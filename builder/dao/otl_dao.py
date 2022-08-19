@@ -2,7 +2,6 @@
 # @Time    : 2020/10/17 17:41
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
-from config.config import permission_manage
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
 import pymysql
 import time
@@ -1794,9 +1793,6 @@ class OtlDao(object):
     def insert_Ontology(self, params_json, cursor, connection):
         print("entry in save")
         values_list = []
-        username = request.headers.get("uuid")
-        values_list.append(username)  # 用户
-        values_list.append(username)  # 用户
         values_list.append(params_json["ontology_name"])
         values_list.append(params_json["ontology_des"].replace('"', '\"').replace("\\", "\\\\"))
         values_list.append(str([]))
@@ -1807,47 +1803,42 @@ class OtlDao(object):
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         print(values_list)
 
-        sql = """INSERT INTO ontology_table (create_user,update_user, ontology_name, ontology_des, entity,edge,used_task,all_task,create_time,update_time) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        sql = """INSERT INTO ontology_table (ontology_name, ontology_des, entity,edge,used_task,all_task,create_time,update_time) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
         new_id = cursor.lastrowid
         return new_id
 
     # lzg add
     @connect_execute_close_db
-    def getCount(self, kgIds, connection, cursor, ):
-        condition = " "
-        if permission_manage:
-            condition = """ where id in ({})""".format(",".join(map(str, kgIds)))
-        sql = """SELECT id FROM ontology_table """ + condition + """;"""
-        # sql = sql.format()
+    def getCount(self, connection, cursor, ):
+        sql = """SELECT id FROM ontology_table;"""
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return len(df)
 
     @connect_execute_close_db
     def getall(self, page, size, order, kgIds, connection, cursor):
-        condition = " "
         if page == -2 and kgIds == "all":
             sql = """SELECT * FROM ontology_table """
             df = pd.read_sql(sql, connection)
             return df
-        if permission_manage:
-            condition = """ where o.id in ({}) """.format(",".join(map(str, kgIds)))
         if page == -2:
-            sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-            """ + condition + """ order by o.create_time  Desc """
+            sql = """
+                SELECT *
+                FROM ontology_table
+                order by create_time Desc"""
         else:
-            sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-            """ + condition + """ order by o.create_time  Desc limit {0}, {1};"""
+            sql = """
+                SELECT *
+                FROM ontology_table
+                order by create_time Desc
+                limit {0}, {1};"""
             if order == "descend":
-                sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-                """ + condition + """ order by o.create_time asc limit {0}, {1} ;"""
+                sql = """
+                    SELECT *
+                    FROM ontology_table
+                    order by create_time asc
+                    limit {0}, {1};"""
             sql = sql.format(page * size, size)
         df = pd.read_sql(sql, connection)
         return df
@@ -1856,14 +1847,6 @@ class OtlDao(object):
     def delete(self, name, connection, cursor, ):
         sql1 = """DELETE FROM ontology_table WHERE id in (%s);""" % (",".join([str(id) for id in name]))
         cursor.execute(sql1)
-        if permission_manage:
-            line = ",".join([str(id) for id in name])
-            sql2 = """DELETE FROM account_manager_graph WHERE manager_graph_id IN (SELECT id FROM manager_graph WHERE kg_id in ({}) AND type = 1);""".format(
-                line)
-            sql3 = """DELETE FROM manager_graph WHERE kg_id in ({}) AND type = 1""".format(line)
-
-            cursor.execute(sql2)
-            cursor.execute(sql3)
         new_id = cursor.lastrowid
         return new_id
 
@@ -1893,12 +1876,9 @@ class OtlDao(object):
         return df
 
     @connect_execute_close_db
-    def getCountbyname(self, otlname, kgIds, connection, cursor, ):
-        condition = " "
-        if permission_manage and len(kgIds) > 0:
-            condition = """ id in ({}) AND """.format(",".join(map(str, kgIds)))
+    def getCountbyname(self, otlname, connection, cursor, ):
         sql = """
-                 SELECT id FROM ontology_table  where """ + condition + """ ontology_name collate utf8_general_ci like {0};
+                 SELECT id FROM ontology_table  where  ontology_name collate utf8_general_ci like {0};
                  """
         otlname = '"%' + otlname + '%"'
         sql = sql.format(otlname)
@@ -1907,20 +1887,20 @@ class OtlDao(object):
         return len(df)
 
     @connect_execute_close_db
-    def getallbyname(self, otlname, page, size, order, kgIds, connection, cursor):
-        condition = " "
-        if permission_manage and len(kgIds) > 0:
-            condition = """ o.id in ({}) AND """.format(",".join(map(str, kgIds)))
-        sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-                 where """ + condition + """ o.ontology_name collate utf8_general_ci like {0}  order by o.create_time  Desc limit {1}, {2};"""
+    def getallbyname(self, otlname, page, size, order, connection, cursor):
+        sql = """
+            SELECT *
+            FROM ontology_table
+            where ontology_name collate utf8_general_ci like {0}
+            order by create_time Desc
+            limit {1}, {2};"""
         if order == "descend":
-            sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-                 where """ + condition + """ o.ontology_name collate utf8_general_ci like {0}  order by o.create_time  asc limit {1}, {2};"""
-        # user = '"' + user + '"'
+            sql = """
+                SELECT *
+                FROM ontology_table 
+                where ontology_name collate utf8_general_ci like {0}
+                order by create_time asc
+                limit {1}, {2};"""
         otlname = '"%' + otlname + '%"'
         sql = sql.format(otlname, page * size, size)
         df = pd.read_sql(sql, connection)
@@ -1929,21 +1909,17 @@ class OtlDao(object):
     @connect_execute_commit_close_db
     def update_name(self, otlid, params_json, connection, cursor):
         values_list = []
-        # 只修改 用户名密码
-        username = request.headers.get("uuid")
-        values_list.append(username)  # 用户
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(params_json["ontology_name"])
         values_list.append(params_json["ontology_des"].replace("\\", "\\\\").replace('"', '\\"'))
         values_list.append(str(otlid))
 
-        sql = """UPDATE ontology_table SET update_user=%s, update_time=%s , ontology_name=%s,ontology_des=%s where id = %s"""
+        sql = """UPDATE ontology_table SET update_time=%s , ontology_name=%s,ontology_des=%s where id = %s"""
 
         sql = sql % ('"' + values_list[0] + '"',
                      '"' + values_list[1] + '"',
                      '"' + values_list[2] + '"',
                      '"' + values_list[3] + '"',
-                     '"' + values_list[4] + '"',
                      )
         Logger.log_info(sql)
         cursor.execute(sql)
@@ -1978,9 +1954,6 @@ class OtlDao(object):
     def update_info(self, otlid, params_json, graph_id, connection, cursor):
         '''更新本体信息，同时更新graph_confg_table中的step_num'''
         values_list = []
-        # 只修改 用户名密码
-        username = request.headers.get("uuid")
-        values_list.append(username)  # 用户
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(str(params_json["entity"]))
         values_list.append(str(params_json["edge"]))
@@ -1993,7 +1966,7 @@ class OtlDao(object):
         step_raw = df.to_dict('records')[0]['step_num']
         step_num = 3 if updateoradd == "update_otl_info" else 2
         step_num = step_raw if step_num < step_raw else step_num
-        sql = """UPDATE ontology_table SET update_user=%s, update_time=%s , entity=%s, edge=%s ,used_task=%s,all_task=%s where id = %s"""
+        sql = """UPDATE ontology_table SET update_time=%s , entity=%s, edge=%s ,used_task=%s,all_task=%s where id = %s"""
 
         sql = sql % ('"' + values_list[0] + '"',
                      '"' + values_list[1] + '"',
@@ -2001,7 +1974,6 @@ class OtlDao(object):
                      '"' + values_list[3] + '"',
                      '"' + values_list[4] + '"',
                      '"' + values_list[5] + '"',
-                     '"' + values_list[6] + '"',
                      )
         Logger.log_info(sql)
         cursor.execute(sql)
@@ -2019,15 +1991,19 @@ class OtlDao(object):
 
     @connect_execute_close_db
     def getallbystate(self, page, size, order, state, connection, cursor):
-        sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email_name,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-                where o.otl_status ={0}  order by o.create_time  Desc limit {1}, {2};"""
+        sql = """
+            SELECT *
+            FROM ontology_table
+            where otl_status = {0}
+            order by create_time Desc
+            limit {1}, {2};"""
         if order == "descend":
-            sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-                 where o.otl_status = {0} order by o.create_time  asc limit {1}, {2};"""
+            sql = """
+                SELECT *
+                FROM ontology_table
+                where otl_status = {0}
+                order by create_time asc
+                limit {1}, {2};"""
         sql = sql.format('"' + state + '"', page * size, size)
         df = pd.read_sql(sql, connection)
         return df
@@ -2045,20 +2021,22 @@ class OtlDao(object):
     @connect_execute_close_db
     def getallbynameandstate(self, name, page, size, order, state, connection, cursor):
         sql = """
-                  SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email_name,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-                 where o.ontology_name collate utf8_general_ci like {0} and o.otl_status = {1} order by o.create_time  Desc limit {2}, {3};
-                          """
+            SELECT *
+            FROM ontology_table
+            where
+              ontology_name collate utf8_general_ci like {0}
+              and otl_status = {1}
+            order by create_time Desc
+            limit {2}, {3};"""
         if order == "descend":
             sql = """
-                 SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,o.* FROM ontology_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                LEFT JOIN account a2 ON a2.uuid=o.update_user
-                where o.ontology_name collate o.utf8_general_ci like {0} and o.otl_status = {1} order by o.create_time  asc limit {2}, {3};
-
-                           """
-        # user = '"' + user + '"'
+                SELECT *
+                FROM ontology_table
+                where
+                  ontology_name collate utf8_general_ci like {0}
+                  and otl_status = {1}
+                order by create_time asc
+                limit {2}, {3};"""
         otlname = '"%' + name + '%"'
         sql = sql.format(otlname, '"' + state + '"', page * size, size)
         df = pd.read_sql(sql, connection)
@@ -2082,12 +2060,6 @@ class OtlDao(object):
         return new_id
 
     @connect_execute_close_db
-    def getReviserByUuid(self, connection, cursor):
-        sql = """SELECT * FROM account"""
-        df = pd.read_sql(sql, connection)
-        return df
-
-    @connect_execute_close_db
     def getallbystate(self, page, size, order, state, connection, cursor):
         sql = """SELECT * FROM ontology_table  where otl_status ={0}  order by create_time  Desc limit {1}, {2};"""
         if order == "descend":
@@ -2107,49 +2079,15 @@ class OtlDao(object):
                      SELECT * FROM ontology_table  where ontology_name collate utf8_general_ci like {0} and otl_status = {1} order by create_time  asc limit {2}, {3};
 
                            """
-        # user = '"' + user + '"'
         otlname = '"%' + name + '%"'
         sql = sql.format(otlname, '"' + state + '"', page * size, size)
         df = pd.read_sql(sql, connection)
         return df
 
-
-    # @connect_execute_commit_close_db
-    # def update(self, otlid, params_json, connection, cursor):
-    #     values_list = []
-    #     # 只修改 用户名密码
-    #     username = request.headers.get("user")
-    #     email = request.headers.get("email")
-    #     values_list.append(username)  # 用户
-    #     values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
-    #     values_list.append(params_json["ontology_name"])
-    #     values_list.append(params_json["ontology_des"])
-    #     values_list.append(str(params_json["entity"]))
-    #     values_list.append(str(params_json["edge"]))
-    #     values_list.append(str(params_json["entity"]))
-    #     values_list.append(str(params_json["edge"]))
-    #     values_list.append(otlid)
-    #
-    #     sql = """UPDATE ontology_table SET create_user=%s, creat_time=%s , ontology_name=%s,ontology_des=%s,  entity=%s, edge=%s  where id = %s"""
-    #
-    #     sql = sql % ('"' + values_list[0] + '"',
-    #                  '"' + values_list[1] + '"',
-    #                  '"' + values_list[2] + '"',
-    #                  '"' + values_list[3] + '"',
-    #                  '"' + values_list[4] + '"',
-    #                  '"' + values_list[5] + '"',
-    #                  '"' + values_list[6]) + '"'
-    #     Logger.log_info(sql)
-    #     cursor.execute(sql)
-    #     new_id = cursor.lastrowid
-    #     return new_id
     @connect_execute_commit_close_db
     def insertCopyOtl(self, args, params_json, cursor, connection):
         print("entry in save")
         values_list = []
-        username = request.headers.get("uuid")
-        values_list.append(username)  # create_user
-        values_list.append(username)  # update_user
         values_list.append(params_json.get("ontology_name"))
         values_list.append(params_json["ontology_des"].replace('"', '\"').replace("\\", "\\\\"))
         values_list.append(args.get("entity"))
@@ -2162,25 +2100,11 @@ class OtlDao(object):
         values_list = list(map(str, values_list))
         print(values_list)
 
-        sql = """INSERT INTO ontology_table (create_user, update_user, ontology_name, ontology_des, entity,edge,used_task,all_task,otl_status,create_time, update_time) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        sql = """INSERT INTO ontology_table (ontology_name, ontology_des, entity,edge,used_task,all_task,otl_status,create_time, update_time) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         print(sql)
         cursor.execute(sql, values_list)
         new_id = cursor.lastrowid
         return new_id
-        # sql = sql % ('"' + values_list[0] + '"',
-        #              '"' + values_list[1] + '"',
-        #              '"' + values_list[2] + '"',
-        #              '"' + values_list[3] + '"',
-        #              '"' + values_list[4] + '"',
-        #              '"' + values_list[5] + '"',
-        #              '"' + values_list[6] + '"',
-        #              '"' + values_list[7] + '"',
-        #              '"' + values_list[8] + '"',
-        #              '"' + values_list[9] + '"')
-        # print(sql)
-        # cursor.execute(sql)
-        # new_id = cursor.lastrowid
-        # return new_id
 
     @connect_execute_close_db
     def getOtlIdbyname(self, otl_name, connection, cursor):

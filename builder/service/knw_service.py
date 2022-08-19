@@ -3,9 +3,7 @@ from distutils.util import strtobool
 from dao.knw_dao import knw_dao
 from utils.common_response_status import CommonResponseStatus
 from utils.log_info import Logger
-from config.config import permission_manage
 from flask import request
-from third_party_service.managerUtils import managerutils
 
 
 class knwService:
@@ -52,19 +50,6 @@ class knwService:
         obj = {}
 
         try:
-            graph_ids, propertyIds = [], []
-            if permission_manage:
-                res_list = params_json.get("res_list", [])
-                for temp in res_list:
-                    graph_ids.append(temp["configId"])  # 可以看见的图谱id列表
-                    propertyIds.append(temp["propertyId"])
-            knw_ids = []
-            if len(graph_ids) > 0:
-                ret = knw_dao.get_ids_by_graph(graph_ids)
-                ids_dict = ret.to_dict('records')
-                for temp in ids_dict:
-                    knw_ids.append(temp["knw_id"])
-
             knw_name = ""
             if "knw_name" in params_json.keys():
                 knw_name = params_json["knw_name"]
@@ -77,10 +62,10 @@ class knwService:
             elif rule == "update":
                 rule = "update_time"
 
-            ret = knw_dao.get_count(knw_name, knw_ids)
+            ret = knw_dao.get_count(knw_name)
             count = len(ret)
 
-            ret = knw_dao.get_knw_by_name(knw_name, page - 1, size, order, rule, knw_ids)
+            ret = knw_dao.get_knw_by_name(knw_name, page - 1, size, order, rule)
             rec_dict = ret.to_dict('records')
             res = {"count": count, "df": rec_dict}
             obj["res"] = res
@@ -136,24 +121,11 @@ class knwService:
         return ret_code, obj
 
     def deleteKnw(self, params_json):
-        uuid = knw_service.get_uuid()
         knw_id = params_json["knw_id"]
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
-            if permission_manage:
-                # 是否有删除权限
-                kg_id = [knw_id]
-                res_message, status = managerutils.operate_permission(uuid, kg_id, 4, "delete")
-                if status != 200:
-                    obj["ErrorCode"] = "Builder.service.knw_service.knwService.deleteKnw.PermissionError"
-                    obj["Description"] = res_message["cause"]
-                    obj["Solution"] = res_message["cause"]
-                    obj["ErrorDetails"] = res_message["message"]
-                    obj["ErrorLink"] = ""
-                    return status, obj
-
-            ret = knw_dao.get_creator(knw_id)
+            ret = knw_dao.get_knw_by_id(knw_id)
             if len(ret) <= 0:
                 # 找不到知识网络
                 ret_code = CommonResponseStatus.SERVER_ERROR.value
@@ -175,22 +147,6 @@ class knwService:
                 obj["ErrorLink"] = ""
                 return ret_code, obj
 
-            creator_id = ret.to_dict('records')[0]["creator_id"]
-            if creator_id != uuid:
-                # 不是创建者，没有权限删除
-                ret_code = CommonResponseStatus.PERMISSION_DENIED.value
-                obj["ErrorCode"] = "Builder.service.knw_service.knwService.deleteKnw.PermissionError"
-                obj["Description"] = "No permission to delete!"
-                obj["Solution"] = "No permission to delete!"
-                obj["ErrorDetails"] = "delete error"
-                obj["ErrorLink"] = ""
-                return ret_code, obj
-
-            if permission_manage:
-                # 删除权限
-                res_message, status = managerutils.knw_delete(knw_id)
-                if status != 200:
-                    return status, res_message
             knw_dao.delete_knw(knw_id)
 
         except Exception as e:
@@ -207,18 +163,10 @@ class knwService:
             obj["ErrorLink"] = ""
         return ret_code, obj
 
-    def getGraph(self, params_json, manager_list):
+    def getGraph(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
-            graph_ids = []
-            graph_map_pro = {}
-            if permission_manage:
-                res_list = params_json.get("res_list", [])
-                for temp in res_list:
-                    configId = temp["configId"]
-                    graph_ids.append(configId)  # 有权限的图谱id列表
-                    graph_map_pro[configId] = temp["propertyId"]
             knw_id = params_json["knw_id"]
             page = int(params_json["page"])
             size = int(params_json["size"])
@@ -234,12 +182,9 @@ class knwService:
                 rule = "KG_name"
             graph_name = params_json["name"]
             graph_name = graph_name.replace("_", "\_")
-            config_id_map = {}
-            for row in manager_list:
-                config_id_map[row['configId']] = row['propertyId']
-            ret = knw_dao.get_all_graph(knw_id, graph_ids, graph_name, upload_graph, config_id_map)
+            ret = knw_dao.get_all_graph(knw_id, graph_name, upload_graph)
             count = len(ret)
-            ret = knw_dao.get_graph_by_knw(knw_id, graph_ids, page - 1, size, order, graph_name, rule, config_id_map,
+            ret = knw_dao.get_graph_by_knw(knw_id, page - 1, size, order, graph_name, rule,
                                            upload_graph)
             res = {"count": count, "df": ret}
             obj["res"] = res
@@ -297,8 +242,8 @@ class knwService:
             obj['solution'] = "Please check mariadb or sql"
         return ret_code, obj
 
-    def updateKnw(self, uuid, graph_id):
-        return knw_dao.update_knw(uuid, graph_id)
+    def updateKnw(self, graph_id):
+        return knw_dao.update_knw(graph_id)
 
     def check_knw_id(self, params_json, delete_graph=False):
         ret_code = CommonResponseStatus.SUCCESS.value
@@ -350,8 +295,6 @@ class knwService:
         result = df["graph_id"].to_dict()
         return result
 
-    def get_uuid(self):
-        return request.headers.get("uuid")
 
 
 knw_service = knwService()

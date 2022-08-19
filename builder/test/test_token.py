@@ -61,12 +61,12 @@ class ASTokenTest(unittest.TestCase):
         # mock insert_refresh_token 插入成功
         asToken.insert_refresh_token = mock.Mock(return_value=0)
         # mock get_source_data_by_auth ds_auth=1的数据源
-        data_get_source_data_by_auth_columns = ['id', 'create_user', 'create_time', 'update_user', 'update_time',
+        data_get_source_data_by_auth_columns = ['id', 'create_time', 'update_time',
                                                 'dsname', 'dataType', 'data_source', 'ds_user', 'ds_password',
                                                 'ds_address', 'ds_port', 'ds_path', 'extract_type', 'ds_auth', 'vhost',
                                                 'queue', 'json_schema', 'knw_id']
-        data_get_source_data_by_auth_row = [[1, 'a10b9b2a-e799-11ec-8695-d250fcb41284', '2022-06-09 10:14:14',
-                                             '853ba1db-4e37-11eb-a57d-0242ac190002', '2022-06-15 14:53:56', '公司as',
+        data_get_source_data_by_auth_row = [[1, '2022-06-09 10:14:14',
+                                             '2022-06-15 14:53:56', '公司as',
                                              'unstructured', 'as7', None, None, 'https://anyshare.aishu.cn', 443,
                                              '郭健康（Stefan）', 'modelExtraction', '1', '', '', '', 1]]
         data_get_source_data_by_auth = pd.DataFrame(data_get_source_data_by_auth_row,

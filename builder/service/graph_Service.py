@@ -10,7 +10,6 @@ import arrow
 from flask import jsonify
 from config import config
 from utils.Gview import Gview
-from config.config import permission_manage
 from utils.common_response_status import CommonResponseStatus
 from dao.graph_dao import graph_dao
 from dao.dsm_dao import dsm_dao
@@ -20,7 +19,6 @@ from dao.graphdb_dao import GraphDB
 from dao.other_dao import other_dao
 # 此处导入知识图谱搜索配置模块
 from dao.knw_dao import knw_dao
-from third_party_service.managerUtils import managerutils
 import pyorient
 from functools import wraps
 from utils import orientSoket
@@ -709,12 +707,7 @@ class GraphService():
                 ds_dict = dss.to_dict('records')
                 ds_dict = ds_dict[0]
                 ds_ids1 = eval(ds_dict["graph_ds"])
-                ## 如果KGIDS在參數里則是走權限，不在就不走權限
-                if "kgIds" in params_json:
-                    kgIds = params_json["kgIds"]
-                    ds_ids = [id for id in ds_ids1 if id in kgIds]
-                else:
-                    ds_ids = [id for id in ds_ids1]
+                ds_ids = [id for id in ds_ids1]
                 if len(ds_ids) > 0:
                     # 获得 图谱中使用的数据源详细信息
                     ds_df = dsm_dao.getbyids(ds_ids)
@@ -971,7 +964,6 @@ class GraphService():
                     graph_process_list = params_json["graph_process"]
                     # 数据源已经不存在
                     ds_list = dsm_dao.getbyids(graph_process_list)
-                    print(ds_list)
                     if len(ds_list) != len(graph_process_list):
                         ret_code = CommonResponseStatus.SERVER_ERROR.value
                         obj['cause'] = "update %s fail" % grapid
@@ -1057,70 +1049,6 @@ class GraphService():
 
         return entity_message
 
-    # 根据graph_id查找该图谱下个数据源或本体
-    def getOtlDsByGraphid(self, params_json, host_url):
-        ret_code = CommonResponseStatus.SUCCESS.value
-        obj = {}
-        graph_id = params_json["graph_id"]
-        ds_type = params_json["type"]
-        ids = []
-        try:
-            if ds_type == 2:
-                df = graph_dao.getDsById(graph_id)
-                print(df)
-                df = df.to_dict()["graph_ds"]
-            else:
-                df = graph_dao.getOtlById(graph_id)
-                df = df.to_dict()["graph_otl"]
-            print(df)
-            for k, v in df.items():
-                ids.extend(eval(v))
-            ids = list(set(ids))
-
-            obj["res"] = ids
-        except Exception as e:
-            ret_code = CommonResponseStatus.SERVER_ERROR.value
-            err = repr(e)
-            Logger.log_error(err)
-            obj['cause'] = err
-            if "SQL" in err or "DatabaseError" in err or "MariaDB" in err or "column" in err.lower() or "row" in err.lower():
-                obj['cause'] = "you have an error in your SQL!"
-            obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-            obj['message'] = "get %s fail" % graph_id
-
-        return ret_code, obj
-
-    # 根据图谱id，查找图谱名称和描述
-    def getGraphInfoByGraphid(self, params_json, host_url):
-        ret_code = CommonResponseStatus.SUCCESS.value
-        obj = {}
-        graph_id = params_json["graph_id"]
-        infos = []
-
-        try:
-            df = graph_dao.getinfoById(graph_id)
-            df = df.to_dict("records")
-            for line in df:
-                temp = {}
-                temp["id"] = line["id"]
-                graph_baseInfo = line["graph_baseInfo"]
-                temp["graph_name"] = eval(graph_baseInfo)[0]["graph_Name"]
-                temp["graph_des"] = eval(graph_baseInfo)[0]["graph_des"]
-                infos.append(temp)
-
-            obj["res"] = infos
-        except Exception as e:
-            ret_code = CommonResponseStatus.SERVER_ERROR.value
-            err = repr(e)
-            Logger.log_error(err)
-            obj['cause'] = err
-            if "SQL" in err or "DatabaseError" in err or "MariaDB" in err or "column" in err.lower() or "row" in err.lower():
-                obj['cause'] = "you have an error in your SQL!"
-            obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-            obj['message'] = "get %s fail" % graph_id
-
-        return ret_code, obj
-
     # graphIds运行状态统计
     def getStatusByIds(self, graphids):
         obj = {}
@@ -1166,37 +1094,6 @@ class GraphService():
                    "message": "mysql connection error",
                    "solution": "Please check mariadb"}
             return obj, -1
-
-    # graphIds删除权限统计
-    def permission_statistics(self, graphids, uuid):
-        noAuthority = []
-        obj = {}
-        try:
-            for id in graphids:
-                url = "http://" + config.manager_ip + ":6800/api/manager/v1/resource/operate" + "?uuid=" + uuid + "&kg_id=" + str(
-                    id) + "&type=3" + "&action=" + "delete"
-                resp = requests.get(url, headers={"info": "kg-builder"})
-                status = resp.status_code
-                if status != 200:
-                    resp = resp.json()
-                    return {"cause": resp["Description"],
-                            "code": resp["ErrorCode"],
-                            "message": resp["ErrorDetails"],
-                            "solution": "Please check permissions"}, status
-                resp = resp.json()
-                flag = resp["res"]
-                if not flag:
-                    noAuthority.append(id)
-            obj["noAuthority"] = noAuthority
-            return obj, 200
-        except Exception as e:
-            err = repr(e)
-            Logger.log_error(err)
-            obj = {"cause": err,
-                   "code": CommonResponseStatus.REQUEST_ERROR.value,
-                   "message": "connection error, permission view failed",
-                   "solution": "Please check mariadb"}
-            return obj, CommonResponseStatus.SERVER_ERROR.value
 
     # 图谱批量删除
     def deleteGraphByIds(self, graphids):
@@ -1254,16 +1151,11 @@ class GraphService():
         obj = {}
         try:
             page = args.get("page")
-            dsids = args.get("dsids")
-            propertyIds = args.get("propertyIds")
             size = args.get("size")
             order = args.get("order")
-            count = dsm_dao.getCount(dsids)
+            count = dsm_dao.getCount()
             res = {}
-            ret = dsm_dao.getall(int(page) - 1, int(size), order, dsids, None)
-            if permission_manage:
-                df_data = pd.DataFrame({"id": dsids, "propertyId": propertyIds})
-                ret = pd.merge(ret, df_data, on=["id"], how="left")
+            ret = dsm_dao.getall(int(page) - 1, int(size), order, None)
             ret = ret.where(ret.notnull(), None)
             rec_dict = ret.to_dict('records')
 
@@ -1304,25 +1196,6 @@ class GraphService():
         except Exception as e:
             Logger.log_error(repr(e))
             obj["cause"] = "get grapg error: mysql connect error"
-            obj["code"] = CommonResponseStatus.REQUEST_ERROR.value
-            obj["message"] = "error"
-            return -1, obj
-
-    # 根据appid获取uuid
-    def get_uuid_by_appid(self, appid):
-        obj = {}
-        try:
-            df = graph_dao.getuuid(appid)
-            if len(df) == 0:
-                obj["cause"] = "appid  %s not exist!" % appid
-                obj["code"] = 500050
-                obj["message"] = "Invalid appid, Please get the new appid !"
-                return -1, obj
-            else:
-                return 0, df
-        except Exception as e:
-            Logger.log_error(repr(e))
-            obj["cause"] = repr(e)
             obj["code"] = CommonResponseStatus.REQUEST_ERROR.value
             obj["message"] = "error"
             return -1, obj
@@ -1520,17 +1393,16 @@ class GraphService():
         pickle.dump(item, file=file_handler)
         return file_path, file_name
 
-    def graph_input(self, uuid, knw_id, graph_id, file_path, method=1):
+    def graph_input(self, knw_id, graph_id, file_path, method=1):
         """
         同步数据
-        :param uuid: 用户唯一标识
         :param knw_id: 知识网络id,如果不为None则为前端调用，将图谱导入指定的知识网络，如果为None为上传内部调用，按照唯一标识判断
         :param graph_id: 知识图谱id
         :param file_path: 文件路径
         :param method: 0 跳过  1 更新
         :return:
         """
-        print(uuid, knw_id, graph_id, file_path)
+        print(knw_id, graph_id, file_path)
 
         # 获取图数据库配置，查询出来使用第一条即可。
         df = graph_dao.getGraphDBbyId(graph_id)
@@ -1583,8 +1455,6 @@ class GraphService():
                     old_knowledge_network = old_knowledge_network[0]
                     knowledge_network["is_update"] = True
                     knowledge_network["id"] = old_knowledge_network["id"]
-                knowledge_network["creator_id"] = uuid
-                knowledge_network["final_operator"] = uuid
                 knowledge_network["creation_time"] = time_now
                 knowledge_network["update_time"] = time_now
             else:
@@ -1614,12 +1484,10 @@ class GraphService():
             if is_update:
                 # 如果是更新，将旧版本id替换
                 ontology["id"] = eval(old_graph_config["graph_otl"])[0]
-            ontology["create_user"] = uuid
             ontology["create_time"] = time_now
-            ontology["update_user"] = uuid
             ontology["update_time"] = time_now
 
-            # 循环处理，知道名称非重复。
+            # 循环处理，直到名称非重复。
             ontology_name = ontology["ontology_name"]
             if not is_update:
                 number = 1
@@ -1636,12 +1504,10 @@ class GraphService():
                 # 如果是更新，替换旧版本id
                 graph_config["id"] = old_graph_config["id"]
                 graph_config["graph_otl"] = old_graph_config["graph_otl"]
-            graph_config["create_user"] = uuid
             graph_config["create_time"] = time_now
-            graph_config["update_user"] = uuid
             graph_config["update_time"] = time_now
 
-            # 如果名称重复，在后面拼接随机uuid()
+            # 如果名称重复，循环处理，直到名称非重复。
             graph_config_name = graph_config["graph_name"]
             if not is_update:
                 number = 1
@@ -1679,9 +1545,7 @@ class GraphService():
                     knowledge_graph_name = knowledge_graph["KG_name"] + "_{0}".format(number)
                     number = number + 1
             knowledge_graph["KG_name"] = knowledge_graph_name
-            knowledge_graph["create_user"] = uuid
             knowledge_graph["create_time"] = time_now
-            knowledge_graph["update_user"] = uuid
             knowledge_graph["update_time"] = time_now
             knowledge_graph["graph_update_time"] = time_now
             # knowledge_graph["status"] = "edit"
@@ -1708,9 +1572,7 @@ class GraphService():
                         number = number + 1
                 search_config["conf_name"] = search_config_name
 
-                search_config["create_user"] = uuid
                 search_config["create_time"] = time_now
-                search_config["update_user"] = uuid
                 search_config["update_time"] = time_now
 
             new_ids = graph_dao.input_data(knowledge_network, graph_config, knowledge_graph, ontology, search_configs,
@@ -1725,65 +1587,9 @@ class GraphService():
                 new_ontology_id = new_ids["ontology_id"]
                 new_graph_config_id = new_ids["graph_config_id"]
 
-                # 注意，此处必须是在知识网络不为更新的时候操作。
-                if not knowledge_network["is_update"]:
-                    new_knowledge_network_id = new_ids["knowledge_network_id"]
-
-                    if permission_manage:
-                        ret, status = managerutils.add_resource(new_knowledge_network_id, 4, uuid)
-                        if status != 200:
-                            knw_dao.delete_knw(new_ontology_id)
-                            return Gview.TErrorreturn(
-                                "Builder.controller.graph_service.save_graph.AddResourceError",
-                                ret["cause"], ret["cause"], ret["message"], ""), status
-
-                    # 调用manager接口增加默认权限
-                    if permission_manage:
-                        ret, status = managerutils.add_permission(new_knowledge_network_id, 4, uuid)
-                        if status != 200:
-                            knw_dao.delete_knw(new_ontology_id)
-                            return Gview.TErrorreturn(
-                                "Builder.controller.graph_service.save_ontology.AddPermissionError",
-                                ret["cause"], ret["cause"], ret["message"], ""), status
-
-                # 调用manager服务，增加权限，此处有一个问题，涉及到分布式事务的问题。目前只能保证在此环境处理过程中，保证一致。
-                if permission_manage:
-                    ret, status = managerutils.add_resource(new_ontology_id, 1, uuid)
-                    if status != 200:
-                        knw_dao.delete_knw(new_ontology_id)
-                        return Gview.TErrorreturn(
-                            "Builder.controller.graph_service.save_ontology.AddResourceError",
-                            ret["cause"], ret["cause"], ret["message"], ""), status
-
-                if permission_manage:
-                    ret, status = managerutils.add_resource(new_graph_config_id, 3, uuid)
-                    if status != 200:
-                        knw_dao.delete_knw(new_ontology_id)
-                        return Gview.TErrorreturn(
-                            "Builder.controller.graph_service.save_graph.AddResourceError",
-                            ret["cause"], ret["cause"], ret["message"], ""), status
-
-                # 调用manager接口增加默认权限
-                if permission_manage:
-                    ret, status = managerutils.add_permission(new_ontology_id, 1, uuid)
-                    if status != 200:
-                        knw_dao.delete_knw(new_ontology_id)
-                        return Gview.TErrorreturn(
-                            "Builder.controller.graph_service.save_ontology.AddPermissionError",
-                            ret["cause"], ret["cause"], ret["message"], ""), status
-
-                # 调用manager接口增加默认权限
-                if permission_manage:
-                    ret, status = managerutils.add_permission(new_graph_config_id, 3, uuid)
-                    if status != 200:
-                        knw_dao.delete_knw(new_graph_config_id)
-                        return Gview.TErrorreturn(
-                            "Builder.controller.graph_service.save_graph.AddPermissionError",
-                            ret["cause"], ret["cause"], ret["message"], ""), status
-
         return "True", 200
     
-    def get_graph_info_basic(self, graph_id, is_all, key, uuid):
+    def get_graph_info_basic(self, graph_id, is_all, key):
         '''
         获取图谱信息
         Args:
@@ -1791,12 +1597,8 @@ class GraphService():
             is_all: True：全部返回，忽略key值； False：返回key指定的字段
             key: 字符串列表,可选值:
                 "graph_des": 图谱描述
-                "create_email": 创建人邮箱
-                "create_user" 创建人
                 "create_time" 创建时间
-                "update_email" 最终操作人邮箱
                 "update_time" 最终操作时间
-                "update_user" 最终操作用户
                 "display_task" 导入的图谱是否执行过任务
                 "export" 是否可以导出
                 "is_import" 是外部导入的图谱还是手动创建
@@ -1857,16 +1659,6 @@ class GraphService():
         res_info['info_ext'] = config_info['graph_InfoExt']
         res_info['kmap'] = config_info['graph_KMap']
         res_info['kmerge'] = config_info['graph_KMerge']
-        if is_all or ('create_user' in key or 'create_email' in key):
-            create_user_uuid = kg_info.iloc[0]['create_user']
-            account_info = graph_dao.get_account_by_uuid(create_user_uuid)
-            res_info['create_user'] = account_info.iloc[0]['name']
-            res_info['create_email'] = account_info.iloc[0]['email']
-        if is_all or ('update_user' in key or 'update_email' in key):
-            update_user_uuid = kg_info.iloc[0]['update_user']
-            account_info = graph_dao.get_account_by_uuid(update_user_uuid)
-            res_info['update_user'] = account_info.iloc[0]['name']
-            res_info['update_email'] = account_info.iloc[0]['email']
         is_upload = config_info['is_upload']  # 表示图谱是否是上传而来
         res_info['is_import'] = True if is_upload else False
         res_info['display_task'] = False if is_upload and task_status == None else True
@@ -1887,19 +1679,6 @@ class GraphService():
             upload_id = graph_dao.get_upload_id([graph_id])
             res_info['is_upload'] = (len(upload_id) != 0)  # 该图谱是否处于上传中
         res_info['knowledge_type'] = 'kg'
-        if is_all or 'property_id' in key:
-            manager_list, status = managerutils.get_otlDsList(uuid, 3)
-            if status != 200:
-                code = codes.Builder_GraphService_GetGraphInfoBasic_PermissionError
-                data = Gview2.TErrorreturn(code,
-                                          description=manager_list['cause'],
-                                          cause=manager_list['cause'],
-                                          solution=manager_list['solution'])
-                return code, data
-            for row in manager_list:
-                if row['configId'] == int(kg_conf_id):
-                    res_info['property_id'] = row['propertyId']
-                    break
         if is_all:
             return code, Gview2.json_return(res_info)
         res = {}

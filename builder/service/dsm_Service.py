@@ -3,7 +3,6 @@
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
 import pika
-from config.config import permission_manage
 from utils.log_info import Logger
 from utils.Gview import Gview
 from utils.common_response_status import CommonResponseStatus
@@ -456,16 +455,12 @@ class DsmService():
         obj = {}
 
         try:
-            kgIds = args.get("kgIds", [])
-            propertyIds = args.get("propertyIds", [])
-
-
             page = args.get("page")
             # user = args.get("user")
             size = args.get("size")
             order = args.get("order")
             knw_id = args.get("knw_id")
-            count = dsm_dao.getCountByKnwId(kgIds, knw_id)
+            count = dsm_dao.getCountByKnwId(knw_id)
             res = {}
 
             # 知识网络不存在
@@ -477,20 +472,9 @@ class DsmService():
                 obj['message'] = "select fail"
                 return ret_code, obj
 
-            # res["df"] = []
-            ret = dsm_dao.getall(int(page)-1, int(size), order, kgIds, knw_id)
-            # 拼接屬性id
-            if permission_manage:
-                df_data = pd.DataFrame({"id": kgIds, "propertyId": propertyIds})
-                ret = pd.merge(ret, df_data, on=["id"], how="left")
-
+            ret = dsm_dao.getall(int(page)-1, int(size), order, knw_id)
             rec_dict = ret.to_dict('records')
 
-            # for i in rec_dict:
-            #     print(arrow.formatter(i["updatetime"]))
-            #     # i["updatetime"] = datetime.(i["updatetime"]).strftime("%Y-%m-%d %H:%M:%S")
-            #     # time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(i["updatetime"]))
-            # count = len(rec_dict)
             if page == "-1":
                 for i in range(len(rec_dict)):
                     if "sort" in rec_dict[i]:
@@ -498,19 +482,7 @@ class DsmService():
                 count = len(rec_dict)
             res["count"] = count
             res["df"] = rec_dict
-
-
-
-
-            #
-            # print(rec_dict)
-            # print(res)
-            # DAIZUO df转一下
             ret = ret.values.tolist()
-            # "".format('YYYY-MM-DD HH:mm:ss')
-
-
-
             obj["res"] = res
         except Exception as e:
             ret_code = CommonResponseStatus.SERVER_ERROR.value
@@ -529,13 +501,6 @@ class DsmService():
         obj = {}
 
         try:
-            kgIds, propertyIds = [], []
-            if permission_manage:
-                res_list = args.get("res_list")
-                for temp in res_list:
-                    kgIds.append(temp["configId"])  # 可以看见的数据源id列表
-                    propertyIds.append(temp["propertyId"])
-
             page = args.get("page")
             dsname = args.get("dsname")
             size = args.get("size")
@@ -551,8 +516,8 @@ class DsmService():
                 obj['message'] = "select fail"
                 return ret_code, obj
 
-            count = dsm_dao.getCountbyname(dsname, kgIds, knw_id)
-            ret = dsm_dao.getallbyname(dsname, int(page)-1, int(size), order, kgIds, knw_id)
+            count = dsm_dao.getCountbyname(dsname, knw_id)
+            ret = dsm_dao.getallbyname(dsname, int(page)-1, int(size), order, knw_id)
             rec_dict = ret.to_dict('records')
             res = {}
             res["count"] = count

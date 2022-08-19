@@ -1,33 +1,9 @@
 from unittest import TestCase, mock
-from controller.graph_controller import is_match
 from main.builder_app import app
 from common.errorcode import codes
 from service.graph_Service import graph_Service
 
 client = app.test_client()
-
-
-class TestIsMatch(TestCase):
-    def setUp(self):
-        self.gns1 = "gns://A7BF3CFEB17F44AA8980E6D61F6EA9D1/9202357016594A039BFCDA510C59530A/FCCEBF383A6A4B4FBBCD862B975F3B88"
-        self.gns2 = "gns://A7BF3CFEB17F44AA8980E6D61F6EA9D1"
-        self.gns3 = "gns://A7BF3CFEB17F4"
-
-    def test_is_match(self):
-        res = is_match(self.gns1, self.gns1)
-        self.assertEqual(res, True)
-
-        res = is_match(self.gns1, self.gns2)
-        self.assertEqual(res, True)
-
-        res = is_match(self.gns2, self.gns1)
-        self.assertEqual(res, True)
-
-        res = is_match(self.gns2, self.gns3)
-        self.assertEqual(res, False)
-
-        res = is_match(self.gns3, self.gns2)
-        self.assertEqual(res, False)
 
 
 class TestGetGraphInfoBasic(TestCase):
@@ -40,7 +16,6 @@ class TestGetGraphInfoBasic(TestCase):
 
     def test_get_graph_info_basic_success1(self):
         response = client.get('/api/builder/v1/graph/info/basic',
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
                               query_string={'graph_id': '1',
                                             'is_all': 'true'}
                               )
@@ -48,10 +23,9 @@ class TestGetGraphInfoBasic(TestCase):
 
     def test_get_graph_info_basic_success2(self):
         response = client.get('/api/builder/v1/graph/info/basic',
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
                               query_string={'graph_id': '1',
                                             'is_all': 'false',
-                                            'key': '["graph_des", "create_email", "create_user", "create_time", "update_email", "update_time", "update_user", "display_task", "export", "is_import", "is_upload", "knowledge_type", "property_id", "status", "step_num", "ds", "otl", "info_ext", "kmap", "kmerge", "mongo_name", "graphdb_name", "graphdb_type", "graphdb_address", "graphdb_id"]'}
+                                            'key': '["graph_des", "create_time", "update_time", "display_task", "export", "is_import", "is_upload", "knowledge_type", "property_id", "status", "step_num", "ds", "otl", "info_ext", "kmap", "kmerge", "mongo_name", "graphdb_name", "graphdb_type", "graphdb_address", "graphdb_id"]'}
                               )
         self.assertEqual(response.status_code, 200)
 
@@ -59,13 +33,11 @@ class TestGetGraphInfoBasic(TestCase):
         '''Builder_GraphController_GetGraphInfoBasic_ParamError'''
         # graph_id不存在
         response = client.get('/api/builder/v1/graph/info/basic',
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'}
                               )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoBasic_ParamError)
         # is_all错误
         response = client.get('/api/builder/v1/graph/info/basic',
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
                               query_string={'graph_id': '1',
                                             'is_all': 'wrong'}
                               )
@@ -76,7 +48,6 @@ class TestGetGraphInfoBasic(TestCase):
         '''Builder_GraphController_GetGraphInfoBasic_KeyTypeError'''
         # key无法被eval
         response = client.get('/api/builder/v1/graph/info/basic',
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
                               query_string={'graph_id': '1',
                                             'is_all': 'false',
                                             'key': '[a'}
@@ -85,7 +56,6 @@ class TestGetGraphInfoBasic(TestCase):
         self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoBasic_KeyTypeError)
         # key不是列表
         response = client.get('/api/builder/v1/graph/info/basic',
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
                               query_string={'graph_id': '1',
                                             'is_all': 'false',
                                             'key': 'a'}
@@ -98,7 +68,6 @@ class TestGetGraphInfoBasic(TestCase):
         graph_Service.get_graph_info_basic = mock.Mock(
             return_value=(codes.Builder_GraphService_GetGraphInfoBasic_GraphDBIdNotExist, {}))
         response = client.get('/api/builder/v1/graph/info/basic',
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
                               query_string={'graph_id': '1',
                                             'is_all': 'true'}
                               )
@@ -108,7 +77,6 @@ class TestGetGraphInfoBasic(TestCase):
         '''Builder_GraphController_GetGraphInfoBasic_UnknownError'''
         graph_Service.get_graph_info_basic = mock.Mock(side_effect=Exception())
         response = client.get('/api/builder/v1/graph/info/basic',
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
                               query_string={'graph_id': '1',
                                             'is_all': 'true'}
                               )

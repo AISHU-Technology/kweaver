@@ -1,6 +1,5 @@
 import json
 
-from third_party_service.managerUtils import managerutils
 from utils.CommonUtil import commonutil
 from utils.timer_check_parameters import CommonCheck
 from utils.log_info import Logger
@@ -14,10 +13,6 @@ from service.graph_Service import graph_Service
 
 
 class Permission(object):
-    def __init__(self, uuid, method):
-        self.uuid = uuid
-        self.method = method
-        self.permission_manage = config.permission_manage
 
     # GET请求：返回所有图谱信息;
     def graphGet(self):
@@ -45,15 +40,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-
-        # 查看增加资源权限
-        res_message, res_code = managerutils.create_resource(self.uuid, 3)
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # 图谱编辑
@@ -89,17 +75,6 @@ class Permission(object):
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message,
                     "solution": "Please check parameters"}, CommonResponseStatus.BAD_REQUEST.value
-
-        if not self.permission_manage:
-            return {}, 0
-        # 查看编辑权限
-        res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[graphid], type=3,
-                                                                action="update")
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"],
-                    "solution": "Please check permissions"}, res_code
         return {}, 0
 
     # 定时任务权限管理，与图谱编辑权限相同
@@ -107,18 +82,6 @@ class Permission(object):
         http_code, res_message = CommonCheck.check_graph_id(graphid)
         if http_code != CommonResponseStatus.SUCCESS.value:
             return http_code, res_message
-        if not self.permission_manage:
-            return http_code, {}
-        # 查看图谱编辑权限
-        res_message, http_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[graphid], type=3,
-                                                                 action="update")
-        if http_code != 200:
-            data = {"detail": res_message["cause"],
-                    "error_code": res_message["code"],
-                    "desc": res_message["message"],
-                    "solution": "Please check permissions", "error_link": ""}
-
-            return http_code, data
         return http_code, {}
 
     # DELETE请求,删除图谱
@@ -142,14 +105,6 @@ class Permission(object):
             return {"cause": message,
                     "code": "Builder.third_party_service.permission_manager.Permission.dsmCreate.ParametersError",
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        # 查看增加资源权限
-        res_message, res_code = managerutils.create_resource(self.uuid, 2)
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": "Builder.third_party_service.permission_manager.Permission.dsmCreate.PermissionError",
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # PUT请求, 编辑数据源
@@ -173,15 +128,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-
-        if not self.permission_manage:
-            return {}, 0
-        # 查看编辑权限
-        res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[dsid], type=2, action="update")
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # DELETE请求,删除数据源
@@ -198,19 +144,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-
-        if not self.permission_manage:
-            return {}, 0
-
-        dsids = params_json["dsids"]
-        # 查看删除权限
-        for dsid in dsids:
-            res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[dsid], type=2,
-                                                                    action="delete")
-            if res_code != 200:
-                return {"cause": res_message["cause"],
-                        "code": res_message["code"],
-                        "message": res_message["message"]}, res_code
         return {}, 0
 
     # POST请求,新建本体
@@ -222,14 +155,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": "Incorrect parameter format"}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        # 查看增加资源权限
-        res_message, res_code = managerutils.create_resource(self.uuid, 1)
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # PUT请求, 编辑本体
@@ -250,17 +175,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        otlids = params_json["otlids"]
-        for otlid in otlids:
-            # 查看删除权限
-            res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[otlid], type=1,
-                                                                    action="delete")
-            if res_code != 200:
-                return {"cause": res_message["cause"],
-                        "code": res_message["code"],
-                        "message": res_message["message"]}, res_code
         return {}, 0
 
     # 运行任务
@@ -271,15 +185,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        # 权限查看
-        res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[graph_id], type=3,
-                                                                action="task_run")
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # 删除任务
@@ -290,15 +195,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        # 权限查看
-        res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[graph_id], type=3,
-                                                                action="task_delete")
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # 任务详情
@@ -309,15 +205,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        # 权限查看
-        res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[graph_id], type=3,
-                                                                action="task_detail")
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # 中止任务
@@ -328,15 +215,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        # 权限查看
-        res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[graph_id], type=3,
-                                                                action="task_stop")
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # 历史记录
@@ -348,16 +226,6 @@ class Permission(object):
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message,
                     "solution": "Please check parameters graph_id"}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        # 权限查看
-        res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[graph_id], type=3,
-                                                                action="history_record")
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"],
-                    "solution": "Please check permissions"}, res_code
         return {}, 0
 
     # 获取任务进度
@@ -368,15 +236,6 @@ class Permission(object):
             return {"cause": message,
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        if not self.permission_manage:
-            return {}, 0
-        # 权限查看
-        res_message, res_code = managerutils.operate_permission(uuid=self.uuid, kg_id=[graph_id], type=3,
-                                                                action="task_progress")
-        if res_code != 200:
-            return {"cause": res_message["cause"],
-                    "code": res_message["code"],
-                    "message": res_message["message"]}, res_code
         return {}, 0
 
     # 知识网络增删改查

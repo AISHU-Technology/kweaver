@@ -358,8 +358,6 @@ def getfilestatus():
                     obj["res"]["result"]["task_status"] = "running"
                     obj["res"]["result"]["error_code"] = ""
                     obj["res"]["result"]["files"] = []
-                    obj["res"]["result"]["create_user_name"] = row["create_user_name"]
-                    obj["res"]["result"]["create_user_email"] = row["create_user_email"]
                     obj["res"]["result"]["create_time"] = row["create_time"]
                     obj["res"]["result"]["finished_time"] = "-"
                     # # 更新状态
@@ -377,8 +375,6 @@ def getfilestatus():
                     code = re.findall(r"[0-9]+", dd[0])[0]
                     obj["res"]["result"]["error_code"] = int(code)
                     obj["res"]["result"]["files"] = []
-                    obj["res"]["result"]["create_user_name"] = row["create_user_name"]
-                    obj["res"]["result"]["create_user_email"] = row["create_user_email"]
                     obj["res"]["result"]["create_time"] = row["create_time"]
                     obj["res"]["result"]["finished_time"] = row["finished_time"]
                 elif task_status == "finished":
@@ -400,8 +396,6 @@ def getfilestatus():
                     obj["res"]["result"]["task_status"] = row["task_status"]
                     obj["res"]["result"]["error_code"] = ""
                     obj["res"]["result"]["files"] = file
-                    obj["res"]["result"]["create_user_name"] = row["create_user_name"]
-                    obj["res"]["result"]["create_user_email"] = row["create_user_email"]
                     obj["res"]["result"]["create_time"] = row["create_time"]
                     obj["res"]["result"]["finished_time"] = row["finished_time"]
                 return jsonify({'res': obj["res"], "code": 200})

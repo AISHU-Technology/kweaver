@@ -132,9 +132,6 @@ class TaskDaoOnto(object):
     @connect_execute_commit_close_db
     def insert_otl_Data(self, otl_id,task_name,ds_id,task_type,postfix, connection, cursor):
         values_list = []
-        username = request.headers.get("uuid")
-        # email = request.headers.get("email")
-        values_list.append(str(username))
         # values_list.append(str(email))
         values_list.append(str(task_name))
         values_list.append(str(ds_id))
@@ -143,7 +140,7 @@ class TaskDaoOnto(object):
         values_list.append(str(postfix))
         values_list.append(str(arrow.now().format('YYYY-MM-DD HH:mm:ss')))
         values_list.append(str(otl_id))
-        sql = """INSERT INTO ontology_task_table ( create_user,task_name, ds_id, task_type,postfix,create_time,ontology_id) VALUES(%s,%s,%s,%s,%s,%s,%s)"""
+        sql = """INSERT INTO ontology_task_table (task_name, ds_id, task_type,postfix,create_time,ontology_id) VALUES(%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
         new_id = cursor.lastrowid
         return new_id
@@ -211,10 +208,10 @@ class TaskDaoOnto(object):
 
     @connect_execute_close_db
     def get_task_by_task_id( self,task_id,connection, cursor):
-        sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name,o.* FROM ontology_task_table AS o 
-                LEFT JOIN account a1 ON a1.uuid=o.create_user 
-                where task_id = %s""" % (str(task_id))
-        # sql = sql.format()
+        sql = """
+            SELECT *
+            FROM ontology_task_table
+            where task_id = %s""" % (str(task_id))
         df = pd.read_sql(sql, connection)
         # data=df.to_dict()
         return df

@@ -7,7 +7,6 @@ import time
 
 import requests
 
-from config.config import permission_manage
 from dao.graph_dao import graph_dao
 from utils.common_response_status import CommonResponseStatus
 from dao.task_dao import task_dao
@@ -211,11 +210,10 @@ class TaskService():
         return data
 
     # 添加任务列表
-    def addtask(self, params_json, host_url):
+    def addtask(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
-
             task_dao.insertData(params_json)
             obj["res"] = "start task "
         except Exception as e:
@@ -283,13 +281,10 @@ class TaskService():
             rec_dict = ret.to_dict('records')
             res = {}
             res["count"] = count
-            # res["df"] = rec_dict
             list_all = []
             for reslist in rec_dict:
                 dict_all = {}
                 for key in reslist:
-                    if key == "create_user":
-                        continue
                     if key == "error_report":
                         value = reslist[key]
                         value = eval(value)
@@ -479,8 +474,6 @@ class TaskService():
 
     # 定时跟新任务状态 updatetatus2
     def updatetatus2(self, df, task_info, host_url):
-        # message_ip = "kg-manager"
-        # message_port = "6800"
         try:
             # 根据任务id 获取任务的状态并改变任务状态
             status = ["graph_baseInfo", "graph_ds", "graph_otl", "graph_InfoExt", "graph_KMap", "graph_KMerge"]
@@ -492,10 +485,6 @@ class TaskService():
                     task = task.to_dict('records')
                     task = task[0]
                     task_state = task["status"]
-
-                    # url = "https://" + message_ip + ":" + message_port + "/api/manager/v1/message"
-                    # username = row["create_user"]
-                    # userid = dsm_dao.getuseridbyname(username)
 
                     # 默认运行中 如果不在运行中的状态改变状态 其他状态不变 normal edit running waiting failed stop
                     if task_state not in status:
@@ -717,38 +706,6 @@ class TaskService():
 
             return ret_code, obj
 
-    # 获取正在运行的任务
-    def getruntask(self, args, host_url):
-        ret_code = CommonResponseStatus.SUCCESS.value
-        obj = {}
-        try:
-            # # 获取之前刷新一次
-            # import celery_scheduler
-            # celery_scheduler.updatedata()
-            kgIds = args.get("kgIds")
-            if len(kgIds) != 0:
-                df = task_dao.getRunCount(kgIds)
-            else:
-                df = []
-            # # 更新任务的状态
-            # df = self.updatetaskstatus(df)  #
-            # num = self.runtasknum(df)
-
-            res = {}
-            res["count"] = len(df)
-            obj["res"] = res
-        except Exception as e:
-            ret_code = CommonResponseStatus.SERVER_ERROR.value
-            err = repr(e)
-            Logger.log_error(err)
-            obj['cause'] = err
-            if "SQL" in err or "DatabaseError" in err or "MariaDB" in err:
-                obj['cause'] = "you have an error in your SQL!"
-            obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-            obj['message'] = "insert connection fail"
-
-        return ret_code, obj
-
     # 获取任务详情
     def getdetailtask(self, graph_id, host_url):
         ret_code = CommonResponseStatus.SUCCESS.value
@@ -769,13 +726,11 @@ class TaskService():
         return ret_code, obj
 
     # 获取任务列表
-    def getalltask(self, args, host_url):
+    def getalltask(self, args):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
             # 分页排序，是获得所有数据在分页排序，因为有三层排序，不知道第n页的数据
-            kgIds = args.get("kgIds")
-            propertyIds = args.get("propertyId")
             page = args.get("page")
             # user = args.get("user")
             size = args.get("size")
@@ -799,9 +754,6 @@ class TaskService():
                     lambda x: self.seconds_to_hms(pd.Timedelta(
                         (pd.to_datetime(x["end_time"]) - pd.to_datetime(x["start_time"]))).total_seconds()) if x[
                         "end_time"] else None, axis=1)
-            if permission_manage:
-                df_data = pd.DataFrame({"graph_id": kgIds, "propertyId": propertyIds})
-                dfs = pd.merge(dfs, df_data, on=["graph_id"], how="left")
             # 将Nan类型转为0
             dfs = dfs.fillna(value=0)
             rec_dict = dfs.to_dict('records')
@@ -816,8 +768,6 @@ class TaskService():
                     effective_storage = False
                 dict_all['effective_storage'] = effective_storage
                 for key in reslist:
-                    if key == "create_user":
-                        continue
                     if key == "error_report":
                         value = reslist[key]
                         if value != "":
@@ -1190,11 +1140,11 @@ class TaskService():
         return code, data
 
     # 定时任务开关
-    def update_timer_switch(self, graph_id, task_id, enabled, update_user):
+    def update_timer_switch(self, graph_id, task_id, enabled):
         code = CommonResponseStatus.SUCCESS.value
         data = {}
         try:
-            graph_dao.update_timer_switch(graph_id, task_id, enabled, update_user)
+            graph_dao.update_timer_switch(graph_id, task_id, enabled, True)
         except Exception as e:
             err = repr(e)
             Logger.log_error(err)

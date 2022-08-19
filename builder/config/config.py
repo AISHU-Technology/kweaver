@@ -54,11 +54,7 @@ CELERY_BROKER_URL = 'redis://10.4.81.11:6379/1'
 # 要存储 Celery 任务的状态或运行结果时就必须要配置
 CELERY_RESULT_BACKEND = 'redis://10.4.81.11:6379/2'
 
-manager_ip = "kg-manager"
-# manager_ip = "10.4.106.255"
 
-# 是否连接manager进行权限管理
-permission_manage = True
 baseInfo_flag = False
 
 

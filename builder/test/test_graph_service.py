@@ -6,7 +6,6 @@ from dao.graph_dao import graph_dao
 from dao.graphdb_dao import GraphDB
 from dao.otl_dao import otl_dao
 from service.graph_Service import graph_Service
-from third_party_service.managerUtils import managerutils
 from test import testApp
 from common.errorcode import codes
 
@@ -16,14 +15,13 @@ class TestGetGraphInfoBasic(unittest.TestCase):
         # 输入参数
         self.graphid = '118'
         self.is_all = False
-        self.key = ["graph_des", "create_email", "create_user", "create_time", "update_email", "update_time",
-                    "update_user", "display_task", "export", "is_import", "is_upload", "knowledge_type", "property_id",
+        self.key = ["graph_des", "create_time", "update_time",
+                    "display_task", "export", "is_import", "is_upload", "knowledge_type", "property_id",
                     "status", "step_num", "ds", "otl", "info_ext", "kmap", "kmerge", "mongo_name", "graphdb_name",
                     "graphdb_type", "graphdb_address", "graphdb_id"]
-        self.uuid = '853ba1db-4e37-11eb-a57d-0242ac190002'
         # mock graph_dao.get_knowledge_graph_by_id
         self.res_get_knowledge_graph_by_id_column = ['id', 'KDB_ip', 'KDB_name', 'KG_config_id', 'KG_name', 'status',
-                                                     'hlStart', 'hlEnd', 'create_user', 'create_time', 'update_user',
+                                                     'hlStart', 'hlEnd', 'create_time',
                                                      'update_time', 'graph_update_time', 'kg_data_volume']
         row = [[164, '10.4.133.125;10.4.131.18;10.4.131.25',
                 'u4d1b761a01f811edb7079af371d61d07', 118, '1111', 'normal',
@@ -39,12 +37,12 @@ class TestGetGraphInfoBasic(unittest.TestCase):
         res = pd.DataFrame(row, columns=column)
         graph_dao.getStatusById = mock.Mock(return_value=res)
         # mock graph_dao.getbyid
-        column = ['id', 'create_user', 'create_time', 'update_user', 'update_time',
+        column = ['id', 'create_time',  'update_time',
                   'graph_name', 'graph_status', 'graph_baseInfo', 'graph_ds', 'graph_otl',
                   'graph_otl_temp', 'graph_InfoExt', 'graph_KMap', 'graph_KMerge',
                   'rabbitmq_ds', 'graph_db_id', 'upload', 'step_num', 'is_upload']
-        row = [[118, '853ba1db-4e37-11eb-a57d-0242ac190002', '2022-07-12 23:36:03',
-                '853ba1db-4e37-11eb-a57d-0242ac190002', '2022-07-13 13:16:30',
+        row = [[118, '2022-07-12 23:36:03',
+               '2022-07-13 13:16:30',
                 '1111', 'finish',
                 "[{'graph_Name': '1111', 'graph_des': '', 'graph_db_id': 5, 'graphDBAddress': '10.4.133.125;10.4.131.18;10.4.131.25', 'graph_mongo_Name': 'mongoDB-118', 'graph_DBName': 'u4d1b761a01f811edb7079af371d61d07'}]",
                 '[101]', '[250]', '[]',
@@ -54,17 +52,6 @@ class TestGetGraphInfoBasic(unittest.TestCase):
                 0, 5, 0, 6, 0]]
         res = pd.DataFrame(row, columns=column)
         graph_dao.getbyid = mock.Mock(return_value=res)
-        # mock graph_dao.get_account_by_uuid
-        column = ['id', 'name', 'passwd', 'email', 'type', 'desc', 'status', 'uuid',
-                  'expire_time', 'create_time', 'app_id', 'pass_st', 'pass_ct',
-                  'locked_dur', 'pass_len', 'pass_dur', 'activation', 'ldap_domain']
-        row = [[1, 'admin', '95790df44d8ac8b12fb2a8d9fc65a692', '--', 0, '', 0,
-                '853ba1db-4e37-11eb-a57d-0242ac190002',
-                '2022-06-09 10:09:25.614000',
-                '2022-06-09 10:09:25.614000', '-MMPTDv7ttRl7uzcS3Bv',
-                '2022-07-11 10:02:00.589000', 0, 0, 12, 0, 1, '']]
-        res = pd.DataFrame(row, columns=column)
-        graph_dao.get_account_by_uuid = mock.Mock(return_value=res)
         # mock graph_dao.getGraphDBNew
         self.res_getGraphDBNew_column = ['id', 'ip', 'port', 'user', 'password', 'version', 'type', 'db_user',
                                          'db_ps', 'db_port', 'name', 'created', 'updated', 'fulltext_id']
@@ -79,50 +66,38 @@ class TestGetGraphInfoBasic(unittest.TestCase):
         row = []
         res = pd.DataFrame(row, columns=column)
         graph_dao.get_upload_id = mock.Mock(return_value=res)
-        # mock managerutils.get_otlDsList
-        manager_list = [{'configId': 118, 'propertyId': 1, 'createUserId': '1'}]
-        status = 200
-        managerutils.get_otlDsList = mock.Mock(return_value=(manager_list, status))
 
     def test_get_graph_info_basic_success1(self):
-        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, self.key, self.uuid)
+        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, self.key)
         self.assertEqual(code, codes.successCode)
 
     def test_get_graph_info_basic_success2(self):
         '''未输入key'''
-        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, None, self.uuid)
+        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, None)
         self.assertEqual(code, codes.successCode)
 
     def test_get_graph_info_basic_success2(self):
         '''is_all为True'''
-        code, res = graph_Service.get_graph_info_basic(self.graphid, True, self.key, self.uuid)
+        code, res = graph_Service.get_graph_info_basic(self.graphid, True, self.key)
         self.assertEqual(code, codes.successCode)
 
     def test_get_graph_info_basic_fail1(self):
         '''Builder.GraphService.GetGraphInfoBasic.GraphidNotExist'''
         res = pd.DataFrame([], columns=self.res_get_knowledge_graph_by_id_column)
         graph_dao.get_knowledge_graph_by_id = mock.Mock(return_value=res)
-        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, self.key, self.uuid)
+        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, self.key)
         self.assertEqual(code, codes.Builder_GraphService_GetGraphInfoBasic_GraphidNotExist)
 
     def test_get_graph_info_basic_fail2(self):
         '''Builder.GraphService.GetGraphInfoBasic.GraphDBIdNotExist'''
         res = pd.DataFrame([], columns=self.res_getGraphDBNew_column)
         graph_dao.getGraphDBNew = mock.Mock(return_value=res)
-        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, self.key, self.uuid)
+        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, self.key)
         self.assertEqual(code, codes.Builder_GraphService_GetGraphInfoBasic_GraphDBIdNotExist)
-
-    def test_get_graph_info_basic_fail3(self):
-        '''Builder.GraphService.GetGraphInfoBasic.PermissionError'''
-        manager_list = {'cause': 'cause', 'solution': 'solution'}
-        status = 400
-        managerutils.get_otlDsList = mock.Mock(return_value=(manager_list, status))
-        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, self.key, self.uuid)
-        self.assertEqual(code, codes.Builder_GraphService_GetGraphInfoBasic_PermissionError)
 
     def test_get_graph_info_basic_fail4(self):
         '''Builder.GraphService.GetGraphInfoBasic.UnsupportedKeyExist'''
-        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, '["unsupported"]', self.uuid)
+        code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, '["unsupported"]')
         self.assertEqual(code, codes.Builder_GraphService_GetGraphInfoBasic_UnsupportedKeyExist)
 
 
@@ -132,12 +107,12 @@ class TestGetGraphInfoOnto(unittest.TestCase):
         self.graphid = 118
         # mock graph_dao.getbyid
         graph_dao.getbyid = mock.Mock
-        self.res_graph_dao_getbyid_column = ['id', 'create_user', 'create_time', 'update_user', 'update_time',
+        self.res_graph_dao_getbyid_column = ['id', 'create_time', 'update_time',
                                              'graph_name', 'graph_status', 'graph_baseInfo', 'graph_ds', 'graph_otl',
                                              'graph_otl_temp', 'graph_InfoExt', 'graph_KMap', 'graph_KMerge',
                                              'rabbitmq_ds', 'graph_db_id', 'upload', 'step_num', 'is_upload']
-        row = [[118, '853ba1db-4e37-11eb-a57d-0242ac190002',
-                '2022-07-12 23:36:03', '853ba1db-4e37-11eb-a57d-0242ac190002',
+        row = [[118,
+                '2022-07-12 23:36:03',
                 '2022-07-13 13:16:30', '1111', 'finish',
                 "[{'graph_Name': '1111', 'graph_des': '', 'graph_db_id': 5, 'graphDBAddress': '10.4.133.125;10.4.131.18;10.4.131.25', 'graph_mongo_Name': 'mongoDB-118', 'graph_DBName': 'u4d1b761a01f811edb7079af371d61d07'}]",
                 '[101]', '[250]', '[]',
@@ -148,11 +123,11 @@ class TestGetGraphInfoOnto(unittest.TestCase):
         res = pd.DataFrame(row, columns=self.res_graph_dao_getbyid_column)
         graph_dao.getbyid = mock.Mock(return_value=res)
         # mock otl_dao.getbyid
-        self.res_otl_dao_getbyid_column = ['id', 'create_user', 'create_time', 'update_user', 'update_time',
+        self.res_otl_dao_getbyid_column = ['id', 'create_time', 'update_time',
                                            'ontology_name', 'ontology_des', 'otl_status', 'entity', 'edge',
                                            'used_task', 'all_task']
-        row = [[250, '853ba1db-4e37-11eb-a57d-0242ac190002',
-                '2022-07-12 23:36:18', '853ba1db-4e37-11eb-a57d-0242ac190002',
+        row = [[250,
+                '2022-07-12 23:36:18',
                 '2022-07-18 09:38:41', '11111', '', 'available',
                 "[{'entity_id': 1, 'colour': '#5F81D8', 'ds_name': 'ASToken通道测试_结构化2', 'dataType': 'structured', 'data_source': 'as7', 'ds_path': '黄思祺(Alice)', 'ds_id': '101', 'extract_type': 'standardExtraction', 'name': 'industry_info', 'source_table': [['gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/3D77695B9C1641398944920D7B6D921E', 'industry_info.csv', '黄思祺（Alice）/测试用例/industry_info.csv']], 'source_type': 'automatic', 'properties': [['name', 'string'], ['industry_name', 'string'], ['subindustry_name', 'string'], ['industry_level', 'string'], ['industry_status', 'string'], ['industry_id', 'string']], 'file_type': 'csv', 'task_id': '18', 'properties_index': ['name'], 'model': '', 'ds_address': 'https://anyshare.aishu.cn', 'alias': 'industry_info'}, {'entity_id': 2, 'colour': '#D8707A', 'ds_name': 'ASToken通道测试_结构化2', 'dataType': 'structured', 'data_source': 'as7', 'ds_path': '黄思祺(Alice)', 'ds_id': '101', 'extract_type': 'standardExtraction', 'name': 'sub_industry_info', 'source_table': [['gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/66EDF458B6E54F53BDCD955EBEC88292', 'sub_industry_info.csv', '黄思祺（Alice）/测试用例/sub_industry_info.csv']], 'source_type': 'automatic', 'properties': [['name', 'string'], ['sub_industry_id', 'string'], ['subindustry_name', 'string'], ['industry_level', 'string'], ['industry_status', 'string']], 'file_type': 'csv', 'task_id': '19', 'properties_index': ['name'], 'model': '', 'ds_address': 'https://anyshare.aishu.cn', 'alias': 'sub_industry_info'}, {'entity_id': 3, 'colour': '#D8707A', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'ss', 'source_table': [], 'source_type': 'manual', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': '', 'ds_address': '', 'alias': 'ss'}]",
                 "[{'edge_id': 1, 'colour': '#5F81D8', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_id': '', 'extract_type': '', 'name': 'industry_info_2_sub_industry_info', 'source_table': [], 'source_type': 'manual', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': '', 'relations': ['industry_info', 'industry_info_2_sub_industry_info', 'sub_industry_info'], 'ds_address': '', 'alias': 'industry_info_2_sub_industry_info'}, {'edge_id': 2, 'colour': '#5C539B', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_id': '', 'extract_type': '', 'name': 'ss_2_industry_info', 'source_table': [], 'source_type': 'manual', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': '', 'relations': ['ss', 'ss_2_industry_info', 'industry_info'], 'ds_address': '', 'alias': 'ss_2_industry_info'}]",
@@ -185,12 +160,12 @@ class TestGetGraphInfoCount(unittest.TestCase):
         self.graphid = 118
         # mock graph_dao.getbyid
         graph_dao.getbyid = mock.Mock
-        self.res_getbyid_column = ['id', 'create_user', 'create_time', 'update_user', 'update_time',
+        self.res_getbyid_column = ['id', 'create_time', 'update_time',
                                    'graph_name', 'graph_status', 'graph_baseInfo', 'graph_ds', 'graph_otl',
                                    'graph_otl_temp', 'graph_InfoExt', 'graph_KMap', 'graph_KMerge',
                                    'rabbitmq_ds', 'graph_db_id', 'upload', 'step_num', 'is_upload']
-        row = [[118, '853ba1db-4e37-11eb-a57d-0242ac190002',
-                '2022-07-12 23:36:03', '853ba1db-4e37-11eb-a57d-0242ac190002',
+        row = [[118,
+                '2022-07-12 23:36:03',
                 '2022-07-13 13:16:30', '1111', 'finish',
                 "[{'graph_Name': '1111', 'graph_des': '', 'graph_db_id': 5, 'graphDBAddress': '10.4.133.125;10.4.131.18;10.4.131.25', 'graph_mongo_Name': 'mongoDB-118', 'graph_DBName': 'u4d1b761a01f811edb7079af371d61d07'}]",
                 '[101]', '[250]', '[]',
@@ -230,12 +205,12 @@ class TestGetGraphInfoDetail(unittest.TestCase):
         self.type = 'entity'
         self.name = 'industry_info'
         # mock graph_dao.getbyid
-        self.res_getbyid_column = ['id', 'create_user', 'create_time', 'update_user', 'update_time',
+        self.res_getbyid_column = ['id', 'create_time', 'update_time',
                                    'graph_name', 'graph_status', 'graph_baseInfo', 'graph_ds', 'graph_otl',
                                    'graph_otl_temp', 'graph_InfoExt', 'graph_KMap', 'graph_KMerge',
                                    'rabbitmq_ds', 'graph_db_id', 'upload', 'step_num', 'is_upload']
-        row = [[118, '853ba1db-4e37-11eb-a57d-0242ac190002',
-                '2022-07-12 23:36:03', '853ba1db-4e37-11eb-a57d-0242ac190002',
+        row = [[118,
+                '2022-07-12 23:36:03',
                 '2022-07-13 13:16:30', '1111', 'finish',
                 "[{'graph_Name': '1111', 'graph_des': '', 'graph_db_id': 5, 'graphDBAddress': '10.4.133.125;10.4.131.18;10.4.131.25', 'graph_mongo_Name': 'mongoDB-118', 'graph_DBName': 'u4d1b761a01f811edb7079af371d61d07'}]",
                 '[101]', '[250]', '[]',

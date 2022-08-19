@@ -2,7 +2,6 @@
 # @Time    : 2020/11/2 13:54
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
-from config.config import permission_manage
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
 import arrow
 import pandas as pd
@@ -215,20 +214,22 @@ class TaskDao(object):
         if task_type != 'all':
             limit_str += f" and task_type='{task_type}'"
         sql = """
-                   SELECT  a1.`email`AS update_user_email ,a1.`name`AS update_user_name,h.create_user as update_user,
-                   h.* FROM graph_task_history_table  AS h
-                   LEFT JOIN account a1 ON a1.uuid=h.create_user 
-                   where graph_id = {0}{3}  order by start_time  Desc limit {1}, {2};
-                   """
+            SELECT *
+            FROM graph_task_history_table
+            where
+              graph_id = {0}
+              {3}
+            order by start_time Desc
+            limit {1}, {2};"""
         if order == "descend":
             sql = """
-              SELECT  a1.`email`AS update_user_email ,a1.`name`AS update_user_name,h.create_user as update_user,
-              h.* FROM graph_task_history_table  AS h
-              LEFT JOIN account a1 ON a1.uuid=h.create_user 
-              where graph_id = {0}{3}  order by start_time  asc limit {1}, {2};
-
-                    """
-        # user = '"' + user + '"'
+                SELECT *
+                FROM graph_task_history_table
+                where
+                  graph_id = {0}
+                  {3}
+                order by start_time asc
+                limit {1}, {2};"""
         status = '"' + graph_id + '"'
         sql = sql.format(status, page * size, size, limit_str)
         Logger.log_info(sql)
@@ -308,21 +309,13 @@ class TaskDao(object):
     @connect_execute_close_db
     def gettaskbyid(self, id, connection, cursor):
         sql = """
-        SELECT
-            a1.`email` AS create_user_email,
-            a1.`name` AS create_user_name,
-            h.*
-        FROM
-            graph_task_table AS h
-            LEFT JOIN account a1 ON a1.uuid=h.create_user
-        where
-            h.graph_id = %s""" % (id)
-        # sql = sql.format()
+            SELECT *
+            FROM graph_task_table
+            where graph_id = %s""" % (id)
         df = pd.read_sql(sql, connection)
-        # data=df.to_dict()
         return df
-        # 根据图谱id获得历史数据
 
+     # 根据图谱id获得历史数据
     @connect_execute_close_db
     def gethistortbytaskid(self, task_id, connection, cursor, ):
         sql = """SELECT id FROM graph_task_history_table where task_id = %s""" % ('"' + task_id + '"')
@@ -393,8 +386,6 @@ class TaskDao(object):
         from service.graph_Service import graph_Service
 
         ret_code, obj = graph_Service.getGraphById(graph_id, "")
-        # sql = """select * from KDB where ip in (SELECT KDB_ip FROM KG WHERE Kg_config_id = %s )  """ % (graph_id)
-        # df = pd.read_sql(sql, connection)
         return obj["res"]
 
     def getotlnum(self, graph_otl):
@@ -450,13 +441,12 @@ class TaskDao(object):
         values_list.append(params_json["task_id"])
         values_list.append(status)
         values_list.append(params_json["create_time"])
-        values_list.append(params_json["create_user"])
         # values_list.append(params_json["user_email"])
         values_list.append(str(error_report))
         values_list.append(params_json.get("task_type", ""))
         values_list.append(params_json.get("trigger_type", 0))
         sql = """INSERT INTO graph_task_table (graph_id, graph_name, task_id, task_status,create_time,
-                  create_user,error_report,task_type,trigger_type) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+                  error_report,task_type,trigger_type) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
         new_id = cursor.lastrowid
         values_list = [status, str(error_report), task_id]
@@ -489,21 +479,6 @@ class TaskDao(object):
     @connect_execute_commit_close_db
     def update_history(self, graph_id, task_data, connection, cursor):
         values_list = []
-        # values_list.append(graph_id)
-        # values_list.append(task_data["graph_name"])
-        # values_list.append(task_data["task_id"])
-        # values_list.append(task_data["task_status"])
-        #
-        # values_list.append(task_data["create_user"])
-        # values_list.append(task_data["create_time"])
-        # # 结束时间
-        # task_json = self.getredisbytaskid(task_data["task_id"])
-        # "2020-11-24 11:36:40.763514"
-        # date_done = task_json["date_done"]
-        # date_done = date_done.split(".")[0]
-        # UTC_FORMAT = "%Y-%m-%dT%H:%M:%S"
-        # utcTime = datetime.datetime.strptime(date_done, UTC_FORMAT)
-        # end_time = utcTime + datetime.timedelta(hours=8)
         values_list.append(task_data["end_time"])
         # 实体数量
         # 图谱数量
@@ -540,9 +515,6 @@ class TaskDao(object):
         print(str(task_data["error_report"]))
         values_list.append(str(task_data["error_report"]))
         values_list.append(task_data["task_id"])
-        # values_list.append(task_data.get("task_type", ""))
-        # values_list.append(task_data.get("trigger_type", 0))
-        # values_list.append(task_data["user_email"])
         print(values_list)
         sql = """UPDATE graph_task_history_table SET end_time=%s,all_num=%s,entity_num=%s,edge_num=%s,entity_pro_num=%s,
                   edge_pro_num=%s,graph_edge=%s,graph_entity=%s,error_report=%s  where task_id = %s"""
@@ -561,17 +533,15 @@ class TaskDao(object):
         values_list.append(params_json["task_id"])
         values_list.append(params_json["task_status"])
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
-        values_list.append(params_json["create_user"])
         values_list.append(params_json["task_type"])
         values_list.append(params_json["trigger_type"])
-        # values_list.append(params_json["user_email"])
         sql = """INSERT INTO graph_task_table (graph_id, graph_name, task_id, task_status,create_time,
-                  create_user,task_type,trigger_type) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"""
+                  task_type,trigger_type) VALUES(%s,%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
         new_id = cursor.lastrowid
         # 插入历史记录表
         sql = """INSERT INTO graph_task_history_table (graph_id, graph_name, task_id, task_status,start_time,
-                  create_user,task_type,trigger_type) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"""
+                  task_type,trigger_type) VALUES(%s,%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
         return new_id
 
@@ -609,11 +579,20 @@ class TaskDao(object):
             limit_str += f" and task_his.trigger_type={trigger_type}"
         limit_str += f" and graph_name collate utf8_general_ci like '%{graph_name}%'"
         order_map = {"descend": "desc", "ascend": "asc"}
-        sql = f"""SELECT task_his.*,a1.email as update_user_email,a1.name as update_user_name,kg.KG_config_id as kg_id 
-                 FROM graph_task_history_table  task_his LEFT JOIN account a1 ON a1.uuid=task_his.create_user 
-                  left join knowledge_graph kg on kg.KG_config_id=task_his.graph_id
-                 where  graph_id={graph_id} {limit_str}
-             order by start_time {order_map[order]} limit {page * size}, {size}"""
+        sql = f"""
+            SELECT
+              task_his.*,
+              kg.KG_config_id as kg_id
+            FROM
+              graph_task_history_table task_his
+              left join knowledge_graph kg on kg.KG_config_id = task_his.graph_id
+            where
+              graph_id = {graph_id} {limit_str}
+            order by
+              start_time {order_map[order]}
+            limit
+              {page * size},
+              {size}"""
         df = pd.read_sql(sql, connection)
         return df
 
@@ -622,18 +601,6 @@ class TaskDao(object):
     def getRunByid(self, graph_id, connection, cursor, ):
         sql = """SELECT * FROM graph_task_table where (task_status="running" OR  task_status="waiting") and  graph_id=%s	"""
         sql = sql % ('"' + graph_id + '"')
-        df = pd.read_sql(sql, connection)
-        return df
-
-    # 获得正在运行的任务
-    @connect_execute_close_db
-    def getRunCount(self, kgIds, connection, cursor, ):
-        condition = "  "
-        if permission_manage:
-            condition = " graph_id in ({}) AND ".format(",".join(map(str, kgIds)))
-        sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS update_user_name FROM graph_task_table AS task_table
-                LEFT JOIN account a1 ON a1.uuid=task_table.create_user 
-                 where """ + condition + """ (task_status="running" or  task_status="waiting") """
         df = pd.read_sql(sql, connection)
         return df
 

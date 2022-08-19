@@ -13,7 +13,6 @@ class knwDao:
     @connect_execute_commit_close_db
     def insert_knowledgeNetwork(self, params_json, cursor, connection):
         print("entry in save")
-        creator_id = request.headers.get("uuid")  # 创建者id
         values_list = []
         values_list.append(params_json["knw_name"])
         if "knw_des" not in params_json.keys():
@@ -21,8 +20,6 @@ class knwDao:
         else:
             values_list.append(params_json["knw_des"])
         values_list.append(params_json["knw_color"])
-        values_list.append(creator_id)
-        values_list.append(creator_id)
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         identify_id = str(uuid.uuid1())
@@ -30,8 +27,9 @@ class knwDao:
         print(values_list)
 
         sql = """
-                INSERT INTO knowledge_network (knw_name, knw_description, color, creator_id, final_operator, 
-                creation_time, update_time,identify_id) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)
+                INSERT INTO knowledge_network 
+                    (knw_name, knw_description, color, creation_time, update_time, identify_id) 
+                VALUES(%s, %s, %s, %s, %s, %s)
                 """
         cursor.execute(sql, values_list)
         new_id = cursor.lastrowid
@@ -39,31 +37,23 @@ class knwDao:
 
     # 分页查询知识网络,knw_name为”“时查询全部
     @connect_execute_close_db
-    def get_knw_by_name(self, knw_name, page, size, order, rule, knw_ids, connection, cursor):
-        uuid = request.headers.get("uuid")
+    def get_knw_by_name(self, knw_name, page, size, order, rule, connection, cursor):
         if order == "desc":
             sql = """
-                      SELECT knw.*, a1.name AS creator_name, a1.email AS creator_email, a2.name AS operator_name, a2.email AS operator_email
-                      FROM knowledge_network knw left join account a1 on a1.uuid=knw.creator_id
-                      left join account a2 on a2.uuid=knw.final_operator
-                      where (knw.id in ({0}) or creator_id={1}) and knw_name like {2}
-                      order by {3} desc limit {4}, {5};
-                            """
+                SELECT *
+                FROM knowledge_network
+                where knw_name like {0}
+                order by {1} desc
+                limit {2}, {3};"""
         else:
             sql = """
-                      SELECT knw.*, a1.name AS creator_name, a1.email AS creator_email, a2.name AS operator_name, a2.email AS operator_email
-                      FROM knowledge_network knw left join account a1 on a1.uuid=knw.creator_id
-                      left join account a2 on a2.uuid=knw.final_operator
-                      where (knw.id in ({0}) or creator_id={1}) and knw_name like {2}
-                      order by {3} asc limit {4}, {5};
-                            """
+                SELECT *
+                FROM knowledge_network
+                where knw_name like {0}
+                order by {1} asc
+                limit {2}, {3};"""
         knw_name = "'%" + knw_name + "%'"
-        uuid = '"' + uuid + '"'
-        if len(knw_ids) <= 0:
-            sql = sql.format("null", uuid, knw_name, rule, page * size, size)
-        else:
-            sql = sql.format(",".join(map(str, knw_ids)), uuid, knw_name, rule, page * size, size)
-        print(sql)
+        sql = sql.format(knw_name, rule, page * size, size)
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df
@@ -71,7 +61,6 @@ class knwDao:
     # 编辑知识网络
     @connect_execute_commit_close_db
     def edit_knw(self, params_json, cursor, connection):
-        operator_id = request.headers.get("uuid")
         values_list = []
         values_list.append(params_json["knw_name"])
         if "knw_des" not in params_json.keys():
@@ -79,11 +68,10 @@ class knwDao:
         else:
             values_list.append(params_json["knw_des"])
         values_list.append(params_json["knw_color"])
-        values_list.append(operator_id)
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(params_json["knw_id"])
 
-        sql = """UPDATE knowledge_network SET knw_name=%s, knw_description=%s, color=%s, final_operator=%s, update_time=%s WHERE id=%s """
+        sql = """UPDATE knowledge_network SET knw_name=%s, knw_description=%s, color=%s, update_time=%s WHERE id=%s """
         cursor.execute(sql, values_list)
         update_id = cursor.lastrowid
         return update_id
@@ -140,25 +128,11 @@ class knwDao:
         df = pd.read_sql(sql, connection)
         return df
 
-    # 根据创建者uuid查找知识网络
-    @connect_execute_close_db
-    def get_knw_by_uuid(self, connection, cursor):
-        uuid = request.headers.get("uuid")
-        sql = """
-                SELECT * FROM knowledge_network WHERE creator_id={};        
-                """
-        uuid = '"' + uuid + '"'
-        sql = sql.format(uuid)
-        Logger.log_info(sql)
-        df = pd.read_sql(sql, connection)
-        return df
-
     # 根据知识网络ID查询全部知识图谱
     @connect_execute_close_db
-    def get_all_graph(self, knw_id, graph_ids, graph_name, upload_graph, config_id_map, connection, cursor):
-        graph_ids = ",".join(map(str, graph_ids))
+    def get_all_graph(self, knw_id, graph_name, upload_graph, connection, cursor):
         join_str = ""
-        limit_str = f" and gc.id in ({graph_ids})" if graph_ids else ""
+        limit_str = ""
         if upload_graph:
             join_str = "join graph_task_table gtt on gc.id = gtt.graph_id " \
                        "join graph_db on gc.graph_db_id = graph_db.id"
@@ -181,23 +155,13 @@ class knwDao:
                     and gc.graph_name collate utf8_general_ci like '%{graph_name}%'"""
         df = pd.read_sql(sql, connection)
         rec_list = df.to_dict('records')
-        rec_list_new = []
-        for index, row in enumerate(rec_list):
-            KG_config_id = row['id']
-            propertyId = config_id_map[KG_config_id]
-            if upload_graph:
-                if propertyId <= 3:
-                    rec_list_new.append(rec_list[index])
-            else:
-                rec_list_new.append(rec_list[index])
-        return rec_list_new
+        return rec_list
 
     # 根据知识网络ID分页查询知识图谱
     @connect_execute_close_db
-    def get_graph_by_knw(self, knw_id, graph_ids, page, size, order_type, graph_name, rule, config_id_map, upload_graph,
+    def get_graph_by_knw(self, knw_id, page, size, order_type, graph_name, rule, upload_graph,
                          connection, cursor):
-        graph_ids = ",".join(map(str, graph_ids))
-        limit_str = f" and kg.KG_config_id in ({graph_ids})" if graph_ids else ""
+        limit_str = ""
         join_str = ""
         if upload_graph:
             join_str = """left join graph_db on gc.graph_db_id = graph_db.id"""
@@ -220,18 +184,12 @@ class knwDao:
                 kg.`hlStart`,
                 kg.`hlEnd`,
                 kg.`update_time` as `updateTime`,
-                a1.`name` as `createUser`,
-                a1.`email` as `createEmail`,
-                a2.`name` as `updateUser`,
-                a2.`email` as updateEmail,
                 gc.graph_otl,
                 gc.step_num
             from
                 knowledge_graph kg
                 LEFT JOIN graph_task_table gt ON kg.KG_config_id = gt.graph_id
                 LEFT JOIN graph_config_table gc ON kg.KG_config_id = gc.id
-                LEFT JOIN account a1 ON a1.uuid = kg.create_user
-                LEFT JOIN account a2 ON a2.uuid = kg.update_user
                 {join_str}
             where
                 kg.KG_config_id in (
@@ -311,11 +269,9 @@ class knwDao:
             graph_id = export_row['id']
             graph_db_type = export_row['type']
             export_map[graph_id] = graph_db_type
-        rec_list_new = []
         for index, row in enumerate(rec_list):
             export = False
             KG_config_id = row['kgconfid']
-            propertyId = config_id_map[KG_config_id]
             taskstatus = row['taskstatus']
             graph_db_type = export_map[KG_config_id]
             if taskstatus == 'normal' and graph_db_type == 'nebula':
@@ -331,7 +287,6 @@ class knwDao:
             rec_list[index]['display_task'] = display_task
             rec_list[index]['advConf'] = advconf
             rec_list[index]['is_import'] = is_import
-            rec_list[index]['propertyId'] = propertyId
             is_upload = True if KG_config_id in upload_list else False
             rec_list[index]['is_upload'] = is_upload
             graph_baseInfo = eval(row['graph_baseInfo'])
@@ -340,13 +295,6 @@ class knwDao:
                 kgDesc = graph_baseInfo[0]['graph_des']
             rec_list[index]['kgDesc'] = kgDesc
             rec_list[index]['otl_id'] = otl_id
-            # 导入导出和上传只有编辑者才有权限
-            if upload_graph:
-                if propertyId <= 3:
-                    rec_list_new.append(rec_list[index])
-            else:
-                rec_list_new.append(rec_list[index])
-        rec_list = rec_list_new
         asModel = False
         if otl_ids:
             otl_ids = list(set(otl_ids))
@@ -376,14 +324,6 @@ class knwDao:
             del rec_list[index]['graph_otl']
         return rec_list
 
-    # 根据知识网络ID查找其创建者
-    @connect_execute_close_db
-    def get_creator(self, knw_id, connection, cursor):
-        sql = """select creator_id from knowledge_network where id={};"""
-        sql = sql.format(knw_id)
-        df = pd.read_sql(sql, connection)
-        return df
-
     # 根据知识网络ID查找关系表
     @connect_execute_close_db
     def get_relation(self, knw_id, connection, cursor):
@@ -410,12 +350,11 @@ class knwDao:
 
     # 更新知识网络
     @connect_execute_commit_close_db
-    def update_knw(self, uuid, graph_id, connection, cursor):
-        values_list = [uuid,
-                       arrow.now().format('YYYY-MM-DD HH:mm:ss'),
+    def update_knw(self, graph_id, connection, cursor):
+        values_list = [arrow.now().format('YYYY-MM-DD HH:mm:ss'),
                        graph_id]
         sql = """
-                update knowledge_network set final_operator=%s ,update_time=%s where id=
+                update knowledge_network set update_time=%s where id=
                 (select knw_id from network_graph_relation where graph_id=%s);
             """
         cursor.execute(sql, values_list)
@@ -438,17 +377,12 @@ class knwDao:
         return df
 
     @connect_execute_close_db
-    def get_count(self, knw_name, knw_ids, connection, cursor):
-        uuid = request.headers.get("uuid")
+    def get_count(self, knw_name, connection, cursor):
         sql = """
-                  SELECT id FROM knowledge_network where (id in ({0}) or creator_id={1}) and knw_name like {2};
+                  SELECT id FROM knowledge_network where knw_name like {0};
                         """
         knw_name = "'%" + knw_name + "%'"
-        uuid = '"' + uuid + '"'
-        if len(knw_ids) <= 0:
-            sql = sql.format("null", uuid, knw_name)
-        else:
-            sql = sql.format(",".join(map(str, knw_ids)), uuid, knw_name)
+        sql = sql.format(knw_name)
         print(sql)
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)

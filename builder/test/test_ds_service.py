@@ -15,9 +15,8 @@ class Test_addds(TestCase):
         self.host_url = ""
 
         # mock knw_dao.get_knw_by_id
-        ret_row = [[1, "test1", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-                    "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        ret_row = [[1, "test1", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc", "2022-04-19 09:24:45"]]
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
@@ -40,7 +39,7 @@ class Test_addds(TestCase):
     def test_not_find_knw(self):
         # mock knw_dao.get_knw_by_id
         ret_row = []
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
@@ -77,36 +76,35 @@ class Test_getall(TestCase):
         dsm_dao.getCountByKnwId = mock.Mock(return_value=5)
 
         # mock knw_dao.get_knw_by_id
-        ret_row = [[1, "test1", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-                    "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        ret_row = [[1, "test1", "des", "#126EE3", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
 
         # mock dsm_dao.getall
-        ret_row = [["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 23, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-                    "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql",
+        ret_row = [[23,
+                    "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql",
                     "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
                     "null", "", "", "", 32],
-                   ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 24, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-                    "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql",
+                   [24,
+                    "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql",
                     "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
                     "null", "", "", "", 32],
-                   ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 25, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-                    "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql",
+                   [25,
+                    "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql",
                     "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
                     "null", "", "", "", 32],
-                   ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 26, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-                    "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql",
+                   [26,
+                    "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql",
                     "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
                     "null", "", "", "", 32],
-                   ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 27, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-                    "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql",
+                   [27,
+                    "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql",
                     "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
                     "null", "", "", "", 32]]
-        column = ["create_user_email", "create_user_name", "update_user_email", "update_user_name", "id", "create_user",
-                  "create_time", "update_user", "update_time", "dsname", "dataType", "data_source", "ds_user",
+        column = ["id",
+                  "create_time", "update_time", "dsname", "dataType", "data_source", "ds_user",
                   "ds_password", "ds_address", "ds_port", "ds_path", "extract_type", "ds_auth", "vhost", "queue",
                   "json_schema", "knw_id"]
         ret = pd.DataFrame(ret_row, columns=column)
@@ -121,7 +119,7 @@ class Test_getall(TestCase):
     def test_not_find_knw(self):
         # mock knw_dao.get_knw_by_id
         ret_row = []
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
@@ -144,9 +142,8 @@ class Test_getbydsname(TestCase):
         self.host_url = ""
 
         # mock knw_dao.get_knw_by_id
-        ret_row = [[1, "test1", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-                    "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        ret_row = [[1, "test1", "des", "#126EE3", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
@@ -156,28 +153,28 @@ class Test_getbydsname(TestCase):
 
         # mock dsm_dao.getallbyname
         ret_row = [
-            ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 23, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-             "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql1",
+            [23,
+             "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql1",
              "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
              "null", "", "", "", 32],
-            ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 24, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-             "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql2",
+            [24,
+             "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql2",
              "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
              "null", "", "", "", 32],
-            ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 25, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-             "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql3",
+            [25,
+             "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql3",
              "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
              "null", "", "", "", 32],
-            ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 26, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-             "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql4",
+            [26,
+             "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql4",
              "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
              "null", "", "", "", 32],
-            ["Eden.jiang@aishu.cn", "Eden", "Eden.jiang@aishu.cn", "Eden", 27, "d53e2bc8-b702-11ec-900d-46cafb76d0dc",
-             "2022-04-19 10:17:42", "d53e2bc8-b702-11ec-900d-46cafb76d0dc", "2022-04-19 10:17:42", "mysql5",
+            [27,
+             "2022-04-19 10:17:42", "2022-04-19 10:17:42", "mysql5",
              "structured", "mysql", "root", "RWlzb29AMTIz", "10.240.0.125", 3306, "kom", "standardExtraction",
              "null", "", "", "", 32]]
-        column = ["create_user_email", "create_user_name", "update_user_email", "update_user_name", "id", "create_user",
-                  "create_time", "update_user", "update_time", "dsname", "dataType", "data_source", "ds_user",
+        column = ["id",
+                  "create_time", "update_time", "dsname", "dataType", "data_source", "ds_user",
                   "ds_password", "ds_address", "ds_port", "ds_path", "extract_type", "ds_auth", "vhost", "queue",
                   "json_schema", "knw_id"]
         ret = pd.DataFrame(ret_row, columns=column)
@@ -192,7 +189,7 @@ class Test_getbydsname(TestCase):
     def test_not_find_knw(self):
         # mock knw_dao.get_knw_by_id
         ret_row = []
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
@@ -271,9 +268,8 @@ class Test_delete(TestCase):
         self.host_url = ""
 
         # mock dsm_dao.getbyids
-        ret_row = [[1, "test1", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-                    "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        ret_row = [[1, "test1", "des", "#126EE3", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         dsm_dao.getbyids = mock.Mock(return_value=ret)
@@ -294,7 +290,7 @@ class Test_delete(TestCase):
     def test_not_find_ds(self):
         # mock dsm_dao.getbyids
         ret_row = []
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         dsm_dao.getbyids = mock.Mock(return_value=ret)

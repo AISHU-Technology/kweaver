@@ -138,17 +138,3 @@ class CheckParameters(object):
             ret_status = cls.INVALID
             message = "请填写 ids"
         return ret_status, params_json, message
-
-    #  登录参数校验
-    @classmethod
-    def login_check(cls, g):
-        ret_status = cls.VALID
-        default_param_value = None
-        request_args_dict = g.request_info_dict['ARGS_DICT']
-        account = request_args_dict.get('account', default_param_value)
-        password = request_args_dict.get('password', default_param_value)
-
-        if account is None or password is None:
-            ret_status = cls.INVALID
-
-        return ret_status, request_args_dict

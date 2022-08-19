@@ -24,9 +24,6 @@ sys.path.append(os.path.abspath("../"))
 from service.task_Service import task_service
 from dao.task_dao import task_dao
 from dao.graph_dao import graph_dao
-from config.config import permission_manage
-from config.config import manager_ip
-from third_party_service.managerUtils import managerutils
 from utils.log_info import Logger
 
 
@@ -71,15 +68,10 @@ def start_task(graph_id, tasktype, trigger_type, right_task_type):
     df = obj_name["df"]
     df = df[0]
     params_json["graph_name"] = df["graph_name"]
-    username = request.headers.get("uuid")
-    # email = request.headers.get("email")
-    params_json["create_user"] = username  # 由token获得
-    # params_json["user_email"] = email
     params_json["graph_id"] = graph_id
     params_json["task_type"] = tasktype
     params_json["trigger_type"] = trigger_type
-    host_url = getHostUrl()
-    ret_code, obj = task_service.addtask(params_json, host_url)
+    ret_code, obj = task_service.addtask(params_json)
     task_dao.upKgstatus(graph_id, task_status)
     # 待做 更新配置的状态为不是编辑状态
     return ret_code, obj, task.id
@@ -177,30 +169,9 @@ def task():
 # 获取任务列表
 @celery_controller_app.route('/buildertask', methods=['GET'])
 def getalltask():
-    kgIds = []
-    propertyIds = []
-    obj = {}
-    # 任务列表权限过滤
-    if permission_manage:
-        uuid = request.args.to_dict().get("uuid")
-        res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=3)
-        if res_code != 200:
-            return jsonify({'res': res_message, "code": res_code})
-        if len(res_message) != 0:
-            for temp in res_message:
-                if int(temp["propertyId"]) <= 4:
-                    kgIds.append(temp["configId"])  # 可以看见的数据源id列表
-                    propertyIds.append(temp["propertyId"])
-        if len(kgIds) == 0:
-            obj["res"] = {"count": 0, "df": []}
-            return jsonify({"res": obj, "code": 200})
-
     # 参数由另一个服务处理
     params_json = request.args.to_dict()
-    params_json["kgIds"] = kgIds
-    params_json["propertyId"] = propertyIds
-    host_url = getHostUrl()
-    ret_code, obj = task_service.getalltask(params_json, host_url)
+    ret_code, obj = task_service.getalltask(params_json)
     return jsonify({'res': obj, "code": ret_code})
 
 
@@ -211,31 +182,6 @@ def getdetailbytaskid():
     host_url = getHostUrl()
     graph_id = params_json.get("graph_id")
     ret_code, obj = task_service.getdetailtask(graph_id, host_url)
-    return jsonify({'res': obj, "code": ret_code})
-
-
-# 获取正在运行和等待的任务
-@celery_controller_app.route('/get_run_task', methods=['GET'])
-def getrunningtask():
-    kgIds, propertyIds = [], []
-
-    if permission_manage:
-        uuid = request.headers.get("uuid")
-        res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=3)
-        if res_code != 200:
-            return jsonify({'res': res_message, "code": res_code})
-        if len(res_message) != 0:
-            for temp in res_message:
-                if int(temp["propertyId"]) <= 4:
-                    kgIds.append(temp["configId"])  # 可以看见的数据源id列表
-                    propertyIds.append(temp["propertyId"])
-        # if len(kgIds) == 0:
-        #     obj["res"] = {"count": 0, "df": []}
-        #     return jsonify({"res": obj, "code": 200})
-    params_json = request.args.to_dict()
-    params_json["kgIds"] = kgIds
-    host_url = getHostUrl()
-    ret_code, obj = task_service.getruntask(params_json, host_url)
     return jsonify({'res': obj, "code": ret_code})
 
 

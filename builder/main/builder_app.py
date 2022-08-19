@@ -36,10 +36,9 @@ logger = logging.getLogger(__name__)
 def before_request():
     path = request.path
     method = request.method
-    uuid = request.headers.get("uuid")
     print("path: ", path)
     print("method: ", method)
-    permission = Permission(uuid, method)
+    permission = Permission()
     # GET请求：返回所有图谱信息;
     # if path == "/api/builder/v1/graph/" and method == "GET":
     #     res_message, res_code = permission.graphGet()

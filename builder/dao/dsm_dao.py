@@ -2,7 +2,6 @@
 # @Time    : 2020/8/11 10:37
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
-from config.config import permission_manage
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
 import pymysql
 import pandas as pd
@@ -182,10 +181,6 @@ class DsmDao(object):
     def insertData(self, params_json, connection, cursor):
         """在data_source_table中新增数据源记录"""
         values_list = []
-        username = request.headers.get("uuid")
-        Logger.log_info("uuid :%s " % username)
-        values_list.append(username)  # 用户
-        values_list.append(username)
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(params_json["dsname"])
@@ -212,12 +207,12 @@ class DsmDao(object):
             # values_list.append(commonutil.EncryptBybase64(params_json["ds_password"]))
             values_list.append(params_json["ds_password"])
 
-            sql = """INSERT INTO data_source_table (create_user,update_user ,create_time,update_time, dsname, dataType,
-                   data_source,ds_address,ds_port,ds_path,extract_type,vhost, queue, json_schema, knw_id, ds_user,ds_password) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            sql = """INSERT INTO data_source_table (create_time,update_time, dsname, dataType,
+                   data_source,ds_address,ds_port,ds_path,extract_type,vhost, queue, json_schema, knw_id, ds_user,ds_password) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         else:
             values_list.append(params_json["ds_auth"])
-            sql = """INSERT INTO data_source_table (create_user,update_user , create_time,update_time, dsname, dataType,
-                               data_source,ds_address,ds_port,ds_path,extract_type,vhost, queue, json_schema, knw_id,ds_auth) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+            sql = """INSERT INTO data_source_table (create_time,update_time, dsname, dataType,
+                               data_source,ds_address,ds_port,ds_path,extract_type,vhost, queue, json_schema, knw_id,ds_auth) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
         Logger.log_info(sql)
         self.lastrowid = cursor.lastrowid
@@ -225,23 +220,15 @@ class DsmDao(object):
         return new_id
 
     @connect_execute_close_db
-    def getCountByKnwId(self, kgIds, knw_id, connection, cursor, ):
-        condition = " "
-        if permission_manage:
-            condition = """AND id IN ({})""".format(",".join(map(str, kgIds)))
-        sql = ("""SELECT id FROM data_source_table WHERE knw_id=%s """ % knw_id) + condition + """ ;"""
-        # sql = sql.format()
+    def getCountByKnwId(self, knw_id, connection, cursor, ):
+        sql = ("""SELECT id FROM data_source_table WHERE knw_id=%s; """ % knw_id)
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return len(df)
 
     @connect_execute_close_db
-    def getCount(self, kgIds, connection, cursor, ):
-        condition = " "
-        if permission_manage:
-            condition = """WHERE id in ({})""".format(",".join(map(str, kgIds)))
-        sql = """SELECT id FROM data_source_table """ + condition + """ ;"""
-        # sql = sql.format()
+    def getCount(self, connection, cursor, ):
+        sql = """SELECT id FROM data_source_table; """
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return len(df)
@@ -259,11 +246,7 @@ class DsmDao(object):
 
     @connect_execute_close_db
     def getbyids(self, ids, connection, cursor, ):
-        sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,d.* FROM data_source_table AS d 
-                    LEFT JOIN account a1 ON a1.uuid=d.create_user 
-                    LEFT JOIN account a2 ON a2.uuid=d.update_user  where d.id in (%s) """ % (
-            ",".join([str(id) for id in ids]))
-        # sql = sql.format()
+        sql = """SELECT * FROM data_source_table where id in (%s)"""
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df
@@ -324,11 +307,8 @@ class DsmDao(object):
         return df
 
     @connect_execute_close_db
-    def getCountbyname(self, dsname, kgIds, knw_id, connection, cursor, ):
-        condition = " "
-        if permission_manage:
-            condition = """ id in ({}) AND """.format(",".join(map(str, kgIds)))
-        sql = """SELECT id FROM data_source_table where knw_id={1} AND """ + condition + """ dsname collate utf8_general_ci like {0};"""
+    def getCountbyname(self, dsname, knw_id, connection, cursor, ):
+        sql = """SELECT id FROM data_source_table where knw_id={1} AND dsname collate utf8_general_ci like {0};"""
         dsname = '"%' + dsname + '%"'
         sql = sql.format(dsname, knw_id)
         Logger.log_info(sql)
@@ -339,84 +319,92 @@ class DsmDao(object):
     @connect_execute_commit_close_db
     def delete(self, ids, connection, cursor, ):
         sql1 = """DELETE FROM data_source_table WHERE id in (%s);""" % (",".join([str(id) for id in ids]))
-        sql2 = """DELETE FROM account_manager_graph WHERE manager_graph_id IN (SELECT id FROM manager_graph WHERE kg_id in ({}) AND type = 2);""".format(
-            ",".join([str(id) for id in ids]))
-        sql3 = """DELETE FROM manager_graph WHERE kg_id in ({}) AND type = 2""".format(
-            ",".join([str(id) for id in ids]))
-
         cursor.execute(sql1)
-        if permission_manage:
-            cursor.execute(sql2)
-            cursor.execute(sql3)
         new_id = cursor.lastrowid
         return new_id
 
     @connect_execute_close_db
-    def getall(self, page, size, order, kgIds, knw_id, connection, cursor):
-        condition1, condition2 = " ", " "
-        if permission_manage:
-            condition1 = """ AND id in  ({}) """.format(",".join(map(str, kgIds)))
-            if knw_id:
-                condition2 = """ WHERE d.knw_id={0} AND d.id in ({1}) """.format(knw_id, ",".join(map(str, kgIds)))
-            else:
-                condition2 = """ WHERE d.id in ({}) """.format(",".join(map(str, kgIds)))
+    def getall(self, page, size, order, knw_id, connection, cursor):
         if page == -2:
-            sql = """SELECT * , (CASE WHEN HEX(dsname) REGEXP "^([46][1-9]|[357][0-9]|[46][a-f]|[57]a|e[4-9][0-9a-f]{4})+" THEN 0 ELSE 1 END) AS sort FROM data_source_table WHERE dataType="structured " """ + condition1 + """ ORDER BY sort , CONVERT(dsname USING gbk)"""
+            sql = """
+                SELECT
+                  *,
+                  (
+                    CASE
+                      WHEN HEX(dsname) REGEXP "^([46][1-9]|[357][0-9]|[46][a-f]|[57]a|e[4-9][0-9a-f]{4})+" THEN 0
+                      ELSE 1
+                    END
+                  ) AS sort
+                FROM
+                  data_source_table
+                WHERE
+                  dataType = "structured "
+                ORDER BY
+                  sort,
+                  CONVERT(dsname USING gbk)"""
             df = pd.read_sql(sql, connection)
             Logger.log_info(sql)
             return df
         else:
             if order == "descend":
-                sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,d.* FROM data_source_table AS d 
-                LEFT JOIN account a1 ON a1.uuid=d.create_user 
-                LEFT JOIN account a2 ON a2.uuid=d.update_user""" \
-                      + condition2 + """ order by update_time asc limit {0}, {1};"""
+                sql = """
+                    SELECT *
+                    FROM
+                      data_source_table
+                    order by
+                      update_time asc
+                    limit
+                      {0}, {1};"""
             else:
-                sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,d.* FROM data_source_table AS d 
-                        LEFT JOIN account a1 ON a1.uuid=d.create_user 
-                        LEFT JOIN account a2 ON a2.uuid=d.update_user """ \
-                      + condition2 + """ order by update_time  Desc limit {0}, {1};"""
-            # user = '"' + user + '"'
+                sql = """
+                    SELECT *
+                    FROM
+                      data_source_table
+                    order by
+                      update_time Desc
+                    limit
+                      {0}, {1};"""
             sql = sql.format(page * size, size, knw_id)
             Logger.log_info(sql)
             df = pd.read_sql(sql, connection)
             return df
 
     @connect_execute_close_db
-    def getallbyname(self, dsname, page, size, order, kgIds, knw_id, connection, cursor):
-        condition = " "
-        ####SELECT a.email ,a.name , d.`dataType`,d.`data_source` FROM data_source_table AS d ,account AS a  WHERE a.uuid = d.`createuser`
-        if permission_manage:
-            condition = """ d.id in ({}) AND """.format(",".join(map(str, kgIds)))
-        sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,d.* FROM data_source_table AS d 
-                LEFT JOIN account a1 ON a1.uuid=d.create_user 
-                LEFT JOIN account a2 ON a2.uuid=d.update_user 
-                where  """ + condition + """ knw_id={3} AND d.dsname collate utf8_general_ci like {0}  
-                order by d.update_time  Desc limit {1}, {2};"""
+    def getallbyname(self, dsname, page, size, order, knw_id, connection, cursor):
+        sql = """
+            SELECT *
+            FROM
+              data_source_table
+            where
+              knw_id = {3}
+              AND dsname collate utf8_general_ci like {0}
+            order by
+              update_time Desc
+            limit
+              {1}, {2};"""
         if order == "descend":
-            sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,d.* FROM data_source_table AS d 
-                    LEFT JOIN account a1 ON a1.uuid=d.create_user 
-                    LEFT JOIN account a2 ON a2.uuid=d.update_user 
-                    where """ + condition + """ knw_id={3} AND d.dsname collate utf8_general_ci like {0}  
-                    order by d.update_time  asc limit {1}, {2}; """
-        # user = '"' + user + '"'
+            sql = """
+                SELECT *
+                FROM
+                  data_source_table
+                where
+                  knw_id = {3}
+                  AND dsname collate utf8_general_ci like {0}
+                order by
+                  update_time asc
+                limit
+                  {1}, {2};"""
         dsname = '"%' + dsname + '%"'
         sql = sql.format(dsname, page * size, size, knw_id)
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df
 
-    ##SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_name,d.*
-    ##FROM data_source_table AS d
-    ##LEFT JOIN account a1 ON a1.uuid=d.createuser
-    ##LEFT JOIN account a2 ON a2.uuid=d.updateuser ;
     @connect_execute_commit_close_db
     def update(self, id, params_json, connection, cursor):
         """数据源编辑"""
         values_list = []
         # 只修改 用户名密码
-        username = request.headers.get("uuid")
-        values_list.append(username)  # 用户
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(params_json["dsname"])
         values_list.append(params_json["dataType"])
@@ -447,23 +435,43 @@ class DsmDao(object):
 
         values_list.append(id)
 
-        # sql = """UPDATE data_source_table SET createuser=%s, updatetime=%s,ds_user=%s,
-        #         ds_password=%s  where dsname = %s"""
-        #
-        # sql = sql % ('"' + values_list[0] + '"',
-        #              '"' + values_list[1] + '"',
-        #              '"' + values_list[2] + '"',
-        #              '"' + values_list[3] + '"',
-        #              '"' + values_list[4]) + '"'
         if params_json["data_source"] != "as7":
-
-            sql = """UPDATE data_source_table SET update_user=%s, update_time=%s, dsname=%s ,dataType=%s,
-                   data_source=%s,ds_address=%s,ds_port=%s,ds_path=%s,extract_type=%s ,vhost=%s, queue=%s, json_schema=%s,ds_user=%s,ds_password=%s  where id = %s"""
+            sql = """
+                UPDATE
+                  data_source_table
+                SET
+                  update_time = %s,
+                  dsname = %s,
+                  dataType = %s,
+                  data_source = %s,
+                  ds_address = %s,
+                  ds_port = %s,
+                  ds_path = %s,
+                  extract_type = %s,
+                  vhost = %s,
+                  queue = %s,
+                  json_schema = %s,
+                  ds_user = %s,
+                  ds_password = %s
+                where
+                  id = %s """
         else:
-            sql = """UPDATE data_source_table SET update_user=%s, update_time=%s, dsname=%s ,dataType=%s,
-                               data_source=%s,ds_address=%s,ds_port=%s,ds_path=%s,extract_type=%s ,ds_auth=%s where id = %s"""
+            sql = """
+                UPDATE
+                  data_source_table
+                SET
+                  update_time = %s,
+                  dsname = %s,
+                  dataType = %s,
+                  data_source = %s,
+                  ds_address = %s,
+                  ds_port = %s,
+                  ds_path = %s,
+                  extract_type = %s,
+                  ds_auth = %s
+                where
+                  id = %s"""
         cursor.execute(sql, values_list)
-        # cursor.execute(sql)
         Logger.log_info(sql)
         new_id = cursor.lastrowid
         return new_id
@@ -525,37 +533,18 @@ class DsmDao(object):
         new_id = cursor.lastrowid
         return new_id
 
-    @connect_execute_commit_close_db
-    def getuseridbyname(self, username, connection, cursor):
-        sql = """SELECT id from account where name=%s""".format(username)
-        cursor.execute(sql)
-        Logger.log_info(sql)
-        userid = cursor.lastrowid
-        return userid
-
     @connect_execute_close_db
-    def getdsbyid(self, kgIds, connection, cursor):
-        condition1, condition2 = " ", " "
-        if permission_manage:
-            condition1 = """ WHERE d.id in ({}) """.format(",".join(map(str, kgIds)))
-            condition2 = """ AND dataType = "structured" """
-
-        sql = """SELECT a1.`email`AS create_user_email ,a1.`name`AS create_user_name, a2.`email`AS update_user_email,a2.`name` AS update_user_name,d.* FROM data_source_table AS d 
-                LEFT JOIN account a1 ON a1.uuid=d.create_user 
-                LEFT JOIN account a2 ON a2.uuid=d.update_user
-                """ + condition1 + condition2 + """ order by update_time """
+    def getdsbyid(self, connection, cursor):
+        sql = """
+            SELECT * FROM data_source_table
+            order by update_time"""
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df
 
     @connect_execute_close_db
-    def getCounts1(self, kgIds, connection, cursor, ):
-        condition1, condition2 = " ", " "
-        if permission_manage:
-            condition1 = """ WHERE id in ({}) """.format(",".join(map(str, kgIds)))
-            condition2 = """ AND dataType = "structured" """
-        sql = """SELECT id FROM data_source_table """ + condition1 + condition2 + """ ;"""
-        # sql = sql.format()
+    def getCounts1(self, connection, cursor):
+        sql = """SELECT id FROM data_source_table;"""
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return len(df)

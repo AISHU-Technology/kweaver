@@ -1135,12 +1135,7 @@ def query_subject_task(kg_id, **kwargs):
 @except_decorator()
 def search_subject_task(kg_id, **kwargs):
     search_type = kwargs["search_type"]
-    # ret_code, obj = graph_Service.getGraphById(kg_id, "")
-    # if ret_code != NORMAL_STATUS:
-    #     obj["code"] = CommonResponseStatus.KGID_NOT_EXIST.value
-    #     return ret_code, obj
     graph_info = graph_dao.getbyid(kg_id)
-    # tp = graph_info.to_dict()
     if graph_info.shape[0] == 0:
         return 500, {"message": "{} not exist!".format(kg_id),
                      "code": CommonResponseStatus.KGID_NOT_EXIST.value,

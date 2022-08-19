@@ -1428,7 +1428,6 @@ def get_graph_config_info(graphid):
     """
     读取graph_config_table内容， 获取图谱配置信息
     """
-    res_obj = {}
     sys.path.append(os.path.abspath("../"))
     from service.graph_Service import graph_Service
     ret_code, obj = graph_Service.getGraphById(graphid, "")
@@ -2415,15 +2414,11 @@ def buildertask(self, graphid, flag):
 
 
 @cel.task
-def send_builder_task(task_type, graph_id, user_id, trigger_type, cycle, task_id):
+def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
     url = "http://kg-builder:6485/buildertask"
     # url = "http://10.4.106.255:6485/buildertask" #本地测试
     payload = {"tasktype": task_type, "graph_id": graph_id, "trigger_type": trigger_type}
     print(f'start timer task,payload: {payload}')
-    headers = {
-        'Content-Type': 'application/json',
-        'uuid': user_id
-    }
     close_key = f'close_{graph_id}'
     try:
         # 定时任务需要进行任务注册防止同一时刻运行同一个图谱任务
@@ -2436,7 +2431,7 @@ def send_builder_task(task_type, graph_id, user_id, trigger_type, cycle, task_id
             if not status:
                 print(f"timer_task_id:{task_id} skip,the graph:{graph_id} task is runninig or waiting")
                 return
-        response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+        response = requests.request("POST", url, data=json.dumps(payload))
         res_json = response.json()
         code = res_json["code"]
         if code != 200:

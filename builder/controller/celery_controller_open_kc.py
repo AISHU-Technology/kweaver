@@ -227,7 +227,6 @@ def create_subject():
 @task_controller_open_kc.route('/subject/deletion', methods=["POST"], strict_slashes=False)
 def delete_subject():
     method = request.method
-    # uuid = request.headers.get("uuid")
     if method == "POST":
         param_code, params_json, param_message = commonutil.getMethodParam()
         if param_code == 0:
@@ -255,7 +254,6 @@ def delete_subject():
 @task_controller_open_kc.route('/subject/update', methods=["POST"], strict_slashes=False)
 def update_subject():
     method = request.method
-    # uuid = request.headers.get("uuid")
     if method == "POST":
         param_code, params_json, param_message = commonutil.getMethodParam()
         if param_code == 0:
@@ -290,7 +288,6 @@ def update_subject():
 @task_controller_open_kc.route('/subject/document', methods=["GET"], strict_slashes=False)
 def get_subject():
     method = request.method
-    # uuid = request.headers.get("uuid")
     if method == "GET":
         param_code, params_json, param_message = commonutil.getMethodParam()
         if param_code == 0:
@@ -320,7 +317,6 @@ def get_subject():
 @task_controller_open_kc.route('/subject/search', methods=["POST"], strict_slashes=False)
 def search_subject():
     method = request.method
-    # uuid = request.headers.get("uuid")
     if method == "POST":
         param_code, params_json, param_message = commonutil.getMethodParam()
         if param_code == 0:
@@ -356,7 +352,6 @@ def search_subject():
 @task_controller_open_kc.route('/subject/knowledge_graphs/search', methods=["POST"], strict_slashes=False)
 def search_kgs_subject():
     method = request.method
-    # uuid = request.headers.get("uuid")
     if method == "POST":
         param_code, params_json, param_message = commonutil.getMethodParam()
         if param_code == 0:

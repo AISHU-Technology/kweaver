@@ -3,10 +3,8 @@
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
 from config import config
-from config.config import permission_manage
 from service.Otl_Open_Service import otlOpenSerivice
 from service.Otl_Service import otl_service
-from third_party_service.managerUtils import managerutils
 from utils.ontology_check_params import otl_check_params
 import datetime
 from flask import Blueprint, request, jsonify
@@ -53,28 +51,6 @@ def get_table():
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
-        # 权限
-        flag = True
-        if permission_manage:
-            uuid = request.headers.get("uuid")
-            dsid = int(params_json["ds_id"])
-            # 调用manager接口获取数据源列表和属性
-            res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=2)
-            if res_code != 200:
-                return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                           message=res_message["message"]), res_code
-            kgIds = []
-            for temp in res_message:
-                if temp["propertyId"] == 1:
-                    kgIds.append(temp["configId"])
-
-            if dsid not in kgIds:
-                flag = False
-
-        if not flag:
-            return Gview.BuFailVreturn(cause="无权进行此操作！", code=CommonResponseStatus.PERMISSION_ERROR.value,
-                                       message="权限不足"), CommonResponseStatus.PERMISSION_DENIED.value
-
         ret_code, ret_message = otl_service.showtables(params_json)  ###########显示数据表####################
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             if ret_message["code"] == CommonResponseStatus.PARAMETERS_ERROR.value:
@@ -229,29 +205,12 @@ def predict_ontology():
 # 新建本体
 @ontology_controller_app.route('/saveontology', methods=["post"])
 def save_ontology():
-    uuid = request.headers.get("uuid")
     params_json = request.get_data()
     params_json = json.loads(params_json)
     ret_code, ret_message, onto_id = otl_service.ontology_save(params_json)
     if onto_id == -1:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-
-    if permission_manage:
-        # 增加资源
-        res_message, res_code = managerutils.add_resource(kg_id=onto_id, type=1, uuid=uuid)
-        if res_code != 200:
-            # 删除新增的资源记录
-            otl_dao.delete([onto_id])
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
-
-        # 调用manager接口增加默认权限
-        res_message, res_code = managerutils.add_permission(kg_id=onto_id, type=1, uuid=uuid)
-        if res_code != 200:
-            otl_dao.delete([onto_id])
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
     return ret_message, CommonResponseStatus.SUCCESS.value
 
 
@@ -303,7 +262,6 @@ def get_model_otl():
 @ontology_controller_app.route('/getotl', methods=["get"])
 def getall():
     method = request.method
-    uuid = request.headers.get("uuid")
     # 根据不同的请求方式请求方式获得参数并获取异常
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json, param_code)
@@ -316,18 +274,6 @@ def getall():
                 Logger.log_error("parameters:%s invalid" % params_json)
                 return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                            message=message), CommonResponseStatus.BAD_REQUEST.value
-
-            if permission_manage:
-                # 调用manager接口获取数据源列表和属性
-                res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=1)
-                if res_code != 200:
-                    return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                               message=res_message["message"]), res_code
-                params_json["res_list"] = res_message
-                if len(res_message) == 0:
-                    ret_message = {"res": {"count": 0, "df": []}}
-                    return json.dumps(ret_message), CommonResponseStatus.SUCCESS.value
-
             ret_code, ret_message = otl_service.getall(params_json, host_url)
             if ret_code == CommonResponseStatus.SERVER_ERROR.value:
                 return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -353,7 +299,6 @@ def delotl():
 @ontology_controller_app.route('/searchbyname', methods=["get"], strict_slashes=False)
 def getotlbyname():
     host_url = getHostUrl()
-    uuid = request.headers.get("uuid")
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         check_res, message = otl_check_params.otlgetbynamePar(params_json)
@@ -361,19 +306,6 @@ def getotlbyname():
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
-
-        # 调用manager接口获取数据源列表和属性
-        if permission_manage:
-            # 调用manager接口获取数据源列表和属性
-            res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=1)
-            if res_code != 200:
-                return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                           message=res_message["message"]), res_code
-            params_json["res_list"] = res_message
-            if len(res_message) == 0:
-                ret_message = {"res": {"count": 0, "df": []}}
-                return json.dumps(ret_message), CommonResponseStatus.SUCCESS.value
-
         ret_code, ret_message = otl_service.getbyotlname("", params_json, host_url, -1)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -388,7 +320,6 @@ def getotlbyname():
 @ontology_controller_app.route('updatename/<otlid>', methods=["put"], strict_slashes=False)
 def updateotlname(otlid):
     host_url = getHostUrl()
-    uuid = request.headers.get("uuid")
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
         message = "The parameter otlid type must be int!"
@@ -402,17 +333,6 @@ def updateotlname(otlid):
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
         params_json["ontology_id"] = str(otlid)
-        # logiccode, logicmessage = otl_check_params.entity_relation_check(params_json)
-        # if logiccode != 0:
-        #     Logger.log_error("parameters:%s invalid" % params_json)
-        #     return Gview.BuFailVreturn(cause=logicmessage, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-        #                                message=logicmessage), CommonResponseStatus.BAD_REQUEST.value
-        if permission_manage:
-            # 修改权限
-            res_message, res_code = managerutils.operate_permission(uuid=uuid, kg_id=[otlid], type=1, action="update")
-            if res_code != 200:
-                return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                           message=res_message["message"]), CommonResponseStatus.SERVER_ERROR.value
 
         ret_code, ret_message = otl_service.update_name(otlid, params_json, host_url, "-1")
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
@@ -428,7 +348,6 @@ def updateotlname(otlid):
 @ontology_controller_app.route('updateinfo/<otlid>', methods=["put"], strict_slashes=False)
 def updateotlinfo(otlid):
     host_url = getHostUrl()
-    uuid = request.headers.get("uuid")
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
         message = "The parameter otlid type must be int!"
@@ -447,12 +366,6 @@ def updateotlinfo(otlid):
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=logicmessage, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=logicmessage), CommonResponseStatus.BAD_REQUEST.value
-        if permission_manage:
-            # 修改权限
-            res_message, res_code = managerutils.operate_permission(uuid=uuid, kg_id=[otlid], type=1, action="update")
-            if res_code != 200:
-                return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                           message=res_message["message"]), res_code
         ret_code, ret_message = otl_service.update_info(otlid, params_json, host_url, "-1")
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -529,7 +442,6 @@ def getotlbykgid(kgid):
 # 根据本体名称获取本体信息
 @ontology_controller_app.route('/getotlbyname', methods=["get"], strict_slashes=False)
 def getotlbyotlname():
-    uuid = request.headers.get("uuid")
     host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     otlname = params_json.get("name")
@@ -562,40 +474,10 @@ def getotlbyotlname():
         return Gview.BuFailVreturn(cause="Ontology name does not exist",
                                    code=CommonResponseStatus.REQUEST_ERROR.value,
                                    message="Ontology name does not exist"), CommonResponseStatus.SERVER_ERROR.value
-    otlid = ret
-    # 增加权限：查看当前查看的本体是否在该用户的可见列表中
-    if permission_manage:
-        # 调用manager接口获取数据源列表和属性
-        res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=1)
-        if res_code != 200:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
-        otlIds = []
-        for temp in res_message:
-            otlIds.append(temp["configId"])
-        if otlid not in otlIds:
-            return Gview.BuFailVreturn(cause="No permission to view the ontology data",
-                                       code=CommonResponseStatus.PERMISSION_ERROR.value,
-                                       message="permission error"), CommonResponseStatus.SERVER_ERROR.value
-
     ret_code, ret_message = otl_service.getotlbyname(otlname, params_json, host_url)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-    # 过滤本体绑定的数据
-    if permission_manage:
-        uuid = request.headers.get("uuid")
-        OwnerIds = []
-        # 当前用户所有者身份的数据源
-        res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=2)
-        if res_code != 200:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        for temp in res_message:
-            if temp["propertyId"] == 1:
-                OwnerIds.append(temp["configId"])
-
-        ret_message = BindingDataSourceFiltering(ret_message, OwnerIds)
     return ret_message, CommonResponseStatus.SUCCESS.value
 
 
@@ -615,8 +497,7 @@ def builde_onto_task():
     url = "http://localhost:6488/onto/buildertask"
     payload = params_json
     headers = {
-        'Content-Type': 'application/json',
-        'uuid': request.headers.get("uuid")
+        'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
     # return make_response(jsonify(result=response.text))
@@ -645,8 +526,7 @@ def gettaskinfo():
     url = "http://localhost:6488/onto/getalltask"
     payload = params_json
     headers = {
-        'Content-Type': 'application/json',
-        'uuid': request.headers.get("uuid"),
+        'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
     # return make_response(jsonify(result=response.text))
@@ -676,8 +556,7 @@ def deletetask():
     payload = params_json
     # url=url+'?'+"task_id="+task_id
     headers = {
-        'Content-Type': 'application/json',
-        'uuid': request.headers.get("uuid")
+        'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
     # return make_response(jsonify(result=response.text))
@@ -710,8 +589,7 @@ def get_task_files():
     url = url + "page=" + page + '&'
     url = url + "size=" + size
     headers = {
-        'Content-Type': 'application/json',
-        'uuid': request.headers.get("uuid")
+        'Content-Type': 'application/json'
     }
     response = requests.request("GET", url, headers=headers)
     res_json = response.json()
@@ -739,8 +617,7 @@ def deletealltask():
     url = "http://localhost:6488/onto/deletealltask"
     url = url + '?' + "ontology_id=%s" % (ontology_id)
     headers = {
-        'Content-Type': 'application/json',
-        'uuid': request.headers.get("uuid")
+        'Content-Type': 'application/json'
     }
     response = requests.request("DELETE", url, headers=headers)
     # return make_response(jsonify(result=response.text))
@@ -806,7 +683,6 @@ def deletealltask():
 # 本体复制
 @ontology_controller_app.route('/copy/<otlid>', methods=["POST"], strict_slashes=False)
 def copy_otl(otlid):
-    uuid = request.headers.get("uuid")
     host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
@@ -842,82 +718,23 @@ def copy_otl(otlid):
         return Gview.BuFailVreturn(cause="Ontology in unavailable state cannot be copied",
                                    code=CommonResponseStatus.REQUEST_ERROR.value,
                                    message="Ontology in unavailable state cannot be copied"), CommonResponseStatus.SERVER_ERROR.value
-    if permission_manage:
-        # 复制权限
-        res_message, res_code = managerutils.operate_permission(uuid=uuid, kg_id=[otlid], type=1, action="copy")
-        if res_code != 200:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
-        # 获取被复制本体的数据
-        ret_code, ret_message = otl_service.getbyotlname(otlid, {}, host_url, 1)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                       message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        # 过滤本体绑定的数据源
-        OwnerIds = []
-        # 当前用户所有者身份的数据源
-        res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=2)
-        if res_code != 200:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        for temp in res_message:
-            if temp["propertyId"] == 1:
-                OwnerIds.append(temp["configId"])
-        ret_message = BindingDataSourceFiltering(ret_message, OwnerIds)
-    else:
-        # 获取被复制本体的数据
-        ret_code, ret_message = otl_service.getbyotlname(otlid, {}, host_url, 1)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                       message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
+    # 获取被复制本体的数据
+    ret_code, ret_message = otl_service.getbyotlname(otlid, {}, host_url, 1)
+    if ret_code == CommonResponseStatus.SERVER_ERROR.value:
+        return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
+                                   message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     # 数据库插入数据
     ret_code, ret_mess, onto_id = otl_service.saveCopyOtl(ret_message["res"].get("df")[0], params_json)
     if onto_id == -1:
         return Gview.BuFailVreturn(cause=ret_mess["cause"], code=ret_mess["code"],
                                    message=ret_mess["message"]), CommonResponseStatus.SERVER_ERROR.value
-    # if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-    #     return Gview.BuFailVreturn(cause=ret_mess["cause"], code=ret_mess["code"],
-    #                                message=ret_mess["message"]), CommonResponseStatus.SERVER_ERROR.value
-    if permission_manage:
-        # 增加资源
-        res_message, res_code = managerutils.add_resource(kg_id=onto_id, type=1, uuid=uuid)
-        if res_code != 200:
-            # 删除新增的资源记录
-            otl_dao.delete([onto_id])
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
-
-        # 调用manager接口增加默认权限
-        res_message, res_code = managerutils.add_permission(kg_id=onto_id, type=1, uuid=uuid)
-        if res_code != 200:
-            otl_dao.delete([onto_id])
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
-
     return {"res": {"ontology_id": onto_id}}, CommonResponseStatus.SUCCESS.value
 
 
 # 本体入口，一键导入时数据源列表
 @ontology_controller_app.route('/ds', methods=["get"], strict_slashes=False)
 def graphDsList():
-    kgIds = []
-    obj = {}
-    uuid = request.headers.get("uuid")
-    # 权限, 属性ID=1的数据源列表
-    if permission_manage:
-        # 调用manager接口获取数据源列表和属性
-        res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=2)
-        if res_code != 200:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        if len(res_message) != 0:
-            for temp in res_message:
-                if temp["propertyId"] == 1:
-                    kgIds.append(temp["configId"])
-        if len(kgIds) == 0:
-            obj = {"res": {"count": 0, "df": []}}
-            return json.dumps(obj), CommonResponseStatus.SUCCESS.value
-    ret_code, ret_message = otl_service.getds(kgIds)
+    ret_code, ret_message = otl_service.getds()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -958,57 +775,6 @@ def updateotlschema():
             Logger.log_error(json.dumps(ret_message))
             return Gview.VErrorreturn(obj), ret_code
         return jsonify(obj), CommonResponseStatus.SUCCESS.value
-
-
-# 本体绑定数据源过滤
-def BindingDataSourceFiltering(res, OwnerIds):
-    """
-    parms：
-        res: 查询得到的本体数据{ "res": {"count": 1, "df" : []}}
-        OwnerIds: 当前用户具有拥有者身份的数据源
-    return：
-        过滤掉本体数据中权限不足的绑定数据源(点和边都有可能绑定数据，均需过滤)
-    """
-    otls = res.get("res", {})
-    df = otls.get("df", [])
-    if len(df) > 0:
-        for i in range(len(df)):
-            # 点
-            entitys = df[i].get("entity", [])
-            for j in range(len(entitys)):
-                ds_id = entitys[j].get("ds_id", 0)
-                OwnerIds = list(map(str, OwnerIds))
-                if ds_id not in OwnerIds:
-                    res["res"]["df"][i]["entity"][j]["source_table"] = []
-                    res["res"]["df"][i]["entity"][j]["source_type"] = "manual"
-                    res["res"]["df"][i]["entity"][j]["dataType"] = ""
-                    res["res"]["df"][i]["entity"][j]["data_source"] = ""
-                    res["res"]["df"][i]["entity"][j]["ds_address"] = ""
-                    res["res"]["df"][i]["entity"][j]["ds_id"] = ""
-                    res["res"]["df"][i]["entity"][j]["ds_name"] = ""
-                    res["res"]["df"][i]["entity"][j]["ds_path"] = ""
-                    res["res"]["df"][i]["entity"][j]["extract_type"] = ""
-                    res["res"]["df"][i]["entity"][j]["file_type"] = ""
-                    res["res"]["df"][i]["entity"][j]["model"] = ""
-                    res["res"]["df"][i]["entity"][j]["task_id"] = ""
-            # 边
-            edges = df[i].get("edge", [])
-            for k in range(len(edges)):
-                ds_id = edges[k].get("ds_id", 0)
-                if ds_id not in OwnerIds:
-                    res["res"]["df"][i]["edge"][k]["source_table"] = []
-                    res["res"]["df"][i]["edge"][k]["source_type"] = "manual"
-                    res["res"]["df"][i]["edge"][k]["dataType"] = ""
-                    res["res"]["df"][i]["edge"][k]["data_source"] = ""
-                    res["res"]["df"][i]["edge"][k]["ds_address"] = ""
-                    res["res"]["df"][i]["edge"][k]["ds_id"] = ""
-                    res["res"]["df"][i]["edge"][k]["ds_name"] = ""
-                    res["res"]["df"][i]["edge"][k]["ds_path"] = ""
-                    res["res"]["df"][i]["edge"][k]["extract_type"] = ""
-                    res["res"]["df"][i]["edge"][k]["file_type"] = ""
-                    res["res"]["df"][i]["edge"][k]["model"] = ""
-                    res["res"]["df"][i]["edge"][k]["task_id"] = ""
-    return res
 
 
 def getHostUrl():

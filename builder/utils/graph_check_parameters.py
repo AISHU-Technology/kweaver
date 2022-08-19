@@ -73,7 +73,7 @@ class GraphCheckParameters(object):
                 flag_digit = False
         print(flag_digit)
 
-    def graphAddPar(self, params_json, graphname):
+    def graphAddPar(self, params_json):
         ret_status = self.VALID
         message = ""
         graph_step = params_json.get("graph_step", None)
@@ -1673,92 +1673,6 @@ class GraphCheckParameters(object):
         message += "\n"
         return ret_status, message
 
-    # 根据graph_id查找该图谱下个数据源或本体接口参数校验
-    def getdsotlbygraphIdPar(self, params_json):
-        ret_status = self.VALID
-        message = ""
-        required = ["graph_id", "type"]
-        # 请求参数
-        values = params_json
-        # 请求的参数不在定义的参数中
-        unnecessaryParameters = []
-        for k in values:
-            if not k in required and k != "timestamp":
-                unnecessaryParameters.append(k)
-        graph_id = params_json.get("graph_id", None)
-        ds_type = params_json.get("type", None)
-        MissingParameters = []
-        if graph_id == None:
-            MissingParameters.append("graph_id")
-        if ds_type == None:
-            MissingParameters.append("type")
-        if len(unnecessaryParameters) > 0:
-            message += "parameters:  %s  are not required!" % ",".join(unnecessaryParameters)
-            ret_status = self.INVALID
-        if len(MissingParameters) > 0:
-            message += "parameters:  %s  are Missing!" % ",".join(MissingParameters)
-            ret_status = self.INVALID
-        # 校验顺序一 先校验参数是否缺少或者多的
-        if len(unnecessaryParameters) > 0 or len(MissingParameters) > 0:
-            return ret_status, message
-        if not isinstance(graph_id, list):
-            message += "The parameter graph_id must be list!"
-            ret_status = self.INVALID
-            return ret_status, message
-        if len(graph_id) == 0:
-            message += "The parameter graph_id can't be empty!"
-            ret_status = self.INVALID
-            return ret_status, message
-        for temp in graph_id:
-            if not isinstance(temp, int):
-                message += "The parameter graph_id element must be int!"
-                ret_status = self.INVALID
-                break
-        if ds_type not in [1, 2]:
-            message += "The parameter type must be in [1, 2] !"
-            ret_status = self.INVALID
-        return ret_status, message
-
-    # 根据graph_id查找该图谱下个数据源或本体接口参数校验
-    def getgraphinfoPar(self, params_json):
-        ret_status = self.VALID
-        message = ""
-        required = ["graph_id"]
-        # 请求参数
-        values = params_json
-        # 请求的参数不在定义的参数中
-        unnecessaryParameters = []
-        for k in values:
-            if not k in required and k != "timestamp":
-                unnecessaryParameters.append(k)
-        graph_id = params_json.get("graph_id", None)
-        MissingParameters = []
-        if graph_id == None:
-            MissingParameters.append("graph_id")
-        if len(unnecessaryParameters) > 0:
-            message += "parameters:  %s  are not required!" % ",".join(unnecessaryParameters)
-            ret_status = self.INVALID
-        if len(MissingParameters) > 0:
-            message += "parameters:  %s  are Missing!" % ",".join(MissingParameters)
-            ret_status = self.INVALID
-        # 校验顺序一 先校验参数是否缺少或者多的
-        if len(unnecessaryParameters) > 0 or len(MissingParameters) > 0:
-            return ret_status, message
-        if not isinstance(graph_id, list):
-            message += "The parameter graph_id must be list!"
-            ret_status = self.INVALID
-            return ret_status, message
-        if len(graph_id) == 0:
-            message += "The parameter graph_id can't be empty!"
-            ret_status = self.INVALID
-            return ret_status, message
-        for temp in graph_id:
-            if not isinstance(temp, int):
-                message += "The parameter graph_id element must be int!"
-                ret_status = self.INVALID
-                break
-        return ret_status, message
-
     # 图谱批量删除参数校验
     def graphDelPar(self, params_json):
         ret_status = self.VALID
@@ -1855,26 +1769,6 @@ class GraphCheckParameters(object):
             message += " parameters: %s no rule!" % ",".join(message_dict["no_rule"])
         if message == "":
             message = "unknown error!"
-        return ret_status, message
-
-    # 图谱编辑过程中的数据源列表
-    def getidbygns_params(self, params_json):
-        ret_status = 0
-        message = ""
-        if not isinstance(params_json, dict):
-            message += "parameter type must be json; "
-            ret_status = -1
-        else:
-            if list(params_json.keys()) != ["gns"]:
-                message += "parameter must be 'gns'; "
-                ret_status = -1
-            if not isinstance(params_json.get("gns"), list):
-                message += "parameter gns must be list; "
-                ret_status = -1
-            else:
-                if len(params_json.get("gns")) == 0:
-                    message += "parameter gns can not be empty list; "
-                    ret_status = -1
         return ret_status, message
 
 

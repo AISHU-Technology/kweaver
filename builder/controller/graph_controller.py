@@ -6,7 +6,6 @@ import requests
 from flask import Blueprint, request, jsonify, send_file, send_from_directory, make_response
 
 from werkzeug.utils import secure_filename
-from config.config import permission_manage
 from dao.graph_dao import graph_dao
 from dao.otl_dao import otl_dao
 from dao.task_dao import task_dao
@@ -24,10 +23,10 @@ import json
 import os
 from utils.log_info import Logger
 from service.task_Service import task_service
-from third_party_service.managerUtils import managerutils
 from controller.knowledgeNetwork_controller import saveRelation, deleteRelation, updateKnw
 from common.errorcode.gview import Gview as Gview2
 from common.errorcode import codes
+import uuid
 
 graph_controller_app = Blueprint('graph_controller_app', __name__)
 graph_controller_open = Blueprint('graph_controller_open', __name__)
@@ -40,12 +39,11 @@ def graphopt():
     POST请求：graph_Service.addgraph新增图谱
     '''
     method = request.method
-    uuid = request.headers.get("uuid")
     # 根据不同的请求方式请求方式获得参数并获取异常
     # get all
     if method == "GET":
         host_url = getHostUrl()
-        permission = Permission(uuid, method)
+        permission = Permission()
 
         res_message, res_code = permission.graphGet()
         if res_code != 0:
@@ -78,25 +76,7 @@ def graphopt():
             graph_dao.delete_record(graph_id)
             return Gview.BuFailVreturn(cause=response["Description"], code=CommonResponseStatus.REQUEST_ERROR.value,
                                        message=response["ErrorDetail"]), CommonResponseStatus.SERVER_ERROR.value
-
-        if permission_manage:
-            # 增加资源
-            res_message, res_code = managerutils.add_resource(kg_id=graph_id, type=3, uuid=uuid)
-            if res_code != 200:
-                # 删除新增的资源记录
-                deleteRelation(knw_id, graph_id)
-                graph_dao.delete_record(graph_id)
-                return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                           message=res_message["message"]), res_code
-
-            # 调用manager接口增加默认权限
-            res_message, res_code = managerutils.add_permission(kg_id=graph_id, type=3, uuid=uuid)
-            if res_code != 200:
-                deleteRelation(knw_id, graph_id)
-                graph_dao.delete_record(graph_id)
-                return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                           message=res_message["message"]), res_code
-        updateKnw(uuid, graph_id)
+        updateKnw(graph_id)
         return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
@@ -107,7 +87,6 @@ def graph(grapid):
     graphCheckParameters.graphAddPar进行参数格式校验
     graph_Service.update编辑图谱
     '''
-    uuid = request.headers.get("uuid")
     host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     graph_step = params_json["graph_step"]
@@ -140,31 +119,8 @@ def graph(grapid):
                 return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                            message=message), CommonResponseStatus.BAD_REQUEST.value
             #  流程中本体的部分 如果是新增本体 直接调用新增本体
-            # 是否有新增本体权限
-            if permission_manage:
-                res_message, res_code = managerutils.create_resource(uuid=uuid, resourceType=1)
-                if res_code != 200:
-                    return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                               message=res_message["message"]), res_code
-
             ret_code, ret_message, otl_id = otl_service.ontology_save(graph_process_dict)
             if ret_code == 200:  # 本体添加成功才更新图谱配置
-                if permission_manage:
-                    # 增加资源
-                    res_message, res_code = managerutils.add_resource(kg_id=otl_id, type=1, uuid=uuid)
-                    if res_code != 200:
-                        # 删除新增的资源记录
-                        otl_dao.delete([otl_id])
-                        return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                                   message=res_message["message"]), res_code
-
-                    # 调用manager接口增加默认权限
-                    res_message, res_code = managerutils.add_permission(kg_id=otl_id, type=1, uuid=uuid)
-                    if res_code != 200:
-                        otl_dao.delete([otl_id])
-                        return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                                   message=res_message["message"]), res_code
-
                 # otl_id = ret_message["res"]["ontology_id"]
                 ret_code2, ret_message2 = graph_Service.update(grapid, params_json, otl_id, host_url)
                 if ret_code2 == CommonResponseStatus.SERVER_ERROR.value:
@@ -199,7 +155,7 @@ def graph(grapid):
                     return Gview.BuFailVreturn(cause=ret_message2["cause"], code=ret_message2["code"],
                                                message=ret_message2[
                                                    "message"]), CommonResponseStatus.SERVER_ERROR.value
-                updateKnw(uuid, grapid)
+                updateKnw(grapid)
                 return Gview.BuVreturn(message=ret_message2.get("res")), CommonResponseStatus.SUCCESS.value
             else:
                 return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -214,7 +170,7 @@ def graph(grapid):
         if ret_code != 200:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        updateKnw(uuid, grapid)
+        updateKnw(grapid)
         return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
     # 更新抽取规则 -- 144162需求增加判断文件+文件夹数量
     elif graph_step == 'graph_InfoExt':
@@ -237,7 +193,7 @@ def graph(grapid):
             obj["ErrorDetails"] = [{str(ret_message["message"])}]
             obj["ErrorLink"] = ""
             return Gview.VErrorreturn(obj), CommonResponseStatus.BAD_REQUEST.value
-        updateKnw(uuid, grapid)
+        updateKnw(grapid)
         return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
@@ -272,18 +228,7 @@ def graph(grapid):
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
         print('ret_res', ret_message)
-
-        if permission_manage:
-            # 图谱编辑过程中，数据源发生变化，builder发送graphid和原有的数据源给manager
-
-            ret_message1, ret_code1 = managerutils.ds_changed(grapid, dsids, uuid)
-            if ret_code1 != 200:
-                return Gview.BuFailVreturn(cause=ret_message1["cause"], code=ret_message1["code"],
-                                           message=ret_message1["message"]), CommonResponseStatus.SERVER_ERROR.value
-            if not ret_message1:
-                return Gview.BuFailVreturn(cause="manager update failed", code=CommonResponseStatus.REQUEST_ERROR.value,
-                                           message="manager update failed"), CommonResponseStatus.SERVER_ERROR.value
-        updateKnw(uuid, grapid)
+        updateKnw(grapid)
         return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
@@ -327,7 +272,6 @@ def getbis():
 
 @graph_controller_app.route('/<graphid>', methods=["get"], strict_slashes=False)
 def getgraphbyid(graphid):
-    uuid = request.headers.get("uuid")
     host_url = getHostUrl()
     if not graphid.isdigit():
         message = "The parameter graph id type must be int!"
@@ -337,15 +281,6 @@ def getgraphbyid(graphid):
     code, ret = graph_Service.checkById(graphid)
     if code != 0:
         return jsonify(ret), 500
-        # return Gview.BuFailVreturn(cause=ret["cause"], code=ret["code"],
-        #                           message=ret["message"]), CommonResponseStatus.REQUEST_ERROR.value
-
-    if permission_manage:
-        res_message, res_code = managerutils.operate_permission(uuid=uuid, kg_id=[graphid], type=3, action="update")
-        if res_code != 200:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
-
     ret_code, ret_message = graph_Service.getGraphById(graphid, host_url)
 
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
@@ -394,7 +329,6 @@ def getbyinfoext():
         infoext_list = params_json['infoext_list']
 
         ret_code, ret_message = graph_Service.getGraphById(graphid, host_url)
-        print('ret_code', ret_code)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -436,7 +370,6 @@ def check_kmapinfo():
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
         ret_code, ret_message = graph_Service.getGraphById(graphid, host_url)
-        print('ret_code', ret_code)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -476,8 +409,6 @@ def getdsbygraphids():
     '''
     根据图谱id返回数据源列表
     '''
-    kgIds = []
-    uuid = request.headers.get("uuid")
     host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -487,22 +418,6 @@ def getdsbygraphids():
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
-        # 权限, 属性ID=1的数据源列表
-        if permission_manage:
-            # 调用manager接口获取数据源列表和属性
-            res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=2)
-            if res_code != 200:
-                return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                           message=res_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-            if len(res_message) != 0:
-                for temp in res_message:
-                    if temp["propertyId"] == 1:
-                        kgIds.append(temp["configId"])
-            # if len(kgIds) == 0:
-            #     obj["res"] = {"count": 0, "df": []}
-            #     return jsonify({"res": obj, "code": 200})
-        if permission_manage:
-            params_json["kgIds"] = kgIds
         ret_code, ret_message = graph_Service.getdsbygraphid(params_json, host_url)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -518,72 +433,9 @@ def getHostUrl():
     hostUrl = request.host_url
     return hostUrl
 
-
-# 根据图谱id获取图谱下的数据源或本体
-@graph_controller_app.route('/query', methods=["post"], strict_slashes=False)
-def getOtlDsById():
-    host_url = getHostUrl()
-    info = request.headers.get("info", "")
-    if info != "kg-manager":
-        return Gview.BuFailVreturn(cause="No access", code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message="No access"), CommonResponseStatus.BAD_REQUEST.value
-    # 获取参数
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    if param_code == 0:
-        # 参数校验
-        check_res, message = graphCheckParameters.getdsotlbygraphIdPar(params_json)
-        if check_res != 0:
-            Logger.log_error("parameters:%s invalid" % params_json)
-            return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                       message=message), CommonResponseStatus.BAD_REQUEST.value
-
-        ret_code, ret_message = graph_Service.getOtlDsByGraphid(params_json, host_url)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                       message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        return ret_message, CommonResponseStatus.SUCCESS.value
-    else:
-        return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
-
-
-# 图谱查询,给定图谱id，返回图谱名称和描述
-@graph_controller_app.route('/graph_info', methods=["post"], strict_slashes=False)
-def getGraphInfoById():
-    host_url = getHostUrl()
-    info = request.headers.get("info", "")
-    if info != "kg-manager":
-        return Gview.BuFailVreturn(cause="No access", code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message="No access"), CommonResponseStatus.BAD_REQUEST.value
-    # 获取参数
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    # paras = request.get_argument()
-    # print("paras: ", paras)
-    if param_code == 0:
-        # 参数校验
-        check_res, message = graphCheckParameters.getgraphinfoPar(params_json)
-        if check_res != 0:
-            Logger.log_error("parameters:%s invalid" % params_json)
-            return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                       message=message), CommonResponseStatus.BAD_REQUEST.value
-        try:
-            ret_code, ret_message = graph_Service.getGraphInfoByGraphid(params_json, host_url)
-        except Exception:
-            return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.REQUEST_ERROR.value,
-                                       message="Mysql correct error"), CommonResponseStatus.SERVER_ERROR.value
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                       message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        return ret_message, CommonResponseStatus.SUCCESS.value
-    else:
-        return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
-
-
 # 图谱批量删除
 @graph_controller_app.route('/delbyids', methods=["POST"], strict_slashes=False)
 def graphDeleteByIds():
-    uuid = request.headers.get("uuid")
     runs, noAuthority, noExist, normal = [], [], [], []
     mess = ""
     obj, obj_code = {}, 200
@@ -632,14 +484,6 @@ def graphDeleteByIds():
                                   ""), CommonResponseStatus.SERVER_ERROR.value
     noExist = res["noExist"]
     normal = list(set(graphids) - set(noExist) - set(runs))
-    if permission_manage and len(normal) > 0:
-        # 统计删除权限情况
-        res_mess1, res_code1 = graph_Service.permission_statistics(normal, uuid)
-        if res_code1 != 200:
-            return Gview.TErrorreturn(res_mess1["code"], res_mess1["message"], res_mess1["solution"],
-                                      res_mess1["cause"], ""), CommonResponseStatus.SERVER_ERROR.value
-        noAuthority = res_mess1["noAuthority"]
-    normal = list(set(normal) - set(noAuthority))
     # 单一删除
     if len(graphids) == 1:
         # 正常
@@ -650,7 +494,6 @@ def graphDeleteByIds():
         if len(noExist) != 0:
             mess += "%s 不存在; " % ",".join(map(str, noExist))
             mess += "删除成功：%s; " % ",".join(map(str, normal))
-            mess += "operator uuid: %s ;" % uuid
             obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
         if len(runs) == 1:
             obj, obj_code = {"Cause": "当前知识网络正在运行任务不可删除，请先停止或删除任务！",
@@ -665,7 +508,6 @@ def graphDeleteByIds():
         # 全部不存在
         if len(noExist) == len(graphids):
             # mess += "%s 不存在; " % ",".join(map(str, noExist))
-            # mess += "删除成功：%s; " % ",".join(map(str, normal)) + "operator uuid: %s ;" % uuid
             obj, obj_code = {"state": "sucess"}, CommonResponseStatus.SUCCESS.value
         # 全部运行
         if len(runs) > 0 and len(noAuthority) == 0 and len(normal) == 0:
@@ -700,7 +542,6 @@ def graphDeleteByIds():
         # 正常
         if len(runs) == 0 and len(noAuthority) == 0 and len(normal) > 0:
             obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
-    res1 = True
     # 统计上传中的图谱
     res, code = graph_Service.get_upload_id(normal)
     if code != 0:
@@ -713,16 +554,6 @@ def graphDeleteByIds():
         solution = "please wait upload finished"
         cause = "graph upload can not delete"
         return Gview.TErrorreturn(CommonResponseStatus.GRAPH_UPLOAD.value, desc, solution, cause, ""), obj_code
-    if permission_manage and len(normal) > 0:
-        # 调用manager接口，告知可以删除的graphids
-        res1, code1 = managerutils.graph_delete(normal)
-        if code1 != 200:
-            return Gview.TErrorreturn(res1["code"], res1["message"], res1["solution"], res1["cause"],
-                                      ""), CommonResponseStatus.SERVER_ERROR.value
-    if not res1:
-        code = CommonResponseStatus.GRAPH_PERMISSION_DELETE_ERR.value
-        return Gview.TErrorreturn(code, "图谱权限删除失败", "Please check permissions", "图谱权限删除失败",
-                                  ""), CommonResponseStatus.SERVER_ERROR.value
     if len(normal) > 0:
         # 删除可以删除的
         res, code = graph_Service.deleteGraphByIds(normal)
@@ -739,10 +570,9 @@ def graphDeleteByIds():
         mess += "%s 正在运行; " % ",".join(map(str, runs))
     if len(normal) > 0:
         mess += "删除成功：%s; " % ",".join(map(str, normal))
-        mess += "operator uuid: %s ;" % uuid
     Logger.log_info(mess)
     if len(normal) > 0:
-        updateKnw(uuid, normal[0])
+        updateKnw(normal[0])
     if obj_code == 200:
         return obj, 200
     solution = "请检查是否有删除权限或者图谱是否在运行中"
@@ -752,8 +582,6 @@ def graphDeleteByIds():
 # 图谱编辑过程中的数据源列表
 @graph_controller_app.route('/ds/<graphid>', methods=["GET"], strict_slashes=False)
 def graphDsList(graphid):
-    kgIds, propertyIds = [], []
-    uuid = request.headers.get("uuid")
     if not graphid.isdigit():
         message = "The parameter graph id type must be int!"
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
@@ -769,38 +597,6 @@ def graphDsList(graphid):
         Logger.log_error("parameters:%s invalid" % params_json)
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-    if permission_manage:
-        # 调用manager接口获取数据源列表和属性
-        res_message, res_code = managerutils.get_otlDsList(uuid=uuid, type=2)
-        if res_code != 200:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        if len(res_message) != 0:
-            for temp in res_message:
-                if temp["propertyId"] == 1:
-                    kgIds.append(temp["configId"])  # 可以看见的数据源id列表
-                    propertyIds.append(1)
-
-    # 该图谱拥有的数据源
-    ret_code, obj = graph_Service.getDsByGraphid(graphid)
-    if ret_code != 200:
-        return Gview.BuFailVreturn(cause=obj["cause"], code=obj["code"],
-                                   message=obj["message"]), CommonResponseStatus.SERVER_ERROR.value
-    ids = obj.get("ids", [])
-    for k in ids:
-        if k not in kgIds:
-            kgIds.append(k)
-            propertyIds.append(4)
-
-    # dsids = list(set(ids + kgIds))
-    # propertyIds = [1] * len(dsids)
-    dsids = kgIds
-
-    if len(dsids) == 0:
-        ret_message = {"res": {"count": 0, "df": []}}
-        return json.dumps(ret_message), CommonResponseStatus.SUCCESS.value
-    params_json["dsids"] = dsids
-    params_json["propertyIds"] = propertyIds
 
     ret_code, ret_message = graph_Service.getDsAll(params_json)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
@@ -808,109 +604,9 @@ def graphDsList(graphid):
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     return ret_message, CommonResponseStatus.SUCCESS.value
 
-
-# 根据gns查找相关的图谱id和图谱名称
-@graph_controller_open.route('/getgraphbygns', methods=["POST"], strict_slashes=False)
-def get_graph_by_gns():
-    kgIds = []
-    host_url = getHostUrl()
-    appid = request.headers.get("appid", None)
-    if appid is None:
-        res = {
-            "ErrorCode": 400000, "Description": "appid error",
-            "Solution": "Please check appid",
-            "ErrorDetails": "missing appid", "ErrorLink": ""
-        }
-        return jsonify(res), 400
-    # 两个默认参数
-    arg_extract_model = "Anysharedocumentmodel"
-    arg_data_source = "as7"
-    try:
-        # 根据appid获取uuid
-        code, obj = graph_Service.get_uuid_by_appid(appid)
-        if code != 0:
-            res = {
-                "ErrorCode": obj["code"], "Description": obj["message"], "Solution": obj["cause"],
-                "ErrorDetails": "获取uuid错误", "ErrorLink": ""
-            }
-            return jsonify(res), 500
-        uuid = obj.to_dict()["uuid"][0]
-
-        # 获取参数
-        param_code, params_json, param_message = commonutil.getMethodParam()
-        # 获取参数错误
-        if param_code != 0:
-            res = {
-                "ErrorCode": 400000, "Description": param_message,
-                "Solution": "parameter error, please check the input parameters carefully",
-                "ErrorDetails": "get parameter error", "ErrorLink": ""
-            }
-            return jsonify(res), 400
-        # 参数校验
-        ret_status, message = graphCheckParameters.getidbygns_params(params_json)
-        if ret_status != 0:
-            res = {
-                "ErrorCode": 400000, "Description": "params error",
-                "Solution": "Please check the input parameters carefully",
-                "ErrorDetails": message, "ErrorLink": ""
-            }
-            return jsonify(res), 400
-        arg_gns_list = params_json.get("gns")
-        # 用户可见图谱id列表
-        if permission_manage:
-            ret, code = managerutils.get_otlDsList(uuid=uuid, type=3)
-            if code != 200:
-                res = {
-                    "ErrorCode": ret["code"], "Description": ret["cause"], "Solution": "权限访问错误",
-                    "ErrorDetails": ret["message"], "ErrorLink": ""
-                }
-                return jsonify(res), code
-            # # 用户可见图谱列表为空
-            # if len(ret) == 0:
-            #     res = {"res": []}
-            #     return jsonify(res), 200
-
-            for temp in ret:
-                if temp["propertyId"] <= 4:
-                    kgIds.append(temp["configId"])  # 可以看见的图谱id列表
-                    # propertyIds.append(1)
-        # 所有图谱信息
-        ret_code, ret_obj = graph_Service.getallgraph(host_url)
-        if ret_code != 200:
-            res = {
-                "ErrorCode": 500000, "Description": ret_obj["cause"], "Solution": "",
-                "ErrorDetails": ret_obj["message"], "ErrorLink": ""
-            }
-            return jsonify(res), ret_code
-        graphs = ret_obj.get("res", {}).get("df", {})
-        if len(graphs) == 0:
-            res = {
-                "ErrorCode": 500051, "Description": "graph list is empty",
-                "Solution": "No graphs now, please create the graph first",
-                "ErrorDetails": "graph list is empty", "ErrorLink": ""
-            }
-            return jsonify(res), 500
-
-        results = {}
-        for arg_gns in arg_gns_list:
-            result = getgraph_onegns(arg_gns, graphs, kgIds, arg_extract_model, arg_data_source)
-            if arg_gns not in results:
-                results[arg_gns] = result
-        res = {"res": results}
-        return jsonify(res), 200
-    except Exception as e:
-        res = {
-            "ErrorCode": 500000, "Description": "internal error", "Solution": "Please contact the administrator",
-            "ErrorDetails": repr(e), "ErrorLink": ""
-        }
-        return jsonify(res), 500
-
-
 # 根据图谱名称获取图谱配置信息
-# todo: getgraphbyid函数名重复，后期需要修改
 @graph_controller_open.route('/<graph_name>', methods=["GET"], strict_slashes=False)
-def getgraphbyid(graph_name):
-    uuid = request.headers.get("uuid")
+def getgraphbyname(graph_name):
     host_url = getHostUrl()
     if not isinstance(graph_name, str):
         message = "The parameter graph name type must be string!"
@@ -921,11 +617,6 @@ def getgraphbyid(graph_name):
     if code != 0:
         return jsonify(ret), 500
     graph_id = ret.to_dict('records')[0]['id']
-    if permission_manage:
-        res_message, res_code = managerutils.operate_permission(uuid=uuid, kg_id=[graph_id], type=3, action="update")
-        if res_code != 200:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
 
     ret_code, ret_message = graph_Service.getGraphById(graph_id, host_url)
 
@@ -937,82 +628,22 @@ def getgraphbyid(graph_name):
 
 @graph_controller_app.route("/adv-search-config/kglist-conf/<net_id>", methods=["GET"], strict_slashes=False)
 def get_adv_search(net_id):
-    # 在此处从头当中获取uuid值。这一步骤应该没有必要。builder项目当中未作处理。
-
-    uuid = request.headers.get("uuid")
-    if uuid == "":
-        return Gview.BuFailVreturn(
-            cause="uuid is not found",
-            code=CommonResponseStatus.UUID_NOT_FOUND.value,
-            message="uuid is not found",
-        ), 500
-    # 此处获取用户能见的所有图谱列表。
-    res_message, res_code = managerutils.get_auth_kg_id_list(uuid)
-    if res_code != 200:
-        return Gview.BuFailVreturn(cause=res_message["cause"],
-                                   code=res_message["code"],
-                                   message=res_message["message"]), res_code
-
-    # 如果长度不为零，查询所有的config_id，需要到数据当中做转换。
-    config_ids = []
-    for item in res_message:
-        config_ids.append(item["configId"])
-
     # 此处兼容知识网络的功能。
     net_ids = knw_service.get_graph_by_knw_id_s(net_id)
     net_ids = list(net_ids.values())
-    config_ids = list(set(config_ids) & set(net_ids))
-
-    # 如果长度为零，代表用户没有可见的知识图谱。直接返回即可。
-    if len(config_ids) == 0:
-        return Gview.BuFailVreturn(cause="user has not useful knowledge graph in this knowledge",
-                                   code=CommonResponseStatus.USER_HAS_NOT_VIEWABLE_GRAPH_IN_NET.value,
-                                   message="please assign permission to the user"), 500
+    config_ids = set(net_ids)
 
     # 此处不需要判断，如果为空，不会走到这一步。
     ids = graph_dao.get_IdByConfigId(config_ids)
 
-    # 获取可以操作的id。查看manager获取可以操作的所有ids。
-    operatorIds = []
-    for id in ids:
-        message, code = managerutils.operate_permission(uuid, [id], 3, "advanced_config", True)
-        # 对于单独的id来说，如果返回成功，代表id可以被操作，也就是有权限
-        if code == 200:
-            operatorIds.append(id)
-
     # 获取到所有的有权限的id，对id进行相关字段拼接操作。然后返回。
-    result = graph_Service.get_graph_conf_list(operatorIds)
+    result = graph_Service.get_graph_conf_list(ids)
     forReturen = {"res": result}
     return jsonify(forReturen), 200
 
 
 @graph_controller_app.route("/output", methods=["POST"], strict_slashes=False)
 def graph_config_output():
-    uuid = request.headers.get("uuid", None)
-    Logger.log_info(f"uuid:{uuid},type:{type(uuid)}")
-    # 检测uuid是否存在于头部，
-    if uuid == None:
-        return Gview.TErrorreturn(
-            "Builder.controller.graph_config.checkuuid.uuidNotExists",
-            "uuid is not found",
-            "please use a useful uuid",
-            "uuid is not found",
-            "",
-        ), 500
-    # 上传默认用户，此用户不做权限校验
-    config_id_map = {}
-    if uuid != "6bee2cb5-da40-11ec-a482-ea21cd616bd0":
-        manager_list, status = managerutils.get_otlDsList(uuid, 3)
-        if status != 200:
-            return Gview.TErrorreturn(
-                "Builder.controller.graph_config.get_otlDsList.not_permission",
-                "no permission or",
-                "Please add edit permission to this user",
-                "no permission",
-                "",
-            ), 500
-        for row in manager_list:
-            config_id_map[row['configId']] = row['propertyId']
     config_ids = request.json.get("ids")
     if len(config_ids) > 1:
         return Gview.TErrorreturn(
@@ -1046,17 +677,6 @@ def graph_config_output():
                 "graph not nebula",
                 "",
             ), 500
-        propertyId = config_id_map.get(int(config_id), None)
-        if uuid != "6bee2cb5-da40-11ec-a482-ea21cd616bd0":
-            if not propertyId or propertyId > 3:
-                return Gview.TErrorreturn(
-                    "Builder.controller.graph_config.get_otlDsList.not_permission",
-                    "no permission",
-                    "Please add edit permission to this user",
-                    "no permission",
-                    "",
-                ), 500
-
     # 此处根据要导出的ids类型，导出图谱。
     file_path, file_name = graph_Service.graph_output(config_ids)
     return send_from_directory(file_path, file_name, as_attachment=True)
@@ -1066,18 +686,8 @@ def graph_config_output():
 def graph_config_input():
     # 获取form表单当中的知识网络id和图谱id
     graph_id = request.form.get("graph_id")
-    uuid = request.headers.get("uuid")
     method = request.form.get("method")
     knw_id = request.form.get("knw_id", None)
-    # 检测uuid是否存在于头部，
-    if uuid == None:
-        return Gview.TErrorreturn(
-            "Builder.controller.graph_config.getuuid.uuidNotFound",
-            "uuid is not found in header",
-            "please put a uuid in header",
-            "uuid is not found in header",
-            "",
-        ), 500
     if knw_id:
         # 检测知识网络是否存在。
         if not knw_service.check_exists_by_knw_id(knw_id):
@@ -1109,8 +719,8 @@ def graph_config_input():
             "import only supports nebula",
             "",
         ), 500
-    # 接受传递的参数。标识文件。
-    file_name = "{0}_input".format(uuid)
+    # 标识文件
+    file_name = secure_filename("{0}_input".format(str(uuid.uuid1())))
     if os.path.exists(file_name):
         os.remove(file_name)
     else:
@@ -1128,10 +738,11 @@ def graph_config_input():
         ), 500
     try:
         for file in files:
-            file.save(secure_filename(file_name))
-            ret, status = graph_Service.graph_input(uuid, knw_id, graph_id, file_name, method)
+            file.save(file_name)
+            ret, status = graph_Service.graph_input(knw_id, graph_id, file_name, method)
             if status != 200:
                 return ret, 500
+            os.remove(file_name)
     except Exception as e:
         return Gview.TErrorreturn(
             "Builder.controller.graph_config.unexception.unexpect_error",
@@ -1174,52 +785,9 @@ def getidbydbname():
         res[dbname] = idinfo
     return res, 200
 
-def getgraph_onegns(arg_gns, graph_ids, kgids, arg_extract_model, arg_data_source):
-    result = []
-    for graph in graph_ids:
-        graph_id = graph.get("id")
-        if graph_id in kgids:
-            graph_name = graph.get("graph_name")
-            graph_InfoExts = graph.get("graph_InfoExt", [])
-            for graph_InfoExt in eval(graph_InfoExts):
-                extract_model = graph_InfoExt.get("extract_model", "")
-                data_source = graph_InfoExt.get("data_source", "")
-                if extract_model != arg_extract_model or data_source != arg_data_source:
-                    continue
-                gns = graph_InfoExt.get("file_source", "")
-                if is_match(arg_gns, gns):
-                    result.append({"id": graph_id, "name": graph_name})
-                    break
-    return result
-
-
-# 判断gns1和gns2是否匹配
-def is_match(gns1, gns2):
-    """
-    gns1：输入gns
-    gns2：被匹配的gns
-    匹配成功的情况：
-    1. gns1 == gns2
-    2. gns1是gns2的子目录
-    3. gns1是gns2的父目录
-    """
-    gns_list1 = gns1.replace("gns://", "").split("/")
-    gns_list2 = gns2.replace("gns://", "").split("/")
-    len_gns1 = len(gns_list1)
-    len_gns2 = len(gns_list2)
-    if ((gns1 == gns2) or
-            (len_gns1 > len_gns2 and gns_list1[:len_gns2] == gns_list2) or
-            (len_gns1 < len_gns2 and gns_list2[:len_gns1] == gns_list1)):
-        return True
-    return False
-    # if len_gns1 < len_gns2:
-    #     return False
-    # return gns_list1[:len_gns2] == gns_list2
-
 @graph_controller_app.route('/info/basic', methods=["get"], strict_slashes=False)
 def get_graph_info_basic():
     try:
-        uuid = request.headers.get("uuid")
         graph_id = request.args.get('graph_id')
         is_all = request.args.get('is_all', 'False')
         key = request.args.get('key')
@@ -1253,7 +821,7 @@ def get_graph_info_basic():
                 data = Gview2.TErrorreturn(code)
                 return data, 400
         # 功能实现
-        code, data = graph_Service.get_graph_info_basic(graph_id, is_all, key, uuid)
+        code, data = graph_Service.get_graph_info_basic(graph_id, is_all, key)
         if code != codes.successCode:
             return data, 400
         return data, 200

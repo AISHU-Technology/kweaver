@@ -3,7 +3,6 @@ from unittest import TestCase, mock
 from service.knw_service import knw_service
 from dao.knw_dao import knw_dao
 import pandas as pd
-from third_party_service.managerUtils import managerutils
 
 
 # test新增知识网络
@@ -59,24 +58,19 @@ class Test_get(TestCase):
 
         # mock knw_dao.get_knw_by_name
         ret_row = [
-            [1, "test1", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "2022-04-19 09:24:45", "2022-04-19 09:24:45", "test1", "test1@163.com", "test1", "test1@163.com"],
-            [2, "test2", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "2022-04-19 09:24:45", "2022-04-19 09:24:45", "test1", "test1@163.com", "test1", "test1@163.com"],
-            [3, "test3", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "2022-04-19 09:24:45", "2022-04-19 09:24:45", "test1", "test1@163.com", "test1", "test1@163.com"],
-            [4, "test4", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "2022-04-19 09:24:45", "2022-04-19 09:24:45", "test1", "test1@163.com", "test1", "test1@163.com"],
-            [5, "test5", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-             "2022-04-19 09:24:45", "2022-04-19 09:24:45", "test1", "test1@163.com", "test1", "test1@163.com"]
+            [1, "test1", "des", "#126EE3",
+             "2022-04-19 09:24:45", "2022-04-19 09:24:45"],
+            [2, "test2", "des", "#126EE3",
+             "2022-04-19 09:24:45", "2022-04-19 09:24:45"],
+            [3, "test3", "des", "#126EE3",
+             "2022-04-19 09:24:45", "2022-04-19 09:24:45"],
+            [4, "test4", "des", "#126EE3",
+             "2022-04-19 09:24:45", "2022-04-19 09:24:45"],
+            [5, "test5", "des", "#126EE3",
+             "2022-04-19 09:24:45", "2022-04-19 09:24:45"]
         ]
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
-                  "update_time", "creator_name", "creator_email", "operator_name", "operator_email"]
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
+                  "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_name = mock.Mock(return_value=ret)
 
@@ -107,9 +101,8 @@ class Test_edit(TestCase):
     def setUp(self) -> None:
         self.params_json = {"knw_id": 1, "knw_name": "test", "knw_des": "des", "knw_color": "#126EE3"}
         # mock knw_dao.get_knw_by_id
-        ret_row = [[1, "test1", "des", "#126EE3", "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc",
-                    "be2ecbdc-b4bf-11ec-900d-46cafb76d0dc", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        ret_row = [[1, "test1", "des", "#126EE3", "2022-04-19 09:24:45", "2022-04-19 09:24:45"]]
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
@@ -132,7 +125,7 @@ class Test_edit(TestCase):
     def test_edit_not_find_knw(self):
         # mock knw_dao.get_knw_by_id
         ret_row = []
-        column = ["id", "knw_name", "knw_description", "color", "creator_id", "final_operator", "creation_time",
+        column = ["id", "knw_name", "knw_description", "color", "creation_time",
                   "update_time"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
@@ -165,26 +158,18 @@ class Test_delete(TestCase):
     def setUp(self) -> None:
         self.params_json = {"knw_id": 1}
 
-        # mock knw_service.get_uuid
-        knw_service.get_uuid = mock.Mock(return_value="e5d2a815230449badccf00bc67436696")
-
-        # mock managerutils.operate_permission
-        managerutils.operate_permission = mock.Mock(return_value=("success", 200))
-
-        # mock knw_dao.get_creator
-        ret_row = [["e5d2a815230449badccf00bc67436696"]]
-        column = ["creator_id"]
+        # mock knw_dao.get_knw_by_id
+        ret_row = [[1, 'test_as', 'test_as', '#126EE3', '2022-06-09 10:13:19',
+        '2022-08-19 13:25:19', 'bb334610-e799-11ec-9211-2afe3ac772a3']]
+        column = ['id', 'knw_name', 'knw_description', 'color', 'creation_time', 'update_time', 'identify_id']
         ret = pd.DataFrame(ret_row, columns=column)
-        knw_dao.get_creator = mock.Mock(return_value=ret)
+        knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
 
         # mock knw_dao.get_relation
         ret_row = []
         column = ["id"]
         ret = pd.DataFrame(ret_row, columns=column)
         knw_dao.get_relation = mock.Mock(return_value=ret)
-
-        # mock managerutils.knw_delete
-        managerutils.knw_delete = mock.Mock(return_value=([], 200))
 
         # mock knw_dao.delete_knw
         knw_dao.delete_knw = mock.Mock(return_value=(200, {}))
@@ -194,22 +179,13 @@ class Test_delete(TestCase):
         res = knw_service.deleteKnw(self.params_json)
         self.assertEqual(res[0], 200)
 
-    # 无权限
-    def test_delete_no_permission(self):
-        # mock managerutils.operate_permission
-        managerutils.operate_permission = mock.Mock(
-            return_value=({"cause": "cause", "code": "code", "message": "message"}, 500))
-
-        res = knw_service.deleteKnw(self.params_json)
-        self.assertEqual(res[0], 500)
-
     # 无知识网络
     def test_delete_not_find_knw(self):
-        # mock knw_dao.get_creator
+        # mock knw_dao.get_knw_by_id
         ret_row = []
-        column = ["creator_id"]
+        column = ['id', 'knw_name', 'knw_description', 'color', 'creation_time', 'update_time', 'identify_id']
         ret = pd.DataFrame(ret_row, columns=column)
-        knw_dao.get_creator = mock.Mock(return_value=ret)
+        knw_dao.get_knw_by_id = mock.Mock(return_value=ret)
 
         res = knw_service.deleteKnw(self.params_json)
         self.assertEqual(res[0], 500)

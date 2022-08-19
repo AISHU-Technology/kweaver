@@ -21,7 +21,6 @@ import os
 import pandas as pd
 from dao.task_onto_dao import task_dao_onto
 import json
-from config.config import permission_manage
 from utils.log_info import Logger
 
 class OtlService(object):
@@ -936,26 +935,14 @@ class OtlService(object):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
-            kgIds, propertyIds = [], []
-            if permission_manage:
-                res_list = args.get("res_list")
-                for temp in res_list:
-                    kgIds.append(temp["configId"])  # 可以看见的数据源id列表
-                    propertyIds.append(temp["propertyId"])
-
+            kgIds = []
             page = args.get("page")
             size = args.get("size")
             order = args.get("order")
-            count = otl_dao.getCount(kgIds)
+            count = otl_dao.getCount()
             res = {}
             res["count"] = count
-
-
             ret = otl_dao.getall(int(page)-1, int(size), order, kgIds)
-
-            # 拼接屬性id
-            df_data = pd.DataFrame({"id": kgIds, "propertyId": propertyIds})
-            ret = pd.merge(ret, df_data, on=["id"], how="left")
             rec_dict = ret.to_dict('records')
             # rec_dict["entity"] = eval(rec_dict["entity"])
             # print(rec_dict)
@@ -967,12 +954,12 @@ class OtlService(object):
                     otl_id = reslist["id"]
                     entity = reslist["entity"]
                     entity_value = eval(entity)
-                    used_task = eval( reslist["used_task"])
-                    if len(entity_value) !=0 :
+                    used_task = eval(reslist["used_task"])
+                    if len(entity_value) != 0 :
                         task_in_table = task_dao_onto.get_all_by_otlid(otl_id)
                         alltask = task_in_table["task_id"].tolist()
                         running_task = task_in_table["task_status"].tolist()
-                        difference =  [i for i in alltask if i not in used_task]
+                        difference = [i for i in alltask if i not in used_task]
                         if "running" not in running_task and len(difference) == 0:
                             dict_all["ontology_name"] = reslist["ontology_name"]
                             list_all.append(dict_all)
@@ -1105,13 +1092,7 @@ class OtlService(object):
 
         else:
             try:
-                kgIds, propertyIds = [], []
-                if permission_manage:
-                    res_list = args.get("res_list", [])
-                    for temp in res_list:
-                        kgIds.append(temp["configId"])  # 可以看见的数据源id列表
-                        propertyIds.append(temp["propertyId"])
-
+                kgIds = []
                 page = args.get("page")
                 otlname = args.get("otlname")
                 size = args.get("size")
@@ -1119,7 +1100,7 @@ class OtlService(object):
                 state = args.get("otl_status")
                 if otlname == "":
                     if state == "all":
-                        count = otl_dao.getCount(kgIds)
+                        count = otl_dao.getCount()
                         ret = otl_dao.getall(int(page) - 1, int(size), order,kgIds)
                         rec_dict = ret.to_dict('records')
                     else:
@@ -1128,8 +1109,8 @@ class OtlService(object):
                         rec_dict = ret.to_dict('records')
                 else:
                     if state == "all":
-                        count = otl_dao.getCountbyname(otlname,kgIds)
-                        ret = otl_dao.getallbyname(otlname, int(page) - 1, int(size), order ,kgIds)
+                        count = otl_dao.getCountbyname(otlname)
+                        ret = otl_dao.getallbyname(otlname, int(page) - 1, int(size), order)
                         rec_dict = ret.to_dict('records')
                     else:
                         count = otl_dao.getCountbynameandstate(otlname,state)
@@ -1418,13 +1399,13 @@ class OtlService(object):
         return ret_name,obj_name
 
 
-    def getds(self, kgIds):
+    def getds(self):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
-            count = dsm_dao.getCounts1(kgIds)
+            count = dsm_dao.getCounts1()
             res = {}
-            ret = dsm_dao.getdsbyid(kgIds)
+            ret = dsm_dao.getdsbyid()
             rec_dict = ret.to_dict('records')
             res["count"] = count
             res["df"] = rec_dict
