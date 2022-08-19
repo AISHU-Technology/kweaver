@@ -1,0 +1,103 @@
+node('kg_aishu_cn_idc'){
+    img_name = "acr.aishu.cn/ad/kg-builder"
+    img_tag = "1.0.2.1"
+    pkg_name = "kg-builder-img.tar"
+    pkg_name_with_num = "kg-builder-img-${BRANCH_NAME}-${BUILD_NUMBER}.tar"
+    package_dir_ftp = "/packages/builder/${BRANCH_NAME}"
+    package_dir_ftp_cover = "/report/graph_builder/${new Date().format('yyyyMMdd-HHmmss')}-${BUILD_NUMBER}"
+    harbor_url = "acr.aishu.cn/ad"
+
+	stage('env') {
+		sh "mkdir -p ./builder-builder"
+	}
+
+	stage('builder kg-builder') {
+		dir('builder-builder') {
+		    def workspace = pwd()
+
+		    git credentialsId: 'f929d963-3e7e-45c9-9530-e3bc6bfe5b82', url: 'https://gitlab.aishu.cn/anydata-rnd/gbuilder/builder.git', branch: "${BRANCH_NAME}"
+
+
+			sh "echo 'Begin to build image'"
+			sh "docker build . --network=host -t ${img_name}:${img_tag}"
+			sh "docker tag ${img_name}:${img_tag} ${img_name}:${img_tag}-${BRANCH_NAME}-${BUILD_NUMBER}"
+            sh "docker tag ${img_name}:${main_tag} ${harbor_url}/${img_name}:${main_tag}.${BRANCH_NAME.toLowerCase()}"
+            sh "docker push ${harbor_url}/${img_name}:${main_tag}.${BRANCH_NAME.toLowerCase()}"
+
+
+		}
+	}
+
+	//stage("UT"){
+	 //   dir("builder-builder"){
+     //       sh "/root/anaconda3/bin/coverage run ds_ut.py"
+      //      sh "/root/anaconda3/bin/coverage xml -o coverage.xml"
+       //     sh "mv coverage.xml ../"
+        //    sh "echo ${BUILD_URL} > /root/ut/ut/kg-builder-ut.info"
+	    //}
+	//}
+
+    stage("UT"){
+        dir("builder-builder"){
+            sh "/root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py"
+            sh "echo ${BUILD_URL} > /root/ut/ut/kg-builder-ut.info"
+            sh "mkdir -p ./coverage"
+            sh "chown -R 1000:1000 ./coverage"
+            sh "cp ./coverage.xml ./coverage/cobertura-coverage.xml"
+            cobertura(coberturaReportFile: 'coverage/cobertura-coverage.xml')
+        }
+	}
+
+
+	stage('upload UT 2 ftp') {
+		sh "ftp -n<<EOF \n\
+		    open ftp-ad.aishu.cn \n\
+		    user ftp_2 Q1c%k2h \n\
+		    binary \n\
+		        mkdir /report/kg-builder \n\
+                mkdir ${package_dir_ftp_cover} \n\
+                cd ${package_dir_ftp_cover} \n\
+                prompt \n\
+                    put coverage.xml coverage.xml \n\
+                close \n\
+			bye \n\
+		EOF"
+	}
+
+	stage('save') {
+		sh "docker save -o ./${pkg_name} ${img_name}:${img_tag}"
+		sh "docker save -o ./${pkg_name_with_num} ${img_name}:${img_tag}"
+		sh "docker tag ${img_name}:${img_tag} ${harbor_url}/${img_name}:${img_tag}.${BRANCH_NAME.toLowerCase()}.${BUILD_NUMBER}"
+		sh "docker push ${harbor_url}/${img_name}:${img_tag}.${BRANCH_NAME.toLowerCase()}.${BUILD_NUMBER}"
+		//--------------------------   AS  ---------------------------------------------------
+		sh "docker tag ${img_name}:${img_tag} ${harbor_url}/${img_name}:${main_tag}"
+        sh "docker push ${harbor_url}/${img_name}:${img_tag}"
+        //------------------------------------------------------------------------------------
+	}
+
+
+	stage('upload 2 ftp') {
+		sh "ftp -n<<EOF \n\
+		    open ftp-ad.aishu.cn \n\
+		    user ftp_2 Q1c%k2h \n\
+		    binary \n\
+		        mkdir `dirname ${package_dir_ftp}` \n\
+                mkdir ${package_dir_ftp} \n\
+                cd /packages/builder/${BRANCH_NAME} \n\
+                prompt \n\
+                put ${pkg_name} ${pkg_name} \n\
+                put ${pkg_name_with_num} ${pkg_name_with_num} \n\
+                close \n\
+                bye \n\
+		EOF"
+	}
+
+	stage('clean') {
+		sh "rm -rf ./*"
+
+	    sh "docker rmi ${img_name}:${img_tag}"
+	    sh "docker rmi ${img_name}:${img_tag}-${BRANCH_NAME}-${BUILD_NUMBER}"
+	    sh "docker rmi ${harbor_url}/${img_name}:${img_tag}.${BRANCH_NAME.toLowerCase()}.${BUILD_NUMBER}"
+        sh "docker rmi ${harbor_url}/${img_name}:${img_tag}.${BRANCH_NAME.toLowerCase()}"
+	}
+}
