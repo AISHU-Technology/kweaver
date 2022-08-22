@@ -37,8 +37,8 @@ from pymongo import MongoClient
 import configparser
 from os import path
 
-from nebula2.gclient.net import ConnectionPool
-from nebula2.Config import Config as NebulaConfig
+from nebula3.gclient.net import ConnectionPool
+from nebula3.Config import Config as NebulaConfig
 from common.errorcode import codes
 from common.errorcode.gview import Gview as Gview2
 

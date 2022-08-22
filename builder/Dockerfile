@@ -1,5 +1,5 @@
 # 基于镜像基础
-FROM acr.aishu.cn/ad/builder-python:1.0.1.16
+FROM acr.aishu.cn/ad/builder-python:1.0.1.17
 
 # 设置代码文件夹工作目录 /app
 WORKDIR /app

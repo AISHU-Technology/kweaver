@@ -17,8 +17,8 @@ import math
 import json
 import multiprocessing
 
-from nebula2.gclient.net import ConnectionPool
-from nebula2.Config import Config as NebulaConfig
+from nebula3.gclient.net import ConnectionPool
+from nebula3.Config import Config as NebulaConfig
 from common.errorcode.gview import Gview as Gview2
 from common.errorcode import codes
 
@@ -1880,7 +1880,7 @@ class SQLProcessor:
             if self.type == 'orientdb':
                 sql = 'SELECT FROM `{}` WHERE `{}` = {}'.format(class_name, prop, value)
             elif self.type == 'nebula':
-                ngql = 'LOOKUP ON `{}` where `{}`.`{}` == {}'.format(class_name, class_name, prop, value)
+                ngql = 'LOOKUP ON `{}` where `{}`.`{}` == {} YIELD id(vertex)'.format(class_name, class_name, prop, value)
                 code, res = graphdb._nebula_exec(ngql, db)
                 sql = []
                 for i in range(res.row_size()):
