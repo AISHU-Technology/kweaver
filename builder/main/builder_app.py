@@ -324,13 +324,12 @@ def before_request():
 
 
 from controller.dsm_controller import dsm_controller_app
-from controller.ontologym_controller import ontology_controller_app, ontology_controller_open
+from controller.ontologym_controller import ontology_controller_app
 # from controller.streamline_line import streamline_controller_app
-from controller.graph_controller import graph_controller_app, graph_controller_open
+from controller.graph_controller import graph_controller_app
 from controller.celery_controller_open_kc import task_controller_open_kc
 from controller.celery_controller import task_controller_app
 from controller.graph_count_controller import graph_count_controller_app
-from controller.graph_count_controller import graph_count_controller_app_open
 from controller.timer_controller import timer_controller_app
 from controller.rebuild_fulltextindex_controller import rebuild_fulltextindex_controller_app
 from controller.knowledgeNetwork_controller import knowledgeNetwork_controller_app
@@ -339,18 +338,13 @@ from controller.knowledgeNetwork_controller import knowledgeNetwork_controller_a
 app.register_blueprint(dsm_controller_app, url_prefix='/api/builder/v1/ds')
 
 app.register_blueprint(ontology_controller_app, url_prefix='/api/builder/v1/onto')
-app.register_blueprint(ontology_controller_open, url_prefix='/api/builder/v1/open/onto')
 
 # app.register_blueprint(streamline_controller_app, url_prefix='/api/builder/v1/streamline')
 app.register_blueprint(graph_controller_app, url_prefix='/api/builder/v1/graph')
-app.register_blueprint(graph_controller_open, url_prefix='/api/builder/v1/open/graph')
 
-app.register_blueprint(task_controller_app, name="task_controller_app_open", url_prefix='/api/builder/v1/open/task')
 app.register_blueprint(task_controller_app, name="task_controller_app", url_prefix='/api/builder/v1/task')
 
 app.register_blueprint(graph_count_controller_app, url_prefix='/api/builder/v1/graphcount')
-app.register_blueprint(graph_count_controller_app_open, url_prefix='/api/builder/v1/open/graphcount')
-# app.register_blueprint(dsm_controller_app, url_prefix='/api/builder/v1/acctoken')
 
 app.register_blueprint(rebuild_fulltextindex_controller_app, url_prefix='/api/builder/v1/fulltextindex')
 app.register_blueprint(task_controller_open_kc, url_prefix='/api/builder/v1/open/kc')
@@ -358,8 +352,6 @@ app.register_blueprint(timer_controller_app, url_prefix='/api/builder/v1/timer')
 
 app.register_blueprint(knowledgeNetwork_controller_app, name="knowledgeNetwork_controller_app",
                        url_prefix='/api/builder/v1/knw')
-app.register_blueprint(knowledgeNetwork_controller_app, name="knowledgeNetwork_controller_app_open",
-                       url_prefix='/api/builder/v1/open/knw')
 # app.register_blueprint(test_app, url_prefix='/test')
 app.response_class = Gresponse
 # app.config['SECRET_KEY'] = 'you never guess'

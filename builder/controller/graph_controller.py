@@ -29,7 +29,6 @@ from common.errorcode import codes
 import uuid
 
 graph_controller_app = Blueprint('graph_controller_app', __name__)
-graph_controller_open = Blueprint('graph_controller_open', __name__)
 
 
 @graph_controller_app.route('', methods=["post"], strict_slashes=False)
@@ -604,27 +603,6 @@ def graphDsList(graphid):
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     return ret_message, CommonResponseStatus.SUCCESS.value
 
-# 根据图谱名称获取图谱配置信息
-@graph_controller_open.route('/<graph_name>', methods=["GET"], strict_slashes=False)
-def getgraphbyname(graph_name):
-    host_url = getHostUrl()
-    if not isinstance(graph_name, str):
-        message = "The parameter graph name type must be string!"
-        return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message=message), CommonResponseStatus.BAD_REQUEST.value
-    # graph_name是否存在
-    code, ret = graph_Service.checkByName(graph_name)
-    if code != 0:
-        return jsonify(ret), 500
-    graph_id = ret.to_dict('records')[0]['id']
-
-    ret_code, ret_message = graph_Service.getGraphById(graph_id, host_url)
-
-    if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-        return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                   message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-    return ret_message, CommonResponseStatus.SUCCESS.value
-
 
 @graph_controller_app.route("/adv-search-config/kglist-conf/<net_id>", methods=["GET"], strict_slashes=False)
 def get_adv_search(net_id):
@@ -754,36 +732,6 @@ def graph_config_input():
 
     return "True", 200
 
-@graph_controller_open.route("/getidbydbname", methods=["POST"], strict_slashes=False)
-def getidbydbname():
-    """根据KDB_name返回id和KG_config_id
-    """
-    dbnames = request.json.get("dbnames")
-    if not dbnames or not isinstance(dbnames, list):  # 未传递dbnames 或 dbnames不为列表 或 dbnames列表长度为0
-        return Gview.TErrorreturn(
-            ErrorCode="Builder.comtroller.graph_config.getidbydbname.paramerror",
-            Description="parameter error",
-            Solution="please check your parameter again.",
-            ErrorDetails="dbnames should be list and should have at least one value.",
-            ErrorLink=""
-        ), 500
-    if len(dbnames) > 50:  # dbnames长度超过50个
-        return Gview.TErrorreturn(
-            ErrorCode="Builder.comtroller.graph_config.getidbydbname.paramlenerror",
-            Description="parameter length error",
-            Solution="please check your parameter again.",
-            ErrorDetails="dbnames size should not exceed 50.",
-            ErrorLink=""
-        ), 500
-    res = {}
-    data = graph_dao.get_id_by_dbname(dbnames)
-    for i in range(len(data)):
-        dbname = data.iloc[i, 0]
-        idinfo = {}
-        idinfo['id'] = int(data.iloc[i, 1])  # id
-        idinfo['kgconfid'] = int(data.iloc[i, 2])  # KG_config_id
-        res[dbname] = idinfo
-    return res, 200
 
 @graph_controller_app.route('/info/basic', methods=["get"], strict_slashes=False)
 def get_graph_info_basic():

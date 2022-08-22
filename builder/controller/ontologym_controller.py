@@ -19,7 +19,6 @@ from utils.celery_check_params_json import celery_check_params
 import re
 
 ontology_controller_app = Blueprint('ontology_controller_app', __name__)
-ontology_controller_open = Blueprint('ontology_controller_open', __name__)
 
 
 #######查询所有本体#############
@@ -740,42 +739,6 @@ def graphDsList():
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
 
     return ret_message, CommonResponseStatus.SUCCESS.value
-
-
-@ontology_controller_open.route('/updateotlschema', methods=["POST"], strict_slashes=False)
-def updateotlschema():
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    graph_id = params_json.get("graph_id", None)
-    if graph_id is None:
-        obj = {}
-        message = "parameter graph_id cannot be empty!"
-        obj["ErrorCode"] = str(CommonResponseStatus.PARAMETERS_ERROR.value)
-        obj["Description"] = message
-        obj["Solution"] = "assign values to parameter graph_id.."
-        obj["ErrorDetails"] = message
-        obj["ErrorLink"] = ""
-        return Gview.VErrorreturn(obj), CommonResponseStatus.BAD_REQUEST.value
-    if type(graph_id).__name__ != "int":
-        obj = {}
-        message = "The parameter graph_id type must be int!"
-        obj["ErrorCode"] = str(CommonResponseStatus.PARAMETERS_ERROR.value)
-        obj["Description"] = message
-        obj["Solution"] = "Enter graph_id of type int."
-        obj["ErrorDetails"] = message
-        obj["ErrorLink"] = ""
-        return Gview.VErrorreturn(obj), CommonResponseStatus.BAD_REQUEST.value
-    if param_code == 0:
-        # 步骤2 参数图谱id是否存在; 图谱配置中本体是否存在，图谱状态是否运行中, 图谱数据库不存在,图谱不可用 ，并获得一些需要的信息
-        ret_code, ret_message, df = otlOpenSerivice.getGraphById(graph_id)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            Logger.log_error(json.dumps(ret_message))
-            return Gview.VErrorreturn(ret_message), CommonResponseStatus.SERVER_ERROR.value
-        ret_code, obj = otlOpenSerivice.updateotlschema(params_json, df, graph_id)
-        if ret_code != CommonResponseStatus.SUCCESS.value:
-            Logger.log_error(json.dumps(ret_message))
-            return Gview.VErrorreturn(obj), ret_code
-        return jsonify(obj), CommonResponseStatus.SUCCESS.value
-
 
 def getHostUrl():
     hostUrl = request.host_url

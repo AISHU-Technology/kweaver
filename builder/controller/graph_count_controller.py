@@ -12,7 +12,6 @@ from service.graph_Service import graph_Service
 from common.errorcode import codes
 
 graph_count_controller_app = Blueprint('graph_count_controller_app', __name__)
-graph_count_controller_app_open = Blueprint('graph_count_controller_app_open', __name__)
 
 
 def get_entity_egdes_num(graph_id):
@@ -156,33 +155,3 @@ def graphs_count_by_id(graph_id):
     result = {"res": res}
     return result
 
-
-# open api获取图数据库点和边数量
-@graph_count_controller_app_open.route('/<graph_id>', methods=["GET"])
-def graphs_count_by_id(graph_id):
-    status = 0
-    # graph_id 不是int
-    if not graph_id.isdigit():
-        return Gview.BuFailVreturn(cause="graph_id must be int ", code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message="param error "), CommonResponseStatus.BAD_REQUEST.value
-    # graph_id 不存在
-    code, ret = graph_Service.checkById(graph_id)
-    if code != 0:
-        return jsonify(ret), 500
-        # return Gview.BuFailVreturn(cause=ret["cause"], code=ret["code"],
-        #                            message=ret["message"]), CommonResponseStatus.REQUEST_ERROR.value
-
-    code, resp = getGraphCount(graph_id)
-    if code != codes.successCode:
-        edges, entities, properties = 0, 0, 0
-        status = -1
-    else:
-        edges, entities, edge_pros, entity_pros, properties = resp
-    res = {
-        "entity_pro": entities,
-        "edge_pro": edges,
-        "pros": properties,
-        "status": status
-    }
-    result = {"res": res}
-    return result

@@ -1265,25 +1265,6 @@ class GraphService():
             obj["message"] = "error"
             return -1, obj
 
-    # 该图谱id是否存在
-    def checkByName(self, graph_name):
-        obj = {}
-        try:
-            df = graph_dao.getbyname(graph_name)
-            if len(df) == 0:
-                obj["cause"] = "graph_name  %s not exist!" % graph_name
-                obj["code"] = CommonResponseStatus.REQUEST_ERROR.value
-                obj["message"] = "graph_name error"
-                return -1, obj
-            else:
-                return 0, df
-        except Exception as e:
-            Logger.log_error(repr(e))
-            obj["cause"] = repr(e)
-            obj["code"] = CommonResponseStatus.REQUEST_ERROR.value
-            obj["message"] = "error"
-            return -1, obj
-
     # 获取gns对应主题
     def get_topic_by_gns(self, graph_id, gns_list, topk):
         # 获取图谱信息

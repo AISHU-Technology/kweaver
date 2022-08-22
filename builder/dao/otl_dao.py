@@ -1851,14 +1851,6 @@ class OtlDao(object):
         return new_id
 
     @connect_execute_close_db
-    def getbyname(self, name, connection, cursor, ):
-        sql = """SELECT * FROM ontology_table where ontology_name = %s""" % ('"' + name + '"')
-        Logger.log_info(sql)
-        # sql = sql.format()
-        df = pd.read_sql(sql, connection)
-        return df
-
-    @connect_execute_close_db
     def getbyids(self, ids, connection, cursor, ):
 
         sql = """SELECT * FROM ontology_table where id in (%s) """ % (",".join([str(id) for id in ids]))

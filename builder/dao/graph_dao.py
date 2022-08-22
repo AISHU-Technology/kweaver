@@ -548,14 +548,6 @@ class GraphDao():
         return df
 
     @connect_execute_close_db
-    def getbyname(self, graph_name, connection, cursor):
-        print(graph_name)
-        sql = f"""SELECT * FROM graph_config_table where graph_name = '{graph_name}'"""
-        Logger.log_info(sql)
-        df = pd.read_sql(sql, connection)
-        return df
-
-    @connect_execute_close_db
     def check_by_name(self, graph_name, connection, cursor):
         print(graph_name)
         sql = """SELECT * FROM graph_config_table where graph_name = '{}'""".format(graph_name)
@@ -566,40 +558,6 @@ class GraphDao():
             return True
         else:
             return False
-
-    @connect_execute_close_db
-    def getkgdbipnamebyid(self, grapid, connection, cursor):
-        """根据grapid返回图数据库信息
-        grapid： graph_config_table的id"""
-        sql = f""" 
-        SELECT
-            graph_db.ip,
-            graph_db.port,
-            tabs.KDB_name,
-            graph_db.user,
-            graph_db.password,
-            graph_db.db_user,
-            graph_db.db_ps,
-            graph_db.db_port,
-            graph_db.type 
-        FROM
-            graph_db  
-            LEFT JOIN (
-                SELECT 
-                    KDB_ip,
-                    KDB_name,
-                    gc.graph_db_id,
-                    gc.id
-                FROM
-                    knowledge_graph kg
-                    JOIN graph_config_table gc ON kg.KG_config_id = gc.id
-                WHERE KG_config_id = {grapid}
-            ) tabs ON tabs.graph_db_id = graph_db.id
-        WHERE tabs.id = {grapid}"""
-        # sql = sql.format()
-        Logger.log_info(sql)
-        df = pd.read_sql(sql, connection)
-        return df
 
     # 流程一根据状态和id判断是否可以修改dbname
     @connect_execute_close_db
@@ -1203,12 +1161,5 @@ class GraphDao():
         df = pd.read_sql(sql, connection)
         return df
 
-    @connect_execute_close_db
-    def get_id_by_dbname(self, dbnames, connection, cursor):
-        dbnames = ['"' + i + '"' for i in dbnames]
-        dbnames = ','.join(dbnames)
-        sql = 'select KDB_name, id, KG_config_id from knowledge_graph where KDB_name in ({})'.format(dbnames)
-        df = pd.read_sql(sql, connection)
-        return df
 
 graph_dao = GraphDao()
