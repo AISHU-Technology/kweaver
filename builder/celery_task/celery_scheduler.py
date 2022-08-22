@@ -26,7 +26,7 @@ def updatedata():
         task_service.updatetaredis(df, task_info)
     else:
         try:
-            task_service.updatetatus2(df, task_info, "host_url")
+            task_service.updatetatus2(df, task_info)
         except Exception as e:
             print(e)
 

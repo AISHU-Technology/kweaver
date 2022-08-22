@@ -385,7 +385,7 @@ class TaskDao(object):
     def geKGDBbyid(self, graph_id, connection, cursor):
         from service.graph_Service import graph_Service
 
-        ret_code, obj = graph_Service.getGraphById(graph_id, "")
+        ret_code, obj = graph_Service.getGraphById(graph_id)
         return obj["res"]
 
     def getotlnum(self, graph_otl):
@@ -457,7 +457,7 @@ class TaskDao(object):
     # 任务管理详细能不能查看
     def taskdetail(self, graph_id):
         from service.graph_Service import graph_Service
-        ret_code, obj = graph_Service.getGraphById(graph_id, "")
+        ret_code, obj = graph_Service.getGraphById(graph_id)
         res = obj["res"]
         graph_baseInfo = res["graph_baseInfo"]
         graph_DBName = ''

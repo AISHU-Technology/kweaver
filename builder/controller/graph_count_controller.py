@@ -25,7 +25,7 @@ def get_entity_egdes_num(graph_id):
             edge2pros: {边名: 属性个数}
             entity2pros: {实体名: 属性个数}
     '''
-    ret_code, obj = graph_Service.getGraphById(graph_id, "")
+    ret_code, obj = graph_Service.getGraphById(graph_id)
     if ret_code != 200:
         return '0'
     res = obj["res"]

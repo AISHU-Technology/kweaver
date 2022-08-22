@@ -27,10 +27,6 @@ from dao.graph_dao import graph_dao
 from utils.log_info import Logger
 
 
-def getHostUrl():
-    hostUrl = request.host_url
-    return hostUrl
-
 
 def start_task(graph_id, tasktype, trigger_type, right_task_type):
     Logger.log_info(
@@ -139,8 +135,6 @@ def task():
                 #     return jsonify({'res': task_id + " start running", "code": 200})
                 else:
                     try:
-                        # 把数据插入到历史数据中 并删除，并执行
-                        # task_service.addhistory(graph_id, task_data, request.host_url)
                         # 删除
                         task_service.deletetask(None, graph_id)
                         # 执行
@@ -179,9 +173,8 @@ def getalltask():
 @celery_controller_app.route('/getdetail', methods=['GET'])
 def getdetailbytaskid():
     params_json = request.args.to_dict()
-    host_url = getHostUrl()
     graph_id = params_json.get("graph_id")
-    ret_code, obj = task_service.getdetailtask(graph_id, host_url)
+    ret_code, obj = task_service.getdetailtask(graph_id)
     return jsonify({'res': obj, "code": ret_code})
 
 
@@ -198,7 +191,6 @@ def gethistorytask():
 def getprogressbytaskid():
     try:
         params_json = request.args.to_dict()
-        # host_url = getHostUrl()
         graph_id = params_json.get("graph_id")
         # # 获取之前刷新一次
         # import celery_scheduler

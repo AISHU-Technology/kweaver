@@ -131,7 +131,7 @@ class TaskService():
         return ret_code, obj
 
     # 添加历史记录
-    def update_history(self, graph_id, task_data, host_url):
+    def update_history(self, graph_id, task_data):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -470,10 +470,10 @@ class TaskService():
                 row["task_status"] = "failed"
                 row["end_time"] = dt
                 row["error_report"] = str(error_report)
-                self.update_history(row["graph_id"], row, "host_url")
+                self.update_history(row["graph_id"], row)
 
     # 定时跟新任务状态 updatetatus2
-    def updatetatus2(self, df, task_info, host_url):
+    def updatetatus2(self, df, task_info):
         try:
             # 根据任务id 获取任务的状态并改变任务状态
             status = ["graph_baseInfo", "graph_ds", "graph_otl", "graph_InfoExt", "graph_KMap", "graph_KMerge"]
@@ -504,7 +504,7 @@ class TaskService():
                                 history_df = task_dao.gethistortbytime(row['task_id'], task["date_done"])
                                 if len(history_df) == 0:
                                     Logger.log_info("graph_id: {} SUCCESS start insert history".format(row["graph_id"]))
-                                    self.update_history(row["graph_id"], row, host_url)
+                                    self.update_history(row["graph_id"], row)
                                 taskstat = task_dao.gettaskupdata(row['task_id'], "normal")
                                 Logger.log_info("graph_id: {} SUCCESS end insert history".format(row["graph_id"]))
                                 if len(taskstat) == 0:
@@ -529,7 +529,7 @@ class TaskService():
                                 history_df = task_dao.gethistortbytime(row['task_id'], task["date_done"])
                                 if len(history_df) == 0:
                                     Logger.log_info("graph_id: {} FAILURE start insert history".format(row["graph_id"]))
-                                    self.update_history(row["graph_id"], row, host_url)
+                                    self.update_history(row["graph_id"], row)
                                 task_ta = task_dao.getbystatusid(row['task_id'])
                                 Logger.log_info("graph_id: {} end insert history".format(row["graph_id"]))
                                 if len(task_ta) > 0:
@@ -555,7 +555,7 @@ class TaskService():
                                 graph_id = row["graph_id"]
                                 task_dao.upKgstatus(graph_id, status2)
                                 row["end_time"] = task["date_done"]
-                                self.update_history(row["graph_id"], row, host_url)
+                                self.update_history(row["graph_id"], row)
                                 # message = "graph %s stoped".format(str(graph_id))
                                 # res = self.task_status_send(url, graph_id, userid, message)
                                 # print(res)
@@ -588,7 +588,7 @@ class TaskService():
             Logger.log_error(err)
         return df
 
-    def update_otl_status2(self, df, task_info, host_url):
+    def update_otl_status2(self, df, task_info):
         try:
             for index, row in df.iterrows():
                 try:
@@ -707,7 +707,7 @@ class TaskService():
             return ret_code, obj
 
     # 获取任务详情
-    def getdetailtask(self, graph_id, host_url):
+    def getdetailtask(self, graph_id):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:

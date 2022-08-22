@@ -47,7 +47,6 @@ class AddgraphTest(unittest.TestCase):
                                 {"graph_Name": "qwe", "graph_des": "", "graph_DBName": "qwe", "graph_db_id": 1}],
                             "knw_id": 1}
 
-        self.host_url = '1.2.3.4'
         self.listDatabases = []
         graph_Service.get_listDatabases = mock.Mock(return_value=self.listDatabases)
         self.mongoDB_db_names = ['test_gjk']
@@ -56,7 +55,7 @@ class AddgraphTest(unittest.TestCase):
 
     def test_addgraph_sucess(self):
         # mock getKgConfByName
-        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json, self.host_url)
+        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json)
         self.assertEqual(ret_code, 200)
 
     def test_addgraph_fail(self):
@@ -66,25 +65,25 @@ class AddgraphTest(unittest.TestCase):
         # mock getKgConfByName
         res = pd.DataFrame(self.graph_config_table, columns=self.graph_config_columns)
         graph_dao.getKgConfByName = mock.Mock(return_value=res)
-        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json, self.host_url)
+        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json)
         self.assertEqual(ret_code, 500)
         res = pd.DataFrame(self.graph_config_table, columns=self.graph_config_columns)
         graph_dao.getallgraph = mock.Mock(return_value=res)
-        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json, self.host_url)
+        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json)
         self.assertEqual(ret_code, 500)
 
     def test_addgraph_exception(self):
         graph_Service.get_listMongo = mock.Mock(return_value=[], side_effect=Exception('mongoDB Unusable!'))
-        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json, self.host_url)
+        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json)
         self.assertEqual(ret_message['code'], 500001)
         self.getGraphDBNew = []
         res = pd.DataFrame(self.getGraphDBNew, columns=self.getGraphDBNew_columns)
         graph_dao.getGraphDBNew = mock.Mock(return_value=res)
-        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json, self.host_url)
+        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json)
         self.assertEqual(ret_message['code'], 500007)
         res = pd.DataFrame(self.graph_config_table, columns=self.graph_config_columns)
         graph_dao.getKgConfByName = mock.Mock(return_value=res)
-        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json, self.host_url)
+        ret_code, ret_message, graph_id = graph_Service.addgraph(self.params_json)
         self.assertEqual(ret_message['code'], 500008)
 
 

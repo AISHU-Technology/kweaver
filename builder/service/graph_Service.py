@@ -43,7 +43,7 @@ from common.errorcode import codes
 from common.errorcode.gview import Gview as Gview2
 
 class GraphService():
-    def getGraphDB(self, host_url):
+    def getGraphDB(self):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -65,7 +65,7 @@ class GraphService():
 
         return ret_code, obj
 
-    def getallgraph(self, host_url):
+    def getallgraph(self):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -87,37 +87,15 @@ class GraphService():
         return ret_code, obj
         # 新增图谱配置
 
-    def getbis(self, host_url):
+    def getbis(self):
         config = configparser.ConfigParser()
         config.read("./../config/asapi.conf")
         baseInfo_flag = eval(config.get("baseInfo_flag", "baseInfo_flag"))
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         obj["baseInfo_flag"] = baseInfo_flag
-        Logger.log_info("host: {}, base info switch {}".format(host_url, baseInfo_flag))
+        Logger.log_info("base info switch {}".format(baseInfo_flag))
         return ret_code, obj
-
-    # def getalldbname(self,host_url):
-    #     ret_code = CommonResponseStatus.SUCCESS.value
-    #     obj = {}
-    #     db_list = []
-    #
-    #     ret = graph_dao.getGraphDBNew()
-    #     rec_dict = ret.to_dict('records')
-    #     rec_dict2 = rec_dict[0]
-    #     graph_DBPort = rec_dict2["port"]
-    #     graph_DBAddress = rec_dict2["ip"]
-    #     try:
-    #         # # 获取 orientDB 数据库集合
-    #         url_db = 'http://' + graph_DBAddress + ':' + str(graph_DBPort) + "/listDatabases"
-    #         r_db = requests.get(url_db)
-    #         databases_res = r_db.json()
-    #         db_list = databases_res["databases"]
-    #         obj["res"] = db_list
-    #     except Exception as e:
-    #         obj["res"] = db_list
-    #         return ret_code, obj
-    #     return ret_code, obj
 
     def get_listDatabases(self, graph_DBAddress, graph_DBPort, username, password, graph_DBType):
         databases = []
@@ -167,7 +145,7 @@ class GraphService():
             if not code:
                 raise Exception(msg)
 
-    def addgraph(self, params_json, host_url):
+    def addgraph(self, params_json):
         config = configparser.ConfigParser()
         asapi_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'asapi.conf')
         config.read(asapi_path)
@@ -336,148 +314,6 @@ class GraphService():
             obj['message'] = "create graph config fail"
         return ret_code, obj, graph_id
 
-    # 修改 新增图谱配置，,已废弃
-    def addgraph_V1635(self, params_json, host_url):
-        ret_code = CommonResponseStatus.SUCCESS.value
-        obj = {}
-        dbname_exits_flag = False
-        KGname_exit_flag = False
-        DB_IP_ERROR = False
-        update_flag = False
-
-        graph_id = -1  # 图谱id
-        # 查询图数据库密码
-        try:
-            # 1. 图谱名称是否存在
-            # 2. 数据库IP是否可用
-            # 3. 图数据名是否可用
-
-            graph_process_list = params_json["graph_process"]
-            graph_process_dict = graph_process_list[0]
-
-            graph_Name = graph_process_dict["graph_Name"]
-            graph_db_id = graph_process_dict["graph_db_id"]
-            KgConf = graph_dao.getKgConfByName(graph_Name)
-
-            mongoDB_conn = mongoConnect.connect_mongo()
-
-            if len(KgConf) != 0:
-                KGname_exit_flag = True
-
-            ret = graph_dao.getGraphDBNew(graph_db_id)
-            rec_dict = ret.to_dict('records')
-            if len(rec_dict) == 0:
-                DB_IP_ERROR = True
-            else:
-                rec_dict2 = rec_dict[0]
-                graph_DBPort = rec_dict2["port"]
-                graph_DBPort = graph_DBPort.split(';')
-                username = rec_dict2["db_user"]
-                # username = commonutil.DecryptBybase64(username)
-                password = rec_dict2["db_ps"]
-                password = commonutil.DecryptBybase64(password)
-                graph_ips = rec_dict2["ip"]
-                graph_DBAddress = rec_dict2["ip"]
-                graph_DBAddress = graph_DBAddress.split(';')
-                graph_DBType = rec_dict2['type']
-                graph_lastId = 0
-                ret_lastId = graph_dao.getKgConfLastId()
-                rec_lastId_dict = ret_lastId.to_dict('records')
-                if len(rec_lastId_dict) == 1:
-                    r_lastId = rec_lastId_dict[0]
-                    graph_lastId = int(r_lastId["id"])
-
-                conId = "-" + str(graph_lastId + 1)
-                graph_DBName = "knowledgegraph" + conId
-                try:
-                    # 获取 orientDB 数据库集合
-                    databases = self.get_listDatabases(graph_DBAddress, graph_DBPort, username, password, graph_DBType)
-                    # 获取 mongoDB 数据库集合
-                    mongoDB_collection_names = mongoDB_conn.collection_names()
-                    mongoDB_db_names = [current_usr.lower() for current_usr in mongoDB_collection_names]
-                    # 如果自动生成的graph_DBName 已存在orientDB 和 mongoDB 中继续触发生成规则
-                    while graph_DBName in databases or graph_DBName.lower() in mongoDB_db_names:
-                        # 规则是 knowledgegraph_id ;[_id] 是数据库自增id, 如果已存在就拼接_id
-                        graph_DBName += conId
-                    # 如果自动生成的数据库名长度超过50 报错终止。
-                    if len(graph_DBName) > 50:
-                        ret_code = CommonResponseStatus.SERVER_ERROR.value
-                        obj['cause'] = "graph_DBName Length over 50!"
-                        obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-                        obj['message'] = "create fail"
-                        return ret_code, obj, graph_id
-                    # db  需要测试连接一下是否可用
-                    self.test_avaible_db(graph_DBAddress, graph_DBPort, username, password, graph_db_id, graph_DBType)
-                except Exception as e:
-                    #  DB只有存在的时不保存，其他 DB port user ps不可用报IP错误
-                    if "ODatabaseException" in repr(e):
-                        Logger.log_info(repr(e))
-                    else:
-                        Logger.log_error(e)
-                        DB_IP_ERROR = True
-
-                # dbname 其他配置用过
-                graph_all = graph_dao.getallgraph()
-                graph_DBName = self.dbnameused(graph_DBName, graph_all, conId)
-                graph_process_dict["graphDBAddress"] = graph_ips
-                graph_process_dict["graph_DBName"] = graph_DBName
-                graph_process_list[0] = graph_process_dict
-
-                # graph_all_df = graph_all.loc[
-                #     graph_all["graph_baseInfo"].str.contains("\'graph_DBName\': \'" + graph_DBName + "\'")]
-                # if len(graph_all_df) > 0:
-                #     dbname_exits_flag = True
-
-            if KGname_exit_flag:
-                if DB_IP_ERROR:
-                    obj['cause'] = "graph name exist and DB IP error!"
-                    # 错误码DB_IP_KGNAME_ERROR
-                    obj['code'] = CommonResponseStatus.DB_IP_KGNAME_ERROR.value
-                else:
-                    if dbname_exits_flag:  # 图数据库名
-                        obj['cause'] = "graph name exist and DB name exist!"
-                        obj['code'] = CommonResponseStatus.KGDB_KGNAME_ERROR.value
-                    else:
-                        obj['cause'] = "kg graph name  exists!"
-                        obj['code'] = CommonResponseStatus.USRPASS_ERROR.value
-            else:
-
-                if DB_IP_ERROR:
-                    obj['cause'] = "DB IP error!"
-                    # 错误码
-                    obj['code'] = CommonResponseStatus.DB_IP_ERROR.value
-                else:
-                    if dbname_exits_flag:  # 图数据库名
-                        obj['cause'] = "DB name exist!"
-                        obj['code'] = CommonResponseStatus.KGDB_ERROR.value
-                    else:
-                        update_flag = True
-            if update_flag:
-                # 数据写入graph_config_table，返回最后一个插入的id
-                ret = graph_dao.insertData(params_json)
-                graph_id = ret
-                if ret > 0:
-                    # 将图谱配置的id 插入knowledge_graph，返回最后一个插入的id
-                    ret_graph = graph_dao.insertgraph(params_json, ret)
-                    if ret_graph > 0:
-                        obj["res"] = str(ret)
-                    else:
-                        ret_code = CommonResponseStatus.SERVER_ERROR.value
-                        obj['cause'] = "create graph config fail"
-                        obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-                        obj['message'] = "create graph config fail"
-            else:
-                ret_code = CommonResponseStatus.SERVER_ERROR.value
-                obj['message'] = "create graph fail"
-        except Exception as e:
-            ret_code = CommonResponseStatus.SERVER_ERROR.value
-            err = repr(e)
-            Logger.log_error(err)
-            obj['cause'] = err
-            obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-            obj['message'] = "create fail"
-        return ret_code, obj, graph_id
-
     def dbnameused(self, graph_DBName, graph_all, conId):
         graph_all_df = graph_all.loc[
             graph_all["graph_baseInfo"].str.contains("\'graph_DBName\': \'" + graph_DBName + "\'")]
@@ -486,7 +322,7 @@ class GraphService():
             self.dbnameused(graph_DBName, graph_all, conId)
         return graph_DBName
 
-    def getGraphById(self, grapid, host_url, slient=False):
+    def getGraphById(self, grapid, slient=False):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -630,7 +466,7 @@ class GraphService():
             list_all.append(dict_all)
         return list_all, used_ds
 
-    def savenocheck(self, params_json, host_url):
+    def savenocheck(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         # 参数不校验，前端做校验，保存错就错了
@@ -686,7 +522,7 @@ class GraphService():
 
         return ret_code, obj
 
-    def getdsbygraphid(self, params_json, host_url):
+    def getdsbygraphid(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         graphid = params_json["id"]
@@ -751,13 +587,12 @@ class GraphService():
 
         return ret_code, obj
 
-    def updatebaseInfo(self, grapid, params_json, otl_id, host_url):
+    def updatebaseInfo(self, grapid, params_json, otl_id):
         """
         修改流程一
         :param grapid:
         :param params_json:
         :param otl_id:
-        :param host_url:
         :return:
         """
         obj = {}
@@ -851,54 +686,6 @@ class GraphService():
             obj['message'] = "update fail"
         return ret_code, obj
 
-    def updatebaseInfo_1635(self, grapid, params_json, otl_id, host_url):
-        # todo: 此函数已经没人在使用，做一下标记。
-        obj = {}
-        ret_code = CommonResponseStatus.SUCCESS.value
-        KGname_exit_flag = False
-        update_flag = False
-        try:
-            graph_process_list = params_json["graph_process"]
-            graph_process_dict = graph_process_list[0]
-
-            graph_Name = graph_process_dict["graph_Name"]
-            KgConf = graph_dao.getKgByNameandId(graph_Name, grapid)
-            if len(KgConf) != 0:
-                KGname_exit_flag = True
-
-            df = graph_dao.getbaseinfoById(grapid)
-            df = df.to_dict("records")
-            for line in df:
-                graph_baseInfo = line["graph_baseInfo"]
-                graph_process_dict["graphDBAddress"] = eval(graph_baseInfo)[0]["graphDBAddress"]
-                graph_process_dict["graph_DBName"] = eval(graph_baseInfo)[0]["graph_DBName"]
-                graph_process_dict["graph_mongo_Name"] = eval(graph_baseInfo)[0]["graph_mongo_Name"]
-            if KGname_exit_flag:
-                obj['cause'] = "kg graph name  exists!"
-                obj['code'] = CommonResponseStatus.USRPASS_ERROR.value
-
-            else:
-                update_flag = True
-            if update_flag:
-                graph_dao.update(grapid, params_json, otl_id)
-                # 修改时，图数据库名字已经存在
-                graph_dao.updategraph(grapid, params_json, otl_id)
-                task_dao.updatestaskgname(grapid, graph_Name)
-                task_dao.updatehistorygname(grapid, graph_Name)
-                obj["res"] = "update graph "
-
-            else:
-                ret_code = CommonResponseStatus.SERVER_ERROR.value
-                obj['message'] = "update graph fail"
-        except Exception as e:
-            ret_code = CommonResponseStatus.SERVER_ERROR.value
-            err = repr(e)
-            Logger.log_error(err)
-            obj['cause'] = err
-            obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-            obj['message'] = "update fail"
-        return ret_code, obj
-
     def getrunbygraphid(self, grapid):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
@@ -918,7 +705,7 @@ class GraphService():
             obj['message'] = "update %s fail" % grapid
         return ret_code, obj
 
-    def update_otl_temp(self, grapid, host_url):
+    def update_otl_temp(self, grapid):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -948,7 +735,7 @@ class GraphService():
         return ret_code, obj
 
     # 图谱编辑过程中更新数据源
-    def update(self, grapid, params_json, otl_id, host_url):
+    def update(self, grapid, params_json, otl_id):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -973,7 +760,7 @@ class GraphService():
                         graph_dao.update(grapid, params_json, otl_id)
                         obj["res"] = "update graph %s " % (grapid)
                 elif graph_step == "graph_baseInfo":
-                    ret_code, obj = self.updatebaseInfo(grapid, params_json, otl_id, host_url)
+                    ret_code, obj = self.updatebaseInfo(grapid, params_json, otl_id)
 
                 elif graph_step == "graph_otl":
                     graph_dao.update(grapid, params_json, otl_id)

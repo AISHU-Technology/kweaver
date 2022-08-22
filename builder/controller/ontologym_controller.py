@@ -3,7 +3,6 @@
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
 from config import config
-from service.Otl_Open_Service import otlOpenSerivice
 from service.Otl_Service import otl_service
 from utils.ontology_check_params import otl_check_params
 import datetime
@@ -39,9 +38,6 @@ ontology_controller_app = Blueprint('ontology_controller_app', __name__)
 ########mysql、hive根据数据源返回数据表#######
 @ontology_controller_app.route('/gettabbydsn', methods=["GET"])
 def get_table():
-    # params_json = request.get_data()
-    # params_json = json.loads(params_json)
-    # host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         print(params_json)
@@ -267,13 +263,12 @@ def getall():
     if param_code == 0:
         # 获取该用户可以看见的本体列表
         if method == "GET":
-            host_url = getHostUrl()
             check_res, message = otl_check_params.getAllParOnto(params_json)
             if check_res != 0:
                 Logger.log_error("parameters:%s invalid" % params_json)
                 return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                            message=message), CommonResponseStatus.BAD_REQUEST.value
-            ret_code, ret_message = otl_service.getall(params_json, host_url)
+            ret_code, ret_message = otl_service.getall(params_json)
             if ret_code == CommonResponseStatus.SERVER_ERROR.value:
                 return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                            message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -285,9 +280,8 @@ def getall():
 
 @ontology_controller_app.route('/delotlbyids', methods=["DELETE"], strict_slashes=False)
 def delotl():
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
-    ret_code, ret_message = otl_service.delete(params_json, host_url)
+    ret_code, ret_message = otl_service.delete(params_json)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -297,7 +291,6 @@ def delotl():
 # 模糊查询
 @ontology_controller_app.route('/searchbyname', methods=["get"], strict_slashes=False)
 def getotlbyname():
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         check_res, message = otl_check_params.otlgetbynamePar(params_json)
@@ -305,7 +298,7 @@ def getotlbyname():
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = otl_service.getbyotlname("", params_json, host_url, -1)
+        ret_code, ret_message = otl_service.getbyotlname("", params_json, -1)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -318,7 +311,6 @@ def getotlbyname():
 
 @ontology_controller_app.route('updatename/<otlid>', methods=["put"], strict_slashes=False)
 def updateotlname(otlid):
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
         message = "The parameter otlid type must be int!"
@@ -333,7 +325,7 @@ def updateotlname(otlid):
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
         params_json["ontology_id"] = str(otlid)
 
-        ret_code, ret_message = otl_service.update_name(otlid, params_json, host_url, "-1")
+        ret_code, ret_message = otl_service.update_name(otlid, params_json, "-1")
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -346,7 +338,6 @@ def updateotlname(otlid):
 
 @ontology_controller_app.route('updateinfo/<otlid>', methods=["put"], strict_slashes=False)
 def updateotlinfo(otlid):
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
         message = "The parameter otlid type must be int!"
@@ -365,7 +356,7 @@ def updateotlinfo(otlid):
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=logicmessage, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=logicmessage), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = otl_service.update_info(otlid, params_json, host_url, "-1")
+        ret_code, ret_message = otl_service.update_info(otlid, params_json, "-1")
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -379,7 +370,6 @@ def updateotlinfo(otlid):
 @ontology_controller_app.route('/<otlid>', methods=["get"], strict_slashes=False)
 def ds(otlid):
     print("*******************************")
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
         message = "The parameter otlid type must be int!"
@@ -388,30 +378,15 @@ def ds(otlid):
     if param_code == 0:
         if request.method == "GET":
             # get 不需要参数校验
-            ret_code, ret_message = otl_service.getbyotlname(otlid, params_json, host_url, 1)
+            ret_code, ret_message = otl_service.getbyotlname(otlid, params_json, 1)
             if ret_code == CommonResponseStatus.SERVER_ERROR.value:
                 return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                            message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
             return ret_message, CommonResponseStatus.SUCCESS.value
-        #  # 弃用
-        # elif request.method == "PUT":
-        #     # 修改的参数校验和新增的一样
-        #     check_res, message = otl_check_params.otlUpdatePar(params_json)
-        #     if check_res != 0:
-        #         Logger.log_error("parameters:%s invalid" % params_json)
-        #         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-        #                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-        #
-        #     ret_code, ret_message = otl_service.update(otlid, params_json, host_url)
-        #     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-        #         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-        #                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        #     return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
 @ontology_controller_app.route('/getbykgid/<kgid>', methods=["get"], strict_slashes=False)
 def getotlbykgid(kgid):
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not kgid.isdigit():
         return Gview.TErrorreturn(
@@ -428,7 +403,7 @@ def getotlbykgid(kgid):
             return obj, code
         otlid = obj
         # 根据本体id返回本体信息
-        ret_code, ret_message = otl_service.getbyotlname(otlid, params_json, host_url, 1)
+        ret_code, ret_message = otl_service.getbyotlname(otlid, params_json, 1)
         if ret_code != CommonResponseStatus.SUCCESS.value:
             return ret_message, ret_code
         # 过滤本体中不在图数据库中的点或边
@@ -441,7 +416,6 @@ def getotlbykgid(kgid):
 # 根据本体名称获取本体信息
 @ontology_controller_app.route('/getotlbyname', methods=["get"], strict_slashes=False)
 def getotlbyotlname():
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     otlname = params_json.get("name")
     message = ""
@@ -473,7 +447,7 @@ def getotlbyotlname():
         return Gview.BuFailVreturn(cause="Ontology name does not exist",
                                    code=CommonResponseStatus.REQUEST_ERROR.value,
                                    message="Ontology name does not exist"), CommonResponseStatus.SERVER_ERROR.value
-    ret_code, ret_message = otl_service.getotlbyname(otlname, params_json, host_url)
+    ret_code, ret_message = otl_service.getotlbyname(otlname)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -682,7 +656,6 @@ def deletealltask():
 # 本体复制
 @ontology_controller_app.route('/copy/<otlid>', methods=["POST"], strict_slashes=False)
 def copy_otl(otlid):
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
         return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
@@ -718,7 +691,7 @@ def copy_otl(otlid):
                                    code=CommonResponseStatus.REQUEST_ERROR.value,
                                    message="Ontology in unavailable state cannot be copied"), CommonResponseStatus.SERVER_ERROR.value
     # 获取被复制本体的数据
-    ret_code, ret_message = otl_service.getbyotlname(otlid, {}, host_url, 1)
+    ret_code, ret_message = otl_service.getbyotlname(otlid, {}, 1)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -740,6 +713,3 @@ def graphDsList():
 
     return ret_message, CommonResponseStatus.SUCCESS.value
 
-def getHostUrl():
-    hostUrl = request.host_url
-    return hostUrl

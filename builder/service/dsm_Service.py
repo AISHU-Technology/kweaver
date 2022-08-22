@@ -20,7 +20,7 @@ from utils.Otl_Util import otl_util
 from dao.knw_dao import knw_dao
 
 class DsmService():
-    def connectTest(self, params_json, host_url):
+    def connectTest(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         if params_json["data_source"] == "as" or params_json["data_source"] == "as7":
@@ -398,7 +398,7 @@ class DsmService():
 
 
 
-    def addds(self, params_json, host_url):
+    def addds(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         ds_id = -1  # 数据源id
@@ -450,7 +450,7 @@ class DsmService():
             # Response(status=500)
 
         return ret_code, obj, ds_id
-    def getall(self, args, host_url):
+    def getall(self, args):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
 
@@ -496,7 +496,7 @@ class DsmService():
 
         return ret_code, obj
 
-    def getbydsname(self, args, host_url):
+    def getbydsname(self, args):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
 
@@ -539,11 +539,7 @@ class DsmService():
         df = dsm_dao.getbyid(id)
         return df
 
-    def getCount(self, host_url):
-        count = dsm_dao.getCount()
-        return count
-
-    def delete(self, params_json, host_url):
+    def delete(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         message = ""
         obj = {}
@@ -616,7 +612,7 @@ class DsmService():
         return ret_code, obj
 
     # 编辑数据源
-    def update(self, id, params_json, host_url):
+    def update(self, id, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:

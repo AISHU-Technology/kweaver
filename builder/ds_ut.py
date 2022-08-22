@@ -127,7 +127,7 @@ class TestDsm(unittest.TestCase):
          "ds_path": "123/POC数据集"}
         check_res, message = dsCheckParameters.testConPar(params_json)
         self.assertEqual(check_res, 0)
-        ret_code, ret_message = dsm_service.connectTest(params_json, host_url="")
+        ret_code, ret_message = dsm_service.connectTest(params_json)
         self.assertEqual(ret_code, 500)
 
     # as7测试连接失败
@@ -136,7 +136,7 @@ class TestDsm(unittest.TestCase):
          "ds_path": "123/POC数据集"}
         check_res, message = dsCheckParameters.testConPar(params_json)
         self.assertEqual(check_res, -1)
-        ret_code, ret_message = dsm_service.connectTest(params_json, host_url="")
+        ret_code, ret_message = dsm_service.connectTest(params_json)
         self.assertEqual(ret_code, 400)
 
     # mysql
@@ -144,14 +144,14 @@ class TestDsm(unittest.TestCase):
         params_json = {"data_source":"mysql","ds_address":"10.240.0.125","ds_port":3306,"ds_user":"root","ds_password":"RWlzb29AMTIz","ds_path":"kom"}
         check_res, message = dsCheckParameters.testConPar(params_json)
         self.assertEqual(check_res, 0)
-        ret_code, ret_message = dsm_service.connectTest(params_json, host_url="")
+        ret_code, ret_message = dsm_service.connectTest(params_json)
         self.assertEqual(ret_code, 200)
     # mysql
     def test_connectTest_mysql_fail(self):
         params_json = {"data_source":"mysql","ds_address":"10.240.0.125","ds_port":3306,"ds_user":"root","ds_password":"AMTIz","ds_path":"kom"}
         check_res, message = dsCheckParameters.testConPar(params_json)
         self.assertEqual(check_res, 0)
-        ret_code, ret_message = dsm_service.connectTest(params_json, host_url="")
+        ret_code, ret_message = dsm_service.connectTest(params_json)
         self.assertEqual(ret_code, 500)
 
     def test_getMethodParam_success(self):

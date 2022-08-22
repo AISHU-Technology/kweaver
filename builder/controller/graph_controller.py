@@ -41,28 +41,26 @@ def graphopt():
     # 根据不同的请求方式请求方式获得参数并获取异常
     # get all
     if method == "GET":
-        host_url = getHostUrl()
         permission = Permission()
 
         res_message, res_code = permission.graphGet()
         if res_code != 0:
             return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
                                        message=res_message["message"]), res_code
-        ret_code, ret_message = graph_Service.getallgraph(host_url)
+        ret_code, ret_message = graph_Service.getallgraph()
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
         return ret_message, CommonResponseStatus.SUCCESS.value
     # add,新建图谱
     elif method == "POST":
-        host_url = getHostUrl()
         param_code, params_json, param_message = commonutil.getMethodParam()
         params_json["graph_process"][0]["graph_DBName"] = other_dao.get_random_uuid()
         ret_code, ret_message = knw_service.check_knw_id(params_json)
         if ret_code != 200:
             return Gview.BuFailVreturn(cause=ret_message["des"], code=CommonResponseStatus.INVALID_KNW_ID.value,
                                        message=ret_message["detail"]), CommonResponseStatus.SERVER_ERROR.value
-        ret_code, ret_message, graph_id = graph_Service.addgraph(params_json, host_url)
+        ret_code, ret_message, graph_id = graph_Service.addgraph(params_json)
         Logger.log_info(ret_message)
         if ret_code != 200:
             Logger.log_error(ret_message)
@@ -86,7 +84,6 @@ def graph(grapid):
     graphCheckParameters.graphAddPar进行参数格式校验
     graph_Service.update编辑图谱
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     graph_step = params_json["graph_step"]
     graph_process_list = params_json["graph_process"]
@@ -121,7 +118,7 @@ def graph(grapid):
             ret_code, ret_message, otl_id = otl_service.ontology_save(graph_process_dict)
             if ret_code == 200:  # 本体添加成功才更新图谱配置
                 # otl_id = ret_message["res"]["ontology_id"]
-                ret_code2, ret_message2 = graph_Service.update(grapid, params_json, otl_id, host_url)
+                ret_code2, ret_message2 = graph_Service.update(grapid, params_json, otl_id)
                 if ret_code2 == CommonResponseStatus.SERVER_ERROR.value:
                     return Gview.BuFailVreturn(cause=ret_message2["cause"], code=ret_message2["code"],
                                                message=ret_message2[
@@ -144,12 +141,12 @@ def graph(grapid):
                 return Gview.BuFailVreturn(cause=message, code=400001, message=message), 400
             #  流程中本体的部分 如果是修改本体 直接调用修改本体
             if updateoradd == "update_otl_name":
-                ret_code, ret_message = otl_service.update_name(str(otl_id), graph_process_dict, host_url, "1")
+                ret_code, ret_message = otl_service.update_name(str(otl_id), graph_process_dict, "1")
             elif updateoradd == "update_otl_info":
-                ret_code, ret_message = otl_service.update_info(str(otl_id), graph_process_dict, host_url, "1", grapid)
+                ret_code, ret_message = otl_service.update_info(str(otl_id), graph_process_dict, "1", grapid)
             if ret_code == 200:
                 # 更新 本体temp字段
-                ret_code2, ret_message2 = graph_Service.update_otl_temp(grapid, host_url)
+                ret_code2, ret_message2 = graph_Service.update_otl_temp(grapid)
                 if ret_code2 == CommonResponseStatus.SERVER_ERROR.value:
                     return Gview.BuFailVreturn(cause=ret_message2["cause"], code=ret_message2["code"],
                                                message=ret_message2[
@@ -165,7 +162,7 @@ def graph(grapid):
         if ret_code != 200:
             return Gview.BuFailVreturn(cause=ret_message["des"], code=CommonResponseStatus.INVALID_KNW_ID.value,
                                        message=ret_message["detail"]), CommonResponseStatus.SERVER_ERROR.value
-        ret_code, ret_message = graph_Service.update(grapid, params_json, "-1", host_url)
+        ret_code, ret_message = graph_Service.update(grapid, params_json, "-1")
         if ret_code != 200:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -183,7 +180,7 @@ def graph(grapid):
             obj["ErrorDetails"] = [str(message)]
             obj["ErrorLink"] = ""
             return Gview.VErrorreturn(obj), CommonResponseStatus.SERVER_ERROR.value
-        ret_code, ret_message = graph_Service.update(grapid, params_json, "-1", host_url)
+        ret_code, ret_message = graph_Service.update(grapid, params_json, "-1")
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             obj = {}
             obj["ErrorCode"] = str(ret_message["code"])
@@ -221,7 +218,7 @@ def graph(grapid):
 
             params_json["rabbitmq_ds"] = code1
         # 更新
-        ret_code, ret_message = graph_Service.update(grapid, params_json, "-1", host_url)
+        ret_code, ret_message = graph_Service.update(grapid, params_json, "-1")
         Logger.log_error("parameters:%s invalid" % params_json)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -236,9 +233,7 @@ def getgraphdb():
     '''
     graph_Service.getGraphDB查询图谱数据库连接信息
     '''
-    host_url = getHostUrl()
-    print(host_url)
-    ret_code, ret_message = graph_Service.getGraphDB(host_url)
+    ret_code, ret_message = graph_Service.getGraphDB()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -251,27 +246,15 @@ def getbis():
     get base info switch
     :return:
     """
-    host_url = getHostUrl()
-    ret_code, ret_message = graph_Service.getbis(host_url)
+    ret_code, ret_message = graph_Service.getbis()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     return ret_message, CommonResponseStatus.SUCCESS.value
 
 
-# @graph_controller_app.route('/getgraphdb', methods=["get"], strict_slashes=False)
-# def getGraphDB():
-#     host_url = getHostUrl()
-#     ret_code, ret_message = graph_Service.getGraphDB(host_url)
-#     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-#         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-#                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-#     return ret_message, CommonResponseStatus.SUCCESS.value
-
-
 @graph_controller_app.route('/<graphid>', methods=["get"], strict_slashes=False)
 def getgraphbyid(graphid):
-    host_url = getHostUrl()
     if not graphid.isdigit():
         message = "The parameter graph id type must be int!"
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
@@ -280,7 +263,7 @@ def getgraphbyid(graphid):
     code, ret = graph_Service.checkById(graphid)
     if code != 0:
         return jsonify(ret), 500
-    ret_code, ret_message = graph_Service.getGraphById(graphid, host_url)
+    ret_code, ret_message = graph_Service.getGraphById(graphid)
 
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -295,12 +278,11 @@ def getgraphbystep(graphid, graph_step):
     根据id和指定的图谱配置阶段，查询entity和property
     graphid：图谱id
     graph_step:["graph_InfoExt","graph_KMap","graph_KMerge"] '''
-    host_url = getHostUrl()
     if not graphid.isdigit():
         message = "The parameter graph id type must be int!"
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-    ret_code, ret_message = graph_Service.getGraphById(graphid, host_url)
+    ret_code, ret_message = graph_Service.getGraphById(graphid)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -315,7 +297,6 @@ def getbyinfoext():
     ''' 根据id和指定的图谱配置阶段，查询图谱信息，参数
        graphid：图谱id
        graph_step:["graph_InfoExt","graph_KMap","graph_KMerge"] '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         check_res, message = graphCheckParameters.checkparam_getinfoext(params_json)
@@ -327,7 +308,7 @@ def getbyinfoext():
         graph_step = params_json['graph_step']
         infoext_list = params_json['infoext_list']
 
-        ret_code, ret_message = graph_Service.getGraphById(graphid, host_url)
+        ret_code, ret_message = graph_Service.getGraphById(graphid)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -356,7 +337,6 @@ def check_kmapinfo():
     ''' 根据id和指定的图谱配置阶段，查询图谱信息，参数
        graphid：图谱id
        check_kmapinfo:[参考KMap的写入参数] '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         graphid = params_json.get("graphid", None)
@@ -368,7 +348,7 @@ def check_kmapinfo():
             message = "The parameter graphid:%s type must be int!" % graphid
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = graph_Service.getGraphById(graphid, host_url)
+        ret_code, ret_message = graph_Service.getGraphById(graphid)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -383,7 +363,6 @@ def check_kmapinfo():
 
 @graph_controller_app.route('/savenocheck', methods=["post"], strict_slashes=False)
 def savenocheck():
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         check_res, message = graphCheckParameters.savenoCheckPar(params_json)
@@ -391,7 +370,7 @@ def savenocheck():
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = graph_Service.savenocheck(params_json, host_url)
+        ret_code, ret_message = graph_Service.savenocheck(params_json)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -408,7 +387,6 @@ def getdsbygraphids():
     '''
     根据图谱id返回数据源列表
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         check_res, message = graphCheckParameters.getdsbygraphidPar(params_json)
@@ -417,7 +395,7 @@ def getdsbygraphids():
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = graph_Service.getdsbygraphid(params_json, host_url)
+        ret_code, ret_message = graph_Service.getdsbygraphid(params_json)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -426,11 +404,6 @@ def getdsbygraphids():
     else:
         return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
-
-
-def getHostUrl():
-    hostUrl = request.host_url
-    return hostUrl
 
 # 图谱批量删除
 @graph_controller_app.route('/delbyids', methods=["POST"], strict_slashes=False)

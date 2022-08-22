@@ -21,10 +21,6 @@ from service.Otl_Service import otl_service
 task_controller_app = Blueprint('task_controller_app', __name__)
 
 
-def getHostUrl():
-    hostUrl = request.host_url
-    return hostUrl
-
 # 执行任务和删除任务
 @task_controller_app.route('/<graph_id>', methods=["post", "DELETE"], strict_slashes=False)
 def taskcrud(graph_id):

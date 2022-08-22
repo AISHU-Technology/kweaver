@@ -87,7 +87,6 @@ def testauth():
 @dsm_controller_app.route('/testconnect', methods=["post"], strict_slashes=False)
 def connectTest():
     """测试连接"""
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         check_res, message = dsCheckParameters.testConPar(params_json)
@@ -95,7 +94,7 @@ def connectTest():
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                        message=message), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = dsm_service.connectTest(params_json, host_url)
+        ret_code, ret_message = dsm_service.connectTest(params_json)
 
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -121,14 +120,13 @@ def dsopt():
     param_code, params_json, param_message = commonutil.getMethodParam()
     # get all,查询该用户可以看见的的数据源
     if method == "GET":
-        host_url = getHostUrl()
         check_res, message = dsCheckParameters.getAllPar(params_json)
         if check_res != 0:
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.TErrorreturn(ErrorCode="Builder.controller.dsm_controller.dsopt.ParametersError",
                                       Description=message, Solution=message, ErrorDetails=message,
                                       ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = dsm_service.getall(params_json, host_url)
+        ret_code, ret_message = dsm_service.getall(params_json)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.TErrorreturn(ErrorCode=ret_message["code"], Description=ret_message["cause"],
                                       Solution=ret_message["cause"], ErrorDetails=ret_message["message"],
@@ -136,8 +134,7 @@ def dsopt():
         return ret_message, CommonResponseStatus.SUCCESS.value
     # add, 新建数据源
     elif method == "POST":
-        host_url = getHostUrl()
-        ret_code, ret_message, ds_id = dsm_service.addds(params_json, host_url)
+        ret_code, ret_message, ds_id = dsm_service.addds(params_json)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.TErrorreturn(ErrorCode=ret_message["ErrorCode"], Description=ret_message["Description"],
                                       Solution=ret_message["Solution"], ErrorDetails=ret_message["ErrorDetails"],
@@ -150,10 +147,9 @@ def ds(dsid):
     """
     put: 修改数据源
     """
-    host_url = getHostUrl()
     # 删除方法重新修改
     if request.method == "DELETE":
-        ret_code, ret_message = dsm_service.delete(dsid, host_url)
+        ret_code, ret_message = dsm_service.delete(dsid)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"])
@@ -162,7 +158,7 @@ def ds(dsid):
     elif request.method == "PUT":
         param_code, params_json, param_message = commonutil.getMethodParam()
         print(params_json)
-        ret_code, ret_message = dsm_service.update(dsid, params_json, host_url)
+        ret_code, ret_message = dsm_service.update(dsid, params_json)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -173,10 +169,9 @@ def ds(dsid):
 
 @dsm_controller_app.route('/delbydsids', methods=["DELETE"], strict_slashes=False)
 def delds():
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
-    ret_code, ret_message = dsm_service.delete(params_json, host_url)
+    ret_code, ret_message = dsm_service.delete(params_json)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -186,7 +181,6 @@ def delds():
 # 模糊查询
 @dsm_controller_app.route('/searchbyname', methods=["get"], strict_slashes=False)
 def getbydsname():
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
     if param_code == 0:
@@ -196,7 +190,7 @@ def getbydsname():
             return Gview.TErrorreturn(ErrorCode="Builder.controller.dsm_controller.getbydsname.ParametersError",
                                       Description=message, Solution=message, ErrorDetails="ParametersError",
                                       ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = dsm_service.getbydsname(params_json, host_url)
+        ret_code, ret_message = dsm_service.getbydsname(params_json)
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
             return Gview.TErrorreturn(ErrorCode=ret_message["code"], Description=ret_message["cause"],
                                       Solution=ret_message["cause"], ErrorDetails=ret_message["message"],
@@ -235,7 +229,6 @@ def get_acctoken_by_id(ds_id):
 # 数据源复制
 @dsm_controller_app.route('/ds_copy/<ds_id>', methods=["post"], strict_slashes=False)
 def ds_copy(ds_id):
-    host_url = getHostUrl()
     print("dsid: ", ds_id)
     # 获取参数
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -260,13 +253,9 @@ def ds_copy(ds_id):
         return Gview.TErrorreturn(ErrorCode="Builder.controller.dsm_controller.ds_copy.ParametersError",
                                   Description=obj["Cause"], Solution=obj["Cause"],
                                   ErrorDetails=obj["message"], ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
-    ret_code, ret_message, ds_id = dsm_service.addds(params_json, host_url)
+    ret_code, ret_message, ds_id = dsm_service.addds(params_json)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.TErrorreturn(ErrorCode=ret_message["ErrorCode"], Description=ret_message["Description"],
                                   Solution=ret_message["Solution"], ErrorDetails=ret_message["ErrorDetails"],
                                   ErrorLink=ret_message["ErrorLink"]), CommonResponseStatus.SERVER_ERROR.value
     return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
-
-def getHostUrl():
-    hostUrl = request.host_url
-    return hostUrl

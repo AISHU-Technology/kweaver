@@ -54,7 +54,6 @@ class Test_update_name(TestCase):
         # parameters
         self.otl_id = 24
         self.params_json = {"ontology_name": "name", "ontology_des": "des"}
-        self.host_url = ""
         self.flag = "0"
         
         df_row = [
@@ -75,28 +74,28 @@ class Test_update_name(TestCase):
     
     # success
     def test_update_name_success(self):
-        res = otl_service.update_name(self.otl_id, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_name(self.otl_id, self.params_json, self.flag)
         self.assertEqual(res[0], 200)
 
         graph_dao.getdatabyotlid = mock.Mock(return_value=[])
-        res = otl_service.update_name(self.otl_id, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_name(self.otl_id, self.params_json, self.flag)
         self.assertEqual(res[0], 200)
         
     # exception
     def test_update_name_exception(self):
         otl_dao.getbyid = mock.Mock(side_effect=Exception("database error"))
-        res = otl_service.update_name(self.otl_id, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_name(self.otl_id, self.params_json, self.flag)
         self.assertEqual(res[0], 500)
         
     # 本体不存在
     def test_update_name_otlid_not_exist(self):
         otl_dao.getbyid = mock.Mock(return_value=self.df_null)
-        res = otl_service.update_name(self.otl_id, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_name(self.otl_id, self.params_json, self.flag)
         self.assertEqual(res[0], 500)
 
     # 不可编辑
     def test_update_name_can_not_edit(self):
-        res = otl_service.update_name(self.otl_id, self.params_json, self.host_url, flag="-1")
+        res = otl_service.update_name(self.otl_id, self.params_json, flag="-1")
         self.assertEqual(res[0], 500)
 
 
@@ -106,7 +105,6 @@ class Test_update_info(TestCase):
         # parameters
         self.otlid = 24
         self.params_json = {"ontology_id":"24","entity":[{"colour":"#805A9C","ds_name":"结构化数据","dataType":"structured","extract_type":"standardExtraction","file_type":"csv","task_id":"55","name":"nei1","source_table":[["gns://B4FFFD35301B43B78DAEA4737A364C47/DC6942AC590846C297A52346AE9B27F0/EDEA69091B1B4538BE74AAA9535D0E66","结构化数据/csv/nei1.csv","nei1.csv"]],"source_type":"automatic","properties":[["name","string"],["p","string"],["s","string"]],"properties_index":["name","p","s"],"data_source":"as7","ds_path":"结构化数据","model":"","entity_id":4,"ds_id":"5"},{"colour":"#F0E34F","ds_name":"结构化数据","dataType":"structured","extract_type":"standardExtraction","file_type":"csv","name":"o","task_id":"55","source_table":[["gns://B4FFFD35301B43B78DAEA4737A364C47/DC6942AC590846C297A52346AE9B27F0/0828A7CE101D433690F7D5ADA7AB4DD4","结构化数据/csv/o.csv","o.csv"]],"source_type":"automatic","properties":[["name","string"],["o","string"]],"properties_index":["name","o"],"data_source":"as7","ds_path":"结构化数据","model":"","entity_id":6,"ds_id":"4"},{"colour":"#5C539B","ds_name":"结构化数据","dataType":"structured","extract_type":"standardExtraction","file_type":"csv","name":"s","task_id":"55","source_table":[["gns://B4FFFD35301B43B78DAEA4737A364C47/DC6942AC590846C297A52346AE9B27F0/2590BB8A10904D6EA3B65ADE23CED0BA","结构化数据/csv/s.csv","s.csv"]],"source_type":"automatic","properties":[["name","string"],["s","string"]],"properties_index":["name","s"],"data_source":"as7","ds_path":"结构化数据","model":"","entity_id":1,"ds_id":"4"}],"edge":[],"used_task":[1,23],"flag":"nextstep"}
-        self.host_url = ""
         self.flag = "-1"
         
         df_row = [
@@ -142,36 +140,36 @@ class Test_update_info(TestCase):
     
     # success
     def test_update_info_success(self):
-        res = otl_service.update_info(self.otlid, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_info(self.otlid, self.params_json, self.flag)
         self.assertEqual(res[0], 200)
 
         graph_dao.getdatabyotlid = mock.Mock(return_value=["graph_name"])
-        res = otl_service.update_info(self.otlid, self.params_json, self.host_url, flag="0")
+        res = otl_service.update_info(self.otlid, self.params_json, flag="0")
         self.assertEqual(res[0], 200)
 
     # exception
     def test_update_info_exception(self):
         otl_dao.getbyid = mock.Mock(side_effect=Exception("database error"))
-        res = otl_service.update_info(self.otlid, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_info(self.otlid, self.params_json, self.flag)
         self.assertEqual(res[0], 500)
 
     # 有正在运行的任务
     def test_update_info_runnig_task(self):
         task_dao_onto.get_all_by_otlid = mock.Mock(return_value=self.all_data_running)
         
-        res = otl_service.update_info(self.otlid, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_info(self.otlid, self.params_json, self.flag)
         self.assertEqual(res[0], 500)
 
     # 本体不存在
     def test_update_info_ontology_not_exist(self):
         otl_dao.getbyid = mock.Mock(return_value=self.df_null)
-        res = otl_service.update_info(self.otlid, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_info(self.otlid, self.params_json, self.flag)
         self.assertEqual(res[0], 500)
         
     # 不可编辑
     def test_update_info_edit_used(self):
         graph_dao.getdatabyotlid = mock.Mock(return_value=["graph_name"])
-        res = otl_service.update_info(self.otlid, self.params_json, self.host_url, self.flag)
+        res = otl_service.update_info(self.otlid, self.params_json, self.flag)
         self.assertEqual(res[0], 500)
     
 
@@ -283,8 +281,7 @@ class Test_getall(TestCase):
         otl_dao.getall = mock.Mock(return_value=self.ret_firstpage)
         args = {'page': '1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
         args["res_list"] = []
-        host_url = 'http://10.4.135.45:6475/'
-        res = otl_service.getall(args, host_url)
+        res = otl_service.getall(args)
         self.assertEqual(res[0], 200)
 
         # 查询全部
@@ -292,8 +289,7 @@ class Test_getall(TestCase):
         otl_dao.getall = mock.Mock(return_value=self.ret_all)
         args = {'page': '-1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
         args["res_list"] = []
-        host_url = 'http://10.4.135.45:6475/'
-        res = otl_service.getall(args, host_url)
+        res = otl_service.getall(args)
         self.assertEqual(res[0], 200)
 
     # 异常
@@ -301,8 +297,7 @@ class Test_getall(TestCase):
         # mock otl_dao.getall
         otl_dao.getall = mock.Mock(return_value=[], side_effect=Exception('database Unusable!'))
         args = {'page': '-1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
-        host_url = 'http://10.4.135.45:6475/'
-        res = otl_service.getall(args, host_url)
+        res = otl_service.getall(args)
         self.assertEqual(res[0], 500)
 
 
@@ -311,7 +306,6 @@ class Test_getbyotlname(TestCase):
     def setUp(self) -> None:
         self.otlid = ""
         # self.args = {'otlname': '', 'otl_status': 'all', 'page': '1', 'size': '10', 'order': 'ascend', 'timestamp': '1637201113677'}
-        self.host_url = 'http://10.4.135.45:6475/'
 
         # mock otl_dao.getCount
         otl_dao.getCount = mock.Mock(return_value=44)
@@ -463,31 +457,31 @@ class Test_getbyotlname(TestCase):
 
         args = {'otlname': '', 'otl_status': 'all', 'page': '1', 'size': '10', 'order': 'ascend',
                 'timestamp': '1637201113677'}
-        res = otl_service.getbyotlname(otlid, args, self.host_url, num)
+        res = otl_service.getbyotlname(otlid, args, num)
         self.assertEqual(res[0], 200)
 
         # 本体状态为available
         args = {'otlname': '', 'otl_status': 'available', 'page': '1', 'size': '10', 'order': 'ascend',
                 'timestamp': '1637201113677'}
-        res = otl_service.getbyotlname(otlid, args, self.host_url, num)
+        res = otl_service.getbyotlname(otlid, args, num)
         self.assertEqual(res[0], 200)
 
         # otlname不为空
         args = {'otlname': '1', 'otl_status': 'all', 'page': '1', 'size': '10', 'order': 'ascend',
                 'timestamp': '1637201113677'}
-        res = otl_service.getbyotlname(otlid, args, self.host_url, num)
+        res = otl_service.getbyotlname(otlid, args, num)
         self.assertEqual(res[0], 200)
 
         # ottname不为空 + 本体状态为available
         args = {'otlname': '1', 'otl_status': 'available', 'page': '1', 'size': '10', 'order': 'ascend',
                 'timestamp': '1637201113677'}
-        res = otl_service.getbyotlname(otlid, args, self.host_url, num)
+        res = otl_service.getbyotlname(otlid, args, num)
         self.assertEqual(res[0], 200)
 
         otlid = '60'
         args = {}
         num = 1
-        res = otl_service.getbyotlname(otlid, args, self.host_url, num)
+        res = otl_service.getbyotlname(otlid, args, num)
         self.assertEqual(res[0], 200)
 
     # 异常
@@ -498,14 +492,13 @@ class Test_getbyotlname(TestCase):
         args = {'otlname': '', 'otl_status': 'all', 'page': '1', 'size': '10', 'order': 'ascend',
                 'timestamp': '1637201113677'}
         num = -1
-        res = otl_service.getbyotlname(self.otlid, args, self.host_url, num)
+        res = otl_service.getbyotlname(self.otlid, args, num)
         self.assertEqual(res[0], 500)
 
 
 class Test_delete(TestCase):
     def setUp(self) -> None:
         self.params_json = {'otlids': [80]}
-        self.host_url = 'http://10.4.135.45:6475/'
 
         # mock otl_dao.getbyids
         ret_row = [[80, '2021-11-17 03:44:05', '2021-11-17 03:44:05', '4', '', 'pending', '[]', '[]', '[]', '[]']]
@@ -533,13 +526,13 @@ class Test_delete(TestCase):
 
     # success
     def test_delete_success(self):
-        res = otl_service.delete(self.params_json, self.host_url)
+        res = otl_service.delete(self.params_json)
         self.assertEqual(res[0], 200)
 
     # 异常
     def test_delete_exception(self):
         otl_dao.getbyids = mock.Mock(return_value=[], self_effect=Exception('database error'))
-        res = otl_service.delete(self.params_json, self.host_url)
+        res = otl_service.delete(self.params_json)
         self.assertEqual(res[0], 500)
 
     # id不存在
@@ -550,7 +543,7 @@ class Test_delete(TestCase):
         ret = pd.DataFrame(ret_row, columns=column)
         otl_dao.getbyids = mock.Mock(return_value=ret)
 
-        res = otl_service.delete(self.params_json, self.host_url)
+        res = otl_service.delete(self.params_json)
         self.assertEqual(res[0], 500)
 
     # 本体正在被使用
@@ -559,7 +552,7 @@ class Test_delete(TestCase):
         useds = ['[25]', '[64]', '[37]', '[38]', '[39]', '[59]', '[60]', '[61]', '[62]', '[63]', '[66]', '[67]', '[68]', '[69]', '[]', '[70]', '[71]', '[72]', '[73]', '[74]', '[75]', '[76]', '[78]', '[80]', '[82]']
         graph_dao.getdsgraphuse_otl = mock.Mock(return_value=useds)
 
-        res = otl_service.delete(self.params_json, self.host_url)
+        res = otl_service.delete(self.params_json)
         self.assertEqual(res[0], 500)
 
     # otl_dao.delete失败
@@ -567,7 +560,7 @@ class Test_delete(TestCase):
         # mock otl_dao.delete
         otl_dao.delete = mock.Mock(return_value=-1)
 
-        res = otl_service.delete(self.params_json, self.host_url)
+        res = otl_service.delete(self.params_json)
         self.assertEqual(res[0], 200) # 为何返回正常
 
 

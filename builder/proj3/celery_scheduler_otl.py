@@ -18,10 +18,9 @@ def update_otl_data():
 	# print(task_info)
 	if status_code == "400":
 		print("redis 断开，不再更新原来数据 失败，失败原因是redis挂断")
-		# task_service.updateotltaredis(df, "host_url")
 	else:
 		try:
-			task_service.update_otl_status2(df, task_info,"host_url")
+			task_service.update_otl_status2(df, task_info)
 		except Exception as e:
 			print(e)
 

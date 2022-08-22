@@ -35,7 +35,7 @@ def rebuild_fulltextindex(KDB_name):
                 ErrorLink=''
             ), 400
         graph_id = df[0]['KG_config_id']
-        ret_code, obj = graph_Service.getGraphById(graph_id, "")
+        ret_code, obj = graph_Service.getGraphById(graph_id)
         # graph_id 不存在
         if ret_code != 200:
             return Gview.TErrorreturn(
@@ -105,7 +105,7 @@ def rebuild_status(KDB_name):
             ErrorLink=''
         ), 400
     graph_id = df[0]['KG_config_id']
-    ret_code, obj = graph_Service.getGraphById(graph_id, "")
+    ret_code, obj = graph_Service.getGraphById(graph_id)
     # graph_id 不存在
     if ret_code != 200:
         return Gview.TErrorreturn(

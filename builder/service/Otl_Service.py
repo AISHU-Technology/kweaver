@@ -931,7 +931,7 @@ class OtlService(object):
 
 
     # lzg add
-    def getall(self, args, host_url):
+    def getall(self, args):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -984,7 +984,7 @@ class OtlService(object):
 
         return ret_code, obj
 
-    def delete(self, params_json, host_url):
+    def delete(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         message = ""
         obj = {}
@@ -1055,7 +1055,7 @@ class OtlService(object):
 
         return ret_code, obj
     # 和查询所有本体重复，待重构
-    def getbyotlname(self, otlid, args, host_url, num):
+    def getbyotlname(self, otlid, args, num):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         if num == 1:
@@ -1131,7 +1131,7 @@ class OtlService(object):
                 obj['message'] = "query  ontology %s fail" % otlname
 
         return ret_code, obj
-    def update_name(self, otl_id,params_json,host_url,flag):
+    def update_name(self, otl_id,params_json,flag):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -1175,7 +1175,7 @@ class OtlService(object):
             obj['message'] = "update fail"
 
         return ret_code, obj
-    def update_info(self, otl_id,params_json,host_url,flag,grapid=None):
+    def update_info(self, otl_id,params_json,flag,grapid=None):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -1234,60 +1234,6 @@ class OtlService(object):
 
         return ret_code, obj
 
-    # def update(self, otlname, params_json, host_url,flag):
-    #     ret_code = CommonResponseStatus.SUCCESS.value
-    #     obj = {}
-    #     try:
-    #         df = otl_dao.getbyid(otlname)
-    #         print(params_json)
-    #         # 本体不存在
-    #         if len(df) == 0:
-    #             ret_code = CommonResponseStatus.SERVER_ERROR.value
-    #             obj['cause'] = "id  %s not exist!" % otlname
-    #             obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-    #             obj['message'] = "update fail"
-    #             return ret_code, obj
-    #         # 不可编辑
-    #         else:
-    #             graph_otl = graph_dao.getdatabyotlid("[" + str(otlname) + "]")
-    #             if len(graph_otl) != 0:
-    #                 if flag == "-1":
-    #                     ret_code = CommonResponseStatus.SERVER_ERROR.value
-    #                     obj['cause'] = "id  %s can not be edit !" % otlname
-    #                     obj['code'] = CommonResponseStatus.EDIT_USED_ERROR.value  # 加新状态码
-    #                     obj['message'] = "update fail"
-    #                     return ret_code, obj
-    #
-    #
-    #
-    #             # 修改前可以通过查看名字是否存在；但是流程中名字存在也
-    #         # # 待做 otlid 不存在 和 name重名共存的问题
-    #         # dfbyname = otl_dao.getbyname(params_json["ontology_name"])
-    #         # if len(dfbyname) > 0:
-    #         #     ret_code = CommonResponseStatus.SERVER_ERROR.value
-    #         #     obj['cause'] = "otlname = %s  exist!" % params_json["ontology_name"]
-    #         #     obj['code'] = CommonResponseStatus.USRPASS_ERROR.value
-    #         #     obj['message'] = "update fail"
-    #                 else:
-    #                     ret = otl_dao.update(otlname, params_json)
-    #                     obj["res"] = "update "
-    #             else:
-    #                 ret = otl_dao.update(otlname, params_json)
-    #                 obj["res"] = "update "
-    #
-    #     except Exception as e:
-    #         ret_code = CommonResponseStatus.SERVER_ERROR.value
-    #         err = repr(e)
-    #         obj['cause'] = err
-    #         if "SQL" in err or "DatabaseError" in err or "MariaDB" in err or "column" in err.lower() or "row" in err.lower():
-    #             obj['cause'] = "you have an error in your SQL!"
-    #         obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-    #         if "Duplicate entry" in err:
-    #             obj['cause'] = "database already have the same name"
-    #             obj['code'] = CommonResponseStatus.USRPASS_ERROR.value
-    #         obj['message'] = "update fail"
-    #
-    #     return ret_code, obj
     def copy_otl(self,params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
@@ -1333,7 +1279,7 @@ class OtlService(object):
             return ret_code, obj
 
 
-    def getotlbyname(self,otlname, params_json, host_url):
+    def getotlbyname(self,otlname):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:

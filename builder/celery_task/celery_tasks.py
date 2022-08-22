@@ -1430,7 +1430,7 @@ def get_graph_config_info(graphid):
     """
     sys.path.append(os.path.abspath("../"))
     from service.graph_Service import graph_Service
-    ret_code, obj = graph_Service.getGraphById(graphid, "")
+    ret_code, obj = graph_Service.getGraphById(graphid)
     if ret_code != 200:
         res_obj = {"state": 'FAILURE', "meta": {'cause': obj["cause"], 'message': obj["message"]}}
         return res_obj, -1

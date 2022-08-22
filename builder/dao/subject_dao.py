@@ -477,7 +477,7 @@ class TextMatchTask(object):
 
     # 基于orientdb 构建词向量
     def build_document_embed_orientdb(self):
-        ret_code, obj = graph_Service.getGraphById(self.kg_id, "")
+        ret_code, obj = graph_Service.getGraphById(self.kg_id)
         if ret_code != NORMAL_STATUS:
             obj["code"] = CommonResponseStatus.KGID_NOT_EXIST.value
             logger.error(obj)
@@ -613,7 +613,7 @@ class TextMatchTask(object):
         nlist = 5
         quantizer = faiss.IndexFlatIP(dim)  # the other index，需要以其他index作为基础
         index = faiss.IndexIVFFlat(quantizer, dim, nlist, faiss.METRIC_INNER_PRODUCT)
-        ret_code, obj = graph_Service.getGraphById(self.kg_id, "")
+        ret_code, obj = graph_Service.getGraphById(self.kg_id)
         res = obj["res"]
         graph_baseInfo = res["graph_baseInfo"]
         baseInfo = graph_baseInfo[0]
@@ -835,7 +835,7 @@ class TextMatchTask(object):
 # 插入主题任务
 @except_decorator()
 def insert_subject_task(kg_id, **kwargs):
-    ret_code, obj = graph_Service.getGraphById(kg_id, "", slient=True)
+    ret_code, obj = graph_Service.getGraphById(kg_id, slient=True)
     if ret_code != NORMAL_STATUS:
         obj["code"] = CommonResponseStatus.KGID_NOT_EXIST.value
         return ret_code, obj
@@ -917,7 +917,7 @@ def insert_subject_task(kg_id, **kwargs):
 # 删除主题任务
 @except_decorator()
 def delete_subject_task(kg_id, subject_id):
-    ret_code, obj = graph_Service.getGraphById(kg_id, "")
+    ret_code, obj = graph_Service.getGraphById(kg_id)
     if ret_code != NORMAL_STATUS:
         obj["code"] = CommonResponseStatus.KGID_NOT_EXIST.value
         return ret_code, obj
@@ -958,7 +958,7 @@ def delete_subject_task(kg_id, subject_id):
 # 更新主题任务
 @except_decorator()
 def update_subject_task(kg_id, **kwargs):
-    ret_code, obj = graph_Service.getGraphById(kg_id, "")
+    ret_code, obj = graph_Service.getGraphById(kg_id)
     if ret_code != NORMAL_STATUS:
         obj["code"] = CommonResponseStatus.KGID_NOT_EXIST.value
         return ret_code, obj
@@ -1044,7 +1044,7 @@ def update_subject_task(kg_id, **kwargs):
 # 查询主题任务
 @except_decorator()
 def query_subject_task(kg_id, **kwargs):
-    ret_code, obj = graph_Service.getGraphById(kg_id, "")
+    ret_code, obj = graph_Service.getGraphById(kg_id)
     if ret_code != NORMAL_STATUS:
         obj["code"] = CommonResponseStatus.KGID_NOT_EXIST.value
         return ret_code, obj
