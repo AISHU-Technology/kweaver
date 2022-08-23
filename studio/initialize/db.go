@@ -18,11 +18,11 @@ import (
 func DB() *gorm.DB {
 	// 注意此处的Config只有在函数当中才可以使用
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		global.Config.DB.Username,
-		global.Config.DB.Password,
-		global.Config.DB.Host,
-		global.Config.DB.Port,
-		global.Config.DB.Name)
+		global.Config.Mariadb.User,
+		global.Config.Mariadb.Password,
+		global.Config.Mariadb.Host,
+		global.Config.Mariadb.Port,
+		global.Config.Mariadb.Database)
 	user, exist := os.LookupEnv("RDSUSER")
 	if exist && user != "" {
 		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -37,7 +37,7 @@ func DB() *gorm.DB {
 		global.LOG,
 		logger.Config{
 			SlowThreshold:             time.Second,
-			LogLevel:                  logger.LogLevel(global.Config.DB.LogLevel),
+			LogLevel:                  logger.LogLevel(global.Config.Mariadb.LogLevel),
 			IgnoreRecordNotFoundError: true,
 			Colorful:                  true,
 		},
@@ -56,9 +56,9 @@ func DB() *gorm.DB {
 		panic(err)
 	} else {
 		sqlDB, _ := db.DB()
-		sqlDB.SetConnMaxLifetime(time.Duration(global.Config.DB.ConnMaxLifetime) * time.Minute)
-		sqlDB.SetMaxIdleConns(global.Config.DB.MaxIdleConns)
-		sqlDB.SetMaxOpenConns(global.Config.DB.MaxOpenConns)
+		sqlDB.SetConnMaxLifetime(time.Duration(global.Config.Mariadb.ConnMaxLifetime) * time.Minute)
+		sqlDB.SetMaxIdleConns(global.Config.Mariadb.MaxIdleConns)
+		sqlDB.SetMaxOpenConns(global.Config.Mariadb.MaxOpenConns)
 	}
 	return db
 }

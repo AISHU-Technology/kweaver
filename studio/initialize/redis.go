@@ -15,18 +15,22 @@ func Redis() redis.Cmdable {
 	if global.Config.Redis.Mode == "stand-alone" {
 		client = redis.NewClient(&redis.Options{
 			Addr:     fmt.Sprintf("%s:%s", global.Config.Redis.Host, global.Config.Redis.Port),
-			Username: global.Config.Redis.Username,
+			Username: global.Config.Redis.User,
 			Password: global.Config.Redis.Password, // no password set
 			DB:       global.Config.Redis.DB,       // use default DB
 		})
 	} else if global.Config.Redis.Mode == "sentinel" {
+		sentinelAddrs := make([]string, len(global.Config.Redis.Sentinel))
+		for i, sentinel := range global.Config.Redis.Sentinel {
+			sentinelAddrs[i] = fmt.Sprintf("%v:%v", sentinel["host"], sentinel["port"])
+		}
 		client = redis.NewFailoverClusterClient(&redis.FailoverOptions{
 			MasterName:       global.Config.Redis.MasterName,
 			SentinelUsername: global.Config.Redis.SentinelUsername,
 			SentinelPassword: global.Config.Redis.SentinelPassword,
-			Username:         global.Config.Redis.Username,
+			Username:         global.Config.Redis.User,
 			Password:         global.Config.Redis.Password,
-			SentinelAddrs:    global.Config.Redis.SentinelAddrs,
+			SentinelAddrs:    sentinelAddrs,
 			DB:               global.Config.Redis.DB,
 			RouteRandomly:    true,
 		})

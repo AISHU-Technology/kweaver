@@ -16,7 +16,7 @@ func init() {
 		global.LOG,
 		logger.Config{
 			SlowThreshold:             time.Second,
-			LogLevel:                  logger.LogLevel(global.Config.DB.LogLevel),
+			LogLevel:                  logger.LogLevel(global.Config.Mariadb.LogLevel),
 			IgnoreRecordNotFoundError: true,
 			Colorful:                  true,
 		},

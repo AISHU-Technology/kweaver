@@ -1,15 +1,14 @@
 server:
   host: 0.0.0.0
   port: 6800
-  mode: debug
+  mode: release
 
-db:
-  username: anydata
+mariadb:
+  user: anydata
   password: Qwe123!@#
   port: 3306
   host: 10.4.68.144
-  name: anydata
-  type: mysql
+  database: anydata
   max-idle-conns: 10
   max-open-conns: 100
   conn-max-lifetime: 60 #60min
@@ -20,13 +19,14 @@ redis:
   mode: stand-alone #stand-alone sentinel
   host: 10.2.174.231
   port: 6379
-  username: ""
+  user: ""
   password: Qwe123!@#
-  master-name: master
-  sentinel-addrs:
-    - 10.4.68.144:6379
-  sentinel-username: ""
-  sentinel-password: Qwe123!@#
+  master_name: master
+  sentinel:
+    - host: 10.4.68.144
+      port: 6379
+  sentinel_account: ""
+  sentinel_password: Qwe123!@#
   db: 0
 
 #zap配置
