@@ -1,0 +1,42 @@
+server:
+  host: 0.0.0.0
+  port: 6800
+  mode: debug
+
+db:
+  username: anydata
+  password: Qwe123!@#
+  port: 3306
+  host: 10.4.68.144
+  name: anydata
+  type: mysql
+  max-idle-conns: 10
+  max-open-conns: 100
+  conn-max-lifetime: 60 #60min
+  log-mode: false
+  log-level: 4
+
+redis:
+  mode: stand-alone #stand-alone sentinel
+  host: 10.2.174.231
+  port: 6379
+  username: ""
+  password: Qwe123!@#
+  master-name: master
+  sentinel-addrs:
+    - 10.4.68.144:6379
+  sentinel-username: ""
+  sentinel-password: Qwe123!@#
+  db: 0
+
+#zap配置
+zap:
+  level: 'info'
+  format: 'console' #console json
+  director: 'log'
+  link-name: 'latest_log'
+  show-line: true
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: true
+  prefix: '[github.com/KWeaver/kw-studio]'
