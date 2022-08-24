@@ -1,0 +1,4 @@
+/
+*  Copyright 2006-2022  AISHU Technology
+*  Source code in this repository is covered by an Apache License 2.0 compatible license 
+/
