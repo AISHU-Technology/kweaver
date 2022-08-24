@@ -612,7 +612,13 @@ class GraphService():
             KgConf = graph_dao.getKgByNameandId(graph_Name, grapid, knw_id)
             if len(KgConf) != 0:
                 KGname_exit_flag = True
-            graph_db_id = params_json['graph_process'][0]['graph_db_id']
+            df = graph_dao.getbaseinfoById(grapid)
+            df = df.to_dict("records")
+            for line in df:
+                graph_baseInfo = eval(line["graph_baseInfo"])[0]
+                graph_process_dict["graphDBAddress"] = graph_baseInfo["graphDBAddress"]
+                graph_process_dict["graph_mongo_Name"] = graph_baseInfo["graph_mongo_Name"]
+                graph_db_id = graph_process_dict["graph_db_id"]
             ret = graph_dao.getGraphDBbyId(graph_db_id)
             rec_dict = ret.to_dict('records')
             if len(rec_dict) == 0:
