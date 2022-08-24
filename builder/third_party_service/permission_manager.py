@@ -33,7 +33,7 @@ class Permission(object):
                     "code": CommonResponseStatus.PARAMETERS_ERROR.value,
                     "message": "Incorrect parameter format"}, CommonResponseStatus.BAD_REQUEST.value
         # 参数校验
-        check_res, message = graphCheckParameters.graphAddPar(params_json, None)
+        check_res, message = graphCheckParameters.graphAddPar(params_json)
         if check_res != 0:
             print("message: ", message)
             Logger.log_error("parameters:%s invalid; " % params_json + "cause:%s" % message)
@@ -68,7 +68,7 @@ class Permission(object):
                     "message": "Incorrect parameter format",
                     "solution": "Please check quest body or header"}, CommonResponseStatus.BAD_REQUEST.value
         # 参数校验
-        check_res, message = graphCheckParameters.graphAddPar(params_json, graphid)
+        check_res, message = graphCheckParameters.graphAddPar(params_json)
         if check_res != 0:
             Logger.log_error("parameters:%s invalid" % params_json)
             return {"cause": message,

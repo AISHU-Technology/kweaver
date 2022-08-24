@@ -46,7 +46,6 @@ def before_request():
             return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
                                        message=res_message["message"]), res_code
         return None
-    # 图谱编辑
     elif path == "/api/builder/v1/graph/output" and method == "POST":
         params_json = request.get_data()
         params_json = json.loads(params_json)
@@ -65,6 +64,7 @@ def before_request():
             return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
                                        message=res_message["message"]), res_code
         return None
+    # 图谱编辑
     elif "/api/builder/v1/graph" in path and method == "POST":
         graphid = path.split("/")[-1]
         if graphid not in ["check_kmapinfo", "getgraphbygns", "delbyids", "graph_info", "query", "savenocheck",
