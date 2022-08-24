@@ -77,19 +77,20 @@ if 'version' in meta.tables.keys():
         raise e
     Logger.log_info("database builder version: %s" % version)
     if len(version) == 0:
-        raise Exception('Database version not found. Upgrade fail.')
-
-    if len(version[0]['builder_version']) == 0:
+        # 数据库版本记录不存在
+        # 进行数据库的初始化
         Logger.log_info('builder_version not found. Start initialization')
-        # 初始化数据库
-        migrate(progressVersion, 'initiate')
-        # 插入当前数据库版本
-        try:
-            updateDatabaseVersion(progressVersion)
-        except Exception as e:
-            Logger.log_info(e)
-            raise e
-        Logger.log_info("Change database builder version success.")
+        if progressVersion in versions:
+            migrate(progressVersion, 'initiate')
+            # 插入当前数据库版本
+            try:
+                insertDatabaseVersion(progressVersion)
+            except Exception as e:
+                Logger.log_info(e)
+                raise e
+            Logger.log_info("Change database builder version success.")
+        else:
+            raise Exception('Upgrade scheme not found.')
     else:
         databaseVersion = version[0]['builder_version']  # 数据库版本
         Logger.log_info('builder_version exists. Compare progressversion and databseversion.')
@@ -123,18 +124,4 @@ if 'version' in meta.tables.keys():
 
             elif progressVersionIdx < databaseVersionIdx:
                 Logger.log_info('Program version is lower than installed version')
-else:
-    # 数据库版本表不存在
-    # 进行数据库的初始化
-    Logger.log_info('Database version table not exist. Start initialization')
-    if progressVersion in versions:
-        migrate(progressVersion, 'initiate')
-        # 插入当前数据库版本
-        try:
-            insertDatabaseVersion(progressVersion)
-        except Exception as e:
-            Logger.log_info(e)
-            raise e
-        Logger.log_info("Change database builder version success.")
-    else:
-        raise Exception('Upgrade scheme not found.')
+
