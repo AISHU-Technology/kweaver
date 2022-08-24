@@ -1,6 +1,6 @@
 /
 *  AISHU KWeaver
 *  Copyright 2006-2022  AISHU Technology
-*  This product includes software developed at The Apache Software Foundation (http://www.apache.org/).
+*  This product includes software developed at The Apache Software Foundation (http://www.apache.org/)
 *  Source code in this repository is covered by an Apache License 2.0 compatible license 
 /
