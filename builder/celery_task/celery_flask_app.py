@@ -18,6 +18,7 @@ print("工作路基:{}".format(os.getcwd()))
 from utils.ConnectUtil import redisConnect
 from common.errorcode import codes
 
+
 class Config(object):  # 创建配置，用类
     # 任务列表
     JOBS = [
@@ -103,12 +104,25 @@ def set_timezone():
     os.environ["TZ"] = tz
 
 
-redis_cluster_mode = str(os.getenv("REDISCLUSTERMODE", ""))
 # 配置
 app = Flask(__name__)
-redis_add, redis_port, redis_user, redis_passwd, master_name, redis_sentinel_user, redis_sentinel_password = redisConnect.get_config()
+redis_add, redis_port, redis_user, redis_passwd, master_name, redis_sentinel_user, redis_sentinel_password, redis_cluster_mode = redisConnect.get_config()
 if config.local_testing != True:
+    if redis_user is None:
+        redis_user = ""
+    if redis_passwd is None:
+        redis_passwd = ""
     if redis_cluster_mode == "sentinel":
+        sentinel_url = ""
+        redis_user_url = f"{redis_user}:{redis_passwd}@"
+        if redis_user_url == "@":
+            redis_user_url = ""
+        for index, sentinel_node in enumerate(redis_add):
+            sentinel_host, sentinel_port = sentinel_node
+            sentinel_url += f"sentinel://{redis_user_url}{sentinel_host}:{sentinel_port}/"
+            sentinel_url += "{0}"
+            if index != len(redis_add):
+                sentinel_url += ";"
         # 密碼
         ## redis://:password@hostname:port/db_number
         # 配置消息代理的路径，如果是在远程服务器上，则配置远程服务器中redis的URL
@@ -116,26 +130,27 @@ if config.local_testing != True:
         ##'sentinel://root:redis@localhost:26079;sentinel://root:redis@localhost:26080;sentinel://root:redis@localhost:26081'
         # 哨兵密碼
         # "sentinel://:mypassword@192.168.1.1:26379/1;sentinel://:mypassword@192.168.1.2:26379/1;sentinel://:mypassword@192.168.1.3:26379/1"
-        app.config[
-            'CELERY_BROKER_URL'] = 'sentinel://' + redis_user + ":" + redis_passwd + "@" + redis_add + ':' + redis_port + "/1"
+        app.config['CELERY_BROKER_URL'] = sentinel_url.format(1)
         # 要存储 Celery 任务的状态或运行结果时就必须要配置
-        BROKER_TRANSPORT_OPTIONS = {'master_name': master_name,
-                                    'sentinel_kwargs': {'password': redis_sentinel_password}}
+        BROKER_TRANSPORT_OPTIONS = {'master_name': master_name, 'password': redis_sentinel_password,
+                                    'sentinel_kwargs': {'password': redis_sentinel_password,
+                                                        "username": redis_sentinel_user}}
         app.config['CELERY_BROKER_TRANSPORT_OPTIONS'] = BROKER_TRANSPORT_OPTIONS
-        app.config[
-            'CELERY_RESULT_BACKEND'] = 'sentinel://' + redis_user + ":" + redis_passwd + "@" + redis_add + ':' + redis_port + "/2"
+        app.config['CELERY_RESULT_BACKEND'] = sentinel_url.format(2)
         app.config['CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS'] = BROKER_TRANSPORT_OPTIONS
         print(app.config)
         app.config['CELERYD_MAX_TASKS_PER_CHILD'] = 1
         app.config.from_object(Config)  # 为实例化的flask引入配置
     if redis_cluster_mode == "master-slave":
+        redis_url = ""
+        redis_user_url = f"{redis_user}:{redis_passwd}@"
+        if redis_user_url == "@":
+            redis_user_url = ""
+        redis_url = f"redis://{redis_user_url}{redis_add}:{redis_port}/" + "{0}"
         # 配置消息代理的路径，如果是在远程服务器上，则配置远程服务器中redis的URL
-        # redis: //:password @ hostname: port / db_number
-        app.config[
-            'CELERY_BROKER_URL'] = 'redis://' + redis_user + ":" + redis_passwd + "@" + redis_add + ':' + redis_port + '/1'
+        app.config['CELERY_BROKER_URL'] = redis_url.format(1)
         # 要存储 Celery 任务的状态或运行结果时就必须要配置
-        app.config[
-            'CELERY_RESULT_BACKEND'] = 'redis://' + redis_user + ":" + redis_passwd + "@" + redis_add + ':' + redis_port + '/2'
+        app.config['CELERY_RESULT_BACKEND'] = redis_url.format(2)
         app.config['CELERYD_MAX_TASKS_PER_CHILD'] = 1
         app.config.from_object(Config)  # 为实例化的flask引入配置
 else:

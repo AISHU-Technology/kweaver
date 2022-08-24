@@ -66,24 +66,17 @@ class DsmDao(object):
         return data
 
     def getdatabyauth(self, ds_auth):
-        import os
-        with open('./../config/mysql.yaml', 'r') as f:
-            yamlConfig = yaml.load(f)
-        db_config = yamlConfig.get("tmysql").get("docker_db")
-        # DATA-1866 通过系统变量获取配置信息
-        HOST = os.getenv("RDSHOST")
-        PORT = eval(os.getenv("RDSPORT"))
-        USER_NAME = os.getenv("RDSUSER")
-        PASSWORD = str(os.getenv("RDSPASS"))
-        SCHEMA = os.getenv("RDSDBNAME")
-        CHARSET = db_config.get('charset')
-        # HOST = db_config.get('host')
-        # PORT = db_config.get('port')
-        # USER_NAME = db_config.get('user')
-        # PASSWORD = str(db_config.get('password'))
-        # SCHEMA = db_config.get('database')
-        # CHARSET = db_config.get('charset')
-        db = pymysql.connect(host=HOST, user=USER_NAME, passwd=PASSWORD, db=SCHEMA, port=PORT, charset=CHARSET)
+        from os import path
+        db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+        with open(db_config_path, 'r') as f:
+            yaml_config = yaml.load(f)
+        mariadb_config = yaml_config['mariadb']
+        host = mariadb_config.get('host')
+        port = mariadb_config.get('port')
+        user_name = mariadb_config.get('user')
+        password = mariadb_config.get('password')
+        database = mariadb_config.get('database')
+        db = pymysql.connect(host=host, user=user_name, passwd=password, db=database, port=port, charset="utf8")
         cur = db.cursor(cursor=pymysql.cursors.DictCursor)
         sql = """SELECT * FROM author_token WHERE ds_auth=%s """
         sql = sql % ds_auth
@@ -246,7 +239,7 @@ class DsmDao(object):
 
     @connect_execute_close_db
     def getbyids(self, ids, connection, cursor, ):
-        sql = """SELECT * FROM data_source_table where id in (%s)"""
+        sql = f"""SELECT * FROM data_source_table where id in (%s)""" % (",".join([str(id) for id in ids]))
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df

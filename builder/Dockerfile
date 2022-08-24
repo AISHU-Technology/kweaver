@@ -10,14 +10,13 @@ ADD . /app
 RUN cp -f /app/celery_task/celery_pytorch.py  /usr/local/lib/python3.9/site-packages/celery/bin/celery.py && \
     pip uninstall -y DataTransform && \
     wget ftp://ftp-ad.aishu.cn/packages/kg-dataflow/develop/DataTransform-0.0.1-py3-none-any.whl \
-    && pip install DataTransform-0.0.1-py3-none-any.whl -i https://repo.huaweicloud.com/repository/pypi/simple/
+    && pip install DataTransform-0.0.1-py3-none-any.whl -i https://repo.huaweicloud.com/repository/pypi/simple/ \
+    && wget ftp://ftp-ad.aishu.cn/packages/models/builder/builder_model.tar \
+    && tar -xvf builder_model.tar -C ./unstructedmodel/ && rm -rf builder_model.tar
 
 EXPOSE 6475
 EXPOSE 6485
 EXPOSE 6488
 ENV PYTHONOPTIMIZE=1
-#ENV PYTHONOPTIMIZE=1
-# Run celery_flask_app.py when the container launches
 CMD ["supervisord", "-c", "/app/supervisord.conf"]
-#CMD ["python", "./celery_task/celery_flask_app.py"]
-#CMD ["python", "builder_app.py"]
+

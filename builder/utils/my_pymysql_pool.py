@@ -17,7 +17,7 @@ db_type = "docker_db"
 
 def connect_execute_commit_close_db(func):
     def wrapper(*args, **kwargs):
-        pymysql_pool = PymysqlPool.get_pool('tmysql', db_type)
+        pymysql_pool = PymysqlPool.get_pool()
         connection = pymysql_pool.connection()
         cursor = connection.cursor(cursor=pymysql.cursors.DictCursor)
         kwargs['connection'] = connection
@@ -39,7 +39,7 @@ def connect_execute_commit_close_db(func):
 
 def connect_execute_close_db(func):
     def wrapper(*args, **kwargs):
-        pymysql_pool = PymysqlPool.get_pool('tmysql', db_type)
+        pymysql_pool = PymysqlPool.get_pool()
         connection = pymysql_pool.connection()
         kwargs['connection'] = connection
         cursor = connection.cursor(cursor=pymysql.cursors.DictCursor)

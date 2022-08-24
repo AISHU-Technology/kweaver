@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import base64
+
+import yaml
 from sqlalchemy.orm import sessionmaker, relationship, foreign, remote
 from sqlalchemy.pool import NullPool
 from sqlalchemy import Column, String, create_engine, Integer, Boolean
@@ -18,7 +20,6 @@ from utils.tzcrontab import TzAwareCrontab
 """
     builder 数据库 表
 """
-# CONFIG_PATH = "./../config/mysql.yaml"
 Base = declarative_base()
 
 
@@ -425,18 +426,17 @@ class NetworkGraphRelation(Base):
 
 # 初始化数据库表
 def init_datatable():
-    import os
+    from os import path
     from urllib import parse
-    ip = os.getenv("RDSHOST")
-    port = eval(os.getenv("RDSPORT"))
-    user = os.getenv("RDSUSER")
-    passwd = str(os.getenv("RDSPASS"))
-    database = os.getenv("RDSDBNAME")
-    # ip = '10.4.128.208'
-    # port = 3306
-    # user = 'root'
-    # passwd = 'anydata123'
-    # database = 'test_anydata'
+    db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+    with open(db_config_path, 'r') as f:
+        yaml_config = yaml.load(f)
+    mariadb_config = yaml_config['mariadb']
+    ip = mariadb_config.get('host')
+    port = mariadb_config.get('port')
+    user = mariadb_config.get('user')
+    passwd = mariadb_config.get('password')
+    database = mariadb_config.get('database')
     sqlalchemy_database_uri = 'mysql+pymysql://{user}:{passwd}@{ip}:{port}/{database}?charset=utf8'.format(
         user=user,
         passwd=parse.quote_plus(passwd),  # 特殊字符@处理

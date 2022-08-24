@@ -5,7 +5,10 @@ import logging
 import os
 
 import ahocorasick
+import yaml
 from pymongo import MongoClient
+from os import path
+
 logging.basicConfig(level=logging.INFO, format='%(levelname)s %(asctime)s %(filename)s:%(lineno)d %(message)s')
 logger = logging.getLogger(__name__)
 
@@ -22,6 +25,7 @@ def build_ac_tree(word_list):
     logger.info('Built AC Tree {}'.format(len(word_list)))
     return ac_tree
 
+
 def build_ac_tree_forward(word_list):
     ac_tree = ahocorasick.Automaton()
     for index, word in enumerate(word_list):
@@ -33,7 +37,6 @@ def build_ac_tree_forward(word_list):
         return None
     logger.info('Built AC Tree {}'.format(len(word_list)))
     return ac_tree
-
 
 
 def error_cb(r):
@@ -79,25 +82,26 @@ class MongoCon:
     @property
     def con(self):
         import urllib.parse
-        if  str(os.getenv("UNIONDEPLOY", "")) == "1":
-            database = "anyshare"
-        elif str(os.getenv("UNIONDEPLOY", "")) == "0":
-            database = "anydata"
-        if ";" in os.getenv("MONGODBHOST"):
-            mongodb_ip_port = (",").join(
-                ["{}:{}".format(ip, os.getenv("MONGODBPORT")) for ip in os.getenv("MONGODBHOST").split(";")])
+        db_config_path = path.join(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))), 'config',
+                                   'db.yaml')
+        with open(db_config_path, 'r') as f:
+            yaml_config = yaml.load(f)
+        mongodb_config = yaml_config['mongodb']
+        user = mongodb_config['user']
+        password = urllib.parse.quote_plus(mongodb_config['password'])
+        host = mongodb_config['host']
+        port = mongodb_config['port']
+        database = mongodb_config['database']
+        if password is not None and user is not None:
+            conn = MongoClient(f'mongodb://{user}:{password}@{host}:{port}/')
         else:
-            mongodb_ip_port = (",").join(
-                ["{}:{}".format(ip, os.getenv("MONGODBPORT")) for ip in os.getenv("MONGODBHOST").split(",")])
-
-        return MongoClient('mongodb://' + os.getenv("MONGODBUSER") + ":" + urllib.parse.quote_plus(os.getenv(
-                "MONGODBPASS")) + "@" + mongodb_ip_port + '/' + database)['anydata']
-
-        # return MongoClient('mongodb://' + self.host + ':' + self.port + '/')[self.db]
+            conn = MongoClient('mongodb://{host}:{port}/')
+        dbconn = conn[database]
+        return dbconn
 
 
 # 从mongodb中获取文档的gns
-def get_gns(mongo, mongo_db, q_gns, signal, who, keys=('gns', ), n_limit=1000):
+def get_gns(mongo, mongo_db, q_gns, signal, who, keys=('gns',), n_limit=1000):
     n_gns = 0
     gns_tb_conn = mongo.con[mongo_db + '_' + 'gnsInfo']
 
@@ -116,5 +120,3 @@ def get_gns(mongo, mongo_db, q_gns, signal, who, keys=('gns', ), n_limit=1000):
     logger.info('gns file num {}'.format(n_gns))
     signal['no_more_gns'] = True
     signal['n_gns'] = n_gns
-
-

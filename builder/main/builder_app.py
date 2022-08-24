@@ -39,13 +39,6 @@ def before_request():
     print("path: ", path)
     print("method: ", method)
     permission = Permission()
-    # GET请求：返回所有图谱信息;
-    # if path == "/api/builder/v1/graph/" and method == "GET":
-    #     res_message, res_code = permission.graphGet()
-    #     if res_code != 0:
-    #         return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-    #                                    message=res_message["message"]), res_code
-    #     return None
     # POST请求：新增图谱
     if path == "/api/builder/v1/graph" and method == "POST":
         res_message, res_code = permission.graphCreate()
@@ -197,130 +190,6 @@ def before_request():
         return None
 
 
-# @app.after_request
-# def af_request(resp):
-#     req_met = request.method
-#     if req_met == "OPTIONS":
-#         return resp
-#     else:
-#         resp = make_response(resp)
-#
-#         authorization = g.authorization
-#         authorization = authorization["Authorization"]
-#         # hflog.info("request token:%s " % authorization)
-#         if authorization is not None:
-#             resp.headers.add("Access-Control-Expose-Headers","Authorization")
-#             resp.headers.add("Authorization", authorization)
-#         return resp
-#
-# @app.before_request
-# def beforeRequest():
-#     """
-#     前置钩子
-#     :return:
-#     """
-#     # verify authority
-#     req_met = request.method
-#     if req_met == "OPTIONS":
-#         pass
-#     else:
-#         author = request.headers.get('Authorization')
-#         hflog.info("request token:%s " % author)
-#         authorization = {"Authorization": None}
-#         g.authorization = authorization
-#         if author == "" or author == None:
-#             return {"Code": "400001", "Cause": "Authorization is invalid", "message": "Authorization is invalid"}, 401
-#         try:
-#             info = jwt.decode(author, key="AnyDATA", algorithms=['HS256'])
-#
-#             current_time = datetime.datetime.now()
-#             current_timestap = time.mktime(current_time.timetuple())
-#             if (current_timestap - info["iat"]) > 15 * 60:
-#                 dtime = datetime.datetime.now()
-#                 un_time = time.mktime(dtime.timetuple())
-#                 exp = datetime.datetime.now() + datetime.timedelta(minutes=30)
-#                 exp = time.mktime(exp.timetuple())
-#                 payload = {
-#                     'user': info["user"],
-#                     'iss': "aishu.cn",
-#                     "iat": un_time,
-#                     'exp': exp,  # 过期时间
-#                     'type': info["type"],
-#                     'id': info["id"]
-#                 }
-#                 try:
-#                     token = jwt.encode(payload, "AnyDATA", algorithm='HS256').decode("ascii")
-#                     author_token = g.authorization
-#                     author_token["Authorization"] = token
-#                     hflog.info("jwt token:%s " % token)
-#                 except Exception as e:
-#                     err = repr(e)
-#                     return {"Code": "400001", "Cause": err, "message": err}, 401
-#
-#         except ExpiredSignatureError:
-#             return {"Code": "400002", "Cause": "Authorization is expired", "message": "Authorization is expired"}, 401
-#         except Exception as e:
-#             err = repr(e)
-#             return {"Code": "400003", "Cause": err, "message": err}, 401
-
-
-# @app.after_request
-# def afterRequest(response):
-#     """
-#     后置钩子
-#     :param f:
-#     :return:
-#     """
-#     # session.permanent = True
-#     # app.permanent_session_lifetime = datetime.timedelta(minutes=1)  # 设置session到期时间
-#
-#     data = json.loads(response.data.decode('utf-8').replace("None", ' '))
-#     if hasattr(g, 'request_info_dict'):
-#         request_info_dict = copy.copy(g.request_info_dict)
-#         if 'LOG_TYPE' in request_info_dict:
-#             del request_info_dict['LOG_TYPE']
-#         log_response_dict = {'RESPONSE_INFO': data, 'REQUEST_INFO': request_info_dict,  'LOG_TYPE': 'response_info'}
-#         hflog.info(json.dumps(log_response_dict))
-#
-#     return Grequest.afterRequest(response)
-#
-#
-# @app.teardown_request
-# def exceptionRequest(exception):
-#     """
-#     异常钩子
-#     :param exception:
-#     :return:
-#     """
-#     return Gview.Vfail(None, repr(exception))
-#
-#
-# @app.errorhandler(Exception)
-# def exception500(exception):
-#     """
-#     http异常处理钩子
-#     :param error:
-#     :return:
-#     """
-#     log_error_dict = {'ERROR_INFO': repr(exception), 'LOG_TYPE': 'error_info'}
-#     if hasattr(g, 'request_info_dict'):
-#         request_info_dict = copy.copy(g.request_info_dict)
-#         if 'LOG_TYPE' in request_info_dict:
-#             del request_info_dict['LOG_TYPE']
-#         log_error_dict['REQUEST_INFO'] = request_info_dict
-#     hflog.error(json.dumps(log_error_dict))
-#
-#     return Gview.Vfail(None, repr(exception))
-#
-#
-# @app.errorhandler(404)
-# def exception404(error):
-#     """
-#     http异常处理钩子
-#     :param error:
-#     :return:
-#     """
-#     return Gview.Vreturn(404, None, repr(error))
 
 
 from controller.dsm_controller import dsm_controller_app
@@ -334,12 +203,11 @@ from controller.timer_controller import timer_controller_app
 from controller.rebuild_fulltextindex_controller import rebuild_fulltextindex_controller_app
 from controller.knowledgeNetwork_controller import knowledgeNetwork_controller_app
 
-# from controller.test_blue import  test_app
+
 app.register_blueprint(dsm_controller_app, url_prefix='/api/builder/v1/ds')
 
 app.register_blueprint(ontology_controller_app, url_prefix='/api/builder/v1/onto')
 
-# app.register_blueprint(streamline_controller_app, url_prefix='/api/builder/v1/streamline')
 app.register_blueprint(graph_controller_app, url_prefix='/api/builder/v1/graph')
 
 app.register_blueprint(task_controller_app, name="task_controller_app", url_prefix='/api/builder/v1/task')
@@ -352,19 +220,10 @@ app.register_blueprint(timer_controller_app, url_prefix='/api/builder/v1/timer')
 
 app.register_blueprint(knowledgeNetwork_controller_app, name="knowledgeNetwork_controller_app",
                        url_prefix='/api/builder/v1/knw')
-# app.register_blueprint(test_app, url_prefix='/test')
 app.response_class = Gresponse
-# app.config['SECRET_KEY'] = 'you never guess'
 if __name__ == '__main__':
     import sys
     import os
-
-    print("ENV RDSHOST : ", os.getenv("RDSHOST"))
-    print("ENV RDSPORT:  ", eval(os.getenv("RDSPORT")))
-    print("ENV RDSUSER : ", os.getenv("RDSUSER"))
-    print("ENV RDSDBNAME : ", os.getenv("RDSDBNAME"))
-    # host_str = '0.0.0.0'
-    # host_str = '10.2.196.58'
     # 初始化，先清除redis任务的状态
     from dao.task_dao import task_dao
     from dao.task_onto_dao import task_dao_onto

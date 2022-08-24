@@ -11,6 +11,7 @@ from DBUtils.PooledDB import PooledDB
 import yaml
 import sys
 import os
+from os import path
 
 
 # sys.path.append(os.path.abspath("../"))
@@ -27,35 +28,21 @@ class PymysqlPool(object):
             return PymysqlPool._instance
 
     @classmethod
-    def get_pool(cls, dbname, read_write):
-        # if cls.yamlConfig is None:
-            # with open(sys.path[0]+'/config/mysql.yaml', 'r') as f:
-            # with open('./config/mysql.yaml', 'r') as f:
-        #     print('pymysql_pool path: ', os.getcwd())
-        #     with open('./../config/mysql.yaml', 'r') as f:
-        #         cls.yamlConfig = yaml.load(f)
-        # db_config = cls.yamlConfig.get(dbname).get(read_write)
-        # DB_MINCACHED = db_config.get('mincached')
-        # DB_MAXCACHED = db_config.get('maxcached')
-        # DB_MAXSHARED = db_config.get('maxshared')
-        # DB_MAXCONNECTIONS = db_config.get('maxconnections')
-        # DB_BLOCKING = db_config.get('blocking')
+    def get_pool(cls):
         DB_MINCACHED = 2
         DB_MAXCACHED = 5
         DB_MAXSHARED = 5
         DB_MAXCONNECTIONS = 3
         DB_BLOCKING = True
-        # DB_HOST = db_config.get('host')
-        # DB_PORT = db_config.get('port')
-        # DB_USER_NAME = db_config.get('user')
-        # DB_PASSWORD = str(db_config.get('password'))
-        # DB_SCHEMA = db_config.get('database')
-        DB_HOST = os.getenv("RDSHOST")
-        DB_PORT = eval(os.getenv("RDSPORT"))
-        DB_USER_NAME = os.getenv("RDSUSER")
-        DB_PASSWORD = str(os.getenv("RDSPASS"))
-        DB_SCHEMA = os.getenv("RDSDBNAME")
-        # CHARSET = db_config.get('charset')
+        db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+        with open(db_config_path, 'r') as f:
+            yaml_config = yaml.load(f)
+        mariadb_config = yaml_config['mariadb']
+        host = mariadb_config.get('host')
+        port = mariadb_config.get('port')
+        user_name = mariadb_config.get('user')
+        password = mariadb_config.get('password')
+        database = mariadb_config.get('database')
         CHARSET = 'utf8'
 
         pool = PooledDB(
@@ -65,11 +52,11 @@ class PymysqlPool(object):
             maxshared=DB_MAXSHARED,
             maxconnections=DB_MAXCONNECTIONS,
             blocking=DB_BLOCKING,
-            host=DB_HOST,
-            port=DB_PORT,
-            user=DB_USER_NAME,
-            password=DB_PASSWORD,
-            db=DB_SCHEMA,
+            host=host,
+            port=port,
+            user=user_name,
+            password=password,
+            db=database,
             charset=CHARSET
         )
 

@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
-
-import os
-
+import yaml
 from sqlalchemy import create_engine
 from sqlalchemy.pool import NullPool
 from urllib import parse
@@ -10,24 +8,22 @@ from utils.log_info import Logger
 from db_migrate.update.databaseUtil import versions, migrate
 from utils.my_pymysql_pool import connect_execute_close_db, connect_execute_commit_close_db
 import pandas as pd
+from os import path
 
 # 当前程序版本
-progressVersion = os.getenv("BUILDERVERSION")
-# 上线之前注释掉
-progressVersion = 'builder-1.1.5'
+progressVersion = 'builder-1.1.1'
 Logger.log_info("progressVersion: %s" % progressVersion)
 
 # 连接数据库
-ip = os.getenv("RDSHOST")
-port = eval(os.getenv("RDSPORT"))
-user = os.getenv("RDSUSER")
-passwd = str(os.getenv("RDSPASS"))
-database = os.getenv("RDSDBNAME")
-# ip = '10.2.174.230'
-# port = 3306
-# user = 'anydata'
-# passwd = 'Qwe123!@#'
-# database = 'anydata'
+db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+with open(db_config_path, 'r') as f:
+    yaml_config = yaml.load(f)
+mariadb_config = yaml_config['mariadb']
+ip = mariadb_config.get('host')
+port = mariadb_config.get('port')
+user = mariadb_config.get('user')
+passwd = mariadb_config.get('password')
+database = mariadb_config.get('database')
 sqlalchemy_database_uri = 'mysql+pymysql://{user}:{passwd}@{ip}:{port}/{database}?charset=utf8'.format(
     user=user,
     passwd=parse.quote_plus(passwd),  # 特殊字符@处理

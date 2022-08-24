@@ -8,11 +8,13 @@ import datetime
 import time
 from functools import partial
 from multiprocessing.dummy import Pool as ThreadPool
+
+import yaml
 from requests.auth import HTTPBasicAuth
 
 import requests
 # from utils.ConnectUtil import redisConnect
-
+from os import path
 sys.path.append(os.path.abspath("../"))
 from common.exception.base import ExceptLevel
 from common.exception.celerytask_exception import CeleryTaskException
@@ -89,12 +91,16 @@ beat_scheduler = 'celery_task.celery_beat:DatabaseScheduler'
 # The maximum number of seconds beat can sleep between checking the schedule.
 # default: 0
 beat_max_loop_interval = 10
-ip = os.getenv("RDSHOST")
-port = eval(os.getenv("RDSPORT"))
-user = os.getenv("RDSUSER")
-passwd = str(os.getenv("RDSPASS"))
-database = os.getenv("RDSDBNAME")
-passwd = parse.quote_plus(passwd)
+db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+with open(db_config_path, 'r') as f:
+    yaml_config = yaml.load(f)
+mariadb_config = yaml_config['mariadb']
+ip = mariadb_config.get('host')
+port = mariadb_config.get('port')
+user = mariadb_config.get('user')
+passwd = mariadb_config.get('password')
+passwd=parse.quote_plus(passwd)
+database = mariadb_config.get('database')
 beat_dburi = f'mysql+mysqlconnector://{user}:{passwd}@{ip}:{port}/{database}'
 beat_config = dict(
     beat_schedule=beat_schedule,
@@ -104,7 +110,9 @@ beat_config = dict(
     timezone=get_timezone(),
     worker_max_tasks_per_child=10
 )
-redis_cluster_mode = str(os.getenv("REDISCLUSTERMODE", ""))
+redis_config = yaml_config['redis']
+redis_cluster_mode = redis_config['mode']
+print(redis_config)
 if config.local_testing != True:
     if redis_cluster_mode == "sentinel":
         # 初始化Celery

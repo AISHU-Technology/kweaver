@@ -1,8 +1,10 @@
 from __future__ import absolute_import
 
+import yaml
 from flask_app import app
 from celery import Celery
-import sys,os
+import sys, os
+
 sys.path.append(os.path.abspath("../"))
 from service.Otl_Service import otl_service
 from service.task_Service import task_service
@@ -10,17 +12,22 @@ from config import config
 from dao.dsm_dao import dsm_dao
 from method.knowledge_graph import Ontology
 from method.database import DataBase
-from utils.Otl_Util import otl_util
+from os import path
 import time
 from utils.common_response_status import CommonResponseStatus
-redis_cluster_mode = str(os.getenv("REDISCLUSTERMODE", ""))
+
+db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+with open(db_config_path, 'r') as f:
+    yaml_config = yaml.load(f)
+redis_config = yaml_config['redis']
+redis_cluster_mode = redis_config['mode']
 if config.local_testing != True:
     if redis_cluster_mode == "sentinel":
-        cel= Celery(app.name, broker=app.config['CELERY_BROKER_URL'],broker_transport_options=app.config['CELERY_BROKER_TRANSPORT_OPTIONS'], backend=app.config['CELERY_RESULT_BACKEND'],result_backend_transport_options =app.config['CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS'], include=[app.name])
-        # @cel.task(name='cel.add', bind=True)
-        # def add(self,x,y):
-        #     result=x+y
-        #     return result
+        cel = Celery(app.name, broker=app.config['CELERY_BROKER_URL'],
+                     broker_transport_options=app.config['CELERY_BROKER_TRANSPORT_OPTIONS'],
+                     backend=app.config['CELERY_RESULT_BACKEND'],
+                     result_backend_transport_options=app.config['CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS'],
+                     include=[app.name])
         print("-------------------------celery config -------------------------")
         print(cel.conf.broker_url)
         cel.conf.broker_transport_options = app.config['CELERY_BROKER_TRANSPORT_OPTIONS']
@@ -34,11 +41,11 @@ if config.local_testing != True:
         print(cel.conf.broker_transport_options)
         print(cel.conf.result_backend)
         print(cel.conf.result_backend_transport_options)
-    else :
+    else:
         # 初始化Celery
         cel = Celery(app.name, broker=app.config['CELERY_BROKER_URL'], backend=app.config['CELERY_RESULT_BACKEND'],
                      include=[app.name])
-else :
+else:
     cel = Celery(app.name, broker=app.config['CELERY_BROKER_URL'], backend=app.config['CELERY_RESULT_BACKEND'],
                  include=[app.name])
 
@@ -47,7 +54,7 @@ else :
 
 
 @cel.task(name='cel.predict_ontology', bind=True)
-def predict_ontology(self,new_params_json,task_id):
+def predict_ontology(self, new_params_json, task_id):
     obj = {}
     try:
         ### 文件夹迭选
@@ -84,7 +91,7 @@ def predict_ontology(self,new_params_json,task_id):
                 add_code1, add_res1 = task_service.update_otl_task_filelist(new_params_json["table_list"], task_id)
                 if add_code1 != 200:
                     self.update_state(state="FAILURE", meta=add_res1)
-            else :
+            else:
                 self.update_state(state="FAILURE", meta=add_res)
             return {'current': 100, 'total': 100}
         if len(new_params_json["table_list"]) == 0:
@@ -105,8 +112,8 @@ def predict_ontology(self,new_params_json,task_id):
             # print(res)
             # obj["res"] = res
         else:
-            if len(new_params_json["table_list"])>100:
-                new_params_json["table_list"]=new_params_json["table_list"][0:100]
+            if len(new_params_json["table_list"]) > 100:
+                new_params_json["table_list"] = new_params_json["table_list"][0:100]
             new_entity_property_dict = []
             new_entity_for_table_dict = []
             new_relation_property_dict = []
@@ -114,12 +121,12 @@ def predict_ontology(self,new_params_json,task_id):
             new_relation_set = []
             if new_params_json["data_source"] not in ["as", "as7"]:  ##hive,masql [a,b,c]
                 # try:
-                    # tablelist = params_json["table_list"]
-                    # ontology = Ontology()  ########因为初始化问题，每次都需要进行类实例化，要不然会出现缓存未清除的现象
-                    # code, res, entity_list, entity_property_dict, entity_relation_set, entity_for_table_dict, name_rule_dict, pro_type_dict, newtable_list = ontology.data_processing(
-                    #     new_params_json)
-                    # #####newtable_list update to mysql
-                    # if len(entity_list) == 0:  ####如果算法没有提取到 则常规提取
+                # tablelist = params_json["table_list"]
+                # ontology = Ontology()  ########因为初始化问题，每次都需要进行类实例化，要不然会出现缓存未清除的现象
+                # code, res, entity_list, entity_property_dict, entity_relation_set, entity_for_table_dict, name_rule_dict, pro_type_dict, newtable_list = ontology.data_processing(
+                #     new_params_json)
+                # #####newtable_list update to mysql
+                # if len(entity_list) == 0:  ####如果算法没有提取到 则常规提取
                 try:
                     # new_params_json["newtablelist"] = [i[0] for i in new_params_json["table_list"]]
                     new_params_json["newtablelist"] = new_params_json["table_list"]
@@ -154,271 +161,6 @@ def predict_ontology(self,new_params_json,task_id):
                     obj['message'] = "Predict ontology fail"
                     self.update_state(state="FAILURE", meta=obj)
                     return {'current': 100, 'total': 100}
-                            # raise Ignore()
-
-                            # return ret_code, obj
-
-                #     else:
-                #         if entity_for_table_dict:
-                #             for entity, tablefile in entity_for_table_dict.items():
-                #                 doc = []
-                #                 for table in tablefile:
-                #                     oldtable = name_rule_dict[table]
-                #
-                #                     doc.append(oldtable)
-                #                 entity_for_table_dict[entity] = doc
-                #         if entity_property_dict:
-                #             for key, value in entity_property_dict.items():
-                #                 one = {}
-                #                 one["entity"] = otl_util.is_special(key)
-                #                 one["property"] = []
-                #                 for v in value:
-                #                     typ = pro_type_dict[v]
-                #                     one["property"].append([otl_util.is_special(v), typ])
-                #                 new_entity_property_dict.append(one)
-                #         if entity_for_table_dict:
-                #             for key, value in entity_for_table_dict.items():
-                #                 one = {}
-                #                 one["entity"] = otl_util.is_special(key)
-                #                 one["main_table"] = value
-                #                 new_entity_for_table_dict.append(one)
-                #                 predicttablelist.extend(value)
-                #         if entity_relation_set:
-                #             for one in entity_relation_set:
-                #                 edge_dict = {}
-                #                 edge_main_table = {}
-                #                 edge_dict["edge"] = otl_util.is_special(one[1])
-                #                 edge_dict["property"] = [["name", "string"]]
-                #                 edge_main_table["edge"] = otl_util.is_special(one[1])
-                #                 edge_main_table["main_table"] = []
-                #                 edge_main_table["main_table"].extend(entity_for_table_dict[one[0]])
-                #                 edge_main_table["main_table"].extend(entity_for_table_dict[one[2]])
-                #                 new_relation_property_dict.append(edge_dict)
-                #                 new_relation_main_table.append(edge_main_table)
-                #
-                #         new_entity_list = []
-                #         if entity_list:
-                #             for entity in entity_list:
-                #                 entity = otl_util.is_special(entity)
-                #                 new_entity_list.append(entity)
-                #         new_relation_set = []
-                #         # print(entity_relation_set)
-                #         # print(type(list(entity_relation_set)))
-                #         if list(entity_relation_set):
-                #             for one in list(entity_relation_set):
-                #                 one = list(one)
-                #                 one[0] = otl_util.is_special(one[0])
-                #                 one[1] = otl_util.is_special(one[1])
-                #                 one[2] = otl_util.is_special(one[2])
-                #                 new_relation_set.append(one)
-                #
-                #         new_params_json["newtablelist"] = list(
-                #             set([i[0] for i in new_params_json["table_list"]]).difference(set(predicttablelist)))
-                #
-                #         code_extract, res_extract = DataBase(new_params_json).get_entity_edge(new_params_json)
-                #
-                #         if code_extract != CommonResponseStatus.SUCCESS.value:
-                #             if len(entity_list) != 0:
-                #                 res["entity_list"] = list(set(new_entity_list))
-                #                 res["entity_property_dict"] = new_entity_property_dict
-                #                 res["entity_relation_set"] = new_relation_set
-                #                 res["entity_main_table_dict"] = new_entity_for_table_dict
-                #                 res["relation_main_table_dict"] = new_relation_main_table
-                #                 res["relation_property_dict"] = new_relation_property_dict
-                #                 res["extract_type"] = "标准抽取"
-                #                 # print(res)
-                #                 obj["res"] = res
-                #                 obj["file_list"] = newtable_list
-                #                 return obj
-                #             # else:
-                #             #     obj = {}
-                #             #     ret_code = CommonResponseStatus.SERVER_ERROR.value
-                #             #
-                #             #     obj['cause'] = "Predict ontology fail"
-                #             #     obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-                #             #     obj['message'] = "Predict ontology fail"
-                #             #
-                #             #     return ret_code, obj
-                #         #     return code_extract, res_extract
-                #         new_entity_list.extend(res_extract["res"]["entity_list"])
-                #         new_entity_property_dict.extend(res_extract["res"]["entity_property_dict"])
-                #         new_entity_for_table_dict.extend(res_extract["res"]["entity_main_table_dict"])
-                #         res = {}
-                #         res["entity_list"] = list(set(new_entity_list))
-                #         res["entity_property_dict"] = new_entity_property_dict
-                #         res["entity_relation_set"] = new_relation_set
-                #         res["entity_main_table_dict"] = new_entity_for_table_dict
-                #         res["relation_main_table_dict"] = new_relation_main_table
-                #         res["relation_property_dict"] = new_relation_property_dict
-                #         res["extract_type"] = "标准抽取"
-                #         # print(res)
-                #         obj["res"] = res
-                #         obj["file_list"] = newtable_list
-                #         return obj
-                #
-                # except Exception as e:
-                #     obj = {}
-                #     err = repr(e)
-                #     obj['cause'] = err
-                #     obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-                #     obj['message'] = "Predict ontology fail"
-                #     self.update_state(state="FAILURE", meta=obj)
-                #     return {'current': 100, 'total': 100}
-                    # raise Ignore()
-
-                    # return ret_code, obj
-                # try:
-                #     # tablelist = params_json["table_list"]
-                #     ontology = Ontology()  ########因为初始化问题，每次都需要进行类实例化，要不然会出现缓存未清除的现象
-                #     code, res, entity_list, entity_property_dict, entity_relation_set, entity_for_table_dict, name_rule_dict, pro_type_dict, newtable_list = ontology.data_processing(
-                #         new_params_json)
-                #     #####newtable_list update to mysql
-                #     if len(entity_list) == 0:  ####如果算法没有提取到 则常规提取
-                #         try:
-                #             new_params_json["newtablelist"] = [i[0] for i in new_params_json["table_list"]]
-                #             code_extract, res_extract = DataBase(new_params_json).get_entity_edge(new_params_json)
-                #             if code_extract != CommonResponseStatus.SUCCESS.value:
-                #                 self.update_state(state="FAILURE", meta=res_extract)
-                #                 return {'current': 100, 'total': 100}
-                #                 # raise Ignore()
-                #                 # return code_extract, res_extract
-                #             new_entity_list = res_extract["res"]["entity_list"]
-                #             new_entity_property_dict = res_extract["res"]["entity_property_dict"]
-                #
-                #             new_entity_for_table_dict = res_extract["res"]["entity_main_table_dict"]
-                #
-                #             res = {}
-                #             res["entity_list"] = list(set(new_entity_list))
-                #             res["entity_property_dict"] = new_entity_property_dict
-                #             res["entity_relation_set"] = new_relation_set
-                #             res["entity_main_table_dict"] = new_entity_for_table_dict
-                #             res["relation_main_table_dict"] = new_relation_main_table
-                #             res["relation_property_dict"] = new_relation_property_dict
-                #             res["extract_type"] = "标准抽取"
-                #             obj["res"] = res
-                #             obj["file_list"] = newtable_list
-                #
-                #             return obj
-                #         except Exception as e:
-                #             obj = {}
-                #             err = repr(e)
-                #             obj['cause'] = err
-                #             obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-                #             obj['message'] = "Predict ontology fail"
-                #             self.update_state(state="FAILURE", meta=obj)
-                #             return {'current': 100, 'total': 100}
-                #             # raise Ignore()
-                #
-                #             # return ret_code, obj
-                #
-                #     else:
-                #         if entity_for_table_dict:
-                #             for entity, tablefile in entity_for_table_dict.items():
-                #                 doc = []
-                #                 for table in tablefile:
-                #                     oldtable = name_rule_dict[table]
-                #
-                #                     doc.append(oldtable)
-                #                 entity_for_table_dict[entity] = doc
-                #         if entity_property_dict:
-                #             for key, value in entity_property_dict.items():
-                #                 one = {}
-                #                 one["entity"] = otl_util.is_special(key)
-                #                 one["property"] = []
-                #                 for v in value:
-                #                     typ = pro_type_dict[v]
-                #                     one["property"].append([otl_util.is_special(v), typ])
-                #                 new_entity_property_dict.append(one)
-                #         if entity_for_table_dict:
-                #             for key, value in entity_for_table_dict.items():
-                #                 one = {}
-                #                 one["entity"] = otl_util.is_special(key)
-                #                 one["main_table"] = value
-                #                 new_entity_for_table_dict.append(one)
-                #                 predicttablelist.extend(value)
-                #         if entity_relation_set:
-                #             for one in entity_relation_set:
-                #                 edge_dict = {}
-                #                 edge_main_table = {}
-                #                 edge_dict["edge"] = otl_util.is_special(one[1])
-                #                 edge_dict["property"] = [["name", "string"]]
-                #                 edge_main_table["edge"] = otl_util.is_special(one[1])
-                #                 edge_main_table["main_table"] = []
-                #                 edge_main_table["main_table"].extend(entity_for_table_dict[one[0]])
-                #                 edge_main_table["main_table"].extend(entity_for_table_dict[one[2]])
-                #                 new_relation_property_dict.append(edge_dict)
-                #                 new_relation_main_table.append(edge_main_table)
-                #
-                #         new_entity_list = []
-                #         if entity_list:
-                #             for entity in entity_list:
-                #                 entity = otl_util.is_special(entity)
-                #                 new_entity_list.append(entity)
-                #         new_relation_set = []
-                #         # print(entity_relation_set)
-                #         # print(type(list(entity_relation_set)))
-                #         if list(entity_relation_set):
-                #             for one in list(entity_relation_set):
-                #                 one = list(one)
-                #                 one[0] = otl_util.is_special(one[0])
-                #                 one[1] = otl_util.is_special(one[1])
-                #                 one[2] = otl_util.is_special(one[2])
-                #                 new_relation_set.append(one)
-                #
-                #         new_params_json["newtablelist"] = list(
-                #             set([i[0] for i in new_params_json["table_list"]]).difference(set(predicttablelist)))
-                #
-                #         code_extract, res_extract = DataBase(new_params_json).get_entity_edge(new_params_json)
-                #
-                #         if code_extract != CommonResponseStatus.SUCCESS.value:
-                #             if len(entity_list) != 0:
-                #                 res["entity_list"] = list(set(new_entity_list))
-                #                 res["entity_property_dict"] = new_entity_property_dict
-                #                 res["entity_relation_set"] = new_relation_set
-                #                 res["entity_main_table_dict"] = new_entity_for_table_dict
-                #                 res["relation_main_table_dict"] = new_relation_main_table
-                #                 res["relation_property_dict"] = new_relation_property_dict
-                #                 res["extract_type"] = "标准抽取"
-                #                 # print(res)
-                #                 obj["res"] = res
-                #                 obj["file_list"] = newtable_list
-                #                 return obj
-                #             # else:
-                #             #     obj = {}
-                #             #     ret_code = CommonResponseStatus.SERVER_ERROR.value
-                #             #
-                #             #     obj['cause'] = "Predict ontology fail"
-                #             #     obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-                #             #     obj['message'] = "Predict ontology fail"
-                #             #
-                #             #     return ret_code, obj
-                #         #     return code_extract, res_extract
-                #         new_entity_list.extend(res_extract["res"]["entity_list"])
-                #         new_entity_property_dict.extend(res_extract["res"]["entity_property_dict"])
-                #         new_entity_for_table_dict.extend(res_extract["res"]["entity_main_table_dict"])
-                #         res = {}
-                #         res["entity_list"] = list(set(new_entity_list))
-                #         res["entity_property_dict"] = new_entity_property_dict
-                #         res["entity_relation_set"] = new_relation_set
-                #         res["entity_main_table_dict"] = new_entity_for_table_dict
-                #         res["relation_main_table_dict"] = new_relation_main_table
-                #         res["relation_property_dict"] = new_relation_property_dict
-                #         res["extract_type"] = "标准抽取"
-                #         # print(res)
-                #         obj["res"] = res
-                #         obj["file_list"] = newtable_list
-                #         return obj
-                #
-                # except Exception as e:
-                #     obj = {}
-                #     err = repr(e)
-                #     obj['cause'] = err
-                #     obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-                #     obj['message'] = "Predict ontology fail"
-                #     self.update_state(state="FAILURE", meta=obj)
-                #     return {'current': 100, 'total': 100}
-                #     # raise Ignore()
-                #     # return ret_code, obj
 
             else:  ###as
                 try:  ####常规提取
@@ -478,4 +220,3 @@ def predict_ontology(self,new_params_json,task_id):
         obj["code"] = 500
         self.update_state(state="FAILURE", meta=obj)
         return {'current': 100, 'total': 100}
-

@@ -6,7 +6,7 @@ import logging
 import yaml
 import os
 import time
-
+from os import path
 from dao.kg_new_word.new_words import Document
 from dao.kg_new_word.co_pair import CoPairGen
 from dao.kg_new_word.idf_counter import IDFCounter
@@ -52,7 +52,7 @@ class NewWordsToMongo(object):
         kw_gen = KWGenerator(mongo=self.mongo, mongo_db=self.mongo_db, mysql_cfg=self.mysql_cfg, as_cfg=self.as7_json,
                              conf=self.conf)
         kw_gen.gen_key_words()
-        
+
         # 关键词提取
         logger.info("process_num: {}".format(process_num))
         time1 = time.time()
@@ -93,21 +93,24 @@ class NewWordsToMongo(object):
     def start(self):
         st = time.time()
         self.as7_json['key_list'] = self.conf.get('com', 'as_keys').split(',')
-
-        with open('./../config/mysql.yaml', 'r') as f:
+        db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+        with open(db_config_path, 'r') as f:
             yaml_config = yaml.load(f)
-
+        mariadb_config = yaml_config['mariadb']
+        ip = mariadb_config.get('host')
+        port = mariadb_config.get('port')
+        user = mariadb_config.get('user')
+        passwd = mariadb_config.get('password')
+        database = mariadb_config.get('database')
         self.mysql_cfg = {
-            'host': os.getenv("RDSHOST"),
-            'db': os.getenv("RDSDBNAME"),
-            'user': os.getenv("RDSUSER"),
-            'password': str(os.getenv("RDSPASS")),
-            'charset': yaml_config['tmysql']['docker_db']['charset'],
-            'port': eval(os.getenv("RDSPORT"))
+            'host': ip,
+            'db': database,
+            'user': user,
+            'password': passwd,
+            'charset': 'utf8',
+            'port': port
         }
-
         if not os.path.isdir('output'):
             os.makedirs('output')
-
         self.run()
         logger.info('total cost time {}'.format(time.time() - st))

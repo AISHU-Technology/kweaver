@@ -15,7 +15,7 @@ from kombu.utils.json import dumps, loads
 
 from utils.session import session_cleanup
 from utils.session import SessionManager
-from db_migrate.build_tables.table_2 import (
+from db_migrate.build_tables.table_1 import (
     PeriodicTask, PeriodicTaskChanged,
     CrontabSchedule,
 )
