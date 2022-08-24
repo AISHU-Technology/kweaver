@@ -8,7 +8,7 @@ type Redis struct {
 	Password         string                   `mapstructure:"password" json:"password" yaml:"password"` // 密码
 	MasterName       string                   `mapstructure:"master_name" json:"master_name" yaml:"master_name"`
 	Sentinel         []map[string]interface{} `mapstructure:"sentinel" json:"sentinel" yaml:"sentinel"`                            //sentinel地址
-	SentinelUsername string                   `mapstructure:"sentinel_username" json:"sentinel_username" yaml:"sentinel_username"` //sentinel用户名
+	SentinelUser     string                   `mapstructure:"sentinel_user" json:"sentinel_user" yaml:"sentinel_user"`             //sentinel用户名
 	SentinelPassword string                   `mapstructure:"sentinel_password" json:"sentinel_password" yaml:"sentinel_password"` //sentinel密码
 	DB               int                      `mapstructure:"db" json:"db" yaml:"db"`                                              // redis的哪个数据库
 }

@@ -26,7 +26,7 @@ func Redis() redis.Cmdable {
 		}
 		client = redis.NewFailoverClusterClient(&redis.FailoverOptions{
 			MasterName:       global.Config.Redis.MasterName,
-			SentinelUsername: global.Config.Redis.SentinelUsername,
+			SentinelUsername: global.Config.Redis.SentinelUser,
 			SentinelPassword: global.Config.Redis.SentinelPassword,
 			Username:         global.Config.Redis.User,
 			Password:         global.Config.Redis.Password,
