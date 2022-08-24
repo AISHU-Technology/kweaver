@@ -4,10 +4,10 @@ server:
   mode: release
 
 mariadb:
-  user: anydata
-  password: Qwe123!@#
+  user: root
+  password: 123456
   port: 3306
-  host: 10.4.68.144
+  host: localhost
   database: anydata
   max-idle-conns: 10
   max-open-conns: 100
@@ -17,10 +17,10 @@ mariadb:
 
 redis:
   mode: stand-alone #stand-alone sentinel
-  host: 10.2.174.231
+  host: 10.4.68.144
   port: 6379
   user: ""
-  password: Qwe123!@#
+  password: ""
   master_name: master
   sentinel:
     - host: 10.4.68.144

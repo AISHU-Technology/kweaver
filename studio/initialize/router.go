@@ -91,7 +91,7 @@ func Router() *gin.Engine {
 	initAPIs()     //初始化controller层对象
 	registerValidation()
 	router.Use(ZapLogger(global.LOG), middleware.ErrorHandler)
-	router.Static("/webui", "../webui")
+	router.Static("/webui", "./webui")
 	r1 := router.Group("/api/studio/v1")
 	{
 		//graphdb
