@@ -1,0 +1,290 @@
+.networkHeader {
+  .networkHeader-box {
+    display: flex;
+    justify-content: space-between;
+
+    .networkHeader-box-left {
+      display: flex;
+
+      .back {
+        height: 48px;
+        width: 40px;
+        padding: 18px 12px 18px 16px;
+      }
+
+      .back-icon {
+        font-size: 12px;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .dropDown-left {
+        display: flex;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        .box {
+          width: 32px;
+          height: 32px;
+          margin: 8px 0;
+          text-align: center;
+          border-radius: 3px;
+          padding: 6px;
+          line-height: 16px;
+          font-size: 16px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+        }
+
+        .overlay-list-name {
+          height: 48px;
+          line-height: 48px;
+          margin-left: 12px;
+          max-width: 186px;
+          font-size: 14px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #000000;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          .id {
+            font-size: 12px;
+            color: var(--ad-text-color-secondary);
+          }
+        }
+
+        .down-icon {
+          display: inline-block;
+          margin: 18px 0 18px 4px;
+          transform: rotate(90deg);
+          color: var(--ad-text-color-secondary);
+        }
+      }
+
+      .knw-network-info {
+        width: 48px;
+        height: 48px;
+        margin-left: 8px;
+        padding: 18px 16px 16px 0px;
+        cursor: pointer;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.04);
+        }
+
+        .ant-popover {
+          width: 400px;
+          top: 40px !important;
+        }
+
+        .network-info-icon {
+          padding-left: 16px;
+          transform: rotatex(180deg);
+        }
+
+        .ant-popover-inner-content {
+          padding: 20px;
+        }
+
+        .ant-popover-arrow {
+          display: none !important;
+        }
+
+        .network-info-name {
+          display: flex;
+          font-family: PingFangSC-Regular, PingFang SC;
+
+          .color-box {
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+            line-height: 46px;
+            margin-right: 8px;
+            text-align: center;
+          }
+
+          .info-name-box {
+            display: flex;
+
+            .network-name {
+              font-size: 16px;
+              font-weight: 400;
+              margin-right: 24px;
+              color: var(--ad-heading-color);
+              max-width: 265px;
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+            }
+
+            .edit-icon {
+              position: absolute;
+              right: 20px;
+              cursor: pointer;
+              color: var(--ad-text-color);
+
+              :hover {
+                color: rgb(0, 0, 0);
+              }
+            }
+          }
+
+          .id {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--ad-text-color);
+          }
+        }
+
+        .network-des-box {
+          margin-top: 16px;
+          font-size: 14px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: var(--ad-text-color-secondary);
+
+          .des-null {
+            color: var(--ad-disabled-color);
+          }
+        }
+      }
+
+      .knw-network-info-select {
+        background: rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    .networkHeader-box-right {
+      padding-right: 8px;
+      display: flex;
+
+      .info-icon {
+        display: inline-block;
+        width: 48px;
+        height: 48px;
+        font-size: 16px;
+        padding: 16px 15px;
+        color: rgba(0, 0, 0, 0.65);
+        cursor: pointer;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.04);
+        }
+      }
+
+      .bg {
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      .upload-btn {
+        display: inline-block;
+        vertical-align: middle;
+        height: 28px;
+        margin: 10px;
+        padding: 4px 12px;
+        color: var(--ad-primary-color);
+        line-height: 20px;
+        border-radius: 3px;
+        background-color: rgba(var(--ad-primary-color-rgb), 0.06);
+        cursor: pointer;
+        user-select: none;
+
+        .btn-icon {
+          vertical-align: middle;
+          color: var(--ad-primary-color);
+        }
+
+        .btn-text {
+          display: inline-block;
+          vertical-align: middle;
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+}
+
+.info-overlay-list {
+  .ant-dropdown-menu {
+    margin-top: 14px !important;
+    right: -17px;
+    width: 290px;
+  }
+
+  .userInfo {
+    color: var(--ad-text-color-secondary);
+    cursor: default;
+
+    &:hover {
+      background: #fff;
+    }
+  }
+
+  .edit {
+    height: 40px !important;
+  }
+}
+
+.network-overlay-list {
+  .ant-dropdown-menu-title-content {
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.85);
+
+    .box {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+      width: 24px;
+      height: 24px;
+      font-size: 14px;
+      line-height: 22px;
+      margin-right: 8px;
+      color: #ffffff;
+      border-radius: 2px;
+      background: #3343e0;
+    }
+
+    .item-name {
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 12px;
+      height: 24px;
+      line-height: 24px;
+      width: 185px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .id {
+      font-size: 12px;
+      color: var(--ad-text-color-secondary);
+    }
+  }
+
+  .ant-dropdown-menu-item {
+    display: block;
+    height: 40px !important;
+    padding: 0 14px;
+    line-height: 40px;
+  }
+
+  .ant-dropdown-menu {
+    margin-top: -5px !important;
+    padding: 2px 0 2px 0;
+    width: 260px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}

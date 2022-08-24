@@ -1,0 +1,272 @@
+.network-addmember {
+  width: 100%;
+  height: 100%;
+
+  .header {
+    padding: 0 24px;
+    width: 100%;
+    height: 60px;
+
+    font-size: 18px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 600;
+    color: var(--ad-heading-color);
+    line-height: 60px;
+    border-bottom: 1px solid var(--ad-line-color);
+  }
+
+  .network-addmember-content {
+    width: 100%;
+    height: 523px;
+    display: flex;
+
+    .content-left {
+      min-width: 303px;
+      padding: 24px 0px;
+      border-right: 1px solid var(--ad-line-color);
+
+
+      .input-box {
+        padding: 0 24px;
+
+        .search-input {
+          width: 254px;
+          height: 32px;
+          background: #FFFFFF;
+          border-radius: 3px;
+          margin-bottom: 16px;
+          padding: 0 8px;
+        }
+      }
+
+      .list-box {
+        padding-left: 16px;
+        overflow-x: hidden;
+      }
+
+      .list-top {
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 24px 0 24px;
+
+        .top-info {
+          display: inline-block;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 0.85);
+          font-size: 14px;
+        }
+      }
+
+
+      .left-user-list {
+        display: flex;
+        width: 270px;
+        height: 60px;
+        padding: 8px 16px 8px 8px;
+
+        .user-info-icon {
+          display: flex;
+
+          .acc-icon {
+            display: inline-block;
+            vertical-align: middle;
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--ad-border-color-base);
+            border-radius: 50%;
+            font-size: 18px;
+            text-align: center;
+            margin: 8px 8px 0 0;
+            padding: 2px;
+          }
+
+          .user {
+            width: 198px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+
+            .name {
+              color: rgba(0, 0, 0, 0.85);
+              width: 150px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .email {
+              color: rgba(0, 0, 0, 0.45);
+              width: 160px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
+
+        .check-box {
+          height: 38px;
+          line-height: 38px;
+        }
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.04);
+        }
+      }
+
+      .nodata-box {
+        width: 200px;
+        height: 300px;
+        margin: 90px auto 0;
+        text-align: center;
+
+        .nodata-img {
+          width: 144px;
+          height: auto;
+        }
+
+        .nodata-text {
+          width: 100%;
+          // min-height: 20px;
+          margin: 8px auto 0;
+          font-size: 14px;
+          color: var(--ad-text-color);
+          // line-height: 20px;
+        }
+      }
+
+      .loading {
+        width: 200px;
+        height: 300px;
+        margin: 90px auto 0;
+        text-align: center;
+      }
+    }
+
+    .content-right {
+      min-width: 497px;
+      padding: 24px 0px;
+
+      .top {
+        padding: 0 22px;
+        display: flex;
+        height: 34px;
+        line-height: 34px;
+        justify-content: space-between;
+
+        .clear-all {
+          font-weight: 400;
+          color: #126EE3;
+          cursor: pointer;
+        }
+      }
+
+      .checked-box {
+        // height: 450px;
+        overflow-x: hidden;
+
+        .right-user-list {
+          display: flex;
+          height: 60px;
+          margin: 0 8px;
+          padding: 8px 16px;
+
+          .user-info-icon {
+            display: flex;
+
+            .acc-icon {
+              display: inline-block;
+              vertical-align: middle;
+              width: 32px;
+              height: 32px;
+              border: 1px solid var(--ad-border-color-base);
+              border-radius: 16px;
+              font-size: 18px;
+              text-align: center;
+              margin: 8px 8px 0 0;
+              padding: 2px;
+            }
+
+            .user {
+              width: 154px;
+              margin-right: 60px;
+              font-size: 14px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+
+              .name {
+                color: rgba(0, 0, 0, 0.85);
+                width: 130px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .email {
+                color: rgba(0, 0, 0, 0.45);
+                width: 140px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+          }
+
+          .select-box {
+            width: 95px;
+            height: 38px;
+            line-height: 38px;
+
+            .auth-select {
+              width: 95px;
+
+              .ant-select-selector {
+                padding: 0 5px 0 8px;
+              }
+            }
+          }
+
+          .close-icon {
+            margin-left: 80px;
+            height: 34px;
+            line-height: 34px;
+          }
+
+          &:hover {
+            background: rgba(0, 0, 0, 0.04);
+          }
+        }
+      }
+
+      .ant-select-single.ant-select-show-arrow .ant-select-selection-item {
+        color: var(--ad-text-color);
+      }
+
+    }
+
+  }
+
+  .footer {
+    height: 64px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--ad-line-color);
+    text-align: right;
+
+    .count {
+      margin: 0 4px;
+      color: var(--ad-primary-color);
+    }
+
+    .ok-button {
+      height: 36px;
+      margin-left: 8px;
+    }
+
+    .cannal-button {
+      height: 36px;
+      margin-left: 12px;
+    }
+  }
+}

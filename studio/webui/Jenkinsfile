@@ -1,0 +1,56 @@
+node("${ad_slave1}"){
+    pkg_name = "studio_src.tar"
+    pkg_name_with_num = "studio_src-${BRANCH_NAME}-${BUILD_NUMBER}.tar"
+    img_name = "kg-studio"
+    
+    stage('clean') {
+	   sh "rm -rf ./*"
+	 
+	}
+
+	stage('build in docker') {
+	    def workspace = pwd()
+		git credentialsId: 'f929d963-3e7e-45c9-9530-e3bc6bfe5b82', url: 'https://gitlab.aishu.cn/anydata-rnd/gmanager/studio.git', branch: "${BRANCH_NAME}"
+		sh "echo '{\"copyright\":\"${copy_right}\",\"version\":\"${main_tag}\"}' | python -mjson.tool > ./src/version.json"
+		sh "redoc-cli bundle -o ${workspace}/src/pages/SwaggerUI/openAPI.html ${workspace}/swagger/openapi.yaml"
+		sh "sed -i '/googleapis/d' ${workspace}/src/pages/SwaggerUI/openAPI.html"
+		sh "docker build . -t ${img_name}:${main_tag} --no-cache --network host"
+		sh "docker run --rm -v ${workspace}:/root/studio ${img_name}:${main_tag} sh -c 'cnpm install && npm run build'"
+	}
+
+	stage('check') {
+        
+        sh "eslint -f html src/** > report/index.html || echo"
+        publishHTML(target:[allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'report/', reportFiles: 'index.html', reportName: 'UI Test Results', reportTitles: ''])
+        sh "jest --coverage --coverageReporters=cobertura || echo"
+        //  health,unhealthy,unstable
+        cobertura coberturaReportFile: 'coverage/cobertura-coverage.xml', lineCoverageTargets: '100, 0, 0', failUnstable: true
+    }
+
+	stage('save') {
+		sh "tar cvf ./${pkg_name} ./build"
+		sh "cp -f ./${pkg_name} ./${pkg_name_with_num}"
+	}
+	
+	stage('upload 2 ftp') {
+		sh "ftp -n<<EOF \n\
+		    open ftp-ad.aishu.cn \n\
+		    user ftp_2 Q1c%k2h \n\
+		    binary \n\
+			mkdir /packages/studio/${BRANCH_NAME} \n\
+			cd /packages/studio/${BRANCH_NAME} \n\
+			prompt \n\
+			put ${pkg_name} ${pkg_name} \n\
+			put ${pkg_name_with_num} ${pkg_name_with_num} \n\
+			close \n\
+			bye \n\
+		EOF"
+	}
+	
+	stage('clean') {
+	 //   sh "rm -rf ./*"
+		
+	    sh "docker rmi ${img_name}:${main_tag}"
+	}
+
+}

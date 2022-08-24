@@ -1,0 +1,90 @@
+.cognitive-simple-graph {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #f8f8f8;
+  overflow: hidden;
+
+  .hide {
+    display: none;
+  }
+
+  .view-tool {
+    position: absolute;
+    z-index: 1;
+    bottom: 20px;
+    right: 20px;
+
+    .tool-item {
+      width: 28px;
+      height: 28px;
+      line-height: 28px;
+      text-align: center;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    .move-wrap {
+      margin-bottom: 8px;
+      border-radius: 2px;
+      font-size: 18px;
+    }
+
+    .add-icon {
+      border-bottom: none;
+      border-radius: 2px 2px 0 0;
+      font-size: 24px;
+      color: var(--ad-text-color-secondary);
+    }
+
+    .reduce-icon {
+      border-radius: 0 0 2px 2px;
+      font-size: 24px;
+      line-height: 24px;
+      color: var(--ad-text-color-secondary);
+    }
+  }
+
+  .switch-box {
+    position: absolute;
+    z-index: 1;
+    left: -9999px;
+    top: -9999px;
+    padding: 12px;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.06);
+
+    .switch-row {
+      height: 30px;
+      line-height: 30px;
+      text-align: right;
+      white-space: nowrap;
+
+      .row-text {
+        display: inline-block;
+        vertical-align: middle;
+        color: var(--ad-heading-color);
+      }
+
+      .ant-switch {
+        margin-left: 12px;
+      }
+    }
+  }
+
+  .g6-tooltip {
+    max-width: 250px;
+    padding: 4px;
+    height: auto;
+    background: rgba(0, 0, 0, 0.75);
+    box-shadow: 0px 9px 28px 8px rgba(0, 0, 0, 0.05), 0px 6px 16px 0px rgba(0, 0, 0, 0.08),
+      0px 3px 6px -4px rgba(0, 0, 0, 0.12);
+    font-size: 14px;
+    color: #fff;
+    word-wrap: break-word;
+    user-select: none;
+  }
+}

@@ -1,0 +1,184 @@
+#inAndOut {
+  width: 296px;
+  height: 494px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 2px 6px 0px rgba(54, 69, 118, 0.2);
+  border-radius: 4px;
+  position: absolute;
+  z-index: 2;
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 20px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ad-heading-color);
+    border-bottom: 1px solid var(--ad-line-color);
+
+    .back {
+      display: inline-block;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+
+    .page-count {
+      margin: 0 4px;
+      color: var(--ad-primary-color);
+    }
+
+    .page {
+      margin: 0 4px;
+      color: var(--ad-primary-color);
+    }
+  }
+
+  .inOut-empty {
+    height: 256px;
+
+    .ant-empty-image {
+      height: 122px;
+      margin: 20px 0 8px 0;
+    }
+  }
+
+  .in-out-loading-data {
+    width: 100%;
+    height: 404px;
+    background-color: #fff;
+    text-align: center;
+    padding: 130px 0 0 0;
+
+    .icon {
+      font-size: 40px;
+      color: var(--ad-primary-color);
+    }
+  }
+
+  .search-box {
+    margin: 12px 20px;
+    width: 256px;
+  }
+
+  .input-icon {
+    color: var(--ad-text-color-secondary);
+  }
+
+  .check {
+    width: 100%;
+    height: 352px;
+
+    .check-all {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 5px 0 20px 18px;
+
+      .select-all {
+        width: 210px;
+        margin: 0 0 0 8px;
+      }
+
+      .select-all-current {
+        width: 210px;
+        margin: 0 0 0 24px;
+        color: rgba(153, 153, 153, 1);
+      }
+    }
+
+    .box {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 2px 0 17px 18px;
+      font-size: 12px;
+      font-weight: 400;
+      // color: rgba(51, 51, 51, 1);
+
+      .check-box-content {
+        width: 210px;
+        margin: 0 0 0 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .check-box-relation {
+        width: 210px;
+        height: 15px;
+        margin: 0 0 0 24px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .check-box-span-tooltip-relation {
+          color: rgba(153, 153, 153, 1);
+        }
+      }
+    }
+  }
+
+  .loading {
+    width: 100%;
+    height: 330px;
+    background-color: var(--ad-error-color);
+  }
+
+  .count-prompt {
+    height: 34px;
+    background: rgba(254, 246, 236, 1);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ad-warning-color);
+    text-align: center;
+    margin: -34px 0 0px 0px;
+    padding: 11px 0 0 0;
+
+    .icon {
+      font-size: 14px;
+      margin: 0 6px 0 0;
+    }
+  }
+
+  .bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 10px 20px;
+    border-top: 1px solid rgba(54, 69, 118, 0.1);
+
+    &>span {
+      font-size: 12px;
+      padding: 2px 5px;
+      cursor: pointer;
+    }
+
+    .delete {
+      color: rgba(153, 153, 153, 1);
+    }
+
+    .delete:hover {
+      color: var(--ad-error-color);
+    }
+
+    .page-pre {
+      color: var(--ad-text-color);
+    }
+
+    .page-next {
+      color: var(--ad-text-color);
+    }
+
+    .unclick-color {
+      color: rgba(204, 204, 204, 1) !important;
+      cursor: no-drop !important;
+    }
+
+    .search {
+      color: var(--ad-primary-color);
+    }
+
+    .search:hover {
+      color: var(--ad-primary-color-hover);
+    }
+  }
+}

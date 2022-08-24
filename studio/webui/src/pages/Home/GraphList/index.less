@@ -1,0 +1,101 @@
+.netWork {
+  margin: 0 auto;
+  max-width: 1920px;
+
+  .netWork-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ad-heading-color);
+  }
+
+  .netWork-list {
+    padding: 0 24px;
+    position: relative;
+    background-color: #fff;
+    .netWork-list-top {
+      display: flex;
+      padding-top: 27px;
+      margin-bottom: 21px;
+      justify-content: space-between;
+    }
+  }
+
+  .table-box {
+    padding-bottom: 40px;
+    .columnKnwName {
+      display: flex;
+      cursor: pointer;
+      font-family: PingFangSC-Regular, PingFang SC;
+      .name-text {
+        margin-left: 12px;
+        .name {
+          width: 190px;
+          height: 22px;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 22px;
+          color: rgba(0, 0, 0, 0.85);
+          &:hover {
+            cursor: pointer;
+          }
+        }
+        .des {
+          width: 190px;
+          height: 22px;
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 22px;
+          color: rgba(0, 0, 0, 0.45);
+        }
+
+        .des-null {
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
+    .columnOp {
+      button {
+        padding: 0;
+        min-width: 66px;
+      }
+    }
+
+    .nodata-box {
+      height: 380px;
+      padding-top: 80px;
+
+      .nodata-text {
+        margin-top: 8px;
+        font-size: 14px;
+        color: var(--ad-text-color);
+        cursor: default;
+      }
+    }
+
+    // 选中行
+    .selectRow {
+      .ant-table-cell {
+        background-color: var(--ad-select-bg-color) !important;
+      }
+      .icon-wrap {
+        border: 1px solid var(--ad-border-color-base);
+      }
+    }
+    .ant-table-row:hover {
+      .ant-table-cell {
+        background-color: var(--ad-hover-bg-color);
+      }
+      .icon-wrap {
+        border: 1px solid var(--ad-border-color-base);
+      }
+    }
+    td.ant-table-column-sort {
+      background-color: #fff;
+    }
+    .ant-table-thead th.ant-table-column-sort {
+      background: #fafafa;
+    }
+  }
+}

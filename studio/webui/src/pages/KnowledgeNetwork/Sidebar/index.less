@@ -1,0 +1,30 @@
+.left-nav {
+  width: 40px;
+  height: 100%;
+  border-right: 1px solid var(--ad-line-color);
+
+  .nav-item {
+    height: 40px;
+    padding: 12px;
+
+    &:hover {
+      background: var(--ad-hover-bg-color);
+      cursor: pointer;
+    }
+  }
+
+  .select {
+    position: relative;
+    background: var(--ad-select-bg-color);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 2px;
+      height: 40px;
+      background-color: var(--ad-primary-color);
+    }
+  }
+}

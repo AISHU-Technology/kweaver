@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="90px" viewBox="0 0 100 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>编组 2</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M50,62 C40.65,62 33,54.35 33,45 C33,35.65 40.65,28 50,28 C59.35,28 67,35.65 67,45 C67,54.435 59.435,62 50,62 L50,62 Z" id="path-1"></path>
+        <filter x="-22.1%" y="-16.2%" width="144.1%" height="144.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feMorphology radius="0.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="2" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="首页" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="5.图谱显示1" transform="translate(-677.000000, -142.000000)">
+            <g id="编组-3" transform="translate(667.000000, 132.000000)">
+                <g id="编组-2" transform="translate(10.000000, 10.000000)">
+                    <rect id="矩形" fill="#F7F8F8" x="0" y="0" width="100" height="90" rx="4"></rect>
+                    <g id="路径" fill-rule="nonzero">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                        <use stroke="#FFFFFF" stroke-width="1" fill="#54639C" xlink:href="#path-1"></use>
+                    </g>
+                    <path d="M51.7159707,46.7160326 L53.9754895,54.9149018 L56.4047673,52.4856241 L59.2112404,55.2930171 L59.7525887,54.7522251 L60.2930171,54.2112405 L57.4855635,51.4047067 L59.914799,48.9763039 L51.7159707,46.7160326 Z" id="路径" stroke="#FFFFFF" fill="#000000" fill-rule="nonzero" transform="translate(56.000000, 51.000000) rotate(-345.000000) translate(-56.000000, -51.000000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

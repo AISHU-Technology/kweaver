@@ -1,0 +1,143 @@
+.storage-index-config {
+  .tool-box {
+    display: flex;
+    justify-content: space-between;
+
+    .tool-box-left {
+      .new-botton {
+        display: inline-block;
+        margin-right: 10px;
+      }
+    }
+
+    .tool-box-right {
+      .search-input {
+        width: 272px;
+        height: 32px;
+        border-radius: 3px;
+      }
+
+      .search-icon {
+        color: var(--ad-disabled-color);
+        cursor: pointer;
+      }
+    }
+  }
+
+  .index-table-box {
+    margin-top: 20px;
+
+    .table-th-title {
+      font-weight: 600;
+      color: var(--ad-heading-color);
+      line-height: 20px;
+    }
+
+    .ant-table-thead > tr > th {
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .icon-wrap {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 3px;
+      cursor: pointer;
+      background-color: #fff;
+    }
+
+    .ellipsis-icon {
+      font-size: 20px;
+    }
+
+    .icon-sub {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 26px;
+      height: 26px;
+    }
+
+    .ant-dropdown {
+      width: 150px;
+    }
+
+    // 选中行
+    .selectRow {
+      .ant-table-cell {
+        background-color: var(--ad-select-bg-color) !important;
+      }
+
+      .icon-wrap {
+        border: 1px solid var(--ad-border-color-base);
+      }
+    }
+
+    // 鼠标悬停行
+    .ant-table-row:hover {
+      .name-icon {
+        display: inline-block;
+      }
+
+      .icon-wrap {
+        border: 1px solid var(--ad-border-color-base);
+      }
+    }
+
+    // 表格悬停
+    .ant-table-row:hover {
+      .ant-table-cell {
+        background-color: var(--ad-hover-bg-color);
+      }
+    }
+
+    .nodata-box {
+      margin: 80px auto;
+
+      .nodata-text {
+        margin-top: 8px;
+        font-size: 14px;
+        color: var(--ad-text-color);
+        cursor: default;
+      }
+    }
+
+    .ant-table-thead th.ant-table-column-sort {
+      background: #fafafa;
+    }
+
+    td.ant-table-column-sort {
+      background: #ffff;
+    }
+
+    .ant-table-thead th.ant-table-column-has-sorters {
+      &:hover {
+        background: #fafafa;
+      }
+    }
+
+    .ant-table-pagination.ant-pagination {
+      margin: 24px 0 40px;
+    }
+
+    .ant-table-placeholder {
+      .ant-table-cell {
+        border: none;
+      }
+    }
+  }
+}
+
+.index-table-overlay {
+  width: 120px;
+
+  .ant-dropdown-menu-item,
+  .ant-dropdown-menu-submenu-title {
+    clear: both;
+    margin: 0;
+    padding: 5px 12px 5px 20px;
+    height: 40px;
+  }
+}
