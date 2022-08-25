@@ -459,7 +459,7 @@ const DataSource = props => {
       width: 180,
       render: (_, record) => {
         return (
-          <div className="ad-center columnOp">
+          <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => onEdit(record)}>
               {intl.get('datamanagement.edit')}
             </Button>
