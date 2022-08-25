@@ -410,68 +410,8 @@ const DataSource = props => {
     {
       title: intl.get('datamanagement.dataName'),
       dataIndex: 'dsname',
-      fixed: 'left',
       ellipsis: true,
       width: 190
-    },
-    {
-      title: intl.get('datamanagement.operation'),
-      fixed: 'left',
-      ellipsis: true,
-      width: 100,
-      render: (_, record) => {
-        const { id } = record;
-        const menu = (
-          <Menu
-            onClick={({ key, domEvent }) => {
-              domEvent.stopPropagation();
-              key === 'edit' && onEdit(record);
-              key === 'copy' && onCopy(record);
-              key === 'delete' && onOperationDel(record);
-              key === 'test' && onOperationTest(record);
-              key !== 'test' && setOperationVisible(false); // 测试不关闭下拉
-            }}
-          >
-            <Menu.Item key="edit">{intl.get('datamanagement.edit')}</Menu.Item>
-            <Menu.Item key="copy">{intl.get('datamanagement.copy')}</Menu.Item>
-            {!isWorkflow && <Menu.Item key="delete">{intl.get('datamanagement.delete')}</Menu.Item>}
-            {isWorkflow && (
-              <Menu.Item key="test">
-                {testLoading ? (
-                  <>
-                    <LoadingOutlined className="icon" style={{ fontSize: 14 }} />
-                    &nbsp;&nbsp;{intl.get('datamanagement.testing')}
-                  </>
-                ) : (
-                  intl.get('datamanagement.test')
-                )}
-              </Menu.Item>
-            )}
-          </Menu>
-        );
-
-        return (
-          <Dropdown
-            visible={operationVisible && selectKey === id}
-            overlay={menu}
-            trigger={['click']}
-            destroyPopupOnHide
-            overlayClassName="data-source-operation-down min-w"
-            getPopupContainer={() => document.querySelector('.dataSource')}
-            onVisibleChange={isOpen => setOperationVisible(isOpen)}
-          >
-            <span
-              className="icon-wrap"
-              onClick={e => {
-                e.stopPropagation();
-                setSelectKey(id);
-              }}
-            >
-              <EllipsisOutlined className="ellipsis-icon" />
-            </span>
-          </Dropdown>
-        );
-      }
     },
     {
       title: intl.get('datamanagement.dataSource'),
@@ -503,26 +443,6 @@ const DataSource = props => {
       width: 192
     },
     {
-      title: intl.get('datamanagement.Operator'),
-      ellipsis: true,
-      width: 192,
-      render: (_, record, index) => {
-        return (
-          <div className="people-info" key={index}>
-            <div className="one">
-              <div className="people" title={record.update_user_name}>
-                {record.update_user_name}
-              </div>
-            </div>
-
-            <div className="two" title={record.update_user_email || '--'}>
-              {record.update_user_email || '--'}
-            </div>
-          </div>
-        );
-      }
-    },
-    {
       title: intl.get('datamanagement.updated'),
       dataIndex: 'update_time',
       ellipsis: true,
@@ -532,6 +452,26 @@ const DataSource = props => {
       sortDirections: ['ascend', 'descend', 'ascend'],
       sortOrder: checked ? checkedSort : sortOrder,
       showSorterTooltip: false
+    },
+    {
+      title: intl.get('datamanagement.operation'),
+      fixed: 'right',
+      width: 180,
+      render: (_, record) => {
+        return (
+          <div className="ad-center columnOp">
+            <Button type="link" onClick={() => onEdit(record)}>
+              {intl.get('datamanagement.edit')}
+            </Button>
+            <Button type="link" onClick={() => onCopy(record)}>
+              {intl.get('datamanagement.copy')}
+            </Button>
+            <Button type="link" onClick={() => onOperationDel(record)}>
+              {intl.get('datamanagement.delete')}
+            </Button>
+          </div>
+        );
+      }
     }
   ];
 

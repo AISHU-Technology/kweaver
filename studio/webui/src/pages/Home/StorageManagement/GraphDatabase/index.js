@@ -221,11 +221,11 @@ class GraphDatabase extends Component {
     {
       title: intl.get('configSys.op'),
       fixed: 'right',
-      width: 115,
+      width: 110,
       render: (text, record) => {
         if (record.name === '内置OrientDB' || record.name === '内置Nebula') return '- -';
         return (
-          <div className="ad-center columnOp">
+          <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => this.getStorage(record, 'edit')}>
               {intl.get('configSys.Edit')}
             </Button>
