@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="60px" viewBox="0 0 40 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>画板</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="40" height="60"></rect>
+        <filter x="-17.5%" y="-11.7%" width="135.0%" height="123.3%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="6" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.06 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="画板" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="邮件">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="蒙版" opacity="0">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g id="信封,信息,消息" mask="url(#mask-2)" fill="#54639C" fill-opacity="0.2" fill-rule="nonzero">
+                <g transform="translate(0.000000, -0.000000)" id="形状">
+                    <path d="M27.5332031,0.680028439 L3.21679687,17.8245632 C1.20117188,19.2438718 0,21.5777139 0,24.0659578 L0,56.1993411 C0,58.295642 1.68164062,60 3.75,60 L56.25,60 C58.3183594,60 60,58.295642 60,56.1993411 L60,24.1194045 C60,21.601468 58.7695312,19.2498103 56.7128906,17.8305017 L31.78125,0.656274321 C30.4980469,-0.22856658 28.8046875,-0.216689521 27.5332031,0.680028439 Z M6.96679687,19.8080321 L28.6171875,4.54601117 C29.2558594,4.09468292 30.0996094,4.09468292 30.7441406,4.53413411 L52.96875,19.8436633 C55.0195312,21.2570333 56.25,23.6146295 56.25,26.132566 L56.25,26.9817758 L33.4160156,38.9538513 C31.2539062,40.0881105 28.6875,40.0881105 26.5253906,38.9538513 L3.75,27.0114684 L3.75,26.0494266 C3.75,23.5611828 4.95117188,21.2332792 6.96679687,19.8080321 Z M55.78125,56.1993411 L4.21875,56.1993411 C3.9609375,56.1993411 3.75,55.985554 3.75,55.7242587 L3.75,31.2931482 L26.5253906,43.2355311 C28.6875,44.3697903 31.2539062,44.3697903 33.4160156,43.2355311 L56.25,31.257517 L56.25,55.7242587 C56.25,55.985554 56.0390625,56.1993411 55.78125,56.1993411 Z"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

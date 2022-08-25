@@ -1,0 +1,198 @@
+.info-content {
+  height: 100%;
+
+  .head {
+    display: flex;
+    height: 78px;
+    padding: 20px;
+
+    .left-tag {
+      width: 208px;
+      height: 36px;
+      text-align: center;
+      line-height: 36px;
+      background: white;
+      border-radius: 3px 0px 0px 3px;
+      border-left: 1px solid rgba(0, 0, 0, 0.15);
+      border-top: 1px solid rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+      border-right: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .right-tag {
+      width: 208px;
+      height: 36px;
+      text-align: center;
+      line-height: 36px;
+      background: white;
+      border-radius: 0px 3px 3px 0px;
+      border-right: 1px solid rgba(0, 0, 0, 0.15);
+      border-top: 1px solid rgba(0, 0, 0, 0.15);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+      border-left: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .tag-selected {
+      color: var(--ad-primary-color);
+      background-color: #f1f7fe;
+      border: 1px solid rgba(var(--ad-primary-color-rgb), 0.45);
+    }
+  }
+
+  .content {
+    height: calc(100% - 100px);
+
+    .ant-collapse {
+      height: 100%;
+      overflow: auto;
+    }
+
+    .down-icon {
+      font-size: 14px;
+      color: var(--ad-primary-color);
+    }
+
+    .line {
+      width: 416px;
+      margin: 20px 16px;
+      border: 1px solid #f4f4f4;
+      background: rgba(255, 255, 255, 1);
+
+      .node {
+        height: 44px;
+        padding: 0 0 0 20px;
+        line-height: 44px;
+        border-bottom: 1px solid rgba(216, 216, 216, 0.47);
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        .word {
+          margin: 0 0 0 10px;
+        }
+      }
+
+      .property {
+        margin: 0 20px;
+        height: 44px;
+        line-height: 44px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        .icon-left {
+          margin: 0 0 0 5px;
+        }
+
+        .word {
+          margin: 0 0 0 14px;
+        }
+      }
+
+      .property-border {
+        border-top: 1px solid rgba(216, 216, 216, 0.47);
+      }
+    }
+
+    .head-node-display {
+
+      // height: 56px;
+      .node-color {
+        width: 14px;
+        height: 14px;
+        float: left;
+        border-radius: 7px;
+        border: 1px solid rgba(229, 229, 229, 1);
+        margin: 4px 10px 0 0px;
+      }
+
+      .node-name {
+        max-width: 340px;
+        float: left;
+
+        .name {
+          max-width: 340px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .alias {
+          max-width: 340px;
+          color: rgba(0, 0, 0, 0.45);
+          font-size: 12px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .ant-collapse {
+      border-top: 1px solid rgba(244, 244, 244, 1);
+      border-bottom: 0;
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    .ant-collapse-header {
+      padding: 8px 36px;
+    }
+
+    .ant-collapse-icon-position-right>.ant-collapse-item>.ant-collapse-header .ant-collapse-arrow {
+      right: 22px;
+    }
+
+    .ant-collapse>.ant-collapse-item {
+      border-bottom: 1px solid rgba(244, 244, 244, 1);
+    }
+
+    .ant-collapse-content {
+      border-top: 0;
+      background: rgba(249, 249, 249, 1);
+    }
+
+    .ant-collapse-content-box {
+      padding: 0;
+    }
+  }
+
+  .no-data {
+    text-align: center;
+
+    .image {
+      margin: 20px 0 0 0;
+
+      .no-data-image {
+        width: 144px;
+        height: auto;
+      }
+    }
+
+    .describe {
+      margin: 8px 0 0 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ad-text-color);
+      line-height: 22px;
+      text-align: center;
+    }
+  }
+
+  .name-tip {
+    margin: 8px 16px 0 16px;
+  }
+
+  .nick-name {
+    margin: 8px 16px 0 16px;
+    padding: 14px 0 0 0;
+    border-top: 1px dashed rgba(255, 255, 255, 1);
+  }
+
+  .des-tip {
+    word-break: break-all;
+    margin: 8px 16px 14px 16px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}

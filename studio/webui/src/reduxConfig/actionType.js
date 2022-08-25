@@ -1,0 +1,9 @@
+const CHANGE_ANY_DATA_LANG = 'src_change_anyDataLang';
+const CHANGE_USERINFO = 'src/page/login/change_userinfo';
+
+const DEMO = 'DEMO';
+
+// 知识图谱
+const KNOWLEDGE_GRAPH_CHANGE_STATUS = 'KNOWLEDGE_GRAPH_CHANGE_STATUS';
+
+export { CHANGE_ANY_DATA_LANG, CHANGE_USERINFO, DEMO, KNOWLEDGE_GRAPH_CHANGE_STATUS };

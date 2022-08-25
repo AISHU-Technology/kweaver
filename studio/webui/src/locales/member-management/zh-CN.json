@@ -1,0 +1,49 @@
+{
+  "memberManage": {
+    "title": "成员管理",
+    "add": "新增",
+    "remove": "移除",
+    "invite": "邀请人",
+    "time": "操作时间",
+    "searchHolder": "搜索账号名称、电子邮箱",
+    "empty": "暂无内容，您可点击|【新增】|按钮邀请更多成员",
+
+    "authDesc": "权限说明",
+    "ownerDesc": "创建、编辑、删除知识网络｜搜索、高级搜索、高级搜索配置｜数据管理、知识网络详情｜管理团队成员",
+    "managerDesc": "创建、编辑知识网络｜搜索、高级搜索、高级搜索配置｜数据管理、知识网络详情｜管理团队成员",
+    "editorDesc": "编辑知识网络｜搜索、高级搜索、高级搜索配置｜数据管理、知识网络详情",
+    "viewerDesc": "编辑知识网络｜搜索、高级搜索｜数据管理、知识网络详情",
+    "know": "知道了",
+
+    "addMember": "添加成员",
+    "emptyDesc": "暂无成员可添加",
+    "count1": "已选择",
+    "count2": "个",
+    "onlyChecked": "仅看已选择项",
+
+    "delTitle": "确认要移除吗？",
+    "delUser": "确认要移除{user}吗？",
+    "delCount": "确定要移除{count}个账号吗？",
+    "delGraph": "移除后账号无法查看{graphName}知识网络。",
+    "delSuccess": "移除成功！",
+    "changeSuccess": "修改成功！",
+    "leastOne": "请至少选择一个成员！",
+    "addSuccess": "新增成员成功！",
+    "noExistMsg": "当前知识网络不存在，无法执行操作！",
+    "noAuthMsg": "您当前暂无该知识网络权限",
+    "lowAuthMsg": "部分操作失败，无法移除同等及以上身份账号！",
+    "partial": "部分账号权限存在异常，请重试！",
+
+    "userInfo": "成员信息",
+    "searchNull": "抱歉，没有找到相关内容",
+    "countInfo": "账号信息",
+    "addSearchNull": "暂无搜索结果",
+    "selected": "已选：",
+    "clearAll": "全部清空",
+
+    "delNewTitle": "确认要移除成员吗？",
+    "delDes": "移除后成员在知识表示中的操作仍被保留",
+    "noMember": "暂无成员",
+    "addSearchHolder": "请输入账号名称"
+  }
+}

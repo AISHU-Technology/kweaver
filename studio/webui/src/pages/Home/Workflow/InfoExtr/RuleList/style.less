@@ -1,0 +1,259 @@
+// 抽取规则
+.info-extract-rule {
+  position: relative;
+  width: 30%;
+  padding: 20px;
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+
+  .extract-rule-title {
+    padding-bottom: 13px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--ad-line-color);
+    line-height: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: PingFangSC-Medium;
+
+    .extract-rule-add-icon {
+      float: right;
+      transform: translateX(-20px);
+
+      .rule-add-icon:hover {
+        color: var(--ad-primary-color);
+      }
+    }
+  }
+
+  // 标准抽取样式
+  .extract-items-box {
+    @title-height: 34px; // 标题 + 新增按钮的高度
+    height: calc(100% - @title-height);
+
+    .extract-item {
+      @extract-item-delete-width: 54px; // 右侧删除按钮的宽度
+
+      display: flex;
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #f4f4f4;
+      border-radius: 3px;
+
+      input[readonly] {
+        cursor: default;
+      }
+
+      .extract-item-form-box {
+        position: relative;
+        width: calc(100% - @extract-item-delete-width);
+        padding: 19px 0 0 30px;
+
+        .rule-line {
+          width: 100%;
+          height: 1px;
+          margin-bottom: 7px;
+          opacity: 0.47;
+          border-top: 1px dashed #d8d8d8;
+        }
+
+        .ant-input-disabled {
+          color: #999 !important;
+          background: #f9f9fa;
+        }
+
+        .ant-input-disabled:hover {
+          border-color: transparent !important;
+        }
+
+        .rule-item-CN {
+          @label-width-CN: 70px; // label的宽度
+
+          display: flex;
+
+          .rule-name-box {
+            width: @label-width-CN;
+
+            .rule-label {
+              display: inline-block;
+              height: 26px;
+              font-size: 14px;
+              color: #999;
+              line-height: 26px;
+            }
+          }
+
+          .rule-input-box {
+            width: calc(100% - @label-width-CN);
+
+            .rule-input {
+              height: 26px;
+              padding: 0 8px;
+              border-color: transparent;
+            }
+
+            .rule-input:focus,
+            .ant-input-focused {
+              border-color: var(--ad-primary-color);
+            }
+
+            .err-info {
+              display: block;
+              font-size: 12px;
+              color: var(--ad-error-color);
+              line-height: 19px;
+            }
+
+            .entity-err-info {
+              .err-info();
+              min-height: 7px;
+            }
+
+            .field-err-info {
+              .err-info();
+              min-height: 19px;
+            }
+
+            .rule-input-error,
+            .rule-input-error:hover,
+            .rule-input-error:focus {
+              border-color: var(--ad-error-color);
+            }
+          }
+        }
+
+        .rule-item-EN {
+          @label-width-EN: 110px;
+
+          display: flex;
+
+          .rule-name-box {
+            width: @label-width-EN;
+            text-align: right;
+            white-space: nowrap;
+
+            .rule-label {
+              display: inline-block;
+              height: 26px;
+              font-size: 14px;
+              color: #999;
+              line-height: 26px;
+            }
+          }
+
+          .rule-input-box {
+            width: calc(100% - @label-width-EN);
+
+            .rule-input {
+              height: 26px;
+              padding: 0 8px;
+              border-color: transparent;
+            }
+
+            .rule-input:focus,
+            .ant-input-focused {
+              border-color: var(--ad-primary-color);
+            }
+
+            .err-info {
+              display: block;
+              font-size: 12px;
+              color: var(--ad-error-color);
+              line-height: 19px;
+            }
+
+            .entity-err-info {
+              .err-info();
+              min-height: 7px;
+            }
+
+            .field-err-info {
+              .err-info();
+              min-height: 19px;
+            }
+
+            .rule-input-error,
+            .rule-input-error:hover,
+            .rule-input-error:focus {
+              border-color: var(--ad-error-color);
+            }
+          }
+        }
+      }
+
+      .extract-item-delete {
+        display: flex;
+        width: @extract-item-delete-width;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        color: var(--ad-text-color);
+        cursor: pointer;
+      }
+
+      .model-item-delete {
+        display: flex;
+        width: @extract-item-delete-width;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+        color: #cacacc;
+        cursor: not-allowed;
+      }
+    }
+
+    .no-rule {
+      text-align: center;
+      flex-direction: column;
+      display: flex;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0 0 0;
+
+      img {
+        width: 144px;
+        height: auto;
+      }
+
+      .no-rule-word {
+        margin-top: 8px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 14px;
+        color: var(--ad-text-color);
+      }
+    }
+  }
+
+  // 模型抽取样式
+  .extract-method-box {
+    width: 100%;
+    padding: 20px 0;
+
+    .ant-input {
+      width: calc(100% - @extract-rule-span-width - @extract-rule-span-margin);
+    }
+
+    .ant-input-disabled {
+      color: #999 !important;
+      background: #f9f9fa;
+    }
+
+    .ant-input-disabled:hover {
+      border-color: #d9d9d9;
+    }
+  }
+
+  @extract-rule-span-width: 56px; // 实际宽度
+  @extract-rule-span-margin: 12px; // 右margin
+
+  .extract-rule-span {
+    display: inline-block;
+    width: @extract-rule-span-width;
+    height: 20px;
+    margin-right: @extract-rule-span-margin;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
