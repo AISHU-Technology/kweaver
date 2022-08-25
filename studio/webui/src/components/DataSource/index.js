@@ -8,7 +8,6 @@
 import React, { useState, useEffect, useImperativeHandle, useCallback, useMemo, useRef } from 'react';
 import { Table, Button, Modal, message, Checkbox, Dropdown, Menu, Tooltip } from 'antd';
 import { ExclamationCircleFilled, LoadingOutlined, EllipsisOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { connect } from 'react-redux';
 import apiService from '@/utils/axios-http';
 import servicesDataSource from '@/services/dataSource';
 import intl from 'react-intl-universal';
@@ -48,7 +47,7 @@ const TEST_ERROR_CODES = {
 };
 
 const DataSource = props => {
-  const { dataSourceData, setDataSourceData, useDs = [], dataSourceRef, userInfo, graphId, selectedKnowledge } = props;
+  const { dataSourceData, setDataSourceData, useDs = [], dataSourceRef, graphId, selectedKnowledge } = props;
   const triggerSelectAll = useRef(false); // 标记触发全选
   const [sourceVisible, setSourceVisible] = useState(false); // 数据源弹窗
   const [deleteVisible, setDeleteVisible] = useState(false); // 删除弹框
@@ -514,8 +513,6 @@ const DataSource = props => {
               <div className="people" title={record.update_user_name}>
                 {record.update_user_name}
               </div>
-
-              {userInfo.email === record.update_user_email && <div>【{intl.get('datamanagement.me')}】</div>}
             </div>
 
             <div className="two" title={record.update_user_email || '--'}>
@@ -732,8 +729,4 @@ const DataSource = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  userInfo: state.getIn(['changeUserInfo', 'userInfo']).toJS()
-});
-
-export default connect(mapStateToProps)(DataSource);
+export default DataSource;

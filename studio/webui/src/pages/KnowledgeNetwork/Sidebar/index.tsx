@@ -31,18 +31,16 @@ const ICON_ARRAY = [
 ];
 
 type SidebarType = {
-  userInfo: any;
   selectedKnowledgeId: number | string;
 };
 const Sidebar = (props: SidebarType) => {
-  const { userInfo, selectedKnowledgeId } = props;
+  const { selectedKnowledgeId } = props;
   const history = useHistory();
 
   return (
     <div className="left-nav">
       {_.map(ICON_ARRAY, item => {
         const { id, icon, intlText, url } = item;
-        if (id === 3 && userInfo?.type === 1) return null;
         const pathname = history?.location?.pathname || '';
         return (
           <div

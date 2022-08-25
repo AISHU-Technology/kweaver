@@ -385,11 +385,6 @@ class DetailModal extends Component {
                       <div className="person">
                         <span>{intl.get('createEntity.cp')}</span>
                         <span>{taskInfo.create_user_name}</span>
-
-                        {localStore.get('userInfo').email === taskInfo.create_user_email ? (
-                          <span>【{intl.get('datamanagement.me')}】</span>
-                        ) : null}
-
                         <span className="email">({taskInfo.create_user_email})</span>
                       </div>
 
