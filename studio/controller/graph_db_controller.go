@@ -12,7 +12,17 @@ type GraphDBController struct {
 	GraphDBService *service.GraphDBService
 }
 
-// GetGraphDBList 根据page和size获取存储记录及存储记录中的谱图
+// GetGraphDBList
+// @Summary 根据page和size获取存储记录及存储记录中的谱图
+// @Description 根据page和size获取存储记录及存储记录中的谱图
+// @Tags 根据page和size获取存储记录及存储记录中的谱图
+// @Param page query int 1 "分页号"
+// @Param size query int 0 "每页数量"
+// @Router /api/studio/v1/opensearch/list [get]
+// @Produce json
+// @Success 200 {object} vo.ListVo  "{"total": 10, "data": [{"id": 1, "name": "test_nebula", "type": "nebula", "count": 1, "osName": "opensearch", "user": "root", "created": 102223243, "updated": 1232343243}]}"
+// @Failure 500 "{"ErrorCode": "Studio.GraphDB.GraphDBRecordNotFoundError", "Description": "Data source record does not exist", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}"
+// @Failure 400 "{"ErrorCode": "Studio.Common.ParameterError", "Description": "Parameter error", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}"
 func (controller *GraphDBController) GetGraphDBList(c *gin.Context) {
 	condition := &vo.GraphListSearchCondition{}
 	kw_errors.Try(c.ShouldBind(condition)).Throw(kw_errors.ParameterError)

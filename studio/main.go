@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	_ "kw-studio/docs"
 	"kw-studio/global"
 	"kw-studio/initialize"
 	"kw-studio/upgrade"

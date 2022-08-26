@@ -6,6 +6,8 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/swaggo/files"
+	gs "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 	"io/ioutil"
 	"kw-studio/controller"
@@ -92,6 +94,7 @@ func Router() *gin.Engine {
 	registerValidation()
 	router.Use(ZapLogger(global.LOG), middleware.ErrorHandler)
 	router.Static("/webui", "./webui")
+	router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	r1 := router.Group("/api/studio/v1")
 	{
 		//graphdb
