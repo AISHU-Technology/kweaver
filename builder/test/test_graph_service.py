@@ -16,7 +16,7 @@ class TestGetGraphInfoBasic(unittest.TestCase):
         self.graphid = '118'
         self.is_all = False
         self.key = ["graph_des", "create_time", "update_time",
-                    "display_task", "export", "is_import", "is_upload", "knowledge_type", "property_id",
+                    "display_task", "export", "is_import", "is_upload", "knowledge_type",
                     "status", "step_num", "ds", "otl", "info_ext", "kmap", "kmerge", "mongo_name", "graphdb_name",
                     "graphdb_type", "graphdb_address", "graphdb_id"]
         # mock graph_dao.get_knowledge_graph_by_id
@@ -26,8 +26,7 @@ class TestGetGraphInfoBasic(unittest.TestCase):
         row = [[164, '10.4.133.125;10.4.131.18;10.4.131.25',
                 'u4d1b761a01f811edb7079af371d61d07', 118, '1111', 'normal',
                 '@-highlight-content-start-@', '@-highlight-content-end-@',
-                '853ba1db-4e37-11eb-a57d-0242ac190002', '2022-07-12 23:36:03',
-                '853ba1db-4e37-11eb-a57d-0242ac190002', '2022-07-13 13:11:41',
+                '2022-07-12 23:36:03', '2022-07-13 13:11:41',
                 '2022-07-13 11:29:15', 1]]
         res = pd.DataFrame(row, columns=self.res_get_knowledge_graph_by_id_column)
         graph_dao.get_knowledge_graph_by_id = mock.Mock(return_value=res)
