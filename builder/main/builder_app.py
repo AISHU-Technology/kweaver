@@ -227,11 +227,12 @@ if __name__ == '__main__':
     # 初始化，先清除redis任务的状态
     from dao.task_dao import task_dao
     from dao.task_onto_dao import task_dao_onto
-
+    from db_migrate.builder_table import builder_table
     print("开始连库")
     ## 因为celery得不到所有的key所以需要先注释掉
     task_dao.initredis()
     print("连库完成")
     task_dao.init_graph_count()
     task_dao_onto.initredis_onto()
+    builder_table()
     app.run(host=config.builder_ip, port=int(config.builder_port), debug=config.builder_debug)

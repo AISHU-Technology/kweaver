@@ -65,63 +65,63 @@ def updateDatabaseVersion(progressVersion, connection, cursor):
     cursor.execute(sql)
 
 
-Logger.log_info('database tables: %s' % meta.tables.keys())
-if 'version' in meta.tables.keys():
-    # 数据库版本表存在
-    Logger.log_info('database version table exists')
-    # 获取数据库版本
-    try:
-        version = getDataBaseVersion()
-    except Exception as e:
-        Logger.log_info(e)
-        raise e
-    Logger.log_info("database builder version: %s" % version)
-    if len(version) == 0:
-        # 数据库版本记录不存在
-        # 进行数据库的初始化
-        Logger.log_info('builder_version not found. Start initialization')
-        if progressVersion in versions:
-            migrate(progressVersion, 'initiate')
-            # 插入当前数据库版本
-            try:
-                insertDatabaseVersion(progressVersion)
-            except Exception as e:
-                Logger.log_info(e)
-                raise e
-            Logger.log_info("Change database builder version success.")
-        else:
-            raise Exception('Upgrade scheme not found.')
-    else:
-        databaseVersion = version[0]['builder_version']  # 数据库版本
-        Logger.log_info('builder_version exists. Compare progressversion and databseversion.')
-
-        # 将数据库版本与程序版本做比较
-        if databaseVersion == progressVersion:
-            Logger.log_info('Program version is identical with database version. Quitting upgrade program.')
-        else:
-            versionList = list(versions)
-            if progressVersion in versionList and databaseVersion in versionList:
-                progressVersionIdx = versionList.index(progressVersion)
-                databaseVersionIdx = versionList.index(databaseVersion)
-            else:
-                Logger.log_info('Upgrade scheme not found. Database version：%s, Specifying version：%s' % (
-                    databaseVersion, progressVersion))
-
-            # 处理版本差异
-            if progressVersionIdx > databaseVersionIdx:
-                Logger.log_info('Start upgrading. progressVersionIdx: %s, databaseVersionIdx: %s' % (
-                    progressVersionIdx, databaseVersionIdx))
-                # 升级
-                for i in range(databaseVersionIdx + 1, progressVersionIdx + 1):
-                    migrate(versionList[i], 'update')
+def builder_table():
+    Logger.log_info('database tables: %s' % meta.tables.keys())
+    if 'version' in meta.tables.keys():
+        # 数据库版本表存在
+        Logger.log_info('database version table exists')
+        # 获取数据库版本
+        try:
+            version = getDataBaseVersion()
+        except Exception as e:
+            Logger.log_info(e)
+            raise e
+        Logger.log_info("database builder version: %s" % version)
+        if len(version) == 0:
+            # 数据库版本记录不存在
+            # 进行数据库的初始化
+            Logger.log_info('builder_version not found. Start initialization')
+            if progressVersion in versions:
+                migrate(progressVersion, 'initiate')
                 # 插入当前数据库版本
                 try:
-                    updateDatabaseVersion(progressVersion)
+                    insertDatabaseVersion(progressVersion)
                 except Exception as e:
                     Logger.log_info(e)
                     raise e
                 Logger.log_info("Change database builder version success.")
+            else:
+                raise Exception('Upgrade scheme not found.')
+        else:
+            databaseVersion = version[0]['builder_version']  # 数据库版本
+            Logger.log_info('builder_version exists. Compare progressversion and databseversion.')
 
-            elif progressVersionIdx < databaseVersionIdx:
-                Logger.log_info('Program version is lower than installed version')
+            # 将数据库版本与程序版本做比较
+            if databaseVersion == progressVersion:
+                Logger.log_info('Program version is identical with database version. Quitting upgrade program.')
+            else:
+                versionList = list(versions)
+                if progressVersion in versionList and databaseVersion in versionList:
+                    progressVersionIdx = versionList.index(progressVersion)
+                    databaseVersionIdx = versionList.index(databaseVersion)
+                else:
+                    Logger.log_info('Upgrade scheme not found. Database version：%s, Specifying version：%s' % (
+                        databaseVersion, progressVersion))
 
+                # 处理版本差异
+                if progressVersionIdx > databaseVersionIdx:
+                    Logger.log_info('Start upgrading. progressVersionIdx: %s, databaseVersionIdx: %s' % (
+                        progressVersionIdx, databaseVersionIdx))
+                    # 升级
+                    for i in range(databaseVersionIdx + 1, progressVersionIdx + 1):
+                        migrate(versionList[i], 'update')
+                    # 插入当前数据库版本
+                    try:
+                        updateDatabaseVersion(progressVersion)
+                    except Exception as e:
+                        Logger.log_info(e)
+                        raise e
+                    Logger.log_info("Change database builder version success.")
+
+                elif progressVersionIdx < databaseVersionIdx:
+                    Logger.log_info('Program version is lower than installed version')

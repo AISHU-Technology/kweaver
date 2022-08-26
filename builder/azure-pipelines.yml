@@ -9,7 +9,10 @@ trigger:
       - DATA-*
   paths:
     include:
-      - /builder
+      - /builder/*
+    exclude:
+      - /studio/*
+      - /sdk/*
 
 pool:
   name: python
@@ -26,10 +29,8 @@ variables:
     value: $(Build.SourceBranchName)-$(Build.BuildNumber)
   - name: imageName
     value: kw-builder
-  - name: imageNameJob
-    value: kw-builder-job
-  - name: imageNameJobFtp
-    value: kw-builder-job
+  - name: imageNameWithHarbor
+    value: acr.aishu.cn/ad/kw-builder
   - name: UTArtifactName
     value: coverageFiles
 
@@ -43,45 +44,6 @@ resources:
       image: wing-biz/euop/dotnet-runtime:3.1
 
 jobs:
-  - job: buildjob
-    displayName: buildJob
-    steps:
-      - task: Bash@3
-        displayName: job compile
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd ./db_migrate;\
-            /root/anaconda3/envs/python3.6.2/bin/pyinstaller -F -p ./../ builder_table.py
-      - task: Docker@2
-        displayName: buildImage
-        inputs:
-          command: 'build'
-          repository: $(imageNameJob)
-          tags: $(mainTag)
-          Dockerfile: '**/Dockerfilejob'
-      - task: Bash@3
-        displayName: saveTar
-        inputs:
-          targetType: 'inline'
-          script: |
-            docker tag $(imageNameJob):$(mainTag) $(harborUrl)/$(imageNameJob):$(mainTag)
-            docker save -o AnyDATA-$(mainTag)-builder-${{parameters.jobTag}}-job-$(Build.BuildNumber).tar $(harborUrl)/$(imageNameJob):$(mainTag)
-      - task: FtpUpload@2
-        displayName: uploadFtp
-        inputs:
-          credentialsOption: 'inputs'
-          serverUrl: 'ftp://ftp-ad.aishu.cn'
-          username: '$(ftpUser)'
-          password: '$(ftpPasswd)'
-          rootDirectory:
-          filePatterns: '**/AnyDATA-$(mainTag)-kw-builder*.tar'
-          remoteDirectory: '/packages/$(imageNameJobFtp)/$(Build.SourceBranchName)'
-          clean: false
-          cleanContents: false
-          preservePaths: false
-          trustSSL: false
-
   - job: utmake
     displayName: utmake
     workspace:
@@ -93,6 +55,7 @@ jobs:
         inputs:
           targetType: 'inline'
           script: |
+            cd ./builder
             /root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py
       - task: CopyFiles@2
         inputs:
@@ -167,16 +130,15 @@ jobs:
       displayName: buildImage
       inputs:
         command: 'build'
-        repository: $(imageName)
+        repository: $(imageNameWithHarbor)
         tags: $(mainTag)
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '**/Builder.Dockerfile'
     - task: Bash@3
       displayName: saveTar
       inputs:
         targetType: 'inline'
         script: |
-          docker tag $(imageName):$(mainTag) $(harborUrl)/$(imageName):$(mainTag)
-          docker save -o AnyDATA-$(mainTag)-$(imageName)-$(imageTag).tar $(harborUrl)/$(imageName):$(mainTag)
+          docker save -o KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
     - task: FtpUpload@2
       displayName: uploadFtp
       inputs:
@@ -185,7 +147,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/AnyDATA-$(mainTag)-$(imageName)*.tar'
+        filePatterns: '**/KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar'
         remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false
