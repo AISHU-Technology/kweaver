@@ -1,12 +1,11 @@
 FROM node:16-slim as nodemake
 RUN mkdir -p /root/studio && \
-ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-#npm install cnpm -g --registry=https://r.npm.taobao.org
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+npm install cnpm -g --registry=https://r.npm.taobao.org
 WORKDIR /root/studio/
 COPY . .
 WORKDIR /root/studio/webui
-#RUN npm i && npm run build
-RUN yarn && yarn build
+RUN npm i && npm run build
 
 FROM golang:1.17 as gomake
 RUN mkdir -p /root/studio
