@@ -84,7 +84,7 @@ jobs:
         displayName: Publish ALL Code Coverage Report
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/builder/coverage_result/coverage.xml'
+          summaryFileLocation: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/builder/coverage_result/*.xml'
 
       - task: PublishTestResults@2
         condition: succeededOrFailed()
