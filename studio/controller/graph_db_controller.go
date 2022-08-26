@@ -23,6 +23,7 @@ type GraphDBController struct {
 // @Param orderField query string created "排序字段"
 // @Param order query string ASC "排序顺序"
 // @Router /api/studio/v1/opensearch/list [get]
+// @Accept  x-www-form-urlencoded
 // @Produce json
 // @Success 200 {object} vo.ListVo  "{"total": 10, "data": [{"id": 1, "name": "test_nebula", "type": "nebula", "count": 1, "osName": "opensearch", "user": "root", "created": 102223243, "updated": 1232343243}]}"
 // @Failure 500 "{"ErrorCode": "Studio.GraphDB.GraphDBRecordNotFoundError", "Description": "Data source record does not exist", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}"

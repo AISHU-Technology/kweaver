@@ -19,6 +19,9 @@ const docTemplate = `{
         "/api/studio/v1/opensearch/list": {
             "get": {
                 "description": "根据page和size获取存储记录及存储记录中的谱图",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
                 "produces": [
                     "application/json"
                 ],
