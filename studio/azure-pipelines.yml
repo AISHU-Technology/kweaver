@@ -6,6 +6,9 @@ trigger:
     include:
       - develop
       - DATA-*
+  path:
+    include:
+      - studio
 
 pool:
   name: go
