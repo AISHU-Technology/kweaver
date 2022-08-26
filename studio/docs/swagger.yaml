@@ -1,0 +1,42 @@
+definitions:
+  vo.ListVo:
+    properties:
+      data: {}
+      total:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /api/studio/v1/opensearch/list:
+    get:
+      description: 根据page和size获取存储记录及存储记录中的谱图
+      parameters:
+      - description: 分页号
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"total": 10, "data": [{"id": 1, "name": "test_nebula", "type":
+            "nebula", "count": 1, "osName": "opensearch", "user": "root", "created":
+            102223243, "updated": 1232343243}]}'
+          schema:
+            $ref: '#/definitions/vo.ListVo'
+        "400":
+          description: '{"ErrorCode": "Studio.Common.ParameterError", "Description":
+            "Parameter error", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}'
+        "500":
+          description: '{"ErrorCode": "Studio.GraphDB.GraphDBRecordNotFoundError",
+            "Description": "Data source record does not exist", ""Solution": "", "ErrorDetails":
+            [], "ErrorLink": ""}'
+      summary: 根据page和size获取存储记录及存储记录中的谱图
+      tags:
+      - 根据page和size获取存储记录及存储记录中的谱图
+swagger: "2.0"
