@@ -58,7 +58,7 @@ jobs:
             cd ./builder
             rm -rf coverage_report
             mkdir coverage_report
-            /root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py > coverage_report/ut_coverage.xml
+            /root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py
       - task: CopyFiles@2
         inputs:
           SourceFolder: $(Build.SourcesDirectory)
@@ -86,7 +86,7 @@ jobs:
         displayName: Publish ALL Code Coverage Report
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/builder/coverage_report/*.xml'
+          summaryFileLocation: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/builder/coverage.xml'
 
       - task: PublishTestResults@2
         condition: succeededOrFailed()
