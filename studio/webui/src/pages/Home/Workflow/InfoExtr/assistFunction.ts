@@ -60,33 +60,39 @@ const dataSourceShow = (text: keyof typeof NAME_OBJECT) => NAME_OBJECT[text];
  * 生成知识网络抽取规则数据
  */
 const generateGraph = (dsList: any[]) => {
-  const data = _.reduce(
-    dsList,
-    (res: any[], item) => {
-      const { dsname, pId, file_id, name, extract_type, extract_model, extract_rules } = item;
+  const data = _.map(dsList, item => {
+    const {
+      dsname,
+      pId,
+      data_source,
+      ds_path,
+      file_id,
+      name,
+      file_type,
+      file_path,
+      extract_type,
+      extract_model,
+      extract_rules
+    } = item;
 
-      res.push({
-        ...item,
-        ds_name: dsname,
-        ds_id: parseInt(pId),
-        file_source: file_id,
-        file_name: name,
-        extract_type,
-        extract_model: extract_model || undefined,
-        extract_rules: extract_rules.map((rule: any) => ({
-          is_model: rule.is_model,
-          entity_type: rule.entity_type,
-          property: {
-            property_field: rule.property.property_field,
-            property_func: rule.property.property_func
-          }
-        }))
-      });
-
-      return res;
-    },
-    []
-  );
+    return {
+      ds_name: dsname,
+      ds_id: parseInt(pId),
+      data_source,
+      ds_path,
+      file_source: file_id,
+      file_name: name,
+      file_path,
+      file_type,
+      extract_type,
+      extract_model: extract_model || undefined,
+      extract_rules: extract_rules.map((rule: any) => ({
+        is_model: rule.is_model,
+        entity_type: rule.entity_type,
+        property: rule.property
+      }))
+    };
+  });
 
   return data;
 };
@@ -250,7 +256,7 @@ const convertToRules = (res: Record<string, any>, fileId: string, extract_type: 
     // 找到该文件预测出的点类
     const spots = _.filter(entity_main_table_dict, (item: any) => {
       const isExist = item.main_table.some((table: any, i: number, self: any[]) => {
-        if (Array.isArray(table)) return table[0].includes(fileId);
+        if (Array.isArray(table)) return table.includes(fileId);
         if (table?.docid) return table.docid === fileId;
         return self.includes(fileId);
       });
@@ -336,7 +342,7 @@ const createSource = (dsData: Record<string, any>, fileData: any[], res: Record<
       };
     }
 
-    const ruleData = convertToRules(res.res, reset.file_id, extract_type);
+    const ruleData = convertToRules(res, reset.file_id, extract_type);
     return { ...source, ...reset, ...ruleData };
   });
 };

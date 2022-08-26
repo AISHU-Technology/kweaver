@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { Button, Tooltip } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
@@ -19,9 +19,16 @@ interface SourceListProps {
   onDelete: (newData: any[], item: Record<string, any>, index: number) => void;
 }
 
-const SourceList: React.FC<SourceListProps> = props => {
+const SourceList: React.ForwardRefRenderFunction<unknown, SourceListProps> = (props, ref) => {
   const { data, selectedSource, onAddClick, onRowClick, onDelete } = props;
   const listScrollRef = useRef<any>(); // 文件列表的滚动条ref
+
+  useImperativeHandle(ref, () => ({
+    scrollToFile: (index: number) => {
+      const height = 94; // 每一项高度94px
+      listScrollRef.current?.scrollbars?.scrollTop(index * height);
+    }
+  }));
 
   useEffect(() => {
     listScrollRef.current?.scrollbars?.scrollToBottom();
@@ -126,4 +133,4 @@ const SourceList: React.FC<SourceListProps> = props => {
   );
 };
 
-export default memo(SourceList);
+export default forwardRef(SourceList);

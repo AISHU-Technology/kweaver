@@ -5,6 +5,20 @@
   padding: 20px;
   border-left: 1px solid rgba(0, 0, 0, 0.06);
 
+  &.EN-style {
+    .rule-item {
+      @label-width-EN: 110px;
+
+      .rule-name-box {
+        width: @label-width-EN !important;
+      }
+
+      .rule-input-box {
+        width: calc(100% - @label-width-EN) !important;
+      }
+    }
+  }
+
   .extract-rule-title {
     padding-bottom: 13px;
     margin-bottom: 0;
@@ -64,7 +78,7 @@
           border-color: transparent !important;
         }
 
-        .rule-item-CN {
+        .rule-item {
           @label-width-CN: 70px; // label的宽度
 
           display: flex;
@@ -83,64 +97,6 @@
 
           .rule-input-box {
             width: calc(100% - @label-width-CN);
-
-            .rule-input {
-              height: 26px;
-              padding: 0 8px;
-              border-color: transparent;
-            }
-
-            .rule-input:focus,
-            .ant-input-focused {
-              border-color: var(--ad-primary-color);
-            }
-
-            .err-info {
-              display: block;
-              font-size: 12px;
-              color: var(--ad-error-color);
-              line-height: 19px;
-            }
-
-            .entity-err-info {
-              .err-info();
-              min-height: 7px;
-            }
-
-            .field-err-info {
-              .err-info();
-              min-height: 19px;
-            }
-
-            .rule-input-error,
-            .rule-input-error:hover,
-            .rule-input-error:focus {
-              border-color: var(--ad-error-color);
-            }
-          }
-        }
-
-        .rule-item-EN {
-          @label-width-EN: 110px;
-
-          display: flex;
-
-          .rule-name-box {
-            width: @label-width-EN;
-            text-align: right;
-            white-space: nowrap;
-
-            .rule-label {
-              display: inline-block;
-              height: 26px;
-              font-size: 14px;
-              color: #999;
-              line-height: 26px;
-            }
-          }
-
-          .rule-input-box {
-            width: calc(100% - @label-width-EN);
 
             .rule-input {
               height: 26px;

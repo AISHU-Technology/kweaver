@@ -12,6 +12,10 @@
   max-height: calc(1080px - @other-height);
   background-color: #fff;
 
+  .hide {
+    display: none;
+  }
+
   // 添加文件的loading
   .extract-add-loading {
     position: fixed;
@@ -30,10 +34,6 @@
       top: 40%;
     }
   }
-
-  .no-loading {
-    display: none;
-  }
 }
 
 /**
@@ -46,13 +46,6 @@
   display: flex;
   width: 100%;
   height: 100%;
-
-  // 文字超出省略号显示
-  .text-ellipsis {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
 
   .clear-flex {
     flex: 1;
@@ -128,7 +121,6 @@
       }
 
       .show-board-file-name {
-        .text-ellipsis();
         height: 20px;
         display: inline-block;
         width: calc(100% - @word-width-CN - 18px);
@@ -160,7 +152,6 @@
       }
 
       .show-board-file-name {
-        .text-ellipsis();
         height: 20px;
         display: inline-block;
         width: calc(100% - @word-width-EN - 18px);
