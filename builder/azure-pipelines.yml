@@ -56,8 +56,6 @@ jobs:
           targetType: 'inline'
           script: |
             cd ./builder
-            rm -rf coverage_report
-            mkdir coverage_report
             /root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py
       - task: CopyFiles@2
         inputs:
