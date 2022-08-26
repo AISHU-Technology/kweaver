@@ -5,11 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { Button, message } from 'antd';
 
 import { GRAPH_STATUS } from '@/enums';
-import serverAuth from '@/services/auth';
 import serviceGraphDetail from '@/services/graphDetail';
 
 import GraphG6 from './GraphG6';
-// import GraphG6Layout from './GraphLayout/index';
 import Menus from './Menus';
 
 import empty from '@/assets/images/empty.svg';
@@ -90,7 +88,6 @@ const GraphDetail = (props: GraphDetailType) => {
     if (is_upload) return message.warning(intl.get('graphList.uploadErr'));
 
     try {
-      const result = (await serverAuth.queryAuth(kg_conf_id, 3)) || {};
       if (status === GRAPH_STATUS.CONFIGURATION) {
         history.push(`/home/workflow/edit?id=${kg_conf_id}&status=${GRAPH_STATUS.CONFIGURATION}`);
       } else {

@@ -31,7 +31,7 @@ resources:
   containers:
     - container: utmake
       endpoint: acr.aishu.cn
-      image: ad/ad_go_env:goenv
+      image: ad/goenv:1.0.2
     - container: scanner
       endpoint: acr.aishu.cn
       image: ad/openjdk:11.0.13-jre
@@ -84,12 +84,13 @@ jobs:
       - script: |
           rm -rf coverage_report
           mkdir coverage_report
-          source /etc/bashrc
           go env -w GOPROXY="https://goproxy.cn"
+          go mod tidy
 
           go test ./test -coverprofile=coverage_report/cover.out -coverpkg=./...service,./...controller
           gocov convert coverage_report/cover.out | gocov-xml > coverage_report/ut_coverage.xml
           go test ./test -v -coverpkg=./...service,./...controller | go-junit-report > coverage_report/coverage.xml
+          cat coverage_report/coverage.xml
       - task: CopyFiles@2
         inputs:
           SourceFolder: $(Build.SourcesDirectory)

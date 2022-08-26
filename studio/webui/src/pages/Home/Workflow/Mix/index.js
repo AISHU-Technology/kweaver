@@ -10,7 +10,6 @@ import { CheckCircleFilled, LoadingOutlined } from '@ant-design/icons';
 
 import serviceWorkflow from '@/services/workflow';
 import TimedTask from '@/components/timedTask';
-import AddMember from '@/components/AddMember';
 
 import SetAttr from './SetAttr';
 import NodeInfo from './NodeInfo';
@@ -33,7 +32,6 @@ class Mix extends Component {
     errMsg: '', // 错误信息
     errIndex: -1, // 错误配置索引
     saveLoading: false, // 接口loading状态
-    isAddMember: false, // 邀请成员界面是否可见
     taskModalType: 'select', // 执行任务弹窗内容
     updateType: 'increment', // 更新方式
     isImmediately: false, // mq数据源立即执行任务
@@ -104,7 +102,6 @@ class Mix extends Component {
     this.setSaveLoading(true);
     const res = await serviceWorkflow.graphEdit(this.props.graphId, params);
 
-    await this.props.getAuthLevel(this.props.graphId);
     if (this.state.isImmediately) return this.setState({ updateType: 'full' }, this.updateTask);
     if (res && res.res) this.setState({ modalVisible: true });
 
@@ -193,12 +190,6 @@ class Mix extends Component {
   setErrIndex = index => this.setState({ errIndex: index });
 
   /**
-   * @description 设置邀请成员界面是否可见
-   * @param {Boolean} bool
-   */
-  setIsAddMember = bool => this.setState({ isAddMember: bool });
-
-  /**
    * @description 生成后端接口需要的数据
    */
   generateData = () => {
@@ -209,13 +200,6 @@ class Mix extends Component {
       : [];
 
     return [{ status: this.state.check, entity_classes: data }];
-  };
-
-  /**
-   * @description 点击邀请成员
-   */
-  onInviteClick = () => {
-    this.setIsAddMember(true);
   };
 
   /**
@@ -239,7 +223,7 @@ class Mix extends Component {
   };
 
   render() {
-    const { authLevel, graphName, graphId, getAuthLevel } = this.props;
+    const { graphId } = this.props;
     const {
       check,
       entity,
@@ -251,7 +235,6 @@ class Mix extends Component {
       saveLoading,
       taskModalType,
       updateType,
-      isAddMember,
       isImmediately,
       timedTaskVisible
     } = this.state;
@@ -320,16 +303,15 @@ class Mix extends Component {
         <Modal
           className={`mix-modal ${taskModalType}`}
           title={taskModalType === 'select' ? intl.get('task.mt') : null}
-          width={isAddMember ? 800 : 480}
+          width={480}
           footer={null}
           maskClosable={false}
-          closable={isAddMember || taskModalType === 'select'}
+          closable={taskModalType === 'select'}
           keyboard={false}
           visible={modalVisible}
           destroyOnClose={true}
           onCancel={() => {
             if (taskModalType === 'select') return this.setState({ modalVisible: false });
-            if (isAddMember) this.setIsAddMember(false);
           }}
         >
           {taskModalType === 'select' ? (
@@ -390,15 +372,7 @@ class Mix extends Component {
                 </ConfigProvider>
               </div>
             </div>
-          ) : isAddMember ? (
-            <AddMember
-              graphId={parseInt(graphId)}
-              graphName={graphName}
-              authLevel={authLevel}
-              setVisible={this.setIsAddMember}
-              effect={() => getAuthLevel(graphId)}
-            />
-          ) : (
+          ) : 
             <div className="mix-modal-content">
               <div className="title-box">
                 <CheckCircleFilled className="check-icon" />
@@ -408,15 +382,12 @@ class Mix extends Component {
               <p className="warming">{intl.get('workflow.conflation.successInfo')}</p>
 
               <div className="footer">
-                <Button type="primary" className="btn" style={{ marginBottom: 16 }} onClick={this.onInviteClick}>
-                  {intl.get('workflow.conflation.addMember')}
-                </Button>
                 <Button className="ant-btn-default btn" onClick={this.goToTask}>
                   {intl.get('workflow.conflation.viewTask')}
                 </Button>
               </div>
             </div>
-          )}
+          }
         </Modal>
 
         <TimedTask

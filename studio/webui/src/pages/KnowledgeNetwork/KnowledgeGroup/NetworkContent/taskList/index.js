@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { Button, Select, Table, Tooltip, Menu, Dropdown, message, Modal, ConfigProvider, Radio } from 'antd';
 import { EllipsisOutlined, LoadingOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 
-import useInterval from '@/utils/useInterval/index';
+import HOOKS from '@/hooks';
 import serviceTaskManagement from '@/services/taskManagement';
 import IconFont from '@/components/IconFont';
 import ErrorModal from './errorModal/index';
@@ -97,7 +97,7 @@ const TaskList = props => {
    * 列表定时刷新   和  进度弹框
    * 同步时间  用一个定时器
    */
-  useInterval(async () => {
+  HOOKS.useInterval(async () => {
     if (['1', '3'].includes(tabsKey)) {
       const getData = {
         page: current,
