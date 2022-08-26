@@ -92,7 +92,7 @@ jobs:
         condition: succeededOrFailed()
         inputs:
           testResultsFormat: "JUnit"
-          testResultsFiles: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/builder/coverage_result/*.xml'
+          testResultsFiles: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/builder/coverage_result/coverage.xml'
           testRunTitle: 'UT Result'
           failTaskOnFailedTests: true
         displayName: 'Publish linting and unit test results'
