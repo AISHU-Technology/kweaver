@@ -1,4 +1,4 @@
-FROM node:16-slim as nodemake
+FROM node:14-slim as nodemake
 RUN mkdir -p /root/studio && \
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 npm install cnpm -g --registry=https://r.npm.taobao.org
