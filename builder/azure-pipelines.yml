@@ -56,7 +56,7 @@ jobs:
           targetType: 'inline'
           script: |
             cd ./builder
-            /root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py > ut_coverage.xml
+            /root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py
       - task: CopyFiles@2
         inputs:
           SourceFolder: $(Build.SourcesDirectory)
