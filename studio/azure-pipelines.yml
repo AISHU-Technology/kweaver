@@ -88,10 +88,9 @@ jobs:
     steps:
       - checkout: self
       - script: |
-          pwd && ls
-          cd ./studio
           rm -rf coverage_report
           mkdir coverage_report
+          cd ./studio
           go env -w GOPROXY="https://goproxy.cn"
           go mod tidy
 
