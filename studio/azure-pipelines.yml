@@ -8,7 +8,10 @@ trigger:
       - DATA-*
   paths:
     include:
-      - studio
+      - /studio/*
+    exclude:
+      - /builder/*
+      - /sdk/*
 
 pool:
   name: go
