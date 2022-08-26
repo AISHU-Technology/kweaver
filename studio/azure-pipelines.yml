@@ -102,7 +102,7 @@ jobs:
         inputs:
           SourceFolder: $(Build.SourcesDirectory)
           contents: |
-            coverage_report/**
+            studio/coverage_report/**
           targetFolder: $(Build.BinariesDirectory)
       - task: PublishBuildArtifacts@1
         inputs:
