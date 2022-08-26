@@ -3,7 +3,7 @@ RUN mkdir -p /root/studio && \
     cd /root/studio && \
     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     npm install cnpm -g --registry=https://r.npm.taobao.org
-COPY ./webui/* .
+COPY ./webui/* ./
 RUN npm run build
 
 FROM golang:1.17 as gomake
