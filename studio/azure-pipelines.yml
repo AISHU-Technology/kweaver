@@ -55,7 +55,7 @@ jobs:
           command: 'build'
           repository: $(imageNameWithHarbor)
           tags: $(mainTag)
-          Dockerfile: '**/Dockerfile'
+          Dockerfile: '/studio/Dockerfile'
       - task: Docker@2
         inputs:
           containerRegistry: 'acr.aishu.cn'
