@@ -3,7 +3,8 @@ RUN mkdir -p /root/studio && \
 ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
 npm install cnpm -g --registry=https://r.npm.taobao.org
 WORKDIR /root/studio  
-COPY ./webui/* ./
+COPY ./webui ./
+WORKDIR /root/studio/webui
 RUN pwd && ls && npm run build
 
 FROM golang:1.17 as gomake
@@ -11,7 +12,7 @@ RUN mkdir -p /root/studio
 WORKDIR /root/studio
 COPY . .
 RUN rm -rf ./webui/*
-COPY --from=nodemake /root/studio/build/* ./webui
+COPY --from=nodemake /root/studio/webui/build/* ./webui
 RUN go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
