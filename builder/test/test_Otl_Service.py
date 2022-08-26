@@ -516,7 +516,7 @@ class Test_delete(TestCase):
         otl_dao.delete = mock.Mock(return_value=0)
 
         # mock task_dao_onto.get_otl_task_list
-        ret_row = [[1, '80', 'test', 'table', '2021-11-16 03:32:59', None, None, None, None, "[['test', 'anydata', 'msql', 'running', 'mysql']]", '9', ''], [2, '80', '853ba1db-4e37-11eb-a57d-0242ac190002', 'test', 'table', '2021-11-16 03:33:35', None, None, None, None, "[['test', 'anydata', 'msql', 'running', 'mysql']]", '9', '']]
+        ret_row = [[1, '80', 'test', 'table', '2021-11-16 03:32:59', None, None, None, None, "[['test', 'anydata', 'msql', 'running', 'mysql']]", '9', ''], [2, '80', 'test', 'table', '2021-11-16 03:33:35', None, None, None, None, "[['test', 'anydata', 'msql', 'running', 'mysql']]", '9', '']]
         column = ['task_id', 'ontology_id', 'task_name', 'task_type', 'create_time', 'finished_time', 'task_status', 'celery_task_id', 'result', 'file_list', 'ds_id', 'postfix']
         ret = pd.DataFrame(ret_row, columns=column)
         task_dao_onto.get_otl_task_list = mock.Mock(return_value=ret)

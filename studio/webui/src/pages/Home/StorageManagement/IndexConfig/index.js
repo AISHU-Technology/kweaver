@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 import intl from 'react-intl-universal';
-import { Table, Button, message, Dropdown, Menu } from 'antd';
-import { LoadingOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { Table, Button, message } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import timeFormat from '@/utils/timeFormat/index.js';
 import serviceStorageManagement from '@/services/storageManagement';
@@ -32,7 +33,6 @@ class IndexConfig extends Component {
     selectKey: 0, // 选中的行
     loading: false,
     deleteItem: {}, // 删除的索引
-    graphListId: 0, // 点击索引的id
     checkedInfo: {}, // 保存编辑或查看的存储信息
     orderType: 'updated', // 排序的类型
     order: 1 // 排序 0 升序 1 降序
@@ -54,28 +54,19 @@ class IndexConfig extends Component {
    * @description 获取初始配置
    */
   initData = async () => {
-    const { current, pageSize, orderType, order, searchType, searchValue } = this.state;
+    const { current, pageSize, orderType, order, searchValue } = this.state;
 
     const type = orderType || 'updated';
     const sort = order || 1;
 
-    const data = {
-      page: current,
-      size: pageSize,
-      order: `${type}-${sort}`,
-      name: searchValue
-    };
-    const res = await serviceStorageManagement.openSearchGet(data);
+    try {
+      const data = { page: current, size: pageSize, order: `${type}-${sort}`, name: searchValue };
+      const { res = {}, ErrorCode = '', Description = '' } = await serviceStorageManagement.openSearchGet(data);
 
-    if (res && res.res) {
-      this.setState({
-        total: res.res.total,
-        tableData: res.res.data
-      });
-    }
-
-    if (res && res.ErrorCode === 'Manager.Common.ServerError') {
-      message.error(res.Description);
+      if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
+      if (ErrorCode === 'Manager.Common.ServerError') message.error(Description);
+    } catch (error) {
+      //
     }
   };
 
@@ -83,28 +74,29 @@ class IndexConfig extends Component {
    * 根据ID获取数据
    */
   getIndex = async (record, option) => {
-    const res = await serviceStorageManagement.openSearchGetById(record.id);
+    try {
+      const {
+        res = {},
+        ErrorCode = '',
+        Description = ''
+      } = await serviceStorageManagement.openSearchGetById(record.id);
 
-    if (res && res.res) {
-      const { ip, port, name, password, user, id } = res.res;
+      if (!_.isEmpty(res)) {
+        const { ip, port, name, password, user, id } = res;
+        const data = { port: port[0], ip: ip[0], id, user, name, password };
+        this.setState({
+          checkedInfo: data,
+          visible: true,
+          optionType: option,
+          optionStorage: record,
+          selectKey: 0
+        });
+      }
 
-      const data = { port: port[0], ip: ip[0], id, user, name, password };
-
-      this.setState({
-        checkedInfo: data,
-        visible: true,
-        optionType: option,
-        optionStorage: record,
-        selectKey: 0
-      });
-    }
-
-    if (res && res.ErrorCode === 'Manager.Opensearch.OSRecordNotFoundError') {
-      message.error(intl.get('configSys.NotFoundError'));
-    }
-
-    if (res && res.ErrorCode === 'Manager.Common.ServerError') {
-      message.error(res.Description);
+      if (ErrorCode === 'Manager.Opensearch.OSRecordNotFoundError') message.error(intl.get('configSys.NotFoundError'));
+      if (ErrorCode === 'Manager.Common.ServerError') message.error(Description);
+    } catch (error) {
+      //
     }
   };
 
@@ -112,11 +104,7 @@ class IndexConfig extends Component {
    * 新建
    */
   onCreate = () => {
-    this.setState({
-      visible: true,
-      checkedInfo: [],
-      optionType: 'create'
-    });
+    this.setState({ visible: true, checkedInfo: [], optionType: 'create' });
   };
 
   /**
@@ -125,37 +113,25 @@ class IndexConfig extends Component {
   onSearch = (e, clear = false) => {
     const { value } = this.searchInput.current.input;
 
-    this.setState(
-      {
-        searchValue: clear ? '' : value
-      },
-      () => {
-        this.initData();
-      }
-    );
+    this.setState({ searchValue: clear ? '' : value }, () => {
+      this.initData();
+    });
   };
 
   /**
    * 页码变化
    */
   currentChange = page => {
-    this.setState(
-      {
-        current: page
-      },
-      () => {
-        this.initData();
-      }
-    );
+    this.setState({ current: page }, () => {
+      this.initData();
+    });
   };
 
   /**
    * 选中毕竟加深
    */
   setSelectKey = id => {
-    this.setState({
-      selectKey: id
-    });
+    this.setState({ selectKey: id });
   };
 
   /**
@@ -164,122 +140,70 @@ class IndexConfig extends Component {
   sortOrderChange = (pagination, filters, sorter) => {
     const order = sorter.order === 'descend' ? '1' : '0';
 
-    this.setState(
-      {
-        order,
-        orderType: sorter.field
-      },
-      () => {
-        this.initData();
-      }
-    );
+    this.setState({ order, orderType: sorter.field }, () => {
+      this.initData();
+    });
   };
 
   /**
    * 关闭弹窗
    */
   closeModal = () => {
-    this.setState({
-      visible: false,
-      delModalVisible: false
-    });
+    this.setState({ visible: false, delModalVisible: false });
   };
 
   columns = [
     {
-      title: (
-        <div>
-          <span className="table-th-title">{intl.get('configSys.storageName')}</span>
-        </div>
-      ),
+      title: intl.get('configSys.storageName'),
       dataIndex: 'name',
-      fixed: 'left',
       ellipsis: true,
-      width: 300
+      width: 200
     },
     {
-      title: (
-        <div>
-          <span className="table-th-title">{intl.get('configSys.op')}</span>
-        </div>
-      ),
-      fixed: 'left',
-      width: 160,
-      render: (text, record, index) => {
-        const menu = (
-          <Menu>
-            <Menu.Item
-              key="edit"
-              onClick={() => {
-                this.getIndex(record, 'edit');
-              }}
-            >
-              <span>{intl.get('configSys.Edit')}</span>
-            </Menu.Item>
-            <Menu.Item
-              key="del"
-              onClick={() => {
-                this.setState({ delModalVisible: true, deleteItem: record, selectKey: 0 });
-              }}
-            >
-              <span>{intl.get('datamanagement.delete')}</span>
-            </Menu.Item>
-          </Menu>
-        );
-
-        return record.name === '内置opensearch' ? (
-          <span className="icon-sub">-&nbsp;-</span>
-        ) : (
-          <Dropdown
-            overlay={menu}
-            trigger={['click']}
-            overlayClassName="index-table-overlay"
-            onVisibleChange={visible => (visible ? this.setSelectKey(record.id) : this.setSelectKey(0))}
-          >
-            <span className="icon-wrap">
-              <EllipsisOutlined className="ellipsis-icon" />
-            </span>
-          </Dropdown>
-        );
-      }
-    },
-    {
-      title: (
-        <div>
-          <span className="table-th-title">{intl.get('configSys.username')}</span>
-        </div>
-      ),
+      title: intl.get('configSys.username'),
       dataIndex: 'user',
       width: 190
     },
     {
-      title: (
-        <div>
-          <span className="table-th-title"> {intl.get('userManagement.createTime')}</span>
-        </div>
-      ),
+      title: intl.get('userManagement.createTime'),
       dataIndex: 'created',
-      width: 330,
-      render: (text, record, index) => {
-        return <div>{timeFormat.timeFormat(text)}</div>;
-      },
       sorter: true,
-      sortDirections: ['ascend', 'descend', 'ascend']
+      sortDirections: ['ascend', 'descend', 'ascend'],
+      render: text => {
+        return timeFormat.timeFormat(text);
+      }
     },
     {
-      title: (
-        <div>
-          <span className="table-th-title">{intl.get('graphList.finalOperatorTime')}</span>
-        </div>
-      ),
+      title: intl.get('graphList.finalOperatorTime'),
       dataIndex: 'updated',
-      width: 238,
-      render: (text, record, index) => {
-        return <div>{timeFormat.timeFormat(text)}</div>;
-      },
       sorter: true,
       defaultSortOrder: 'descend',
-      sortDirections: ['ascend', 'descend', 'ascend']
+      sortDirections: ['ascend', 'descend', 'ascend'],
+      render: text => {
+        return timeFormat.timeFormat(text);
+      }
+    },
+    {
+      title: intl.get('configSys.op'),
+      fixed: 'right',
+      width: 110,
+      render: (text, record) => {
+        return record.name === '内置opensearch' ? (
+          <span className="icon-sub">- -</span>
+        ) : (
+          <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
+            <Button type="link" onClick={() => this.getIndex(record, 'edit')}>
+              {intl.get('configSys.Edit')}
+            </Button>
+            <Button
+              type="link"
+              onClick={() => this.setState({ delModalVisible: true, deleteItem: record, selectKey: 0 })}
+            >
+              {intl.get('datamanagement.delete')}
+            </Button>
+          </div>
+        );
+      }
     }
   ];
 
@@ -307,29 +231,24 @@ class IndexConfig extends Component {
 
         <div className="index-table-box">
           <Table
+            tableLayout="fixed"
             dataSource={tableData}
             columns={this.columns}
+            scroll={{ x: '100%' }}
+            rowKey={record => record?.id}
+            loading={loading ? { indicator: antIconBig } : false}
+            rowClassName={record => record.id === selectKey && 'selectRow'}
+            onChange={this.sortOrderChange}
             pagination={{
-              current,
               total,
+              current,
               pageSize,
+              showTitle: false,
+              showSizeChanger: false,
               onChange: this.currentChange,
               className: 'index-table-pagination ',
-              showTotal: total => intl.get('userManagement.total', { total }),
-              showTitle: false,
-              showSizeChanger: false
+              showTotal: total => intl.get('userManagement.total', { total })
             }}
-            rowKey={record => record.id}
-            rowClassName={record => record.id === selectKey && 'selectRow'}
-            tableLayout="fixed"
-            loading={
-              loading
-                ? {
-                    indicator: antIconBig,
-                    wrapperClassName: 'dataSource-Loading'
-                  }
-                : false
-            }
             locale={{
               emptyText:
                 searchValue === '' ? (
@@ -352,8 +271,6 @@ class IndexConfig extends Component {
                   </div>
                 )
             }}
-            onChange={this.sortOrderChange}
-            scroll={{ x: '100%' }}
           />
         </div>
 

@@ -1,14 +1,11 @@
 /* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { Button, Spin, message, Modal } from 'antd';
 import { LeftOutlined, LoadingOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 
 import apiService from '@/utils/axios-http';
-import { changeUserInfo } from '@/reduxConfig/actions';
-import servicesAuth from '@/services/auth';
 import servicesCreateEntity from '@/services/createEntity';
 import serviceWorkflow from '@/services/workflow';
 
@@ -29,7 +26,6 @@ import './style.less';
 const antIconBig = <LoadingOutlined className="load-icon" spin />;
 
 const Workflow = props => {
-  const { userInfo } = props;
   const history = useHistory(); // 路由
   const step1Ref = useRef(); // 绑定流程一组件实例
   const step2Ref = useRef(); // 绑定流程二组件实例
@@ -50,7 +46,6 @@ const Workflow = props => {
   const [graphStatus, setGraphStatus] = useState(''); // 图谱状态
   const [quitVisible, setQuitVisible] = useState(false); // 控制退出弹框
   const [dataLoading, setDataLoading] = useState(false); // 流程一加载loading
-  const [authLevel, setAuthLevel] = useState(4); // 权限级别
 
   useEffect(() => {
     if (history?.location?.pathname === '/home/workflow/create') {
@@ -68,19 +63,12 @@ const Workflow = props => {
 
     if (id) {
       getGraph(id);
-      getAuthLevel(id);
     }
 
-    if (window.location.pathname.includes('create')) setAuthLevel(1);
     document.body.classList.add('hidden-scroll');
 
     return () => document.body.classList.remove('hidden-scroll');
   }, []);
-
-  // 管理员强制最高权限
-  useEffect(() => {
-    userInfo.type === 0 && setAuthLevel(1);
-  }, [userInfo]);
 
   // 根据ID获取数据
   const getGraph = async id => {
@@ -110,20 +98,6 @@ const Workflow = props => {
         default:
           res.Cause && message.error(res.Cause);
       }
-    }
-  };
-
-  /**
-   * 查询当前用户对于图谱的权限
-   * @param {Number} id 图谱id
-   */
-  const getAuthLevel = async id => {
-    const response = await servicesAuth.queryAuth(id, 3);
-
-    if (response && response.res) {
-      setAuthLevel(response.res);
-    } else {
-      setAuthLevel(4);
     }
   };
 
@@ -382,12 +356,9 @@ const Workflow = props => {
             infoExtrData={infoExtrData}
             conflation={conflation}
             history={history}
-            authLevel={authLevel}
-            userInfo={userInfo}
             prev={prev}
             next={next}
             setConflation={setConflation}
-            getAuthLevel={getAuthLevel}
             ref={step6Ref}
           />
         </div>
@@ -424,12 +395,4 @@ const Workflow = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  userInfo: state.getIn(['changeUserInfo', 'userInfo']).toJS()
-});
-
-const mapDispatchToProps = dispatch => ({
-  updateUserInfo: userInfo => dispatch(changeUserInfo(userInfo))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Workflow);
+export default Workflow;

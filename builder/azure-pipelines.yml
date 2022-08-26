@@ -15,18 +15,18 @@ parameters:
   - name: jobTag
     displayName: 请手动输入程序的数据库版本值
     type: string
-    default: '1.1.5'
+    default: '1.1.1'
 
 variables:
   - group: global-context
   - name: imageTag
     value: $(Build.SourceBranchName)-$(Build.BuildNumber)
   - name: imageName
-    value: kg-builder
+    value: kw-builder
   - name: imageNameJob
-    value: kg-builder-job
+    value: kw-builder-job
   - name: imageNameJobFtp
-    value: kg-builder-job
+    value: kw-builder-job
   - name: UTArtifactName
     value: coverageFiles
 
@@ -72,7 +72,7 @@ jobs:
           username: '$(ftpUser)'
           password: '$(ftpPasswd)'
           rootDirectory:
-          filePatterns: '**/AnyDATA-$(mainTag)-builder*.tar'
+          filePatterns: '**/AnyDATA-$(mainTag)-kw-builder*.tar'
           remoteDirectory: '/packages/$(imageNameJobFtp)/$(Build.SourceBranchName)'
           clean: false
           cleanContents: false

@@ -4,17 +4,6 @@ const baseManager = '/api/manager/v1';
 const baseDataIo = '/api/data-io/v1';
 
 const API = {
-  // auth
-  getIdentity: `${baseManager}/identity`,
-  getAllPrivate: `${baseManager}/allprivate`,
-  postAccountPrivate: `${baseManager}/account/private`,
-  getGraphPrivate: `${baseManager}/graph/private`,
-  postAddMember: `${baseManager}/graph/private`,
-  deletePrivate: `${baseManager}/graph/private`,
-  putPrivate: `${baseManager}/graph/private`,
-  getAccNotGraph: `${baseManager}/account_not_graph`,
-  queryAuth: `${baseManager}/resource/property`,
-
   getOnto: `${baseBuilder}/onto`,
 
   // task-management
