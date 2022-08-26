@@ -4,12 +4,14 @@
 trigger:
   branches:
     include:
-      - release
       - develop
       - DATA-*
+  path:
+    include:
+      - studio
 
 pool:
-  name: python
+  name: go
 
 parameters:
   - name: jobTag
@@ -22,16 +24,17 @@ variables:
   - name: imageTag
     value: $(Build.SourceBranchName)-$(Build.BuildNumber)
   - name: imageName
-    value: kw-builder
-  - name: imageNameJob
-    value: kw-builder-job
-  - name: imageNameJobFtp
-    value: kw-builder-job
+    value: kw-studio
+  - name: imageNameWithHarbor
+    value: acr.aishu.cn/ad/kw-studio
   - name: UTArtifactName
     value: coverageFiles
 
 resources:
   containers:
+    - container: utmake
+      endpoint: acr.aishu.cn
+      image: ad/goenv:1.0.2
     - container: scanner
       endpoint: acr.aishu.cn
       image: ad/openjdk:11.0.13-jre
@@ -40,30 +43,26 @@ resources:
       image: wing-biz/euop/dotnet-runtime:3.1
 
 jobs:
-  - job: buildjob
-    displayName: buildJob
+  - job:
+    displayName: build
     steps:
-      - task: Bash@3
-        displayName: job compile
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd ./db_migrate;\
-            /root/anaconda3/envs/python3.6.2/bin/pyinstaller -F -p ./../ builder_table.py
       - task: Docker@2
         displayName: buildImage
         inputs:
           command: 'build'
-          repository: $(imageNameJob)
+          repository: $(imageNameWithHarbor)
           tags: $(mainTag)
-          Dockerfile: '**/Dockerfilejob'
+          Dockerfile: '**/Dockerfile'
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'acr.aishu.cn'
+          command: 'login'
       - task: Bash@3
         displayName: saveTar
         inputs:
           targetType: 'inline'
           script: |
-            docker tag $(imageNameJob):$(mainTag) $(harborUrl)/$(imageNameJob):$(mainTag)
-            docker save -o AnyDATA-$(mainTag)-builder-${{parameters.jobTag}}-job-$(Build.BuildNumber).tar $(harborUrl)/$(imageNameJob):$(mainTag)
+            docker save -o KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
       - task: FtpUpload@2
         displayName: uploadFtp
         inputs:
@@ -72,36 +71,39 @@ jobs:
           username: '$(ftpUser)'
           password: '$(ftpPasswd)'
           rootDirectory:
-          filePatterns: '**/AnyDATA-$(mainTag)-kw-builder*.tar'
-          remoteDirectory: '/packages/$(imageNameJobFtp)/$(Build.SourceBranchName)'
+          filePatterns: '**/KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar'
+          remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
           clean: false
           cleanContents: false
           preservePaths: false
           trustSSL: false
-
   - job: utmake
+    container: utmake
     displayName: utmake
     workspace:
       clean: all
     steps:
       - checkout: self
-      - task: Bash@3
-        displayName: utRun
-        inputs:
-          targetType: 'inline'
-          script: |
-            /root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py
+      - script: |
+          rm -rf coverage_report
+          mkdir coverage_report
+          go env -w GOPROXY="https://goproxy.cn"
+          go mod tidy
+
+          go test ./test -coverprofile=coverage_report/cover.out -coverpkg=./...service,./...controller
+          gocov convert coverage_report/cover.out | gocov-xml > coverage_report/ut_coverage.xml
+          go test ./test -v -coverpkg=./...service,./...controller | go-junit-report > coverage_report/coverage.xml
+          cat coverage_report/coverage.xml
       - task: CopyFiles@2
         inputs:
           SourceFolder: $(Build.SourcesDirectory)
           contents: |
-            coverage.xml
-            coverage_result/*
+            coverage_report/**
           targetFolder: $(Build.BinariesDirectory)
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.BinariesDirectory)'
-          ArtifactName:  ${{variables.UTArtifactName}}
+          ArtifactName: ${{variables.UTArtifactName}}
 
   - job: coverage
     displayName: coverage
@@ -118,13 +120,13 @@ jobs:
         displayName: Publish ALL Code Coverage Report
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/coverage.xml'
+          summaryFileLocation: '$(Build.SourcesDirectory)/coverageFiles/coverage_report/ut_coverage.xml'
 
       - task: PublishTestResults@2
         condition: succeededOrFailed()
         inputs:
           testResultsFormat: "JUnit"
-          testResultsFiles: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/coverage_result/*.xml'
+          testResultsFiles: '$(Build.SourcesDirectory)/coverageFiles/coverage_report/coverage.xml'
           testRunTitle: 'UT Result'
           failTaskOnFailedTests: true
         displayName: 'Publish linting and unit test results'
@@ -133,7 +135,7 @@ jobs:
     displayName: 静态扫描
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
     container: scanner
-    dependsOn: [utmake, coverage]
+    dependsOn: [ utmake, coverage ]
     workspace:
       clean: all
     steps:
@@ -143,9 +145,10 @@ jobs:
           SonarQube: 'adS'
           scannerMode: 'CLI'
           configMode: 'manual'
-          cliProjectKey: 'sonar.gbuilder-builder'
-          cliProjectName: 'gbuilder-builder'
+          cliProjectKey: 'sonar.kw-studio'
+          cliProjectName: 'kw-studio'
           cliSources: '.'
+
       - task: SonarQubeAnalyze@4
         displayName: Run SonarQube Code Analysis task
 
@@ -153,41 +156,3 @@ jobs:
         displayName: Publish Quality Gate Result task
         inputs:
           pollingTimeoutSec: '300'
-
-  - job:
-    timeoutInMinutes: 120
-    displayName: build
-    workspace:
-      clean: all
-    steps:
-    - task: Docker@2
-      displayName: buildImage
-      inputs:
-        command: 'build'
-        repository: $(imageName)
-        tags: $(mainTag)
-        Dockerfile: '**/Dockerfile'
-    - task: Bash@3
-      displayName: saveTar
-      inputs:
-        targetType: 'inline'
-        script: |
-          docker tag $(imageName):$(mainTag) $(harborUrl)/$(imageName):$(mainTag)
-          docker save -o AnyDATA-$(mainTag)-$(imageName)-$(imageTag).tar $(harborUrl)/$(imageName):$(mainTag)
-    - task: FtpUpload@2
-      displayName: uploadFtp
-      inputs:
-        credentialsOption: 'inputs'
-        serverUrl: 'ftp://ftp-ad.aishu.cn'
-        username: '$(ftpUser)'
-        password: '$(ftpPasswd)'
-        rootDirectory:
-        filePatterns: '**/AnyDATA-$(mainTag)-$(imageName)*.tar'
-        remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
-        clean: false
-        cleanContents: false
-        preservePaths: false
-        trustSSL: false
-
-
-

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { Menu, Dropdown, Tooltip, Popover, message } from 'antd';
+import { Menu, Dropdown, Tooltip, Popover } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import IconFont from '@/components/IconFont';
@@ -15,8 +14,7 @@ import './index.less';
 
 const NetworkHeader = props => {
   const history = useHistory();
-  const { userInfo, knowledgeList, selectedKnowledge, changeSelectedKnowledge, initKnowledgeList, onRefreshLeftSpace } =
-    props;
+  const { knowledgeList, selectedKnowledge, changeSelectedKnowledge, initKnowledgeList, onRefreshLeftSpace } = props;
 
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -72,10 +70,6 @@ const NetworkHeader = props => {
         className="edit"
         onClick={() => {
           setOpSelected(false);
-          if (userInfo.email !== selectedKnowledge.creator_email) {
-            message.error(intl.get('graphList.editperMissionError'));
-            return;
-          }
           setEditModalVisible(true);
         }}
       >
@@ -87,10 +81,6 @@ const NetworkHeader = props => {
         className="edit"
         onClick={() => {
           setOpSelected(false);
-          if (userInfo.email !== selectedKnowledge.creator_email) {
-            message.error(intl.get('graphList.delperMissionError'));
-            return;
-          }
           setDeleteModalVisible(true);
         }}
       >
@@ -169,16 +159,15 @@ const NetworkHeader = props => {
                         <div className="network-name" title={wrapperTitle(`${selectedKnowledge?.knw_name}`)}>
                           {selectedKnowledge?.knw_name}
                         </div>
-                        {userInfo.email === selectedKnowledge.creator_email && (
-                          <IconFont
-                            type="icon-edit"
-                            className="edit-icon"
-                            onClick={() => {
-                              setInfoClicked(false);
-                              setEditModalVisible(true);
-                            }}
-                          />
-                        )}
+
+                        <IconFont
+                          type="icon-edit"
+                          className="edit-icon"
+                          onClick={() => {
+                            setInfoClicked(false);
+                            setEditModalVisible(true);
+                          }}
+                        />
                       </div>
                       <div className="id">ID：{selectedKnowledge?.id}</div>
                     </div>
@@ -201,12 +190,10 @@ const NetworkHeader = props => {
           </div>
         </div>
         <div className="networkHeader-box-right">
-          {userInfo.type !== 1 && (
-            <span className="upload-btn" onClick={() => selectedKnowledge.id && setUploadVisible(true)}>
-              <IconFont origin="adf" type="icon-shangchuan" className="btn-icon" />
-              <span className="btn-text">{intl.get('uploadService.upload')}</span>
-            </span>
-          )}
+          <span className="upload-btn" onClick={() => selectedKnowledge.id && setUploadVisible(true)}>
+            <IconFont origin="adf" type="icon-shangchuan" className="btn-icon" />
+            <span className="btn-text">{intl.get('uploadService.upload')}</span>
+          </span>
 
           <Dropdown
             overlay={infoMenu}
@@ -223,14 +210,12 @@ const NetworkHeader = props => {
         </div>
       </div>
 
-      {userInfo.type !== 1 && (
-        <UploadKnowledgeModal
-          visible={uploadVisible}
-          kgData={selectedKnowledge}
-          setVisible={setUploadVisible}
-          onOk={onAfterUpload}
-        />
-      )}
+      <UploadKnowledgeModal
+        visible={uploadVisible}
+        kgData={selectedKnowledge}
+        setVisible={setUploadVisible}
+        onOk={onAfterUpload}
+      />
 
       {/* 编辑知识网路弹窗 */}
       <EditModal
@@ -246,8 +231,4 @@ const NetworkHeader = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  userInfo: state.getIn(['changeUserInfo', 'userInfo']).toJS()
-});
-
-export default connect(mapStateToProps)(NetworkHeader);
+export default NetworkHeader;

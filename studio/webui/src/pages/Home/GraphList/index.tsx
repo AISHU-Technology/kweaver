@@ -180,11 +180,11 @@ const GraphList = () => {
     {
       title: intl.get('graphList.operation'),
       dataIndex: 'op',
-      width: 118,
+      width: 110,
       fixed: 'right',
       render: (text: string, record: any) => {
         return (
-          <div className="ad-center columnOp">
+          <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => onOpenCreateOrEdit(record)}>
               {intl.get('graphList.edit')}
             </Button>

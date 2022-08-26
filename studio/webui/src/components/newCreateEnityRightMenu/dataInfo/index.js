@@ -13,27 +13,19 @@ import intl from 'react-intl-universal';
 import { SketchPicker } from 'react-color';
 import {
   Form,
+  Alert,
   Collapse,
   Input,
   Tooltip,
   Switch,
-  Select,
   message,
   Modal,
   ConfigProvider,
   Button,
   AutoComplete
 } from 'antd';
-import {
-  RightOutlined,
-  InfoCircleFilled,
-  MinusCircleFilled,
-  DisconnectOutlined,
-  MinusCircleOutlined,
-  QuestionCircleOutlined
-} from '@ant-design/icons';
+import { RightOutlined, InfoCircleFilled, DisconnectOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
-import Alert from '@/components/Alert';
 import IconFont from '@/components/IconFont';
 import BottomPagination from '@/components/Pagination';
 import { wrapperTitle } from '@/utils/handleFunction';
@@ -801,7 +793,7 @@ class DataInfo extends Component {
       <div className="data-info">
         {TYPE !== 'view' && !(selectedElement && selectedElement.model) && (
           <div>
-            <Alert message={intl.get('createEntity.tip')} type="warning" showIcon />
+            <Alert className="alert" message={intl.get('createEntity.tip')} type="warning" showIcon />
           </div>
         )}
         <div className="title">
