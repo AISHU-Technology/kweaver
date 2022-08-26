@@ -124,13 +124,13 @@ jobs:
         displayName: Publish ALL Code Coverage Report
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Build.SourcesDirectory)/studio/coverageFiles/coverage_report/ut_coverage.xml'
+          summaryFileLocation: '$(Build.SourcesDirectory)/coverageFiles/studio/coverage_report/ut_coverage.xml'
 
       - task: PublishTestResults@2
         condition: succeededOrFailed()
         inputs:
           testResultsFormat: "JUnit"
-          testResultsFiles: '$(Build.SourcesDirectory)/studio/coverageFiles/coverage_report/coverage.xml'
+          testResultsFiles: '$(Build.SourcesDirectory)/coverageFiles/studio/coverage_report/coverage.xml'
           testRunTitle: 'UT Result'
           failTaskOnFailedTests: true
         displayName: 'Publish linting and unit test results'
