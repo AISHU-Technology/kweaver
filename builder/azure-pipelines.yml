@@ -62,7 +62,7 @@ jobs:
           SourceFolder: $(Build.SourcesDirectory)
           contents: |
             coverage.xml
-            coverage_result/*
+            builder/coverage_result/*
           targetFolder: $(Build.BinariesDirectory)
       - task: PublishBuildArtifacts@1
         inputs:
