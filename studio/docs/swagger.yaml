@@ -20,6 +20,22 @@ paths:
         in: query
         name: size
         type: integer
+      - description: 记录名称
+        in: query
+        name: name
+        type: string
+      - description: 配置类型
+        in: query
+        name: type
+        type: string
+      - description: 排序字段
+        in: query
+        name: orderField
+        type: string
+      - description: 排序顺序
+        in: query
+        name: order
+        type: string
       produces:
       - application/json
       responses:
@@ -38,5 +54,5 @@ paths:
             [], "ErrorLink": ""}'
       summary: 根据page和size获取存储记录及存储记录中的谱图
       tags:
-      - 根据page和size获取存储记录及存储记录中的谱图
+      - Studio
 swagger: "2.0"

@@ -23,7 +23,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "根据page和size获取存储记录及存储记录中的谱图"
+                    "Studio"
                 ],
                 "summary": "根据page和size获取存储记录及存储记录中的谱图",
                 "parameters": [
@@ -37,6 +37,30 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "每页数量",
                         "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "记录名称",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "配置类型",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "排序字段",
+                        "name": "orderField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "排序顺序",
+                        "name": "order",
                         "in": "query"
                     }
                 ],

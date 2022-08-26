@@ -15,9 +15,13 @@ type GraphDBController struct {
 // GetGraphDBList
 // @Summary 根据page和size获取存储记录及存储记录中的谱图
 // @Description 根据page和size获取存储记录及存储记录中的谱图
-// @Tags 根据page和size获取存储记录及存储记录中的谱图
+// @Tags Studio
 // @Param page query int 1 "分页号"
 // @Param size query int 0 "每页数量"
+// @Param name query string orientdb_name "记录名称"
+// @Param type query string orientdb "配置类型"
+// @Param orderField query string created "排序字段"
+// @Param order query string ASC "排序顺序"
 // @Router /api/studio/v1/opensearch/list [get]
 // @Produce json
 // @Success 200 {object} vo.ListVo  "{"total": 10, "data": [{"id": 1, "name": "test_nebula", "type": "nebula", "count": 1, "osName": "opensearch", "user": "root", "created": 102223243, "updated": 1232343243}]}"
