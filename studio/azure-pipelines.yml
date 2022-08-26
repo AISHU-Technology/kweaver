@@ -6,7 +6,7 @@ trigger:
     include:
       - develop
       - DATA-*
-  path:
+  paths:
     include:
       - studio
 
