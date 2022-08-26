@@ -6,7 +6,7 @@ WORKDIR /root/studio/
 COPY . .
 WORKDIR /root/studio/webui
 #RUN npm i && npm run build
-RUN rm -rf package-lock.json && rm -rf yarn.lock && yarn && yarn build
+RUN yarn && yarn build
 
 FROM golang:1.17 as gomake
 RUN mkdir -p /root/studio
