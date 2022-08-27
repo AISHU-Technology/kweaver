@@ -181,6 +181,7 @@ function build(previousFileSizes) {
       });
     });
   });
+  process.exit(0);
 }
 
 function copyPublicFolder() {
