@@ -173,15 +173,16 @@ function build(previousFileSizes) {
         );
         return reject(new Error(messages.warnings.join('\n\n')));
       }
-
-      return resolve({
+      
+      resolve({
         stats,
         previousFileSizes,
         warnings: messages.warnings
       });
+      console.log('build complete...')
+      process.exit(0);
     });
   });
-  process.exit(0);
 }
 
 function copyPublicFolder() {
