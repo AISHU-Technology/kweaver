@@ -173,13 +173,11 @@ function build(previousFileSizes) {
         );
         return reject(new Error(messages.warnings.join('\n\n')));
       }
-      
-      resolve({
+      Promise.resolve({
         stats,
         previousFileSizes,
         warnings: messages.warnings
       });
-      console.log('build complete...')
       process.exit(0);
     });
   });
