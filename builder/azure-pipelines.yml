@@ -120,39 +120,39 @@ jobs:
         inputs:
           pollingTimeoutSec: '300'
 
-#  - job:
-#    timeoutInMinutes: 120
-#    displayName: build
-#    workspace:
-#      clean: all
-#    steps:
-#    - task: Docker@2
-#      displayName: buildImage
-#      inputs:
-#        command: 'build'
-#        repository: $(imageNameWithHarbor)
-#        tags: $(mainTag)
-#        Dockerfile: '**/Builder.Dockerfile'
-#    - task: Bash@3
-#      displayName: saveTar
-#      inputs:
-#        targetType: 'inline'
-#        script: |
-#          docker save -o KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
-#    - task: FtpUpload@2
-#      displayName: uploadFtp
-#      inputs:
-#        credentialsOption: 'inputs'
-#        serverUrl: 'ftp://ftp-ad.aishu.cn'
-#        username: '$(ftpUser)'
-#        password: '$(ftpPasswd)'
-#        rootDirectory:
-#        filePatterns: '**/KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar'
-#        remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
-#        clean: false
-#        cleanContents: false
-#        preservePaths: false
-#        trustSSL: false
+  - job:
+    timeoutInMinutes: 120
+    displayName: build
+    workspace:
+      clean: all
+    steps:
+    - task: Docker@2
+      displayName: buildImage
+      inputs:
+        command: 'build'
+        repository: $(imageNameWithHarbor)
+        tags: $(mainTag)
+        Dockerfile: '**/Builder.Dockerfile'
+    - task: Bash@3
+      displayName: saveTar
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker save -o KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
+    - task: FtpUpload@2
+      displayName: uploadFtp
+      inputs:
+        credentialsOption: 'inputs'
+        serverUrl: 'ftp://ftp-ad.aishu.cn'
+        username: '$(ftpUser)'
+        password: '$(ftpPasswd)'
+        rootDirectory:
+        filePatterns: '**/KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar'
+        remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
+        clean: false
+        cleanContents: false
+        preservePaths: false
+        trustSSL: false
 
 
 
