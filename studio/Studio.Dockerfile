@@ -5,7 +5,7 @@ npm install cnpm -g --registry=https://r.npm.taobao.org
 WORKDIR /root/studio/
 COPY . .
 WORKDIR /root/studio/webui
-RUN cnpm i && cnpm run build
+RUN cnpm i && cnpm run build && ls /build
 
 FROM golang:1.17 as gomake
 RUN mkdir -p /root/studio
