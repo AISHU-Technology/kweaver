@@ -15,7 +15,7 @@ progressVersion = 'builder-1.1.1'
 Logger.log_info("progressVersion: %s" % progressVersion)
 
 # 连接数据库
-db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'kwconfig.yaml')
 with open(db_config_path, 'r') as f:
     yaml_config = yaml.load(f)
 mariadb_config = yaml_config['mariadb']

@@ -16,7 +16,7 @@ from os import path
 import time
 from utils.common_response_status import CommonResponseStatus
 
-db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'kwconfig.yaml')
 with open(db_config_path, 'r') as f:
     yaml_config = yaml.load(f)
 redis_config = yaml_config['redis']

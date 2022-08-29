@@ -91,7 +91,7 @@ beat_scheduler = 'celery_task.celery_beat:DatabaseScheduler'
 # The maximum number of seconds beat can sleep between checking the schedule.
 # default: 0
 beat_max_loop_interval = 10
-db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'kwconfig.yaml')
 with open(db_config_path, 'r') as f:
     yaml_config = yaml.load(f)
 mariadb_config = yaml_config['mariadb']

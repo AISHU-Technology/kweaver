@@ -93,7 +93,7 @@ class NewWordsToMongo(object):
     def start(self):
         st = time.time()
         self.as7_json['key_list'] = self.conf.get('com', 'as_keys').split(',')
-        db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+        db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'kwconfig.yaml')
         with open(db_config_path, 'r') as f:
             yaml_config = yaml.load(f)
         mariadb_config = yaml_config['mariadb']
