@@ -25,9 +25,9 @@ func (service *SwaggerService) GetSwaggerDoc() interface{} {
 	docChan := make(chan map[string]interface{}, len(global.Config.Swagger.DocUrls))
 	//发送请求获取doc
 	for _, url := range global.Config.Swagger.DocUrls {
-		go func() {
+		go func(url string) {
 			docChan <- service.Swagger.GetSwaggerDoc(url)
-		}()
+		}(url)
 	}
 	//合并doc
 	for docCount := 0; docCount < len(global.Config.Swagger.DocUrls); {
