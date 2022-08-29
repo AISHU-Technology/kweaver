@@ -71,7 +71,7 @@ from functools import partial
 from multiprocessing.dummy import Pool as ThreadPool
 from celery import schedules
 import multiprocessing
-
+from config.config import db_config_path
 
 # CELERY_BROKER_URL = 'redis://10.4.70.120:6379/1'
 # # 要存储 Celery 任务的状态或运行结果时就必须要配置
@@ -91,7 +91,6 @@ beat_scheduler = 'celery_task.celery_beat:DatabaseScheduler'
 # The maximum number of seconds beat can sleep between checking the schedule.
 # default: 0
 beat_max_loop_interval = 10
-db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
 with open(db_config_path, 'r') as f:
     yaml_config = yaml.load(f)
 mariadb_config = yaml_config['mariadb']

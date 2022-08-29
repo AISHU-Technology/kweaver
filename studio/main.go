@@ -15,7 +15,7 @@ import (
 
 func main() {
 	//1.初始化配置文件和日志
-	global.Config = initialize.Config("./config.yaml")
+	global.Config = initialize.Config("./config.yaml", "/etc/studio/kwconfig.yaml")
 	global.LOG = initialize.Zap()
 	//2.初始化redis客户端
 	global.Redis = initialize.Redis()
