@@ -43,13 +43,15 @@ interface BasicInfoInterface {
     update_user: string;
     update_time: string;
     graphdb_name: string;
+    graphdb_address: string;
   };
 }
 
 const BasicInfo = (props: BasicInfoInterface) => {
   const { graphCount, graphBasicData } = props;
   const { nodeCount, edgeCount } = graphCount;
-  const { graph_des, is_import, create_time, create_user, update_user, update_time, graphdb_name } = graphBasicData;
+  const { graph_des, is_import, create_time, create_user, update_user, update_time, graphdb_name, graphdb_address } =
+    graphBasicData;
 
   const formatNode =
     nodeCount < HELPER.formatNumberWithSuffix.limit
@@ -71,11 +73,12 @@ const BasicInfo = (props: BasicInfoInterface) => {
         <div className="header ad-pb-2 ad-mb-3">
           <Format.Title level={22}>{intl.get('graphDetail.kgGeneralProperties')}</Format.Title>
         </div>
-        <Line label="ID" value={graphdb_name} />
+        <Line label={intl.get('graphDetail.storageLocation')} value={graphdb_name} />
         <Line
           label={intl.get('graphDetail.creationWay')}
           value={is_import ? intl.get('graphDetail._import') : intl.get('graphDetail.manually')}
         />
+        <Line label="存储位置" value={graphdb_address} />
         <Line label={intl.get('graphDetail.description')} isEllipsis={false} value={graph_des} />
         <Divider className="divider" />
         <Line label={intl.get('graphDetail.numberOfEntity')} value={formatNode} />

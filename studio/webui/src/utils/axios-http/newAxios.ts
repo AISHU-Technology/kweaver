@@ -14,13 +14,13 @@ service.interceptors.request.use(
     const sessionidStorage = sessionStore.get('sessionid') || '';
     const uuid = Cookie.get('uuid');
 
-    if (sessionidCookie && sessionidCookie !== sessionidStorage) {
-      sessionStore.set('sessionid', sessionidCookie);
-      window.location.reload();
-    }
+    // if (sessionidCookie && sessionidCookie !== sessionidStorage) {
+    //   sessionStore.set('sessionid', sessionidCookie);
+    //   window.location.reload();
+    // }
+    // if (uuid) config.headers.uuid = uuid;
+    // if (sessionidCookie) config.headers.sessionid = sessionidCookie;
 
-    if (uuid) config.headers.uuid = uuid;
-    if (sessionidCookie) config.headers.sessionid = sessionidCookie;
     config.headers['Content-Type'] = 'application/json; charset=utf-8';
     config.headers['Accept-Language'] = anyDataLang === 'en-US' ? 'en-US' : 'zh-CN';
 
@@ -64,9 +64,9 @@ const request = ({ url, data, config, method }: RequestType): any => {
       })
       .catch(error => {
         const { config = {}, data = {}, status } = error.response || {};
-        const { errorcode, description } = data || {};
+        const { ErrorCode, Description } = data || {};
 
-        if (data?.description?.includes('timeout')) {
+        if (data?.Description?.includes('timeout')) {
           message.error([intl.get('createEntity.timeOut')]);
           return reject(error.response);
         }
@@ -75,7 +75,7 @@ const request = ({ url, data, config, method }: RequestType): any => {
           Cookie.remove('uuid');
           localStore.remove('userInfo');
 
-          if (errorcode === 'Gateway.AdminResetAccess.LoginInfoMatchError') {
+          if (ErrorCode === 'Gateway.AdminResetAccess.LoginInfoMatchError') {
             setTimeout(() => window.location.replace('/login'), 2000);
             return reject(error.response);
           }
@@ -83,12 +83,12 @@ const request = ({ url, data, config, method }: RequestType): any => {
           message.error([intl.get('login.loginOutTip')]);
           setTimeout(() => window.location.replace('/login'), 2000);
         } else if (status === 500 || status === 403) {
-          if (errorcode || config?.url?.includes('/api/builder/v1/graph/output')) return reject(error.response);
-          if (errorcode === 'Gateway.PlatformAuth.AuthError') message.error('认证失败');
+          if (ErrorCode || config?.url?.includes('/api/builder/v1/graph/output')) return reject(error.response);
+          if (ErrorCode === 'Gateway.PlatformAuth.AuthError') message.error('认证失败');
         } else if (status === 400) {
           return reject({ type: 'message', config: error?.response?.config, response: error?.response?.data });
         } else {
-          if (description) message.error(description);
+          if (Description) message.error(Description);
           return reject(error.response);
         }
       });
