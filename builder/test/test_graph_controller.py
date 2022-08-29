@@ -35,14 +35,14 @@ class TestGetGraphInfoBasic(TestCase):
         response = client.get('/api/builder/v1/graph/info/basic',
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoBasic_ParamError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoBasic_ParamError)
         # is_all错误
         response = client.get('/api/builder/v1/graph/info/basic',
                               query_string={'graph_id': '1',
                                             'is_all': 'wrong'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoBasic_ParamError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoBasic_ParamError)
 
     def test_get_graph_info_basic_fail2(self):
         '''Builder_GraphController_GetGraphInfoBasic_KeyTypeError'''
@@ -53,7 +53,7 @@ class TestGetGraphInfoBasic(TestCase):
                                             'key': '[a'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoBasic_KeyTypeError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoBasic_KeyTypeError)
         # key不是列表
         response = client.get('/api/builder/v1/graph/info/basic',
                               query_string={'graph_id': '1',
@@ -61,7 +61,7 @@ class TestGetGraphInfoBasic(TestCase):
                                             'key': 'a'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoBasic_KeyTypeError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoBasic_KeyTypeError)
 
     def test_get_graph_info_basic_fail3(self):
         '''graph_Service.get_graph_info_basic 错误'''
@@ -102,7 +102,7 @@ class TestGetGraphInfoOnto(TestCase):
         response = client.get('/api/builder/v1/graph/info/onto'
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoOnto_ParamError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoOnto_ParamError)
 
     def test_get_graph_info_onto_fail2(self):
         '''graph_Service.get_graph_info_onto 出错'''
@@ -120,7 +120,7 @@ class TestGetGraphInfoOnto(TestCase):
                               query_string={'graph_id': '1'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoOnto_UnknownError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoOnto_UnknownError)
 
 
 class TestGetGraphInfoCount(TestCase):
@@ -142,7 +142,7 @@ class TestGetGraphInfoCount(TestCase):
         response = client.get('/api/builder/v1/graph/info/count'
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoCount_ParamError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoCount_ParamError)
 
     def test_get_graph_info_count_fail2(self):
         '''graph_Service.get_graph_info_count 出错'''
@@ -160,7 +160,7 @@ class TestGetGraphInfoCount(TestCase):
                               query_string={'graph_id': '1'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoCount_UnknownError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoCount_UnknownError)
 
 
 class TestGetGraphInfoDetail(TestCase):
@@ -187,14 +187,14 @@ class TestGetGraphInfoDetail(TestCase):
                                             'name': 'entity_name'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoDetail_ParamError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoDetail_ParamError)
         # type不存在
         response = client.get('/api/builder/v1/graph/info/detail',
                               query_string={'graph_id': '1',
                                             'name': 'entity_name'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoDetail_ParamError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoDetail_ParamError)
         # type错误
         response = client.get('/api/builder/v1/graph/info/detail',
                               query_string={'graph_id': '1',
@@ -202,14 +202,14 @@ class TestGetGraphInfoDetail(TestCase):
                                             'name': 'entity_name'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoDetail_ParamError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoDetail_ParamError)
         # name不存在
         response = client.get('/api/builder/v1/graph/info/detail',
                               query_string={'graph_id': '1',
                                             'type': 'entity'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoDetail_ParamError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoDetail_ParamError)
 
     def test_get_graph_info_detail_fail2(self):
         '''graph_Service.get_graph_info_detail错误'''
@@ -231,4 +231,4 @@ class TestGetGraphInfoDetail(TestCase):
                                             'name': 'entity_name'}
                               )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['errorcode'], codes.Builder_GraphController_GetGraphInfoDetail_UnknownError)
+        self.assertEqual(response.json['ErrorCode'], codes.Builder_GraphController_GetGraphInfoDetail_UnknownError)

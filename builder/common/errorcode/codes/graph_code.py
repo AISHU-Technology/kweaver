@@ -3,50 +3,50 @@ from __future__ import (absolute_import, unicode_literals)
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoBasic.ParamError",
-        "description": "参数[arg]错误",
-        "cause": "",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphController.GetGraphInfoBasic.ParamError",
+        "Description": "参数[arg]错误",
+        "ErrorDetails": "",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphController_GetGraphInfoBasic_ParamError = 'Builder.GraphController.GetGraphInfoBasic.ParamError'
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoBasic.UnknownError",
-        "description": "[description]",
-        "cause": _l("[cause]"),
-        "solution": _l("Please contact the developers.")
+        "ErrorCode": "Builder.GraphController.GetGraphInfoBasic.UnknownError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
     }
 '''
 Builder_GraphController_GetGraphInfoBasic_UnknownError = 'Builder.GraphController.GetGraphInfoBasic.UnknownError'
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoBasic.GraphidNotExist",
-        "description": "graphid [graphid] 不存在",
-        "cause": "graphid [graphid] 不存在",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphService.GetGraphInfoBasic.GraphidNotExist",
+        "Description": "graphid [graphid] 不存在",
+        "ErrorDetails": "graphid [graphid] 不存在",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphService_GetGraphInfoBasic_GraphidNotExist = 'Builder.GraphService.GetGraphInfoBasic.GraphidNotExist'
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoBasic.KeyTypeError",
-        "description": "key类型错误",
-        "cause": "key应为字符串列表",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphController.GetGraphInfoBasic.KeyTypeError",
+        "Description": "key类型错误",
+        "ErrorDetails": "key应为字符串列表",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphController_GetGraphInfoBasic_KeyTypeError = 'Builder.GraphController.GetGraphInfoBasic.KeyTypeError'
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoBasic.GraphDBIdNotExist",
-        "description": "图数据库id [graphdb_id] 不存在",
-        "cause": "图数据库id [graphdb_id] 不存在",
-        "solution": "请重新配置图数据库"
+        "ErrorCode": "Builder.GraphService.GetGraphInfoBasic.GraphDBIdNotExist",
+        "Description": "图数据库id [graphdb_id] 不存在",
+        "ErrorDetails": "图数据库id [graphdb_id] 不存在",
+        "Solution": "请重新配置图数据库"
     }
 '''
 Builder_GraphService_GetGraphInfoBasic_GraphDBIdNotExist = 'Builder.GraphService.GetGraphInfoBasic.GraphDBIdNotExist'
@@ -54,130 +54,130 @@ Builder_GraphService_GetGraphInfoBasic_GraphDBIdNotExist = 'Builder.GraphService
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoBasic.PermissionError",
-        "description": "[description]",
-        "cause": "[cause]",
-        "solution": "[solution]"
+        "ErrorCode": "Builder.GraphService.GetGraphInfoBasic.PermissionError",
+        "Description": "[description]",
+        "ErrorDetails": "[cause]",
+        "Solution": "[solution]"
     }
 '''
 Builder_GraphService_GetGraphInfoBasic_PermissionError = 'Builder.GraphService.GetGraphInfoBasic.PermissionError'
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoBasic.UnsupportedKeyExist",
-        "description": "这些字段不支持: [unsupported_key]",
-        "cause": "key中有不支持的字段",
-        "solution": "请检查传入的参数key"
+        "ErrorCode": "Builder.GraphService.GetGraphInfoBasic.UnsupportedKeyExist",
+        "Description": "这些字段不支持: [unsupported_key]",
+        "ErrorDetails": "key中有不支持的字段",
+        "Solution": "请检查传入的参数key"
     }
 '''
 Builder_GraphService_GetGraphInfoBasic_UnsupportedKeyExist = 'Builder.GraphService.GetGraphInfoBasic.UnsupportedKeyExist'
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoOnto.ParamError",
-        "description": "参数[arg]错误",
-        "cause": "",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphController.GetGraphInfoOnto.ParamError",
+        "Description": "参数[arg]错误",
+        "ErrorDetails": "",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphController_GetGraphInfoOnto_ParamError = 'Builder.GraphController.GetGraphInfoOnto.ParamError'
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoOnto.GraphidNotExist",
-        "description": "graphid [graphid] 不存在",
-        "cause": "graphid [graphid] 不存在",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphService.GetGraphInfoOnto.GraphidNotExist",
+        "Description": "graphid [graphid] 不存在",
+        "ErrorDetails": "graphid [graphid] 不存在",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphService_GetGraphInfoOnto_GraphidNotExist = 'Builder.GraphService.GetGraphInfoOnto.GraphidNotExist'
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoOnto.OtlidNotExist",
-        "description": _l('ontology id [otl_id] not exists'),
-        "cause": _l('ontology id [otl_id] not exists'),
-        "solution": _l("Please config the ontology.")
+        "ErrorCode": "Builder.GraphService.GetGraphInfoOnto.OtlidNotExist",
+        "Description": _l('ontology id [otl_id] not exists'),
+        "ErrorDetails": _l('ontology id [otl_id] not exists'),
+        "Solution": _l("Please config the ontology.")
     }
 '''
 Builder_GraphService_GetGraphInfoOnto_OtlidNotExist = 'Builder.GraphService.GetGraphInfoOnto.OtlidNotExist'
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoOnto.UnknownError",
-        "description": "[description]",
-        "cause": _l("[cause]"),
-        "solution": _l("Please contact the developers.")
+        "ErrorCode": "Builder.GraphController.GetGraphInfoOnto.UnknownError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
     }
 '''
 Builder_GraphController_GetGraphInfoOnto_UnknownError = 'Builder.GraphController.GetGraphInfoOnto.UnknownError'
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoCount.ParamError",
-        "description": "参数[arg]错误",
-        "cause": "",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphController.GetGraphInfoCount.ParamError",
+        "Description": "参数[arg]错误",
+        "ErrorDetails": "",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphController_GetGraphInfoCount_ParamError = 'Builder.GraphController.GetGraphInfoCount.ParamError'
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoCount.UnknownError",
-        "description": "[description]",
-        "cause": _l("[cause]"),
-        "solution": _l("Please contact the developers.")
+        "ErrorCode": "Builder.GraphController.GetGraphInfoCount.UnknownError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
     }
 '''
 Builder_GraphController_GetGraphInfoCount_UnknownError = 'Builder.GraphController.GetGraphInfoCount.UnknownError'
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoCount.GraphidNotExist",
-        "description": "graphid [graphid] 不存在",
-        "cause": "graphid [graphid] 不存在",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphService.GetGraphInfoCount.GraphidNotExist",
+        "Description": "graphid [graphid] 不存在",
+        "ErrorDetails": "graphid [graphid] 不存在",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphService_GetGraphInfoCount_GraphidNotExist = 'Builder.GraphService.GetGraphInfoCount.GraphidNotExist'
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoDetail.ParamError",
-        "description": "参数[arg]错误",
-        "cause": "",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphController.GetGraphInfoDetail.ParamError",
+        "Description": "参数[arg]错误",
+        "ErrorDetails": "",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphController_GetGraphInfoDetail_ParamError = 'Builder.GraphController.GetGraphInfoDetail.ParamError'
 
 '''
     {
-        "errorcode": "Builder.GraphController.GetGraphInfoDetail.UnknownError",
-        "description": "[description]",
-        "cause": _l("[cause]"),
-        "solution": _l("Please contact the developers.")
+        "ErrorCode": "Builder.GraphController.GetGraphInfoDetail.UnknownError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
     }
 '''
 Builder_GraphController_GetGraphInfoDetail_UnknownError = 'Builder.GraphController.GetGraphInfoDetail.UnknownError'
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoDetail.GraphidNotExist",
-        "description": "graphid [graphid] 不存在",
-        "cause": "graphid [graphid] 不存在",
-        "solution": "请重新检查输入参数"
+        "ErrorCode": "Builder.GraphService.GetGraphInfoDetail.GraphidNotExist",
+        "Description": "graphid [graphid] 不存在",
+        "ErrorDetails": "graphid [graphid] 不存在",
+        "Solution": "请重新检查输入参数"
     }
 '''
 Builder_GraphService_GetGraphInfoDetail_GraphidNotExist = 'Builder.GraphService.GetGraphInfoDetail.GraphidNotExist'
 
 '''
     {
-        "errorcode": "Builder.GraphService.GetGraphInfoDetail.NameNotExist",
-        "description": _l('[class_type] [name] not exists'),
-        "cause": _l('[class_type] [name] not exists'),
-        "solution": _l("Please check your parameter again.")
+        "ErrorCode": "Builder.GraphService.GetGraphInfoDetail.NameNotExist",
+        "Description": _l('[class_type] [name] not exists'),
+        "ErrorDetails": _l('[class_type] [name] not exists'),
+        "Solution": _l("Please check your parameter again.")
     }
 '''
 Builder_GraphService_GetGraphInfoDetail_NameNotExist = 'Builder.GraphService.GetGraphInfoDetail.NameNotExist'

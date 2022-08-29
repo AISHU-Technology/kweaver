@@ -90,6 +90,7 @@ checkBrowsers(paths.appPath, isInteractive)
       const publicPath = config.output.publicPath;
       const buildFolder = path.relative(process.cwd(), paths.appBuild);
       printHostingInstructions(appPackage, publicUrl, publicPath, buildFolder, useYarn);
+      process.exit(0);
     },
     err => {
       const tscCompileOnError = process.env.TSC_COMPILE_ON_ERROR === 'true';
@@ -173,7 +174,6 @@ function build(previousFileSizes) {
         );
         return reject(new Error(messages.warnings.join('\n\n')));
       }
-
       return resolve({
         stats,
         previousFileSizes,

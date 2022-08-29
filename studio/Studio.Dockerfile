@@ -9,10 +9,10 @@ RUN cnpm i && cnpm run build
 
 FROM golang:1.17 as gomake
 RUN mkdir -p /root/studio
-WORKDIR /root/studio
+WORKDIR /root/studio/
 COPY . .
 RUN rm -rf ./webui/*
-COPY --from=nodemake /root/studio/webui/build/* ./webui
+COPY --from=nodemake /root/studio/webui/build/* ./webui/
 RUN go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
