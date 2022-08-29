@@ -5,6 +5,8 @@ from flask_app import app
 from celery import Celery
 import sys, os
 
+from config.config import db_config_path
+
 sys.path.append(os.path.abspath("../"))
 from service.Otl_Service import otl_service
 from service.task_Service import task_service
@@ -15,8 +17,6 @@ from method.database import DataBase
 from os import path
 import time
 from utils.common_response_status import CommonResponseStatus
-
-db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'kwconfig.yaml')
 with open(db_config_path, 'r') as f:
     yaml_config = yaml.load(f)
 redis_config = yaml_config['redis']

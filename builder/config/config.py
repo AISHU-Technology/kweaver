@@ -53,16 +53,10 @@ builder_debug = False
 CELERY_BROKER_URL = 'redis://10.4.81.11:6379/1'
 # 要存储 Celery 任务的状态或运行结果时就必须要配置
 CELERY_RESULT_BACKEND = 'redis://10.4.81.11:6379/2'
-
-
 baseInfo_flag = False
-
-
-
-
 local_testing = False
-
 mongodb_host = "10.2.235.235"
 mongodb_port = "27017"
 redis_add = "10.4.128.208"
 redis_port = "6379"
+db_config_path = "/etc/builder/kwconfig.yaml"

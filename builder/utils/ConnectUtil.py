@@ -10,8 +10,7 @@ import redis
 from redis.sentinel import Sentinel
 import sys, os
 from os import path
-
-db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'kwconfig.yaml')
+from config.config import db_config_path
 
 sys.path.append(os.path.abspath("../"))
 

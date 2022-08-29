@@ -16,6 +16,9 @@ from os import path
 
 # sys.path.append(os.path.abspath("../"))
 # 单例
+from config.config import db_config_path
+
+
 class PymysqlPool(object):
     yamlConfig = None
     _instance_lock = threading.Lock()
@@ -34,7 +37,6 @@ class PymysqlPool(object):
         DB_MAXSHARED = 5
         DB_MAXCONNECTIONS = 3
         DB_BLOCKING = True
-        db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'kwconfig.yaml')
         with open(db_config_path, 'r') as f:
             yaml_config = yaml.load(f)
         mariadb_config = yaml_config['mariadb']

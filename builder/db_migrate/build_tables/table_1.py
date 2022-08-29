@@ -8,6 +8,8 @@ from sqlalchemy.pool import NullPool
 from sqlalchemy import Column, String, create_engine, Integer, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mysql import LONGTEXT
+
+from config.config import db_config_path
 from utils.log_info import Logger
 import sqlalchemy as sa
 from sqlalchemy.event import listen
@@ -426,9 +428,7 @@ class NetworkGraphRelation(Base):
 
 # 初始化数据库表
 def init_datatable():
-    from os import path
     from urllib import parse
-    db_config_path = path.join(path.dirname(path.dirname(path.dirname(path.abspath(__file__)))), 'config', 'kwconfig.yaml')
     with open(db_config_path, 'r') as f:
         yaml_config = yaml.load(f)
     mariadb_config = yaml_config['mariadb']

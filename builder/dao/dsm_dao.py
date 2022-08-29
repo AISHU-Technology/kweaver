@@ -66,8 +66,7 @@ class DsmDao(object):
         return data
 
     def getdatabyauth(self, ds_auth):
-        from os import path
-        db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'kwconfig.yaml')
+        from config.config import db_config_path
         with open(db_config_path, 'r') as f:
             yaml_config = yaml.load(f)
         mariadb_config = yaml_config['mariadb']
