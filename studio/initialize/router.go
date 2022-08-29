@@ -20,6 +20,7 @@ import (
 var (
 	GraphDBController    *controller.GraphDBController
 	OpenSearchController *controller.OpenSearchController
+	SwaggerController    *controller.SwaggerController
 )
 
 //创建controller对象
@@ -30,6 +31,9 @@ func initAPIs() {
 	OpenSearchController = &controller.OpenSearchController{
 		OpenSearchService: OpenSearchService,
 		GraphDBService:    GraphDBService,
+	}
+	SwaggerController = &controller.SwaggerController{
+		SwaggerService: SwaggerService,
 	}
 }
 
@@ -113,6 +117,9 @@ func Router() *gin.Engine {
 		r1.POST("/opensearch/delete", OpenSearchController.DeleteOpenSearchById)
 		r1.POST("/opensearch/update", OpenSearchController.UpdateOpenSearch)
 		r1.POST("/opensearch/test", OpenSearchController.TestOpenSearchConfig)
+
+		//swagger
+		r1.GET("/swaggerDoc", SwaggerController.GetSwaggerDoc)
 	}
 	return router
 }

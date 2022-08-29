@@ -11,12 +11,206 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "contact": {},
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/studio/v1/opensearch/list": {
+        "/api/studio/v1/graphdb": {
+            "get": {
+                "description": "根据id查询存储配置信息",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "根据id查询存储配置信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "存储记录id",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "存储配置信息",
+                        "schema": {
+                            "$ref": "#/definitions/vo.GraphDBVo"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/graphdb/add": {
+            "post": {
+                "description": "添加存储配置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "添加存储配置",
+                "parameters": [
+                    {
+                        "description": "添加的存储配置",
+                        "name": "graphDBVo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.GraphDBVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "添加的存储配置id",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/graphdb/delete": {
+            "post": {
+                "description": "根据id删除存储配置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "根据id删除存储配置",
+                "parameters": [
+                    {
+                        "description": "存储配置id",
+                        "name": "id",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.IdVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/graphdb/graph/list": {
+            "get": {
+                "description": "根据id查询关联的图谱",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "根据id查询关联的图谱",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "分页号",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页数量",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "存储记录id",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "关联的图谱信息",
+                        "schema": {
+                            "$ref": "#/definitions/vo.ListVo"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/graphdb/list": {
             "get": {
                 "description": "根据page和size获取存储记录及存储记录中的谱图",
                 "consumes": [
@@ -69,22 +263,591 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"total\": 10, \"data\": [{\"id\": 1, \"name\": \"test_nebula\", \"type\": \"nebula\", \"count\": 1, \"osName\": \"opensearch\", \"user\": \"root\", \"created\": 102223243, \"updated\": 1232343243}]}",
+                        "description": "存储配置列表",
                         "schema": {
                             "$ref": "#/definitions/vo.ListVo"
                         }
                     },
                     "400": {
-                        "description": "{\"ErrorCode\": \"Studio.Common.ParameterError\", \"Description\": \"Parameter error\", \"\"Solution\": \"\", \"ErrorDetails\": [], \"ErrorLink\": \"\"}"
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
                     },
                     "500": {
-                        "description": "{\"ErrorCode\": \"Studio.GraphDB.GraphDBRecordNotFoundError\", \"Description\": \"Data source record does not exist\", \"\"Solution\": \"\", \"ErrorDetails\": [], \"ErrorLink\": \"\"}"
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/graphdb/test": {
+            "post": {
+                "description": "测试存储配置信息是否正确",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "测试存储配置信息是否正确",
+                "parameters": [
+                    {
+                        "description": "待测试的存储配置信息",
+                        "name": "testVo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.ConnTestVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/graphdb/update": {
+            "post": {
+                "description": "根据id更新存储配置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "根据id更新存储配置",
+                "parameters": [
+                    {
+                        "description": "存储配置更新信息",
+                        "name": "graphDBUpdateVo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.GraphDBUpdateVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/opensearch": {
+            "get": {
+                "description": "根据id查询opensearch配置信息",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "根据id查询opensearch配置信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "opensearch记录id",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "opensearch配置信息",
+                        "schema": {
+                            "$ref": "#/definitions/vo.OpenSearchVo"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/opensearch/add": {
+            "post": {
+                "description": "添加opensearch配置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "添加opensearch配置",
+                "parameters": [
+                    {
+                        "description": "添加的opensearch配置",
+                        "name": "opensearchVo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.OpenSearchVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "添加的opensearch配置id",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/opensearch/delete": {
+            "post": {
+                "description": "根据id删除opensearch配置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "根据id删除opensearch配置",
+                "parameters": [
+                    {
+                        "description": "opensearch配置id",
+                        "name": "idVo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.OpenSearchIdVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/opensearch/list": {
+            "get": {
+                "description": "根据page和size获取opensearch信息",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "根据page和size获取opensearch信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "分页号",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "每页数量",
+                        "name": "size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "记录名称",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "排序字段",
+                        "name": "orderField",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "排序顺序",
+                        "name": "order",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "opensearch配置列表",
+                        "schema": {
+                            "$ref": "#/definitions/vo.ListVo"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/opensearch/test": {
+            "post": {
+                "description": "测试opensearch配置信息是否正确",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "测试opensearch配置信息是否正确",
+                "parameters": [
+                    {
+                        "description": "待测试的opensearch配置信息",
+                        "name": "osVo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.OpenSearchTestVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/opensearch/update": {
+            "post": {
+                "description": "根据id更新opensearch配置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "根据id更新opensearch配置",
+                "parameters": [
+                    {
+                        "description": "待更新的opensearch配置信息",
+                        "name": "opensearchUpdateVo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.OpenSearchUpdateVo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "参数异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "服务内部异常",
+                        "schema": {
+                            "$ref": "#/definitions/kw_errors.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/studio/v1/swaggerDoc": {
+            "get": {
+                "description": "查询api文档",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Studio"
+                ],
+                "summary": "查询api文档",
+                "responses": {
+                    "200": {
+                        "description": "swagger api文档",
+                        "schema": {
+                            "type": "object"
+                        }
                     }
                 }
             }
         }
     },
     "definitions": {
+        "kw_errors.Error": {
+            "type": "object",
+            "properties": {
+                "Description": {
+                    "type": "string"
+                },
+                "ErrorCode": {
+                    "type": "string"
+                },
+                "ErrorDetails": {
+                    "type": "array",
+                    "items": {}
+                },
+                "ErrorLink": {
+                    "type": "string"
+                },
+                "Solution": {
+                    "type": "string"
+                }
+            }
+        },
+        "vo.ConnTestVo": {
+            "type": "object",
+            "required": [
+                "password",
+                "user"
+            ],
+            "properties": {
+                "ip": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "port": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "orientdb",
+                        "nebula",
+                        "opensearch"
+                    ]
+                },
+                "user": {
+                    "type": "string",
+                    "maxLength": 50
+                }
+            }
+        },
+        "vo.GraphDBUpdateVo": {
+            "type": "object",
+            "required": [
+                "password",
+                "user"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "port": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "orientdb",
+                        "nebula",
+                        "opensearch"
+                    ]
+                },
+                "user": {
+                    "type": "string",
+                    "maxLength": 50
+                }
+            }
+        },
+        "vo.GraphDBVo": {
+            "type": "object",
+            "required": [
+                "osId",
+                "password",
+                "user"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "osId": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "port": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "orientdb",
+                        "nebula",
+                        "opensearch"
+                    ]
+                },
+                "user": {
+                    "type": "string",
+                    "maxLength": 50
+                }
+            }
+        },
+        "vo.IdVo": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
         "vo.ListVo": {
             "type": "object",
             "properties": {
@@ -93,18 +856,131 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
+        },
+        "vo.OpenSearchIdVo": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "vo.OpenSearchTestVo": {
+            "type": "object",
+            "required": [
+                "password",
+                "user"
+            ],
+            "properties": {
+                "ip": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "port": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "user": {
+                    "type": "string",
+                    "maxLength": 50
+                }
+            }
+        },
+        "vo.OpenSearchUpdateVo": {
+            "type": "object",
+            "required": [
+                "password",
+                "user"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "port": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "user": {
+                    "type": "string",
+                    "maxLength": 50
+                }
+            }
+        },
+        "vo.OpenSearchVo": {
+            "type": "object",
+            "required": [
+                "password",
+                "user"
+            ],
+            "properties": {
+                "created": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "ip": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "port": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "updated": {
+                    "type": "integer"
+                },
+                "user": {
+                    "type": "string",
+                    "maxLength": 50
+                }
+            }
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.0",
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "",
+	Title:            "KWeaver API",
+	Description:      "欢迎使用KWeaver 1.0 OpenAPI",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

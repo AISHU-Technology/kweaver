@@ -22,31 +22,65 @@ type GraphDBController struct {
 // @Param type query string orientdb "配置类型"
 // @Param orderField query string created "排序字段"
 // @Param order query string ASC "排序顺序"
-// @Router /api/studio/v1/opensearch/list [get]
+// @Router /api/studio/v1/graphdb/list [get]
 // @Accept  x-www-form-urlencoded
 // @Produce json
-// @Success 200 {object} vo.ListVo  "{"total": 10, "data": [{"id": 1, "name": "test_nebula", "type": "nebula", "count": 1, "osName": "opensearch", "user": "root", "created": 102223243, "updated": 1232343243}]}"
-// @Failure 500 "{"ErrorCode": "Studio.GraphDB.GraphDBRecordNotFoundError", "Description": "Data source record does not exist", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}"
-// @Failure 400 "{"ErrorCode": "Studio.Common.ParameterError", "Description": "Parameter error", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}"
+// @Success 200 {object} vo.ListVo  "存储配置列表"
+// @Failure 500 {object} kw_errors.Error "服务内部异常"
+// @Failure 400 {object} kw_errors.Error "参数异常"
 func (controller *GraphDBController) GetGraphDBList(c *gin.Context) {
 	condition := &vo.GraphListSearchCondition{}
 	kw_errors.Try(c.ShouldBind(condition)).Throw(kw_errors.ParameterError)
 	response.Ok(c, controller.GraphDBService.GetGraphDBList(condition))
 }
 
-// GetGraphDBInfoById 根据id查询存储配置信息
+// GetGraphDBInfoById
+// @Summary 根据id查询存储配置信息
+// @Description 根据id查询存储配置信息
+// @Tags Studio
+// @Param id query int 1 "存储记录id"
+// @Router /api/studio/v1/graphdb [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} vo.GraphDBVo "存储配置信息"
+// @Failure 500 {object} kw_errors.Error "服务内部异常"
+// @Failure 400 {object} kw_errors.Error "参数异常"
 func (controller *GraphDBController) GetGraphDBInfoById(c *gin.Context) {
 	idVo := &vo.IdVo{}
 	kw_errors.Try(c.ShouldBind(idVo)).Throw(kw_errors.ParameterError)
 	response.Ok(c, controller.GraphDBService.GetGraphDBInfoById(idVo.ID))
 }
 
+// GetGraphInfoByGraphDBId
+// @Summary 根据id查询关联的图谱
+// @Description 根据id查询关联的图谱
+// @Tags Studio
+// @Param page query int 1 "分页号"
+// @Param size query int 0 "每页数量"
+// @Param id query int 1 "存储记录id"
+// @Router /api/studio/v1/graphdb/graph/list [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} vo.ListVo  "关联的图谱信息"
+// @Failure 500 {object} kw_errors.Error "服务内部异常"
+// @Failure 400 {object} kw_errors.Error "参数异常"
 func (controller *GraphDBController) GetGraphInfoByGraphDBId(c *gin.Context) {
 	condition := &vo.GraphSearchCondition{}
 	kw_errors.Try(c.ShouldBind(condition)).Throw(kw_errors.ParameterError)
 	response.Ok(c, controller.GraphDBService.GetGraphInfoByGraphDBId(condition))
 }
 
+// AddGraphDB
+// @Summary 添加存储配置
+// @Description 添加存储配置
+// @Tags Studio
+// @Param graphDBVo body vo.GraphDBVo true "添加的存储配置"
+// @Router /api/studio/v1/graphdb/add [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {number} number "添加的存储配置id"
+// @Failure 500 {object} kw_errors.Error "服务内部异常"
+// @Failure 400 {object} kw_errors.Error "参数异常"
 func (controller *GraphDBController) AddGraphDB(c *gin.Context) {
 	graphDBVo := &vo.GraphDBVo{}
 	kw_errors.Try(c.ShouldBind(graphDBVo)).Throw(kw_errors.ParameterError)
@@ -56,6 +90,17 @@ func (controller *GraphDBController) AddGraphDB(c *gin.Context) {
 	response.Ok(c, controller.GraphDBService.AddGraphDB(graphDBVo))
 }
 
+// DeleteGraphDBById
+// @Summary 根据id删除存储配置
+// @Description 根据id删除存储配置
+// @Tags Studio
+// @Param id body vo.IdVo true "存储配置id"
+// @Router /api/studio/v1/graphdb/delete [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {string} string "ok"
+// @Failure 500 {object} kw_errors.Error "服务内部异常"
+// @Failure 400 {object} kw_errors.Error "参数异常"
 func (controller *GraphDBController) DeleteGraphDBById(c *gin.Context) {
 	idVo := &vo.IdVo{}
 	kw_errors.Try(c.ShouldBind(idVo)).Throw(kw_errors.ParameterError)
@@ -64,6 +109,17 @@ func (controller *GraphDBController) DeleteGraphDBById(c *gin.Context) {
 	response.Ok(c)
 }
 
+// UpdateGraphDB
+// @Summary 根据id更新存储配置
+// @Description 根据id更新存储配置
+// @Tags Studio
+// @Param graphDBUpdateVo body vo.GraphDBUpdateVo true "存储配置更新信息"
+// @Router /api/studio/v1/graphdb/update [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {string} string "ok"
+// @Failure 500 {object} kw_errors.Error "服务内部异常"
+// @Failure 400 {object} kw_errors.Error "参数异常"
 func (controller *GraphDBController) UpdateGraphDB(c *gin.Context) {
 	graphDBUpdateVo := &vo.GraphDBUpdateVo{}
 	kw_errors.Try(c.ShouldBind(graphDBUpdateVo)).Throw(kw_errors.ParameterError)
@@ -75,7 +131,17 @@ func (controller *GraphDBController) UpdateGraphDB(c *gin.Context) {
 	response.Ok(c)
 }
 
-// TestGraphDBConfig 测试存储配置信息是否正确
+// TestGraphDBConfig
+// @Summary 测试存储配置信息是否正确
+// @Description 测试存储配置信息是否正确
+// @Tags Studio
+// @Param testVo body vo.ConnTestVo true "待测试的存储配置信息"
+// @Router /api/studio/v1/graphdb/test [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {string} string "ok"
+// @Failure 500 {object} kw_errors.Error "服务内部异常"
+// @Failure 400 {object} kw_errors.Error "参数异常"
 func (controller *GraphDBController) TestGraphDBConfig(c *gin.Context) {
 	vo := &vo.ConnTestVo{}
 	kw_errors.Try(c.ShouldBind(vo)).Throw(kw_errors.ParameterError)

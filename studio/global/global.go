@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"kw-studio/config"
+	"kw-studio/http"
 )
 
 var (
@@ -14,4 +15,6 @@ var (
 	LOG          *zap.Logger
 	Redis        redis.Cmdable
 	LockOperator lock.LockOperator //redis分布式锁
+
+	SwaggerHttpService http.Swagger
 )

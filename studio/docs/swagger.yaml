@@ -1,14 +1,330 @@
 definitions:
+  kw_errors.Error:
+    properties:
+      Description:
+        type: string
+      ErrorCode:
+        type: string
+      ErrorDetails:
+        items: {}
+        type: array
+      ErrorLink:
+        type: string
+      Solution:
+        type: string
+    type: object
+  vo.ConnTestVo:
+    properties:
+      ip:
+        items:
+          type: string
+        type: array
+      password:
+        maxLength: 150
+        type: string
+      port:
+        items:
+          type: string
+        type: array
+      type:
+        enum:
+        - orientdb
+        - nebula
+        - opensearch
+        type: string
+      user:
+        maxLength: 50
+        type: string
+    required:
+    - password
+    - user
+    type: object
+  vo.GraphDBUpdateVo:
+    properties:
+      id:
+        type: integer
+      ip:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      password:
+        maxLength: 150
+        type: string
+      port:
+        items:
+          type: string
+        type: array
+      type:
+        enum:
+        - orientdb
+        - nebula
+        - opensearch
+        type: string
+      user:
+        maxLength: 50
+        type: string
+    required:
+    - password
+    - user
+    type: object
+  vo.GraphDBVo:
+    properties:
+      id:
+        type: integer
+      ip:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      osId:
+        minimum: 1
+        type: integer
+      password:
+        maxLength: 150
+        type: string
+      port:
+        items:
+          type: string
+        type: array
+      type:
+        enum:
+        - orientdb
+        - nebula
+        - opensearch
+        type: string
+      user:
+        maxLength: 50
+        type: string
+    required:
+    - osId
+    - password
+    - user
+    type: object
+  vo.IdVo:
+    properties:
+      id:
+        type: integer
+    type: object
   vo.ListVo:
     properties:
       data: {}
       total:
         type: integer
     type: object
+  vo.OpenSearchIdVo:
+    properties:
+      id:
+        type: integer
+    type: object
+  vo.OpenSearchTestVo:
+    properties:
+      ip:
+        items:
+          type: string
+        type: array
+      password:
+        maxLength: 150
+        type: string
+      port:
+        items:
+          type: string
+        type: array
+      user:
+        maxLength: 50
+        type: string
+    required:
+    - password
+    - user
+    type: object
+  vo.OpenSearchUpdateVo:
+    properties:
+      id:
+        type: integer
+      ip:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      password:
+        maxLength: 150
+        type: string
+      port:
+        items:
+          type: string
+        type: array
+      user:
+        maxLength: 50
+        type: string
+    required:
+    - password
+    - user
+    type: object
+  vo.OpenSearchVo:
+    properties:
+      created:
+        type: integer
+      id:
+        type: integer
+      ip:
+        items:
+          type: string
+        type: array
+      name:
+        type: string
+      password:
+        maxLength: 150
+        type: string
+      port:
+        items:
+          type: string
+        type: array
+      updated:
+        type: integer
+      user:
+        maxLength: 50
+        type: string
+    required:
+    - password
+    - user
+    type: object
 info:
   contact: {}
+  description: 欢迎使用KWeaver 1.0 OpenAPI
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: KWeaver API
+  version: "1.0"
 paths:
-  /api/studio/v1/opensearch/list:
+  /api/studio/v1/graphdb:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 根据id查询存储配置信息
+      parameters:
+      - description: 存储记录id
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 存储配置信息
+          schema:
+            $ref: '#/definitions/vo.GraphDBVo'
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 根据id查询存储配置信息
+      tags:
+      - Studio
+  /api/studio/v1/graphdb/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加存储配置
+      parameters:
+      - description: 添加的存储配置
+        in: body
+        name: graphDBVo
+        required: true
+        schema:
+          $ref: '#/definitions/vo.GraphDBVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 添加的存储配置id
+          schema:
+            type: number
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 添加存储配置
+      tags:
+      - Studio
+  /api/studio/v1/graphdb/delete:
+    post:
+      consumes:
+      - application/json
+      description: 根据id删除存储配置
+      parameters:
+      - description: 存储配置id
+        in: body
+        name: id
+        required: true
+        schema:
+          $ref: '#/definitions/vo.IdVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 根据id删除存储配置
+      tags:
+      - Studio
+  /api/studio/v1/graphdb/graph/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 根据id查询关联的图谱
+      parameters:
+      - description: 分页号
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      - description: 存储记录id
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 关联的图谱信息
+          schema:
+            $ref: '#/definitions/vo.ListVo'
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 根据id查询关联的图谱
+      tags:
+      - Studio
+  /api/studio/v1/graphdb/list:
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -42,19 +358,283 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"total": 10, "data": [{"id": 1, "name": "test_nebula", "type":
-            "nebula", "count": 1, "osName": "opensearch", "user": "root", "created":
-            102223243, "updated": 1232343243}]}'
+          description: 存储配置列表
           schema:
             $ref: '#/definitions/vo.ListVo'
         "400":
-          description: '{"ErrorCode": "Studio.Common.ParameterError", "Description":
-            "Parameter error", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}'
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
         "500":
-          description: '{"ErrorCode": "Studio.GraphDB.GraphDBRecordNotFoundError",
-            "Description": "Data source record does not exist", ""Solution": "", "ErrorDetails":
-            [], "ErrorLink": ""}'
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
       summary: 根据page和size获取存储记录及存储记录中的谱图
+      tags:
+      - Studio
+  /api/studio/v1/graphdb/test:
+    post:
+      consumes:
+      - application/json
+      description: 测试存储配置信息是否正确
+      parameters:
+      - description: 待测试的存储配置信息
+        in: body
+        name: testVo
+        required: true
+        schema:
+          $ref: '#/definitions/vo.ConnTestVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 测试存储配置信息是否正确
+      tags:
+      - Studio
+  /api/studio/v1/graphdb/update:
+    post:
+      consumes:
+      - application/json
+      description: 根据id更新存储配置
+      parameters:
+      - description: 存储配置更新信息
+        in: body
+        name: graphDBUpdateVo
+        required: true
+        schema:
+          $ref: '#/definitions/vo.GraphDBUpdateVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 根据id更新存储配置
+      tags:
+      - Studio
+  /api/studio/v1/opensearch:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 根据id查询opensearch配置信息
+      parameters:
+      - description: opensearch记录id
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: opensearch配置信息
+          schema:
+            $ref: '#/definitions/vo.OpenSearchVo'
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 根据id查询opensearch配置信息
+      tags:
+      - Studio
+  /api/studio/v1/opensearch/add:
+    post:
+      consumes:
+      - application/json
+      description: 添加opensearch配置
+      parameters:
+      - description: 添加的opensearch配置
+        in: body
+        name: opensearchVo
+        required: true
+        schema:
+          $ref: '#/definitions/vo.OpenSearchVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 添加的opensearch配置id
+          schema:
+            type: number
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 添加opensearch配置
+      tags:
+      - Studio
+  /api/studio/v1/opensearch/delete:
+    post:
+      consumes:
+      - application/json
+      description: 根据id删除opensearch配置
+      parameters:
+      - description: opensearch配置id
+        in: body
+        name: idVo
+        required: true
+        schema:
+          $ref: '#/definitions/vo.OpenSearchIdVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 根据id删除opensearch配置
+      tags:
+      - Studio
+  /api/studio/v1/opensearch/list:
+    get:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 根据page和size获取opensearch信息
+      parameters:
+      - description: 分页号
+        in: query
+        name: page
+        type: integer
+      - description: 每页数量
+        in: query
+        name: size
+        type: integer
+      - description: 记录名称
+        in: query
+        name: name
+        type: string
+      - description: 排序字段
+        in: query
+        name: orderField
+        type: string
+      - description: 排序顺序
+        in: query
+        name: order
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: opensearch配置列表
+          schema:
+            $ref: '#/definitions/vo.ListVo'
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 根据page和size获取opensearch信息
+      tags:
+      - Studio
+  /api/studio/v1/opensearch/test:
+    post:
+      consumes:
+      - application/json
+      description: 测试opensearch配置信息是否正确
+      parameters:
+      - description: 待测试的opensearch配置信息
+        in: body
+        name: osVo
+        required: true
+        schema:
+          $ref: '#/definitions/vo.OpenSearchTestVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 测试opensearch配置信息是否正确
+      tags:
+      - Studio
+  /api/studio/v1/opensearch/update:
+    post:
+      consumes:
+      - application/json
+      description: 根据id更新opensearch配置
+      parameters:
+      - description: 待更新的opensearch配置信息
+        in: body
+        name: opensearchUpdateVo
+        required: true
+        schema:
+          $ref: '#/definitions/vo.OpenSearchUpdateVo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: 参数异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+        "500":
+          description: 服务内部异常
+          schema:
+            $ref: '#/definitions/kw_errors.Error'
+      summary: 根据id更新opensearch配置
+      tags:
+      - Studio
+  /api/studio/v1/swaggerDoc:
+    get:
+      description: 查询api文档
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: swagger api文档
+          schema:
+            type: object
+      summary: 查询api文档
       tags:
       - Studio
 swagger: "2.0"
