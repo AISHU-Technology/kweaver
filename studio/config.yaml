@@ -42,14 +42,14 @@ zap:
   prefix: '[github.com/KWeaver/kw-studio]'
 
 swagger:
-  title: "KWeaver API"
-  version: "1.0"
+  title: "KWeaver OpenAPI"
+  version: "1.0.0"
   description: "欢迎使用KWeaver 1.0 OpenAPI"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
   tags:
-    - {"name": "Introduction", "description": "AnyDATA Framework 2.0 提供OpenAPI能力，通过调用AnyDATA的OpenAPI使用AnyDATA的各项功能，实现应用和AnyDATA的集成和交互操作。"}
+    - {"name": "Introduction", "description": "KWeaver提供OpenAPI能力，通过调用KWeaver的OpenAPI使用KWeaver的各项功能，实现应用和KWeaver的集成和交互操作。"}
     - {"name": "Studio", "description": "KWeaver管理界面" }
     - {"name": "KN Builder", "description": "知识网络生成服务 Knowledge Network Builder（KN Builder）：利用人工智能技术，将不同形态的数据转化为知识网络，实现数据知识化。包括知识图谱、语言模型和规则库。"}
     - {"name": "CEngine", "description": "知识网络探索式分析相关API，可实现实体的搜索，以及探索与其相关联的实体。遵循GraphQL接口规范，详细schema可查看graphql schema"}
