@@ -1,0 +1,24 @@
+server:
+  ip: 0.0.0.0
+  port: 6474
+  debug: true
+orient:
+  user: admin
+  password: admin
+  ip:  kc-topic-orientdb
+  port: 2480
+  db: kc-topic
+algServer:
+  ip: kg-alg-server
+  port: 8080
+builderServer:
+  ip: kg-builder
+  port: 6475
+maria:
+  ip: rds-proton-rds-mariadb-cluster
+  port: 3320
+  user: anydata
+  password: Qwe123!@#
+  db: anydata
+
+

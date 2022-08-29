@@ -1,0 +1,65 @@
+# Starter pipeline
+#
+
+trigger:
+  branches:
+    include:
+      - develop
+      - DATA-*
+
+pool:
+  name: algServer
+
+variables:
+  - group: global-context
+  - name: imageTag
+    value: $(Build.SourceBranchName)-$(Build.BuildNumber)
+  - name: imageName
+    value: kg-alg-server
+  - name: UTArtifactName
+    value: coverageFiles
+  - name: imageNameWithHarbor
+    value: acr.aishu.cn/ad/kg-alg-server
+
+resources:
+  containers:
+    - container: scanner
+      endpoint: acr.aishu.cn
+      image: ad/openjdk:11.0.13-jre
+    - container: dotnet
+      endpoint: acr.aishu.cn
+      image: wing-biz/euop/dotnet-runtime:3.1
+
+jobs:
+  - job:
+    displayName: build
+    workspace:
+      clean: all
+    steps:
+    - task: Docker@2
+      displayName: buildImage
+      inputs:
+        command: 'build'
+        repository: $(imageNameWithHarbor)
+        tags: $(mainTag)
+        Dockerfile: '**/Dockerfile'
+    - task: Bash@3
+      displayName: saveTar
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker save -o AnyDATA-$(mainTag)-kg-algServer-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
+    - task: FtpUpload@2
+      displayName: uploadFtp
+      inputs:
+        credentialsOption: 'inputs'
+        serverUrl: 'ftp://ftp-ad.aishu.cn'
+        username: '$(ftpUser)'
+        password: '$(ftpPasswd)'
+        rootDirectory:
+        filePatterns: '**/AnyDATA-$(mainTag)-kg-algServer*.tar'
+        remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
+        clean: false
+        cleanContents: false
+        preservePaths: false
+        trustSSL: false

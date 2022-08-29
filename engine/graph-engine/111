@@ -1,0 +1,29 @@
+
+// GroupRouters is the router of service
+var GroupRouters = map[string][]leo.Router{
+	uriRoot + "v1": {
+		// KGDemo 使用的 RESTful API
+		leo.NewRouter("post", "/search", controllers.SearchHandler),
+		leo.NewRouter("post", "/searchv2", controllers.SearchHandlerV2),
+		leo.NewRouter("get", "/click", cache.CachePage(store, 3*time.Second, controllers.ClickHandler)),
+	},
+}
+
+var GroupGQLKGRouters = map[string][]leo.Router{
+	uriRoot + "v1": {
+
+		//、、 Orientdb sql API
+		leo.NewRouter("post", "/sql/:id", services.SearchSQLHandler),
+
+		// 分析详情
+		leo.NewRouter("get", "/analysis", services.AnalysisHandler),
+		// xx搜一搜
+		leo.NewRouter("get", "/recommend", services.RecommendHandler),
+		//？ 智能搜索采纳日志
+		leo.NewRouter("post", "/adv-search/feedback", services.AdvSearchFeedBackLog),
+
+		// 搜索界面图谱下拉列表
+		leo.NewRouter("get", "/search-kglist", services.SearchKGListHandler),
+
+	},
+}
