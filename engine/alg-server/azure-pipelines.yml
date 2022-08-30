@@ -48,7 +48,7 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: $(mainTag)
-        Dockerfile: '**/alg-server.Dockerfile'
+        Dockerfile: '**/Dockerfile'
     - task: Bash@3
       displayName: saveTar
       inputs:
