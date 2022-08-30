@@ -10,6 +10,7 @@ trigger:
     include:
       - /engine/graph-engine/*
     exclude:
+      - /engine/alg-server/*
       - /builder/*
       - /sdk/*
 
