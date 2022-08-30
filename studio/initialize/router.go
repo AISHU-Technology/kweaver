@@ -2,11 +2,12 @@ package initialize
 
 import (
 	"bytes"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/swaggo/files"
+	swaggerFiles "github.com/swaggo/files"
 	gs "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 	"io/ioutil"
@@ -93,7 +94,7 @@ func Router() *gin.Engine {
 	initAPIs()     //初始化controller层对象
 	registerValidation()
 	router.Use(ZapLogger(global.LOG), middleware.ErrorHandler)
-	router.Static("/static", "./webui")
+	router.Use(static.Serve("/static", static.LocalFile("./webui", true)))
 	router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	r1 := router.Group("/api/studio/v1")
 	{
