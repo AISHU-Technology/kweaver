@@ -38,15 +38,15 @@ variables:
   - name: imageName
     value: engine
   - name: imageNameFtp
-    value: kg-engine
+    value: kw-engine
   - name: imageNameWithHarbor
-    value: acr.aishu.cn/ad/kg-engine
+    value: acr.aishu.cn/ad/kw-engine
   - name: imageNameJob
     value: engine
   - name: imageNameJobFtp
-    value: kg-engine-job
+    value: kw-engine-job
   - name: imageNameWithHarborJob
-    value: acr.aishu.cn/ad/kg-engine-job
+    value: acr.aishu.cn/ad/kw-engine-job
 
 jobs:
   - job:
@@ -117,14 +117,14 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: $(mainTag)
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '**/Engine.Dockerfile'
     - task: Bash@3
       displayName: saveTar-engine
       inputs:
         targetType: 'inline'
         script: |
-          docker save -o AnyDATA-$(mainTag)-$(imageName).tar $(imageNameWithHarbor):$(mainTag)
-          cp AnyDATA-$(mainTag)-$(imageName).tar AnyDATA-$(mainTag)-kg-$(imageName)-$(imageTag).tar
+          docker save -o KWeaver-$(mainTag)-$(imageName).tar $(imageNameWithHarbor):$(mainTag)
+          cp KWeaver-$(mainTag)-$(imageName).tar KWeaver-$(mainTag)-kg-$(imageName)-$(imageTag).tar
     - task: FtpUpload@2
       displayName: uploadFtp-engine
       inputs:
@@ -133,7 +133,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/AnyDATA-$(mainTag)-kg-$(imageName)-$(imageTag).tar'
+        filePatterns: '**/KWeaver-$(mainTag)-kg-$(imageName)-$(imageTag).tar'
         remoteDirectory: '/packages/$(imageNameFtp)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false
