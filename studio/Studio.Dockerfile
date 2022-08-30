@@ -17,6 +17,7 @@ RUN go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
 go mod tidy && \
+ls -R . && \
 go build -o studio ./main.go
 
 FROM acr.aishu.cn/public/ubuntu:21.10.20211119
