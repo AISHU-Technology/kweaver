@@ -73,7 +73,7 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          docker save -o AnyDATA-$(mainTag)-$(imageNameJob)-${{ parameters.jobTag }}-job-$(Build.BuildNumber).tar $(imageNameWithHarborJob):$(mainTag)
+          docker save -o KWeaver-$(mainTag)-$(imageNameJob)-${{ parameters.jobTag }}-job-$(Build.BuildNumber).tar $(imageNameWithHarborJob):$(mainTag)
     - task: FtpUpload@2
       displayName: uploadFtp-engineJob
       inputs:
@@ -82,7 +82,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/AnyDATA-$(mainTag)-$(imageNameJob)-*.tar'
+        filePatterns: '**/KWeaver-$(mainTag)-$(imageNameJob)-*.tar'
         remoteDirectory: '/packages/$(imageNameJobFtp)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false
@@ -117,7 +117,7 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: $(mainTag)
-        Dockerfile: '**/Engine.Dockerfile'
+        Dockerfile: '**/Dockerfile'
     - task: Bash@3
       displayName: saveTar-engine
       inputs:
