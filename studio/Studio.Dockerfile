@@ -5,7 +5,7 @@ npm install cnpm -g --registry=https://r.npm.taobao.org
 WORKDIR /root/studio/
 COPY . .
 WORKDIR /root/studio/webui
-RUN cnpm i && cnpm run build && ls -R .
+RUN cnpm i && cnpm run build
 
 FROM golang:1.17 as gomake
 RUN mkdir -p /root/studio
@@ -17,6 +17,7 @@ RUN go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
 go mod tidy && \
+ls -R . && \
 go build -o studio ./main.go
 
 FROM acr.aishu.cn/public/ubuntu:21.10.20211119
