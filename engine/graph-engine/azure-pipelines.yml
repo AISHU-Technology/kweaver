@@ -59,7 +59,7 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/src --privileged=true ad_go_env:goenv /bin/bash -c "source /etc/bashrc;go env -w GO111MODULE=\"on\";go env -w GOPROXY=\"https://goproxy.aishu.cn\";go env -w GOPRIVATE=\"gitlab.aishu.cn/anydata-rnd\";cd ./database;go build -o engineJob -a -ldflags '-extldflags \"-static\"' ."
+          docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/src --privileged=true ad_go_env:goenv /bin/bash -c "source /etc/bashrc;go env -w GO111MODULE=\"on\";go env -w GOPROXY=\"https://goproxy.aishu.cn\";go env -w GOPRIVATE=\"gitlab.aishu.cn/anydata-rnd\";cd ./engine/graph-engine/database;go build -o engineJob -a -ldflags '-extldflags \"-static\"' ."
     - task: Docker@2
       displayName: buildImage-engineJob
       inputs:
