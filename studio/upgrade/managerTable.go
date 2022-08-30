@@ -61,7 +61,6 @@ func Upgrade() {
 			global.LOG.Info("The upgrade version is the same as the system version, and no upgrade processing is performed.")
 			return
 		} else {
-
 			result := GetChanges(dbVersionSplit, versionSplit)
 			if len(result) == 0 {
 				panic("Downgrade not supported")
