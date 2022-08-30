@@ -10,8 +10,7 @@ import redis
 from redis.sentinel import Sentinel
 import sys, os
 from os import path
-
-db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
+from config.config import db_config_path
 
 sys.path.append(os.path.abspath("../"))
 
@@ -61,19 +60,17 @@ class RedisClinet():
             yaml_config = yaml.load(f)
         redis_config = yaml_config['redis']
         self.redis_cluster_mode = redis_config['mode']
+        self.redis_account = redis_config.get('user', None)
+        self.redis_password = redis_config.get('password', None)
         if self.redis_cluster_mode == "sentinel":
             sentinel_config = redis_config['sentinel']
             self.sentinel_list = [(v['host'], v['port']) for v in sentinel_config]
-            self.sentinel_account = redis_config['sentinel_account']
+            self.sentinel_account = redis_config['sentinel_user']
             self.sentinel_password = redis_config['sentinel_password']
-            self.redis_account = redis_config['redis_account']
-            self.redis_password = redis_config['redis_password']
             self.master_name = redis_config['master_name']
         elif self.redis_cluster_mode == "stand-alone":
-            self.redis_account = redis_config['user']
-            self.redis_password = redis_config['password']
-            self.redis_host = redis_config['host']
-            self.redis_port = redis_config['port']
+            self.redis_host = redis_config.get('host', None)
+            self.redis_port = redis_config.get('port', None)
 
     def get_config(self):
         if self.redis_cluster_mode == "sentinel":

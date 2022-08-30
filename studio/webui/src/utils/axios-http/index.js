@@ -14,11 +14,6 @@ import { message } from 'antd';
 import Cookie from 'js-cookie';
 import intl from 'react-intl-universal';
 
-import { openAppId } from '@/utils/crypto/sha256';
-
-import { getParam, localStore } from '@/utils/handleFunction';
-import { sessionStore } from '@/utils/handleFunction';
-
 import changeUrl from './changeUrl';
 import paramsToQueryString from './paramsToQueryString';
 
@@ -30,11 +25,6 @@ const { CancelToken } = axios;
 
 const sources = {};
 
-//是否是iframe页面
-const iframe = window.location.pathname.includes('iframe');
-// 是否为认证openapi的方式
-const apiToken = getParam('apiToken');
-
 const service = axios.create({
   baseURL: '/',
   timeout: 20000 // 超时取消请求
@@ -43,11 +33,8 @@ const service = axios.create({
 // 请求拦截处理
 service.interceptors.request.use(
   config => {
-    // iframe接口处理
-    const newUrl = apiToken ? config.url.split('v1').join('v1/kgservice') : config.url.split('v1').join('v1/open');
-
     // 添加时间戳
-    config.url = iframe ? changeUrl(newUrl) : changeUrl(config.url);
+    config.url = changeUrl(config.url);
 
     const request = JSON.stringify(config.url) + JSON.stringify(config.data);
 
@@ -66,50 +53,9 @@ service.interceptors.request.use(
 
     // 修改 header 信息 token， 这些信息来自cookie
     const anyDataLang = Cookie.get('anyDataLang');
-    const sessionid = Cookie.get('sessionid');
-    const uuid = Cookie.get('uuid');
 
     config.headers['Accept-Language'] = anyDataLang === 'en-US' ? 'en-US' : 'zh-CN';
-
-    // open api 请求头处理
-    if (iframe) {
-      const pid = getParam('pid');
-
-      if (apiToken) {
-        //认证的方式
-        apiToken && (config.headers.apiToken = apiToken);
-        pid && (config.headers.pid = pid);
-      } else {
-        // appkey加密的方式
-        const tj_appid = getParam('appid');
-        let timestamp = Date.parse(new Date()).toString();
-        timestamp = timestamp.substr(0, 10);
-
-        // 获取参数
-        const query = config.method === 'get' ? urls[1] : JSON.stringify(config.data);
-
-        // open api需要加密appkey
-        const appkey = openAppId(tj_appid, timestamp, query);
-
-        appkey && (config.headers.appkey = appkey);
-        tj_appid && (config.headers.appid = tj_appid);
-        config.headers.timestamp = timestamp;
-      }
-    } else {
-      sessionid && (config.headers.sessionid = sessionid);
-      uuid && (config.headers.uuid = uuid);
-    }
-    // config.headers['Cache-Control'] = 'no-store';
-
-    if (
-      sessionStore.get('sessionid') &&
-      Cookie.get('sessionid') &&
-      sessionStore.get('sessionid') !== Cookie.get('sessionid')
-    ) {
-      sessionStore.set('sessionid', Cookie.get('sessionid'));
-      window.location.reload();
-    }
-
+    config.headers['Cache-Control'] = 'no-store';
     config.headers['Content-Type'] = 'application/json; charset=utf-8';
 
     // 上传文件配置，必传 type：file
@@ -172,25 +118,7 @@ service.interceptors.response.use(
     const { status, data: { Code, ErrorCode, code } = {} } = error.response;
     const curCode = `${Code || ErrorCode || code || ''}`;
 
-    if (status === 401) {
-      Cookie.remove('sessionid');
-      Cookie.remove('uuid');
-      localStore.remove('userInfo');
-
-      if (curCode === 'Gateway.AdminResetAccess.LoginInfoMatchError') {
-        setTimeout(() => {
-          window.location.replace('/login');
-        }, 2000);
-
-        return;
-      }
-
-      message.error([intl.get('login.loginOutTip')]);
-
-      setTimeout(() => {
-        window.location.replace('/login');
-      }, 2000);
-    } else if (status === 500 || status === 403) {
+    if (status === 500 || status === 403) {
       if (curCode || error.response.config.url.includes('/api/builder/v1/graph/output')) {
         return error.response;
       }

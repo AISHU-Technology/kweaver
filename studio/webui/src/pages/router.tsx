@@ -11,7 +11,6 @@ import getAntdGlobalConfig from '@/theme/getAntdGlobalConfig';
 
 import asyncComponent from '@/components/AsyncComponent';
 
-const Login = asyncComponent(() => import('@/pages/Login'));
 const Home = asyncComponent(() => import('@/pages/Home'));
 const Workflow = asyncComponent(() => import('@/pages/Home/Workflow'));
 const KnowledgeNetwork = asyncComponent(() => import('@/pages/KnowledgeNetwork'));
@@ -36,12 +35,11 @@ const App = (props: any) => {
       <Router>
         <Switch>
           <Redirect exact from="/" to="/home/graph-list" />
-          <Route path="/login" render={() => <Login />} />
           <Route path="/home/workflow/create" render={() => <Workflow />} />
           <Route path="/home/workflow/edit" render={() => <Workflow />} />
           <Route path="/home" render={() => <Home />} />
           <Route path="/knowledge" render={(arg: any) => <KnowledgeNetwork {...arg} />} />
-          <Route component={NotFound} />
+          <Route render={() => <NotFound />} />
         </Switch>
       </Router>
     </div>

@@ -7,6 +7,8 @@ import yaml
 import os
 import time
 from os import path
+
+from config.config import db_config_path
 from dao.kg_new_word.new_words import Document
 from dao.kg_new_word.co_pair import CoPairGen
 from dao.kg_new_word.idf_counter import IDFCounter
@@ -93,7 +95,6 @@ class NewWordsToMongo(object):
     def start(self):
         st = time.time()
         self.as7_json['key_list'] = self.conf.get('com', 'as_keys').split(',')
-        db_config_path = path.join(path.dirname(path.dirname(path.abspath(__file__))), 'config', 'db.yaml')
         with open(db_config_path, 'r') as f:
             yaml_config = yaml.load(f)
         mariadb_config = yaml_config['mariadb']

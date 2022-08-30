@@ -49,7 +49,7 @@ const GraphDetail = (props: GraphDetailType) => {
         try {
           resultCount = await serviceGraphDetail.graphGetInfoCount({ graph_id: graphid });
         } catch (error) {
-          // console.log('error', error);
+          // console.log('errors', error);
         }
         const { entity = [], edge = [], entity_count = 0, edge_count = 0 } = resultCount?.res || {};
         setGraphCount({ nodes: entity, edges: edge, nodeCount: entity_count, edgeCount: edge_count });
@@ -72,7 +72,7 @@ const GraphDetail = (props: GraphDetailType) => {
     } catch (error) {
       setIsLoading(false);
       const { type, response } = error as any;
-      if (type === 'message') message.error(response?.description || '');
+      if (type === 'message') message.error(response?.Description || '');
     }
   };
 
