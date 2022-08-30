@@ -32,10 +32,8 @@ func main() {
 	s := leo.NewService(conf)
 	// 此处添加中间件，将自己的中间件添加即可。
 	s.RegisterMidwares(leo.CORSMiddleware() /*utils.TokenVali(), utils.ShareAPI()*/, leo.Informer())
-	s.RegisterRouterGroups(GroupRouters)
+
 	s.RegisterRouterGroups(GroupGQLKGRouters)
-	//s.RegisterRouterGroups(KCRouters)
-	//s.RegisterRouterGroups(OpenAPIRouters)
 
 	s.Start()
 }
