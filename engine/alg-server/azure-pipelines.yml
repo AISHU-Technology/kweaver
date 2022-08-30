@@ -21,11 +21,11 @@ variables:
   - name: imageTag
     value: $(Build.SourceBranchName)-$(Build.BuildNumber)
   - name: imageName
-    value: kg-alg-server
+    value: kw-alg-server
   - name: UTArtifactName
     value: coverageFiles
   - name: imageNameWithHarbor
-    value: acr.aishu.cn/ad/kg-alg-server
+    value: acr.aishu.cn/ad/kw-alg-server
 
 resources:
   containers:
@@ -48,13 +48,13 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: $(mainTag)
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '**/alg-server.Dockerfile'
     - task: Bash@3
       displayName: saveTar
       inputs:
         targetType: 'inline'
         script: |
-          docker save -o AnyDATA-$(mainTag)-kg-algServer-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
+          docker save -o KWeaver-$(mainTag)-kw-algServer-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
     - task: FtpUpload@2
       displayName: uploadFtp
       inputs:
@@ -63,7 +63,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/AnyDATA-$(mainTag)-kg-algServer*.tar'
+        filePatterns: '**/KWeaver-$(mainTag)-kw-algServer-$(imageTag).tar'
         remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false
