@@ -14,11 +14,6 @@ import { message } from 'antd';
 import Cookie from 'js-cookie';
 import intl from 'react-intl-universal';
 
-import { openAppId } from '@/utils/crypto/sha256';
-
-import { getParam, localStore } from '@/utils/handleFunction';
-import { sessionStore } from '@/utils/handleFunction';
-
 import changeUrl from './changeUrl';
 import paramsToQueryString from './paramsToQueryString';
 
@@ -29,9 +24,6 @@ const requestList = [];
 const { CancelToken } = axios;
 
 const sources = {};
-
-// 是否为认证openapi的方式
-const apiToken = getParam('apiToken');
 
 const service = axios.create({
   baseURL: '/',
@@ -61,24 +53,8 @@ service.interceptors.request.use(
 
     // 修改 header 信息 token， 这些信息来自cookie
     const anyDataLang = Cookie.get('anyDataLang');
-    const sessionid = Cookie.get('sessionid');
-    const uuid = Cookie.get('uuid');
 
     config.headers['Accept-Language'] = anyDataLang === 'en-US' ? 'en-US' : 'zh-CN';
-
-    // open api 请求头处理
-    // sessionid && (config.headers.sessionid = sessionid);
-    // uuid && (config.headers.uuid = uuid);
-
-    // if (
-    //   sessionStore.get('sessionid') &&
-    //   Cookie.get('sessionid') &&
-    //   sessionStore.get('sessionid') !== Cookie.get('sessionid')
-    // ) {
-    //   sessionStore.set('sessionid', Cookie.get('sessionid'));
-    //   window.location.reload();
-    // }
-
     config.headers['Cache-Control'] = 'no-store';
     config.headers['Content-Type'] = 'application/json; charset=utf-8';
 
@@ -142,25 +118,7 @@ service.interceptors.response.use(
     const { status, data: { Code, ErrorCode, code } = {} } = error.response;
     const curCode = `${Code || ErrorCode || code || ''}`;
 
-    if (status === 401) {
-      Cookie.remove('sessionid');
-      Cookie.remove('uuid');
-      localStore.remove('userInfo');
-
-      if (curCode === 'Gateway.AdminResetAccess.LoginInfoMatchError') {
-        setTimeout(() => {
-          window.location.replace('/login');
-        }, 2000);
-
-        return;
-      }
-
-      message.error([intl.get('login.loginOutTip')]);
-
-      setTimeout(() => {
-        window.location.replace('/login');
-      }, 2000);
-    } else if (status === 500 || status === 403) {
+    if (status === 500 || status === 403) {
       if (curCode || error.response.config.url.includes('/api/builder/v1/graph/output')) {
         return error.response;
       }

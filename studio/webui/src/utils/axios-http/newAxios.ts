@@ -4,22 +4,10 @@ import Cookie from 'js-cookie';
 import intl from 'react-intl-universal';
 import { message } from 'antd';
 
-import { localStore, sessionStore } from '@/utils/handleFunction';
-
 const service = axios.create({ baseURL: '/', timeout: 20000 });
 service.interceptors.request.use(
   config => {
     const anyDataLang = Cookie.get('anyDataLang');
-    const sessionidCookie = Cookie.get('sessionid') || '';
-    const sessionidStorage = sessionStore.get('sessionid') || '';
-    const uuid = Cookie.get('uuid');
-
-    // if (sessionidCookie && sessionidCookie !== sessionidStorage) {
-    //   sessionStore.set('sessionid', sessionidCookie);
-    //   window.location.reload();
-    // }
-    // if (uuid) config.headers.uuid = uuid;
-    // if (sessionidCookie) config.headers.sessionid = sessionidCookie;
 
     config.headers['Content-Type'] = 'application/json; charset=utf-8';
     config.headers['Accept-Language'] = anyDataLang === 'en-US' ? 'en-US' : 'zh-CN';
@@ -70,19 +58,7 @@ const request = ({ url, data, config, method }: RequestType): any => {
           message.error([intl.get('createEntity.timeOut')]);
           return reject(error.response);
         }
-        if (status === 401) {
-          Cookie.remove('sessionid');
-          Cookie.remove('uuid');
-          localStore.remove('userInfo');
-
-          if (ErrorCode === 'Gateway.AdminResetAccess.LoginInfoMatchError') {
-            setTimeout(() => window.location.replace('/login'), 2000);
-            return reject(error.response);
-          }
-
-          message.error([intl.get('login.loginOutTip')]);
-          setTimeout(() => window.location.replace('/login'), 2000);
-        } else if (status === 500 || status === 403) {
+        if (status === 500 || status === 403) {
           if (ErrorCode || config?.url?.includes('/api/builder/v1/graph/output')) return reject(error.response);
           if (ErrorCode === 'Gateway.PlatformAuth.AuthError') message.error('认证失败');
         } else if (status === 400) {
