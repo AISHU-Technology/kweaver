@@ -23,7 +23,8 @@ require (
 	github.com/swaggo/gin-swagger v1.5.2
 	github.com/swaggo/swag v1.8.4
 	github.com/vesoft-inc/nebula-go/v3 v3.2.0
-	go.uber.org/zap v1.17.0
+	go.uber.org/goleak v1.1.12 // indirect
+	go.uber.org/zap v1.22.0
 	golang.org/x/net v0.0.0-20220822230855-b0a4917ee28c // indirect
 	golang.org/x/sys v0.0.0-20220823224334-20c2bfdbfe24 // indirect
 	golang.org/x/tools v0.1.12 // indirect
