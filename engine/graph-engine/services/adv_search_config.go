@@ -97,7 +97,6 @@ func AddAdvSearchConfigHandler(c *gin.Context) {
 			return
 		}
 	}
-	//uuid := c.Request.Header.Get("uuid")
 	httpcode, res := controllers.AddAdvSearchConf(body.ConfName, body.Type, body.ConfDesc, body.KGID, body.ConfContent)
 
 	c.JSON(httpcode, res)
@@ -157,60 +156,10 @@ func GetInfoAdvSearchConfigHandler(c *gin.Context) {
 	}
 
 	confID, _ := strconv.Atoi(id)
-	//uuid := c.Request.Header.Get("uuid")
 	httpcode, res := controllers.GetInfoAdvSearchConf(confID)
 
 	c.JSON(httpcode, res)
 }
-
-// -------------------------
-// 基本信息检查
-// -------------------------
-//type CheckInfo struct {
-//	ConfID   int    `json:"conf_id"`
-//	ConfName string `json:"conf_name" binding:"required,max=50"`
-//	Type     string `json:"type"`
-//	KGID     int    `json:"kg_id" binding:"required"`
-//	ConfDesc string `json:"conf_desc" binding:"max=150"`
-//}
-//
-//func CheckInfoAdvSearchConfigHandler(c *gin.Context) {
-//	var body CheckInfo
-//
-//	err := c.ShouldBindWith(&body, binding.JSON)
-//	if err != nil {
-//		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
-//		return
-//	}
-//
-//	matchConfName, _ := regexp.MatchString("^[=~!@#$&%^&*()_+`{}\\-[\\];:,.\\\\\\?<>\\'\"|/~！@#￥%…&*（）—+。={ }|【 】‘“’”：；、《》？，。/a-zA-Z0-9\u4e00-\u9fa5]+$", body.ConfName)
-//	if !matchConfName {
-//		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, errors.New("conf_name invalid characters")))
-//		return
-//	}
-//
-//	if body.ConfDesc != "" {
-//		matchConfDesc, _ := regexp.MatchString("^[=~!@#$&%^&*()_+`{}\\-[\\];:,.\\\\\\?<>\\'\"|/~！@#￥%…&*（）—+。={ }|【 】‘“’”：；、《》？，。\n/a-zA-Z0-9\u4e00-\u9fa5]+$", body.ConfDesc)
-//		if !matchConfDesc {
-//			c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, errors.New("conf_desc invalid characters")))
-//			return
-//		}
-//	}
-//	uuid := c.Request.Header.Get("uuid")
-//	httpcode, res := controllers.CheckInfoAdvSearchConf(body.ConfName, body.Type, body.ConfDesc, body.KGID, body.ConfID, uuid)
-//
-//	c.JSON(httpcode, res)
-//}
-
-// -------------------------
-// 包含配置图谱列表
-// -------------------------
-//func KGListConfAdvSearchConfigHandler(c *gin.Context) {
-//	uuid := c.Request.Header.Get("uuid")
-//	httpcode, res := controllers.KGListAdvSearchConf(uuid)
-//
-//	c.JSON(httpcode, res)
-//}
 
 // -------------------------
 // 获取图谱相应配置
@@ -226,7 +175,6 @@ func GetConfByKGNameAdvSearchConfigHandler(c *gin.Context) {
 	}
 
 	id, _ := strconv.Atoi(kgid)
-	//uuid := c.Request.Header.Get("uuid")
 	httpcode, res := controllers.GetConfByKGID(id)
 
 	c.JSON(httpcode, res)
@@ -242,7 +190,6 @@ type KGListAsBody struct {
 }
 
 func KGListAdvSearchConfigHandler(c *gin.Context) {
-	//uuid := c.Request.Header.Get("uuid")
 
 	var body KGListAsBody
 	err := c.ShouldBind(&body)

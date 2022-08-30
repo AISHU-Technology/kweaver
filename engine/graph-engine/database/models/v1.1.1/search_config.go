@@ -13,6 +13,4 @@ type SearchConfig struct {
 	DB2Doc      string    `gorm:"column:db_2_doc;type:longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL"`
 	CreateTime  time.Time `gorm:"column:create_time;type:datetime(0) NULL DEFAULT NULL"`
 	UpdateTime  time.Time `gorm:"column:update_time;type:datetime(0) NULL DEFAULT NULL"`
-	//CreateUser  string    `gorm:"column:create_user;type:varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL"`
-	//UpdateUser  string    `gorm:"column:update_user;type:varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci  NULL DEFAULT NULL"`
 }

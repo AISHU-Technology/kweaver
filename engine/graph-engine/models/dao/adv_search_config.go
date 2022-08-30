@@ -105,10 +105,6 @@ func GetAdvSearchConf(filter, query, sort string) ([]AdvSearchConf, error) {
 			KGID:       kg_id,
 			CreateTime: create_time,
 			UpdateTime: update_time,
-			//CreateUser:  create_user,
-			//CreateEmail: create_email.String,
-			//UpdateUser:  update_user,
-			//UpdateEmail: update_email.String,
 		}
 
 		baseInfoMap := make(map[string]interface{})

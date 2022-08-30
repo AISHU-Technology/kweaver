@@ -25,12 +25,8 @@ func AdvSearchHandler(c *gin.Context) {
 	id, _ := c.Params.Get("confid")
 	// 国际化
 	header := c.Request.Header
-
-	//uuid := c.Request.Header.Get("uuid")
 	httpcode, res := controllers.AdvSearch(id, body.Query, body.Page, body.Size, body.Limit, header)
-
 	c.JSON(httpcode, res)
-
 }
 
 // 语义搜索test
@@ -44,9 +40,6 @@ func AdvSearchTestHandler(c *gin.Context) {
 
 	// 国际化
 	header := c.Request.Header
-
-	//uuid := c.Request.Header.Get("uuid")
 	httpcode, res := controllers.AdvSearchTest(body, header)
-
 	c.JSON(httpcode, res)
 }

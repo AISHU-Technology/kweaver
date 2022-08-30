@@ -13,20 +13,16 @@ import (
 var KGS KGList
 
 type KGConf struct {
-	ID       string
-	Type     string
-	Name     string
-	User     string
-	Pwd      string
-	URL      string
-	DB       string
-	Version  int
-	KGConfID string
-	//CreateUser       string
-	//CreateEmail      string
-	CreateTime string
-	//UpdateUser       string
-	//UpdateEmail      string
+	ID               string
+	Type             string
+	Name             string
+	User             string
+	Pwd              string
+	URL              string
+	DB               string
+	Version          int
+	KGConfID         string
+	CreateTime       string
 	UpdateTime       string
 	Status           string
 	TaskStatus       string
@@ -86,16 +82,14 @@ func GetKGConf() ([]KGConf, error) {
 			graph_baseInfo sql2.NullString
 			hlStart        string
 			hlEnd          string
-			//create_user    sql2.NullString
-			create_time sql2.NullString
-			//update_user    sql2.NullString
-			update_time sql2.NullString
-			port        sql2.NullString
-			user        sql2.NullString
-			password    sql2.NullString
-			version     sql2.NullString
-			dbtype      sql2.NullString
-			fulltextID  sql2.NullString
+			create_time    sql2.NullString
+			update_time    sql2.NullString
+			port           sql2.NullString
+			user           sql2.NullString
+			password       sql2.NullString
+			version        sql2.NullString
+			dbtype         sql2.NullString
+			fulltextID     sql2.NullString
 		)
 		err := kgConfig.Scan(&id, &KDB_ip, &KDB_name, &KG_config_id, &KG_name, &status, &task_status, &config_status,
 			&graph_baseInfo, &hlStart, &hlEnd, &create_time, &update_time, &port, &user,
@@ -120,13 +114,11 @@ func GetKGConf() ([]KGConf, error) {
 			TaskStatus:   task_status.String,
 			ConfigStatus: config_status.String,
 			KGConfID:     KG_config_id,
-			//CreateUser:   create_user.String,
-			CreateTime: create_time.String,
-			//UpdateUser:   update_user.String,
-			UpdateTime: update_time.String,
-			HLStart:    hlStart,
-			HLEnd:      hlEnd,
-			FulltextID: fulltextID.String,
+			CreateTime:   create_time.String,
+			UpdateTime:   update_time.String,
+			HLStart:      hlStart,
+			HLEnd:        hlEnd,
+			FulltextID:   fulltextID.String,
 		}
 
 		if graph_baseInfo.String != "" {

@@ -19,17 +19,15 @@ import (
 
 // KG 知识图谱
 type KG struct {
-	ID           string `json:"id"`
-	Name         string `json:"name"`
-	Status       string `json:"status"`
-	TaskStatus   string `json:"task_status"`
-	ConfigStatus string `json:"config_status"`
-	KGconfid     string `json:"kg_confid"`
-	//CreateUser   string    `json:"create_user"`
-	CreateTime string `json:"create_time"`
-	//UpdateUser   string    `json:"update_user"`
-	UpdateTime string    `json:"update_time"`
-	Onto       *Ontology `json:"onto"`
+	ID           string    `json:"id"`
+	Name         string    `json:"name"`
+	Status       string    `json:"status"`
+	TaskStatus   string    `json:"task_status"`
+	ConfigStatus string    `json:"config_status"`
+	KGconfid     string    `json:"kg_confid"`
+	CreateTime   string    `json:"create_time"`
+	UpdateTime   string    `json:"update_time"`
+	Onto         *Ontology `json:"onto"`
 }
 
 // Ontology 本体类
@@ -104,17 +102,15 @@ type KGListRes struct {
 }
 
 type KGRes struct {
-	ID           string `json:"id"`
-	Name         string `json:"name"`
-	Status       string `json:"status"`
-	TaskStatus   string `json:"task_status"`
-	ConfigStatus string `json:"config_status"`
-	KGconfid     string `json:"kg_confid"`
-	//CreateUser   string     `json:"create_user"`
-	CreateTime string `json:"create_time"`
-	//UpdateUser   string     `json:"update_user"`
-	UpdateTime string     `json:"update_time"`
-	Onto       *OntoCount `json:"onto"`
+	ID           string     `json:"id"`
+	Name         string     `json:"name"`
+	Status       string     `json:"status"`
+	TaskStatus   string     `json:"task_status"`
+	ConfigStatus string     `json:"config_status"`
+	KGconfid     string     `json:"kg_confid"`
+	CreateTime   string     `json:"create_time"`
+	UpdateTime   string     `json:"update_time"`
+	Onto         *OntoCount `json:"onto"`
 }
 
 // Ontology 本体类
@@ -159,11 +155,9 @@ func KGList(authorType int, graphName string, graphStatus string, page int32, si
 						TaskStatus:   k.TaskStatus,
 						ConfigStatus: k.ConfigStatus,
 						KGconfid:     k.KGConfID,
-						//CreateUser:   k.CreateUser,
-						CreateTime: k.CreateTime,
-						//UpdateUser:   k.UpdateUser,
-						UpdateTime: k.UpdateTime,
-						Onto:       nil,
+						CreateTime:   k.CreateTime,
+						UpdateTime:   k.UpdateTime,
+						Onto:         nil,
 					}
 
 					res = append(
@@ -182,11 +176,9 @@ func KGList(authorType int, graphName string, graphStatus string, page int32, si
 						TaskStatus:   k.TaskStatus,
 						ConfigStatus: k.ConfigStatus,
 						KGconfid:     k.KGConfID,
-						//CreateUser:   k.CreateUser,
-						CreateTime: k.CreateTime,
-						//UpdateUser:   k.UpdateUser,
-						UpdateTime: k.UpdateTime,
-						Onto:       nil,
+						CreateTime:   k.CreateTime,
+						UpdateTime:   k.UpdateTime,
+						Onto:         nil,
 					}
 
 					res = append(
@@ -208,11 +200,9 @@ func KGList(authorType int, graphName string, graphStatus string, page int32, si
 						TaskStatus:   k.TaskStatus,
 						ConfigStatus: k.ConfigStatus,
 						KGconfid:     k.KGConfID,
-						//CreateUser:   k.CreateUser,
-						CreateTime: k.CreateTime,
-						//UpdateUser:   k.UpdateUser,
-						UpdateTime: k.UpdateTime,
-						Onto:       nil,
+						CreateTime:   k.CreateTime,
+						UpdateTime:   k.UpdateTime,
+						Onto:         nil,
 					}
 
 					res = append(
@@ -230,11 +220,9 @@ func KGList(authorType int, graphName string, graphStatus string, page int32, si
 					TaskStatus:   k.TaskStatus,
 					ConfigStatus: k.ConfigStatus,
 					KGconfid:     k.KGConfID,
-					//CreateUser:   k.CreateUser,
-					CreateTime: k.CreateTime,
-					//UpdateUser:   k.UpdateUser,
-					UpdateTime: k.UpdateTime,
-					Onto:       nil,
+					CreateTime:   k.CreateTime,
+					UpdateTime:   k.UpdateTime,
+					Onto:         nil,
 				}
 
 				res = append(
@@ -279,11 +267,9 @@ func KGList(authorType int, graphName string, graphStatus string, page int32, si
 					TaskStatus:   r.KG.TaskStatus,
 					ConfigStatus: r.KG.ConfigStatus,
 					KGconfid:     r.KG.KGconfid,
-					//CreateUser:   r.KG.CreateUser,
-					CreateTime: r.KG.CreateTime,
-					//UpdateUser:   r.KG.UpdateUser,
-					UpdateTime: r.KG.UpdateTime,
-					Onto:       &ontoCount,
+					CreateTime:   r.KG.CreateTime,
+					UpdateTime:   r.KG.UpdateTime,
+					Onto:         &ontoCount,
 				}
 
 				kglist = append(kglist, kg)
@@ -306,11 +292,9 @@ func KGList(authorType int, graphName string, graphStatus string, page int32, si
 				TaskStatus:   r.KG.TaskStatus,
 				ConfigStatus: r.KG.ConfigStatus,
 				KGconfid:     r.KG.KGconfid,
-				//CreateUser:   r.KG.CreateUser,
-				CreateTime: r.KG.CreateTime,
-				//UpdateUser:   r.KG.UpdateUser,
-				UpdateTime: r.KG.UpdateTime,
-				Onto:       &ontoCount,
+				CreateTime:   r.KG.CreateTime,
+				UpdateTime:   r.KG.UpdateTime,
+				Onto:         &ontoCount,
 			}
 
 			kglist = append(kglist, kg)

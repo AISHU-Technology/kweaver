@@ -757,20 +757,6 @@ func (q *DataQuery) SearchV(ctx context.Context, args SearchArgs) (*SearchRes, e
 	start := time.Now()
 
 	c := ctx.Value("Context").(*gin.Context)
-
-	//uuid := c.Request.Header.Get("uuid")
-	//kgid, _ := strconv.Atoi(string(args.ID))
-	//// 判断用户是否有操作资源权限
-	//operateResp, err := utils.GetAuthResourceOperate(uuid, kgid, 3, utils.RescourceOperateMap[utils.GraphSearch])
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//if operateResp["res"] == false {
-	//	c.Status(403)
-	//	return nil, utils.ErrInfo(utils.ErrRightsErr, errors.New("insufficient user rights"))
-	//}
-
 	// 数据库获取配置
 	r, err := utils.GetKGConf()
 	if err != nil {
@@ -925,19 +911,6 @@ type SearchEArgs struct {
 // SearchE 获取边的class和count
 func (q *DataQuery) SearchE(ctx context.Context, args SearchEArgs) (*SearchEdgesRes, error) {
 	c := ctx.Value("Context").(*gin.Context)
-
-	//uuid := c.Request.Header.Get("uuid")
-	//kgid, _ := strconv.Atoi(string(args.ID))
-	//// 判断用户是否有操作资源权限
-	//operateResp, err := utils.GetAuthResourceOperate(uuid, kgid, 3, utils.RescourceOperateMap[utils.GraphSearch])
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//if operateResp["res"] == false {
-	//	c.Status(403)
-	//	return nil, utils.ErrInfo(utils.ErrRightsErr, errors.New("insufficient user rights"))
-	//}
 
 	// 数据库获取配置
 	r, err := utils.GetKGConf()
@@ -1189,19 +1162,6 @@ type ExpandEArgs struct {
 
 func (q *DataQuery) ExpandE(ctx context.Context, args *ExpandEArgs) (*[]*EdgeRes, error) {
 	c := ctx.Value("Context").(*gin.Context)
-
-	// 判断用户是否有操作资源权限
-	//uuid := c.Request.Header.Get("uuid")
-	//kgid, _ := strconv.Atoi(string(args.ID))
-	//operateResp, err := utils.GetAuthResourceOperate(uuid, kgid, 3, utils.RescourceOperateMap[utils.GraphSearch])
-	//if err != nil {
-	//	return nil, err
-	//}
-	//
-	//if operateResp["res"] == false {
-	//	c.Status(403)
-	//	return nil, utils.ErrInfo(utils.ErrRightsErr, errors.New("insufficient user rights"))
-	//}
 
 	var res []*EdgeRes
 

@@ -522,19 +522,15 @@ func (r *Ontology) PCount() string {
 
 // KG 知识图谱
 type KG struct {
-	ID           graphql.ID
-	Name         string
-	Status       string
-	TaskStatus   string
-	TriggerType  string
-	RabbitmqDs   int32
-	ConfigStatus string
-	KGconfid     graphql.ID
-	//CreateUser       string
-	//CreateEmail      string
-	CreateTime string
-	//UpdateUser       string
-	//UpdateEmail      string
+	ID               graphql.ID
+	Name             string
+	Status           string
+	TaskStatus       string
+	TriggerType      string
+	RabbitmqDs       int32
+	ConfigStatus     string
+	KGconfid         graphql.ID
+	CreateTime       string
 	UpdateTime       string
 	Onto             *Ontology
 	ASModel          bool
@@ -590,30 +586,10 @@ func (r *KGResovler) KGConfID() graphql.ID {
 	return r.kg.KGconfid
 }
 
-// CreateUser 返回创建者
-//func (r *KGResovler) CreateUser() string {
-//	return r.kg.CreateUser
-//}
-
-// CreateEmail 返回创建者邮箱
-//func (r *KGResovler) CreateEmail() string {
-//	return r.kg.CreateEmail
-//}
-
 // CreateTime 返回创建时间
 func (r *KGResovler) CreateTime() string {
 	return r.kg.CreateTime
 }
-
-//// UpdateUser 返回修改者
-//func (r *KGResovler) UpdateUser() string {
-//	return r.kg.UpdateUser
-//}
-//
-//// UpdateEmail 返回修改者邮箱
-//func (r *KGResovler) UpdateEmail() string {
-//	return r.kg.UpdateEmail
-//}
 
 // UpdateTime 返回更新时间
 func (r *KGResovler) UpdateTime() string {
@@ -1027,24 +1003,20 @@ type filter struct {
 
 func getKgListByFilter(k utils.KGConf, authKGResp []interface{}) (KG, error) {
 	kg := KG{
-		ID:           graphql.ID(k.ID),
-		Name:         k.Name,
-		Status:       k.Status,
-		TaskStatus:   k.TaskStatus,
-		TriggerType:  k.TriggerType,
-		RabbitmqDs:   k.RabbitmqDs,
-		ConfigStatus: k.ConfigStatus,
-		KGconfid:     graphql.ID(k.KGConfID),
-		CreateTime:   k.CreateTime,
-		UpdateTime:   k.UpdateTime,
-		Onto:         nil,
-		ASModel:      false,
-		AdvConf:      false,
-		KGDesc:       k.KGDesc,
-		//CreateUser:       k.CreateUser,
-		//CreateEmail:      k.CreateEmail,
-		//UpdateUser:       k.UpdateUser,
-		//UpdateEmail:      k.UpdateEmail,
+		ID:               graphql.ID(k.ID),
+		Name:             k.Name,
+		Status:           k.Status,
+		TaskStatus:       k.TaskStatus,
+		TriggerType:      k.TriggerType,
+		RabbitmqDs:       k.RabbitmqDs,
+		ConfigStatus:     k.ConfigStatus,
+		KGconfid:         graphql.ID(k.KGConfID),
+		CreateTime:       k.CreateTime,
+		UpdateTime:       k.UpdateTime,
+		Onto:             nil,
+		ASModel:          false,
+		AdvConf:          false,
+		KGDesc:           k.KGDesc,
 		EffectiveStorage: k.EffectiveStorage,
 	}
 
