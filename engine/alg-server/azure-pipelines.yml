@@ -6,6 +6,12 @@ trigger:
     include:
       - develop
       - DATA-*
+  paths:
+    include:
+      - /engine/alg-server/*
+    exclude:
+      - /builder/*
+      - /sdk/*
 
 pool:
   name: algServer
