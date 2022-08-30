@@ -1,6 +1,6 @@
 const baseBuilder = '/api/builder/v1';
 const baseEngine = '/api/engine/v1';
-const baseManager = '/api/manager/v1';
+const baseStudio = '/api/studio/v1';
 const baseDataIo = '/api/data-io/v1';
 
 const API = {
@@ -48,9 +48,9 @@ const API = {
   getOntoByName: `${baseBuilder}/onto/searchbyname`,
 
   // expired
-  pwSizeGet: `${baseManager}/system/passize`,
-  pwReset: `${baseManager}/account/pass`,
-  pwPut: `${baseManager}/pass`,
+  pwSizeGet: `${baseStudio}/system/passize`,
+  pwReset: `${baseStudio}/account/pass`,
+  pwPut: `${baseStudio}/pass`,
 
   // explore
   analysisReportGet: `${baseEngine}/analysis`,
@@ -74,9 +74,9 @@ const API = {
   graphGetInfoDetail: `${baseBuilder}/graph/info/detail`,
 
   // login
-  loginPost: `${baseManager}/login`,
-  logoutPost: `${baseManager}/logout`,
-  userSourceGet: `${baseManager}/user/status`,
+  loginPost: `${baseStudio}/login`,
+  logoutPost: `${baseStudio}/logout`,
+  userSourceGet: `${baseStudio}/user/status`,
 
   // searchConfig 认知搜索
   addAdvConfig: `${baseEngine}/adv-search-config`,
@@ -92,19 +92,19 @@ const API = {
   fetchCanvasData: `${baseBuilder}/onto/getbykgid`,
 
   // storageManagement
-  graphDBGetById: `${baseManager}/graphdb`,
-  graphDBGetList: `${baseManager}/graphdb/list`,
-  graphDBCreate: `${baseManager}/graphdb/add`,
-  graphDBDelete: `${baseManager}/graphdb/delete`,
-  graphDBUpdate: `${baseManager}/graphdb/update`,
-  graphDBTest: `${baseManager}/graphdb/test`,
-  graphDBGetGraphById: `${baseManager}/graphdb/graph/list`,
-  openSearchGet: `${baseManager}/opensearch/list`,
-  openSearchGetById: `${baseManager}/opensearch`,
-  openSearchCreate: `${baseManager}/opensearch/add`,
-  openSearchDelete: `${baseManager}/opensearch/delete`,
-  openSearchUpdate: `${baseManager}/opensearch/update`,
-  openSearchTest: `${baseManager}/opensearch/test`,
+  graphDBGetById: `${baseStudio}/graphdb`,
+  graphDBGetList: `${baseStudio}/graphdb/list`,
+  graphDBCreate: `${baseStudio}/graphdb/add`,
+  graphDBDelete: `${baseStudio}/graphdb/delete`,
+  graphDBUpdate: `${baseStudio}/graphdb/update`,
+  graphDBTest: `${baseStudio}/graphdb/test`,
+  graphDBGetGraphById: `${baseStudio}/graphdb/graph/list`,
+  openSearchGet: `${baseStudio}/opensearch/list`,
+  openSearchGetById: `${baseStudio}/opensearch`,
+  openSearchCreate: `${baseStudio}/opensearch/add`,
+  openSearchDelete: `${baseStudio}/opensearch/delete`,
+  openSearchUpdate: `${baseStudio}/opensearch/update`,
+  openSearchTest: `${baseStudio}/opensearch/test`,
 
   // taskManagement
   taskGet: `${baseBuilder}/task`,
