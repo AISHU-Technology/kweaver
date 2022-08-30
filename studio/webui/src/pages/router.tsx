@@ -41,7 +41,7 @@ const App = (props: any) => {
           <Route path="/home/workflow/edit" render={() => <Workflow />} />
           <Route path="/home" render={() => <Home />} />
           <Route path="/knowledge" render={(arg: any) => <KnowledgeNetwork {...arg} />} />
-          <Route component={NotFound} />
+          <Route render={() => <NotFound />} />
         </Switch>
       </Router>
     </div>
