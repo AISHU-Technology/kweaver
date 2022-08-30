@@ -54,6 +54,6 @@ swagger:
     - {"name": "KN Builder", "description": "知识网络生成服务 Knowledge Network Builder（KN Builder）：利用人工智能技术，将不同形态的数据转化为知识网络，实现数据知识化。包括知识图谱、语言模型和规则库。"}
     - {"name": "CEngine", "description": "知识网络探索式分析相关API，可实现实体的搜索，以及探索与其相关联的实体。遵循GraphQL接口规范，详细schema可查看graphql schema"}
   doc_urls:
-    - "/swagger/doc.json"
+    - "http://localhost:6800/swagger/doc.json"
     - "http://kw-builder:6475/swagger/swagger.json"
     - "http://kw-engine:6474/swagger/doc.json"
