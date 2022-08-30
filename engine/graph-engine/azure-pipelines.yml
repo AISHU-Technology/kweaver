@@ -6,6 +6,12 @@ trigger:
     include:
       - develop
       - DATA-*
+  paths:
+    include:
+      - /engine/graph-engine/*
+    exclude:
+      - /builder/*
+      - /sdk/*
 
 pool:
   name: go
