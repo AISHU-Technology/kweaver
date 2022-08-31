@@ -94,7 +94,6 @@ func Router() *gin.Engine {
 	initAPIs()     //初始化controller层对象
 	registerValidation()
 
-	webui.AddRoutes(router)
 	router.Use(ZapLogger(global.LOG), middleware.ErrorHandler)
 	router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	r1 := router.Group("/api/studio/v1")
