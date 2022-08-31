@@ -67,7 +67,7 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarborJob)
         tags: $(mainTag)
-        Dockerfile: '**/Dockerfilejob'
+        Dockerfile: '**/Graphengine.Dockerfilejob'
 
     - task: Bash@3
       displayName: saveJobTar
