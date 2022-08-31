@@ -18,8 +18,8 @@ var staticFS embed.FS
 func AddRoutes(router gin.IRouter) {
 	embeddedBuildFolder := newStaticFileSystem()
 	fallbackFileSystem := newFallbackFileSystem(embeddedBuildFolder)
-	router.Use(static.Serve("/apphome", embeddedBuildFolder))
-	router.Use(static.Serve("/apphome", fallbackFileSystem))
+	router.Use(static.Serve("/", embeddedBuildFolder))
+	router.Use(static.Serve("/", fallbackFileSystem))
 }
 
 // ----------------------------------------------------------------------
