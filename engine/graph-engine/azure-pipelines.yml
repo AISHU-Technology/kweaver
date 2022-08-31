@@ -118,7 +118,7 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: $(mainTag)
-        Dockerfile: '**/Dockerfile'
+        Dockerfile: '**/Graphengine.Dockerfile'
     - task: Bash@3
       displayName: saveTar-engine
       inputs:
