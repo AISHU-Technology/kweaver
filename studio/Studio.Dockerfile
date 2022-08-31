@@ -11,7 +11,7 @@ FROM golang:1.17 as gomake
 RUN mkdir -p /root/studio
 WORKDIR /root/studio/
 COPY . .
-COPY --from=nodemake /root/studio/webui/build/* /root/studio/webui/
+COPY --from=nodemake /root/studio/webui/build/* /root/studio/webui/build/
 RUN ls -R . && \
 go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
