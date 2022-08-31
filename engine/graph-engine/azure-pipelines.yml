@@ -115,10 +115,11 @@ jobs:
     - task: Docker@2
       displayName: buildImage-engine
       inputs:
-        command: 'build'
-        repository: $(imageNameWithHarbor)
+        targetType: 'inline'
         script: |
           ls -R
+        command: 'build'
+        repository: $(imageNameWithHarbor)
         tags: $(mainTag)
         Dockerfile: '**/Graphengine.Dockerfile'
     - task: Bash@3
