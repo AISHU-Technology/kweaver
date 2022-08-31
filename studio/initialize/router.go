@@ -2,7 +2,6 @@ package initialize
 
 import (
 	"bytes"
-	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
@@ -15,7 +14,7 @@ import (
 	"kw-studio/global"
 	"kw-studio/middleware"
 	"kw-studio/validators"
-	"strings"
+	"kw-studio/webui"
 	"time"
 )
 
@@ -94,15 +93,9 @@ func Router() *gin.Engine {
 	InitServices() //初始化service层对象
 	initAPIs()     //初始化controller层对象
 	registerValidation()
+
+	webui.AddRoutes(router)
 	router.Use(ZapLogger(global.LOG), middleware.ErrorHandler)
-	//configuration to SAP applications
-	router.Use(static.Serve("/", static.LocalFile("./webui", true)))
-	router.NoRoute(func(c *gin.Context) {
-		if !strings.HasPrefix(c.Request.RequestURI, "/api") {
-			c.File("./assets/build/index.html")
-		}
-		//default 404 page not found
-	})
 	router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	r1 := router.Group("/api/studio/v1")
 	{
