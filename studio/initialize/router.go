@@ -15,6 +15,7 @@ import (
 	"kw-studio/global"
 	"kw-studio/middleware"
 	"kw-studio/validators"
+	"strings"
 	"time"
 )
 
@@ -94,7 +95,14 @@ func Router() *gin.Engine {
 	initAPIs()     //初始化controller层对象
 	registerValidation()
 	router.Use(ZapLogger(global.LOG), middleware.ErrorHandler)
-	router.Use(static.Serve("/static", static.LocalFile("./webui", true)))
+	//configuration to SAP applications
+	router.Use(static.Serve("/", static.LocalFile("./webui", true)))
+	router.NoRoute(func(c *gin.Context) {
+		if !strings.HasPrefix(c.Request.RequestURI, "/api") {
+			c.File("./assets/build/index.html")
+		}
+		//default 404 page not found
+	})
 	router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	r1 := router.Group("/api/studio/v1")
 	{
