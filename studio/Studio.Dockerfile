@@ -11,7 +11,8 @@ FROM golang:1.17 as gomake
 RUN mkdir -p /root/studio
 WORKDIR /root/studio/
 COPY . .
-RUN go env -w GO111MODULE=on && \
+RUN ls -R . && \
+go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
 go mod tidy && \
