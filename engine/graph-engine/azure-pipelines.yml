@@ -115,9 +115,6 @@ jobs:
     - task: Docker@2
       displayName: buildImage-engine
       inputs:
-        targetType: 'inline'
-        script: |
-          ls -R
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: $(mainTag)
