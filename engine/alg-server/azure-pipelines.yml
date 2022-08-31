@@ -49,7 +49,7 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: $(mainTag)
-        Dockerfile: '/engine/alg-server/Dockerfile'
+        Dockerfile: '**/engine/alg-server/Dockerfile'
     - task: Bash@3
       displayName: saveTar
       inputs:
