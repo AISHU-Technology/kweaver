@@ -23,7 +23,7 @@ const SelectStore = React.forwardRef((props: SelectStoreType, ref: any) => {
   const getStore = async (page = 1) => {
     try {
       setIsFetching(true);
-      const postData = { page, size: -1, order: 'created-1', type: 'nebula', name: '' };
+      const postData = { page, size: -1, orderField: 'created', order: 'DESC', type: 'nebula', name: '' };
       const result = await serverStorageManagement.graphDBGetList(postData);
       const { df, data, total, count } = result?.res || {};
       const _list = df || data || [];

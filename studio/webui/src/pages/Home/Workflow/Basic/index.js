@@ -63,7 +63,7 @@ const Basic = (props, ref) => {
   };
 
   const getStorage = async () => {
-    const data = { page: 1, size: -1, order: 'created-1', type: 'all', name: '' };
+    const data = { page: 1, size: -1, orderField: 'created', order: 'DESC', type: 'all', name: '' };
     const res = await serviceStorageManagement.graphDBGetList(data);
 
     if (res && res.res) {
