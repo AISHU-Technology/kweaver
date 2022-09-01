@@ -1,4 +1,5 @@
 #!/bin/sh
+cd ./engine/graph-engine
 make cleanall
 make all
 
