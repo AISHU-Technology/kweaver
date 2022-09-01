@@ -125,7 +125,7 @@ jobs:
         targetType: 'inline'
         script: |
           docker save -o KWeaver-$(mainTag)-$(imageName).tar $(imageNameWithHarbor):$(mainTag)
-          cp KWeaver-$(mainTag)-$(imageName).tar KWeaver-$(mainTag)-kg-$(imageName)-$(imageTag).tar
+          cp KWeaver-$(mainTag)-$(imageName).tar KWeaver-$(mainTag)-kw-$(imageName)-$(imageTag).tar
     - task: FtpUpload@2
       displayName: uploadFtp-engine
       inputs:
@@ -134,7 +134,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/KWeaver-$(mainTag)-kg-$(imageName)-$(imageTag).tar'
+        filePatterns: '**/KWeaver-$(mainTag)-kw-$(imageName)-$(imageTag).tar'
         remoteDirectory: '/packages/$(imageNameFtp)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false
