@@ -15,6 +15,7 @@
     "name": "Name",
     "state": "State",
     "creationWay": "Creation way",
+    "storageLocation": "Storage Location",
     "_import": "import",
     "manually": "manually",
     "numberOfEntity": "Number of entity",

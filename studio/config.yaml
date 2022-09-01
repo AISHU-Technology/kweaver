@@ -20,13 +20,15 @@ redis:
   host: 10.4.68.144
   port: 6379
   user: ""
-  password: ""
-  master_name: master
+  password: "123456"
+  master_name: mymaster
   sentinel:
-    - host: 10.4.68.144
-      port: 6379
-  sentinel_user: ""
-  sentinel_password: Qwe123!@#
+    - host: 10.4.69.47
+      port: 26380
+    - host: 10.4.69.47
+      port: 26381
+  sentinel_user: ~
+  sentinel_password: ~
   db: 0
 
 #zap配置

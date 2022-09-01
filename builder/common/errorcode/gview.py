@@ -34,9 +34,10 @@ class Gview(object):
         detailError = errDict[ErrorCode]
         detailErrorCopy= copy.deepcopy(detailError)
 
-        detailErrorCopy['description'] = cls.replaceArgs(detailError['description'], args)
-        detailErrorCopy['cause'] = cls.replaceArgs(detailError['cause'], args)
-        detailErrorCopy['solution'] = cls.replaceArgs(detailError['solution'], args)
+        detailErrorCopy['Description'] = cls.replaceArgs(detailError['Description'], args)
+        detailErrorCopy['ErrorDetails'] = cls.replaceArgs(detailError['ErrorDetails'], args)
+        detailErrorCopy['Solution'] = cls.replaceArgs(detailError['Solution'], args)
+        detailErrorCopy['ErrorLink'] = ""
         return jsonify(detailErrorCopy)
 
     @staticmethod

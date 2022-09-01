@@ -73,7 +73,7 @@ const KnowledgeNetwork = () => {
     logo: headLogo,
     operation: [
       { float: 'left', component: () => <Breadcrumb kgData={selectedKnowledge} /> },
-      { icon: <SettingOutlined />, text: 'API文档', onClick: () => history.push('/login') },
+      { icon: <SettingOutlined />, text: 'API文档', onClick: () => history.push('/home/system-config') },
       { icon: <SettingOutlined />, text: '系统配置', onClick: () => history.push('/home/system-config') }
     ]
   };
