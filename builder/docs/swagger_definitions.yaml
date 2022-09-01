@@ -1,0 +1,93 @@
+tags:
+  - 'KN Builder'
+consumes:
+  - 'application/json'
+produces:
+  - 'application/json'
+responses:
+  '200':
+    description: 'operation success'
+    schema:
+      $ref: '#/definitions/BuilderRes'
+  '500':
+    description: 'operation failure'
+    schema:
+      $ref: '#/definitions/OldBuilderErrResponse'
+  '400':
+    description: 'parameter error'
+    schema:
+      $ref: '#/definitions/OldBuilderErrResponse'
+definitions:
+  graph:
+    type: 'object'
+    required:
+      - 'graph_process'
+      - 'graph_step'
+      - 'knw_id'
+    properties:
+      graph_process:
+        type: 'longtext'
+        example: [
+        {
+          "graph_Name": "graph name",
+          "graph_des": "graph description",
+          "graph_db_id": 1
+        }
+        ]
+      graph_step:
+        type: 'string'
+        format: 'string'
+        description: 'graph step'
+        example: 'graph_baseInfo'
+      knw_id:
+        type: 'integer'
+        format: 'int32'
+        description: 'knowledge network id'
+        example: 2
+  BuilderRes:
+    type: 'object'
+    properties:
+      res:
+        type: 'string'
+        format: 'string'
+        description: 'success information'
+    xml:
+      name: 'builderRes'
+  OldBuilderErrResponse:
+    type: 'object'
+    properties:
+      Cause:
+        type: 'string'
+        format: 'string'
+        description: 'error description'
+      Code:
+        type: 'integer'
+        format: 'int32'
+        description: 'error code'
+      message:
+        type: 'string'
+        format: 'string'
+        description: 'error detail'
+  NewBuilderErrResponse:
+    type: 'object'
+    properties:
+      ErrorCode:
+        type: 'string'
+        format: 'string'
+        description: 'error code'
+      Description:
+        type: 'string'
+        format: 'string'
+        description: 'error description'
+      ErrorDetails:
+        type: 'string'
+        format: 'string'
+        description: 'error detail'
+      Solution:
+        type: 'string'
+        format: 'string'
+        description: 'solution'
+      ErrorLink:
+        type: 'string'
+        format: 'string'
+        description: 'error link'
