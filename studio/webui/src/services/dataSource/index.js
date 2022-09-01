@@ -75,26 +75,6 @@ const asAuthGet = async (ip, port, key) =>
     ds_auth: key
   });
 
-/**
- * 将授权信息保存到后端
- */
-const asAuthPost = async body => await apiService.axiosPost(API.asAuthPost, body);
-
-/**
- * 删除本体
- * @param {string} dsname 请求`数据源名`
- */
-const deleteOnto = async otlids => await apiService.axiosDelete(API.deleteOnto, { data: { otlids } });
-
-/**
- * 模糊查询本体
- * @param {string} otlname 本体名称
- * @param {int} page 请求`页码`
- * @param {int} size 请求`每页条数`
- */
-const getOntoByName = async (otlname, otl_status, page, size, order) =>
-  await apiService.axiosGetData(API.getOntoByName, { otlname, otl_status, page, size, order });
-
 export default {
   sourceConnectTest,
   dataSourcePost,
@@ -104,8 +84,5 @@ export default {
   dataSourcePut,
   dataSourceDelete,
   getDsByName,
-  asAuthGet,
-  asAuthPost,
-  deleteOnto,
-  getOntoByName
+  asAuthGet
 };
