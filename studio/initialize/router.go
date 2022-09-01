@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	jsoniter "github.com/json-iterator/go"
-	"github.com/swaggo/files"
+	swaggerFiles "github.com/swaggo/files"
 	gs "github.com/swaggo/gin-swagger"
 	"go.uber.org/zap"
 	"io/ioutil"
@@ -92,8 +92,8 @@ func Router() *gin.Engine {
 	InitServices() //初始化service层对象
 	initAPIs()     //初始化controller层对象
 	registerValidation()
+
 	router.Use(ZapLogger(global.LOG), middleware.ErrorHandler)
-	router.Static("/webui", "./webui")
 	router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	r1 := router.Group("/api/studio/v1")
 	{

@@ -6,6 +6,7 @@ import (
 	"kw-studio/global"
 	"kw-studio/initialize"
 	"kw-studio/upgrade"
+	"kw-studio/webui"
 )
 
 //go:generate go env -w GO111MODULE=on
@@ -25,6 +26,8 @@ func main() {
 	upgrade.Upgrade()
 	//5.初始化路由
 	router := initialize.Router()
+	webui.AddRoutes(router)
+
 	switch global.Config.Server.Mode {
 	case "debug":
 		gin.SetMode(gin.DebugMode)

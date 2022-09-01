@@ -19,7 +19,7 @@ redis:
   mode: stand-alone #stand-alone sentinel
   host: 10.4.68.144
   port: 6379
-  user: ~
+  user: ""
   password: "123456"
   master_name: mymaster
   sentinel:
