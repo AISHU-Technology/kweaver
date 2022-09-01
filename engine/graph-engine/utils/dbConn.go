@@ -27,11 +27,12 @@ func InitConn() {
 	//	"anydata")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?multiStatements=true",
-		os.Getenv("RDSUSER"),
-		os.Getenv("RDSPASS"),
-		os.Getenv("RDSHOST"),
-		os.Getenv("RDSPORT"),
-		os.Getenv("RDSDBNAME"))
+		CONFIG.MariaConf.User,
+		CONFIG.MariaConf.Pwd,
+		CONFIG.MariaConf.IP,
+		CONFIG.MariaConf.Port,
+		CONFIG.MariaConf.Db,
+	)
 	logger2.Info(dsn)
 	LOGGER := logger.New(
 		log.New(os.Stdout, "", log.LstdFlags),

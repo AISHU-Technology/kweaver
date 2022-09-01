@@ -5,7 +5,7 @@ import (
 	v1_1_1 "graph-engine/database/models/v1.1.1"
 	"graph-engine/database/operation"
 	"graph-engine/logger"
-	"os"
+	"graph-engine/utils"
 	"reflect"
 	"strings"
 )
@@ -15,8 +15,8 @@ var MigrageStruct = []interface{}{&operation.V_1_1_1{}}
 
 func InitDB() {
 	// 此版本用来确定当前程序版本
-	databaseVersion := os.Getenv("ENGINEVERSION")
-	//databaseVersion := "engine-1.1.1"
+	//databaseVersion := os.Getenv("ENGINEVERSION")
+	databaseVersion := "engine-1.1.1"
 
 	if databaseVersion == "" {
 		panic("please input engine database version to upgraded in job")
@@ -26,7 +26,7 @@ func InitDB() {
 	databaseVersion = strings.Split(databaseVersion, "-")[1]
 	databaseVersionDeal := strings.ReplaceAll("V_"+databaseVersion, ".", "_")
 
-	db := operation.GormEngine()
+	db := utils.DBENGINE
 
 	// 获取当前子系统版本
 	existVersion := db.Migrator().HasTable(&v1_1_1.Version{})

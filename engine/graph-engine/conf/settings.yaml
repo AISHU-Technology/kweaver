@@ -9,14 +9,15 @@ orient:
   port: 2480
   db: kc-topic
 algServer:
-  ip: kg-alg-server
+  ip: kw-alg-server
   port: 8080
 builderServer:
-  ip: kg-builder
+  ip: kw-builder
   port: 6475
-maria:
-  ip: rds-proton-rds-mariadb-cluster
-  port: 3320
+mariadb:
+  #ip: rds-proton-rds-mariadb-cluster
+  ip: 10.4.106.255
+  port: 3306
   user: anydata
   password: Qwe123!@#
   db: anydata

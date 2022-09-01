@@ -7,6 +7,7 @@ package utils
 import (
 	"errors"
 	"gitlab.aishu.cn/anydata-rnd/leo"
+	"graph-engine/logger"
 )
 
 // CONFIG 服务器配置
@@ -23,7 +24,7 @@ const (
 type ServerConf struct {
 	SysConf    `yaml:"server"`
 	OrientConf `yaml:"orient"`
-	MariaConf  `yaml:"maria"`
+	MariaConf  `yaml:"mariadb"`
 	AlgConf    `yaml:"algServer"`
 	//ManagerConf `yaml:"managerServer"`
 	BuilderConf `yaml:"builderServer"`
@@ -123,6 +124,10 @@ func init() {
 	var err = leo.ReadYamlConfig(&CONFIG, "./conf/settings.yaml")
 	if err != nil {
 		panic(errors.New("loading yaml file err, " + err.Error()))
+	}
+	err = leo.ReadYamlConfig(&CONFIG, "")
+	if err != nil {
+		logger.Info("no yaml file")
 	}
 	err = leo.ReadYamlConfig(&UrlCONF, "./conf/url.yaml")
 	if err != nil {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	v1_1_1 "graph-engine/database/models/v1.1.1"
 	"graph-engine/logger"
+	"graph-engine/utils"
 	"time"
 )
 
@@ -22,7 +23,7 @@ func (v *V_1_1_1) Update() {
 //}
 
 func (v *V_1_1_1) DBInit() {
-	db := GormEngine()
+	db := utils.DBENGINE
 
 	// 检测SearchConfig结构体对应的表是否存在
 	if !db.Migrator().HasTable(&v1_1_1.SearchConfig{}) {
