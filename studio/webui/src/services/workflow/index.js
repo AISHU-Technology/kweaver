@@ -30,11 +30,6 @@ const graphGetInfoExt = async id => await apiService.axiosGet(`${API.graphGetInf
 const graphCheckKmApInfo = async data => await apiService.axiosPost(API.graphCheckKmApInfo, data);
 
 /**
- * @description 流程六执行任务
- */
-const performTask = async (id, data) => await apiService.axiosPost(`${API.taskPerform}/${id}`, data);
-
-/**
  * @description 流程一查询开关状态
  */
 const graphGetBis = async () => await apiService.axiosGet(API.graphGetBis);
@@ -46,6 +41,5 @@ export default {
   graphSaveNoCheck,
   graphGetInfoExt,
   graphCheckKmApInfo,
-  performTask,
   graphGetBis
 };

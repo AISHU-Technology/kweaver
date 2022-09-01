@@ -64,12 +64,6 @@ const fetchModelList = async () => await apiService.axiosGet(API.fetchModelList)
 const getEntityInfo = async (id: any) => await apiService.axiosGet(`${API.getEntityInfo}${id}`);
 
 /**
- * @description 复制本体
- */
-const copyGetEntityInfo = async (id: any, data: any) =>
-  await apiService.axiosPost(`${API.copyGetEntityInfo}${id}`, data);
-
-/**
  * @description 流程3中按id获取数据源
  */
 const getFlowSource = async (data: any) => await apiService.axiosGetData(API.getFlowSource, data);
@@ -143,7 +137,6 @@ export default {
   getEntityTasks,
   deleteEntityTask,
   getTaskFiles,
-  copyGetEntityInfo,
   delAllEntityTask,
   changeEntityTent,
   updateEntity,

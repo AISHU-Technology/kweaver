@@ -51,15 +51,6 @@ const fetchConfigList = async (data: {
   return await apiService.axiosGetData(API.fetchConfigList, data);
 };
 
-// 检查配置信息
-const checkConfig = async (data: {
-  kg_id: number; // 图谱id
-  conf_name: string; // 配置名
-  conf_id?: number; // 配置id, 传参时为编辑, 反之新增
-  type?: string; // 图谱模型
-  conf_desc?: string; // 配置描述
-}) => await apiService.axiosPost(API.checkConfig, data);
-
 /**
  * 根据图谱id获取画布数据
  * WARNING 接口由builder提供, 但是会diff比对图数据库, 仅返回图数据库中存在的数据, 返回的数据可能和本体不一致, 供engine使用
@@ -102,7 +93,6 @@ const servicesSearchConfig = {
   deleteAdvConfig,
   fetchConfig,
   fetchConfigList,
-  checkConfig,
   fetchCanvasData,
   advSearchV2,
   advSearchTestV2,
