@@ -33,9 +33,15 @@ graph_controller_app = Blueprint('graph_controller_app', __name__)
 
 with open('../docs/swagger_definitions.yaml', 'r') as f:
     swagger_definitions = yaml.load(f)
+with open('../docs/swagger_old_response.yaml', 'r') as f:
+    swagger_old_response = yaml.load(f)
+    swagger_old_response.update(swagger_definitions)
+with open('../docs/swagger_new_response.yaml', 'r') as f:
+    swagger_new_response = yaml.load(f)
+    swagger_new_response.update(swagger_definitions)
 
 @graph_controller_app.route('', methods=["post"], strict_slashes=False)
-@swag_from(swagger_definitions)
+@swag_from(swagger_old_response)
 def graphopt():
     '''
     add a knowledge graph
@@ -72,7 +78,7 @@ def graphopt():
 
 
 @graph_controller_app.route('/<grapid>', methods=["post"], strict_slashes=False)
-@swag_from(swagger_definitions)
+@swag_from(swagger_old_response)
 def graph(grapid):
     '''
     edit the graph information according to the graph id
@@ -237,6 +243,7 @@ def graph(grapid):
 
 
 @graph_controller_app.route('/getgraphdb', methods=["get"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def getgraphdb():
     '''
     查询图谱数据库连接信息
@@ -249,6 +256,7 @@ def getgraphdb():
 
 
 @graph_controller_app.route('/getbis', methods=["get"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def getbis():
     """
     get base info switch
@@ -261,7 +269,7 @@ def getbis():
 
 
 @graph_controller_app.route('/<graphid>', methods=["get"], strict_slashes=False)
-@swag_from(swagger_definitions)
+@swag_from(swagger_old_response)
 def getgraphbyid(graphid):
     '''
     query the graph
@@ -291,7 +299,7 @@ def getgraphbyid(graphid):
 
 @graph_controller_app.route('/<graph_step>/graphid=<graphid>', methods=["get"], strict_slashes=False,
                             endpoint="graph_step")
-@swag_from(swagger_definitions)
+@swag_from(swagger_old_response)
 def getgraphbystep(graphid, graph_step):
     '''
     get the entity class collection and its property collection in the specific graph configuration step
@@ -326,7 +334,7 @@ def getgraphbystep(graphid, graph_step):
 
 
 @graph_controller_app.route('/infoext_list', methods=["post"], strict_slashes=False)
-@swag_from(swagger_definitions)
+@swag_from(swagger_old_response)
 def getbyinfoext():
     '''
     get the extraction rule according to the extraction file list
@@ -393,7 +401,7 @@ def getbyinfoext():
 
 
 @graph_controller_app.route('/check_kmapinfo', methods=["post"], strict_slashes=False)
-@swag_from(swagger_definitions)
+@swag_from(swagger_old_response)
 def check_kmapinfo():
     '''
     verify the mapping information
@@ -454,7 +462,7 @@ def check_kmapinfo():
 
 
 @graph_controller_app.route('/savenocheck', methods=["post"], strict_slashes=False)
-@swag_from(swagger_definitions)
+@swag_from(swagger_old_response)
 def savenocheck():
     '''
     save and exit
@@ -515,11 +523,26 @@ def savenocheck():
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
 
-# 一键导入时的数据源列表：该图谱下的，且属性id为1的数据源
 @graph_controller_app.route('/getdsbygraphid', methods=["get"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def getdsbygraphids():
     '''
+    get data source list by graph id
     根据图谱id返回数据源列表
+    流程三一键导入时的数据源列表：该图谱下的，且属性id为1的数据源
+    ---
+    parameters:
+        -   name: id
+            in: query
+            description: graph id
+            required: true
+            type: integer
+            example: 1
+        -   name: type
+            in: query
+            description: 流程标识【filter:过滤非结构，只有结构数据，unfilter:有结构和非结构数据】
+            type: string
+            example: 'filter'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -539,9 +562,28 @@ def getdsbygraphids():
         return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
-# 图谱批量删除
+
 @graph_controller_app.route('/delbyids', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def graphDeleteByIds():
+    '''
+    delete graph by graph ids
+    图谱批量删除
+    ---
+    parameters:
+        -   name: graphids
+            in: body
+            description: list of graph ids to be deleted
+            required: true
+            type: array
+            example: [1, 2]
+        -   name: knw_id
+            in: body
+            description: knowledge network id
+            required: true
+            type: integer
+            example: 1
+    '''
     runs, noAuthority, noExist, normal = [], [], [], []
     mess = ""
     obj, obj_code = {}, 200
@@ -685,9 +727,35 @@ def graphDeleteByIds():
     return Gview.TErrorreturn(obj["Code"], obj["message"], solution, obj["Cause"], ""), obj_code
 
 
-# 图谱编辑过程中的数据源列表
 @graph_controller_app.route('/ds/<graphid>', methods=["GET"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def graphDsList(graphid):
+    '''
+    get data source list in the graph editing process
+    图谱编辑过程中的数据源列表
+    ---
+    parameters:
+        -   name: graphid
+            in: path
+            required: true
+            description: graph id
+            type: integer
+        -   name: page
+            in: query
+            required: true
+            description: page
+            type: integer
+        -   name: size
+            in: query
+            required: true
+            description: number of display items per page
+            type: integer
+        -   name: order
+            in: query
+            required: false
+            description: "'ascend'(default) display items in time sequence, new items on the top; else 'descend'"
+            type: string
+    '''
     if not graphid.isdigit():
         message = "The parameter graph id type must be int!"
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
@@ -712,7 +780,18 @@ def graphDsList(graphid):
 
 
 @graph_controller_app.route("/adv-search-config/kglist-conf/<net_id>", methods=["GET"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def get_adv_search(net_id):
+    '''
+    get knowledge graph list configuration by network id
+    ---
+    parameters:
+        -   name: net_id
+            in: path
+            required: true
+            description: network id
+            type: integer
+    '''
     # 此处兼容知识网络的功能。
     net_ids = knw_service.get_graph_by_knw_id_s(net_id)
     net_ids = list(net_ids.values())
@@ -728,7 +807,19 @@ def get_adv_search(net_id):
 
 
 @graph_controller_app.route("/output", methods=["POST"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def graph_config_output():
+    '''
+    export the knowledge graph
+    ---
+    parameters:
+        -   name: ids
+            in: body
+            required: true
+            description: list of graph ids to be exported. If its length exceeds 1, an error will be reported.
+            type: array
+            example: ["86"]
+    '''
     config_ids = request.json.get("ids")
     if len(config_ids) > 1:
         return Gview.TErrorreturn(
@@ -768,7 +859,35 @@ def graph_config_output():
 
 
 @graph_controller_app.route("/input", methods=["POST"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def graph_config_input():
+    '''
+    import the knowledge graph
+    ---
+    parameters:
+        -   name: knw_id
+            in: body
+            required: true
+            description: knowledge network id
+            type: integer
+        -   name: file
+            in: body
+            required: true
+            description: data file to be uploaded
+            type: file
+        -   name: graph_id
+            in: body
+            required: true
+            description: graph id
+            type: integer
+        -   name: method
+            in: body
+            required: true
+            description: '0: skip when graph id exists; 1: update when graph id exists'
+            type: integer
+    consumes:
+        -   application/x-www-form-urlencoded
+    '''
     # 获取form表单当中的知识网络id和图谱id
     graph_id = request.form.get("graph_id")
     method = request.form.get("method")
@@ -841,7 +960,28 @@ def graph_config_input():
 
 
 @graph_controller_app.route('/info/basic', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def get_graph_info_basic():
+    '''
+    get the graph information
+    ---
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+        -   name: is_all
+            in: query
+            required: false
+            description: 'True：返回所有字段，忽略key传入参数; False（默认）：按照key返回需要的字段'
+            type: boolean
+        -   name: 'key'
+            in: query
+            required: false
+            description: 需要额外获取信息的字段
+            # type: array
+    '''
     try:
         graph_id = request.args.get('graph_id')
         is_all = request.args.get('is_all', 'False')
@@ -887,7 +1027,18 @@ def get_graph_info_basic():
                                    description=str(e)), 400
 
 @graph_controller_app.route('/info/onto', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def get_graph_info_onto():
+    '''
+    get the ontology of the graph
+    ---
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+    '''
     try:
         graph_id = request.args.get('graph_id')
         if not graph_id or not graph_id.isdigit():
@@ -906,7 +1057,18 @@ def get_graph_info_onto():
                                    description=str(e)), 400
 
 @graph_controller_app.route('/info/count', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def get_graph_info_count():
+    '''
+    get the count of the graph
+    ---
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+    '''
     try:
         graph_id = request.args.get('graph_id')
         if not graph_id or not graph_id.isdigit():
@@ -925,7 +1087,28 @@ def get_graph_info_count():
                                    description=str(e)), 400
 
 @graph_controller_app.route('/info/detail', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def get_graph_info_detail():
+    '''
+    get the configuration details of entities or edges in the graph
+    ---
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+        -   name: type
+            in: query
+            required: true
+            description: entity or edge
+            type: string
+        -   name: name
+            in: query
+            required: true
+            description: name of the entity or the edge
+            type: string
+    '''
     try:
         graph_id = request.args.get('graph_id')
         otl_type = request.args.get('type')
