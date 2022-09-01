@@ -59,7 +59,6 @@ func (controller *GraphDBController) AddGraphDB(c *gin.Context) {
 func (controller *GraphDBController) DeleteGraphDBById(c *gin.Context) {
 	idVo := &vo.IdVo{}
 	kw_errors.Try(c.ShouldBind(idVo)).Throw(kw_errors.ParameterError)
-	checkGraphDBDefaultConfig(idVo.ID)
 	controller.GraphDBService.DeleteGraphDBById(idVo.ID)
 	response.Ok(c)
 }
@@ -68,7 +67,6 @@ func (controller *GraphDBController) UpdateGraphDB(c *gin.Context) {
 	graphDBUpdateVo := &vo.GraphDBUpdateVo{}
 	kw_errors.Try(c.ShouldBind(graphDBUpdateVo)).Throw(kw_errors.ParameterError)
 	checkIpPortCount(graphDBUpdateVo.Ip, graphDBUpdateVo.Port)
-	checkGraphDBDefaultConfig(graphDBUpdateVo.ID)
 	graphDBUpdateVo.Ip, graphDBUpdateVo.Port = checkDuplicatesAddr(graphDBUpdateVo.Ip, graphDBUpdateVo.Port)
 	controller.GraphDBService.TestConnConfig(&vo.ConnTestVo{Ip: graphDBUpdateVo.Ip, Port: graphDBUpdateVo.Port, User: graphDBUpdateVo.User, Password: graphDBUpdateVo.Password, Type: graphDBUpdateVo.Type})
 	controller.GraphDBService.UpdateGraphDB(graphDBUpdateVo)
@@ -111,10 +109,4 @@ func checkDuplicatesAddr(originIps, originPorts []string) (ips, ports []string) 
 		return removeDuplicatesAddr(originIps, originPorts)
 	}
 	return originIps, originPorts
-}
-
-func checkGraphDBDefaultConfig(id int) {
-	if id == 1 {
-		panic(kw_errors.ParameterError.SetDetailError("Default configuration cannot be deleted"))
-	}
 }
