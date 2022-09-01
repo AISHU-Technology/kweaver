@@ -1,6 +1,7 @@
-const baseBuilder = '/api/builder/v1';
-const baseEngine = '/api/engine/v1';
-const baseStudio = '/api/studio/v1';
+const baseBuilder =
+  process.env.NODE_ENV === 'production' ? 'http://10.4.106.255:6476/api/builder/v1' : 'api/builder/v1';
+const baseEngine = process.env.NODE_ENV === 'production' ? 'http://10.4.106.255:6888/api/engine/v1' : '/api/engine/v1';
+const baseStudio = process.env.NODE_ENV === 'production' ? 'http://10.4.106.255:6474/api/studio/v1' : '/api/studio/v1';
 const baseDataIo = '/api/data-io/v1';
 
 const API = {
