@@ -12,7 +12,11 @@ RUN mkdir -p /root/studio
 WORKDIR /root/studio/
 COPY . .
 COPY --from=nodemake /root/studio/webui/build/* /root/studio/webui/build/
-RUN ls -R /webui/build && \
+RUN mkdir /root/studio/webui/build/static && \
+mv /root/studio/webui/build/js /root/studio/webui/build/static && \
+mv /root/studio/webui/build/css /root/studio/webui/build/static && \
+mv /root/studio/webui/build/media /root/studio/webui/build/static
+RUN ls -R . && \
 go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
