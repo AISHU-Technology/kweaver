@@ -5,6 +5,12 @@ import (
 	"reflect"
 )
 
+/**
+ * @Author: Xiangguang.li
+ * @Date: 2022/2/24
+ * @Email: Xiangguang.li@aishu.cn
+ **/
+
 type ErrorHandler func() []error
 
 // Throw 如果ErrorHandler处理后返回errors不为空，则使用e包装后panic

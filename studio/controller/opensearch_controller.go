@@ -9,6 +9,12 @@ import (
 	"kw-studio/utils/response"
 )
 
+/**
+ * @Author: Xiangguang.li
+ * @Date: 2022/8/20
+ * @Email: Xiangguang.li@aishu.cn
+ **/
+
 type OpenSearchController struct {
 	OpenSearchService *service.OpenSearchService
 	GraphDBService    *service.GraphDBService

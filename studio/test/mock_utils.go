@@ -24,6 +24,12 @@ import (
 	"time"
 )
 
+/**
+ * @Author: Xiangguang.li
+ * @Date: 2022/2/24
+ * @Email: Xiangguang.li@aishu.cn
+ **/
+
 func InitTestDB(db *sql.DB, l logger.Interface) *gorm.DB {
 	if l == nil {
 		l = logger.New(
