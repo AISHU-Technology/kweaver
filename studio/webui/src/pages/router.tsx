@@ -15,6 +15,7 @@ const Home = asyncComponent(() => import('@/pages/Home'));
 const Workflow = asyncComponent(() => import('@/pages/Home/Workflow'));
 const KnowledgeNetwork = asyncComponent(() => import('@/pages/KnowledgeNetwork'));
 const NotFound = asyncComponent(() => import('@/components/NotFound'));
+const SwaggerUI = asyncComponent(() => import('@/pages/SwaggerUI'));
 
 const App = (props: any) => {
   useEffect(() => {
@@ -39,6 +40,7 @@ const App = (props: any) => {
           <Route path="/home/workflow/edit" render={() => <Workflow />} />
           <Route path="/home" render={() => <Home />} />
           <Route path="/knowledge" render={(arg: any) => <KnowledgeNetwork {...arg} />} />
+          <Route path="/swagger" render={() => <SwaggerUI />} />
           <Route render={() => <NotFound />} />
         </Switch>
       </Router>

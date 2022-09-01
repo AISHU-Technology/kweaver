@@ -1,12 +1,5 @@
-/**
- * @description 高级搜索策略配置
- * @author Jason.ji
- * @date 2021/3/25
- * @update 2022/6/17
- */
 import apiService from '@/utils/axios-http';
 import { API } from '@/services/api';
-import { OPEN_API } from '@/services/openApi';
 
 // 获取可配置的图谱
 const fetchConfigGraph = async (data: {
