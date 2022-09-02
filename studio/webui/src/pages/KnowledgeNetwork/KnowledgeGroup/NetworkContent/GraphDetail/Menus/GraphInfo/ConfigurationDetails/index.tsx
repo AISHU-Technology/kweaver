@@ -75,7 +75,7 @@ const ConfigurationDetails = (props: any) => {
                   <Format.Text>{SHOW_TEXT[selectedData?.type].name || ''}</Format.Text>
                 </div>
                 <div className="imitationInput">
-                  <div className="ad-align-center">
+                  <div className="ad-align-center ad-w-100">
                     <div
                       className={classnames(SHOW_TEXT[selectedData?.type].className || '')}
                       style={{ backgroundColor: color }}
@@ -92,7 +92,7 @@ const ConfigurationDetails = (props: any) => {
                   <Format.Text>{SHOW_TEXT[selectedData?.type].alias || ''}</Format.Text>
                 </div>
                 <div className="imitationInput">
-                  <Format.Text>{alias}</Format.Text>
+                  <Format.Text className="ad-ellipsis">{alias}</Format.Text>
                 </div>
               </div>
             </div>

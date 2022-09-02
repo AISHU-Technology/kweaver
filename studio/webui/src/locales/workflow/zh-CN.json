@@ -39,7 +39,7 @@
     },
 
     "information": {
-      "information": "信息抽取",
+      "information": "知识抽取",
       "fileList": "数据列表",
       "selectDs": "选择数据源",
       "board": "数据源展示看板",
