@@ -100,12 +100,12 @@ class RedisClinet():
         if self.redis_cluster_mode == "stand-alone":
             if model == "read":
                 pool = redis.ConnectionPool(host=self.redis_host, port=self.redis_port, db=db,
-                                            password=self.redis_password)
+                                            username=self.redis_account, password=self.redis_password)
                 redis_con = redis.StrictRedis(connection_pool=pool)
                 return redis_con
             if model == "write":
                 pool = redis.ConnectionPool(host=self.redis_host, port=self.redis_port, db=db,
-                                            password=self.redis_password)
+                                            username=self.redis_account, password=self.redis_password)
                 redis_con = redis.StrictRedis(connection_pool=pool)
                 return redis_con
 
