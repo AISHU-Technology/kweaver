@@ -178,14 +178,6 @@ def getdetailbytaskid():
     return jsonify({'res': obj, "code": ret_code})
 
 
-# 分页获取历史任务
-@celery_controller_app.route('/get_history_task', methods=['GET'])
-def gethistorytask():
-    params_json = request.args.to_dict()
-    ret_code, obj = task_service.gethistorydata(params_json)
-    return jsonify({'res': obj, "code": ret_code})
-
-
 # 根据任务id获取进度
 @celery_controller_app.route('/get_task_progress', methods=['GET'])
 def getprogressbytaskid():

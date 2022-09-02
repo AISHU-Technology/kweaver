@@ -31,13 +31,15 @@ from flasgger import swag_from
 import yaml
 graph_controller_app = Blueprint('graph_controller_app', __name__)
 
-with open('../docs/swagger_definitions.yaml', 'r') as f:
-    swagger_definitions = yaml.load(f)
-with open('../docs/swagger_old_response.yaml', 'r') as f:
-    swagger_old_response = yaml.load(f)
+GBUILDER_ROOT_PATH = GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+builder_root_path = os.path.abspath(__file__)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
+    swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r') as f:
+    swagger_old_response = yaml.load(f, Loader=yaml.FullLoader)
     swagger_old_response.update(swagger_definitions)
-with open('../docs/swagger_new_response.yaml', 'r') as f:
-    swagger_new_response = yaml.load(f)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
+    swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
     swagger_new_response.update(swagger_definitions)
 
 @graph_controller_app.route('', methods=["post"], strict_slashes=False)
@@ -246,7 +248,9 @@ def graph(grapid):
 @swag_from(swagger_old_response)
 def getgraphdb():
     '''
+    query database connection information
     查询图谱数据库连接信息
+    ---
     '''
     ret_code, ret_message = graph_Service.getGraphDB()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:

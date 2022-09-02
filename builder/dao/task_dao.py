@@ -203,39 +203,6 @@ class TaskDao(object):
         df = pd.read_sql(sql, connection)
         return len(df)
 
-    # 根据图谱id获得历史数据分页排序
-    @connect_execute_close_db
-    def gethistortdata(self, graph_id, page, size, order, task_type, trigger_type, task_status, connection, cursor):
-        limit_str = ""
-        if task_status != 'all':
-            limit_str += f" and task_status='{task_status}'"
-        if trigger_type != 'all':
-            limit_str += f" and trigger_type='{trigger_type}'"
-        if task_type != 'all':
-            limit_str += f" and task_type='{task_type}'"
-        sql = """
-            SELECT *
-            FROM graph_task_history_table
-            where
-              graph_id = {0}
-              {3}
-            order by start_time Desc
-            limit {1}, {2};"""
-        if order == "descend":
-            sql = """
-                SELECT *
-                FROM graph_task_history_table
-                where
-                  graph_id = {0}
-                  {3}
-                order by start_time asc
-                limit {1}, {2};"""
-        status = '"' + graph_id + '"'
-        sql = sql.format(status, page * size, size, limit_str)
-        Logger.log_info(sql)
-        df = pd.read_sql(sql, connection)
-        return df
-
     # 根据状态排序
     @connect_execute_close_db
     def getallbystatus(self, task_status, page, size, order, connection, cursor):
@@ -337,21 +304,6 @@ class TaskDao(object):
     def gettaskupdata(self, task_id, task_status, connection, cursor, ):
         sql = """SELECT id FROM graph_task_table where task_id = %s and task_status = %s """ % (
             '"' + task_id + '"', '"' + task_status + '"')
-        # sql = sql.format()
-        df = pd.read_sql(sql, connection)
-        # data=df.to_dict()
-        return df
-
-    # 根据图谱id获得历史数据
-    @connect_execute_close_db
-    def gethistorttaskbyid(self, id, task_type, trigger_type, task_status, connection, cursor, ):
-        sql = """SELECT id FROM graph_task_history_table where graph_id = %s""" % ('"' + id + '"')
-        if task_status != 'all':
-            sql += f" and task_status='{task_status}'"
-        if trigger_type != 'all':
-            sql += f" and trigger_type='{trigger_type}'"
-        if task_type != 'all':
-            sql += f" and task_type='{task_type}'"
         # sql = sql.format()
         df = pd.read_sql(sql, connection)
         # data=df.to_dict()
