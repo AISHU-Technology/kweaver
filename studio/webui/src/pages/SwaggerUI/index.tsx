@@ -16,7 +16,7 @@ const SwaggerUI = () => {
   const init = async () => {
     try {
       const res = await servicesSwagger.swaggerDocGet();
-      res.paths ? setDocData(res) : setLoading(false);
+      res.res ? setDocData(res.res) : setLoading(false);
     } catch {
       setLoading(false);
     }

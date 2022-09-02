@@ -40,7 +40,7 @@ const Home = () => {
   const header = {
     logo: headLogo,
     operation: [
-      { icon: <SettingOutlined />, text: 'API文档', onClick: () => history.push('/swagger') },
+      { icon: <SettingOutlined />, text: 'API文档', onClick: () => window.open('/swagger', '_blank') },
       { icon: <SettingOutlined />, text: '系统配置', onClick: () => history.push('/home/system-config') }
     ]
   };
