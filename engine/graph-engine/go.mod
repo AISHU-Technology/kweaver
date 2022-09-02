@@ -20,7 +20,8 @@ require (
 	//github.com/vesoft-inc/nebula-go/v2 v2.6.0
 	github.com/vesoft-inc/nebula-go/v3 v3.0.0
 	github.com/vladoatanasov/logrus_amqp v0.0.0-20181023103017-b21faf6f8ae3
-	gitlab-archive.aishu.cn/anydata-rnd/leo v0.0.0-20200618062146-c694268680ef
+	devops.aishu.cn/AISHUDevOps/AnyDATA/_git/leo v0.0.0-20200618062146-c694268680ef
+	//gitlab.aishu.cn/anydata-rnd/leo v0.0.0-20200618062146-c694268680ef
 	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550 // indirect
 	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
 	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
