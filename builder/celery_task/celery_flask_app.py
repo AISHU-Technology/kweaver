@@ -106,7 +106,6 @@ def set_timezone():
 
 # 配置
 app = Flask(__name__)
-a=redisConnect.get_config()
 redis_add, redis_port, redis_user, redis_passwd, master_name, redis_sentinel_user, redis_sentinel_password, redis_cluster_mode = redisConnect.get_config()
 if config.local_testing != True:
     if redis_user is None:
