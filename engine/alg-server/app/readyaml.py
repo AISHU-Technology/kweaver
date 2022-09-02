@@ -14,7 +14,7 @@ def readYAML():
 def readYAMLglobal():
     try:
         # 全局配置文件
-        with open("./test.yaml", "r", encoding="utf-8") as f:
+        with open("/etc/builder/kwconfig.yaml", "r", encoding="utf-8") as f:
             data = yaml.load(f, Loader=yaml.FullLoader)
             return data
     except:
