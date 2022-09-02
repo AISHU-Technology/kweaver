@@ -5,13 +5,13 @@ import os
 import logging
 from typing import Dict, Any, List
 from dataclasses import dataclass, Field
-from readconfig import ReadConfig
 
 from dacite import from_dict
 from dacite.dataclasses import get_fields
 from inject import autoparams
 from .handlers.search_engine import AnyDataSearchEngine
 from .handlers.graph_search import AnyDataGraphSearch
+from .readconfig import ReadConfig
 from .utils.connector import AsyncRequestMysql
 import asyncio
 import aiomysql

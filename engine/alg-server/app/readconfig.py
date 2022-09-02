@@ -1,7 +1,6 @@
 import logging
-from dataclasses import dataclass
-
 import yaml
+
 
 class ReadConfig():
     def read_yaml():
