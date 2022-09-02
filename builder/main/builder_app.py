@@ -29,7 +29,8 @@ app.config.from_object(config)
 bind_i18n(app)
 
 # swagger文档
-with open('../docs/swagger_template.yaml', 'r') as f:
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_template.yaml'), 'r') as f:
     swagger_template = yaml.load(f)
 swagger = Swagger(app, template=swagger_template)
 

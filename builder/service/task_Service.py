@@ -256,59 +256,6 @@ class TaskService():
         hms = "%02d:%02d:%02d" % (h, m, s)
         return hms
 
-    # 根据任务图谱id获得历史记录
-    def gethistorydata(self, params_json):
-        ret_code = CommonResponseStatus.SUCCESS.value
-        obj = {}
-
-        try:
-            page = params_json.get("page")
-            graph_id = params_json.get("graph_id")
-            size = params_json.get("size")
-            order = params_json.get("order")
-            task_type = params_json.get("task_type", 'all')
-            trigger_type = params_json.get("trigger_type", 'all')
-            task_status = params_json.get("task_status", 'all')
-            all_task = task_dao.gethistorttaskbyid(graph_id, task_type, trigger_type, task_status)
-            count = len(all_task)
-            ret = task_dao.gethistortdata(graph_id, int(page) - 1, int(size), order, task_type, trigger_type,
-                                          task_status)
-            if len(ret) > 0:
-                ret["all_time"] = ret[["end_time", "start_time"]].apply(
-                    lambda x: self.seconds_to_hms(pd.Timedelta(
-                        (pd.to_datetime(x["end_time"]) - pd.to_datetime(x["start_time"]))).total_seconds()), axis=1
-                )
-            rec_dict = ret.to_dict('records')
-            res = {}
-            res["count"] = count
-            list_all = []
-            for reslist in rec_dict:
-                dict_all = {}
-                for key in reslist:
-                    if key == "error_report":
-                        value = reslist[key]
-                        value = eval(value)
-                        dict_all[key] = value
-                    else:
-                        dict_all[key] = reslist[key]
-                list_all.append(dict_all)
-
-            res["df"] = list_all
-            obj["res"] = res
-        except Exception as e:
-            ret_code = CommonResponseStatus.SERVER_ERROR.value
-            err = repr(e)
-            Logger.log_error(err)
-            if "SQL" in err or "DatabaseError" in err or "MariaDB" in err:
-                obj['cause'] = "you have an error in your SQL!"
-            else:
-                obj['cause'] = err
-            obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
-            obj['message'] = "query datasource fail"
-            obj['solution'] = "Please check mariadb or sql"
-
-        return ret_code, obj
-
     # 根据状态搜索
     def serchbystatus(self, params_json):
         ret_code = CommonResponseStatus.SUCCESS.value
