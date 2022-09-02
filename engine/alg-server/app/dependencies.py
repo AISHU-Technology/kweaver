@@ -5,6 +5,7 @@ import os
 import logging
 from typing import Dict, Any, List
 from dataclasses import dataclass, Field
+from readconfig import ReadConfig
 
 from dacite import from_dict
 from dacite.dataclasses import get_fields
@@ -30,19 +31,13 @@ class Config:
     PROJECT_PATH: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # mysql配置信息
-    # MYSQL_HOST = '10.4.106.255'
-    # MYSQL_DB = 'anydata'
-    # MYSQL_USER = 'anydata'
-    # MYSQL_PASSWORD = 'Qwe123!@#'
-    # MYSQL_CHARSET = 'utf8'
-    # MYSQL_PORT = 3306
-    MYSQL_HOST = os.getenv("RDSHOST")
-    MYSQL_DB = os.getenv("RDSDBNAME")
-    MYSQL_USER = os.getenv("RDSUSER")
-    MYSQL_PASSWORD = os.getenv("RDSPASS")
+    DBCONFIG = ReadConfig().c["mariadb"]
+    MYSQL_HOST = DBCONFIG["ip"]
+    MYSQL_DB = DBCONFIG["db"]
+    MYSQL_USER = DBCONFIG["user"]
+    MYSQL_PASSWORD = DBCONFIG["password"]
     MYSQL_CHARSET = 'utf8'
-    MYSQL_PORT = int(os.getenv("RDSPORT"))
-
+    MYSQL_PORT = DBCONFIG["port"]
 
 class NebulaDb:
     pass
