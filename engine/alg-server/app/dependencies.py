@@ -11,6 +11,7 @@ from dacite.dataclasses import get_fields
 from inject import autoparams
 from .handlers.search_engine import AnyDataSearchEngine
 from .handlers.graph_search import AnyDataGraphSearch
+from .readyaml import getYAML
 from .utils.connector import AsyncRequestMysql
 import asyncio
 import aiomysql
@@ -30,19 +31,13 @@ class Config:
     PROJECT_PATH: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # mysql配置信息
-    # MYSQL_HOST = '10.4.106.255'
-    # MYSQL_DB = 'anydata'
-    # MYSQL_USER = 'anydata'
-    # MYSQL_PASSWORD = 'Qwe123!@#'
-    # MYSQL_CHARSET = 'utf8'
-    # MYSQL_PORT = 3306
-    MYSQL_HOST = os.getenv("RDSHOST")
-    MYSQL_DB = os.getenv("RDSDBNAME")
-    MYSQL_USER = os.getenv("RDSUSER")
-    MYSQL_PASSWORD = os.getenv("RDSPASS")
+    DBCONFIG = getYAML()["mariadb"]
+    MYSQL_HOST = DBCONFIG["ip"]
+    MYSQL_DB = DBCONFIG["db"]
+    MYSQL_USER = DBCONFIG["user"]
+    MYSQL_PASSWORD = DBCONFIG["password"]
     MYSQL_CHARSET = 'utf8'
-    MYSQL_PORT = int(os.getenv("RDSPORT"))
-
+    MYSQL_PORT = DBCONFIG["port"]
 
 class NebulaDb:
     pass
