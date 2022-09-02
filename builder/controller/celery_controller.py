@@ -352,20 +352,7 @@ def getprogress(graph_id):
 
 # 健康检查 /api/builder/v1/task/health/ready
 @task_controller_app.route('/health/ready', methods=["GET"], strict_slashes=False)
-@swag_from(swagger_definitions)
 def health():
-    '''
-    pod health check
-    健康检查
-    ---
-    responses:
-        '200':
-            description: healthy
-            example: 'success'
-        '500':
-            description: unhealthy
-            example: 'failed'
-    '''
     try:
         url = "http://localhost:6485/graph/health/ready"
         payload = {}
@@ -385,20 +372,7 @@ def health():
 
 
 @task_controller_app.route('/health/alive', methods=["GET"], strict_slashes=False)
-@swag_from(swagger_definitions)
 def healthalive():
-    '''
-    pod health check
-    健康检查
-    ---
-    responses:
-        '200':
-            description: healthy
-            example: 'success'
-        '500':
-            description: unhealthy
-            example: 'failed'
-    '''
     try:
         url = "http://localhost:6485/graph/health/alive"
         payload = {}
