@@ -31,7 +31,7 @@ bind_i18n(app)
 # swagger文档
 GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_template.yaml'), 'r') as f:
-    swagger_template = yaml.load(f)
+    swagger_template = yaml.load(f, Loader=yaml.FullLoader)
 swagger = Swagger(app, template=swagger_template)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(lineno)d - %(message)s')
