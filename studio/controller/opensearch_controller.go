@@ -9,6 +9,12 @@ import (
 	"kw-studio/utils/response"
 )
 
+/**
+ * @Author: Xiangguang.li
+ * @Date: 2022/8/20
+ * @Email: Xiangguang.li@aishu.cn
+ **/
+
 type OpenSearchController struct {
 	OpenSearchService *service.OpenSearchService
 	GraphDBService    *service.GraphDBService
@@ -86,7 +92,6 @@ func (controller *OpenSearchController) AddOpenSearch(c *gin.Context) {
 func (controller *OpenSearchController) DeleteOpenSearchById(c *gin.Context) {
 	idVo := &vo.OpenSearchIdVo{}
 	kw_errors.Try(c.ShouldBind(idVo)).Throw(kw_errors.ParameterError)
-	checkOsDefaultConfig(idVo.ID)
 	controller.OpenSearchService.DeleteOpenSearchById(idVo.ID)
 	response.Ok(c)
 }
@@ -106,7 +111,6 @@ func (controller *OpenSearchController) UpdateOpenSearch(c *gin.Context) {
 	opensearchUpdateVo := &vo.OpenSearchUpdateVo{}
 	kw_errors.Try(c.ShouldBind(opensearchUpdateVo)).Throw(kw_errors.ParameterError)
 	checkIpPortCount(opensearchUpdateVo.Ip, opensearchUpdateVo.Port)
-	checkOsDefaultConfig(opensearchUpdateVo.ID)
 	opensearchUpdateVo.Ip, opensearchUpdateVo.Port = checkDuplicatesAddr(opensearchUpdateVo.Ip, opensearchUpdateVo.Port)
 	controller.GraphDBService.TestConnConfig(&vo.ConnTestVo{Ip: opensearchUpdateVo.Ip, Port: opensearchUpdateVo.Port, User: opensearchUpdateVo.User, Password: opensearchUpdateVo.Password, Type: constant.OpenSearch})
 	controller.OpenSearchService.UpdateOpenSearch(opensearchUpdateVo)
@@ -131,10 +135,4 @@ func (controller *OpenSearchController) TestOpenSearchConfig(c *gin.Context) {
 	osVo.Ip, osVo.Port = checkDuplicatesAddr(osVo.Ip, osVo.Port)
 	controller.GraphDBService.TestConnConfig(&vo.ConnTestVo{Ip: osVo.Ip, Port: osVo.Port, User: osVo.User, Password: osVo.Password, Type: constant.OpenSearch})
 	response.Ok(c)
-}
-
-func checkOsDefaultConfig(id int) {
-	if id == 1 {
-		panic(kw_errors.ParameterError.SetDetailError("Default configuration cannot be deleted"))
-	}
 }

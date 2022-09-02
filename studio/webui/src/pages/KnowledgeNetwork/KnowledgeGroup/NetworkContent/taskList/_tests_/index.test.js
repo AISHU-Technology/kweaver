@@ -35,7 +35,6 @@ serviceTaskManagement.taskGetProgress = jest.fn(() =>
 serviceTaskManagement.taskDelete = jest.fn(() => Promise.resolve({ res: 'success' }));
 serviceTaskManagement.taskStop = jest.fn(() => Promise.resolve({ res: 'success' }));
 serviceTaskManagement.taskCreate = jest.fn(() => Promise.resolve({ res: 1 }));
-serviceTaskManagement.taskGetDetail = jest.fn(() => Promise.resolve({ Code: 500403 }));
 
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({ push: jest.fn(), location: { pathname: '' }, listen: jest.fn() })

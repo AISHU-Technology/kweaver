@@ -8,6 +8,12 @@ import (
 	"kw-studio/utils/response"
 )
 
+/**
+ * @Author: Xiangguang.li
+ * @Date: 2022/8/20
+ * @Email: Xiangguang.li@aishu.cn
+ **/
+
 // ErrorHandler 统一异常处理
 func ErrorHandler(c *gin.Context) {
 	defer func() {

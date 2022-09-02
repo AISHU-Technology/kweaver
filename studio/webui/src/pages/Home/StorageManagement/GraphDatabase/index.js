@@ -43,7 +43,7 @@ class GraphDatabase extends Component {
     graphListId: 0, // 点击存储的id
     storageInfo: {}, // 保存编辑或查看的存储信息
     orderType: 'updated', // 排序的类型
-    order: 1 // 排序 0 升序 1 降序
+    order: 'DESC' // 排序 ASC 升序 DESC 降序
   };
 
   searchInput = React.createRef();
@@ -65,8 +65,8 @@ class GraphDatabase extends Component {
     const { current, pageSize, orderType, order, searchType, searchValue } = this.state;
 
     const type = orderType || 'updated';
-    const sort = order || 1;
-    const data = { page: current, size: pageSize, order: `${type}-${sort}`, type: searchType, name: searchValue };
+    const sort = order || 'DESC';
+    const data = { page: current, size: pageSize, orderField: type, order: sort, type: searchType, name: searchValue };
 
     try {
       const { res, ErrorCode = '' } = await serviceStorageManagement.graphDBGetList(data);
@@ -151,7 +151,7 @@ class GraphDatabase extends Component {
    * 点击表格排序
    */
   sortOrderChange = (pagination, filters, sorter) => {
-    const order = sorter.order === 'descend' ? '1' : '0';
+    const order = sorter.order === 'descend' ? 'DESC' : 'ASC';
 
     this.setState({ order, orderType: sorter.field }, () => {
       this.initData();

@@ -10,6 +10,9 @@ from utils.CommonUtil import commonutil
 from utils.ConnectUtil import redisConnect
 from service.graph_Service import graph_Service
 from common.errorcode import codes
+from flasgger import swag_from
+import yaml
+import os
 
 graph_count_controller_app = Blueprint('graph_count_controller_app', __name__)
 
@@ -113,8 +116,25 @@ def get_graph_count_all():
     return codes.successCode, res
 
 
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
+    swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r') as f:
+    swagger_old_response = yaml.load(f, Loader=yaml.FullLoader)
+    swagger_old_response.update(swagger_definitions)
+
 @graph_count_controller_app.route('/', methods=["GET"])
+@swag_from(swagger_definitions)
 def graphs_count_all():
+    '''
+    get the graph count
+    统计图谱用量
+    ---
+    responses:
+        200:
+            description: operation success
+            type: object
+    '''
     db = "0"
     r = redisConnect.connect_redis(db, model="read")
     try:
@@ -133,7 +153,19 @@ def graphs_count_all():
 
 
 @graph_count_controller_app.route('/<graph_id>', methods=["GET"])
+@swag_from(swagger_old_response)
 def graphs_count_by_id(graph_id):
+    '''
+    get graph statistics
+    图谱知识量统计
+    ---
+    parameters:
+        -   name: graph_id
+            in: path
+            required: true
+            description: graph id
+            type: integer
+    '''
     # graph_id 不是int
     if not graph_id.isdigit():
         return Gview.BuFailVreturn(cause="graph_id must be int ", code=CommonResponseStatus.PARAMETERS_ERROR.value,

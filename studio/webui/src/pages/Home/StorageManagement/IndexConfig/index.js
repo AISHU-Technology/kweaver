@@ -35,7 +35,7 @@ class IndexConfig extends Component {
     deleteItem: {}, // 删除的索引
     checkedInfo: {}, // 保存编辑或查看的存储信息
     orderType: 'updated', // 排序的类型
-    order: 1 // 排序 0 升序 1 降序
+    order: 'DESC' // 排序 ASC 升序 DESC 降序
   };
 
   searchInput = React.createRef();
@@ -57,10 +57,10 @@ class IndexConfig extends Component {
     const { current, pageSize, orderType, order, searchValue } = this.state;
 
     const type = orderType || 'updated';
-    const sort = order || 1;
+    const sort = order || 'DESC';
 
     try {
-      const data = { page: current, size: pageSize, order: `${type}-${sort}`, name: searchValue };
+      const data = { page: current, size: pageSize, orderField: type, order: sort, name: searchValue };
       const { res = {}, ErrorCode = '', Description = '' } = await serviceStorageManagement.openSearchGet(data);
 
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
@@ -138,7 +138,7 @@ class IndexConfig extends Component {
    * 点击表格排序
    */
   sortOrderChange = (pagination, filters, sorter) => {
-    const order = sorter.order === 'descend' ? '1' : '0';
+    const order = sorter.order === 'descend' ? 'DESC' : 'ASC';
 
     this.setState({ order, orderType: sorter.field }, () => {
       this.initData();
