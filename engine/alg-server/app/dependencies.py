@@ -11,7 +11,7 @@ from dacite.dataclasses import get_fields
 from inject import autoparams
 from .handlers.search_engine import AnyDataSearchEngine
 from .handlers.graph_search import AnyDataGraphSearch
-from .readconfig import ReadConfig
+from .readyaml import getYAML
 from .utils.connector import AsyncRequestMysql
 import asyncio
 import aiomysql
@@ -31,7 +31,7 @@ class Config:
     PROJECT_PATH: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     # mysql配置信息
-    DBCONFIG = ReadConfig().c["mariadb"]
+    DBCONFIG = getYAML()["mariadb"]
     MYSQL_HOST = DBCONFIG["ip"]
     MYSQL_DB = DBCONFIG["db"]
     MYSQL_USER = DBCONFIG["user"]
