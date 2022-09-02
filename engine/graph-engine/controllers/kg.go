@@ -11,7 +11,7 @@ import (
 	"graph-engine/controllers/gql"
 
 	"github.com/gin-gonic/gin"
-	"gitlab.aishu.cn/anydata-rnd/leo"
+	"graph-engine/leo"
 )
 
 // MakeKGHandler 创建 GQL Handler

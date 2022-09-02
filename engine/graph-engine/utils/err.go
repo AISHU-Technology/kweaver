@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
-	"gitlab.aishu.cn/anydata-rnd/leo"
+	"graph-engine/leo"
 )
 
 // 错误服务名

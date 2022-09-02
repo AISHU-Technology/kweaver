@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cache/persistence"
-	"gitlab.aishu.cn/anydata-rnd/leo"
+	"graph-engine/leo"
 )
 
 var uriRoot = "api/engine/"

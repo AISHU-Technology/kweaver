@@ -7,7 +7,7 @@ package gql
 import (
 	"context"
 	"github.com/gin-gonic/gin"
-	"gitlab.aishu.cn/anydata-rnd/leo"
+	"graph-engine/leo"
 	"graph-engine/models"
 	"graph-engine/models/nebula"
 	"graph-engine/models/orient"

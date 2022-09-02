@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/graph-gophers/graphql-go"
 	"github.com/graph-gophers/graphql-go/relay"
-	"gitlab.aishu.cn/anydata-rnd/leo"
 	"graph-engine/controllers/gql"
+	"graph-engine/leo"
 )
 
 // MakeExploreHandler 创建 GQL Handler

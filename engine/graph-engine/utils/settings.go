@@ -6,7 +6,7 @@ package utils
 
 import (
 	"errors"
-	"gitlab.aishu.cn/anydata-rnd/leo"
+	"graph-engine/leo"
 	"graph-engine/logger"
 )
 

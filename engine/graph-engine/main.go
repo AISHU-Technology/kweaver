@@ -5,8 +5,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"gitlab.aishu.cn/anydata-rnd/leo"
 	"graph-engine/database"
+	"graph-engine/leo"
 	"graph-engine/utils"
 )
 
