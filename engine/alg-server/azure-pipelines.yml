@@ -55,7 +55,7 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          docker save -o KWeaver-$(mainTag)-kw-algServer-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
+          docker save -o KWeaver-$(mainTag)-kw-algserver-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
     - task: FtpUpload@2
       displayName: uploadFtp
       inputs:
@@ -64,7 +64,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/KWeaver-$(mainTag)-kw-algServer-$(imageTag).tar'
+        filePatterns: '**/KWeaver-$(mainTag)-kw-algserver-$(imageTag).tar'
         remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false
