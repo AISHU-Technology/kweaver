@@ -109,8 +109,8 @@ jobs:
           SonarQube: 'adS'
           scannerMode: 'CLI'
           configMode: 'manual'
-          cliProjectKey: 'sonar.gbuilder-builder'
-          cliProjectName: 'gbuilder-builder'
+          cliProjectKey: 'sonar.kw-builder'
+          cliProjectName: 'kw-builder'
           cliSources: '.'
       - task: SonarQubeAnalyze@4
         displayName: Run SonarQube Code Analysis task

@@ -169,7 +169,6 @@ class OtlService(object):
                 obj['code'] = CommonResponseStatus.PARAMETERS_ERROR.value
                 obj['message'] = "Show by postfix False"
                 return ret_code, obj
-
         else:
             ret_code = CommonResponseStatus.SERVER_ERROR.value
             # err = repr(e)
@@ -180,6 +179,7 @@ class OtlService(object):
 
         ret_code, obj = otl_dao.filter_by_postfix(params_json,)
         return ret_code, obj
+
     def preview_ontology(self,params_json):
 
         ret_code = CommonResponseStatus.SUCCESS.value

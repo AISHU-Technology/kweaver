@@ -109,15 +109,6 @@ def graph(grapid):
         return Gview.BuFailVreturn(cause=run_message["cause"], code=run_message["code"],
                                    message=run_message[
                                        "message"]), CommonResponseStatus.SERVER_ERROR.value
-    # 上传中或者导出中的图谱不能编辑
-    res, code = graph_Service.get_upload_id(grapid)
-    res = res.to_dict('records')
-    if len(res) > 0:
-        cause = "graph upload can not edit"
-        message = "graph cannot edit,the graph is upload"
-        code = CommonResponseStatus.GRAPH_UPLOAD_NOT_EDIT.value
-        return Gview.BuFailVreturn(cause=cause, code=code,
-                                   message=message), CommonResponseStatus.SERVER_ERROR.value
     # 处理graph_process
     # 本体
     if graph_step == "graph_otl":
@@ -693,18 +684,6 @@ def graphDeleteByIds():
         # 正常
         if len(runs) == 0 and len(noAuthority) == 0 and len(normal) > 0:
             obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
-    # 统计上传中的图谱
-    res, code = graph_Service.get_upload_id(normal)
-    if code != 0:
-        return Gview.TErrorreturn(res["code"], res["message"], res["solution"], res["cause"],
-                                  ""), CommonResponseStatus.SERVER_ERROR.value
-    res = res.to_dict('records')
-    if len(res) > 0:
-        obj_code = 500
-        desc = "graph upload can not delete"
-        solution = "please wait upload finished"
-        cause = "graph upload can not delete"
-        return Gview.TErrorreturn(CommonResponseStatus.GRAPH_UPLOAD.value, desc, solution, cause, ""), obj_code
     if len(normal) > 0:
         # 删除可以删除的
         res, code = graph_Service.deleteGraphByIds(normal)

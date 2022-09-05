@@ -1100,20 +1100,6 @@ class GraphService():
         result = df.to_dict(orient="records")
         return result
 
-    # 统计是否存在上传中的id
-    def get_upload_id(self, graphids):
-        try:
-            df = graph_dao.get_upload_id(graphids)
-        except Exception as e:
-            err = repr(e)
-            Logger.log_error(err)
-            obj = {"cause": err,
-                   "code": CommonResponseStatus.REQUEST_ERROR.value,
-                   "message": "mysql connection error",
-                   "solution": "Please check mariadb"}
-            return obj, -1
-        return df, 0
-
     def graph_output(self, graph_ids):
         """
         导出图谱
@@ -1450,8 +1436,7 @@ class GraphService():
                 else:
                     res_info['export'] = False
         if is_all or 'is_upload' in key:
-            upload_id = graph_dao.get_upload_id([graph_id])
-            res_info['is_upload'] = (len(upload_id) != 0)  # 该图谱是否处于上传中
+            res_info['is_upload'] = False  # 该图谱是否处于上传中
         res_info['knowledge_type'] = 'kg'
         if is_all:
             return code, Gview2.json_return(res_info)
