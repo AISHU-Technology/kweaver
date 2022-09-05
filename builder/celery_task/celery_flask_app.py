@@ -141,7 +141,7 @@ if config.local_testing != True:
         print(app.config)
         app.config['CELERYD_MAX_TASKS_PER_CHILD'] = 1
         app.config.from_object(Config)  # 为实例化的flask引入配置
-    if redis_cluster_mode == "master-slave":
+    if redis_cluster_mode == "stand-alone":
         redis_url = ""
         redis_user_url = f"{redis_user}:{redis_passwd}@"
         if redis_user_url == "@":

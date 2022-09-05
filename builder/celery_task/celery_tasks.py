@@ -138,7 +138,7 @@ if config.local_testing != True:
         print(cel.conf.broker_transport_options)
         print(cel.conf.result_backend)
         print(cel.conf.result_backend_transport_options)
-    if redis_cluster_mode == "master-slave":
+    if redis_cluster_mode == "stand-alone":
         # 初始化Celery
         cel = Celery(app.name, broker=app.config['CELERY_BROKER_URL'], backend=app.config['CELERY_RESULT_BACKEND'],
                      include=[app.name])
