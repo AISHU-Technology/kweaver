@@ -132,6 +132,7 @@
     "editSuccess": "Success",
     "repeatError": "Ip address cannot be duplicate",
     "createIndex": "Created index configuration",
+    "indexConfigurationFirst": "Please create an index configuration first",
     "editIndex": "Edit index configuration",
     "delIndex": "Delete index configuration",
     "placeIpInput": "Please enter address",

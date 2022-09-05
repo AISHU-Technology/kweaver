@@ -16,15 +16,64 @@ import requests
 import json
 from dao.graph_dao import graph_dao
 from utils.util import get_timezone
+from flasgger import swag_from
+import yaml
+import os
 
 timer_controller_app = Blueprint('timer_controller_app', __name__)
 
-import sys
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
+    swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
+    swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
+    swagger_new_response.update(swagger_definitions)
 
 
-# 新增定时任务
 @timer_controller_app.route('/add/<graph_id>', methods=["post"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def add_timed_task(graph_id):
+    '''
+    add a scheduled task
+    新增定时任务
+    ---
+    parameters:
+        -   name: graph_id
+            in: path
+            required: true
+            description: graph id
+            type: integer
+        -   name: task_type
+            in: body
+            required: true
+            description: 'building task type. allowableValues: full, increment'
+            example: increment
+            type: string
+        -   name: cycle
+            in: body
+            required: true
+            description: "'one': execute once; 'day': execute daily; 'week': execute weekly; 'month': execute monthly. "
+            type: string
+            example: month
+        -   name: datetime
+            in: body
+            required: true
+            description: "The delivery parameters that are only executed once are the specific date, such as: '2021-12-20 15:54', else are hours and minutes for daily, week and month, such as: '16:40'. 只执行一次的传递参数为具体日期如：'2021-12-20 15:54'，每天，每周，每月传递小时分钟形如：'16:40'"
+            type: string
+            example: "17:20"
+        -   name: enabled
+            in: body
+            required: false
+            description: 任务开关，开启：1，关闭：0，默认开启
+            type: integer
+            example: 1
+        -   name: date_list
+            in: body
+            required: true
+            description: 表示周几/几号执行，list内容为int，每周页面有效值为1~7，元素个数不能大于7，每月页面有效值为1~31如[1，4]，元素个数不能大于31，依次代表周一到周日或者1~31号，一次执行和每天执行页面传递空列表即可，传递其它值会直接丢弃掉
+            type: array
+            example: [1,2,3,4,5]
+    '''
     method = request.method
     if method == "POST":
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -83,9 +132,56 @@ def add_timed_task(graph_id):
                                       error_link), CommonResponseStatus.BAD_REQUEST.value
 
 
-# 修改定时任务
 @timer_controller_app.route('/update/<graph_id>', methods=["post"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def update_timed_task(graph_id):
+    '''
+    modify scheduled task
+    修改定时任务
+    ---
+    parameters:
+        -   name: graph_id
+            in: path
+            required: true
+            description: graph id
+            type: integer
+        -   name: task_id
+            in: body
+            required: true
+            description: 定时任务id
+            type: string
+            example: "edfeca62-77f8-11ec-9513-4281da722808"
+        -   name: task_type
+            in: body
+            required: true
+            description: 构建任务类型，full，increment
+            type: string
+            example: increment
+        -   name: cycle
+            in: body
+            required: true
+            description: 有效值为one,day,week,month，one：执行一次，day：每天执行，week：每周执行，month：每月执行
+            type: string
+            example: week
+        -   name: datetime
+            in: body
+            required: true
+            description: 只执行一次的传递参数为具体日期如：'2021-12-20 15:54'，每天，每周，每月传递小时分钟形如：'16:40'
+            type: string
+            example: 17:02
+        -   name: enabled
+            in: body
+            required: false
+            description: 任务开关，开启：1，关闭：0，默认开启
+            type: integer
+            example: 1
+        -   name: date_list
+            in: body
+            required: true
+            description: 表示周几/几号执行，list内容为int，每周页面有效值为1~7，元素个数不能大于7，每月页面有效值为1~31如[1，4]，元素个数不能大于31，依次代表周一到周日或者1~31号，一次执行和每天执行页面传递空列表即可，传递其它值会直接丢弃掉
+            type: array
+            example: [1]
+    '''
     method = request.method
     if method == "POST":
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -145,9 +241,27 @@ def update_timed_task(graph_id):
                                       error_link), CommonResponseStatus.BAD_REQUEST.value
 
 
-# 批量删除定时任务
 @timer_controller_app.route('/delete/<graph_id>', methods=["post"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def delete_timed_task(graph_id):
+    '''
+    batch delete scheduled task
+    批量删除定时任务
+    当传递的task_id列表部分无效时，只针对有效的task_id执行删除动作，无效的值直接丢弃，如果列表中的值全部无效则直接返回200，后台不执行删除动作，task_id与graph_id不匹配的情况下，后端只会删除隶属于graph_id的定时任务。
+    ---
+    parameters:
+        -   name: graph_id
+            in: path
+            required: true
+            description: graph id
+            type: integer
+        -   name: task_id
+            in: body
+            required: true
+            description: 定时任务id列表，list内容为定时任务id，如['aaa','bbbb‘]
+            type: array
+            example: ["122","4bfc6d8e-68ab-11ec-b9d3-005056ba834d"]
+    '''
     method = request.method
     if method == "POST":
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -185,9 +299,35 @@ def delete_timed_task(graph_id):
                                       error_link), CommonResponseStatus.BAD_REQUEST.value
 
 
-# 分页获取定时任务
 @timer_controller_app.route('', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def get_timed_task():
+    '''
+    paging get scheduled task
+    分页获取定时任务
+    ---
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+        -   name: page
+            in: query
+            required: true
+            description: page number
+            type: integer
+        -   name: size
+            in: query
+            required: true
+            description: numbers per page
+            type: integer
+        -   name: order
+            in: query
+            required: true
+            description: 有效值为ascend和descend，ascend：按照更改时间升序（从旧到新）展示，descend：按照更改时间倒序（从新到旧）展示
+            type: string
+    '''
     method = request.method
     if method == "GET":
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -222,9 +362,25 @@ def get_timed_task():
                                       error_link), CommonResponseStatus.BAD_REQUEST.value
 
 
-# 获取定时任务详情
 @timer_controller_app.route('/info', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def get_timed_info():
+    '''
+    get scheduled task details
+    获取定时任务详情
+    ---
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+        -   name: task_id
+            in: query
+            required: true
+            description: scheduled task id
+            type: string
+    '''
     method = request.method
     if method == "GET":
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -249,9 +405,32 @@ def get_timed_info():
                                       error_link), CommonResponseStatus.BAD_REQUEST.value
 
 
-# 定时任务开关
 @timer_controller_app.route('/switch/<graph_id>', methods=["post"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def timed_switch(graph_id):
+    '''
+    scheduled task switch
+    定时任务开关
+    ---
+    parameters:
+        -   name: graph_id
+            in: path
+            required: true
+            description: graph id
+            type: integer
+        -   name: task_id
+            in: body
+            required: true
+            description: scheduled task id
+            type: string
+            example: "ce29686e-7352-11ec-8b53-005056ba834d"
+        -   name: enabled
+            in: body
+            required: true
+            description: 任务开关，开启：1，关闭：0
+            type: integer
+            example: 1
+    '''
     method = request.method
     if method == "POST":
         param_code, params_json, param_message = commonutil.getMethodParam()

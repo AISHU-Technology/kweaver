@@ -81,8 +81,15 @@ class GraphDatabase extends Component {
   /**
    * 新建
    */
-  onCreate = () => {
-    this.setState({ visible: true, storageInfo: {}, optionType: 'create' });
+  onCreate = async () => {
+    try {
+      const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '' };
+      const { res = {} } = await serviceStorageManagement.openSearchGet(data);
+      if (res?.data?.length > 0) return this.setState({ visible: true, storageInfo: {}, optionType: 'create' });
+      message.warning(intl.get('configSys.indexConfigurationFirst'));
+    } catch (error) {
+      message.warning(intl.get('configSys.indexConfigurationFirst'));
+    }
   };
 
   /**
