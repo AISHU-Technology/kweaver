@@ -97,7 +97,7 @@ jobs:
 
   - job: scan
     displayName: 静态扫描
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/DATA-210336'))
     container: scanner
     dependsOn: [utmake, coverage]
     workspace:
