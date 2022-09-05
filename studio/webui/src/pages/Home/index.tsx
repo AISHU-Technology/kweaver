@@ -1,10 +1,11 @@
 import React from 'react';
-import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import { Button } from 'antd';
+import { Route, Switch, useHistory, useLocation, Link } from 'react-router-dom';
 import { SettingOutlined, CiOutlined } from '@ant-design/icons';
 
 import Layout from '@/Layout';
-
 import asyncComponent from '@/components/AsyncComponent';
+import IconFont from '@/components/IconFont';
 
 import headLogo from '@/assets/images/head-Logo.svg';
 import './style.less';
@@ -40,7 +41,15 @@ const Home = () => {
   const header = {
     logo: headLogo,
     operation: [
-      { icon: <SettingOutlined />, text: 'API文档', onClick: () => window.open('/swagger', '_blank') },
+      {
+        component: () => (
+          <Link to="/swagger" target="_blank">
+            <Button className="operation" type="link" icon={<IconFont type="icon-wendang-xianxing" />}>
+              API文档
+            </Button>
+          </Link>
+        )
+      },
       { icon: <SettingOutlined />, text: '系统配置', onClick: () => history.push('/home/system-config') }
     ]
   };
