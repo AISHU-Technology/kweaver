@@ -46,11 +46,11 @@ type SysConf struct {
 
 // MariaConf 配置
 type MariaConf struct {
-	IP   string `yaml:"ip"`
+	IP   string `yaml:"host"`
 	Port string `yaml:"port"`
 	User string `yaml:"user"`
 	Pwd  string `yaml:"password"`
-	Db   string `yaml:"db"`
+	Db   string `yaml:"database"`
 }
 
 // OrientConf OrientDB 配置
@@ -125,10 +125,13 @@ func init() {
 	if err != nil {
 		panic(errors.New("loading yaml file err, " + err.Error()))
 	}
-	err = leo.ReadYamlConfig(&CONFIG, "/etc/builder/kwconfig.yaml")
+	//err = leo.ReadYamlConfig(&CONFIG, "/etc/builder/kwconfig.yaml")
+	err = leo.ReadYamlConfig(&CONFIG, "./conf/settings2.yaml")
 	if err != nil {
 		logger.Info("no yaml file")
 	}
+	logger.Info("xxxxxxxxxx")
+	logger.Info(CONFIG.MariaConf)
 	err = leo.ReadYamlConfig(&UrlCONF, "./conf/url.yaml")
 	if err != nil {
 		panic(errors.New("loading yaml file err, " + err.Error()))
