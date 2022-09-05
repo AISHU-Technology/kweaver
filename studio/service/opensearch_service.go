@@ -12,6 +12,12 @@ import (
 	"time"
 )
 
+/**
+ * @Author: Xiangguang.li
+ * @Date: 2022/8/20
+ * @Email: Xiangguang.li@aishu.cn
+ **/
+
 type OpenSearchService struct{}
 
 func (*OpenSearchService) GetOpenSearchList(condition *vo.OsSearchCondition) *vo.ListVo {

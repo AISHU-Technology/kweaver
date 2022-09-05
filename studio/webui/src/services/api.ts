@@ -1,14 +1,8 @@
-const baseBuilder = '/api/builder/v1';
+const baseBuilder = 'api/builder/v1';
 const baseEngine = '/api/engine/v1';
 const baseStudio = '/api/studio/v1';
-const baseDataIo = '/api/data-io/v1';
 
 const API = {
-  getOnto: `${baseBuilder}/onto`,
-
-  // task-management
-  graphDelete: `${baseBuilder}/graph/delbyids`,
-
   // createEntity
   getSource: `${baseBuilder}/onto/ds`,
   getDataList: `${baseBuilder}/onto/gettabbydsn`,
@@ -20,7 +14,6 @@ const API = {
   addEntity: `${baseBuilder}/onto/saveontology`,
   fetchModelList: `${baseBuilder}/onto/modellist`,
   getEntityInfo: `${baseBuilder}/onto/`,
-  copyGetEntityInfo: `${baseBuilder}/onto/copy/`,
   getFlowSource: `${baseBuilder}/graph/getdsbygraphid`,
   changeFlowData: `${baseBuilder}/graph/`,
   getModelPreview: `${baseBuilder}/onto/modelspo`,
@@ -43,14 +36,6 @@ const API = {
   dataSourceDelete: `${baseBuilder}/ds/delbydsids`,
   getDsByName: `${baseBuilder}/ds/searchbyname`,
   asAuthGet: `${baseBuilder}/ds/Auth`,
-  asAuthPost: `${baseBuilder}/ds/gettoken`,
-  deleteOnto: `${baseBuilder}/onto/delotlbyids`,
-  getOntoByName: `${baseBuilder}/onto/searchbyname`,
-
-  // expired
-  pwSizeGet: `${baseStudio}/system/passize`,
-  pwReset: `${baseStudio}/account/pass`,
-  pwPut: `${baseStudio}/pass`,
 
   // explore
   analysisReportGet: `${baseEngine}/analysis`,
@@ -73,11 +58,6 @@ const API = {
   graphGetInfoCount: `${baseBuilder}/graph/info/count`,
   graphGetInfoDetail: `${baseBuilder}/graph/info/detail`,
 
-  // login
-  loginPost: `${baseStudio}/login`,
-  logoutPost: `${baseStudio}/logout`,
-  userSourceGet: `${baseStudio}/user/status`,
-
   // searchConfig 认知搜索
   addAdvConfig: `${baseEngine}/adv-search-config`,
   updateAdvConfig: `${baseEngine}/adv-search-config/update`,
@@ -85,7 +65,6 @@ const API = {
   fetchConfigGraph: `${baseEngine}/adv-search-config/kglist`,
   fetchConfig: `${baseEngine}/adv-search-config/info`,
   fetchConfigList: `${baseEngine}/adv-search-config`,
-  checkConfig: `${baseEngine}/adv-search-config/check-info`,
   advSearchV2: `${baseEngine}/adv-search`,
   advSearchTestV2: `${baseEngine}/adv-search/test`,
   entityPropertiesGet: `${baseEngine}/properties`,
@@ -112,9 +91,7 @@ const API = {
   taskStop: `${baseBuilder}/task/stoptask`,
   taskDelete: `${baseBuilder}/task`,
   taskGetProgress: `${baseBuilder}/task/get_progress`,
-  taskGetDetail: `${baseBuilder}/task/getdetail`,
   graphDelByIds: `${baseBuilder}/graph/delbyids`,
-  graphGetCount: `${baseBuilder}/graphcount`,
 
   // timedTask
   timerGet: `${baseBuilder}/timer`,
@@ -124,15 +101,6 @@ const API = {
   timerUpdate: `${baseBuilder}/timer/update`,
   timerSwitch: `${baseBuilder}/timer/switch`,
 
-  // uploadKnowledge
-  uploadServiceGet: `${baseDataIo}/uploadServiceList`,
-  uploadServiceCreate: `${baseDataIo}/uploadServiceList/add`,
-  uploadServiceUpdate: `${baseDataIo}/uploadServiceList/update`,
-  uploadServiceDelete: `${baseDataIo}/uploadServiceList/delete`,
-  uploadServiceTaskGet: `${baseDataIo}/uploadServiceTask`,
-  uploadKnowledge: `${baseDataIo}/uploadServiceTask`,
-  taskGetRelationKN: `${baseDataIo}/task/knowledgeNetwork`,
-
   // workflow
   graphGet: `${baseBuilder}/graph`,
   graphEdit: `${baseBuilder}/graph`,
@@ -140,8 +108,7 @@ const API = {
   graphGetBis: `${baseBuilder}/graph/getbis`,
   graphSaveNoCheck: `${baseBuilder}/graph/savenocheck`,
   graphCheckKmApInfo: `${baseBuilder}/graph/check_kmapinfo`,
-  graphGetInfoExt: `${baseBuilder}/graph/graph_InfoExt/graphid`,
-  taskPerform: `${baseBuilder}/task`
+  graphGetInfoExt: `${baseBuilder}/graph/graph_InfoExt/graphid`
 };
 
 export { API };

@@ -53,19 +53,9 @@ const taskGetProgress = async (id, loop = false) => {
 };
 
 /**
- * 获取详情
- */
-const taskGetDetail = async id => await apiService.axiosGet(`${API.taskGetDetail}/${id}`);
-
-/**
  * 删除图谱
  */
 const graphDelByIds = async data => await apiService.axiosPost(API.graphDelByIds, data);
-
-/**
- * 获取图谱知识量统计
- */
-const graphGetCount = async graph_id => await apiService.axiosGet(`${API.graphGetCount}/${graph_id}`);
 
 export default {
   taskGet,
@@ -73,7 +63,5 @@ export default {
   taskStop,
   taskDelete,
   taskGetProgress,
-  taskGetDetail,
-  graphDelByIds,
-  graphGetCount
+  graphDelByIds
 };

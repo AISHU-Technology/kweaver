@@ -40,7 +40,7 @@ const ModalContent = memo(props => {
    * 获取索引
    */
   const getIndexList = async () => {
-    const data = { page: 1, size: -1, order: 'updated-0', name: '' };
+    const data = { page: 1, size: -1, orderField: 'created', order: 'ASC', name: '' };
     const res = await serviceStorageManagement.openSearchGet(data);
 
     if (res && res.res) {

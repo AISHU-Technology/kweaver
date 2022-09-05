@@ -234,22 +234,6 @@ class knwDao:
                 advconf = True
                 adv_map[kgconfid] = advconf
         sql = f"""
-            select gid
-            from task
-            where
-                transferStatus in (0,1)
-                and gid in (
-                    select graph_id
-                    from network_graph_relation
-                    where knw_id = {knw_id}
-                )
-            group by gid """
-        Logger.log_info(sql)
-        upload_df = pd.read_sql(sql, connection)
-        upload_res = upload_df.to_dict('records')
-        for upload_row in upload_res:
-            upload_list.append(upload_row['gid'])
-        sql = f"""
             select
                 gc.id,
                 graph_db.type
@@ -287,7 +271,7 @@ class knwDao:
             rec_list[index]['display_task'] = display_task
             rec_list[index]['advConf'] = advconf
             rec_list[index]['is_import'] = is_import
-            is_upload = True if KG_config_id in upload_list else False
+            is_upload = False
             rec_list[index]['is_upload'] = is_upload
             graph_baseInfo = eval(row['graph_baseInfo'])
             kgDesc = ""

@@ -92,14 +92,6 @@ def task():
                                     "code": 500056,
                                     "message": "task cannot run,the storage address of this graph does not exist"},
                             "code": 500})
-        # 统计上传中的图谱
-        res, code = graph_Service.get_upload_id(graph_id)
-        res = res.to_dict('records')
-        if len(res) > 0:
-            return jsonify({'res': {"cause": "graph upload can not run",
-                                    "code": CommonResponseStatus.GRAPH_UPLOAD_NOT_RUN.value,
-                                    "message": "task cannot run,the graph upload"},
-                            "code": 500})
         graph_data_dict = graph_data_dict2.to_dict('records')
         if len(graph_data_dict) > 0:
             # 查看graph_id 存在不，如果不存在执行任务，如果存在，根据状态：执行中和等待中不可以执行，
@@ -175,14 +167,6 @@ def getdetailbytaskid():
     params_json = request.args.to_dict()
     graph_id = params_json.get("graph_id")
     ret_code, obj = task_service.getdetailtask(graph_id)
-    return jsonify({'res': obj, "code": ret_code})
-
-
-# 分页获取历史任务
-@celery_controller_app.route('/get_history_task', methods=['GET'])
-def gethistorytask():
-    params_json = request.args.to_dict()
-    ret_code, obj = task_service.gethistorydata(params_json)
     return jsonify({'res': obj, "code": ret_code})
 
 

@@ -9,7 +9,7 @@ import IndexConfig from './IndexConfig';
 import './index.less';
 
 const StorageManagement = () => {
-  const [tabsKey, setTabsKey] = useState('graph');
+  const [tabsKey, setTabsKey] = useState('index');
 
   const callback = (key: string) => setTabsKey(key);
 
@@ -19,12 +19,12 @@ const StorageManagement = () => {
         存储管理
       </Format.Title>
       <div className="content">
-        <Tabs defaultActiveKey="graph" activeKey={tabsKey} onChange={callback}>
-          <Tabs.TabPane key="graph" tab={intl.get('configSys.graphDatabase')}>
-            <GraphDatabase tabsKey={tabsKey} />
-          </Tabs.TabPane>
+        <Tabs defaultActiveKey="index" activeKey={tabsKey} onChange={callback}>
           <Tabs.TabPane key="index" tab={intl.get('configSys.indexConfig')}>
             <IndexConfig tabsKey={tabsKey} />
+          </Tabs.TabPane>
+          <Tabs.TabPane key="graph" tab={intl.get('configSys.graphDatabase')}>
+            <GraphDatabase tabsKey={tabsKey} />
           </Tabs.TabPane>
         </Tabs>
       </div>

@@ -8,12 +8,33 @@ from dao.graphdb_dao import GraphDB
 from dao.graph_dao import graph_dao
 import threading
 from utils.ConnectUtil import redisConnect
+from flasgger import swag_from
+import yaml
+import os
 
 rebuild_fulltextindex_controller_app = Blueprint('rebuild_fulltextindex_controller_app', __name__)
 
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
+    swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
+    swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
+    swagger_new_response.update(swagger_definitions)
+
 @rebuild_fulltextindex_controller_app.route('/<KDB_name>', methods=["POST"])
+@swag_from(swagger_new_response)
 def rebuild_fulltextindex(KDB_name):
-    '''提交重建索引任务'''
+    '''
+    submit rebuilding-fulltext-index task
+    提交重建索引任务
+    ---
+    parameters:
+        -   name: KDB_name
+            in: path
+            required: true
+            description: graph database name
+            type: string
+    '''
     try:
         if not re.search(u'^[a-z]+[_a-z0-9]*$', KDB_name):
             return Gview.TErrorreturn(
@@ -83,8 +104,19 @@ def rebuild_fulltextindex(KDB_name):
         return str(e), 500
 
 @rebuild_fulltextindex_controller_app.route('/<KDB_name>', methods=["GET"])
+@swag_from(swagger_new_response)
 def rebuild_status(KDB_name):
-    '''获取重建索引状态'''
+    '''
+    get status of rebuilding-fulltext-index task
+    获取重建索引状态
+    ---
+    parameters:
+        -   name: KDB_name
+            in: path
+            required: true
+            description: graph database name
+            type: string
+    '''
     if not re.search(u'^[a-z]+[_a-z0-9]*$', KDB_name):
         return Gview.TErrorreturn(
             ErrorCode='Builder.controller.graph_config.getKDBname.KDBnameWrongFormat',
