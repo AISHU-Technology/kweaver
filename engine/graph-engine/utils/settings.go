@@ -125,8 +125,7 @@ func init() {
 	if err != nil {
 		panic(errors.New("loading yaml file err, " + err.Error()))
 	}
-	//err = leo.ReadYamlConfig(&CONFIG, "/etc/builder/kwconfig.yaml")
-	err = leo.ReadYamlConfig(&CONFIG, "./conf/settings2.yaml")
+	err = leo.ReadYamlConfig(&CONFIG, "/etc/builder/kwconfig.yaml")
 	if err != nil {
 		logger.Info("no yaml file")
 	}

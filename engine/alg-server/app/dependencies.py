@@ -32,8 +32,8 @@ class Config:
 
     # mysql配置信息
     DBCONFIG = getYAML()["mariadb"]
-    MYSQL_HOST = DBCONFIG["ip"]
-    MYSQL_DB = DBCONFIG["db"]
+    MYSQL_HOST = DBCONFIG["host"]
+    MYSQL_DB = DBCONFIG["database"]
     MYSQL_USER = DBCONFIG["user"]
     MYSQL_PASSWORD = DBCONFIG["password"]
     MYSQL_CHARSET = 'utf8'

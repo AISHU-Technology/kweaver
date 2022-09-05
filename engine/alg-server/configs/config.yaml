@@ -1,6 +1,6 @@
 mariadb:
-  ip: 10.4.106.255
+  host: 10.4.106.255
   port: 3306
   user: anydata
   password: Qwe123!@#
-  db: anydata
+  database: anydata
