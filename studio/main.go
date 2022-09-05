@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/DeanThompson/ginpprof"
 	"github.com/gin-gonic/gin"
 	_ "kw-studio/docs"
 	"kw-studio/global"
@@ -35,6 +36,9 @@ func main() {
 	upgrade.Upgrade()
 	//6.初始化路由
 	router := initialize.Router()
+	// automatically add routers for net/http/pprof
+	// e.g. /debug/pprof, /debug/pprof/heap, etc.
+	ginpprof.Wrap(router)
 	webui.AddRoutes(router)
 
 	switch global.Config.Server.Mode {

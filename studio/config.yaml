@@ -57,5 +57,5 @@ swagger:
     - { "name": "CEngine", "description": "知识网络探索式分析相关API，可实现实体的搜索，以及探索与其相关联的实体。遵循GraphQL接口规范，详细schema可查看graphql schema" }
   doc_urls:
     - "http://localhost:6800/swagger/doc.json"
-    - "http://kw-builder:6475/apispec_1.json"
+    - "http://10.4.129.252:6475/apispec_1.json"
     - "http://kw-engine:6474/swagger/doc.json"
