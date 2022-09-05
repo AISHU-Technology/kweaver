@@ -64,7 +64,6 @@ class TestGetGraphInfoBasic(unittest.TestCase):
         column = ['gid']
         row = []
         res = pd.DataFrame(row, columns=column)
-        graph_dao.get_upload_id = mock.Mock(return_value=res)
 
     def test_get_graph_info_basic_success1(self):
         code, res = graph_Service.get_graph_info_basic(self.graphid, self.is_all, self.key)

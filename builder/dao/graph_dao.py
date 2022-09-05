@@ -1128,13 +1128,6 @@ class GraphDao():
         return result["kg_id"]
 
     @connect_execute_close_db
-    def get_upload_id(self, graphids, connection, cursor):
-        graphids = ",".join(map(str, graphids)) if isinstance(graphids, list) else graphids
-        sql = f"select gid from task where transferStatus in (0,1) and gid in ({graphids}) group by gid"
-        df = pd.read_sql(sql, connection)
-        return df
-
-    @connect_execute_close_db
     def get_graph_db_id(self, graphids, connection, cursor):
         graphids = ",".join(map(str, graphids))
         sql = f"select id,graph_db_id from graph_config_table where id in ({graphids})"

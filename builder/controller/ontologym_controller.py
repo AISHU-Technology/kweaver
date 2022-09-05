@@ -16,28 +16,50 @@ import requests
 import json
 from utils.celery_check_params_json import celery_check_params
 import re
+from flasgger import swag_from
+import yaml
+import os
 
 ontology_controller_app = Blueprint('ontology_controller_app', __name__)
 
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
+    swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r') as f:
+    swagger_old_response = yaml.load(f, Loader=yaml.FullLoader)
+    swagger_old_response.update(swagger_definitions)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
+    swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
+    swagger_new_response.update(swagger_definitions)
 
-#######查询所有本体#############
-# @ontology_controller_app.route('/', methods=["get"])
-# def onto2():
-#
-#
-#     return id
-#
-# ########根据本体名查询本体#########
-# @ontology_controller_app.route('/', methods=["get"])
-#
-#
-#
-# ###### 查询所有数据源名############（数据源管理已经存在4.3）问题：如何显示get_all分页显示，与原相同
-# @ontology_controller_app.route('/', methods=["get"])
 
-########mysql、hive根据数据源返回数据表#######
 @ontology_controller_app.route('/gettabbydsn', methods=["GET"])
+@swag_from(swagger_old_response)
 def get_table():
+    '''
+    get data table by data source name
+    根据数据源名获取数据表
+    ---
+    parameters:
+        -   name: ds_id
+            in: query
+            required: true
+            description: data source id
+            type: integer
+            example: 8
+        -   name: data_source
+            in: query
+            required: true
+            description: 'data source type. options: as7, hive, mysql'
+            type: string
+            example: as7
+        -   name: postfix
+            in: query
+            required: false
+            description: the file postfix. only valid when the data source type is as
+            type: string
+            example: csv
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         print(params_json)
@@ -60,12 +82,33 @@ def get_table():
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
 
-###################按需返回##############
 @ontology_controller_app.route('/dirlist', methods=["GET"])  ###docid\tockendid
+@swag_from(swagger_old_response)
 def filter_by_postfix():
+    '''
+    expand the AS folder
+    展开AS文件夹
+    按需返回文件列表
+    ---
+    parameters:
+        -   name: ds_id
+            in: query
+            required: true
+            description: data source id
+            type: string
+        -   name: docid
+            in: query
+            required: true
+            description: the gns of the folder
+            type: string
+        -   name: postfix
+            in: query
+            required: true
+            description: '结构化："csv","json"; 非结构化：“all”'
+            type: string
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
-
         paramscode, message = otl_check_params.valid_params_check("show_by_postfix", params_json)
         if paramscode != 0:
             Logger.log_error("parameters:%s invalid" % params_json)
@@ -83,43 +126,30 @@ def filter_by_postfix():
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
 
-# @ontology_controller_app.route('/flatfile', methods=["post"])###docid\tockendid
-# def flat_file():
-#     params_json = request.get_data()
-#     params_json = json.loads(params_json)
-#     paramscode, message = otl_check_params.valid_params_check("flatfile", params_json)
-#     if paramscode != 0:
-#         Logger.log_error("parameters:%s invalid" % params_json)
-#         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-#                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-#     ret_code, ret_message = otl_service.flatfile(params_json)
-#     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-#         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-#                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-#
-#     print(ret_message)
-#     return ret_message, CommonResponseStatus.SUCCESS.value
-
-
-#########预览#############
-
-##########本体预览#########
-# @ontology_controller_app.route('/previewonto', methods=["get"])
-# def ontology_preview():
-#     params_json = request.args.to_dict()
-#     ret_code, ret_message = otl_service.preview_ontology(params_json)
-#     paramscode, message = otl_check_params.valid_params_check("preview_ontology", params_json)
-#     if paramscode != 0:
-#         Logger.log_error("parameters:%s invalid" % params_json)
-#         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-#                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-#     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-#         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-#                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-#     return ret_message, CommonResponseStatus.SUCCESS.value
-# ##########源数据预览#########
 @ontology_controller_app.route('/previewdata', methods=["GET"])
+@swag_from(swagger_old_response)
 def data_preview():
+    '''
+    preview the data
+    源数据预览
+    ---
+    parameters:
+        -   name: ds_id
+            in: query
+            required: true
+            description: data source id
+            type: string
+        -   name: data_source
+            in: query
+            required: true
+            description: data source type
+            type: string
+        -   name: name
+            in: query
+            required: true
+            description: 'as:docid; mysql:表名'
+            type: string
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         paramscode, message = otl_check_params.valid_params_check("preview_data", params_json)
@@ -144,9 +174,56 @@ def data_preview():
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
 
-##########调用算法 返回本体###############
 @ontology_controller_app.route('/auto/autogenschema', methods=["post"])
+@swag_from(swagger_old_response)
 def predict_ontology():
+    '''
+    get extraction object and its properties
+    流程四，获取数据源抽取对象及属性
+    ---
+    parameters:
+        -   name: ds_id
+            in: body
+            required: true
+            description: data source id
+            type: string
+            example: 8
+        -   name: data_source
+            in: body
+            required: true
+            description: 'data source type. options: as mysql hive (as：json,csv V1.0 版本json只支持单行)'
+            type: string
+            example: as7
+        -   name: file_list
+            in: body
+            required: true
+            description: file list
+            type: array
+            example: [
+                {
+                    "docid": "gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/667CDDD12E364766B72F8652F624A072",
+                    "type": "file",
+                    "name": "cuostomer.csv"
+                }
+            ]
+        -   name: extract_type
+            in: body
+            required: true
+            description: labelExtraction or standardExtraction
+            type: string
+            example: standardExtraction
+        -   name: step
+            in: body
+            required: false
+            description: Otl or Ext. only valid when extract type is labelExtraction
+            type: string
+        -   name: postfix
+            in: body
+            required: true
+            description: the file postfix
+            type: integer
+            example: csv
+    '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
     paramscode, message = otl_check_params.valid_params_check("predict_ontology", params_json)
@@ -166,40 +243,80 @@ def predict_ontology():
     return ret_message, CommonResponseStatus.SUCCESS.value
 
 
-###########《保存》存入数据库#########################
-# @ontology_controller_app.route('/saveontology', methods=["post","get"])
-# def save_ontology():
-#     # method = request.method
-#     # if  method=="GET":
-#     ret_code, ret_message = otl_service.ontology_save_fist()
-#     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-#         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-#                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-#     return ret_message, CommonResponseStatus.SUCCESS.value
-#     # elif method=="POST":
-#     #     params_json = request.get_data()
-#     #     params_json = json.loads(params_json)
-#     #
-#     #     paramscode, message = otl_check_params.valid_params_check("ontology_save", params_json)
-#     #     if paramscode==0:
-#     #         logiccode,logicmessage=otl_check_params.entity_relation_check(params_json)
-#     #         if logiccode != 0:
-#     #             Logger.log_error("parameters:%s invalid" % params_json)
-#     #             return Gview.BuFailVreturn(cause=logicmessage, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-#     #                                        message=logicmessage), CommonResponseStatus.BAD_REQUEST.value
-#     #     else:
-#     #         Logger.log_error("parameters:%s invalid" % params_json)
-#     #         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-#     #                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-#     #     ret_code, ret_message = otl_service.ontology_save(params_json)
-#     #     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-#     #         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-#     #                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-#     #     return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
-###########《保存》存入数据库#########################
-# 新建本体
 @ontology_controller_app.route('/saveontology', methods=["post"])
+@swag_from(swagger_old_response)
 def save_ontology():
+    '''
+    add an ontology
+    新建本体
+    ---
+    parameters:
+        -   name: ontology_name
+            in: body
+            required: true
+            description: ontology name
+            type: string
+            example: ontology_name
+        -   name: ontology_des
+            in: body
+            required: false
+            description: ontology description
+            type: string
+            example: ontology_des
+        -   name: entity
+            in: body
+            required: true
+            description: entity class information
+            type: array
+            example:  [
+                {
+                  "colour": "#546CFF",
+                  "name": "边1",
+                  "properties": [["name", "string"]],
+                  "relations": ["实体1", "边1", "实体2"],
+                  "ds_name": "数据源名或者本体名",
+                  "dataTtype": "数据类型（结构化，非结构化）",
+                  "extract_type": "选择模型（普通）",
+                  "model": "aishu",
+                  "file_type": "文件类型，csv，mysql数据来源 无文件类型",
+                  "source": [
+                    "docid",
+                    "table",
+                    "文件或者表，如果是本体导入或者手动创建为空"
+                  ],
+                  "source_type": " automatic,manual,import 自动预测,手动创建,本体导入"
+                }
+              ]
+        -   name: edge
+            in: body
+            required: true
+            description: edge class information
+            type: array
+            example: [
+                {
+                  "colour": "#123CDF",
+                  "ds_name": "数据源名或者本体名",
+                  "dataType": "数据类型（结构化，非结构化）",
+                  "extract_type": "选择模型（普通）",
+                  "model": "aishu",
+                  "data_source": "as",
+                  "ds_path": "123",
+                  "id": "7",
+                  "file_type": "文件类型，csv，mysql数据来源 无文件类型",
+                  "name": "实体1",
+                  "properties": [
+                    ["name", "string"],
+                    ["age", "int"]
+                  ],
+                  "source": [
+                    "docid",
+                    "table",
+                    "文件或者表，如果是本体导入或者手动创建为空"
+                  ],
+                  "source_type": " automatic,manual,import 自动预测,手动创建,本体导入"
+                },
+              ]
+    '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
     ret_code, ret_message, onto_id = otl_service.ontology_save(params_json)
@@ -210,7 +327,13 @@ def save_ontology():
 
 
 @ontology_controller_app.route('/modellist', methods=["get"])
+@swag_from(swagger_old_response)
 def get_model_list():
+    '''
+    get model list
+    返回模型列表
+    ---
+    '''
     ret_code, ret_message = otl_service.get_model_list()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
@@ -219,7 +342,19 @@ def get_model_list():
 
 
 @ontology_controller_app.route('/modelspo', methods=["get"])
+@swag_from(swagger_old_response)
 def get_model_spo():
+    '''
+    get model spo
+    获取模型spo
+    ---
+    parameters:
+        -   name: model
+            in: query
+            required: true
+            description: model name
+            type: string
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         paramscode, message = otl_check_params.valid_params_check("modelspo", params_json)
@@ -235,7 +370,26 @@ def get_model_spo():
 
 
 @ontology_controller_app.route('/getmodelotl', methods=["post"])
+@swag_from(swagger_old_response)
 def get_model_otl():
+    '''
+    get model ontology
+    获取模型本体
+    ---
+    parameters:
+        -   name: file_list
+            in: body
+            required: true
+            description: file list
+            type: array
+            example: [["gns://3B3FDF44E3FD48FEB0F0C38C0C4D9C13/C6B5BF7F283144E897CA818707F14812/AE3E13B7F7674CF7BA6C48D420D1AD07", "anyshare//anydata研发线//aaa.csv", "aaa.csv"]]
+        -   name: model
+            in: body
+            required: true
+            description: model name
+            type: string
+            example: AImodel
+    '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
     paramscode, message = otl_check_params.valid_params_check("getmodelotl", params_json)
@@ -253,9 +407,30 @@ def get_model_otl():
     return ret_message, CommonResponseStatus.SUCCESS.value
 
 
-# lzg add
 @ontology_controller_app.route('/getotl', methods=["get"])
+@swag_from(swagger_old_response)
 def getall():
+    '''
+    get ontology list
+    获取本体库列表
+    ---
+    parameters:
+        -   name: page
+            in: query
+            required: true
+            description: 'page number. -1: get all ontologies; else paging get ontology list.'
+            type: integer
+        -   name: size
+            in: query
+            required: true
+            description: number per page
+            type: integer
+        -   name: order
+            in: query
+            required: true
+            description: descend or ascend. order by time
+            type: string
+    '''
     method = request.method
     # 根据不同的请求方式请求方式获得参数并获取异常
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -279,7 +454,20 @@ def getall():
 
 
 @ontology_controller_app.route('/delotlbyids', methods=["DELETE"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def delotl():
+    '''
+    delete the ontology
+    删除本体
+    ---
+    parameters:
+        -   name: otlids
+            in: body
+            required: true
+            description: ontology ids
+            type: array
+            example: [990,103,101,102,95,87,89]
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     ret_code, ret_message = otl_service.delete(params_json)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
@@ -288,9 +476,35 @@ def delotl():
     return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
-# 模糊查询
 @ontology_controller_app.route('/searchbyname', methods=["get"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def getotlbyname():
+    '''
+    fuzzy query ontology by name
+    模糊查询
+    ---
+    parameters:
+        -   name: page
+            in: query
+            required: true
+            description: page number
+            type: integer
+        -   name: size
+            in: query
+            required: true
+            description: number per page
+            type: integer
+        -   name: order
+            in: query
+            required: true
+            description: descend or ascend. order by time
+            type: string
+        -   name: otlname
+            in: query
+            required: true
+            description: ontology name
+            type: string
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         check_res, message = otl_check_params.otlgetbynamePar(params_json)
@@ -310,7 +524,31 @@ def getotlbyname():
 
 
 @ontology_controller_app.route('updatename/<otlid>', methods=["put"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def updateotlname(otlid):
+    '''
+    update ontology name and description
+    更新本体名称和描述
+    ---
+    parameters:
+        -   name: otlid
+            in: path
+            required: true
+            description: ontology id
+            type: integer
+        -   name: ontology_name
+            in: body
+            required: true
+            description: ontology name
+            type: string
+            example: ontology_name
+        -   name: ontology_des
+            in: body
+            required: true
+            description: ontology description
+            type: string
+            example: ontology_des
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
         message = "The parameter otlid type must be int!"
@@ -337,7 +575,72 @@ def updateotlname(otlid):
 
 
 @ontology_controller_app.route('updateinfo/<otlid>', methods=["put"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def updateotlinfo(otlid):
+    '''
+    update ontology information such as entity class information
+    更新本体entity等信息
+    ---
+    parameters:
+        -   name: otlid
+            in: path
+            required: true
+            description: ontolody id
+            type: integer
+        -   name: entity
+            in: body
+            required: true
+            description: 'entity class information. 必须字段：entity_id,colour,ds_name,dataType,data_source,ds_path,ds_id,extract_type,name,source_table,source_type,properties. 非必须字段(可为空但字段必须)：file_type,task_id,properties_index,model，source_table. 注：之前的id改为ds_id，现在的entity_id为唯一标识'
+            type: array
+            example: [
+                {
+                  "colour": "#805A9C",
+                  "ds_name": "结构化数据",
+                  "dataType": "structured",
+                  "extract_type": "standardExtraction",
+                  "file_type": "csv",
+                  "task_id": "55",
+                  "name": "nei1",
+                  "source_table": [
+                    [
+                      "gns://B4FFFD35301B43B78DAEA4737A364C47/DC6942AC590846C297A52346AE9B27F0/EDEA69091B1B4538BE74AAA9535D0E66",
+                      "结构化数据/csv/nei1.csv",
+                      "nei1.csv"
+                    ]
+                  ],
+                  "source_type": "automatic",
+                  "properties": [
+                    ["name", "string"],
+                    ["p", "string"],
+                    ["s", "string"]
+                  ],
+                  "properties_index": ["name", "p", "s"],
+                  "data_source": "as7",
+                  "ds_path": "结构化数据",
+                  "model": "",
+                  "entity_id": 4,
+                  "ds_id": "5"
+                }
+              ]
+        -   name: edge
+            in: body
+            required: false
+            description: edge class information. edge_id. 其他同上
+            type: array
+            example: []
+        -   name: used_task
+            in: body
+            required: true
+            description: 被渲染过的task
+            type: array
+            example: [1, 23]
+        -   name: flag
+            in: body
+            required: true
+            description: '下一步则是“nextstep”--下一步校验entity不可为空，有运行的任务不可保存. 保存则是“save”--不校验entity为空，有运行的任务可保存'
+            type: string
+            example: nextstep
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
         message = "The parameter otlid type must be int!"
@@ -368,8 +671,13 @@ def updateotlinfo(otlid):
 
 
 @ontology_controller_app.route('/<otlid>', methods=["get"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def ds(otlid):
-    print("*******************************")
+    '''
+    get ontology details by name
+    通过名字获取本体详细内容
+    ---
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
         message = "The parameter otlid type must be int!"
@@ -386,7 +694,19 @@ def ds(otlid):
 
 
 @ontology_controller_app.route('/getbykgid/<kgid>', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def getotlbykgid(kgid):
+    '''
+    get ontology information by kgid
+    根据kgid返回本体信息
+    ---
+    parameters:
+        -   name: kgid
+            in: path
+            required: true
+            description: knowledge graph id
+            type: integer
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not kgid.isdigit():
         return Gview.TErrorreturn(
@@ -413,9 +733,20 @@ def getotlbykgid(kgid):
         return ret_message, CommonResponseStatus.SUCCESS.value
 
 
-# 根据本体名称获取本体信息
 @ontology_controller_app.route('/getotlbyname', methods=["get"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def getotlbyotlname():
+    '''
+    get ontology information by ontology name
+    根据本体名称获取本体信息
+    ---
+    parameters:
+        -   name: name
+            in: query
+            required: true
+            description: ontology name
+            type: string
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     otlname = params_json.get("name")
     message = ""
@@ -454,9 +785,39 @@ def getotlbyotlname():
     return ret_message, CommonResponseStatus.SUCCESS.value
 
 
-####lj add
 @ontology_controller_app.route('/task/build_task', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def builde_onto_task():
+    '''
+    execute the task of predicting ontology
+    执行预测本体的任务
+    ---
+    parameters:
+        -   name: ontology_id
+            in: body
+            required: true
+            description: 新建本体时第一次构建任务本体id为空，并返回临时本体id. 接下来构建任务都使用返回的临时本体id. 编辑本体时构建任务使用本体id
+            type: string
+            example: 8
+        -   name: file_list
+            in: body
+            required: true
+            description: 想要预测的文件
+            type: array
+            example: [{"docid":"gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/3D77695B9C1641398944920D7B6D921E","name":"industry_info.csv","type":"file"}]
+        -   name: postfix
+            in: body
+            required: true
+            description: 筛选条件. csv,json,""-->mysql/hive
+            type: string
+            example: csv
+        -   name: ds_id
+            in: body
+            required: true
+            description: data source id
+            type: integer
+            example: 7
+    '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
     #####验证改
@@ -487,7 +848,37 @@ def builde_onto_task():
 
 
 @ontology_controller_app.route('/task/gettaskinfo', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def gettaskinfo():
+    '''
+    query task list
+    ---
+    parameters:
+        -   name: page
+            in: body
+            required: true
+            description: page number
+            type: integer
+            example: 1
+        -   name: size
+            in: body
+            required: true
+            description: number per page
+            type: integer
+            example: 20
+        -   name: ontology_id
+            in: body
+            required: true
+            description: ontology id
+            type: string
+            example: 7
+        -   name: used_task
+            in: body
+            required: true
+            description: rendered tasks
+            type: array
+            example: []
+    '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
     #####验证改
@@ -516,7 +907,19 @@ def gettaskinfo():
 
 
 @ontology_controller_app.route('/task/deletetask', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def deletetask():
+    '''
+    delete the task
+    ---
+    parameters:
+        -   name: task_list
+            in: body
+            required: true
+            description: task list
+            type: array
+            example: [13]
+    '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
     #####验证改
@@ -546,7 +949,28 @@ def deletetask():
 
 
 @ontology_controller_app.route('/task/get_task_files', methods=["GET"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def get_task_files():
+    '''
+    get the status of predicting files
+    ---
+    parameters:
+        -   name: task_id
+            in: query
+            required: true
+            description: task id
+            type: integer
+        -   name: page
+            in: query
+            required: true
+            description: page number
+            type: integer
+        -   name: size
+            in: query
+            required: true
+            description: number per page
+            type: integer
+    '''
     params_json = request.args.to_dict()
     #####验证改
     paramscode, message = celery_check_params.valid_params_check("get_task_files", params_json)
@@ -578,7 +1002,23 @@ def get_task_files():
 
 
 @ontology_controller_app.route('/task/deletealltask', methods=["DELETE"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def deletealltask():
+    '''
+    exit without saving all tasks related to deleting ontology
+    ---
+    parameters:
+        -   name: ontology_id
+            in: query
+            required: true
+            description: ontology id
+            type: integer
+        -   name: state
+            in: query
+            required: true
+            description: "'edit': edit without saving (delete some tasks); 'notedit': create without saving (delete all tasks)"
+            type: string
+    '''
     params_json = request.args.to_dict()
     paramscode, message = celery_check_params.valid_params_check("deletealltask", params_json)
     if paramscode != 0:
@@ -606,56 +1046,31 @@ def deletealltask():
         return res_json_return, CommonResponseStatus.SUCCESS.value
 
 
-# # 健康检查 /api/builder/v1/onto/task/health/ready
-# @ontology_controller_app.route('/task/health/ready', methods=["GET"], strict_slashes=False)
-# def health():
-#     url = "http://localhost:6488/onto/health/ready"
-#     payload = {}
-#     headers = {}
-#     response = requests.request("GET", url, headers=headers, data=payload)
-#     res_json = response.json()
-#     code = res_json["code"]
-#     ret_message = res_json["res"]
-#     if code == 200:
-#         return "success", CommonResponseStatus.SUCCESS.value
-#     Logger.log_error(json.dumps(res_json))
-#     return Gview.BuFailVreturn(cause="success", code=50000,
-#                                message="success"), CommonResponseStatus.SERVER_ERROR.value
-#
-# @ontology_controller_app.route('/task/health/alive', methods=["GET"], strict_slashes=False)
-# def healthalive():
-#     url = "http://localhost:6488/onto/health/alive"
-#     payload = {}
-#     headers = {}
-#     response = requests.request("GET", url, headers=headers, data=payload)
-#     res_json = response.json()
-#     code = res_json["code"]
-#     ret_message = res_json["res"]
-#     if code == 200:
-#         return "success", CommonResponseStatus.SUCCESS.value
-#     Logger.log_error(json.dumps(res_json))
-#     return Gview.BuFailVreturn(cause="success", code=50000,
-#                                message="success"), CommonResponseStatus.SERVER_ERROR.value
-
-# @ontology_controller_app.route('/copy', methods=["POST"], strict_slashes=False)
-# def copy_otl():
-#     params_json = request.get_data()
-#     params_json = json.loads(params_json)
-#     #####验证改
-#     paramscode, message = celery_check_params.valid_params_check("copy_otl", params_json)
-#     if paramscode != 0:
-#         Logger.log_error("parameters:%s invalid" % params_json)
-#         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-#                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-#     ret_code, ret_message = otl_service.copy_otl(params_json)
-#     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-#         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-#                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-#     return ret_message, CommonResponseStatus.SUCCESS.value
-
-# 本体复制
 @ontology_controller_app.route('/copy/<otlid>', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def copy_otl(otlid):
+    '''
+    copy ontology
+    ---
+    parameters:
+        -   name: otlid
+            in: path
+            required: true
+            description: ontology id
+            type: integer
+        -   name: ontology_name
+            in: body
+            required: true
+            description: ontology name
+            type: string
+            example: ontology_name
+        -   name: ontology_des
+            in: body
+            required: false
+            description: ontology description
+            type: string
+            example: ontology_description
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
         return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
@@ -703,9 +1118,13 @@ def copy_otl(otlid):
     return {"res": {"ontology_id": onto_id}}, CommonResponseStatus.SUCCESS.value
 
 
-# 本体入口，一键导入时数据源列表
 @ontology_controller_app.route('/ds', methods=["get"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def graphDsList():
+    '''
+    get data source list when clicking 'batching import' in step 3: ontology
+    ---
+    '''
     ret_code, ret_message = otl_service.getds()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],

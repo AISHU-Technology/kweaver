@@ -13,9 +13,9 @@ import ScrollBar from '@/components/ScrollBar';
 import { getPostfix } from '@/utils/handleFunction';
 
 import ShowTable from './ShowTable';
-import ModalContent from './ModalContent';
 import SourceList from './SourceList';
 import RuleList from './RuleList';
+import SourceModal from './SourceModal';
 import { hasErr, verifyLast, verifySources } from './RuleList/assistFunction';
 import {
   SourceType,
@@ -65,7 +65,6 @@ const InfoExtr = (props: any, ref: React.Ref<any>) => {
     anyDataLang
   } = props;
   const preCurrent = useRef(0); // 使用ref hook 模拟 componentDidUpdate
-  const modalContentRef = useRef<any>(); // 弹框内容的ref
   const boardScrollRef = useRef<any>(); // 展示看板的滚动条ref
   const sourceListRef = useRef<any>(); // 抽取源列表ref
   const ruleListRef = useRef<any>(); // 规则列表ref
@@ -138,7 +137,7 @@ const InfoExtr = (props: any, ref: React.Ref<any>) => {
    */
   const fetchModel = async () => {
     const res = await servicesCreateEntity.fetchModelList();
-    res && res.res && setModelList(Object.entries(res.res));
+    res?.res && setModelList(Object.entries(res.res));
   };
 
   /**
@@ -204,14 +203,11 @@ const InfoExtr = (props: any, ref: React.Ref<any>) => {
   /**
    * 点击确认按钮添加数据源
    */
-  const onAdd = async (e: any) => {
-    e.preventDefault();
-    const addData = modalContentRef.current.addFile();
-    if (!addData) return;
+  const onAdd = async ({ selectSource, asSelectValue, dataSheetSelectValue }: any) => {
+    if (!selectSource) return;
     setAddDsVisible(false);
     setAddLoading(true);
     let data: any[] = [];
-    const { selectSource, asSelectValue, dataSheetSelectValue } = addData;
     const { id, data_source, extract_type, extract_model } = selectSource;
     const alertExtractErr = (code: number) => {
       code in EXTRACT_ERROR_CODE && message.error(intl.get(EXTRACT_ERROR_CODE[code]));
@@ -577,33 +573,15 @@ const InfoExtr = (props: any, ref: React.Ref<any>) => {
         </Button>
       </div>
 
-      <Modal
-        className="extract-modal"
-        title={intl.get('workflow.information.details')}
+      <SourceModal
         visible={addDsVisible}
-        width={800}
-        maskClosable={false}
-        destroyOnClose
-        footer={[
-          <ConfigProvider key="entityInfo" autoInsertSpaceInButton={false}>
-            <Button className="ant-btn-default ds-btn" onClick={() => setAddDsVisible(false)}>
-              {intl.get('workflow.information.cancel')}
-            </Button>
-            <Button type="primary" className="ds-btn" onClick={onAdd}>
-              {intl.get('workflow.information.ok')}
-            </Button>
-          </ConfigProvider>
-        ]}
-        onCancel={() => setAddDsVisible(false)}
-      >
-        <ModalContent
-          ref={modalContentRef}
-          modelList={modelList}
-          graphId={graphId}
-          anyDataLang={anyDataLang}
-          total={sourceList.length}
-        />
-      </Modal>
+        setVisible={setAddDsVisible}
+        modelList={modelList}
+        graphId={graphId}
+        anyDataLang={anyDataLang}
+        total={sourceList.length}
+        onAdd={onAdd}
+      />
     </div>
   );
 };

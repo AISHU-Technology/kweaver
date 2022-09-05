@@ -75,7 +75,7 @@ class RedisClinet():
     def get_config(self):
         if self.redis_cluster_mode == "sentinel":
             return self.sentinel_list, None, self.redis_account, self.redis_password, self.master_name, self.sentinel_account, self.sentinel_password, self.redis_cluster_mode
-        if self.redis_cluster_mode == "master-slave":
+        if self.redis_cluster_mode == "stand-alone":
             return self.redis_host, self.redis_port, self.redis_account, self.redis_password, "", "", "", self.redis_cluster_mode
 
     def connect_redis(self, db, model):
@@ -97,15 +97,15 @@ class RedisClinet():
                                                password=self.redis_password,
                                                db=db)
             return redis_con
-        if self.redis_cluster_mode == "master-slave":
+        if self.redis_cluster_mode == "stand-alone":
             if model == "read":
                 pool = redis.ConnectionPool(host=self.redis_host, port=self.redis_port, db=db,
-                                            password=self.redis_password)
+                                            username=self.redis_account, password=self.redis_password)
                 redis_con = redis.StrictRedis(connection_pool=pool)
                 return redis_con
             if model == "write":
                 pool = redis.ConnectionPool(host=self.redis_host, port=self.redis_port, db=db,
-                                            password=self.redis_password)
+                                            username=self.redis_account, password=self.redis_password)
                 redis_con = redis.StrictRedis(connection_pool=pool)
                 return redis_con
 
