@@ -1,10 +1,9 @@
-/* eslint-disable react/no-string-refs */
 import React from 'react';
 import { mount } from 'enzyme';
 import { sleep, act } from '@/tests';
 import { mockStep2Data, mockModels, mockDirPre, mockFilePre, mockSheet, mockModelPro, mockSheetList } from './mockData';
 import servicesCreateEntity from '@/services/createEntity';
-import ModalContent from '../ModalContent/index';
+import SourceModal from '../SourceModal';
 
 // 获取数据源
 servicesCreateEntity.getFlowSource = jest.fn(() =>
@@ -21,22 +20,16 @@ servicesCreateEntity.getOtherPreData = jest.fn(({ id }) =>
   Promise.resolve(id === 2 ? { res: mockSheet } : mockFilePre)
 );
 
-const test = {};
 const defaultProps = {
+  visible: true,
+  setVisible: jest.fn(),
   graphId: 1,
-  modelList: mockModels,
+  modelList: Object.entries(mockModels),
   subscriptionState: { smartSearchState: true },
-  total: 2
+  total: 2,
+  onAdd: jest.fn()
 };
-const init = (props = defaultProps) => mount(<ModalContent {...props} />, { ref: test });
-
-describe('UI is render', () => {
-  // 是否渲染
-  it('should render', async () => {
-    init();
-    await sleep();
-  });
-});
+const init = (props = defaultProps) => mount(<SourceModal {...props} />);
 
 describe('Function is called', () => {
   // 切换数据源
@@ -79,7 +72,6 @@ describe('Function is called', () => {
   // 计数
   it('test source count', async () => {
     const wrapper = init();
-
     await sleep();
     wrapper.update();
     act(() => {
@@ -94,26 +86,18 @@ describe('Function is called', () => {
     expect(wrapper.find('.extract-count span').text()).toBe(`${wrapper.props().total + 1}`);
   });
 
-  // 添加数据源方法
-  it('test addFile', async () => {
-    // mock一个父组件来调用内部方法
-    class MockWrapper extends React.Component {
-      render() {
-        return <ModalContent {...defaultProps} ref="mockRef" />;
-      }
-    }
-
-    const wrapper = mount(<MockWrapper />);
-    let res;
-
+  // 点击确定
+  it('test click ok', async () => {
+    const wrapper = init();
     await sleep();
     wrapper.update();
+    const spyAdd = jest.spyOn(wrapper.props(), 'onAdd');
 
     // 未选择
     act(() => {
-      res = wrapper.ref('mockRef').addFile();
+      wrapper.find('.footer-btn Button').last().simulate('click');
     });
-    expect(res).toBeFalsy();
+    expect(spyAdd).toHaveBeenCalledTimes(0);
 
     // 正常选择
     act(() => {
@@ -126,9 +110,10 @@ describe('Function is called', () => {
     });
     wrapper.update();
     act(() => {
-      res = wrapper.ref('mockRef').addFile();
+      wrapper.find('.footer-btn Button').last().simulate('click');
     });
-    expect(res.selectSource).toEqual(mockStep2Data[0]);
-    expect(res.asSelectValue).toEqual(['{"docid":"gns1","name":"文件夹","file_path":"文件夹","type":"dir"}']);
+    const params = spyAdd.mock.calls[0][0] as any;
+    expect(params.selectSource).toEqual({ ...mockStep2Data[0], extract_model: Object.keys(mockModels)[0] });
+    expect(params.asSelectValue).toEqual(['{"docid":"gns1","name":"文件夹","file_path":"文件夹","type":"dir"}']);
   });
 });

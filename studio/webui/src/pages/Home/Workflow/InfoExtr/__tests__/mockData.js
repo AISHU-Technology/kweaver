@@ -89,7 +89,13 @@ const mockStep4Data = [
 ];
 
 // 模型
-const mockModels = ['AImodel', 'Anysharedocumentmodel', 'Contractmodel', 'Generalmodel'];
+const mockModels = {
+  AImodel: '科技新闻模型',
+  Anysharedocumentmodel: '文档知识模型',
+  Contractmodel: '合同模型',
+  Generalmodel: '百科知识模型',
+  OperationMaintenanceModel: '软件文档知识模型'
+};
 
 // 文件夹预览
 const mockDirPre = {
