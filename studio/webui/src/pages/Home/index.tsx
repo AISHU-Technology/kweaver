@@ -40,7 +40,7 @@ const Home = () => {
   const header = {
     logo: headLogo,
     operation: [
-      { icon: <IconFont type="icon-wendang-xianxing" />, text: 'API文档', onClick: () => history.push('/swagger') },
+      { icon: <IconFont type="icon-wendang-xianxing" />, text: 'API文档', onClick: () => window.open('/apidoc') },
       { icon: <SettingOutlined />, text: '系统配置', onClick: () => history.push('/home/system-config') }
     ]
   };
