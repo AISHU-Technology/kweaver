@@ -13,7 +13,7 @@ import torch.nn as nn
 import configparser
 
 config = configparser.ConfigParser()
-config.read("./../config/config.ini")
+config.read("./../config/config.ini", encoding='utf-8')
 
 # 获取所有section
 sections = config.sections()

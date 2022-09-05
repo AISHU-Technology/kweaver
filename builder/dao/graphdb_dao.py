@@ -46,6 +46,38 @@ def type_transform(value, type, sql_format=True):
     else:
         return str(value)
 
+
+def gen_doc_vid(merge_otls, otl_name, one_data, en_pro_dict, gtype='nebula'):
+    """
+    计算图数据库点的vid, 兼容nebula和orientdb
+
+    参数
+        merge_otls: 融合属性字典
+            demo: {"t_stock_percent_wide": {"name": "equality"}}
+                t_stock_percent_wide： 实体名
+                name: 是融合属性
+                equality: 是融合的方法
+        otl_name: 实体名
+        one_data: 一个实体数据
+        en_pro_dict: 属性字典
+        gtype: 图数据库的名称，默认nabule
+
+    """
+    tab_val_index = []  # 属性列表
+    for k, v in merge_otls[otl_name].items():
+        value = type_transform(normalize_text(str(one_data[k])), en_pro_dict[otl_name][k])
+        if gtype == "orientdb":
+            value = "  `{}` = '{}' ".format(k, one_data[k])
+        tab_val_index.append(value)
+
+    if gtype == "orientdb":
+        return 'SELECT FROM `{}` WHERE {}'.format(otl_name, ','.join(tab_val_index))
+
+    props_str = ''
+    for m in tab_val_index:
+        props_str += f'{m}_'
+    return get_md5(props_str)
+
 def data_type_transform(data_type: str):
     '''默认数据类型以orientdb为基础，部分数据类型需要兼容nebula，在此进行转换'''
     mapping = {'boolean': 'bool', 'decimal': 'float', 'integer': 'int'}
@@ -108,10 +140,48 @@ class GraphDB(object):
             ret = task_dao.getFulltextEnginebyId(fulltext_id)
             rec_dict = ret.to_dict('records')[0]
             self.esaddress = rec_dict['ip']
+            # DEBUG
+            # self.esaddress  = os.getenv('RDSHOST')
             self.esport = rec_dict['port']
             self.esusername = rec_dict['user']
             self.espassword = rec_dict['password']
             self.espassword = commonutil.DecryptBybase64(self.espassword)
+
+    def start_connect_pool(self):
+        """
+        添加链接池
+        """
+        if 'connection_pool' in self.__dict__:
+            return
+        host = []  # nebula数据地址和端口组成的列表，例：[('10.4.131.25', 9669), ('10.4.131.18', 9669), ('10.4.133.125', 9669)]
+        for i in range(len(self.address)):
+            host.append((self.address[i], self.port[i]))
+        config = NebulaConfig()
+        connection_pool = ConnectionPool()
+        connection_pool.init(host, config)
+        self.connection_pool = connection_pool
+
+    def _nebula_session_exec_(self, ngql, db=None):
+        self.start_connect_pool()
+        logging.getLogger().setLevel(logging.WARNING)
+        session = self.connection_pool.get_session(self.username, self.password)
+        state_code = 200
+        res = {}
+        if db:
+            res = session.execute('USE {}'.format(db))
+            if not res.is_succeeded():
+                print(ngql)
+                print(res.error_msg())
+                state_code = 500
+        if ngql:
+            ngql = re.sub('[\r|\n]*', "", ngql)
+            res = session.execute(ngql)
+            if not res.is_succeeded():
+                print(ngql)
+                print(res.error_msg())
+                state_code = 500
+        session.release()
+        return state_code, res
 
     def exec(self, sql, db):
         if self.type == 'orientdb':
@@ -1053,7 +1123,7 @@ class GraphDB(object):
                     valuesstr.append("'" + v + "'")
                 ngql = 'INSERT VERTEX `{}` ({}) VALUES "{}" : ({})' \
                     .format(otl_name, ','.join(propsstr), vid, ','.join(valuesstr))
-                self._nebula_exec(ngql, db)
+                self._nebula_session_exec_(ngql, db)
                 # es插入索引
                 code, res = self._get_present_index_nebula(db)
                 if code != 200:
@@ -1560,6 +1630,109 @@ class GraphDB(object):
                     (ExceptLevel.ERROR, 'Builder.controller.graphdb.nebulaJobError', 'nebula job error'))
         return False
 
+    def create_edges(self, edge_class, starts, ends, prop_val_sqls, db):
+        """
+        Args:
+            edge_class: 边名
+            start: 起点sql/起点VID
+            end: 终点sql/终点VID
+            prop_val_sql: orientdb: 第一项为赋值字符串列表 nebula: 第一项为属性列表,第二项为值列表
+            db: 图数据库名
+        """
+        if self.type == 'orientdb':
+            self._create_edges_orientdb(edge_class, starts, ends, prop_val_sqls, db)
+
+        elif self.type == 'nebula':
+            self._create_edges_nebula(edge_class, starts, ends, prop_val_sqls, db)
+
+    def _create_edges_nebula(self, edge_class, starts, ends, prop_val_sqls, db):
+        """nebula批量插入边
+
+        Args:
+            edge_class: 边的类型
+            props: 边的属性 列表
+            starts: 起始点的VID
+            ends: 终点的VID
+            values: 边的值 列表
+            db: 图数据库名
+
+        if self.type == 'orientdb':
+            self._create_edge_orientdb(edge_class, start, end, prop_val_sql[0], db)
+        elif self.type == 'nebula':
+            self._create_edge_nebula(edge_class, prop_val_sql[0], start, end,prop_val_sql[1], db)
+        """
+
+        pairs = []
+        for index, start in enumerate(starts):
+            props = prop_val_sqls[index][0]
+            values = prop_val_sqls[index][1]
+            propsstr = ['`' + p + '`' for p in props]
+            pair = '"{}" -> "{}" : ({})'.format(start, ends[index], ','.join(values))
+            pairs.append(pair)
+
+        ngql = 'INSERT EDGE `{}` ({}) VALUES {}'.format(edge_class, ','.join(propsstr), ",".join(pairs))
+        code, res = self._nebula_session_exec_(ngql, db)
+        if code != 200:
+            print(repr(res))
+
+        # 插入全文索引
+        code, res = self._get_present_index_nebula(db)
+        if code != 200:
+            print(self.state)
+            return
+        present_index_field, present_index_name, _, _ = res
+        if not edge_class.lower() in present_index_name:
+            print('edge_class {} not in present_index_name'.format(edge_class.lower()))
+            return
+
+        body = []
+
+        index_name = present_index_name[edge_class.lower()]
+        index_fields = present_index_field[edge_class.lower()]
+
+        for index, start in enumerate(starts):
+            vid = start + '_' + ends[index]
+            props = prop_val_sqls[index][0]
+
+            body_field = {}
+            for i in range(len(props)):
+                if props[i] in index_fields:
+                    body_field[props[i]] = values[i]
+
+            body_index = {"index": {"_index": index_name, "_id": vid}}
+            body.append(json.dumps(body_index) + '\n' + json.dumps(body_field))
+
+        if body:
+            body = '\n'.join(body) + '\n'
+            self.fulltext_bulk_index(body)
+
+    def _create_edges_orientdb(self, edge_class, starts, ends, set_sqls, db):
+        '''orientdb插入边
+
+        Args:
+            edge_class: 边的类型
+            start: 选择起始点的sql语句
+            end: 选择终点的sql语句
+            set_sql: 边的属性值sql语句list
+            db: 图数据库名
+        '''
+
+        for index, start in enumerate(starts):
+            end = ends[index]
+
+            delete_sql = "DELETE EDGE FROM ({}) to ({}) WHERE @class = '{}'".format(start, end, edge_class)
+            code, r_json = self._orientdb_http(delete_sql, db)
+            create_sql = "create edge `{}` from ({}) to ({}) set {}".format(edge_class, start, end,
+                                                                            " , ".join(set_sqls[index][0]))
+            code, r_json = self._orientdb_http(create_sql, db)
+            if code == 500 and "DuplicatedException" in r_json["errors"][0]["content"]:
+                update_sql = "UPDATE  EDGE `{}` set out= ({}) ,in = ({}) , {} \
+                                    UPSERT where out = ({}) and in = ({})" \
+                    .format(edge_class, start, end, " , ".join(set_sqls[index][0]),
+                            start, end)
+                code, r_json = self._orientdb_http(update_sql, db)
+                if code != 200:
+                    print(r_json)
 
 class SQLProcessor:
     def __init__(self, dbtype) -> None:
