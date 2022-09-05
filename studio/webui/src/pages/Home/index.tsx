@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button } from 'antd';
-import { Route, Switch, useHistory, useLocation, Link } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { SettingOutlined, CiOutlined } from '@ant-design/icons';
 
 import Layout from '@/Layout';
@@ -41,15 +40,7 @@ const Home = () => {
   const header = {
     logo: headLogo,
     operation: [
-      {
-        component: () => (
-          <Link to="/swagger" target="_blank">
-            <Button className="operation" type="link" icon={<IconFont type="icon-wendang-xianxing" />}>
-              API文档
-            </Button>
-          </Link>
-        )
-      },
+      { icon: <IconFont type="icon-wendang-xianxing" />, text: 'API文档', onClick: () => history.push('/swagger') },
       { icon: <SettingOutlined />, text: '系统配置', onClick: () => history.push('/home/system-config') }
     ]
   };
