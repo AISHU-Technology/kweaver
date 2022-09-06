@@ -39,6 +39,23 @@ class NewKnowledgeMap extends Component {
   };
 
   /**
+   * 生成保存的数据让父组件调用
+   */
+  getFlowData = () => {
+    const { nodes, edges } = this.state;
+
+    const { otls_map, relations_map } = newHandleDataToNext(nodes, edges);
+
+    if (!otls_map.length && !relations_map.length) {
+      return [];
+    }
+
+    const data = [{ otls_map, relations_map }];
+
+    return data;
+  };
+
+  /**
    * @description 上一步
    */
   pre = () => {

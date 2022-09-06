@@ -3,10 +3,11 @@ import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { SettingOutlined, CiOutlined } from '@ant-design/icons';
 
 import Layout from '@/Layout';
-import asyncComponent from '@/components/AsyncComponent';
-import IconFont from '@/components/IconFont';
 
-import headLogo from '@/assets/images/head-Logo.svg';
+import IconFont from '@/components/IconFont';
+import asyncComponent from '@/components/AsyncComponent';
+
+import headLogo from '@/assets/images/kw.svg';
 import './style.less';
 
 const GraphList = asyncComponent(() => import('./GraphList'));
@@ -16,13 +17,13 @@ const SOURCE = [
   {
     label: '知识网络',
     key: '/home/graph-list',
-    icon: <CiOutlined />,
+    icon: <IconFont type="icon-knowledge" />,
     bindRoute: true
   },
   {
     label: '系统配置',
     key: 'system',
-    icon: <CiOutlined />,
+    icon: <IconFont type="icon-setting" />,
     children: [
       {
         label: '存储管理',
@@ -40,7 +41,11 @@ const Home = () => {
   const header = {
     logo: headLogo,
     operation: [
-      { icon: <IconFont type="icon-wendang-xianxing" />, text: 'API文档', onClick: () => window.open('/apidoc') },
+      {
+        icon: <IconFont type="icon-wendang-xianxing" />,
+        text: 'API文档',
+        onClick: () => history.push('/home/system-config')
+      },
       { icon: <SettingOutlined />, text: '系统配置', onClick: () => history.push('/home/system-config') }
     ]
   };

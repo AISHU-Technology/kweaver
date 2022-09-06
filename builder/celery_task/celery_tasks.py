@@ -1876,7 +1876,7 @@ def buildertask(self, graphid, flag):
                         # 标准抽取
                         if extract_type == "standardExtraction":
                             ret_code, obj = standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_id, file_name,
-                                             file_source, rules, entity_type)
+                                             file_source, rules, graph_KMerge, entity_type)
                             if ret_code != CommonResponseStatus.SUCCESS.value:
                                 self.update_state(state='FAILURE', meta=obj)
                                 return {'current': 100, 'total': 100}
@@ -1950,7 +1950,7 @@ def buildertask(self, graphid, flag):
 
 @cel.task
 def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
-    url = "http://kg-builder:6485/buildertask"
+    url = "http://kw-builder:6485/buildertask"
     # url = "http://10.4.106.255:6485/buildertask" #本地测试
     payload = {"tasktype": task_type, "graph_id": graph_id, "trigger_type": trigger_type}
     print(f'start timer task,payload: {payload}')

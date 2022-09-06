@@ -108,24 +108,6 @@ class TimedTaskList extends Component {
       }
     },
     {
-      title: intl.get('datamanagement.Operator'),
-      dataIndex: 'update_user',
-      key: 'update_user',
-      width: 180,
-      render: (_text, record) => {
-        return (
-          <div className="time-task-user">
-            <div className="name" title={record.update_user || '--'}>
-              {record.update_user || '--'}
-            </div>
-            <div className="email" title={record.update_user_email || '--'}>
-              {record.update_user_email || '--'}
-            </div>
-          </div>
-        );
-      }
-    },
-    {
       title: intl.get('datamanagement.updated'),
       dataIndex: 'modify_time',
       key: 'modify_time',
