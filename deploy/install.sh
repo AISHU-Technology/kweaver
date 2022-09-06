@@ -1,13 +1,56 @@
 #!/bin/bash
 
-# check Docker container include kw-studio/kw-builder/kw-engine
-CONTAINER_NUM=$(docker ps -a | grep -E 'kw-studio|kw-builder|kw-engine|kw-nginx|kw-mongodb|kw-mariadb|kw-redis' | wc -l)
+clear
+chmod 777 -R ./
+
+HOST_EXP="^(([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
+PORT_EXP="^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-5][0-9][0-9][0-9][0-9]$)|(^[6][0-5][0-5][0-3][0-5]$)"
+EMPTY_EXP="^[\s\S]*.*[^\ ][\s\S]*$"
+CONFIGDIR=./kwconfig
+CONFIGFILE=./kwconfig/kwconfig.yaml
+CONFIGBAK=./kwconfig/kwconfig.yaml.bak
+
+# check Docker container include kw-studio|kw-builder|kw-engine|kw-nginx|kw-mongodb|kw-mariadb|kw-redis
+CONTAINER_NUM=$(docker ps -a | grep -E 'kw-studio|kw-builder|kw-engine|kw-nginx|kw-mongodb|kw-mariadb|kw-redis|kw-algserver' | wc -l)
 
 if [[ $CONTAINER_NUM > 0 ]]; then
-  docker ps -a | grep kw | awk '{print $1}' | xargs docker rm
+  PS3="You have already run kweaver docker images, you can remove them by above ways: "
+  select option in "auto" "manual"
+  do
+    case $option in
+    "auto")
+      docker ps -a | grep kw | awk '{print $1}' | xargs docker rm
+      break;;
+    "manual")
+      echo "Please remove kweaver docker container manually, and then run this install script."
+      exit 0
+      ;;
+    *)
+      echo "Incorrect input, please reselect.";;
+    esac
+  done
 fi
 
-read -n1 -p "Do you want to use the project's default database [Y/N]?" answer
+function checkparam() {
+  dstatus=0
+    while [ $dstatus = 0 ]
+    do
+      if [[ $3 ]] ; then
+        read -s -p "$1" input
+      else
+        read -p "$1" input
+      fi
+
+      if [[ $input =~ $2 ]] ;then
+        tempinput=$input
+        dstatus+=1
+      else
+        echo "Incorrect input, please re-enter."
+      fi
+    done
+}
+
+read -p "Do you want to use the project's default database [Y/N]?  " answer
 echo -e "\n"
 case $answer in
 (Y | y)
@@ -21,8 +64,9 @@ case $answer in
   }
 
   function touchyaml() {
-    CONFIGFILE=./kwconfig.yaml
-    CONFIGBAK=./kwconfig.yaml.bak
+    if [[ ! -d "$CONFIGDIR" ]]; then
+      mkdir $CONFIGDIR
+    fi
     if [[ ! -f "$CONFIGFILE" ]]; then
       touch $CONFIGFILE
     else
@@ -57,29 +101,6 @@ case $answer in
       fi
     fi
   }
-
-  function checkparam() {
-    dstatus=0
-      while [ $dstatus = 0 ]
-      do
-        if [[ $3 ]] ; then
-          read -s -p "$1" input
-        else
-          read -p "$1" input
-        fi
-
-        if [[ $input =~ $2 ]] ;then
-          tempinput=$input
-          dstatus+=1
-        else
-          echo "Incorrect input, please re-enter."
-        fi
-      done
-  }
-
-  HOST_EXP="^(([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([1-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$"
-  PORT_EXP="^[1-9]$|(^[1-9][0-9]$)|(^[1-9][0-9][0-9]$)|(^[1-9][0-9][0-9][0-9]$)|(^[1-5][0-9][0-9][0-9][0-9]$)|(^[6][0-5][0-5][0-3][0-5]$)"
-  EMPTY_EXP="^[\s\S]*.*[^\ ][\s\S]*$"
 
   function editdbconfig() {
     echo "Use your own $1 database."
@@ -217,7 +238,8 @@ case $answer in
   editdbconfig mongodb
 
   PS3="Choose your reids deployment mode: "
-  select option in "stand-alone mode" "sentinel mode" "cluster mode"
+  select option in "stand-alone mode" "sentinel mode"
+  # select option in "stand-alone mode" "sentinel mode" "cluster mode"
   do
     case $option in
     "stand-alone mode")
@@ -228,9 +250,9 @@ case $answer in
       sentinelport=()
       sentinelnodeconfig
       break;;
-    "cluster mode")
-      redis_cluster
-      break;;
+    # "cluster mode")
+    #   redis_cluster
+    #   break;;
     *)
       echo "Incorrect input, please reselect.";;
     esac
@@ -243,26 +265,70 @@ esac
 # 
 
 function dockercomposeinit() {
-  if [[ $(docker images | grep kw-studio) != "" ]];then
-    echo "you already have the docker image acr.aishu.cn/ad/kw-studio"
-  else
-    echo "Begin to Load Image: kw-studio."
-    docker load -i "$(ls | grep kw-studio)"
-  fi
-  if [[ $(docker images | grep kw-builder) != "" ]];then
-    echo "you already have the docker image acr.aishu.cn/ad/kw-builder"
-  else
-    echo "Begin to Load Image: kw-builder."
-    docker load -i "$(ls | grep kw-builder)"
-  fi
-  echo "One-click deployment will start."
-  docker compose -f $1 up
+  # edit nginx config
+  checkparam "Enter the host that you want to deploy kweaver: " "$EMPTY_EXP"
+  sed -i '/.*server_name*./c\server_name  '"$tempinput"';' ./nginx/nginx.conf
+
+
+  docker compose -p "aishu.cn/kweaver" -f $1 up
 }
 
-echo -e "\033[33m\033[01m\033[05m Waiting for the AnyData service to be installed. \033[0m\n"
-if [[ $answer = "N" ]]||[[ $answer = "n" ]];then
+checkeditports() {
+  pIDa=`lsof -i :$1 | grep -v "PID" | awk '{print $2}'`
+  if [[ "$pIDa" != "" ]];then
+    echo "port $1 has been used, you should edit ./docker-compose-$2.yaml"
+    if [[ $3 != "" ]];then
+      echo "port $1 has been used, you should edit ./nginx/nginx.conf"
+    fi
+  fi
+}
+
+basicoperation() {
+  # check ports kw-nginx:80 kw-studio:6800 kw-builder:6475 kw-algserver:8080 kw-engine:6474
+  checkeditports 80 "basic" "nginx"
+  checkeditports 6800 "basic" "nginx"
+  checkeditports 6475 "basic" "nginx"
+  checkeditports 8080 "basic" ""
+  checkeditports 6474 "basic" "nginx"
   dockercomposeinit ./docker-compose-basic.yaml
+}
+
+advanceoperation() {
+  # check ports kw-nginx:80 kw-mariadb:3307 kw-redis:6378 kw-mongodb:27018 kw-studio:6800 kw-builder:6475 kw-algserver:8080 kw-engine:6474
+  checkeditports 80 "advance" "nginx"
+  checkeditports 3307 "advance" ""
+  checkeditports 6378 "advance" ""
+  checkeditports 27018 "advance" ""
+  checkeditports 6800 "advance" "nginx"
+  checkeditports 6475 "advance" "nginx"
+  checkeditports 8080 "advance" ""
+  checkeditports 6474 "advance" "nginx"
+  dockercomposeinit ./docker-compose-advance.yaml
+}
+
+if [[ $answer = "N" ]]||[[ $answer = "n" ]];then
+  clear
+  cat $CONFIGFILE
+  read -p "Confirm that your database config is correct. [Y/N]?  " confirm
+  echo -e "\n"
+  case $confirm in
+  (Y | y)
+    basicoperation
+    ;;
+  (N | n)
+    read -p "Edit the database config file munually, press anykey to continue." conti
+    echo -e "\n"
+    case $conti in
+    (*)
+      basicoperation
+      ;;
+    esac
+    ;;
+  (*)
+    echo "You have selected an unknown option, will continue."
+    basicoperation
+    ;;
+  esac
 else
-  # dockercomposeinit ./docker-compose-advance.yaml
-  dockercomposeinit ./docker-compose-temp.yaml
+  advanceoperation
 fi

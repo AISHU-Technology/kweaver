@@ -99,6 +99,33 @@ services:
       - kw-mongodb
       - kw-studio
 
+  kw-algserver:
+    container_name: kw-algserver
+    image: acr.aishu.cn/ad/kw-algserver:2.0.0.5
+    restart: always
+    volumes:
+      - ./kwconfig-default/:/etc/builder/:ro
+    networks:
+      - kw-network
+    ports:
+      - '8080:8080'
+    depends_on:
+      - kw-mariadb
+
+  kw-engine:
+    container_name: kw-engine
+    image: acr.aishu.cn/ad/kw-engine:2.0.0.5
+    restart: always
+    volumes:
+      - ./kwconfig-default/:/etc/builder/:ro
+    networks:
+      - kw-network
+    ports:
+      - '6474:6474'
+    depends_on:
+      - kw-mariadb
+      - kw-builder
+
 networks:
   kw-network:
     driver: bridge
