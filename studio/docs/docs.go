@@ -22,7 +22,7 @@ const docTemplate = `{
     "paths": {
         "/api/studio/v1/graphdb": {
             "get": {
-                "description": "根据id查询存储配置信息",
+                "description": "Query storage configuration information based on id",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -32,30 +32,30 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据id查询存储配置信息",
+                "summary": "Query storage configuration information based on id",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "存储记录id",
+                        "description": "Storage configuration id",
                         "name": "id",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "存储配置信息",
+                        "description": "Store configuration information",
                         "schema": {
                             "$ref": "#/definitions/vo.GraphDBVo"
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -65,7 +65,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/graphdb/add": {
             "post": {
-                "description": "添加存储配置",
+                "description": "Add storage configuration",
                 "consumes": [
                     "application/json"
                 ],
@@ -75,10 +75,10 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "添加存储配置",
+                "summary": "Add storage configuration",
                 "parameters": [
                     {
-                        "description": "添加的存储配置",
+                        "description": "Storage configuration parameters",
                         "name": "graphDBVo",
                         "in": "body",
                         "required": true,
@@ -89,19 +89,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "添加的存储配置id",
+                        "description": "Added storage configuration id",
                         "schema": {
                             "type": "number"
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -111,7 +111,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/graphdb/delete": {
             "post": {
-                "description": "根据id删除存储配置",
+                "description": "Delete storage configuration based on id",
                 "consumes": [
                     "application/json"
                 ],
@@ -121,10 +121,10 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据id删除存储配置",
+                "summary": "Delete storage configuration based on id",
                 "parameters": [
                     {
-                        "description": "存储配置id",
+                        "description": "Storage configuration id",
                         "name": "id",
                         "in": "body",
                         "required": true,
@@ -141,13 +141,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -157,7 +157,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/graphdb/graph/list": {
             "get": {
-                "description": "根据id查询关联的图谱",
+                "description": "Query the associated graph based on the storage configuration id",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -167,42 +167,42 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据id查询关联的图谱",
+                "summary": "Query the associated graph based on the storage configuration id",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "分页号",
+                        "description": "Page number",
                         "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "每页数量",
+                        "description": "Quantity per page",
                         "name": "size",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "存储记录id",
+                        "description": "Storage configuration id",
                         "name": "id",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "关联的图谱信息",
+                        "description": "Associated graph information",
                         "schema": {
                             "$ref": "#/definitions/vo.ListVo"
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -212,7 +212,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/graphdb/list": {
             "get": {
-                "description": "根据page和size获取存储记录及存储记录中的谱图",
+                "description": "Get storage configurations and graphs in storage configurations according to page and size",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -222,60 +222,60 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据page和size获取存储记录及存储记录中的谱图",
+                "summary": "Get storage configurations and graphs in storage configurations according to page and size",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "分页号",
+                        "description": "Page number",
                         "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "每页数量",
+                        "description": "Quantity per page",
                         "name": "size",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "记录名称",
+                        "description": "Configuration name",
                         "name": "name",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "配置类型",
+                        "description": "Configuration type",
                         "name": "type",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "排序字段",
+                        "description": "Order field",
                         "name": "orderField",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "排序顺序",
+                        "description": "Order type",
                         "name": "order",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "存储配置列表",
+                        "description": "Storage configuration list",
                         "schema": {
                             "$ref": "#/definitions/vo.ListVo"
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -285,7 +285,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/graphdb/test": {
             "post": {
-                "description": "测试存储配置信息是否正确",
+                "description": "Test whether the storage configuration information is correct",
                 "consumes": [
                     "application/json"
                 ],
@@ -295,10 +295,10 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "测试存储配置信息是否正确",
+                "summary": "Test whether the storage configuration information is correct",
                 "parameters": [
                     {
-                        "description": "待测试的存储配置信息",
+                        "description": "Storage configuration information to be tested",
                         "name": "testVo",
                         "in": "body",
                         "required": true,
@@ -315,13 +315,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -331,7 +331,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/graphdb/update": {
             "post": {
-                "description": "根据id更新存储配置",
+                "description": "Update storage configuration based on id",
                 "consumes": [
                     "application/json"
                 ],
@@ -341,10 +341,10 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据id更新存储配置",
+                "summary": "Update storage configuration based on id",
                 "parameters": [
                     {
-                        "description": "存储配置更新信息",
+                        "description": "Storage configuration parameters",
                         "name": "graphDBUpdateVo",
                         "in": "body",
                         "required": true,
@@ -361,13 +361,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -377,7 +377,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/opensearch": {
             "get": {
-                "description": "根据id查询opensearch配置信息",
+                "description": "Query opensearch configuration information based on id",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -387,30 +387,30 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据id查询opensearch配置信息",
+                "summary": "Query opensearch configuration information based on id",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "opensearch记录id",
+                        "description": "opensearch configuration id",
                         "name": "id",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "opensearch配置信息",
+                        "description": "opensearch configuration",
                         "schema": {
                             "$ref": "#/definitions/vo.OpenSearchVo"
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -420,7 +420,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/opensearch/add": {
             "post": {
-                "description": "添加opensearch配置",
+                "description": "Add opensearch configuration",
                 "consumes": [
                     "application/json"
                 ],
@@ -430,10 +430,10 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "添加opensearch配置",
+                "summary": "Add opensearch configuration",
                 "parameters": [
                     {
-                        "description": "添加的opensearch配置",
+                        "description": "Added opensearch configuration",
                         "name": "opensearchVo",
                         "in": "body",
                         "required": true,
@@ -444,19 +444,19 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "添加的opensearch配置id",
+                        "description": "Added opensearch configuration id",
                         "schema": {
                             "type": "number"
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -466,7 +466,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/opensearch/delete": {
             "post": {
-                "description": "根据id删除opensearch配置",
+                "description": "Delete opensearch configuration based on id",
                 "consumes": [
                     "application/json"
                 ],
@@ -476,10 +476,10 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据id删除opensearch配置",
+                "summary": "Delete opensearch configuration based on id",
                 "parameters": [
                     {
-                        "description": "opensearch配置id",
+                        "description": "opensearch configuration id",
                         "name": "idVo",
                         "in": "body",
                         "required": true,
@@ -496,13 +496,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -512,7 +512,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/opensearch/list": {
             "get": {
-                "description": "根据page和size获取opensearch信息",
+                "description": "Get opensearch information based on page and size",
                 "consumes": [
                     "application/x-www-form-urlencoded"
                 ],
@@ -522,54 +522,54 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据page和size获取opensearch信息",
+                "summary": "Get opensearch information based on page and size",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "分页号",
+                        "description": "Page number",
                         "name": "page",
                         "in": "query"
                     },
                     {
                         "type": "integer",
-                        "description": "每页数量",
+                        "description": "Quantity per page",
                         "name": "size",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "记录名称",
+                        "description": "Record name",
                         "name": "name",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "排序字段",
+                        "description": "Order field",
                         "name": "orderField",
                         "in": "query"
                     },
                     {
                         "type": "string",
-                        "description": "排序顺序",
+                        "description": "Order type",
                         "name": "order",
                         "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "opensearch配置列表",
+                        "description": "opensearch configuration list",
                         "schema": {
                             "$ref": "#/definitions/vo.ListVo"
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -579,7 +579,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/opensearch/test": {
             "post": {
-                "description": "测试opensearch配置信息是否正确",
+                "description": "Test whether the opensearch configuration is correct",
                 "consumes": [
                     "application/json"
                 ],
@@ -589,10 +589,10 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "测试opensearch配置信息是否正确",
+                "summary": "Test whether the opensearch configuration is correct",
                 "parameters": [
                     {
-                        "description": "待测试的opensearch配置信息",
+                        "description": "opensearch configuration to be tested",
                         "name": "osVo",
                         "in": "body",
                         "required": true,
@@ -609,13 +609,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -625,7 +625,7 @@ const docTemplate = `{
         },
         "/api/studio/v1/opensearch/update": {
             "post": {
-                "description": "根据id更新opensearch配置",
+                "description": "Update opensearch configuration based on id",
                 "consumes": [
                     "application/json"
                 ],
@@ -635,10 +635,10 @@ const docTemplate = `{
                 "tags": [
                     "Studio"
                 ],
-                "summary": "根据id更新opensearch配置",
+                "summary": "Update opensearch configuration based on id",
                 "parameters": [
                     {
-                        "description": "待更新的opensearch配置信息",
+                        "description": "Updated opensearch configuration",
                         "name": "opensearchUpdateVo",
                         "in": "body",
                         "required": true,
@@ -655,13 +655,13 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "参数异常",
+                        "description": "Parameter error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
                     },
                     "500": {
-                        "description": "服务内部异常",
+                        "description": "Server internal error",
                         "schema": {
                             "$ref": "#/definitions/kw_errors.Error"
                         }
@@ -671,17 +671,17 @@ const docTemplate = `{
         },
         "/api/studio/v1/swaggerDoc": {
             "get": {
-                "description": "查询api文档",
+                "description": "query api documentation",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Studio"
                 ],
-                "summary": "查询api文档",
+                "summary": "query api documentation",
                 "responses": {
                     "200": {
-                        "description": "swagger api文档",
+                        "description": "swagger api documentation",
                         "schema": {
                             "type": "object"
                         }
