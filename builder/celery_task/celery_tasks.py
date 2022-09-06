@@ -1950,7 +1950,7 @@ def buildertask(self, graphid, flag):
 
 @cel.task
 def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
-    url = "http://kg-builder:6485/buildertask"
+    url = "http://kw-builder:6485/buildertask"
     # url = "http://10.4.106.255:6485/buildertask" #本地测试
     payload = {"tasktype": task_type, "graph_id": graph_id, "trigger_type": trigger_type}
     print(f'start timer task,payload: {payload}')
