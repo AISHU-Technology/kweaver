@@ -11,12 +11,12 @@ type SwaggerController struct {
 }
 
 // GetSwaggerDoc
-// @Summary 查询api文档
-// @Description 查询api文档
+// @Summary query api documentation
+// @Description query api documentation
 // @Tags Studio
 // @Router /api/studio/v1/swaggerDoc [get]
 // @Produce json
-// @Success 200 {object} object "swagger api文档"
+// @Success 200 {object} object "swagger api documentation"
 func (controller *SwaggerController) GetSwaggerDoc(c *gin.Context) {
 	response.Ok(c, controller.SwaggerService.GetSwaggerDoc())
 }

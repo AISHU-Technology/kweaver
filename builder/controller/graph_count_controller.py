@@ -128,7 +128,6 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r
 def graphs_count_all():
     '''
     get the graph count
-    统计图谱用量
     ---
     responses:
         200:
@@ -157,7 +156,6 @@ def graphs_count_all():
 def graphs_count_by_id(graph_id):
     '''
     get graph statistics
-    图谱知识量统计
     ---
     parameters:
         -   name: graph_id

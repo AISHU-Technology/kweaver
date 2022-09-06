@@ -13,10 +13,10 @@ definitions:
       - 'knw_id'
     properties:
       graph_process:
-        type: 'longtext'
+        type: 'object'
         example: [
         {
-          "graph_Name": "graph name",
+          "graph_Name": "graph_name",
           "graph_des": "graph description",
           "graph_db_id": 1
         }

@@ -36,7 +36,6 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 
 swagger_taskcrud_post = {
     'summary': 'execute the task',
-    'description': '执行任务',
     'parameters': [
         {
             'name': 'graph_id',
@@ -55,7 +54,6 @@ swagger_taskcrud_post = {
 swagger_taskcrud_post.update(swagger_old_response)
 swagger_taskcrud_delete = {
     'summary': 'delete the task',
-    'description': '删除任务',
     'parameters': [
         {
             'name': 'graph_id',
@@ -172,7 +170,6 @@ def taskcrud_delete(graph_id):
 def getalltask(graph_id):
     '''
     get task list by page
-    分页获取任务列表
     ---
     parameters:
         -   name: graph_id
@@ -270,7 +267,6 @@ def getalltask(graph_id):
 def stoptask(graph_id):
     '''
     terminate the task
-    终止任务
     ---
     parameters:
         -   name: graph_id
@@ -310,7 +306,6 @@ def stoptask(graph_id):
 def getprogress(graph_id):
     '''
     get task progress
-    获取任务进度
     ---
     parameters:
         -   name: graph_id

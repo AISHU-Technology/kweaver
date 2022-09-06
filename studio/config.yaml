@@ -45,17 +45,17 @@ zap:
 
 swagger:
   title: "KWeaver OpenAPI"
-  version: "1.0.0"
-  description: "欢迎使用KWeaver 1.0.0 OpenAPI"
+  version: "0.1.0"
+  description: "Welcome to KWeaver 0.1.0 OpenAPI"
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
   tags:
-    - { "name": "Introduction", "description": "KWeaver提供OpenAPI能力，通过调用KWeaver的OpenAPI使用KWeaver的各项功能，实现应用和KWeaver的集成和交互操作。" }
-    - { "name": "Studio", "description": "KWeaver管理界面" }
-    - { "name": "KN Builder", "description": "知识网络生成服务 Knowledge Network Builder（KN Builder）：利用人工智能技术，将不同形态的数据转化为知识网络，实现数据知识化。包括知识图谱、语言模型和规则库。" }
-    - { "name": "CEngine", "description": "知识网络探索式分析相关API，可实现实体的搜索，以及探索与其相关联的实体。遵循GraphQL接口规范，详细schema可查看graphql schema" }
+    - { "name": "Introduction", "description": "Kweaver provides OpenAPI capabilities, and uses KWeaver's capabilities by calling KWeaver's OpenAPI to realize and apply KWeaver integration and interaction." }
+    - { "name": "Studio", "description": "KWeaver Admin UI" }
+    - { "name": "KN Builder", "description": "Knowledge Network Builder (KN Builder): Use artificial intelligence technology to transform data of different forms into knowledge networks to realize data knowledge. Including knowledge graph, language model and rule base." }
+    - { "name": "CEngine", "description": "Knowledge network exploratory analysis related API, which can realize the search of entities and explore the entities associated with them. Follow the GraphQL interface specification, the detailed schema can be viewed in graphql schema" }
   doc_urls:
     - "http://localhost:6800/swagger/doc.json"
-    - "http://10.4.129.252:6475/apispec_1.json"
+    - "http://kw-builder:6475/apispec_1.json"
     - "http://kw-engine:6474/swagger/doc.json"
