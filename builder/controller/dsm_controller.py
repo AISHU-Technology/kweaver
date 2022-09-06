@@ -2,36 +2,70 @@
 # @Time    : 2020/8/10 17:53
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
-import requests
-import pandas as pd
-from flask import Blueprint, request, g,current_app,session,Response,jsonify
-
-from config import config
-from dao.dsm_dao import dsm_dao
-
+import yaml
+from flask import Blueprint, request
 from dao.graph_dao import graph_dao
-from dao.otl_dao import otl_dao
 from third_party_service.anyshare.token import asToken
 
-from utils.check_parameters import CheckParameters
+from flasgger import swag_from
 from utils.ds_check_parameters import dsCheckParameters
 import os
-import sys
 from utils.log_info import Logger
 from utils.Gview import Gview
 from utils.common_response_status import CommonResponseStatus
-from functools import wraps
 from service.dsm_Service import dsm_service
 import json
 from utils.CommonUtil import commonutil
+
 dsm_controller_app = Blueprint('dsm_controller_app', __name__)
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH',
+                               os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
+    swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r') as f:
+    swagger_old_response = yaml.load(f, Loader=yaml.FullLoader)
+    swagger_old_response.update(swagger_definitions)
+with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
+    swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
+    swagger_new_response.update(swagger_definitions)
+
+
 @dsm_controller_app.route('/Auth', methods=["GET"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def auth():
-    """AS7数据源 授权"""
+    '''
+    Get authorization URL
+    ---
+    parameters:
+        -   name: ds_route
+            in: query
+            required: true
+            description: routing, only for auth-success
+            type: string
+            example: auth-success
+        -   name: ds_address
+            in: query
+            required: true
+            description: data source ip
+            type: integer
+            example: 192.168.1.1
+        -   name: ds_auth
+            in: query
+            required: true
+            description: Data source id, new data source is empty
+            type: integer
+            example: " "
+        -   name: ds_port
+            in: query
+            required: true
+            description: data source port
+            type: integer
+            example: 443
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
     if param_code == 0:
-        check_res, message = dsCheckParameters.Authcheck(params_json)####增加校验
+        check_res, message = dsCheckParameters.Authcheck(params_json)  ####增加校验
         if check_res != 0:
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
@@ -49,29 +83,47 @@ def auth():
         return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
+
 @dsm_controller_app.route('/gettoken', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def gettoken():
-    """将AS7的授权信息写入数据库"""
+    '''
+    Get token interface
+    ---
+    parameters:
+        -   name: ds_code
+            in: body
+            required: true
+            description: Authorization code
+            type: string
+            example: fd4645y6u6756454e5423465gbfxefef
+        -   name: ds_auth
+            in: body
+            required: true
+            description: Data source id
+            type: integer
+            example: 66
+    '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
-    paramscode, message = dsCheckParameters.gettokencheck(params_json)####增加校验
+    paramscode, message = dsCheckParameters.gettokencheck(params_json)  ####增加校验
     if paramscode != 0:
         Logger.log_error("parameters:%s invalid" % params_json)
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message=message), CommonResponseStatus.BAD_REQUEST.value
     ret_code, ret_message = dsm_service.insert_refresh_token(params_json)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     return ret_message, CommonResponseStatus.SUCCESS.value
 
+
 @dsm_controller_app.route('/testauth', methods=["POST"], strict_slashes=False)
 def testauth():
-    """未使用"""
+    """not used"""
     params_json = request.get_data()
     params_json = json.loads(params_json)
-    paramscode, message = dsCheckParameters.verifycheck(params_json)####增加校验
+    paramscode, message = dsCheckParameters.verifycheck(params_json)  ####增加校验
     if paramscode != 0:
         Logger.log_error("parameters:%s invalid" % params_json)
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
@@ -85,8 +137,67 @@ def testauth():
 
 
 @dsm_controller_app.route('/testconnect', methods=["post"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def connectTest():
-    """测试连接"""
+    '''
+       test connect
+       ---
+       parameters:
+           -   name: data_source
+               in:  body
+               required: true
+               description: mysql/as/as7/hive/rabbitmq
+               type: string
+               example: my_mysql
+           -   name: ds_address
+               in:  body
+               required: true
+               description: Data source url or ip
+               type: string
+               example: 192.168.0.1
+           -   name: ds_id
+               in:  body
+               required: true
+               description: Data source id
+               type: string
+               example: 1
+           -   name: ds_port
+               in:  body
+               required: true
+               description: Data source port
+               type: integer
+               example: 3306
+           -   name: ds_user
+               in:  body
+               required: false
+               description: Data source user,as does not have this parameter
+               type: string
+               example: admin
+           -   name: ds_password
+               in:  body
+               required: false
+               description: Data source password,as does not have this parameter
+               type: string
+               example: ZWlzb28uY29tMTIz
+           -   name: ds_path
+               in:  body
+               required: true
+               description: database or path
+               type: string
+               example: anydata
+           -   name: vhost
+               in:  body
+               required: true
+               description: When data_source is not rabbitmq, pass ""
+               type: string
+               example: " "
+           -   name: queue
+               in:  body
+               required: true
+               description: When data_source is not rabbitmq, pass ""
+               type: string
+               example: " "
+       '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         check_res, message = dsCheckParameters.testConPar(params_json)
@@ -109,66 +220,259 @@ def connectTest():
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
 
-@dsm_controller_app.route('', methods=["get", "post"], strict_slashes=False)
+@dsm_controller_app.route('', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def dsopt():
-    """
-    get: 获取所有数据源
-    post: 新增数据源
-    """
-    method = request.method
-    # 根据不同的请求方式请求方式获得参数并获取异常
+    '''
+          get all datasource
+          ---
+          parameters:
+              -   name: page
+                  in: query
+                  required: true
+                  description: page
+                  type: integer
+                  example: 1
+              -   name: size
+                  in: query
+                  required: true
+                  description: Number of lines displayed per page
+                  type: integer
+                  example: 10
+              -   name: order
+                  in: query
+                  required: true
+                  description: ascend is in reverse chronological order,descend is opposite
+                  type: string
+                  example: ascend
+              -   name: knw_id
+                  in:  body
+                  required: true
+                  description: knowledge network id
+                  type: string
+                  example: 1
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
-    # get all,查询该用户可以看见的的数据源
-    if method == "GET":
-        check_res, message = dsCheckParameters.getAllPar(params_json)
-        if check_res != 0:
-            Logger.log_error("parameters:%s invalid" % params_json)
-            return Gview.TErrorreturn(ErrorCode="Builder.controller.dsm_controller.dsopt.ParametersError",
-                                      Description=message, Solution=message, ErrorDetails=message,
-                                      ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
-        ret_code, ret_message = dsm_service.getall(params_json)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.TErrorreturn(ErrorCode=ret_message["code"], Description=ret_message["cause"],
-                                      Solution=ret_message["cause"], ErrorDetails=ret_message["message"],
-                                      ErrorLink=""), CommonResponseStatus.SERVER_ERROR.value
-        return ret_message, CommonResponseStatus.SUCCESS.value
-    # add, 新建数据源
-    elif method == "POST":
-        ret_code, ret_message, ds_id = dsm_service.addds(params_json)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.TErrorreturn(ErrorCode=ret_message["ErrorCode"], Description=ret_message["Description"],
-                                      Solution=ret_message["Solution"], ErrorDetails=ret_message["ErrorDetails"],
-                                      ErrorLink=ret_message["ErrorLink"]), CommonResponseStatus.SERVER_ERROR.value
-        return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
+    check_res, message = dsCheckParameters.getAllPar(params_json)
+    if check_res != 0:
+        Logger.log_error("parameters:%s invalid" % params_json)
+        return Gview.TErrorreturn(ErrorCode="Builder.controller.dsm_controller.dsopt.ParametersError",
+                                  Description=message, Solution=message, ErrorDetails=message,
+                                  ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
+    ret_code, ret_message = dsm_service.getall(params_json)
+    if ret_code == CommonResponseStatus.SERVER_ERROR.value:
+        return Gview.TErrorreturn(ErrorCode=ret_message["code"], Description=ret_message["cause"],
+                                  Solution=ret_message["cause"], ErrorDetails=ret_message["message"],
+                                  ErrorLink=""), CommonResponseStatus.SERVER_ERROR.value
+    return ret_message, CommonResponseStatus.SUCCESS.value
+
+
+@dsm_controller_app.route('', methods=["post"], strict_slashes=False)
+@swag_from(swagger_new_response)
+def dsopt_post():
+    '''
+    add datasource
+    ---
+    parameters:
+       -   name: dsname
+           in: body
+           required: true
+           description: Data source name
+           type: string
+           example: test_rabbitmq
+       -   name: data_source
+           in:  body
+           required: true
+           description: mysql/as/as7/hive/rabbitmq
+           type: string
+           example: rabbitmq
+       -   name: ds_address
+           in:  body
+           required: true
+           description: Data source url or ip
+           type: string
+           example: 192.168.1.1
+       -   name: ds_port
+           in:  body
+           required: true
+           description: Data source port
+           type: integer
+           example: 5672
+       -   name: ds_user
+           in:  body
+           required: true
+           description: Data source user
+           type: string
+           example: admin
+       -   name: ds_password
+           in:  body
+           required: true
+           description: Data source password
+           type: string
+           example: test123456
+       -   name: ds_path
+           in:  body
+           required: true
+           description: database or path
+           type: string
+           example: " "
+       -   name: extract_type
+           in:  body
+           required: true
+           description: extract type
+           type: string
+           example: standardExtraction
+       -   name: vhost
+           in:  body
+           required: true
+           description: When data_source is not rabbitmq, pass ""
+           type: string
+           example: test
+       -   name: queue
+           in:  body
+           required: true
+           description: When data_source is not rabbitmq, pass ""
+           type: string
+           example: test1
+       -   name: dataType
+           in:  body
+           required: true
+           description: datasource type,structured、unstructured,rabbitmq is structured
+           type: string
+           example: structured
+       -   name: json_schema
+           in:  body
+           required: true
+           description: When data_source is not rabbitmq, pass ""
+           type: object
+           example: {"name": "xiaoming"}
+       -   name: knw_id
+           in:  body
+           required: true
+           description: knowledge network id
+           type: integer
+           example: 1
+
+    '''
+    param_code, params_json, param_message = commonutil.getMethodParam()
+    ret_code, ret_message, ds_id = dsm_service.addds(params_json)
+    if ret_code == CommonResponseStatus.SERVER_ERROR.value:
+        return Gview.TErrorreturn(ErrorCode=ret_message["ErrorCode"], Description=ret_message["Description"],
+                                  Solution=ret_message["Solution"], ErrorDetails=ret_message["ErrorDetails"],
+                                  ErrorLink=ret_message["ErrorLink"]), CommonResponseStatus.SERVER_ERROR.value
+    return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
 @dsm_controller_app.route('/<dsid>', methods=["put"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def ds(dsid):
-    """
-    put: 修改数据源
-    """
-    # 删除方法重新修改
-    if request.method == "DELETE":
-        ret_code, ret_message = dsm_service.delete(dsid)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                       message=ret_message["message"])
-        return Gview.BuVreturn(message=ret_message.get("res"))
-    # 修改数据源
-    elif request.method == "PUT":
-        param_code, params_json, param_message = commonutil.getMethodParam()
-        print(params_json)
-        ret_code, ret_message = dsm_service.update(dsid, params_json)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                       message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-        return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
-
-
+    '''
+    edit datasource
+    ---
+    parameters:
+       -   name: dsid
+           in: query
+           required: true
+           description: Data source id
+           type: string
+           example: 1
+       -   name: dsname
+           in: body
+           required: true
+           description: Data source name
+           type: string
+           example: test_rabbitmq
+       -   name: data_source
+           in:  body
+           required: true
+           description: mysql/as/as7/hive/rabbitmq
+           type: string
+           example: rabbitmq
+       -   name: ds_address
+           in:  body
+           required: true
+           description: Data source url or ip
+           type: string
+           example: 192.168.1.1
+       -   name: ds_port
+           in:  body
+           required: true
+           description: Data source port
+           type: integer
+           example: 5672
+       -   name: ds_user
+           in:  body
+           required: true
+           description: Data source user
+           type: string
+           example: admin
+       -   name: ds_password
+           in:  body
+           required: true
+           description: Data source password
+           type: string
+           example: test123456
+       -   name: ds_path
+           in:  body
+           required: true
+           description: database or path
+           type: string
+           example: " "
+       -   name: extract_type
+           in:  body
+           required: true
+           description: extract type
+           type: integer
+           example: standardExtraction
+       -   name: vhost
+           in:  body
+           required: true
+           description: When data_source is not rabbitmq, pass ""
+           type: string
+           example: test
+       -   name: queue
+           in:  body
+           required: true
+           description: When data_source is not rabbitmq, pass ""
+           type: string
+           example: test1
+       -   name: dataType
+           in:  body
+           required: true
+           description: datasource type,structured、unstructured,rabbitmq is structured
+           type: string
+           example: structured
+       -   name: json_schema
+           in:  body
+           required: true
+           description: When data_source is not rabbitmq, pass ""
+           type: object
+           example: {"name": "xiaoming"}
+    '''
+    # update datasource
+    param_code, params_json, param_message = commonutil.getMethodParam()
+    print(params_json)
+    ret_code, ret_message = dsm_service.update(dsid, params_json)
+    if ret_code == CommonResponseStatus.SERVER_ERROR.value:
+        return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
+                                   message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
+    return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
 @dsm_controller_app.route('/delbydsids', methods=["DELETE"], strict_slashes=False)
+@swag_from(swagger_old_response)
 def delds():
+    '''
+    delete datasource
+    ---
+    parameters:
+       -   name: dsids
+           in: body
+           required: true
+           description: Data source ids
+           type: array
+           example: [1,2,3,4]
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
     ret_code, ret_message = dsm_service.delete(params_json)
@@ -178,13 +482,42 @@ def delds():
     return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
-# 模糊查询
 @dsm_controller_app.route('/searchbyname', methods=["get"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def getbydsname():
+    '''
+    Fuzzy query data source by name
+    ---
+    parameters:
+       -   name: dsname
+           in: query
+           required: true
+           description: Data source name
+           type: string
+           example: test
+       -   name: page
+           in: query
+           required: true
+           description: Data source name
+           type: integer
+           example: 1
+       -   name: size
+           in: query
+           required: true
+           description: Number of lines displayed per page
+           type: integer
+           example: 10
+       -   name: order
+           in: query
+           required: true
+           description: ascend is in reverse chronological order,descend is opposite
+           type: string
+           example: ascend
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
     if param_code == 0:
-        check_res,  message = dsCheckParameters.dsgetbynamePar(params_json)
+        check_res, message = dsCheckParameters.dsgetbynamePar(params_json)
         if check_res != 0:
             Logger.log_error("parameters:%s invalid" % params_json)
             return Gview.TErrorreturn(ErrorCode="Builder.controller.dsm_controller.getbydsname.ParametersError",
@@ -205,32 +538,125 @@ def getbydsname():
 
 
 @dsm_controller_app.route('/acctoken/<ds_id>', methods=["GET"])
+@swag_from(swagger_old_response)
 def get_acctoken_by_id(ds_id):
+    '''
+    get as token
+    ---
+    parameters:
+       -   name: ds_id
+           in: query
+           required: true
+           description: Data source id
+           type: string
+           example: 1
+    '''
     print("ds_id: ", ds_id)
     if not ds_id.isdigit():
         return Gview.BuFailVreturn(cause="ds_id must be int ", code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                               message="param error "), CommonResponseStatus.BAD_REQUEST.value
+                                   message="param error "), CommonResponseStatus.BAD_REQUEST.value
     df = graph_dao.getDs_authById(ds_id)
     df = df.to_dict()
     df = df["ds_auth"]
     if not df:
-        return Gview.BuFailVreturn(cause=" ds_id %s not exist" % str(ds_id), code=CommonResponseStatus.REQUEST_ERROR.value,
+        return Gview.BuFailVreturn(cause=" ds_id %s not exist" % str(ds_id),
+                                   code=CommonResponseStatus.REQUEST_ERROR.value,
                                    message=" ds_id %s not exist" % str(ds_id)), CommonResponseStatus.SERVER_ERROR.value
     ds_auth = df[0]
-    data = {"ds_auth": ds_auth}
-    print("data: ", data)
-    print('开始获取AS token', __file__, 'get_acctoken_by_id')
     ret_code, token = asToken.get_token(ds_auth)
     obj = {'access_token': token}
     return {
         "res": obj
     }
 
-# 数据源复制
+
 @dsm_controller_app.route('/ds_copy/<ds_id>', methods=["post"], strict_slashes=False)
+@swag_from(swagger_new_response)
 def ds_copy(ds_id):
-    print("dsid: ", ds_id)
-    # 获取参数
+    '''
+        copy datasource
+        ---
+        parameters:
+           -   name: dsname
+               in: body
+               required: true
+               description: Data source name
+               type: string
+               example: test_rabbitmq
+           -   name: data_source
+               in:  body
+               required: true
+               description: mysql/as/as7/hive/rabbitmq
+               type: string
+               example: rabbitmq
+           -   name: ds_address
+               in:  body
+               required: true
+               description: Data source url or ip
+               type: string
+               example: 192.168.1.1
+           -   name: ds_port
+               in:  body
+               required: true
+               description: Data source port
+               type: integer
+               example: 5672
+           -   name: ds_user
+               in:  body
+               required: true
+               description: Data source user
+               type: string
+               example: admin
+           -   name: ds_password
+               in:  body
+               required: true
+               description: Data source password
+               type: string
+               example: test123456
+           -   name: ds_path
+               in:  body
+               required: true
+               description: database or path
+               type: string
+               example: " "
+           -   name: extract_type
+               in:  body
+               required: true
+               description: extract type
+               type: integer
+               example: standardExtraction
+           -   name: vhost
+               in:  body
+               required: true
+               description: When data_source is not rabbitmq, pass ""
+               type: string
+               example: test
+           -   name: queue
+               in:  body
+               required: true
+               description: When data_source is not rabbitmq, pass ""
+               type: string
+               example: test1
+           -   name: dataType
+               in:  body
+               required: true
+               description: datasource type,structured、unstructured,rabbitmq is structured
+               type: string
+               example: structured
+           -   name: json_schema
+               in:  body
+               required: true
+               description: When data_source is not rabbitmq, pass ""
+               type: string
+               example: {"name": "xiaoming"}
+           -   name: knw_id
+               in:  body
+               required: true
+               description: knowledge network id
+               type: inte
+               example: 1
+
+        '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
         return Gview.TErrorreturn("Builder.controller.dsm_controller.ds_copy.ParametersError",

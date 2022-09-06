@@ -87,7 +87,7 @@ import configparser
 
 
 config = configparser.ConfigParser()
-config.read("./../config/config.ini")
+config.read("./../config/config.ini", encoding="utf-8")
 sections = config.sections()
 # 获取特定section
 extract_items = config.items('extract')
