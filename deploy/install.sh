@@ -270,7 +270,7 @@ function dockercomposeinit() {
   sed -i '/.*server_name*./c\server_name  '"$tempinput"';' ./nginx/nginx.conf
 
 
-  docker compose -p "aishu.cn/kweaver" -f $1 up
+  docker compose -p "aishu-kweaver" -f $1 up
 }
 
 checkeditports() {
