@@ -260,7 +260,7 @@ const Workflow = props => {
         </div>
 
         <div className="network-info">
-          <IconFont type="icon-bianzu8" className="icon" />
+          <IconFont type="icon-graph" className="icon" />
         </div>
 
         <div className="network-tent">

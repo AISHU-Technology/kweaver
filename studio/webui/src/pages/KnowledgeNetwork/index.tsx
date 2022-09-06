@@ -10,7 +10,7 @@ import Layout from '@/Layout';
 import IconFont from '@/components/IconFont';
 import asyncComponent from '@/components/AsyncComponent';
 
-import headLogo from '@/assets/images/head-Logo.svg';
+import headLogo from '@/assets/images/kw.svg';
 import cognitiveEngineIcon from '@/assets/images/cognitiveEngine.svg';
 
 const KnowledgeGroup = asyncComponent(() => import('@/pages/KnowledgeNetwork/KnowledgeGroup'));
@@ -22,7 +22,7 @@ const Breadcrumb = (props: any) => {
   const { kgData } = props;
 
   return (
-    <div className="ad-align-center">
+    <div className="ad-align-center ad-pt-2">
       <div style={{ cursor: 'pointer' }} onClick={() => history.push('/home/graph-list')}>
         工作台
       </div>
@@ -73,7 +73,11 @@ const KnowledgeNetwork = () => {
     logo: headLogo,
     operation: [
       { float: 'left', component: () => <Breadcrumb kgData={selectedKnowledge} /> },
-      { icon: <SettingOutlined />, text: 'API文档', onClick: () => history.push('/home/system-config') },
+      {
+        icon: <IconFont type="icon-wendang-xianxing" />,
+        text: 'API文档',
+        onClick: () => history.push('/home/system-config')
+      },
       { icon: <SettingOutlined />, text: '系统配置', onClick: () => history.push('/home/system-config') }
     ]
   };
