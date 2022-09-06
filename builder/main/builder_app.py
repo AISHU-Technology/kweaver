@@ -32,6 +32,9 @@ bind_i18n(app)
 GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_template.yaml'), 'r') as f:
     swagger_template = yaml.load(f, Loader=yaml.FullLoader)
+swagger_config = Swagger.DEFAULT_CONFIG
+swagger_config['specs_route'] = '/swagger'  # swagger访问路径
+swagger_config['specs'][0]['route'] = '/swagger_json.json'  # json文件访问路径
 swagger = Swagger(app, template=swagger_template)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(lineno)d - %(message)s')
