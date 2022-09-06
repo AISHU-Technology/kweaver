@@ -239,7 +239,6 @@ def graph(grapid):
 def getgraphdb():
     '''
     query database connection information
-    查询图谱数据库连接信息
     ---
     '''
     ret_code, ret_message = graph_Service.getGraphDB()
@@ -297,9 +296,6 @@ def getgraphbyid(graphid):
 def getgraphbystep(graphid, graph_step):
     '''
     get the entity class collection and its property collection in the specific graph configuration step
-    根据id和指定的图谱配置阶段，查询entity和property
-    graphid：图谱id
-    graph_step:["graph_InfoExt","graph_KMap","graph_KMerge"]
     ---
     parameters:
         -   name: 'graphid'
@@ -309,7 +305,7 @@ def getgraphbystep(graphid, graph_step):
             type: 'integer'
         -   name: 'graph_step'
             in: 'path'
-            description: 'graph configuration step'
+            description: 'graph configuration step. options: "graph_InfoExt","graph_KMap","graph_KMerge"'
             required: true
             type: 'string'
             example: 'graph_InfoExt'
@@ -331,10 +327,7 @@ def getgraphbystep(graphid, graph_step):
 @swag_from(swagger_old_response)
 def getbyinfoext():
     '''
-    get the extraction rule according to the extraction file list
-    根据id和指定的图谱配置阶段，查询图谱信息
-    graphid：图谱id
-    graph_step:["graph_InfoExt","graph_KMap","graph_KMerge"]
+    get the extraction rule according to the extraction file list and graph configuration step
     ---
     parameters:
         -   name: 'graphid'
@@ -355,10 +348,9 @@ def getbyinfoext():
             required: true
             type: 'array'
             example: [
-              { "ds_name": "数据源名1", "file_source": "文件标识：fileid或tablename" },
-              { "ds_name": "数据源名1", "file_source": "文件标识：fileid或tablename" }
+              { "ds_name": "data_source_name1", "file_source": "document identification：fileid or tablename" },
+              { "ds_name": "data_source_name1", "file_source": "document identification：fileid or tablename" }
             ]
-
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -399,10 +391,9 @@ def getbyinfoext():
 def check_kmapinfo():
     '''
     verify the mapping information
-    根据id和指定的图谱配置阶段，查询图谱信息
-    映射过程中，需要调用check_kmapinfo接口，用于校验图谱映射信息是否在图谱配置（本体点类、边类及其属性是否在本体库中，实体名及其属性是否在抽取规则中，数据源及其文件标识是否存在于抽取规则中）。
-    场景，流程3本体修改了流程5使用的本体和本体属性，边属性，原来的配置还在，但是信息已经被修改了，进入流程5时返回的信息中是否仍然存在，存在0，不存在1，其下属性内容不存在2。
-    场景，流程4 信息抽取修改了流程5使用的抽取的实体和属性，进入流程5返回的信息中是否存在，存在0，不存在1，其下属性内容不存在2。
+    During the mapping process, checking the mapping information is necessary. This interface is used to verify whether the mapping information is in the graph configuration (whether the entity class, edge class and their properties are in the ontology library, whether the entity name and its attributes are in the extraction rules, and whether the data source and its file ID are in the extraction rules).
+    <b>Scenario</b>: the ontology, entity class properties and edge class properties which are used by step 5 are modified in step 3 ontology. The original configuration in step 5 is still there, but the information has been modified. When entering step 5, it is judged whether the information still exists. If it exists, it is marked with 0. If it does not exist, it is marked with 1. The property content under it does not exist with 2.
+    <b>Scenario</b>: information extraction in step 4 modifies the extracted entities and properties used in step 5. It is judged whether the information in step 5 exists. 0: exists, 1: does not exist, 2: property content under it does not exist.
     ---
     parameters:
         -   name: 'graphid'
@@ -522,8 +513,7 @@ def savenocheck():
 def getdsbygraphids():
     '''
     get data source list by graph id
-    根据图谱id返回数据源列表
-    流程三一键导入时的数据源列表：该图谱下的，且属性id为1的数据源
+    get data source list when clicking 'batching import' in step 3: ontology
     ---
     parameters:
         -   name: id
@@ -534,7 +524,7 @@ def getdsbygraphids():
             example: 1
         -   name: type
             in: query
-            description: 流程标识【filter:过滤非结构，只有结构数据，unfilter:有结构和非结构数据】
+            description: 'process identification. filter: filter non structural data, only return structural data; unfilter: return structured and unstructured data'
             type: string
             example: 'filter'
     '''
@@ -561,8 +551,7 @@ def getdsbygraphids():
 @swag_from(swagger_new_response)
 def graphDeleteByIds():
     '''
-    delete graph by graph ids
-    图谱批量删除
+    batch delete graph by graph ids
     ---
     parameters:
         -   name: graphids
@@ -714,7 +703,6 @@ def graphDeleteByIds():
 def graphDsList(graphid):
     '''
     get data source list in the graph editing process
-    图谱编辑过程中的数据源列表
     ---
     parameters:
         -   name: graphid
@@ -956,12 +944,12 @@ def get_graph_info_basic():
         -   name: is_all
             in: query
             required: false
-            description: 'True：返回所有字段，忽略key传入参数; False（默认）：按照key返回需要的字段'
+            description: 'True：return all fields, ignoring the parameters passed in by key; False(default)：return the required fields by key'
             type: boolean
         -   name: 'key'
             in: query
             required: false
-            description: 需要额外获取信息的字段
+            description: fields requiring additional information
             # type: array
     '''
     try:
