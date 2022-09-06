@@ -5,17 +5,17 @@
  */
 
 import { API } from '../api';
-import apiService from '@/utils/axios-http';
+import apiService from '@/utils/axios-http/newAxios';
 
 /**
  * @description 获取单条数据配置源
  */
-const graphDBGetById = async id => await apiService.axiosGetData(API.graphDBGetById, { id });
+const graphDBGetById = async id => await apiService.axiosGet(API.graphDBGetById, { id });
 
 /**
  * @description 数据源存储列表
  */
-const graphDBGetList = async data => await apiService.axiosGetData(API.graphDBGetList, data);
+const graphDBGetList = async data => await apiService.axiosGet(API.graphDBGetList, data);
 
 /**
  * @description 创建存储
@@ -40,17 +40,17 @@ const graphDBTest = async data => await apiService.axiosPost(API.graphDBTest, da
 /**
  * @description 根据ID获取当前存储的图谱
  */
-const graphDBGetGraphById = async data => await apiService.axiosGetData(API.graphDBGetGraphById, data);
+const graphDBGetGraphById = async data => await apiService.axiosGet(API.graphDBGetGraphById, data);
 
 /**
  * @description 获取索引列表
  */
-const openSearchGet = async data => await apiService.axiosGetData(API.openSearchGet, data);
+const openSearchGet = async data => await apiService.axiosGet(API.openSearchGet, data);
 
 /**
  * 根据id获取单条索引
  */
-const openSearchGetById = async id => await apiService.axiosGetData(API.openSearchGetById, { id });
+const openSearchGetById = async id => await apiService.axiosGet(API.openSearchGetById, { id });
 
 /**
  * 新建索引

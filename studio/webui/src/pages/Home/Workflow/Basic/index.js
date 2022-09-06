@@ -64,15 +64,18 @@ const Basic = (props, ref) => {
 
   const getStorage = async () => {
     const data = { page: 1, size: -1, orderField: 'created', order: 'DESC', type: 'all', name: '' };
-    const res = await serviceStorageManagement.graphDBGetList(data);
-
-    if (res && res.res) {
-      if (basicData?.graph_db_id) {
-        const currentDb = _.filter(res.res.data, item => item.id === basicData.graph_db_id)[0];
-
-        setDbType(currentDb.type);
+    try {
+      const { res } = await serviceStorageManagement.graphDBGetList(data);
+      if (!_.isEmpty(res)) {
+        if (basicData?.graph_db_id) {
+          const currentDb = _.filter(res?.data, item => item.id === basicData.graph_db_id)[0];
+          setDbType(currentDb.type);
+        }
+        setStorageList(res?.data);
       }
-      setStorageList(res.res.data);
+    } catch (error) {
+      const { type, response } = error;
+      if (type === 'message') message.error(response?.Description || '');
     }
   };
 

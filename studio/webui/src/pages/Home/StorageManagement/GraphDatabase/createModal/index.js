@@ -41,30 +41,33 @@ const ModalContent = memo(props => {
    */
   const getIndexList = async () => {
     const data = { page: 1, size: -1, orderField: 'created', order: 'ASC', name: '' };
-    const res = await serviceStorageManagement.openSearchGet(data);
 
-    if (res && res.res) {
-      setList(res.res.data);
+    try {
+      const result = await serviceStorageManagement.openSearchGet(data);
 
-      if (optionType === 'create') {
-        const dt = res.res.data.filter(item => item.name === '内置opensearch')[0];
+      if (!_.isEmpty(result?.res)) {
+        setList(result.res?.data);
+        if (optionType === 'create') {
+          const dt = result.res?.data.filter(item => item.name === '内置opensearch')[0];
 
-        dt && form.setFieldsValue({ osId: dt.id });
-        dt && setDefaultIndex(dt.id);
+          dt && form.setFieldsValue({ osId: dt.id });
+          dt && setDefaultIndex(dt.id);
+        }
+
+        if (optionType === 'edit') {
+          result.res?.data.forEach(item => {
+            if (item.name === initData.osName) {
+              form.setFieldsValue({ osId: item.id });
+              setDefaultIndex(item.id);
+            }
+          });
+        }
       }
-
-      if (optionType === 'edit') {
-        res.res.data.forEach(item => {
-          if (item.name === initData.osName) {
-            form.setFieldsValue({ osId: item.id });
-            setDefaultIndex(item.id);
-          }
-        });
+    } catch (error) {
+      const { type, response } = error;
+      if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
+        message.error(response?.Description || '');
       }
-    }
-
-    if (res && res.ErrorCode === 'Manager.Common.ServerError') {
-      message.error(res.Description);
     }
   };
 
@@ -97,29 +100,28 @@ const ModalContent = memo(props => {
       // 查看点击保存关闭弹窗
       optionType === 'check' && closeModal();
 
-      if (optionType === 'create') {
-        const res = await serviceStorageManagement.graphDBCreate({ ip, name, user, type, password, port, osId });
-
-        if (res && res.res) {
-          message.success(intl.get('configSys.saveSuccess'));
-          closeModal();
-          getData();
+      try {
+        if (optionType === 'create') {
+          const result = await serviceStorageManagement.graphDBCreate({ ip, name, user, type, password, port, osId });
+          if (result && result.res) {
+            message.success(intl.get('configSys.saveSuccess'));
+            closeModal();
+            getData();
+          }
         }
 
-        res && res.ErrorCode && messageError(res);
-      }
-
-      if (optionType === 'edit') {
-        const { id } = initData;
-        const res = await serviceStorageManagement.graphDBUpdate({ name, ip, id, user, type, password, port });
-
-        if (res && res.res) {
-          message.success(intl.get('configSys.editSuccess'));
-          closeModal();
-          getData();
+        if (optionType === 'edit') {
+          const { id } = initData;
+          const res = await serviceStorageManagement.graphDBUpdate({ name, ip, id, user, type, password, port });
+          if (res && res.res) {
+            message.success(intl.get('configSys.editSuccess'));
+            closeModal();
+            getData();
+          }
         }
-
-        res && res.ErrorCode && messageError(res);
+      } catch (error) {
+        const { type, response } = error;
+        if (type === 'message') messageError(response);
       }
     });
   };
@@ -148,16 +150,17 @@ const ModalContent = memo(props => {
         setRepeatIP(errors);
         return;
       }
-
       setTestLoading(true);
-      const res = await serviceStorageManagement.graphDBTest({ ip, name, user, type, password, port });
 
-      if (res && res.res) {
-        message.success(intl.get('configSys.testSuccess'));
+      try {
+        const result = await serviceStorageManagement.graphDBTest({ ip, name, user, type, password, port });
+        if (result?.res) message.success(intl.get('configSys.testSuccess'));
+        setTestLoading(false);
+      } catch (error) {
+        setTestLoading(false);
+        const { type, response } = error;
+        if (type === 'message') messageError(response);
       }
-
-      res && res.ErrorCode && messageError(res);
-      setTestLoading(false);
     });
   };
 

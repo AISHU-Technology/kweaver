@@ -39,10 +39,12 @@ const DeleteModal = (props: DeleteModalType) => {
         getData();
         setVisible();
       }
-
-      if (ERROR_CODE[result?.ErrorCode]) message.error(intl.get(ERROR_CODE[result?.ErrorCode]));
     } catch (error) {
-      // console.log('error')
+      const { type, response } = error;
+      if (type === 'message') {
+        const { ErrorCode } = response;
+        if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
+      }
     }
   };
 

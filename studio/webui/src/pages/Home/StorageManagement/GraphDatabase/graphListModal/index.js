@@ -33,17 +33,19 @@ const GraphListModal = props => {
     setLoading(true);
 
     try {
-      const { res = {}, ErrorCode = '', Description = '' } = await serviceStorageManagement.graphDBGetGraphById(data);
+      const { res = {} } = await serviceStorageManagement.graphDBGetGraphById(data);
 
       if (!_.isEmpty(res)) {
         setTotal(res?.total);
         setTableData(res?.data);
       }
-
-      if (ErrorCode === 'Manager.Common.ServerError') message.error(Description);
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      const { type, response } = error;
+      if (type === 'message' && response?.ErrorCode === 'Manager.Common.ServerError') {
+        message.error(response?.Description || '');
+      }
     }
   };
 
