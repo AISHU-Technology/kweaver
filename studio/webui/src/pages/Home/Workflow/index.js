@@ -211,10 +211,10 @@ const Workflow = props => {
       return;
     }
 
-    const step3Data = step3Ref.current.getFlowData();
-    const step4Data = step4Ref.current.getFlowData();
-    const step5Data = step5Ref.current.getFlowData();
-    const step6Data = step6Ref.current.getFlowData();
+    const step3Data = step3Ref.current?.getFlowData();
+    const step4Data = step4Ref.current?.getFlowData();
+    const step5Data = step5Ref.current?.getFlowData();
+    const step6Data = step6Ref.current?.getFlowData();
 
     // 流程中新建本体保存并退出,如果输入了本体名称或描述，如果正确，就创建本体
     if (current === 2 && step3Ref.current.state.editEntityModalRef) {

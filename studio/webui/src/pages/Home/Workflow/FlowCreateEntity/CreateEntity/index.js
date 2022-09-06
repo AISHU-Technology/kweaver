@@ -252,6 +252,28 @@ class CreateEntity extends Component {
   };
 
   /**
+   * @description 保存并关闭
+   */
+  getFlowData = () => {
+    const { nodes, edges, ontology_id, used_task, ontology_name, ontology_des } = this.state;
+
+    if (!ontology_name) return [];
+
+    const { entity, edge } = setSaveData(nodes, edges);
+    const data = {
+      entity,
+      edge,
+      used_task,
+      id: ontology_id,
+      ontology_id: ontology_id.toString(),
+      ontology_name,
+      ontology_des
+    };
+
+    return [data];
+  };
+
+  /**
    * @description 选择右侧操作工具
    */
   selectRightTool = (rightSelect, isIgnoreCheck) => {
