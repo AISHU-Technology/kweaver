@@ -47,14 +47,14 @@ def auth():
             in: query
             required: true
             description: data source ip
-            type: integer
+            type: string
             example: 192.168.1.1
         -   name: ds_auth
             in: query
             required: true
-            description: Data source id, new data source is empty
+            description: Data source id, Empty when adding data source
             type: integer
-            example: " "
+            example:
         -   name: ds_port
             in: query
             required: true
@@ -417,7 +417,7 @@ def ds(dsid):
            required: true
            description: database or path
            type: string
-           example: " "
+           example: ""
        -   name: extract_type
            in:  body
            required: true
