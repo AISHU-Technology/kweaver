@@ -13,7 +13,7 @@ import torch
 from spo.train_flora import SubjectModel,ObjectModel#加载模型使用，不能删除
 
 config = configparser.ConfigParser()
-config.read("./../config/config.ini")
+config.read("./../config/config.ini", encoding="utf-8")
 
 # 获取所有section
 sections = config.sections()
