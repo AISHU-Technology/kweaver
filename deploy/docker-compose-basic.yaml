@@ -4,6 +4,7 @@ services:
   kw-nginx:
     container_name: kw-nginx
     image: nginx
+    restart: always
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/log/error.log:/var/log/nginx/error.log
