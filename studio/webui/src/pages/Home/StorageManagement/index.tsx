@@ -5,7 +5,6 @@ import { Tabs } from 'antd';
 
 import Layout from '@/Layout';
 import Format from '@/components/Format';
-import Sidebar from '@/components/Sidebar';
 import IconFont from '@/components/IconFont';
 
 import GraphDatabase from './GraphDatabase';
