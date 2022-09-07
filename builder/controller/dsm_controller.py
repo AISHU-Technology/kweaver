@@ -653,7 +653,7 @@ def ds_copy(ds_id):
                in:  body
                required: true
                description: knowledge network id
-               type: inte
+               type: integer
                example: 1
 
         '''
