@@ -60,6 +60,13 @@ jobs:
         inputs:
           containerRegistry: 'acr.aishu.cn'
           command: 'login'
+      - task: Docker@2
+        displayName: PushToHub
+        inputs:
+          command: push
+          containerRegistry: aishu.hub
+          repository: $(imageNameWithHarbor)
+          tags: latest | $(mainTag)
       - task: Bash@3
         displayName: saveTar
         inputs:
