@@ -9,7 +9,7 @@ orient:
   port: 2480
   db: kc-topic
 algServer:
-  ip: kw-alg-server
+  ip: kw-algserver
   port: 8080
 builderServer:
   ip: kw-builder
