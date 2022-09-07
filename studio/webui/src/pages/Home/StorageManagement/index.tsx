@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { useLocation } from 'react-router-dom';
 import { Tabs } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
 
 import Layout from '@/Layout';
 import Format from '@/components/Format';
