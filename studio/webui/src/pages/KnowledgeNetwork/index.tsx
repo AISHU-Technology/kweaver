@@ -18,15 +18,11 @@ const CognitiveEngine = asyncComponent(() => import('@/pages/KnowledgeNetwork/Co
 const DataSource = asyncComponent(() => import('@/components/DataSource'));
 
 const Breadcrumb = (props: any) => {
-  const history = useHistory();
   const { kgData } = props;
 
   return (
-    <div className="ad-align-center ad-pt-2">
-      <div style={{ cursor: 'pointer' }} onClick={() => history.push('/home/graph-list')}>
-        工作台
-      </div>
-      <div className="ad-ml-2 ad-mr-2">/</div>
+    <div className="ad-align-center" style={{ marginTop: 2 }}>
+      <div style={{ marginRight: 10 }}>/</div>
       <div className="ad-ellipsis" style={{ width: 150 }}>
         {kgData?.knw_name}
       </div>
@@ -72,6 +68,7 @@ const KnowledgeNetwork = () => {
   const header = {
     logo: headLogo,
     operation: [
+      { float: 'left', text: '工作台', onClick: () => history.push('/home/graph-list') },
       { float: 'left', component: () => <Breadcrumb kgData={selectedKnowledge} /> },
       {
         icon: <IconFont type="icon-wendang-xianxing" />,

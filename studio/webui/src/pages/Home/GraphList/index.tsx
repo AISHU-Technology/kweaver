@@ -199,72 +199,72 @@ const GraphList = () => {
 
   return (
     <div id="netWork" className="netWork">
-      <Format.Title className="ad-mb-5" level={5}>
-        {intl.get('graphList.mygraph')}
-      </Format.Title>
-      <div className="netWork-list">
-        <div className="netWork-list-top">
-          <Button type="primary" onClick={() => onOpenCreateOrEdit({})}>
-            <IconFont type="icon-Add" style={{ color: '#fff' }} />
-            {intl.get('graphList.create')}
-          </Button>
-          <SearchInput
-            placeholder={intl.get('graphList.searchName')}
-            onChange={searchChange}
-            onPressEnter={(e: any) => onSearch(e?.target?.value)}
-            onClear={() => onSearch('')}
-          />
-        </div>
-        <div className="table-box">
-          <Table
-            columns={columns}
-            scroll={{ x: '100%' }}
-            dataSource={tableData}
-            onChange={sortOrderChange}
-            rowKey={(record: any) => record.id}
-            loading={loading ? { indicator } : false}
-            onRow={record => ({ onClick: () => setSelectKey(record.id) })}
-            rowClassName={(record: any) => (record?.id === selectKey ? 'selectRow' : '')}
-            pagination={{
-              total,
-              current: page,
-              pageSize: size,
-              showTitle: false,
-              showSizeChanger: false,
-              onChange: currentChange,
-              showTotal: total => intl.get('graphList.total', { total })
-            }}
-            locale={{
-              emptyText: !searchValue ? (
-                <div className="nodata-box">
-                  <img src={addContentImg} alt="nodata" />
-                  <div className="nodata-text">
-                    <span>{intl.get('graphList.click')}</span>
-                    <span className="create-span" onClick={() => onOpenCreateOrEdit({})}>
-                      {intl.get('global.emptyTableCreate')}
-                    </span>
-                    <span>{intl.get('graphList.addNetwork')}</span>
+      <div className="ad-p-5 ad-bg-white" style={{ height: '100%' }}>
+        <Format.Title className="ad-mb-5">{intl.get('graphList.mygraph')}</Format.Title>
+        <div className="netWork-list">
+          <div className="netWork-list-top">
+            <Button type="primary" onClick={() => onOpenCreateOrEdit({})}>
+              <IconFont type="icon-Add" style={{ color: '#fff' }} />
+              {intl.get('graphList.create')}
+            </Button>
+            <SearchInput
+              placeholder={intl.get('graphList.searchName')}
+              onChange={searchChange}
+              onPressEnter={(e: any) => onSearch(e?.target?.value)}
+              onClear={() => onSearch('')}
+            />
+          </div>
+          <div className="table-box">
+            <Table
+              columns={columns}
+              scroll={{ x: '100%' }}
+              dataSource={tableData}
+              onChange={sortOrderChange}
+              rowKey={(record: any) => record.id}
+              loading={loading ? { indicator } : false}
+              onRow={record => ({ onClick: () => setSelectKey(record.id) })}
+              rowClassName={(record: any) => (record?.id === selectKey ? 'selectRow' : '')}
+              pagination={{
+                total,
+                current: page,
+                pageSize: size,
+                showTitle: false,
+                showSizeChanger: false,
+                onChange: currentChange,
+                showTotal: total => intl.get('graphList.total', { total })
+              }}
+              locale={{
+                emptyText: !searchValue ? (
+                  <div className="nodata-box">
+                    <img src={addContentImg} alt="nodata" />
+                    <div className="nodata-text">
+                      <span>{intl.get('graphList.click')}</span>
+                      <span className="create-span" onClick={() => onOpenCreateOrEdit({})}>
+                        {intl.get('global.emptyTableCreate')}
+                      </span>
+                      <span>{intl.get('graphList.addNetwork')}</span>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="nodata-box">
-                  <img src={NoResult} alt="nodata" />
-                  <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
-                </div>
-              )
-            }}
-          />
+                ) : (
+                  <div className="nodata-box">
+                    <img src={NoResult} alt="nodata" />
+                    <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
+                  </div>
+                )
+              }}
+            />
+          </div>
         </div>
+
+        <CreateModal
+          visible={!_.isEmpty(createOrEditData)}
+          source={createOrEditData}
+          onRefreshList={onRefreshList}
+          onCloseCreateOrEdit={onCloseCreateOrEdit}
+        />
+
+        <DeleteModal visible={!!delId} delId={delId} onCloseDelete={onCloseDelete} onRefreshList={onRefreshList} />
       </div>
-
-      <CreateModal
-        visible={!_.isEmpty(createOrEditData)}
-        source={createOrEditData}
-        onRefreshList={onRefreshList}
-        onCloseCreateOrEdit={onCloseCreateOrEdit}
-      />
-
-      <DeleteModal visible={!!delId} delId={delId} onCloseDelete={onCloseDelete} onRefreshList={onRefreshList} />
     </div>
   );
 };
