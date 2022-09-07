@@ -8,14 +8,6 @@
   margin: 0 auto;
   background-color: #f8f8f8;
 
-  // &.has-footer {
-  //   padding-bottom: @footer-height;
-
-  //   .main-box {
-  //     height: calc(100vh - 100px - @footer-height);
-  //   }
-  // }
-
   .main-box {
     display: flex;
     flex-direction: column;
@@ -127,7 +119,7 @@
           background-color: var(--ad-line-color);
         }
 
-        &>span {
+        & > span {
           display: inline-block;
           transform: translateY(4px);
         }
@@ -242,7 +234,7 @@
           font-size: 16px;
           width: 64px;
 
-          &+.ant-tabs-tab {
+          & + .ant-tabs-tab {
             margin-left: 120px;
           }
         }
@@ -296,13 +288,15 @@
 
   // 底部
   .footer {
-    position: fixed;
-    z-index: 201;
     left: 0;
     bottom: 0;
-    right: 0;
+    width: 100%;
+    z-index: 201;
+    display: flex;
+    padding: 9px 40px;
+    position: absolute;
+    align-items: center;
     height: @footer-height;
-    padding: 9px 380px;
     background-color: #fff;
     border-top: 1px solid var(--ad-line-color);
 
