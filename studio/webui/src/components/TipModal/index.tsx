@@ -1,8 +1,5 @@
 /**
  * 二次确认弹窗, 常用于删除、退出提示
- * @author Jason.ji
- * @date 2022/05/24
- *
  */
 
 import React from 'react';

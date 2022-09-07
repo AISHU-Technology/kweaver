@@ -5,6 +5,7 @@ import Home from './index';
 
 jest.mock('react-router-dom', () => ({
   useHistory: () => ({ push: jest.fn(), location: { pathname: '' }, listen: jest.fn() }),
+  useLocation: () => ({ pathname: '', search: '' }),
   withRouter: () => jest.fn()
 }));
 

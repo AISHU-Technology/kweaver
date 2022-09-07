@@ -6,6 +6,7 @@
 import React, { createRef, PureComponent } from 'react';
 import { Select, Button, Input, Empty, ConfigProvider, Checkbox, Tabs, Modal, message } from 'antd';
 import { UpOutlined, DownOutlined, ExclamationCircleFilled, CloseOutlined } from '@ant-design/icons';
+import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { GET_CLASSDATA, GET_SEARCHLIST, GET_SEARCHE } from './gql';
 import { exploreQuery, kgQuery } from '@/utils/graphQL-search';
@@ -13,7 +14,6 @@ import servicesExplore from '@/services/explore';
 import IconFont from '@/components/IconFont';
 import Analysis from '@/components/analysisInfo';
 import AdSpin from '@/components/AdSpin';
-import { throttle } from '@/utils/handleFunction';
 import { boolCheckStatus, checkAllData, handleTags } from './assistFunction';
 // import Header from './Header';
 import FilterModal from './FilterModal';
@@ -254,7 +254,7 @@ class searchUI extends PureComponent {
    * 监听窗口变化, 更新筛选标签折叠状态, 300ms防抖
    * @param {HtmlEvent} e
    */
-  listenResize = throttle(e => {
+  listenResize = _.throttle(e => {
     const { fold } = this.state;
     const { scrollHeight } = this.filterRef.current;
 

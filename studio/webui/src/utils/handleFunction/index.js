@@ -2,8 +2,6 @@
  * 常用的一些函数
  */
 
-export { debounce, useDebounce } from './Debounce';
-export { throttle, useThrottle } from './Throttle';
 export { getParam } from './GetParam';
 export { getPostfix } from './GetFilePostfix';
 export { wrapperTitle } from './WrapperTitle';

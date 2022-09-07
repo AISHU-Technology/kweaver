@@ -11,7 +11,8 @@ const PATH_ALIAS = [
   'hooks',
   'enums',
   'version',
-  'vendors'
+  'vendors',
+  'Layout'
 ].reduce((res, path) => ({ ...res, [`^@/${path}(.*)$`]: `<rootDir>/src/${path}$1` }), {});
 
 module.exports = {
