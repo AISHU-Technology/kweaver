@@ -6,6 +6,7 @@
     "systemConfig": "Settings",
     "cognitiveEngine": "Cognitive engine",
     "cognitiveSearch": "Cognitive search",
+    "knowledgeSearch": "Knowledge Search",
     "dataManage": "Data",
     "ok": "OK",
     "cancel": "Cancel",

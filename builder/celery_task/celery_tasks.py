@@ -6,8 +6,11 @@ import sys
 import os
 import datetime
 import time
+import copy
+import traceback
 from functools import partial
-from multiprocessing.dummy import Pool as ThreadPool
+import threading
+from multiprocessing.pool import ThreadPool
 
 import yaml
 from requests.auth import HTTPBasicAuth
@@ -58,7 +61,7 @@ from urllib import parse
 from celery.utils.log import get_task_logger
 
 from dao.task_dao import task_dao
-from dao.graphdb_dao import GraphDB, SQLProcessor
+from dao.graphdb_dao import GraphDB, SQLProcessor, gen_doc_vid
 
 logger = get_task_logger(__name__)
 
@@ -72,6 +75,10 @@ from multiprocessing.dummy import Pool as ThreadPool
 from celery import schedules
 import multiprocessing
 from config.config import db_config_path
+from dao.builder_dao import MongoBuildDao
+from utils.ConnectUtil import HiveClient
+import pymysql
+
 
 # CELERY_BROKER_URL = 'redis://10.4.70.120:6379/1'
 # # 要存储 Celery 任务的状态或运行结果时就必须要配置
@@ -210,7 +217,7 @@ class Configure(object):
             Logger.log_info("配置文件：{}不存在".format(config_ini_path))
         else:
             config1 = configparser.ConfigParser()
-            config1.read(config_ini_path)
+            config1.read(config_ini_path, encoding="utf-8")
             # 获取特定section
             extract_items = config1.items('extract')
             extract_items = dict(extract_items)
@@ -315,7 +322,7 @@ def create_mongodb_by_graph_name(conn_db, graph_mongo_Name, flag="full"):
         flag:是否是增量，增量：increment； 全量：full
     """
     # 根据图谱名称创建 mongodb数据库
-    collection_names = conn_db.collection_names()
+    collection_names = conn_db.list_collection_names()
     # 获取数据库中所有的 collection 名称
     for collection_name in collection_names:
         # 保留主题信息
@@ -470,7 +477,7 @@ def get_rules(graph_InfoExt):
 
 
 def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_id, file_name, file_source, rules,
-                     entity_type):
+                     graph_KMerge, entity_type):
     """
     标准抽取, standardExtraction，处理数据加入mongodb
     Args：
@@ -482,6 +489,7 @@ def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_i
         file_name: 文件名称
         file_source: 文件对应gns
         rules: 抽取规则 {文件名: 属性列表}
+        graph_KMerge: 融合属性，在monogo中用于构建唯一索引
         entity_type: 点名, 即文件名
     """
     ret_code = CommonResponseStatus.SUCCESS.value
@@ -489,7 +497,7 @@ def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_i
         if ds_id == used_ds["id"]:
             print(f'创建mongodb集合:{entity_type}')
             collection = conn_db[graph_mongo_Name + "_" + entity_type]
-            mongo_data = []
+
             data_ds = used_ds
             if data_source != "hive":
                 ret_code, data = readinfo(data_source, data_ds, file_name, file_source)
@@ -501,187 +509,24 @@ def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_i
                         return ret_code, data
                     else:
                         ret_code = CommonResponseStatus.SUCCESS.value
+
+            print(f'创建mongodb集合:{entity_type} 唯一索引')
+            create_mongo_index(graph_mongo_Name, entity_type, graph_KMerge)
+
+            entity_rules = rules[entity_type]
+            if len(entity_rules) <= 0:
+                raise BaseException(f'{entity_type} 提取规则为空')
+
             if data_source == "mysql":
-                df = data
-                df2 = list(df)  # 列
-                for index, row in df.iterrows():  # 遍历行
-                    # 按行处理 方便插入mongodb
-                    mongodict = {}
-                    for i in df2:
-                        for key in rules:  ###抽取規則
-                            val = rules[key]  ####抽取規則屬性
-                            if otl_util.is_special(i) in val:  # 遍历列名
-                                dict_m = {}
-                                if row[i] != None:
-                                    dict_m[i] = mongo_type_tansform(row[i])
-                                    if key not in mongodict.keys():
-                                        mongodict[key] = dict_m
-                                    else:
-                                        old_d = mongodict[key]
-                                        new_d = {**old_d, **dict_m}
-                                        mongodict[key] = new_d
+                transfer = MysqlTransfer(file_name, used_ds, entity_rules, ds_id, collection)
+                transfer.run()
+            if data_source == "hive":
+                transfer = HiveTransfer(file_name, used_ds, entity_rules, ds_id, collection)
+                transfer.run()
+            if data_source == "as7":
+                transfer = ASTransfer(file_name, file_source, used_ds, rules, ds_id, collection)
+                transfer.run()
 
-                    for all_en in mongodict:
-                        value = mongodict[all_en]
-                        Entity1_data = value  # 实体1的属性
-                        Entity1_data["ds_id"] = ds_id
-                        mongo_data.append(Entity1_data)
-                        if len(mongo_data) % 10000 == 0:
-                            collection.insert(mongo_data)
-                            mongo_data = []
-            elif data_source == "hive":
-                headlist, sql, hive_conn = read_hive(data_ds, file_name)
-                hive_cursor = hive_conn.cursor()
-                hive_cursor.execute(sql)
-                read_num = 3000000
-                while True:
-                    resultlist = []
-                    resultlist.append(headlist)
-                    ts1 = time.time()
-                    ret = hive_cursor.fetchmany(size=read_num)
-                    if not ret:
-                        hive_conn.close()
-                        break
-                    ts2 = time.time()
-                    print(f'hive读取{read_num / 10000}w条数据耗时:{ts2 - ts1}s')
-                    read_num = 1000000
-                    for data in ret:
-                        linelist = [x for x in data]
-                        resultlist.append(linelist)
-                    datas  = resultlist[1:]
-                    columns = resultlist[0]
-                    for row in datas:  # 一行数据
-                        mongodict = {}
-                        for i in range(len(row)): # 列号
-                            if entity_type in rules and otl_util.is_special(columns[i]) in rules[entity_type]:
-                                dict_m = {}
-                                if row[i]:
-                                    dict_m[columns[i]] = mongo_type_tansform(row[i])
-                                    if entity_type not in mongodict.keys():
-                                        mongodict[entity_type] = dict_m
-                                    else:
-                                        old_d = mongodict[entity_type]
-                                        new_d = {**old_d, **dict_m}
-                                        mongodict[entity_type] = new_d
-                        for all_en in mongodict:
-                            value = mongodict[all_en]
-                            Entity1_data = value  # 实体1的属性
-                            Entity1_data["ds_id"] = ds_id
-                            mongo_data.append(Entity1_data)
-                            if len(mongo_data) % 10000 == 0:
-                                collection.insert(mongo_data)
-                                mongo_data = []
-            elif data_source == "as7":
-                try:
-                    _source = data
-                    if "extension" in _source:
-                        file_type = _source["extension"]
-                    elif "ext" in _source:
-                        file_type = _source["ext"]
-                    file_content = _source["content"]
-                    if file_type == ".csv":
-                        if "\r\n" in file_content:
-                            lines = file_content.split("\r\n")
-                        elif "\n\t" in file_content:
-                            lines = file_content.split("\n\t")
-                        else:
-                            lines = file_content.split("\n")
-                        lie_l = lines[0]
-                        if "\r" in lie_l:
-                            lie_l = lie_l.replace("\r", "")
-                        if "\t" in lie_l:
-                            if lie_l.startswith('\t'):
-                                lie_list = lie_l.split("\t")[1:]
-                            else:
-                                lie_list = lie_l.split("\t")
-                        elif "," in lie_l:
-                            lie_list = lie_l.split(",")
-                        elif "，" in lie_l:
-                            lie_list = lie_l.split("，")
-                        else:
-                            lie_list = []
-                            lie_list.append(lie_l)
-                        lie_list = [otl_util.is_special(_) for _ in lie_list]  # 构建任务 读取文件内容 属性 特殊字符处理
-                        # lie_list = lie_l.split("\t")
-                        for line in lines[1:]:  # 遍历行
-                            line = line.replace("\r", "")
-                            if "\t" in line:
-                                if line.startswith('\t'):
-                                    line_val = line.split("\t")[1:]
-                                else:
-                                    line_val = line.split("\t")
-                            elif "," in line:
-                                line_val = line.split(",")
-                            elif "，" in line:
-                                line_val = line.split("，")
-                            else:
-                                line_val = []
-                                line_val.append(line)
-                            if len(line_val) != len(lie_list):
-                                continue
-                            # if "" in line_val:
-                            #     line_val.remove("")
-                            mongodict = {}  # 组装 mongo数据
-                            for ind in range(len(lie_list)):  # 遍历列名
-                                for key in rules:  # 本体 实体名
-                                    val = rules[key]  # 本体 属性名list
-                                    lie_var = lie_list[ind]
-                                    if "\r" in lie_var:
-                                        lie_var = lie_var.replace("\r", "")
-                                    if lie_var in val:
-                                        dict_m = {}
-                                        dict_m[lie_var] = line_val[ind]
-                                        if key not in mongodict.keys():
-                                            mongodict[key] = dict_m
-                                        else:
-                                            old_d = mongodict[key]
-                                            new_d = {**old_d, **dict_m}
-                                            mongodict[key] = new_d
-
-                            for all_en in mongodict:
-                                value = mongodict[all_en]
-                                Entity1_data = value  # 实体1的属性
-                                Entity1_data["ds_id"] = ds_id
-                                mongo_data.append(Entity1_data)
-                                if len(mongo_data) % 10000 == 0:
-                                    collection.insert(mongo_data)
-                                    mongo_data = []
-                    if file_type == ".json":
-                        lines = file_content.split("\n")
-                        for line in lines:  # 遍历行
-                            json_t = json.loads(line)
-                            json_t = otl_util.flatten_json(json_t, 3)
-                            lie_ = json_t.keys()
-                            mongodict = {}  # 组装 mongo数据
-                            for lie in lie_:  # 遍历列名
-                                a = isinstance(json_t[lie], list)
-                                b = isinstance(json_t[lie], dict)
-                                if not (a or b):
-                                    for key in rules:
-                                        val = rules[key]
-                                        if lie in val:
-                                            dict_m = {}
-                                            if json_t[lie] != None:
-                                                dict_m[lie] = mongo_type_tansform(json_t[lie])
-                                                if key not in mongodict.keys():
-                                                    mongodict[key] = dict_m
-                                                else:
-                                                    old_d = mongodict[key]
-                                                    new_d = {**old_d, **dict_m}
-                                                    mongodict[key] = new_d
-
-                            for all_en in mongodict:
-                                value = mongodict[all_en]
-                                Entity1_data = value  # 实体1的属性
-                                Entity1_data["ds_id"] = ds_id
-                                mongo_data.append(Entity1_data)
-                                if len(mongo_data) % 10000 == 0:
-                                    collection.insert(mongo_data)
-                                    mongo_data = []
-                except Exception:
-                    print("error : {}".format(file_name))
-            if mongo_data:
-                collection.insert(mongo_data)
     return ret_code, 'standard_extract success'
 
 def normalize_text(text):
@@ -1761,336 +1606,19 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
             print(f'update mysql error:{str(e)}')
         else:
             print('update mysql sucess')
-            
-         # 遍历实体映射创建本体图谱
-        start_create_vertex = time.time()
-        for o_i in range(len(all_otl_class)):
-            ## 细节处理map信息
-            otl_name, tab_, otl_pro, tab_pro, tab_otl, otl_tab = get_Kmap_dict(o_i, all_otl_class)
-            print(f'开始插入顶点:{otl_name}')
-            vertex_time1 = time.time()
-            # 仅仅多线程
-            ## 创建点
-            if tab_ != "":
-                table2 = conn_db[graph_mongo_Name + "_" + tab_]
-                alldata = table2.find()
-                if alldata.count() > 0:
-                    table = conn_db[graph_mongo_Name + "_" + tab_]
-                    alldata_length = alldata.count()
-                    iter_size = 1000
-                    current = 0
-                    batch_id = []
-                    sqlProcessor = SQLProcessor(graphdb.type)
-                    while current < alldata_length:
-                        # 获取插入点的sql语句
-                        if (batch_id):
-                            # batch = table.find({"_id": {'$gt': ObjectId(batch_id[0])}}).limit(iter_size)
-                            batch = table.find().limit(iter_size).skip(current)
-                        else:
-                            batch = table.find().limit(iter_size)
-                        batch_sql = sqlProcessor.vertex_sql_multi(batch, otl_tab, en_pro_dict, merge_otls, otl_name)
-                        # 获取es插入索引的请求体
-                        es_bulk_index = ''
-                        if graphdb.type == 'nebula':
-                            if (batch_id):
-                                # batch = table.find({"_id": {'$gt': ObjectId(batch_id[0])}}).limit(iter_size)
-                                batch = table.find().limit(iter_size).skip(current)
-                            else:
-                                batch = table.find().limit(iter_size)
-                            es_bulk_index = sqlProcessor.es_bulk_multi(mongo_db, otl_name, otl_tab, en_pro_dict,
-                                                                    merge_otls, batch, graph_db_id)
-                        if (batch_id):
-                            # batch = table.find({"_id": {'$gt': ObjectId(batch_id[0])}}).limit(iter_size)
-                            batch = table.find().limit(iter_size).skip(current)
-                        else:
-                            batch = table.find().limit(iter_size)
-                        list_d = pd.DataFrame(list(batch))
-                        list_d = list_d["_id"].tail(1)
-                        batch_id = list_d.tolist()
-                        graphdb.create_vertex(mongo_db, batch_sql=batch_sql, es_bulk_index=es_bulk_index,
-                                              otl_name=otl_name, props=list(otl_tab.keys()))
-                        current = current + iter_size
-                        if current % 10000 == 0:
-                            print(f'{otl_name}已插入数据：{current}条')
-                        elif current >= alldata_length:
-                            print(f'{otl_name}已插入数据：{alldata_length}条')
-            vertex_time2 = time.time()
-            print(f'创建顶点{otl_name}成功,耗时:{vertex_time2 - vertex_time1}s')
-        finish_create_vertex = time.time()
-        print(f'创建顶点总耗时：{finish_create_vertex - start_create_vertex}s')
 
+        # 插入点
+        start_create_vertex = time.time()
+        vertex_writer = VertexWriter(all_otl_class, graph_mongo_Name, graphdb, graph_db_id, mongo_db, en_pro_dict,
+                                     merge_otls)
+        vertex_writer.write()
+        print(f'创建顶点总耗时：{time.time() - start_create_vertex}s')
         ## 遍历边 创建边
         start_create_edge = time.time()
-        for rel_i in range(len(relations_map)):
-            rela = relations_map[rel_i]
-            relation_info = rela["relation_info"]
-            source = relation_info["source_type"]
-            model = relation_info["model"]
-            ## 获取头尾实体
-            begin_vertex_class = relation_info["begin_name"]
-            edge_class = relation_info["edge_name"]
-            end_vertex_class = relation_info["end_name"]
-            entity_data = relation_info["entity_type"]
-            ## 获取 边 属性
-            property_map = rela["property_map"]
-            edge_otl_pro = []  # 边的属性列表
-            edge_otl_tab_pro = {}  # 边的属性对应的实体属性
-            for pro_map in property_map:
-                edge_otl_pro.append(pro_map["edge_prop"])
-                edge_otl_tab_pro[pro_map["edge_prop"]] = pro_map["entity_prop"]
-            ## 获取 映射 数据
-            relation_map = rela["relation_map"][0]
-            begin_class_prop = relation_map["begin_class_prop"]
-            equation_begin = relation_map["equation_begin"]
-            relation_begin_pro = relation_map["relation_begin_pro"]
-            equation = relation_map["equation"]
-            relation_end_pro = relation_map["relation_end_pro"]
-            equation_end = relation_map["equation_end"]
-            end_class_prop = relation_map["end_class_prop"]
-
-            sqlProcessor = SQLProcessor(graphdb.type)
-            if source == 'manual':  # 如果是手绘
-                print(f'正在插入边:{edge_class}')
-                startalldata = list(conn_db[graph_mongo_Name + "_" +
-                                    otl_tab_map[begin_vertex_class]["entity_data"]].find())
-                endalldata = list(conn_db[graph_mongo_Name + "_" +
-                                otl_tab_map[end_vertex_class]["entity_data"]].find())
-                if entity_data == otl_tab_map[begin_vertex_class]["entity_data"]:
-                    edgedata = startalldata
-                elif entity_data == otl_tab_map[end_vertex_class]["entity_data"]:
-                    edgedata = endalldata
-                else:
-                    edgedata = list(conn_db[graph_mongo_Name + "_" + entity_data].find())
-                if not begin_class_prop or not end_class_prop:  # 用户在流程五未选择实体的映射属性
-                    continue
-                start_prop = otl_tab_map[begin_vertex_class]["pro_map"][begin_class_prop]
-                end_prop = otl_tab_map[end_vertex_class]["pro_map"][end_class_prop]
-                if equation == '':  # 如果是4框
-                    if equation_begin == '被包含':
-                        # 将起始点的起始属性的所有值加入到AC自动机中
-                        start_tree = buildACTree(startalldata, start_prop)
-                    if equation_end == '包含':
-                        # 将结束点的结束属性的所有值加入到AC自动机中
-                        end_tree = buildACTree(endalldata, end_prop)
-                    for onedata in edgedata:  # mongodb中的一行数据文档
-                        start_sql_list = []
-                        end_sql_list = []
-                        rel_end_v = ""  # 关系边结束属性值
-                        rel_begin_v = ""   # 关系边起始属性值
-                        if relation_begin_pro in onedata:
-                            rel_begin_v = onedata[relation_begin_pro]
-                        if relation_end_pro in onedata:
-                            rel_end_v = onedata[relation_end_pro]
-                        # 构造选择起点的sql语句
-                        if equation_begin == "等于":
-                            start_sql = sqlProcessor.select_sql(class_name=begin_vertex_class,
-                                                                prop=begin_class_prop,
-                                                                value='"' + normalize_text(str(rel_begin_v)) + '"',
-                                                                graphdb=graphdb,
-                                                                db=mongo_db)
-                            if isinstance(start_sql, list):
-                                start_sql_list.extend(start_sql)
-                            else:
-                                start_sql_list.append(start_sql)
-                        if equation_begin == "被包含" and start_tree.kind > 0:
-                            words = []
-                            # 关系边起始属性值包含起始点属性值
-                            for j in start_tree.iter(str(rel_begin_v)):
-                                if j[1][1] not in words:
-                                    words.append(j[1][1])  # 被包含的起始点属性值
-                            for word in words:
-                                start_sql = sqlProcessor.select_sql(class_name=begin_vertex_class,
-                                                                    prop=begin_class_prop,
-                                                                    value='"' + normalize_text(str(word)) + '"',
-                                                                    graphdb=graphdb,
-                                                                    db=mongo_db)
-                                if isinstance(start_sql, list):
-                                    start_sql_list.extend(start_sql)
-                                else:
-                                    start_sql_list.append(start_sql)
-                        # 构造选择终点的sql语句
-                        if equation_end == "等于":
-                            end_sql = sqlProcessor.select_sql(class_name=end_vertex_class,
-                                                              prop=end_class_prop,
-                                                              value='"' + normalize_text(str(rel_end_v)) + '"',
-                                                              graphdb=graphdb,
-                                                              db=mongo_db)
-                            if isinstance(end_sql, list):
-                                end_sql_list.extend(end_sql)
-                            else:
-                                end_sql_list.append(end_sql)
-                        if equation_end == "包含" and end_tree.kind > 0:
-                            words = []
-                            # 关系边结束属性值包含结束点属性值
-                            for j in end_tree.iter(str(rel_end_v)):
-                                if j[1][1] not in words:
-                                    words.append(j[1][1])  # 被包含的结束点属性值
-                            if len(words) > 0:
-                                for word in words:
-                                    end_sql = sqlProcessor.select_sql(class_name=end_vertex_class,
-                                                                      prop=end_class_prop,
-                                                                      value='"' + normalize_text(str(word)) + '"',
-                                                                      graphdb=graphdb,
-                                                                      db=mongo_db)
-                                    if isinstance(end_sql, list):
-                                        end_sql_list.extend(end_sql)
-                                    else:
-                                        end_sql_list.append(end_sql)
-                        # 构造边的属性值sql语句
-                        prop_val_sql = sqlProcessor.prop_value_sql(entity_data, edge_otl_tab_pro, onedata, edge_class=edge_class)
-                        # 插入边
-                        for i in start_sql_list:
-                            for j in end_sql_list:
-                                graphdb.create_edge(edge_class, i, j, prop_val_sql, mongo_db)
-                else:  # 如果是2框
-                    if equation == "包含" or equation == "被包含":
-                        if equation == "被包含":
-                            treedata = startalldata  # 模式串数据
-                            tree_pro = start_prop # 模式串属性
-                            finddata = endalldata  # 待匹配的数据
-                            findpro = end_prop # 待匹配的数据属性
-                        if equation == "包含":
-                            treedata = endalldata
-                            tree_pro = end_prop
-                            finddata = startalldata
-                            findpro = start_prop
-                        ## 获取头类数据 建AC树
-                        if len(treedata) > 0:
-                            # 将模式串数据的属性值加入AC自动机中
-                            ACtree = buildACTree(treedata, tree_pro)
-                            if len(finddata) > 0 and ACtree.kind > 0:
-                                for onedata in finddata:
-                                    if findpro in onedata and onedata[findpro]:
-                                        one = str(onedata[findpro])  # 待匹配的值 字符串
-                                        words = []  # 匹配到的字符
-                                        for j in ACtree.iter(one):
-                                            if j[1][1] not in words:
-                                                words.append(j[1][1])
-                                        # 构造边的属性值sql语句
-                                        prop_val_sql = sqlProcessor.prop_value_sql(entity_data, edge_otl_tab_pro, onedata, edge_class=edge_class)
-                                        # 插入边
-                                        if len(words) > 0:
-                                            for word in words:
-                                                if equation == '被包含':
-                                                    start_val = '"' + normalize_text(str(word)) + '"'
-                                                    end_val = '"' + normalize_text(str(one)) + '"'
-                                                elif equation == '包含':
-                                                    start_val = '"' + normalize_text(str(one)) + '"'
-                                                    end_val = '"' + normalize_text(str(word)) + '"'
-                                                start_sql = sqlProcessor.select_sql(begin_vertex_class,
-                                                                                    prop=begin_class_prop,
-                                                                                    value=start_val,
-                                                                                    graphdb=graphdb,
-                                                                                    db=mongo_db)
-                                                end_sql = sqlProcessor.select_sql(end_vertex_class,
-                                                                                  prop=end_class_prop,
-                                                                                  value=end_val,
-                                                                                  graphdb=graphdb,
-                                                                                  db=mongo_db)
-                                                if not isinstance(start_sql, list):
-                                                    start_sql = [start_sql]
-                                                if not isinstance(end_sql, list):
-                                                    end_sql = [end_sql]
-                                                for start_sql_i in start_sql:
-                                                    for end_sql_i in end_sql:
-                                                        graphdb.create_edge(edge_class, start_sql_i, end_sql_i, prop_val_sql, mongo_db)
-                    if equation == "等于":
-                        if len(startalldata) <= len(endalldata):
-                            alldata = startalldata
-                            pro = otl_tab_map[begin_vertex_class]["pro_map"][begin_class_prop]
-                        else:
-                            alldata = endalldata
-                            pro = otl_tab_map[end_vertex_class]["pro_map"][end_class_prop]
-                        for onedata in alldata:
-                            prop_val_sql = sqlProcessor.prop_value_sql(entity_data, edge_otl_tab_pro, onedata, edge_class=edge_class)
-                            if pro in onedata:
-                                pro_value = onedata[pro]
-                                start_sql = sqlProcessor.select_sql(begin_vertex_class,
-                                                                    prop=begin_class_prop,
-                                                                    value='"' + normalize_text(str(pro_value)) + '"',
-                                                                    graphdb=graphdb,
-                                                                    db=mongo_db)
-                                end_sql = sqlProcessor.select_sql(end_vertex_class,
-                                                                  prop=end_class_prop,
-                                                                  value='"' + normalize_text(str(pro_value)) + '"',
-                                                                  graphdb=graphdb,
-                                                                  db=mongo_db)
-                                if not isinstance(start_sql, list):
-                                    start_sql = [start_sql]
-                                if not isinstance(end_sql, list):
-                                    end_sql = [end_sql]
-                                for start_sql_i in start_sql:
-                                    for end_sql_i in end_sql:
-                                        graphdb.create_edge(edge_class, start_sql_i, end_sql_i, prop_val_sql, mongo_db)
-            if model != '':  # 如果是model
-                if edge_class == (begin_vertex_class + "2" + end_vertex_class):
-                    s_class = edge_class.split("2")[0]
-                    o_class = edge_class.split("2")[-1]
-                else:
-                    s_class = begin_vertex_class
-                    o_class = end_vertex_class
-                if edge_class != "":
-                    table2 = conn_db[graph_mongo_Name + "_" + edge_class]
-                    alldata = table2.find()
-                    # 关系改为批量执行
-                    pool = ThreadPool(20)
-                    # pool = multiprocessing.Pool(10)
-                    if alldata.count() > 0:
-                        table = conn_db[graph_mongo_Name + "_" + edge_class]
-                        alldata_length = alldata.count()
-                        iter_size = 1000
-                        current = 0
-                        batch_id = []
-                        # batch = table.find().limit(iter_size)
-                        while current < alldata_length:
-                            if (batch_id):
-                                # batch = table.find({"_id": {'$gt': ObjectId(batch_id[0])}}).limit(iter_size)
-                                batch = table.find().limit(iter_size).skip(current)
-                            else:
-                                batch = table.find().limit(iter_size)
-                            sql_list = sqlProcessor.edge_sql_multi(s_class, o_class, edge_class, batch, edge_pro_dict,
-                                                                   merge_otls=merge_otls)
-                            if (batch_id):
-                                # batch = table.find({"_id": {'$gt': ObjectId(batch_id[0])}}).limit(iter_size)
-                                batch = table.find().limit(iter_size).skip(current)
-                            else:
-                                batch = table.find().limit(iter_size)
-                            list_d = pd.DataFrame(list(batch))
-                            list_d = list_d["_id"].tail(1)
-                            batch_id = list_d.tolist()
-                            if graphdb.type == 'nebula':
-                                props_check = list(edge_pro_dict[edge_class].keys())
-                                graphdb._check_schema_nebula(mongo_db, edge_class, props_check, 'edge')
-                            pool.apply_async(graphdb.exec_batch, (sql_list, mongo_db))
-                            if graphdb.type == 'nebula':
-                                if (batch_id):
-                                    batch = table.find().limit(iter_size).skip(current)
-                                else:
-                                    batch = table.find().limit(iter_size)
-                                es_bulk_edge_index = sqlProcessor.es_bulk_edge_multi(mongo_db, edge_class, batch, graph_db_id,
-                                                                                     s_class, o_class, merge_otls)
-                                graphdb.fulltext_bulk_index(es_bulk_edge_index)
-                            # print("批两处理关系最后一个id: ",batch_id)
-                            # 创建
-                            # oriendb_batch_http(address, mongo_db, batch_sql_t[0], graph_DBPort, username, password,
-                            #                    graphid)
-                            # 更新
-                            # oriendb_batch_http(address, mongo_db, batch_sql_t[1], graph_DBPort, username,
-                            #                    password,
-                            #                    graphid)
-                            # del batch_sql
-                            # del batch_sql_t
-                            # pool.close()
-                            # pool.join()
-                            current = current + iter_size
-                            if current % 10000 == 0:
-                                print(f'{edge_class}已插入数据：{current}条')
-                    pool.close()
-                    pool.join()
-                    print(f'{edge_class}共插入(更新)数据{alldata.count()}条')
-        finish_create_edge = time.time()
-        print(f'创建边总耗时：{finish_create_edge - start_create_edge}s')
-
+        edgeWriter = EdgeWriter(otls_map, en_pro_dict, edge_pro_dict, relations_map, g_merge,
+                                graph_db_id, mongo_db, graph_mongo_Name)
+        edgeWriter.write()
+        print(f'创建边总耗时：{time.time() - start_create_edge}s')
         return 200, "success"
     except Exception as e:
         print(repr(e))
@@ -2348,7 +1876,7 @@ def buildertask(self, graphid, flag):
                         # 标准抽取
                         if extract_type == "standardExtraction":
                             ret_code, obj = standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_id, file_name,
-                                             file_source, rules, entity_type)
+                                             file_source, rules, graph_KMerge, entity_type)
                             if ret_code != CommonResponseStatus.SUCCESS.value:
                                 self.update_state(state='FAILURE', meta=obj)
                                 return {'current': 100, 'total': 100}
@@ -2422,7 +1950,7 @@ def buildertask(self, graphid, flag):
 
 @cel.task
 def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
-    url = "http://kg-builder:6485/buildertask"
+    url = "http://kw-builder:6485/buildertask"
     # url = "http://10.4.106.255:6485/buildertask" #本地测试
     payload = {"tasktype": task_type, "graph_id": graph_id, "trigger_type": trigger_type}
     print(f'start timer task,payload: {payload}')
@@ -2448,3 +1976,1139 @@ def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
     except Exception as e:
         print(f'send timer exception:{str(e)}')
 
+
+
+def create_mongo_index(graph_mongo_Name, entity_type, g_merge):
+    """
+    给指定的集合创建唯一索引
+    从融合属性里面找到融合属性列表，然后创建唯一索引
+
+    参数：
+        graph_mongo_Name: mongo里面的集合名字的前缀
+            demo: mongoDB-10_t_enterprise_econ_kind, mongoDB-10就是前缀，t_enterprise_econ_kind是实体类的名称
+        entity_type: 表名字
+            demo: t_stock_percent_wide
+        g_merge: 融合属性
+            demo: {"t_stock_percent_wide": {"name": "equality"}}
+                  name: 是融合属性
+                  equality: 是融合的方法
+    """
+    merge_otls, merge_flag = get_Kmerge_dict(g_merge)
+    # 如果merge_flag==False，那么可以抛出错误，不允许，没有融合属性
+    if not merge_flag:
+        raise Exception("entity {}, merge flag not set error".format(entity_type))
+
+    c = MongoBuildDao.get_collection(graph_mongo_Name + "_" + entity_type)
+    merge_pro = []  # 属性列表
+    if entity_type not in merge_otls:
+        return
+    for k, v in merge_otls[entity_type].items():
+        merge_pro.append((k, 1))
+    try:
+        c.create_index(merge_pro, unique=True)
+    except Exception as e:
+        raise ("create mongo unique index error:{}".format(repr(e)))
+
+
+class RelationBuildBase(object):
+    """
+    写边的类，包含一些比较复杂的数据对象，是其他写边子类的必备类，一个对象即可，考虑使用单例模式
+    """
+
+    def __init__(self, otls_map, en_pro_dict, edge_pro_dict, relations_map,
+                 g_merge, graph_db_id, mongo_db, graph_mongo_Name):
+        self.otls_map = otls_map
+        self.relations_map = relations_map
+
+        mapInfo = get_map_info(otls_map)
+        self.otl_tab_map = mapInfo[1]
+        merge_otls, merge_flag = get_Kmerge_dict(g_merge)
+
+        self.en_pro_dict = en_pro_dict
+        self.edge_pro_dict = edge_pro_dict
+        self.merge_otls = merge_otls
+        self.g_merge = g_merge
+        self.graph_db_id = graph_db_id
+        self.mongo_db = mongo_db
+        # mongodb集合名称前缀，每个图一种前缀
+        self.graph_mongo_Name = graph_mongo_Name
+        self.graphdb = GraphDB(self.graph_db_id)
+        self.sqlProcessor = SQLProcessor(self.graphdb.type)
+
+    def gen_vid(self, otl_name, one_data):
+        """
+        计算实体one_data在图数据库中的的VertexId，支持nebula和orientdb
+
+        逻辑
+            根据实体类的融合属性，根据web页面的先后顺序，计算出MD5结果
+
+        参数
+            otl_name: 实体类名称，用来获实体类的融合属性
+            one_data: 实际的实体点数据
+
+        条件
+            1. 实体类必须有融合属性
+
+        返回
+            MD5字符串
+                demo: 7f3fdf6fbbbcb5875062a88473303e0a
+        """
+        return gen_doc_vid(self.merge_otls, otl_name, one_data, self.en_pro_dict, self.graphdb.type)
+
+    def get_collection_name(self, class_name):
+        """
+        获取实体类名对应的mongodb 集合名称
+
+        参数
+            class_name: 实体类名
+        """
+        return self.graph_mongo_Name + "_" + class_name
+
+
+class RelationManualBase(object):
+    """
+    每种边类型的基础信息，基本都是从buildInfo.relations_map中获取的
+
+    参数
+        rela_id: 边类型索引，整形
+        buildInfo: RelationBuildBase,写边基础信息
+    """
+
+    def __init__(self, rela_id: int, buildInfo: RelationBuildBase):
+        self.buildInfo = buildInfo
+
+        rela = self.buildInfo.relations_map[rela_id]
+
+        relation_info = rela["relation_info"]
+        self.source = relation_info["source_type"]
+        self.model = relation_info["model"]
+        # 获取头尾实体
+        self.begin_vertex_class = relation_info["begin_name"]
+        self.edge_class = relation_info["edge_name"]
+        self.end_vertex_class = relation_info["end_name"]
+        self.entity_data = relation_info["entity_type"]
+        # 获取 边 属性
+        property_map = rela["property_map"]
+        self.edge_otl_pro = []  # 边的属性列表
+        self.edge_otl_tab_pro = {}  # 边的属性对应的实体属性
+        for pro_map in property_map:
+            self.edge_otl_pro.append(pro_map["edge_prop"])
+            self.edge_otl_tab_pro[pro_map["edge_prop"]
+            ] = pro_map["entity_prop"]
+        # 获取 映射 数据
+        relation_map = rela["relation_map"][0]
+        self.begin_class_prop = relation_map["begin_class_prop"]
+        self.equation_begin = relation_map["equation_begin"]
+        self.relation_begin_pro = relation_map["relation_begin_pro"]
+        self.equation = relation_map["equation"]
+        self.relation_end_pro = relation_map["relation_end_pro"]
+        self.equation_end = relation_map["equation_end"]
+        self.end_class_prop = relation_map["end_class_prop"]
+
+
+class RelationManualBuilder(object):
+    """
+    写边公共类，包含写边的公共方法
+
+    参数
+        buildInfo： RelationManualBase，每种边类型的基础信息
+    """
+
+    def __init__(self, buildInfo: RelationManualBase):
+        self.__dict__ = buildInfo.__dict__
+        self.len_dict = dict()
+
+    def get_collection_prop_len(self, class_name, class_prop):
+        """
+        获取某个实体类中某个属性的长度范围
+
+        逻辑
+            使用mongo数据库的aggregate计算，有一定的耗时，
+
+        参数
+            class_name: 实体类名
+            class_prop: 需要统计长度范围的属性
+
+        返回
+            字典格式：{"2":1,"10":1,"5":1}
+        """
+        mongo_collection_name = self.buildInfo.get_collection_name(class_name)
+        collection = MongoBuildDao.get_collection(mongo_collection_name)
+        return MongoBuildDao.prop_len(collection, class_prop)
+
+    def load_collection_prop_len(self, class_name, class_prop):
+        """
+        保存某集合某属性长度返回
+        """
+        len_dict = self.__dict__.get('len_dict', dict())
+        len_value = self.get_collection_prop_len(class_name, class_prop)
+        # 有值的情况下，才会更新
+        if len_value:
+            len_dict[class_name] = len_value
+            self.len_dict = len_dict
+
+    def props_filter(self):
+        """
+        mongo查询，没必要获取文档的所有属性，将相关的属性返回即可
+
+        逻辑
+            包含
+                1. 起点和终点的融合属性  》 计算VertexID
+                2. 起点和终点，关系类的关联属性   》 直接关系和间接关系的所有属性
+        """
+        merge_pro = {}
+        # 起点的融合属性
+        for k, v in self.buildInfo.merge_otls[self.begin_vertex_class].items():
+            merge_pro[k] = 1
+        # 终点的融合属性
+        for k, v in self.buildInfo.merge_otls[self.end_vertex_class].items():
+            merge_pro[k] = 1
+
+        filter_dict = {
+            self.begin_class_prop: 1,
+            self.relation_begin_pro: 1,
+            self.relation_end_pro: 1,
+            self.end_class_prop: 1}
+        filter_dict.update(merge_pro)
+        return filter_dict
+
+    def edge_sql(self, one_data):
+        """
+        构造边的属性值sql语句
+        """
+        sql_processor: SQLProcessor = self.buildInfo.sqlProcessor
+        return sql_processor.prop_value_sql(
+            self.entity_data, self.edge_otl_tab_pro, one_data, edge_class=self.edge_class)
+
+    def find_contain_relations(self, collection, len_dict, collection_prop, find_value):
+        """
+        关系A.p1 包含 B.p2
+        p1是父串，p2是子串， 如果找出包含关系，需要将p1_value的全部子串手动计算出来，然后在B中查询
+
+        对应调用是:
+        find_contain_relations(B_collection, B_lenDict, B_p2, p1_value)
+
+        参数
+            collection: Mongo集合对象， B_collection
+            lenDict:  mongo集合长度字典，B_lenDict
+            collection_prop: mongo集合关系属性，B_p2
+            find_value: p1_value
+
+        """
+        sub_strings = MongoBuildDao.gen_sub_str(len_dict, find_value)
+        exist_items = MongoBuildDao.relations(collection, collection_prop, sub_strings, self.props_filter())
+        return exist_items
+
+    def find_equal_relations(self, batch_data, batch_prop, relation_collection, relation_prop):
+        """
+        关系A.p1 等于 B.p2，假定边的方向是从A->B
+
+        先从A中查询出一批数据batch_data，batch_prop就是p1, relation_collection就是B，relation_prop就是p2
+
+        对应调用是:
+        find_equal_relations(batch_data, p1, B_collection, p2)
+
+        参数
+            batch_data: 批量数据
+            batch_prop: 批量数据的映射关系属性
+            relation_collection: 关系集合的mongo collection
+            relation_prop: 关系集合的映射属性
+
+        返回： 字典 one_of_batch[batch_prop]:list[mongo_document]
+        """
+        values = [one[batch_prop] for one in batch_data if batch_prop in one]
+        items = relation_collection.find({relation_prop: {"$in": values}}, self.props_filter())
+
+        results = dict()
+        for item in items:
+            key = item[relation_prop]
+            end_data = results.get(key, [])
+            end_data.append(item)
+            results[key] = end_data
+        return results
+
+    def create_batch_edges(self, batch_data, batch_begin, batch_end):
+        """
+        批量写入边到图数据库， 由batch_data开始构建
+
+        参数
+            batch_data: 批量的关系数据
+            batch_begin: 起点数据
+            batch_end: 终点数据
+
+        逻辑
+            1. 分批写边，每批次5000条
+            2. 支持nebula和orientdb
+            3. 参数都是list，长度一致
+
+        """
+        starts = []
+        ends = []
+        prop_val_sqls = []
+        graphdb: GraphDB = self.buildInfo.graphdb
+        total = 0
+
+        for one_data in batch_data:
+            # 构造边的属性值sql语句
+            prop_val_sql = self.edge_sql(one_data)
+            # 获取某个数据的ObjectId字符串
+            key = str(one_data['_id'])
+            # 边的起点和终点，可能有多种情况
+            start_points = batch_begin[key] if key in batch_begin else []
+            end_points = batch_end[key] if key in batch_end else []
+            for i in start_points:
+                for j in end_points:
+                    starts.append(i)
+                    ends.append(j)
+                    prop_val_sqls.append(prop_val_sql)
+                    if len(starts) % 5000 == 0:
+                        total += 5000
+                        # nebula插入必须单线程，这里加锁
+                        self.lock.acquire()
+                        graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
+                        self.lock.release()
+
+                        # 循环重置
+                        starts = []
+                        ends = []
+                        prop_val_sqls = []
+
+        if len(starts) > 0:
+            total += len(starts)
+
+            self.lock.acquire()
+            graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
+            self.lock.release()
+
+            # print("write {} edge".format(total))
+
+    def gen_batch_vid(self, batch_otl_name, batch_datas):
+        """
+        计算批量数据的vid
+
+        参数：
+            otl_name: batch_data对应的实体类名称
+            batch_datas: 批量实体数据
+
+        返回：字典结构，[bsonId]:list(vids)
+        """
+        results = dict()
+        for one in batch_datas:
+            vid = self.buildInfo.gen_vid(batch_otl_name, one)
+            results[str(one["_id"])] = [vid]
+        return results
+
+    def batch_equal_relations(self, batch_data, batch_prop, relation_class_name, relation_prop):
+        """
+        去集合查询等于关系的数据
+
+        参数：
+            batch_data: 批量数据
+            batch_class_name: 批量数据对应的实体类名
+            batch_prop: 批量数据的映射关系属性
+            relation_collection: 关系集合的mongo collection
+            relation_prop: 关系集合的映射属性
+        """
+        relation_collection_name = self.buildInfo.get_collection_name(relation_class_name)
+        relation_collection = MongoBuildDao.get_collection(relation_collection_name)
+        end_item_dict = self.find_equal_relations(batch_data, batch_prop, relation_collection, relation_prop)
+
+        results = dict()
+        for one_data in batch_data:
+            key = one_data[batch_prop]
+            if key not in end_item_dict:
+                continue
+            one_ends = end_item_dict[key]
+            vids = []
+            for one in one_ends:
+                # 如果两个ID一样，是同一个点
+                if str(one['_id']) == str(one_data['_id']):
+                    continue
+                vid = self.buildInfo.gen_vid(relation_class_name, one)
+                vids.append(vid)
+            results[str(one_data["_id"])] = vids
+        return results
+
+    def batch_contain_relations(self, batch_data, batch_prop, relation_class_name, relation_prop):
+        """
+        查询包含情况下的关系开始值
+
+        参数
+            batch_data: 批量数据
+            batch_prop: 批量数据的映射关系属性
+            relation_class_name: 关系实体的mongo集合名称
+            len_dict:
+            relation_prop: 关系集合的映射属性
+        wordsDict:dict -> bsonID[words]
+        """
+        # 去mongo中的集合C，查询每个数据对应的关系数据words
+        results = dict()
+        relation_collect_name = self.buildInfo.get_collection_name(relation_class_name)
+        relation_collection = MongoBuildDao.get_collection(relation_collect_name)
+        len_dict = self.len_dict[relation_class_name]
+        for one_data in batch_data:
+            if batch_prop not in one_data:
+                continue
+            docs = self.find_contain_relations(relation_collection, len_dict, relation_prop, one_data[batch_prop])
+
+            vids = []
+            bsonId = str(one_data['_id'])
+            for one in docs:
+                # 如果两个ID一样，是同一个点
+                if str(one['_id']) == str(one_data['_id']):
+                    continue
+                vid = self.buildInfo.gen_vid(relation_class_name, one)
+                vids.append(vid)
+            results[bsonId] = vids
+
+        return results
+
+
+class RelationIn2Class(RelationManualBuilder):
+    """
+    涉及两个类之间的关系边构建，也叫 两框
+
+    参数
+        relationBaseInfo: 某边构建的基础信息
+    """
+
+    def __init__(self, relationBaseInfo: RelationManualBuilder):
+        super().__init__(relationBaseInfo)
+        """
+            边构建的前期准备，主要是准备一些属性
+        """
+        self.start_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
+                                     self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
+        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
+                                   self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+
+        self.start_collection = MongoBuildDao.get_collection(
+            self.start_collection_name)
+        self.end_collection = MongoBuildDao.get_collection(
+            self.end_collection_name)
+
+        self.start_data_count = self.start_collection.count_documents({})
+        self.end_data_count = self.end_collection.count_documents({})
+
+    def prepare_from_start(self):
+        """
+        边构建的起点数据
+        """
+        self.all_data_collection = self.start_collection
+        self.all_data_count = self.start_data_count
+        self.find_class = self.begin_vertex_class
+        self.relation_class = self.end_vertex_class
+        self.find_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
+        self.relation_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
+        self.reverse = False
+
+    def prepare_from_end(self):
+        """
+        边构建的终点数据
+        """
+        self.all_data_collection = self.end_collection
+        self.all_data_count = self.end_data_count
+        self.find_class = self.end_vertex_class
+        self.relation_class = self.begin_vertex_class
+        self.find_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
+        self.relation_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
+        self.reverse = True
+
+    def prepare(self):
+        if self.equation == "包含" or self.equation == "被包含":
+            if self.equation == "被包含":
+                self.prepare_from_end()
+            if self.equation == "包含":
+                self.prepare_from_start()
+
+            # 包含情况下，要加载属性长度范围，为后面的包含关系计算做准备
+            self.load_collection_prop_len(self.find_class, self.find_prop)
+            self.load_collection_prop_len(self.relation_class, self.relation_prop)
+
+        if self.equation == "等于":
+            if self.start_data_count <= self.end_data_count:
+                self.prepare_from_start()
+            else:
+                self.prepare_from_end()
+
+        # 添加hash索引，方便mongo查找
+        MongoBuildDao.hashed_index(self.start_collection, self.find_prop)
+        MongoBuildDao.hashed_index(self.end_collection, self.relation_prop)
+
+        self.lock = threading.Lock()
+
+    def write(self):
+        """
+        写边的入口方法
+        """
+        self.prepare()
+        if self.start_data_count <= 0 or self.end_data_count <= 0:
+            return
+
+        pool = ThreadPool(10)
+        iter_size = 1000
+        current = 0
+        while current < self.all_data_count:
+            pool.apply_async(self.process, (self.all_data_collection, current, iter_size))
+            # f(c, current, iter_size)
+            current += iter_size
+        pool.close()
+        pool.join()
+        print("edge_class:{}=>{}->{} total: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, self.all_data_count))
+
+
+    def process(self, collection, current, iter_size):
+        """
+        批量处理边
+
+        参数
+            collection: 起点的mongo集合
+            current: 当前数据的索引
+            iter_size: 每次数据的长度
+        """
+        batch_results = collection.find({}, self.props_filter()).skip(current).limit(iter_size)
+        batch_data = list(batch_results)
+        print("edge_class:{}=>{}->{} current: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, current))
+
+        # 直接关系情况下，边的起点可以直接计算
+        batch_begin = self.gen_batch_vid(self.find_class, batch_data)
+
+        if self.equation == "包含" or self.equation == "被包含":
+            batch_end = self.batch_contain_relations(batch_data, self.find_prop, self.relation_class,
+                                                     self.relation_prop)
+
+        if self.equation == "等于":
+            batch_end = self.batch_equal_relations(batch_data, self.find_prop, self.relation_class, self.relation_prop)
+
+        if self.reverse:
+            self.create_batch_edges(batch_data, batch_end, batch_begin)
+        else:
+            self.create_batch_edges(batch_data, batch_begin, batch_end)
+
+
+class RelationIn3Class(RelationManualBuilder):
+    """
+    涉及三个类之间的关系边构建
+    以等于关系举例
+    A.p1==B.p2; B.p3=c.p4
+
+    A: begin_vertex_class
+    B: entity_data
+    c: end_vertex_class
+    p1: begin_class_prop
+    p2: relation_begin_pro
+    p3: relation_end_pro
+    p4: end_class_prop
+
+    构建关系是从A->C
+
+    参数
+        relationBaseInfo: 某边构建的基础信息
+    """
+
+    def __init__(self, relation_base_info: RelationManualBase):
+        super().__init__(relation_base_info)
+
+        self.start_collection_ame = self.buildInfo.graph_mongo_Name + "_" + \
+                                    self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
+        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
+                                   self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+
+        self.start_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
+        self.end_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
+
+        self.start_collection = MongoBuildDao.get_collection(self.start_collection_ame)
+        self.end_collection = MongoBuildDao.get_collection(self.end_collection_name)
+
+        self.start_count = self.start_collection.count_documents({})
+        self.end_count = self.end_collection.count_documents({})
+
+        self.lock = threading.Lock()
+
+    def prepare(self):
+        # 添加hash索引
+        MongoBuildDao.hashed_index(self.start_collection, self.start_prop)
+        MongoBuildDao.hashed_index(self.end_collection, self.end_prop)
+
+    def get_edge_collection(self):
+        """
+        获取关系类entity_data的mongo集合
+        """
+        edge_collection_name = self.buildInfo.graph_mongo_Name + "_" + self.entity_data
+        if self.entity_data == self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]:
+            edge_collection_name = self.start_collection_ame
+        if self.entity_data == self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]:
+            edge_collection_name = self.end_collection_name
+        return MongoBuildDao.get_collection(edge_collection_name)
+
+    def write(self):
+        """
+        写边入口方法
+        """
+        self.prepare()
+        # 确定边所在类
+        edge_collection = self.get_edge_collection()
+        total = edge_collection.count_documents({})
+        if total > 0:
+            if self.equation_begin == "被包含":
+                self.load_collection_prop_len(self.begin_vertex_class, self.begin_class_prop)
+
+            if self.equation_end == "包含":
+                self.load_collection_prop_len(self.end_vertex_class, self.end_class_prop)
+
+        pool = ThreadPool(10)
+        iter_size = 1000
+        current = 0
+        while current < total:
+            pool.apply_async(self.process, (edge_collection, current, iter_size))
+            # self.write_process(edge_collection, current, iter_size)
+            current += iter_size
+        pool.close()
+        pool.join()
+        print("edge_class:{}=>{}->{} total: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, total))
+
+    def process(self, collection, current, iter_size):
+        """
+        批量处理边
+
+        参数
+            collection: 起点的mongo集合
+            current: 当前数据的索引
+            iter_size: 每次数据的长度
+        """
+        batch_results = collection.find({}, self.props_filter()).skip(current).limit(iter_size)
+        batch_data = list(batch_results)
+        if current % 100000 == 0:
+            print("edge_class:{}=>{}->{} current: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, current))
+
+        if self.equation_begin == "等于":
+            batch_begin = self.batch_equal_relations(batch_data, self.relation_begin_pro, self.begin_vertex_class,
+                                                     self.begin_class_prop)
+
+        if self.equation_begin == "被包含":
+            batch_begin = self.batch_contain_relations(batch_data, self.relation_begin_pro, self.begin_vertex_class,
+                                                       self.begin_class_prop)
+
+        if self.equation_end == "等于":
+            batch_end = self.batch_equal_relations(batch_data, self.relation_end_pro, self.end_vertex_class,
+                                                   self.end_class_prop)
+
+        if self.equation_end == "包含":
+            batch_end = self.batch_contain_relations(batch_data, self.relation_end_pro, self.end_vertex_class,
+                                                     self.end_class_prop)
+
+        self.create_batch_edges(batch_data, batch_begin, batch_end)
+
+
+class EdgeWriter(object):
+
+    def __init__(self, otls_map, en_pro_dict, edge_pro_dict, relations_map, g_merge, graph_db_id, mongo_db, graph_mongo_Name):
+        self.relationBuildInfo = RelationBuildBase(
+            otls_map, en_pro_dict, edge_pro_dict, relations_map, g_merge, graph_db_id, mongo_db, graph_mongo_Name)
+
+    def write(self):
+        for rel_i in range(len(self.relationBuildInfo.relations_map)):
+            base_info = RelationManualBase(rel_i, self.relationBuildInfo)
+            # 如果是手绘
+            if base_info.source == 'manual':
+                self.manual(base_info)
+            # 如果是model
+            if base_info.model != '':
+                self.model(base_info)
+
+    def manual(self, base_info):
+        # 用户在流程五未选择实体的映射属性
+        if not base_info.begin_class_prop or not base_info.end_class_prop:
+            return None
+        # 如果是4框
+        if base_info.equation == '':
+            builder = RelationIn3Class(base_info)
+            builder.write()
+        # 如果是2框
+        else:
+            builder = RelationIn2Class(base_info)
+            builder.write()
+
+    def model(self, base_info):
+        """
+        模型处理方法，代码没有动
+        """
+        edge_class = base_info.edge_class
+        begin_vertex_class = base_info.begin_vertex_class
+        end_vertex_class = base_info.end_vertex_class
+        graph_mongo_Name = base_info.buildInfo.graph_mongo_Name
+        sqlProcessor = base_info.buildInfo.sqlProcessor
+        edge_pro_dict = base_info.buildInfo.edge_pro_dict
+        merge_otls = base_info.buildInfo.merge_otls
+        graphdb = base_info.buildInfo.graphdb
+        mongo_db = base_info.buildInfo.mongo_db
+        graph_db_id = base_info.buildInfo.graph_db_id
+
+        if edge_class == (begin_vertex_class + "2" + end_vertex_class):
+            s_class = edge_class.split("2")[0]
+            o_class = edge_class.split("2")[-1]
+        else:
+            s_class = begin_vertex_class
+            o_class = end_vertex_class
+        if edge_class != "":
+            table2 = conn_db[graph_mongo_Name + "_" + edge_class]
+            alldata = table2.find()
+            # 关系改为批量执行
+            pool = ThreadPool(20)
+            # pool = multiprocessing.Pool(10)
+            if alldata.count() > 0:
+                table = conn_db[graph_mongo_Name + "_" + edge_class]
+                alldata_length = alldata.count()
+                iter_size = 1000
+                current = 0
+                batch_id = []
+                # batch = table.find().limit(iter_size)
+                while current < alldata_length:
+                    if (batch_id):
+                        # batch = table.find({"_id": {'$gt': ObjectId(batch_id[0])}}).limit(iter_size)
+                        batch = table.find().limit(iter_size).skip(current)
+                    else:
+                        batch = table.find().limit(iter_size)
+                    sql_list = sqlProcessor.edge_sql_multi(s_class, o_class, edge_class, batch, edge_pro_dict,
+                                                           merge_otls=merge_otls)
+                    if (batch_id):
+                        # batch = table.find({"_id": {'$gt': ObjectId(batch_id[0])}}).limit(iter_size)
+                        batch = table.find().limit(iter_size).skip(current)
+                    else:
+                        batch = table.find().limit(iter_size)
+                    list_d = pd.DataFrame(list(batch))
+                    list_d = list_d["_id"].tail(1)
+                    batch_id = list_d.tolist()
+                    if graphdb.type == 'nebula':
+                        props_check = list(
+                            edge_pro_dict[edge_class].keys())
+                        graphdb._check_schema_nebula(
+                            mongo_db, edge_class, props_check, 'edge')
+                    pool.apply_async(
+                        graphdb.exec_batch, (sql_list, mongo_db))
+                    if graphdb.type == 'nebula':
+                        if (batch_id):
+                            batch = table.find().limit(iter_size).skip(current)
+                        else:
+                            batch = table.find().limit(iter_size)
+                        es_bulk_edge_index = sqlProcessor.es_bulk_edge_multi(mongo_db, edge_class, batch, graph_db_id,
+                                                                             s_class, o_class, merge_otls)
+                        graphdb.fulltext_bulk_index(es_bulk_edge_index)
+                    # print("批两处理关系最后一个id: ",batch_id)
+                    # 创建
+                    # oriendb_batch_http(address, mongo_db, batch_sql_t[0], graph_DBPort, username, password,
+                    #                    graphid)
+                    # 更新
+                    # oriendb_batch_http(address, mongo_db, batch_sql_t[1], graph_DBPort, username,
+                    #                    password,
+                    #                    graphid)
+                    # del batch_sql
+                    # del batch_sql_t
+                    # pool.close()
+                    # pool.join()
+                    current = current + iter_size
+                    if current % 10000 == 0:
+                        print(f'{edge_class}已插入数据：{current}条')
+            pool.close()
+            pool.join()
+            print(f'{edge_class}共插入(更新)数据{alldata.count()}条')
+
+
+class VertexWriter(object):
+
+    def __init__(self, all_otl_class, graph_mongo_name, graphdb, graph_db_id, mongo_db, en_pro_dict, merge_otls):
+        self.graphdb = graphdb
+        self.all_otl_class = all_otl_class
+        self.graph_mongo_name = graph_mongo_name
+        self.en_pro_dict = en_pro_dict
+        self.mongo_db = mongo_db
+        self.graph_db_id = graph_db_id
+        self.merge_otls = merge_otls
+        self.sqlProcessor = SQLProcessor(self.graphdb.type)
+        self.lock = threading.Lock()
+
+    def write(self):
+        for o_i in range(len(self.all_otl_class)):
+            # 细节处理map信息
+            otl_name, tab_, otl_pro, tab_pro, tab_otl, otl_tab = get_Kmap_dict(o_i, self.all_otl_class)
+
+            if not tab_:
+                continue
+
+            print(f'开始插入顶点:{otl_name}')
+            vertex_time1 = time.time()
+
+            collection_name = self.graph_mongo_name + "_" + tab_
+            collection = conn_db[collection_name]
+            total = collection.count_documents({})
+            if total <= 0:
+                continue
+            iter_size = MongoBuildDao.step_size(collection_name, 4194304)
+
+            index = 0
+            batch_size = 200000
+            while index < total:
+                # 多线程插入
+                pool = ThreadPool(10)
+                current = 0
+                while current < batch_size and (current + index) <= total:
+                    pool.apply_async(self.process, (collection, current + index, iter_size, otl_tab, otl_name))
+                    # self.process(collection, current+ index, iter_size, otl_tab, otl_name)
+                    current += iter_size
+                pool.close()
+                pool.join()
+
+                index += batch_size
+            print(f'创建顶点{otl_name}, total:{total} 成功,耗时:{time.time() - vertex_time1}s')
+
+    def process(self, collection, current, iter_size, otl_tab, otl_name):
+        try:
+            batch = collection.find({}).skip(current).limit(iter_size)
+            batch_copy = copy.deepcopy(batch)
+
+            # 生成ES索引
+            es_bulk_index = ''
+            if self.graphdb.type == 'nebula':
+                es_bulk_index = self.sqlProcessor.es_bulk_multi(self.mongo_db, otl_name, otl_tab,
+                                                                self.en_pro_dict, self.merge_otls,
+                                                                batch, self.graph_db_id)
+
+            # 生成nebula插入语句
+            batch_sql = self.sqlProcessor.vertex_sql_multi(batch_copy, otl_tab, self.en_pro_dict,
+                                                           self.merge_otls, otl_name)
+
+            # 插入nebula点， 单线程
+            self.lock.acquire()
+            self.graphdb.create_vertex(self.mongo_db, batch_sql=batch_sql, es_bulk_index=es_bulk_index,
+                                       otl_name=otl_name, props=list(otl_tab.keys()))
+            self.lock.release()
+
+            # 打个日志
+            if (current + iter_size) % 100000 == 0:
+                print("当前插入顶点{}， {}个".format(otl_name, current + iter_size))
+        except Exception as e:
+            traceback.print_exc()
+
+
+
+
+class Transfer(object):
+    """
+    数据转换的基类
+    """
+
+    def __init__(self, rules, ds_id, collection):
+        self.ds_id = ds_id
+        self.collection = collection
+        self.rules = rules
+
+    def get_client(self):
+        pass
+
+    def run(self):
+        pass
+
+    def extract(self, data, columns):
+        """
+        数据转换的通用方法，每个实现都要用到的方法
+        """
+        if len(self.rules) <= 0:
+            raise BaseException('extract rules empty error')
+
+        try:
+            new_columns = [otl_util.is_special(i) for i in columns]
+            columns_dict = {v: k for k, v in enumerate(new_columns)}
+            mongo_data = []
+            exist_rule = [r for r in self.rules if r in columns_dict]
+
+            for row in data:
+                temp_dict = {k: row[v] for k, v in columns_dict.items() if row[v]}
+                m = {k: temp_dict[k] for k in exist_rule if k in temp_dict}
+                m["ds_id"] = self.ds_id
+                mongo_data.append(m)
+            MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)
+        except BaseException:
+            traceback.print_exc()
+
+
+class HiveTransfer(Transfer):
+    """
+    hive的提取方法
+    """
+
+    def __init__(self, table_name, ds, rules, ds_id, collection):
+        super().__init__(rules, ds_id, collection)
+        self.table_name = table_name
+        self.data_ds = ds
+        self.hive_batch_number = 1000000
+        self.parser_batch_number = 20000
+
+    def get_client(self):
+        ip = self.data_ds['ds_address']
+        port = self.data_ds['ds_port']
+        database = self.data_ds['ds_path']
+        user = self.data_ds['ds_user']
+
+        password = commonutil.DecryptBybase64(self.data_ds['ds_password'])
+        return HiveClient(ip, user, password, database, port)
+
+    def read(self, client):
+        database = self.data_ds['ds_path']
+        sql0 = """DESC `{}`"""
+        sql0 = sql0.format(self.table_name)
+        ret0 = client.query(sql0)
+        columns = [x[0] for x in ret0]
+        sql = "SELECT * FROM {}.`{}`"
+        sql = sql.format(database, self.table_name)
+        conn = client.conn
+        return columns, sql, conn
+
+    def run(self):
+        try:
+            client = self.get_client()
+
+            columns, sql, hive_conn = self.read(client)
+            hive_cursor = hive_conn.cursor()
+            hive_cursor.execute(sql)
+
+            while True:
+                start_time = time.time()
+                ret = hive_cursor.fetchmany(size=self.hive_batch_number)
+                if not ret:
+                    hive_conn.close()
+                    break
+
+                total = len(ret)
+                print(f'hive读取{total / 10000}w条数据耗时:{time.time() - start_time}s')
+                rows = [list(data) for data in ret]
+
+                pool = ThreadPool(10)
+                current = 0
+                while current < total:
+                    pool.apply_async(self.extract, (rows[current:current + self.parser_batch_number], columns))
+                    current += self.parser_batch_number
+                pool.close()
+                pool.join()
+        except BaseException as e:
+            print("extract data error:{}".format(repr(e)))
+
+        return CommonResponseStatus.SUCCESS.value, 'standard_extract success'
+
+
+class MysqlTransfer(Transfer):
+    """
+    mysql处理类
+    """
+
+    def __init__(self, table_name, data_ds, rules, ds_id, collection):
+        super().__init__(rules, ds_id, collection)
+        self.table_name = table_name
+        self.data_ds = data_ds
+
+    def get_client(self):
+        ip = self.data_ds['ds_address']
+        port = self.data_ds['ds_port']
+        database = self.data_ds['ds_path']
+        user = self.data_ds['ds_user']
+        password = commonutil.DecryptBybase64(self.data_ds['ds_password'])
+
+        return pymysql.connect(host=ip, database=database, user=user, password=password, port=port, charset='utf8')
+
+    def total(self, client):
+        try:
+            sql = "SELECT count(1) FROM {}".format(self.table_name)
+            cursor = client.cursor()
+            cursor.execute(sql)
+            data = cursor.fetchall()
+            cursor.close()
+            return int(data[0][0])
+        except BaseException:
+            traceback.print_exc()
+
+    def run(self):
+        client = self.get_client()
+
+        iter_size = 1000
+        batch_size = 200000
+        skip = 0
+
+        try:
+            while True:
+                sql = "select * from {} limit {}, {}".format(self.table_name, skip, batch_size)
+                df = pd.read_sql(sql, client)
+                df2 = list(df)  # 列
+
+                data = [value for index, value in df.iterrows()]
+                total = len(data)
+                if len(data) <= 0:
+                    break
+
+                current = 0
+                pool = ThreadPool(10)
+                while current < total:
+                    pool.apply_async(self.extract, (data[current:current + iter_size], df2))
+                    current += iter_size
+
+                pool.close()
+                pool.join()
+
+                skip += batch_size
+        except BaseException:
+            traceback.print_exc()
+            return CommonResponseStatus.QUEUE_ERROR.value, 'standard_extract fail'
+        return CommonResponseStatus.SUCCESS.value, 'standard_extrac success'
+
+
+class ASTransfer(Transfer):
+
+    def __init__(self, file_name, file_source, used_ds, rules, ds_id, collection):
+        super().__init__(rules, ds_id, collection)
+        self.file_name = file_name
+        self.data_ds = used_ds
+        self.file_source = file_source
+
+    def read(self):
+        ds_address = self.data_ds['ds_address']
+        keylist = ["extension", "content"]
+        version = otl_dao.getversion(ds_address)
+        ret_code, result = otl_dao.getinfofromas(self.data_ds, keylist, self.file_source, version)
+        if ret_code == 500:
+            print("error : {}".format(self.file_name))
+            return ret_code, result
+        else:
+            return ret_code, result
+
+    def extract_csv(self, file_content):
+        if "\r\n" in file_content:
+            lines = file_content.split("\r\n")
+        elif "\n\t" in file_content:
+            lines = file_content.split("\n\t")
+        else:
+            lines = file_content.split("\n")
+        lie_l = lines[0]
+        if "\r" in lie_l:
+            lie_l = lie_l.replace("\r", "")
+        if "\t" in lie_l:
+            if lie_l.startswith('\t'):
+                lie_list = lie_l.split("\t")[1:]
+            else:
+                lie_list = lie_l.split("\t")
+        elif "," in lie_l:
+            lie_list = lie_l.split(",")
+        elif "，" in lie_l:
+            lie_list = lie_l.split("，")
+        else:
+            lie_list = []
+            lie_list.append(lie_l)
+        lie_list = [otl_util.is_special(_) for _ in lie_list]  # 构建任务 读取文件内容 属性 特殊字符处理
+        # lie_list = lie_l.split("\t")
+        mongo_data = []
+        for line in lines[1:]:  # 遍历行
+            line = line.replace("\r", "")
+            if "\t" in line:
+                if line.startswith('\t'):
+                    line_val = line.split("\t")[1:]
+                else:
+                    line_val = line.split("\t")
+            elif "," in line:
+                line_val = line.split(",")
+            elif "，" in line:
+                line_val = line.split("，")
+            else:
+                line_val = []
+                line_val.append(line)
+            if len(line_val) != len(lie_list):
+                continue
+            # if "" in line_val:
+            #     line_val.remove("")
+            mongodict = {}  # 组装 mongo数据
+            for ind in range(len(lie_list)):  # 遍历列名
+                for key in self.rules:  # 本体 实体名
+                    val = self.rules[key]  # 本体 属性名list
+                    lie_var = lie_list[ind]
+                    if "\r" in lie_var:
+                        lie_var = lie_var.replace("\r", "")
+                    if lie_var in val:
+                        dict_m = {}
+                        dict_m[lie_var] = line_val[ind]
+                        if key not in mongodict.keys():
+                            mongodict[key] = dict_m
+                        else:
+                            old_d = mongodict[key]
+                            new_d = {**old_d, **dict_m}
+                            mongodict[key] = new_d
+
+            for all_en in mongodict:
+                value = mongodict[all_en]
+                Entity1_data = value  # 实体1的属性
+                Entity1_data["ds_id"] = self.ds_id
+                mongo_data.append(Entity1_data)
+                if len(mongo_data) % 10000 == 0:
+                    MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)
+                    mongo_data = []
+        if mongo_data:
+            MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)
+
+    def extract_json(self, file_content):
+        lines = file_content.split("\n")
+        mongo_data = []
+        for line in lines:  # 遍历行
+            json_t = json.loads(line)
+            json_t = otl_util.flatten_json(json_t, 3)
+            lie_ = json_t.keys()
+            mongodict = {}  # 组装 mongo数据
+            for lie in lie_:  # 遍历列名
+                a = isinstance(json_t[lie], list)
+                b = isinstance(json_t[lie], dict)
+                if not (a or b):
+                    for key in self.rules:
+                        val = self.rules[key]
+                        if lie in val:
+                            dict_m = {}
+                            if json_t[lie] != None:
+                                dict_m[lie] = str(json_t[lie])
+                                if key not in mongodict.keys():
+                                    mongodict[key] = dict_m
+                                else:
+                                    old_d = mongodict[key]
+                                    new_d = {**old_d, **dict_m}
+                                    mongodict[key] = new_d
+
+            for all_en in mongodict:
+                value = mongodict[all_en]
+                Entity1_data = value  # 实体1的属性
+                Entity1_data["ds_id"] = self.ds_id
+                mongo_data.append(Entity1_data)
+                if len(mongo_data) % 10000 == 0:
+                    MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)
+                    mongo_data = []
+
+        if mongo_data:
+            MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)
+
+    def run(self):
+        ret_code, data = self.read()
+        if ret_code != CommonResponseStatus.SUCCESS.value:
+            # 仅token错误时才中止任务，读取文件发生错误仍继续运行
+            if (data.get('code') and
+                    (data.get('code') == CommonResponseStatus.UNVERIFY_ERROR.value or
+                     data.get('code') == CommonResponseStatus.TOKEN_OVERDUE_ERROR.value)):
+                return ret_code, data
+            else:
+                ret_code = CommonResponseStatus.SUCCESS.value
+        try:
+            _source = data
+            if "extension" in _source:
+                file_type = _source["extension"]
+            elif "ext" in _source:
+                file_type = _source["ext"]
+            file_content = _source["content"]
+
+            if file_type == ".csv":
+                self.extract_csv(file_content)
+            if file_type == ".json":
+                self.extract_json(file_content)
+        except BaseException:
+            print("error : {}".format(self.file_name))
+
+        return ret_code, 'standard_extract success'

@@ -125,7 +125,8 @@ class mongoClient(object):
         port = mongodb_config['port']
         database = mongodb_config['database']
         if password is not None and user is not None:
-            conn = MongoClient(f'mongodb://{user}:{password}@{host}:{port}/')
+            con_str=f'mongodb://{user}:{password}@{host}:{port}/'
+            conn = MongoClient(con_str)
         else:
             conn = MongoClient('mongodb://{host}:{port}/')
         dbconn = conn[database]

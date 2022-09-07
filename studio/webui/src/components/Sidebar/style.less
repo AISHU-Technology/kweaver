@@ -29,13 +29,13 @@
     }
 
     .ant-menu-item-selected:hover {
-      color: var(--ad-error-color);
+      color: var(--ad-primary-color);
     }
 
     .ant-menu-item::after {
       left: 0px;
       right: auto;
-      border-color: var(--ad-error-color);
+      border-color: var(--ad-primary-color);
     }
 
     .ant-menu-submenu-title,
@@ -46,11 +46,12 @@
     .ant-menu-item-selected,
     .ant-menu-submenu-selected [aria-expanded='false'],
     .ant-menu-submenu-vertical.ant-menu-submenu-selected [aria-expanded='true'] {
-      color: var(--ad-error-color) !important;
+      color: var(--ad-primary-color) !important;
       border-radius: 0px 4px 4px 0px;
       background-color: rgba(145, 151, 169, 0.14);
       .ant-menu-item-icon {
-        filter: url(#filterRed);
+        filter: drop-shadow(var(--ad-primary-color) 80px 0);
+        transform: translateX(-80px);
       }
     }
     .ant-menu-item-selected:after,
@@ -64,7 +65,7 @@
       content: '';
       position: absolute;
       transform: scaleY(1);
-      border-right: 3px solid var(--ad-error-color);
+      border-right: 3px solid var(--ad-primary-color);
     }
     .ant-menu-item:hover,
     .ant-menu-submenu-title:hover,
@@ -94,12 +95,12 @@
     background-color: rgba(145, 151, 169, 0.14);
   }
   .ant-menu-item-selected {
-    color: var(--ad-error-color);
+    // color: var(--ad-primary-color);
     border-radius: 0px 4px 4px 0px;
     background-color: rgba(145, 151, 169, 0.24) !important;
   }
   .ant-menu-item-selected:hover {
-    color: var(--ad-error-color);
+    color: var(--ad-primary-color);
   }
   // subMenu 的箭头
   .ant-menu-submenu-expand-icon,

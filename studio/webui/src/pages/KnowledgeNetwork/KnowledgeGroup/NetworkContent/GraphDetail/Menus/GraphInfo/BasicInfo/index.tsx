@@ -39,8 +39,6 @@ interface BasicInfoInterface {
     graph_des: string;
     is_import: boolean;
     create_time: string;
-    create_user: string;
-    update_user: string;
     update_time: string;
     graphdb_name: string;
     graphdb_address: string;
@@ -50,8 +48,7 @@ interface BasicInfoInterface {
 const BasicInfo = (props: BasicInfoInterface) => {
   const { graphCount, graphBasicData } = props;
   const { nodeCount, edgeCount } = graphCount;
-  const { graph_des, is_import, create_time, create_user, update_user, update_time, graphdb_name, graphdb_address } =
-    graphBasicData;
+  const { graph_des, is_import, create_time, update_time, graphdb_name, graphdb_address } = graphBasicData;
 
   const formatNode =
     nodeCount < HELPER.formatNumberWithSuffix.limit
@@ -84,9 +81,7 @@ const BasicInfo = (props: BasicInfoInterface) => {
         <Line label={intl.get('graphDetail.numberOfEntity')} value={formatNode} />
         <Line label={intl.get('graphDetail.numberOfRelation')} value={formatEdge} />
         <Divider className="divider" />
-        <Line label={intl.get('graphDetail.creationPerson')} value={create_user} />
         <Line label={intl.get('graphDetail.creationTime')} value={create_time} />
-        <Line label={intl.get('graphDetail.finalModifier')} value={update_user || '--'} />
         <Line label={intl.get('graphDetail.finalModificationTime')} value={update_time || '--'} />
       </div>
     </div>

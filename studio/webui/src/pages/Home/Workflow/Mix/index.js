@@ -117,18 +117,15 @@ class Mix extends Component {
     this.runSingal = true;
     const { updateType, saveLoading } = this.state;
     let data = { tasktype: updateType };
-
     // 执行
-    const taskRes = await serviceWorkflow.performTask(this.props.graphId, data);
+    const taskRes = await serviceWorkflow.taskPerform(this.props.graphId, data);
     saveLoading && this.setState({ saveLoading: false });
-
     if (taskRes && taskRes.res) {
-      window.history.pushState({}, null, window.origin + '/home/graph-list');
       this.setState({ taskModalType: 'save', modalVisible: true });
+      window.history.pushState({}, null, window.origin + '/home/graph-list');
     }
 
     if (taskRes && taskRes.Code) this.props.next(taskRes);
-
     setTimeout(() => {
       this.runSingal = false;
     }, 100);
@@ -372,7 +369,7 @@ class Mix extends Component {
                 </ConfigProvider>
               </div>
             </div>
-          ) : 
+          ) : (
             <div className="mix-modal-content">
               <div className="title-box">
                 <CheckCircleFilled className="check-icon" />
@@ -387,7 +384,7 @@ class Mix extends Component {
                 </Button>
               </div>
             </div>
-          }
+          )}
         </Modal>
 
         <TimedTask

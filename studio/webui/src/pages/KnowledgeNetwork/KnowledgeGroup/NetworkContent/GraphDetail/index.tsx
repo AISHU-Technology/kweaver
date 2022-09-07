@@ -71,7 +71,7 @@ const GraphDetail = (props: GraphDetailType) => {
       setGraphData({ nodes, edges });
     } catch (error) {
       setIsLoading(false);
-      const { type, response } = error as any;
+      const { type = '', response = {} } = (error || {}) as any;
       if (type === 'message') message.error(response?.Description || '');
     }
   };

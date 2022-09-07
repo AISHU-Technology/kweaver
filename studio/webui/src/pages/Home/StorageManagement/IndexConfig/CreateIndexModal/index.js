@@ -28,45 +28,30 @@ const ModalContent = props => {
     form.validateFields().then(async values => {
       const { ip, name, user, password, port } = values;
 
-      // 新建
-      if (optionType === 'create') {
-        const data = {
-          name,
-          user,
-          password,
-          ip: [ip],
-          port: [port]
-        };
-        const res = await serviceStorageManagement.openSearchCreate(data);
-
-        if (res && res.res) {
-          message.success(intl.get('configSys.saveSuccess'));
-          closeModal();
-          getData();
+      try {
+        // 新建
+        if (optionType === 'create') {
+          const data = { name, user, password, ip: [ip], port: [port] };
+          const res = await serviceStorageManagement.openSearchCreate(data);
+          if (res && res.res) {
+            message.success(intl.get('configSys.saveSuccess'));
+            closeModal();
+            getData();
+          }
         }
-
-        res && res.ErrorCode && messageError(res);
-      }
-
-      // 编辑
-      if (optionType === 'edit') {
-        const data = {
-          user,
-          name,
-          password,
-          ip: [ip],
-          port: [port],
-          id: initData.id
-        };
-        const res = await serviceStorageManagement.openSearchUpdate(data);
-
-        if (res && res.res) {
-          message.success(intl.get('configSys.editSuccess'));
-          closeModal();
-          getData();
+        // 编辑
+        if (optionType === 'edit') {
+          const data = { user, name, password, ip: [ip], port: [port], id: initData.id };
+          const res = await serviceStorageManagement.openSearchUpdate(data);
+          if (res && res.res) {
+            message.success(intl.get('configSys.editSuccess'));
+            closeModal();
+            getData();
+          }
         }
-
-        res && res.ErrorCode && messageError(res);
+      } catch (error) {
+        const { type = '', response = {} } = error || {};
+        if (type === 'message') messageError(response);
       }
     });
   };
@@ -82,13 +67,12 @@ const ModalContent = props => {
       try {
         setTestLoading(true);
         const result = await serviceStorageManagement.openSearchTest(data);
-
         if (result?.res) message.success(intl.get('configSys.testSuccess'));
-        if (result?.ErrorCode) messageError(result);
-
         setTestLoading(false);
       } catch (error) {
         setTestLoading(false);
+        const { type = '', response = {} } = error || {};
+        if (type === 'message') messageError(response);
       }
     });
   };
@@ -98,13 +82,11 @@ const ModalContent = props => {
     // 存储位置名称已存在
     if (res && res.ErrorCode === 'Manager.OpenSearch.DuplicateOsRecordNameError') {
       form.setFields([{ name: 'name', errors: [intl.get('configSys.nameRepeat')] }]);
+      return;
     }
-    // 内部错误
-    if (res && res.ErrorCode === 'Manager.Common.ServerError') {
-      message.error(res.Description);
-    }
-
-    if (ERROR_CODE[res?.ErrorCode]) message.error(intl.get(ERROR_CODE[res?.ErrorCode]));
+    if (res && res.ErrorCode === 'Manager.Common.ServerError') return message.error(res.Description);
+    if (ERROR_CODE[res?.ErrorCode]) return message.error(intl.get(ERROR_CODE[res?.ErrorCode]));
+    message.error(res.Description);
   };
 
   return (

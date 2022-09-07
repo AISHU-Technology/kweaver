@@ -105,7 +105,7 @@ def taskcrud_post(graph_id):
                 return Gview.BuFailVreturn(cause=re_obj["cause"], code=re_obj["code"],
                                            message=re_obj["message"]), CommonResponseStatus.SERVER_ERROR.value
         # 调用执行
-        url = "http://kg-builder:6485/buildertask"
+        url = "http://kw-builder:6485/buildertask"
         payload = {"graph_id": graph_id, "tasktype": tasktype, "trigger_type": trigger_type}
         headers = {
             'Content-Type': 'application/json',
@@ -147,7 +147,7 @@ def taskcrud_delete(graph_id):
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
         task_ids = params_json['task_ids']
         # 调用执行
-        url = "http://kg-builder:6485/delete_task"
+        url = "http://kw-builder:6485/delete_task"
         payload = {"graph_id": graph_id, "task_ids": task_ids}
         headers = {
             'Content-Type': 'application/json'
@@ -247,7 +247,7 @@ def getalltask(graph_id):
     payload = {"graph_id": graph_id}
     for k in params:
         payload[k] = params_json[k]
-    url = "http://kg-builder:6485/buildertask"
+    url = "http://kw-builder:6485/buildertask"
     response = requests.request("GET", url, params=payload)
     print(f"url={response.url}")
     res_json = response.json()
@@ -287,7 +287,7 @@ def stoptask(graph_id):
                                    message=message), CommonResponseStatus.BAD_REQUEST.value
     if method == "POST":
         # 调用执行
-        url = "http://kg-builder:6485/stoptask"
+        url = "http://kw-builder:6485/stoptask"
         payload = "{\"graph_id\":" + graph_id + "  \n}"
         headers = {
             'Content-Type': 'application/json'
@@ -333,7 +333,7 @@ def getprogress(graph_id):
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
         # 调用执行
-        url = "http://kg-builder:6485/get_task_progress?graph_id=" + graph_id + ""
+        url = "http://kw-builder:6485/get_task_progress?graph_id=" + graph_id + ""
         payload = {}
         response = requests.request("GET", url, data=payload)
         # return make_response(jsonify(result=response.text))

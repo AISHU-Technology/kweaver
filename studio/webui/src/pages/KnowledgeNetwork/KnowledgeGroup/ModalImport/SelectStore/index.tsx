@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import _ from 'lodash';
-import { Select } from 'antd';
+import { Select, message } from 'antd';
 
 import serverStorageManagement from '@/services/storageManagement';
 
@@ -31,8 +31,10 @@ const SelectStore = React.forwardRef((props: SelectStoreType, ref: any) => {
       const newList = page === 1 ? _list : source.items.concat(_list);
       setSource({ items: newList, count: _count });
       setIsFetching(false);
-    } catch (e) {
+    } catch (error) {
       setIsFetching(false);
+      const { type = '', response = {} } = (error || {}) as any;
+      if (type === 'message') message.error(response?.Description || '');
     }
   };
 

@@ -61,12 +61,15 @@ class IndexConfig extends Component {
 
     try {
       const data = { page: current, size: pageSize, orderField: type, order: sort, name: searchValue };
-      const { res = {}, ErrorCode = '', Description = '' } = await serviceStorageManagement.openSearchGet(data);
+      const { res = {} } = await serviceStorageManagement.openSearchGet(data);
 
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
-      if (ErrorCode === 'Manager.Common.ServerError') message.error(Description);
     } catch (error) {
-      //
+      console.log('error error', error);
+      const { type = '', response = {} } = error || {};
+      if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
+        message.error(response?.Description || '');
+      }
     }
   };
 
@@ -75,11 +78,7 @@ class IndexConfig extends Component {
    */
   getIndex = async (record, option) => {
     try {
-      const {
-        res = {},
-        ErrorCode = '',
-        Description = ''
-      } = await serviceStorageManagement.openSearchGetById(record.id);
+      const { res = {} } = await serviceStorageManagement.openSearchGetById(record.id);
 
       if (!_.isEmpty(res)) {
         const { ip, port, name, password, user, id } = res;
@@ -92,11 +91,15 @@ class IndexConfig extends Component {
           selectKey: 0
         });
       }
-
-      if (ErrorCode === 'Manager.Opensearch.OSRecordNotFoundError') message.error(intl.get('configSys.NotFoundError'));
-      if (ErrorCode === 'Manager.Common.ServerError') message.error(Description);
     } catch (error) {
-      //
+      const { type = '', response = {} } = error || {};
+      if (type === 'message') {
+        const { ErrorCode, Description } = response;
+        if (ErrorCode === 'Manager.Opensearch.OSRecordNotFoundError') {
+          message.error(intl.get('configSys.NotFoundError'));
+        }
+        if (ErrorCode === 'Manager.Common.ServerError') message.error(Description);
+      }
     }
   };
 

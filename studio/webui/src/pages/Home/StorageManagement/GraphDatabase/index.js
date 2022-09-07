@@ -69,12 +69,14 @@ class GraphDatabase extends Component {
     const data = { page: current, size: pageSize, orderField: type, order: sort, type: searchType, name: searchValue };
 
     try {
-      const { res, ErrorCode = '' } = await serviceStorageManagement.graphDBGetList(data);
-
+      const { res } = await serviceStorageManagement.graphDBGetList(data);
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
-      if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
     } catch (error) {
-      // console.log('error')
+      const { type = '', response = {} } = error || {};
+      if (type === 'message') {
+        const { ErrorCode } = response;
+        if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
+      }
     }
   };
 
@@ -97,17 +99,20 @@ class GraphDatabase extends Component {
    */
   getStorage = async (record, option) => {
     try {
-      const { res = {}, ErrorCode = '' } = await serviceStorageManagement.graphDBGetById(record.id);
+      const result = await serviceStorageManagement.graphDBGetById(record.id);
 
-      if (!_.isEmpty(res)) {
-        const { ip, port, name, type, password, user, id } = res;
+      if (!_.isEmpty(result?.res)) {
+        const { ip, port, name, type, password, user, id } = result.res;
         const ips = _.map(ip, (item, index) => `${item}:${port[index]}`);
         const data = { port, ips, id, user, type, name, password, osName: record.osName };
         this.setState({ storageInfo: data, visible: true, optionType: option, optionStorage: record });
       }
-      if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
     } catch (error) {
-      // console.log(error)
+      const { type = '', response = {} } = error || {};
+      if (type === 'message') {
+        const { ErrorCode } = response;
+        if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
+      }
     }
   };
 

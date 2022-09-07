@@ -92,6 +92,7 @@ const API = {
   taskDelete: `${baseBuilder}/task`,
   taskGetProgress: `${baseBuilder}/task/get_progress`,
   graphDelByIds: `${baseBuilder}/graph/delbyids`,
+  taskPerform: `${baseBuilder}/task`,
 
   // timedTask
   timerGet: `${baseBuilder}/timer`,
