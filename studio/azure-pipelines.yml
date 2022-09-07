@@ -63,8 +63,7 @@ jobs:
       - task: Docker@2
         displayName: Push image
         inputs:
-          containerRegistry: |
-            'acr.aishu.cn'
+          containerRegistry: 'acr.aishu.cn'
           repository: 'ad/kw-studio'
           command: push
           tags: |
