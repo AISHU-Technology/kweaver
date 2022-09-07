@@ -44,7 +44,7 @@ type RequestType = {
   method: 'get' | 'post' | 'delete' | 'put';
 };
 const request = ({ url, data, config, method }: RequestType): any => {
-  const body = method === 'get' ? { params: data } : { data };
+  const body = method === 'get' ? { params: data } : data;
   return new Promise((resolve, reject) => {
     service[method](url, Object.assign(body, config))
       .then(response => {

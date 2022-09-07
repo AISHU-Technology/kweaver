@@ -121,8 +121,8 @@ class Mix extends Component {
     const taskRes = await serviceWorkflow.taskPerform(this.props.graphId, data);
     saveLoading && this.setState({ saveLoading: false });
     if (taskRes && taskRes.res) {
-      window.history.pushState({}, null, window.origin + '/home/graph-list');
       this.setState({ taskModalType: 'save', modalVisible: true });
+      window.history.pushState({}, null, window.origin + '/home/graph-list');
     }
 
     if (taskRes && taskRes.Code) this.props.next(taskRes);
