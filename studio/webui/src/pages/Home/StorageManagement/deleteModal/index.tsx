@@ -40,7 +40,7 @@ const DeleteModal = (props: DeleteModalType) => {
         setVisible();
       }
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode } = response;
         if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));

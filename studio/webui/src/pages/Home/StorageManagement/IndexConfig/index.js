@@ -65,7 +65,8 @@ class IndexConfig extends Component {
 
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
     } catch (error) {
-      const { type, response } = error;
+      console.log('error error', error);
+      const { type = '', response = {} } = error || {};
       if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
         message.error(response?.Description || '');
       }
@@ -91,7 +92,7 @@ class IndexConfig extends Component {
         });
       }
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode, Description } = response;
         if (ErrorCode === 'Manager.Opensearch.OSRecordNotFoundError') {

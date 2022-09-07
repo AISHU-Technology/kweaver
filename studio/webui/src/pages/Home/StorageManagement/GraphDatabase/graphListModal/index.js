@@ -42,7 +42,7 @@ const GraphListModal = props => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message' && response?.ErrorCode === 'Manager.Common.ServerError') {
         message.error(response?.Description || '');
       }

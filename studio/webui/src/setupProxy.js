@@ -35,7 +35,7 @@ module.exports = function (app) {
       // target: 'https://10.2.235.242',
       // target: 'https://10.2.196.57',
       // target: 'https://10.4.71.138',
-      target: 'http://10.4.69.51:6888',
+      target: 'http://10.4.69.51:6800',
       changeOrigin: true,
       secure: false
     })
