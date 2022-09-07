@@ -64,9 +64,11 @@ jobs:
         displayName: PushToHub
         inputs:
           command: push
-          containerRegistry: aishu.hub
+          containerRegistry: 'acr.aishu.cn'
           repository: $(imageNameWithHarbor)
-          tags: latest | $(mainTag)
+          tags: |
+            latest  
+            $(mainTag)
       - task: Bash@3
         displayName: saveTar
         inputs:
