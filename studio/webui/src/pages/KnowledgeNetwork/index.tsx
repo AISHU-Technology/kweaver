@@ -11,7 +11,6 @@ import IconFont from '@/components/IconFont';
 import asyncComponent from '@/components/AsyncComponent';
 
 import headLogo from '@/assets/images/kw.svg';
-import cognitiveEngineIcon from '@/assets/images/cognitiveEngine.svg';
 
 const KnowledgeGroup = asyncComponent(() => import('@/pages/KnowledgeNetwork/KnowledgeGroup'));
 const CognitiveEngine = asyncComponent(() => import('@/pages/KnowledgeNetwork/CognitiveEngine'));
@@ -84,19 +83,19 @@ const KnowledgeNetwork = () => {
       {
         label: '知识图谱',
         key: '/knowledge/network',
-        icon: <IconFont type="icon-graph" />,
+        icon: <IconFont type="icon-zhishitupu" />,
         onClick: () => history.push(`/knowledge/network?id=${currentId}`)
       },
       {
         label: '认知引擎',
         key: '/knowledge/engine',
-        icon: <img src={cognitiveEngineIcon} alt="search" />,
+        icon: <IconFont type="icon-renzhiyinqing" />,
         onClick: () => history.push(`/knowledge/engine?id=${currentId}`)
       },
       {
         label: '数据管理',
         key: '/knowledge/source',
-        icon: <IconFont type="icon-data" />,
+        icon: <IconFont type="icon-shujuyuanguanli" />,
         onClick: () => history.push(`/knowledge/source?id=${currentId}`)
       }
     ]
