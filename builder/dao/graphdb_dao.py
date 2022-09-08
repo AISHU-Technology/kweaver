@@ -36,15 +36,16 @@ def get_md5(data):
     return md.hexdigest()
 
 
-def type_transform(value, type, sql_format=True):
-    if type == "string" or type == "datetime" or type == "date":
-        if sql_format:
+
+def type_transform(db_type, value, type, sql_format=True):
+    if sql_format:
+        if type == "string":
             value = "'" + str(value) + "'"
-        else:
-            value = str(value)
-        return value
-    else:
-        return str(value)
+        if type == "date" or (db_type == "orientdb" and type == "datetime"):
+            value = ' date("{}") '.format(value)
+        if db_type == "nebula" and type == "datetime":
+            value = ' datetime("{}") '.format(value)
+    return str(value)
 
 
 def gen_doc_vid(merge_otls, otl_name, one_data, en_pro_dict, gtype='nebula'):
@@ -65,7 +66,7 @@ def gen_doc_vid(merge_otls, otl_name, one_data, en_pro_dict, gtype='nebula'):
     """
     tab_val_index = []  # 属性列表
     for k, v in merge_otls[otl_name].items():
-        value = type_transform(normalize_text(str(one_data[k])), en_pro_dict[otl_name][k])
+        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[otl_name][k])
         if gtype == "orientdb":
             value = "  `{}` = '{}' ".format(k, one_data[k])
         tab_val_index.append(value)
@@ -85,16 +86,11 @@ def data_type_transform(data_type: str):
         return data_type
     return mapping[data_type.lower()]
 
-def default_value(type, sql_format=True):
-    if type == "string" or type == "datetime" or type == "date":
-        if sql_format:
-            return "''"
-        else:
-            return ""
-    elif type == 'int' or type == 'float' or type == 'double':
-        return '0'
-    elif type == 'boolean' or type == 'bool':
-        return 'false'
+def default_value(sql_format=True):
+    if sql_format:
+        return "NULL"
+    else:
+        return ""
 
 
 def normalize_text(text):
@@ -1801,7 +1797,7 @@ class SQLProcessor:
                         if isinstance(row_val_t, float) and math.isnan(row_val_t):
                             valueExist = False
                         else:
-                            otlvalue = type_transform(normalize_text(str(row_val_t)),
+                            otlvalue = type_transform(self.type, normalize_text(str(row_val_t)),
                                                       en_pro_dict[otl_name][ot_tb])
                             val = "%(otlpro)s=%(otlvalue)s" \
                                   % {"otlpro": "`" + ot_tb + "`",
@@ -1822,14 +1818,14 @@ class SQLProcessor:
             if not valueExist:
                 tab_val.append("%(otlpro)s=%(otlvalue)s" \
                                % {"otlpro": "`" + ot_tb + "`",
-                                  "otlvalue": default_value(en_pro_dict[otl_name][ot_tb])})
-                vals.append(default_value(en_pro_dict[otl_name][ot_tb]))
+                                  "otlvalue": default_value()})
+                vals.append(default_value())
         if tab_val:
             if "ds_id" in row.keys():
                 tab_val.append('`ds_id`=\'' + str(row["ds_id"]) + '\'')
                 vals.append('\'' + str(row["ds_id"]) + '\'')
             else:
-                vals.append(default_value('string'))
+                vals.append(default_value())
             ts = time.time()
             tab_val.append(" `timestamp` = " + str(ts))
             vals.append(str(ts))
@@ -1921,7 +1917,7 @@ class SQLProcessor:
                         if not (isinstance(row_val_t, float) and math.isnan(row_val_t)):
                             if ot_tb == 'name':
                                 name_exists = True
-                            otlvalue = type_transform(normalize_text(str(row_val_t)),
+                            otlvalue = type_transform(self.type, normalize_text(str(row_val_t)),
                                                       en_pro_dict[otl_name][ot_tb],
                                                       sql_format=False)
                             vals.append(otlvalue)
@@ -1933,7 +1929,7 @@ class SQLProcessor:
                                 body_field[ot_tb] = otlvalue
                         # todo 非浮点数处理方式
         if not name_exists:
-            body_field['name'] = default_value(en_pro_dict[otl_name]['name'], sql_format=False)
+            body_field['name'] = default_value(sql_format=False)
         vid = ''
         if vals and tab_val_index:
             idval = ''
@@ -2182,10 +2178,10 @@ class SQLProcessor:
             vals = []
             for pro in edge_pro_dict[edge_class]:
                 if pro in p_pro:
-                    pro_value = type_transform(normalize_text(str(p_pro[pro])), edge_pro_dict[edge_class][pro])
+                    pro_value = type_transform(self.type, normalize_text(str(p_pro[pro])), edge_pro_dict[edge_class][pro])
                     vals.append(pro_value)
                 else:
-                    vals.append(default_value(edge_pro_dict[edge_class][pro]))
+                    vals.append(default_value())
             ngql = '"{}" -> "{}" : ({})' \
                 .format(s_sql, o_sql, ','.join(vals))
             return ngql
