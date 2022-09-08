@@ -2936,6 +2936,8 @@ class MysqlTransfer(Transfer):
                 df2 = list(df)  # 列
 
                 data = [value for index, value in df.iterrows()]
+                for value in data:
+                    value.replace({pd.NaT: None}, inplace=True)
                 total = len(data)
                 if len(data) <= 0:
                     break
