@@ -1,8 +1,5 @@
 /**
  * 格式化展示json数据
- * @author Jason.ji
- * @date 2022/06/15
- *
  */
 
 import React, { memo, useState, useEffect, useRef, useMemo } from 'react';

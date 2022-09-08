@@ -1,12 +1,4 @@
 /* eslint-disable max-lines */
-/**
- * 点或边的信息
- *
- * @author Eden
- * @date 2020/05/14
- *
- */
-
 import React, { Component } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';

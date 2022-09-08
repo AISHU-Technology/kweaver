@@ -1,10 +1,6 @@
 /* eslint-disable max-lines */
 /**
  * 创建图谱
- *
- * @author Eden
- * @date 2021/04/22
- *
  */
 
 import React, { Component } from 'react';

@@ -1,11 +1,3 @@
-/**
- * 定时任务配置页面(包含新增和编辑)
- *
- * @author Eden
- * @date 2021/12/21
- *
- */
-
 import React, { Component } from 'react';
 import { Radio, Button, message } from 'antd';
 import intl from 'react-intl-universal';

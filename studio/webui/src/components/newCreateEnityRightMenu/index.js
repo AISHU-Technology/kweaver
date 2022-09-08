@@ -1,9 +1,3 @@
-/**
- * @description 新创建本体右侧菜单
- * @author Eden
- * @date 2021/05/13
- */
-
 import React, { Component } from 'react';
 import TaskList from './taskList';
 import GatherList from './gatherList';

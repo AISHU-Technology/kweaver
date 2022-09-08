@@ -1,10 +1,3 @@
-/**
- * 搜索结果展示列表
- * @author Jason.ji
- * @date 2022/01/10
- *
- */
-
 import React, { memo, useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Checkbox, Pagination } from 'antd';
 import intl from 'react-intl-universal';

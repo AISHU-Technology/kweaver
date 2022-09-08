@@ -67,7 +67,7 @@ class searchUI extends PureComponent {
     analysLoading: false, // 分析报告loading
     analysVisible: false, // 分析报告弹窗
     reportData: '', // 分析报告数据
-    anylysisTitle: '', // 分析报告标题
+    analysisTitle: '', // 分析报告标题
     changeVisible: false, // 切换图谱确认弹窗
     viewType: V_ALL, // 结果筛选
     checkedCache: [], // 已选结果缓存
@@ -537,7 +537,7 @@ class searchUI extends PureComponent {
       rid: encodeURIComponent(id)
     };
 
-    this.setState({ anylysisTitle: name, analysLoading: true });
+    this.setState({ analysisTitle: name, analysLoading: true });
     this.resetFlag && (this.resetFlag = false);
 
     const res = await servicesExplore.analysisReportGet(params);
@@ -610,7 +610,7 @@ class searchUI extends PureComponent {
       analysLoading,
       analysVisible,
       reportData,
-      anylysisTitle,
+      analysisTitle,
       changeVisible,
       viewType,
       rightKey
@@ -903,7 +903,7 @@ class searchUI extends PureComponent {
           forceRender
           onCancel={() => this.setState({ analysVisible: false })}
         >
-          <Analysis reportData={reportData} anylysisTitle={anylysisTitle} />
+          <Analysis reportData={reportData} analysisTitle={analysisTitle} />
         </Modal>
 
         {/* 切换图谱确认弹窗 */}

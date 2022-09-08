@@ -615,7 +615,7 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
         onCancel={() => dispatchState({ reportVisible: false })}
         footer={null}
       >
-        <Analysis reportData={reportData.data} anylysisTitle={reportData.title} />
+        <Analysis reportData={reportData.data} analysisTitle={reportData.title} />
       </Modal>
 
       {/* 探索式分析 */}

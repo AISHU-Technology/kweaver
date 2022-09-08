@@ -1,9 +1,3 @@
-/**
- * @description 编辑本体弹窗
- * @author Eden
- * @date 2021/05/19
- */
-
 import React, { Component } from 'react';
 import intl from 'react-intl-universal';
 import { withRouter } from 'react-router-dom';

@@ -1,8 +1,5 @@
 /**
  * 导入rabbitMQ数据源
- * @author Jason.ji
- * @date 2021/12/24
- *
  */
 
 import React, { memo, useEffect } from 'react';

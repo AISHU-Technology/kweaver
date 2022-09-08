@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * 若第三步、第四步选择文档知识模型，融合处，文档知识模型中的点类和边类，属性设置增加默认属性，用户也可手动修改
  *   1. folder：gns，
@@ -12,8 +11,8 @@ const modelSpot = ['folder', 'document', 'chapter', 'label']; // 文档知识模
 
 /**
  * 生成配置
- * @param {String} name 点类名称
- * @param {Boolean} isSpecial 是否包含文档知识模型, 进行特殊处理
+ * @param {string} name 点类名称
+ * @param {boolean} isSpecial 是否包含文档知识模型, 进行特殊处理
  */
 const createPro = (name, isSpecial) => {
   const defaultPro = { property: 'name', function: 'equality' };
@@ -35,10 +34,10 @@ const createPro = (name, isSpecial) => {
 
 /**
  * 判断第三步和第四步是否都使用了AnyShare文档知识模型
- * @param {Array} entity 第三步的数据
- * @param {Array} extr 第四步的数据
+ * @param {array} entity 第三步的数据
+ * @param {array} extr 第四步的数据
  */
-const isDocment = (entity, extr) => {
+const isDocument = (entity, extr) => {
   let flag = false;
 
   const isEntityHas = entity.some(item => item.model === AS_MODEL);
@@ -51,8 +50,8 @@ const isDocment = (entity, extr) => {
 
 /**
  * 初始化配置
- * @param {Array} entity 点类数据
- * @param {Boolean} isDocModel 是否使用了文档知识模型
+ * @param {array} entity 点类数据
+ * @param {boolean} isDocModel 是否使用了文档知识模型
  */
 const initConfig = (entity, isDocModel) => {
   const data = entity.reduce((pre, cur) => {
@@ -60,8 +59,8 @@ const initConfig = (entity, isDocModel) => {
     const isSpecial = isDocModel && model === AS_MODEL && modelSpot.includes(name);
 
     pre.push({
-      colour: colour,
-      name: name,
+      colour,
+      name,
       properties: createPro(name, isSpecial),
       attrList: properties.map(pro => pro[0]),
       alias
@@ -75,9 +74,9 @@ const initConfig = (entity, isDocModel) => {
 
 /**
  * 更新配置
- * @param {Array} origin 原配置数据
- * @param {Array} onto 新的第三步数据
- * @param {Boolean} isDocModel 是否使用了文档知识模型
+ * @param {array} origin 原配置数据
+ * @param {array} onto 新的第三步数据
+ * @param {boolean} isDocModel 是否使用了文档知识模型
  */
 const updateConfig = (origin, onto, isDocModel) => {
   const oldData = origin[0].entity_classes;
@@ -91,16 +90,16 @@ const updateConfig = (origin, onto, isDocModel) => {
     if (index === -1) {
       // 新增
       pre.push({
-        colour: colour,
-        name: name,
+        colour,
+        name,
         properties: createPro(name, isSpecial),
         attrList: newAttrList,
         alias
       });
     } else {
       // 更新
-      let repeatPro = []; // 原数据可能重复
-      let oldPro = [...oldData[index].properties];
+      const repeatPro = []; // 原数据可能重复
+      const oldPro = [...oldData[index].properties];
 
       const newPro = oldPro.filter(item => {
         const { property } = item;
@@ -114,8 +113,8 @@ const updateConfig = (origin, onto, isDocModel) => {
       });
 
       pre.push({
-        colour: colour,
-        name: name,
+        colour,
+        name,
         properties: newPro,
         attrList: newAttrList,
         alias
@@ -128,4 +127,4 @@ const updateConfig = (origin, onto, isDocModel) => {
   return data;
 };
 
-export { isDocment, initConfig, updateConfig };
+export { isDocument, initConfig, updateConfig };

@@ -1,10 +1,3 @@
-/**
- * 汇总信息
- * @author Jason.ji
- * @date 2022/01/11
- *
- */
-
 import React, { memo, useCallback, useMemo } from 'react';
 import { Collapse } from 'antd';
 import intl from 'react-intl-universal';
@@ -42,9 +35,6 @@ const SumInfo = props => {
     );
   }, []);
 
-  /**
-   * 空内容
-   */
   const RenderEmpty = () => (
     <div className="nodata-box">
       <img src={emptyImg} alt="no data" />
@@ -64,7 +54,6 @@ const SumInfo = props => {
           header={
             <div className="coll-head">
               <img src={In} alt="in" className="icon" />
-              {/* 进边关系详情 */}
               <span className="word">
                 {intl.get('search.inEdge')}&nbsp;({inCounts})
               </span>
@@ -80,7 +69,6 @@ const SumInfo = props => {
           header={
             <div className="coll-head">
               <img src={Out} alt="in" className="icon" />
-              {/* 出边关系详情 */}
               <span className="word">
                 {intl.get('search.outEdge')}&nbsp;({outCounts})
               </span>
