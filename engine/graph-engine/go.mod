@@ -3,7 +3,6 @@ module graph-engine
 go 1.13
 
 require (
-	github.com/PuerkitoBio/purell v1.2.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	//github.com/dgrijalva/jwt-go v3.0.0+incompatible
 	github.com/fatih/structs v1.1.0
@@ -20,7 +19,6 @@ require (
 	github.com/json-iterator/go v1.1.12
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.4 // indirect
-	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-sqlite3 v1.14.15
 	github.com/pkg/errors v0.9.1
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
@@ -30,7 +28,6 @@ require (
 	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
 	github.com/swaggo/gin-swagger v1.3.2
 	github.com/swaggo/swag v1.8.5
-	github.com/urfave/cli/v2 v2.14.1 // indirect
 	//github.com/vesoft-inc/nebula-go/v2 v2.6.0
 	github.com/vesoft-inc/nebula-go/v3 v3.0.0
 	github.com/vladoatanasov/logrus_amqp v0.0.0-20181023103017-b21faf6f8ae3
