@@ -12,8 +12,27 @@ type ReqAdvSearch struct {
 	Size  int    `form:"size" binding:"required,gt=0"`
 	Limit int    `form:"limit"`
 }
+type ResAdvSearch struct {
+}
 
-// 智能搜索（2AD）
+// AdvSearchHandler
+// @Summary advanced search
+// @Description semantic search
+// @Tags Engine
+// @Param confid path string true "config ids like'5,6,7'"
+// @Param query query string false "Query statement"
+// @Param page query int true  "number of pages" minimum(1)
+// @Param size query int true  "Number of pages displayed" minimum(1)
+// @Param limit query int false  "limit"
+// @Router /api/engine/v1/adv-search/{confid} [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} controllers.ExpandVertexRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func AdvSearchHandler(c *gin.Context) {
 	var body ReqAdvSearch
 	err := c.ShouldBind(&body)
@@ -29,7 +48,20 @@ func AdvSearchHandler(c *gin.Context) {
 	c.JSON(httpcode, res)
 }
 
-// 语义搜索test
+// AdvSearchTestHandler
+// @Summary advanced search test
+// @Description semantic search test
+// @Tags Engine
+// @Param body body string true "adv-search query"
+// @Router /api/engine/v1/adv-search/test [get]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.ExpandVertexRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func AdvSearchTestHandler(c *gin.Context) {
 	var body controllers.AdvSearchTestBody
 	err := c.ShouldBindJSON(&body)
