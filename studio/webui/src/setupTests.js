@@ -3,7 +3,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import intl from 'react-intl-universal';
 import locales from '@/locales';
 import 'react-app-polyfill/jsdom';
-import '@/vendors/canvasMock';
+import 'jest-canvas-mock';
 
 // 默认简体中文
 intl.init({

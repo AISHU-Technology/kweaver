@@ -11,7 +11,6 @@ const PATH_ALIAS = [
   'hooks',
   'enums',
   'version',
-  'vendors',
   'Layout'
 ].reduce((res, path) => ({ ...res, [`^@/${path}(.*)$`]: `<rootDir>/src/${path}$1` }), {});
 
@@ -55,7 +54,6 @@ module.exports = {
     '<rootDir>/src/theme/*',
     '<rootDir>/src/tests/*',
     '<rootDir>/src/graphQLSerVer*',
-    '<rootDir>/src/pages/SwaggerUI*',
-    '<rootDir>/src/vendors/*'
+    '<rootDir>/src/pages/SwaggerUI*'
   ]
 };
