@@ -2258,6 +2258,9 @@ class RelationManualBuilder(object):
             end_points = batch_end[key] if key in batch_end else []
             for i in start_points:
                 for j in end_points:
+                    # 起点和终点一样，跳过
+                    if str(i) == str(j):
+                        continue
                     starts.append(i)
                     ends.append(j)
                     prop_val_sqls.append(prop_val_sql)
@@ -2321,9 +2324,6 @@ class RelationManualBuilder(object):
             one_ends = end_item_dict[key]
             vids = []
             for one in one_ends:
-                # 如果两个ID一样，是同一个点
-                if str(one['_id']) == str(one_data['_id']):
-                    continue
                 vid = self.buildInfo.gen_vid(relation_class_name, one)
                 vids.append(vid)
             results[str(one_data["_id"])] = vids
@@ -2354,9 +2354,6 @@ class RelationManualBuilder(object):
             vids = []
             bsonId = str(one_data['_id'])
             for one in docs:
-                # 如果两个ID一样，是同一个点
-                if str(one['_id']) == str(one_data['_id']):
-                    continue
                 vid = self.buildInfo.gen_vid(relation_class_name, one)
                 vids.append(vid)
             results[bsonId] = vids
