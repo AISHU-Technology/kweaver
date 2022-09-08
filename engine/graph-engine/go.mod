@@ -31,8 +31,7 @@ require (
 	//github.com/vesoft-inc/nebula-go/v2 v2.6.0
 	github.com/vesoft-inc/nebula-go/v3 v3.0.0
 	github.com/vladoatanasov/logrus_amqp v0.0.0-20181023103017-b21faf6f8ae3
-	golang.org/x/net v0.0.0-20220826154423-83b083e8dc8b // indirect
-	golang.org/x/sys v0.0.0-20220907062415-87db552b00fd // indirect
+	golang.org/x/sys v0.0.0-20220829200755-d48e67d00261 // indirect
 	golang.org/x/text v0.3.7
 	golang.org/x/tools v0.1.12 // indirect
 	gopkg.in/olivere/elastic.v5 v5.0.86
@@ -41,4 +40,5 @@ require (
 	gorm.io/driver/mysql v1.2.1
 	gorm.io/gorm v1.22.4
 	xorm.io/xorm v1.3.1
+
 )

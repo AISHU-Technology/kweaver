@@ -61,7 +61,7 @@ jobs:
         targetType: 'inline'
         script: |
           docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/src --privileged=true ad/graph_builder:1.0.1 sh ./engine/graph-engine/build.sh
-    #      docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/src --privileged=true ad_go_env:goenv /bin/bash -c "source /etc/bashrc;go test -coverprofile=cover.out -coverpkg=./controllers;gocov convert cover.out | gocov-xml > ut_coverage.xml;go test -v -coverpkg=./controllers | go-junit-report > coverage.xml";
+          docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/src --privileged=true ad_go_env:goenv /bin/bash -c "source /etc/bashrc;go test -coverprofile=cover.out -coverpkg=./controllers;gocov convert cover.out | gocov-xml > ut_coverage.xml;go test -v -coverpkg=./controllers | go-junit-report > coverage.xml";
     # - task: FtpUpload@2ls
     #   displayName: utUpload
     #   inputs:
