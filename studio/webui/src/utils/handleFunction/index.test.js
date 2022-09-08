@@ -1,7 +1,5 @@
 import { mount } from 'enzyme';
 import {
-  debounce, // 防抖函数(类组件)
-  throttle, // 节流函数(类组件)
   getParam, // 获取url中的参数
   getPostfix, // 获取文件后缀
   wrapperTitle, // 截断title
@@ -153,56 +151,6 @@ describe('switchIcon', () => {
     fileList.forEach(file => {
       expect(isRender(switchIcon('file', file))).toBe(true);
     });
-  });
-});
-
-describe('debounce', () => {
-  it('should debounce', () => {
-    jest.useFakeTimers();
-
-    const test = jest.fn();
-    const immediateTest = jest.fn();
-    const arg1 = '第一次调用';
-    const arg2 = '第二次调用';
-    const mockDebounce = debounce(test, 20);
-    const mockImmediate = debounce(immediateTest, 20, true);
-
-    mockDebounce(arg1);
-    mockDebounce(arg2);
-    jest.runAllTimers();
-
-    // 延迟防抖
-    expect(test).toHaveBeenCalledTimes(1);
-    expect(test.mock.calls[0][0]).toBe(arg2);
-
-    mockImmediate(arg1);
-    mockImmediate(arg2);
-    jest.runAllTimers();
-
-    // 立即执行的防抖
-    expect(immediateTest).toHaveBeenCalledTimes(1);
-    expect(immediateTest.mock.calls[0][0]).toBe(arg1);
-
-    jest.useRealTimers();
-  });
-});
-
-describe('throttle', () => {
-  it('should throttle', () => {
-    jest.useFakeTimers();
-
-    const test = jest.fn();
-    const arg1 = '第一次调用';
-    const arg2 = '第二次调用';
-    const mockThrottle = throttle(test, 20);
-
-    mockThrottle(arg1);
-    mockThrottle(arg2);
-
-    jest.runAllTimers();
-    expect(test).toHaveBeenCalledTimes(1);
-    expect(test.mock.calls[0][0]).toBe(arg1);
-    jest.useRealTimers();
   });
 });
 

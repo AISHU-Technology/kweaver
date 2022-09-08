@@ -233,7 +233,7 @@
       "viewTask": "View task",
       "backGraph": "Back list",
       "seeTask": "View task",
-      "enptyErr": "The value cannot be null",
+      "emptyErr": "The value cannot be null",
       "repeatErr": "Repeat selection.Please modify",
       "delSuccess": "Attribute configuration deleted successfully!",
       "timedrun": "Timed run"

@@ -1,10 +1,3 @@
-/**
- * 添加筛选条件弹窗
- * @author Jason.ji
- * @date 2022/01/06
- *
- */
-
 import React, { memo, useState, Fragment, useEffect } from 'react';
 import { Modal, Button, Select, Input, DatePicker, Empty, InputNumber } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';

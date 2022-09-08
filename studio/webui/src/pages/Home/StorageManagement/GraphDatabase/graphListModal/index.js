@@ -42,7 +42,7 @@ const GraphListModal = props => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message' && response?.ErrorCode === 'Manager.Common.ServerError') {
         message.error(response?.Description || '');
       }
@@ -90,7 +90,7 @@ const GraphListModal = props => {
           columns={columns}
           dataSource={tableData}
           pagination={false}
-          rowKey={(record, index) => id + index}
+          rowKey={record => record.name}
           scroll={tableData.length > 6 ? { y: 399 } : false}
           loading={loading ? { indicator: antIconBig } : false}
           locale={{

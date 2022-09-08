@@ -16,7 +16,7 @@ module.exports = function (app) {
       // target: 'https://10.2.235.242',
       // target: 'https://10.2.196.57',
       // target: 'https://10.4.71.138',
-      target: 'http://10.4.106.255:6476',
+      target: 'http://10.4.69.51:6475',
       changeOrigin: true,
       secure: false
     })
@@ -55,7 +55,7 @@ module.exports = function (app) {
       // target: 'https://10.2.235.242',
       // target: 'https://10.2.196.57',
       // target: 'https://10.4.71.138',
-      target: 'http://10.4.106.255:6476',
+      target: 'http://10.4.69.51:6474',
       changeOrigin: true,
       secure: false
     })

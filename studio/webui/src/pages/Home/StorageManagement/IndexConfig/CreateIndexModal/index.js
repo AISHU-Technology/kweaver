@@ -50,7 +50,7 @@ const ModalContent = props => {
           }
         }
       } catch (error) {
-        const { type, response } = error;
+        const { type = '', response = {} } = error || {};
         if (type === 'message') messageError(response);
       }
     });
@@ -71,7 +71,7 @@ const ModalContent = props => {
         setTestLoading(false);
       } catch (error) {
         setTestLoading(false);
-        const { type, response } = error;
+        const { type = '', response = {} } = error || {};
         if (type === 'message') messageError(response);
       }
     });

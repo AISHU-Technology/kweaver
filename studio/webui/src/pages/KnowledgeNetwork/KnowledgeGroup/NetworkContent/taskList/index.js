@@ -382,7 +382,8 @@ const TaskList = props => {
   // 运行按钮
   const runTask = () => {
     // 取消按钮focus样式
-    document.getElementsByClassName('run')[0].focus = false;
+    const runBtn = document.getElementsByClassName('run')[0];
+    runBtn && (runBtn.focus = false);
 
     if (tableData.length === 0) {
       setSelectUpdateId(selectedGraph.kg_conf_id);

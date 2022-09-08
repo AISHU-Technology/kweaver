@@ -1,7 +1,5 @@
 /**
- * @description 特定点批量建边
- * @author Eden
- * @date 2021/05/20
+ * 特定点批量建边
  */
 
 import React, { Component } from 'react';

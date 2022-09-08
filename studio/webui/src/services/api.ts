@@ -110,7 +110,6 @@ const API = {
   graphSaveNoCheck: `${baseBuilder}/graph/savenocheck`,
   graphCheckKmApInfo: `${baseBuilder}/graph/check_kmapinfo`,
   graphGetInfoExt: `${baseBuilder}/graph/graph_InfoExt/graphid`,
-  taskPerform: `${baseBuilder}/task`,
 
   // swagger
   swaggerDocGet: `${baseStudio}/swaggerDoc`

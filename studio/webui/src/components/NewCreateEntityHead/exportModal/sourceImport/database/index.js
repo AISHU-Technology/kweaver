@@ -1,11 +1,3 @@
-/**
- * 数据库类导入
- *
- * @author Eden
- * @date 2021/05/13
- *
- */
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';

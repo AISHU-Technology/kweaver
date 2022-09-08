@@ -151,7 +151,7 @@ describe('SearchUI', () => {
     const wrapper = init(defaultProps);
 
     await wrapper.instance().getReport(mockRes[0]);
-    expect(wrapper.state().anylysisTitle).toBe(mockRes[0].name);
+    expect(wrapper.state().analysisTitle).toBe(mockRes[0].name);
 
     servicesExplore.analysisReportGet.mockImplementationOnce(() =>
       Promise.resolve({ ErrorCode: 'EngineServer.ErrNebulaStatsErr' })

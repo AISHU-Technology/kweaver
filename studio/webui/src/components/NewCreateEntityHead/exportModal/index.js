@@ -1,9 +1,3 @@
-/**
- * @description 一键导入弹窗
- * @author Eden
- * @date 2021/05/11
- */
-
 import React, { Component } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';

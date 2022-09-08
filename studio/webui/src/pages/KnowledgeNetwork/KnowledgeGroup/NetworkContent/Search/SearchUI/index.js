@@ -6,6 +6,7 @@
 import React, { createRef, PureComponent } from 'react';
 import { Select, Button, Input, Empty, ConfigProvider, Checkbox, Tabs, Modal, message } from 'antd';
 import { UpOutlined, DownOutlined, ExclamationCircleFilled, CloseOutlined } from '@ant-design/icons';
+import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { GET_CLASSDATA, GET_SEARCHLIST, GET_SEARCHE } from './gql';
 import { exploreQuery, kgQuery } from '@/utils/graphQL-search';
@@ -13,7 +14,6 @@ import servicesExplore from '@/services/explore';
 import IconFont from '@/components/IconFont';
 import Analysis from '@/components/analysisInfo';
 import AdSpin from '@/components/AdSpin';
-import { throttle } from '@/utils/handleFunction';
 import { boolCheckStatus, checkAllData, handleTags } from './assistFunction';
 // import Header from './Header';
 import FilterModal from './FilterModal';
@@ -67,7 +67,7 @@ class searchUI extends PureComponent {
     analysLoading: false, // 分析报告loading
     analysVisible: false, // 分析报告弹窗
     reportData: '', // 分析报告数据
-    anylysisTitle: '', // 分析报告标题
+    analysisTitle: '', // 分析报告标题
     changeVisible: false, // 切换图谱确认弹窗
     viewType: V_ALL, // 结果筛选
     checkedCache: [], // 已选结果缓存
@@ -254,7 +254,7 @@ class searchUI extends PureComponent {
    * 监听窗口变化, 更新筛选标签折叠状态, 300ms防抖
    * @param {HtmlEvent} e
    */
-  listenResize = throttle(e => {
+  listenResize = _.throttle(e => {
     const { fold } = this.state;
     const { scrollHeight } = this.filterRef.current;
 
@@ -537,7 +537,7 @@ class searchUI extends PureComponent {
       rid: encodeURIComponent(id)
     };
 
-    this.setState({ anylysisTitle: name, analysLoading: true });
+    this.setState({ analysisTitle: name, analysLoading: true });
     this.resetFlag && (this.resetFlag = false);
 
     const res = await servicesExplore.analysisReportGet(params);
@@ -610,7 +610,7 @@ class searchUI extends PureComponent {
       analysLoading,
       analysVisible,
       reportData,
-      anylysisTitle,
+      analysisTitle,
       changeVisible,
       viewType,
       rightKey
@@ -903,7 +903,7 @@ class searchUI extends PureComponent {
           forceRender
           onCancel={() => this.setState({ analysVisible: false })}
         >
-          <Analysis reportData={reportData} anylysisTitle={anylysisTitle} />
+          <Analysis reportData={reportData} analysisTitle={analysisTitle} />
         </Modal>
 
         {/* 切换图谱确认弹窗 */}

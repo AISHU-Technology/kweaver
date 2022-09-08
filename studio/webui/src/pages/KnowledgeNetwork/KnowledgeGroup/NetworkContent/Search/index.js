@@ -1,9 +1,3 @@
-/**
- * @description 新普通搜索页面
- * @author Eden
- * @date 2022/01/05
- */
-
 import React, { Component } from 'react';
 import { Drawer, Button } from 'antd';
 import intl from 'react-intl-universal';

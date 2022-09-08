@@ -1,11 +1,3 @@
-/**
- * 按次配置任务
- *
- * @author Eden
- * @date 2021/12/21
- *
- */
-
 import React, { Component } from 'react';
 import { DatePicker } from 'antd';
 import intl from 'react-intl-universal';

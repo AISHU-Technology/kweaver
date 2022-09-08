@@ -1,23 +1,15 @@
-/**
- * @description 汇总信息
- * @author Eden
- * @date 2022/01/11
- */
-
 import React, { Component } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import IconFont from '@/components/IconFont';
 import Summary from './Summary';
 import Basic from './Basic';
-import Pathexploration from './PathExploration';
-
+import PathExploration from './PathExploration';
 import './style.less';
 
 const ICON_ARRAY = [
   { id: 1, type: 'icon-iconzhengli_dangan', intlText: 'searchGraph.Summary' },
   { id: 2, type: 'icon-jibenxinxi', intlText: 'searchGraph.baseInfo' }
-  // { id: 3, type: 'icon-lujingtansuo', intlText: 'searchGraph.pathExploration' }
 ];
 class SideBar extends Component {
   state = {
@@ -95,7 +87,7 @@ class SideBar extends Component {
             />
           )}
           {lefSelect === 3 && (
-            <Pathexploration
+            <PathExploration
               startNode={startNode}
               endNode={endNode}
               setStartNode={setStartNode}

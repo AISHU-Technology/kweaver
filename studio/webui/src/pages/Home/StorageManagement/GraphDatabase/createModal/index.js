@@ -64,7 +64,7 @@ const ModalContent = memo(props => {
         }
       }
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
         message.error(response?.Description || '');
       }
@@ -120,7 +120,7 @@ const ModalContent = memo(props => {
           }
         }
       } catch (error) {
-        const { type, response } = error;
+        const { type = '', response = {} } = error || {};
         if (type === 'message') messageError(response);
       }
     });
@@ -158,7 +158,7 @@ const ModalContent = memo(props => {
         setTestLoading(false);
       } catch (error) {
         setTestLoading(false);
-        const { type, response } = error;
+        const { type = '', response = {} } = error || {};
         if (type === 'message') messageError(response);
       }
     });
