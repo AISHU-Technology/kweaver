@@ -17,7 +17,7 @@ from third_party_service.permission_manager import Permission
 import logging
 
 from common.international import bind_i18n
-from flasgger import Swagger
+from flasgger import Swagger, LazyString, LazyJSONEncoder
 import yaml
 
 # from flask_cors import *
@@ -32,8 +32,10 @@ bind_i18n(app)
 GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_template.yaml'), 'r') as f:
     swagger_template = yaml.load(f, Loader=yaml.FullLoader)
+app.json_encoder = LazyJSONEncoder
+swagger_template['host'] = LazyString(lambda: request.host)
 swagger_config = Swagger.DEFAULT_CONFIG
-swagger_config['specs_route'] = '/swagger'  # swagger访问路径
+swagger_config['specs_route'] = '/swagger'  # swagger页面访问路径
 swagger_config['specs'][0]['route'] = '/swagger_json.json'  # json文件访问路径
 swagger = Swagger(app, template=swagger_template)
 
