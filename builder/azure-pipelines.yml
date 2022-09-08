@@ -131,8 +131,23 @@ jobs:
       inputs:
         command: 'build'
         repository: $(imageNameWithHarbor)
-        tags: $(mainTag)
+        tags: |
+          $(mainTag)
+          latest
         Dockerfile: '**/Builder.Dockerfile'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'acr.aishu.cn'
+        command: 'login'
+    - task: Docker@2
+      displayName: Push image
+      inputs:
+        containerRegistry: 'acr.aishu.cn'
+        repository: 'ad/kw-builder'
+        command: push
+        tags: |
+          $(mainTag)
+          latest
     - task: Bash@3
       displayName: saveTar
       inputs:
