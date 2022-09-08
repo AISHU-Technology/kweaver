@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
+import intl from 'react-intl-universal';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { SettingOutlined } from '@ant-design/icons';
 
@@ -88,9 +89,15 @@ const KnowledgeNetwork = () => {
       },
       {
         label: '认知引擎',
-        key: '/knowledge/engine',
+        key: 'knowledgeEngine',
         icon: <IconFont type="icon-renzhiyinqing" />,
-        onClick: () => history.push(`/knowledge/engine?id=${currentId}`)
+        children: [
+          {
+            label: intl.get('global.knowledgeSearch'),
+            key: '/knowledge/engine/search',
+            onClick: () => history.push(`/knowledge/engine/search?id=${currentId}`)
+          }
+        ]
       },
       {
         label: '数据管理',
@@ -106,7 +113,7 @@ const KnowledgeNetwork = () => {
       <Layout header={header} sidebar={sidebar} mainStyle={{ padding: 0, background: '#fff' }}>
         <Switch>
           <Route path="/knowledge/network" render={() => <KnowledgeGroup kgData={selectedKnowledge} />} />
-          <Route path="/knowledge/engine" render={() => <CognitiveEngine kgData={selectedKnowledge} />} />
+          <Route path="/knowledge/engine/search" render={() => <CognitiveEngine kgData={selectedKnowledge} />} />
           <Route path="/knowledge/source" render={() => <DataSource selectedKnowledge={selectedKnowledge} />} />
         </Switch>
       </Layout>
