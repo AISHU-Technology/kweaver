@@ -4,24 +4,24 @@ import { act, sleep } from '@/tests';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 import DeleteModal from '../deleteModal/index';
 
-const props = {
+const defaultProps = {
   visible: true,
-  setVisible: jest.fn(),
-  getData: jest.fn(),
-  delId: 1
+  delId: 1,
+  onCloseDelete: jest.fn(),
+  onRefreshList: jest.fn()
 };
 
 servicesKnowledgeNetwork.knowledgeNetDelete = jest.fn(() => Promise.resolve({ res: 'success' }));
-const init = (props = {}) => mount(<DeleteModal {...props} />);
+const init = (props = defaultProps) => mount(<DeleteModal {...props} />);
 
 describe('UI render', () => {
   it('render test', async () => {
-    init(props);
+    init();
     await sleep();
   });
 
   it('', () => {
-    const wrapper = init(props);
+    const wrapper = init();
     const btn = wrapper.find('Button');
 
     expect(btn.length).toBe(2);
@@ -30,7 +30,7 @@ describe('UI render', () => {
 
 describe('Function', () => {
   it('ok btn', async () => {
-    const wrapper = init(props);
+    const wrapper = init();
 
     const ok = wrapper.find('.delete-ok').at(0);
 
@@ -40,11 +40,11 @@ describe('Function', () => {
     await sleep();
 
     expect(servicesKnowledgeNetwork.knowledgeNetDelete).toHaveBeenCalled();
-    expect(props.getData).toHaveBeenCalled();
+    expect(defaultProps.onRefreshList).toHaveBeenCalled();
   });
 
   it('cancel btn', async () => {
-    const wrapper = init(props);
+    const wrapper = init();
 
     const cancel = wrapper.find('.ant-btn-default .delete-cancel').at(0);
 
@@ -53,7 +53,7 @@ describe('Function', () => {
     });
     await sleep();
 
-    expect(props.setVisible).toHaveBeenCalled();
+    expect(defaultProps.onCloseDelete).toHaveBeenCalled();
   });
 });
 
@@ -62,7 +62,7 @@ describe('error text', () => {
     servicesKnowledgeNetwork.knowledgeNetDelete = jest.fn(() =>
       Promise.resolve({ ErrorCode: 'Builder.service.knw_service.knwService.deleteKnw.GraphNotEmptyError' })
     );
-    const wrapper = init(props);
+    const wrapper = init();
 
     const ok = wrapper.find('.delete-ok').at(0);
 
@@ -76,7 +76,7 @@ describe('error text', () => {
     servicesKnowledgeNetwork.knowledgeNetDelete = jest.fn(() =>
       Promise.resolve({ ErrorCode: 'Builder.service.knw_service.knwService.deleteKnw.PermissionError' })
     );
-    const wrapper = init(props);
+    const wrapper = init();
 
     const ok = wrapper.find('.delete-ok').at(0);
 
@@ -90,7 +90,7 @@ describe('error text', () => {
     servicesKnowledgeNetwork.knowledgeNetDelete = jest.fn(() =>
       Promise.resolve({ ErrorCode: 'Builder.service.knw_service.knwService.deleteKnw.RequestError' })
     );
-    const wrapper = init(props);
+    const wrapper = init();
 
     const ok = wrapper.find('.delete-ok').at(0);
 

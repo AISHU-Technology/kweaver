@@ -161,6 +161,7 @@
     "cross-env": "7.0.3",
     "html-loader": "0.5.5",
     "jest": "24.9.0",
+    "jest-canvas-mock": "2.4.0",
     "redux-devtools": "3.5.0",
     "stylelint": "13.13.0",
     "stylelint-config-standard": "22.0.0",

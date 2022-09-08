@@ -1,6 +1,5 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import intl from 'react-intl-universal';
 
 import BasicInfo from '../GraphInfo/BasicInfo';
 
@@ -26,10 +25,5 @@ describe('BasicInfo', () => {
   it('have name', () => {
     const wrapper = init(props);
     expect(wrapper.find('.content').exists()).toBe(true);
-  });
-
-  it('class graphStatus exists', () => {
-    const wrapper = init(props);
-    expect(wrapper.find('.graphStatus').exists()).toBe(true);
   });
 });
