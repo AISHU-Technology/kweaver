@@ -65,7 +65,6 @@ class IndexConfig extends Component {
 
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
     } catch (error) {
-      console.log('error error', error);
       const { type = '', response = {} } = error || {};
       if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
         message.error(response?.Description || '');

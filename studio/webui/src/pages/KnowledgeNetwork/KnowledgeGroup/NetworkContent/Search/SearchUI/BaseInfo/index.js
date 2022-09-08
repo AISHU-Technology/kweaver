@@ -1,10 +1,3 @@
-/**
- * 基本信息
- * @author Jason.ji
- * @date 2022/01/11
- *
- */
-
 import React, { memo } from 'react';
 import ScrollBar from '@/components/ScrollBar';
 import './style.less';

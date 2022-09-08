@@ -1,7 +1,5 @@
 /**
- * @description 进出边拓展点
- * @author Eden
- * @date 2022/01/14
+ * 进出边拓展点
  */
 
 import React, { Component } from 'react';
@@ -24,7 +22,7 @@ class InAndOut extends Component {
     sourceData: [], // 每页数据
     searchValue: '', // 搜索的值
     openEdges: this.props.edges, // 需要展开的边
-    loadding: false,
+    loading: false,
     openNodes: this.props.nodes // 需要展开的点
   };
 
@@ -64,7 +62,7 @@ class InAndOut extends Component {
    */
   getEdgeData = async ({ id, typeClass, io, rid, page, size, name }) => {
     this.setState({
-      loadding: true
+      loading: true
     });
     try {
       const res = await servicesExplore.expandEdges({
@@ -89,11 +87,11 @@ class InAndOut extends Component {
         });
       }
       this.setState({
-        loadding: false
+        loading: false
       });
     } catch (error) {
       this.setState({
-        loadding: false
+        loading: false
       });
     }
   };
@@ -473,7 +471,7 @@ class InAndOut extends Component {
 
   render() {
     const { selectEdge, openInformation, inOrOut } = this.props;
-    const { page, sourceData, loadding } = this.state;
+    const { page, sourceData, loading } = this.state;
 
     return (
       <div id="inAndOut">
@@ -507,7 +505,7 @@ class InAndOut extends Component {
             onPressEnter={e => this.onSearch(e)}
           />
         </div>
-        {loadding ? (
+        {loading ? (
           <div className="in-out-loading-data">
             <LoadingOutlined className="icon" />
           </div>

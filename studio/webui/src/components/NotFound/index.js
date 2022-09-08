@@ -1,17 +1,10 @@
-/**
- * 路由404页面
- *
- * @author liang.zhiqiang@aishu.cn
- * @date 2020/06/16
- *
- */
-
 import React from 'react';
 import intl from 'react-intl-universal';
 import logo from '@/assets/images/head-Logo.svg';
 import NotFoundImg from '@/assets/images/404.svg';
 import versionInfo from '../../version.json';
 import './style.less';
+
 const NotFound = () => {
   return (
     <div className="not-found">

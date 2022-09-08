@@ -1,10 +1,4 @@
 /* eslint-disable max-lines */
-/**
- * @description 关系类管理弹窗
- * @author Eden
- * @date 2021/05/10
- */
-
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { Select, ConfigProvider, Button, Empty, AutoComplete } from 'antd';

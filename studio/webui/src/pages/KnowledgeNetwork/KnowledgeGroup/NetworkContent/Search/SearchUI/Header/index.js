@@ -1,10 +1,3 @@
-/**
- * 普通搜索顶部工具栏
- * @author Jason.ji
- * @date 2022/01/06
- *
- */
-
 import React, { memo } from 'react';
 import { Select, Button, Empty, ConfigProvider } from 'antd';
 import intl from 'react-intl-universal';

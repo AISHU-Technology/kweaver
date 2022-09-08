@@ -1,21 +1,17 @@
-/**
- * 顶部步骤条
- */
-
 import React, { memo } from 'react';
 import { CheckOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
+import classNames from 'classnames';
 import './style.less';
 
-const checkIcon = <CheckOutlined className="check-icon" />;
+const NumIcon = ({ number }: { number: number }) => <span className="num-icon">{number}</span>;
 
-const TopSteps = props => {
-  const { current } = props;
+interface TopStepsProps {
+  current?: number;
+}
+const TopSteps: React.FC<TopStepsProps> = props => {
+  const { current = 0 } = props;
 
-  // 文字图标
-  const NumIcon = ({ number }) => <span className="num-icon">{number}</span>;
-
-  // 所有步骤条标题
   const titleList = [
     intl.get('workflow.basic.basic'),
     intl.get('workflow.datasource.datasource'),
@@ -32,8 +28,16 @@ const TopSteps = props => {
         const isProgress = index === current;
 
         return (
-          <div key={title} className={`step-item ${isFinish && 'finish'} ${isProgress && 'progress'}`}>
-            <span className="status-icon">{isFinish ? checkIcon : <NumIcon number={index + 1} />}</span>
+          <div
+            key={title}
+            className={classNames('step-item', {
+              finish: isFinish,
+              progress: isProgress
+            })}
+          >
+            <span className="status-icon">
+              {isFinish ? <CheckOutlined className="check-icon" /> : <NumIcon number={index + 1} />}
+            </span>
             <span className="step-title">{title}</span>
           </div>
         );

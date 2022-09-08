@@ -1,9 +1,3 @@
-/**
- * @description 搜索图谱页面
- * @author Eden
- * @date 2022/01/05
- */
-
 import React, { Component } from 'react';
 import G6Graph from './G6Graph';
 import SideBar from './SideBar';

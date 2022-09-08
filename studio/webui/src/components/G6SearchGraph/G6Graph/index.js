@@ -1,10 +1,4 @@
-/* eslint-disable */
-/**
- * @description G6图谱渲染
- * @author Eden
- * @date 2022/01/05
- */
-
+/* eslint-disable max-lines */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Button, message } from 'antd';
@@ -52,11 +46,11 @@ class G6Graph extends Component {
     loadingFull: false, // 加载数据全屏loading
     selectEdge: '', // 选择需要展开的边
     visible: false, // 控制分析弹窗
-    anylysisTitle: '',
+    analysisTitle: '',
     inOrOut: 'in', // 进出边
     modalVisible: false, // 一键清除
     tipHidden: false, // 框选删除弹窗
-    selectedNodes: [], //框选的点
+    selectedNodes: [], // 框选的点
     configBoxVisible: false, // 设置框框
     isClickTool: false // 点击进出边操作圈
   };
@@ -233,7 +227,7 @@ class G6Graph extends Component {
       // 点击空白区域或者边，关闭操作盘
       if (!e.item || e.item.getModel().source) {
         !e.item && this.props.setSelectedNode('');
-        !e.item && this.recoveryStyle(); //恢复高亮
+        !e.item && this.recoveryStyle(); // 恢复高亮
 
         this.closeAll();
 
@@ -266,13 +260,13 @@ class G6Graph extends Component {
 
     // 双击节点组
     this.graph.on('node:dblclick', e => {
-      clearTimeout(this.timer); //清除未执行的定时器
+      clearTimeout(this.timer); // 清除未执行的定时器
       this.expandEdges(e.item.get('model'));
     });
 
     // 点击节点组
     this.graph.on('node:click', e => {
-      clearTimeout(this.timer); //清除未执行的定时器
+      clearTimeout(this.timer); // 清除未执行的定时器
       this.timer = setTimeout(() => {
         // 固定点击过的节点
         const model = e.item.get('model');
@@ -323,7 +317,7 @@ class G6Graph extends Component {
 
           this.setState({
             visible: true,
-            anylysisTitle: selectedNode.data.name
+            analysisTitle: selectedNode.data.name
           });
 
           return;
@@ -814,9 +808,8 @@ class G6Graph extends Component {
    */
   deleteNode = (deleteNode, nodes, edges) => {
     const { selectedNodes } = this.state;
-    deleteNode = deleteNode || selectedNodes;
-
-    const deleteIds = deleteNode.map(item => item.id || item?._cfg.id);
+    const curDeleteNode = deleteNode || selectedNodes;
+    const deleteIds = curDeleteNode.map(item => item.id || item?._cfg.id);
 
     const newNodes = nodes.filter(item => {
       return !deleteIds.includes(item.id);
@@ -856,7 +849,6 @@ class G6Graph extends Component {
         this.addNodes(newNodes, openEdges);
       }
 
-      //报错
       if (res?.ErrorCode) {
         EXPAND_ERROR.forEach(item => {
           if (item.ErrorCode === res?.ErrorCode) {
@@ -864,7 +856,9 @@ class G6Graph extends Component {
           }
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      return 0;
+    }
   };
 
   // 关闭分析报告弹窗
@@ -886,7 +880,7 @@ class G6Graph extends Component {
       inAndOutVisible,
       loadingFull,
       selectEdge,
-      anylysisTitle,
+      analysisTitle,
       visible,
       inOrOut,
       modalVisible,
@@ -1018,7 +1012,7 @@ class G6Graph extends Component {
           selectGraph={selectGraph}
           selectedNode={selectedNode}
           onCancel={this.closeAnalysis}
-          anylysisTitle={anylysisTitle}
+          analysisTitle={analysisTitle}
         />
 
         <ModalDelete

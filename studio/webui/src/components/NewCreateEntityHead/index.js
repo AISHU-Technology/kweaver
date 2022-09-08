@@ -1,10 +1,4 @@
 /* eslint-disable max-lines */
-/**
- * @description 新创建本体页操作栏头部
- * @author Eden
- * @date 2021/05/08
- */
-
 import React, { Component } from 'react';
 import intl from 'react-intl-universal';
 import { withRouter } from 'react-router-dom';

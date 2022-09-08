@@ -1,12 +1,3 @@
-/* eslint-disable */
-/**
- * 标注展示
- *
- * @author Eden
- * @date 2021/1/26
- *
- */
-
 import React, { Component } from 'react';
 import intl from 'react-intl-universal';
 import { Collapse } from 'antd';
