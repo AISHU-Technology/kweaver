@@ -2820,7 +2820,7 @@ class Transfer(object):
 
             for row in data:
                 temp_dict = {k: row[v] for k, v in columns_dict.items() if row[v]}
-                m = {k: str(temp_dict[k]) for k in exist_rule if k in temp_dict}
+                m = {k: str(temp_dict[k]) if temp_dict[k] is not None else None for k in exist_rule if k in temp_dict}
                 m["ds_id"] = self.ds_id
                 mongo_data.append(m)
             MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)

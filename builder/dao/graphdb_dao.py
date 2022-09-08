@@ -36,15 +36,20 @@ def get_md5(data):
     return md.hexdigest()
 
 
-
 def type_transform(db_type, value, type, sql_format=True):
     if sql_format:
         if type == "string":
             value = "'" + str(value) + "'"
-        if type == "date" or (db_type == "orientdb" and type == "datetime"):
-            value = ' date("{}") '.format(value)
-        if db_type == "nebula" and type == "datetime":
-            value = ' datetime("{}") '.format(value)
+        if type == "date":
+            if db_type == "nebula":
+                value = ' date("{}") '.format(value)
+            elif db_type == 'orientdb':
+                value = "'" + str(value) + "'"
+        if type == "datetime":
+            if db_type == "nebula":
+                value = ' datetime("{}") '.format(value)
+            elif db_type == 'orientdb':
+                value = "'" + str(value) + "'"
     return str(value)
 
 
@@ -79,12 +84,14 @@ def gen_doc_vid(merge_otls, otl_name, one_data, en_pro_dict, gtype='nebula'):
         props_str += f'{m}_'
     return get_md5(props_str)
 
+
 def data_type_transform(data_type: str):
     '''默认数据类型以orientdb为基础，部分数据类型需要兼容nebula，在此进行转换'''
     mapping = {'boolean': 'bool', 'decimal': 'float', 'integer': 'int'}
     if data_type.lower() not in mapping:
         return data_type
     return mapping[data_type.lower()]
+
 
 def default_value(sql_format=True):
     if sql_format:
@@ -1730,6 +1737,7 @@ class GraphDB(object):
                 if code != 200:
                     print(r_json)
 
+
 class SQLProcessor:
     def __init__(self, dbtype) -> None:
         self.type = dbtype
@@ -2049,7 +2057,8 @@ class SQLProcessor:
             if self.type == 'orientdb':
                 sql = 'SELECT FROM `{}` WHERE `{}` = {}'.format(class_name, prop, value)
             elif self.type == 'nebula':
-                ngql = 'LOOKUP ON `{}` where `{}`.`{}` == {} YIELD id(vertex)'.format(class_name, class_name, prop, value)
+                ngql = 'LOOKUP ON `{}` where `{}`.`{}` == {} YIELD id(vertex)'.format(class_name, class_name, prop,
+                                                                                      value)
                 code, res = graphdb._nebula_exec(ngql, db)
                 sql = []
                 for i in range(res.row_size()):
@@ -2178,7 +2187,8 @@ class SQLProcessor:
             vals = []
             for pro in edge_pro_dict[edge_class]:
                 if pro in p_pro:
-                    pro_value = type_transform(self.type, normalize_text(str(p_pro[pro])), edge_pro_dict[edge_class][pro])
+                    pro_value = type_transform(self.type, normalize_text(str(p_pro[pro])),
+                                               edge_pro_dict[edge_class][pro])
                     vals.append(pro_value)
                 else:
                     vals.append(default_value())
