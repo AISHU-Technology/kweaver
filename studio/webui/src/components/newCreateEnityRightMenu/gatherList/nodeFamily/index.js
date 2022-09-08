@@ -25,7 +25,7 @@ class NodeFamily extends Component {
   scrollRef = createRef();
 
   componentDidMount() {
-    this.props.onNodeFamilyRef(this.scrollRef.current.scrollBars);
+    this.props.onNodeFamilyRef(this.scrollRef.current?.scrollBars);
   }
 
   changeCheck = (e, data) => {
