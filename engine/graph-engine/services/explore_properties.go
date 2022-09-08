@@ -16,10 +16,11 @@ type ReqPropertiesArgs struct {
 // @Summary attributes and types
 // @Description Get attributes and types, for configuring search filter
 // @Tags Engine
-// @Param id query int true "knowledge graph id"
-// @Param class query string true "class name"
+// Param id query int true "knowledge graph id"
+// Param class query string true "class name"
+// @Param body body ReqPropertiesArgs true "class id and name"
 // @Router /api/engine/v1/properties [post]
-// @Accept  x-www-form-urlencoded
+// @Accept  json
 // @Produce json
 // @Success 200 {object} controllers.GetPropertiesRes "result string"
 // @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"

@@ -16,10 +16,11 @@ type ReqExploreRelationArgs struct {
 // @Summary Get relationship
 // @Description Get the direct relationship between two entities
 // @Tags Engine
-// @Param id query int true "knowledge graph id"
-// @Param rids query []string true "IDs of the two entities, length=2"
+// Param id query int true "knowledge graph id"
+// Param rids query []string true "IDs of the two entities, length=2"
+// @Param body body ReqExploreRelationArgs true "knowledge graph id and entity IDs"
 // @Router /api/engine/v1/explore/relation [post]
-// @Accept  x-www-form-urlencoded
+// @Accept  json
 // @Produce json
 // @Success 200 {object} controllers.Relation "result string"
 // @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"

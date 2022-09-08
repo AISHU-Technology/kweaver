@@ -12,8 +12,6 @@ type ReqAdvSearch struct {
 	Size  int    `form:"size" binding:"required,gt=0"`
 	Limit int    `form:"limit"`
 }
-type ResAdvSearch struct {
-}
 
 // AdvSearchHandler
 // @Summary advanced search
@@ -27,7 +25,7 @@ type ResAdvSearch struct {
 // @Router /api/engine/v1/adv-search/{confid} [get]
 // @Accept  x-www-form-urlencoded
 // @Produce json
-// @Success 200 {object} controllers.ExpandVertexRes "result string"
+// @Success 200 {object} Response "result string"
 // @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
 // @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 // @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
@@ -52,11 +50,11 @@ func AdvSearchHandler(c *gin.Context) {
 // @Summary advanced search test
 // @Description semantic search test
 // @Tags Engine
-// @Param body body string true "adv-search query"
+// @Param body body RequestModel true "adv-search query"
 // @Router /api/engine/v1/adv-search/test [get]
 // @Accept  json
 // @Produce json
-// @Success 200 {object} controllers.ExpandVertexRes "result string"
+// @Success 200 {object} Response "result string"
 // @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
 // @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 // @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
@@ -74,4 +72,87 @@ func AdvSearchTestHandler(c *gin.Context) {
 	header := c.Request.Header
 	httpcode, res := controllers.AdvSearchTest(body, header)
 	c.JSON(httpcode, res)
+}
+
+//not used, just for swagger
+
+type Vertexes struct {
+	Open []string
+}
+
+type Edges struct {
+	Open []string
+}
+
+type SearchRange struct {
+	Vertexes Vertexes
+	Edges    Edges
+}
+
+type DisplayRange struct {
+	Vertexes Vertexes
+}
+
+type ConfContent struct {
+	Max_depth     int
+	Search_range  SearchRange
+	Display_range DisplayRange
+}
+type RequestModel struct {
+	Kg_ids       string
+	Query        string
+	Page         int
+	Size         int
+	Conf_content ConfContent
+}
+
+type Vertex struct {
+	Id    string
+	Tag   string
+	Name  string
+	Color string
+}
+
+type Edge struct {
+	From_id string
+	To_id   string
+	Tag     string
+	Name    string
+	Color   string
+}
+
+type PathMetaData struct {
+	From_entity_score float32
+	Depth             int
+	Weight            float32
+}
+
+type Path struct {
+	Vertexes  []Vertex
+	Edges     []Edge
+	Meta_data []PathMetaData
+}
+
+type TargetVertex struct {
+	Tag         string
+	Id          string
+	Name        string
+	Score       float32
+	Color       string
+	Analysis    bool
+	Properties  Dict
+	Search_path Path
+}
+
+type SearchResult struct {
+	Search []TargetVertex
+}
+
+type Response struct {
+	Time   float32
+	Number int
+	Res    SearchResult
+}
+
+type Dict struct {
 }

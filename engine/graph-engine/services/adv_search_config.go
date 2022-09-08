@@ -67,9 +67,9 @@ type DelAdvSearchConf struct {
 // @Summary delete configs
 // @Description delete adv-search configs
 // @Tags Engine
-// @Param conf_ids query []int true "search config ids"
+// @Param conf_ids body DelAdvSearchConf true "config ids"
 // @Router /api/engine/v1/adv-search-config [delete]
-// @Accept  x-www-form-urlencoded
+// @Accept  json
 // @Produce json
 // @Success 200 {object} controllers.DelSearchConfRes "result string"
 // @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
