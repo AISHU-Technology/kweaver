@@ -41,10 +41,16 @@ def type_transform(db_type, value, type, sql_format=True):
     if sql_format:
         if type == "string":
             value = "'" + str(value) + "'"
-        if type == "date" or (db_type == "orientdb" and type == "datetime"):
-            value = ' date("{}") '.format(value)
-        if db_type == "nebula" and type == "datetime":
-            value = ' datetime("{}") '.format(value)
+        if type == "date":
+            if db_type == "nebula":
+                value = ' date("{}") '.format(value)
+            elif db_type == 'orientdb':
+                value = "'" + str(value) + "'"
+        if type == "datetime":
+            if db_type == "nebula":
+                value = ' datetime("{}") '.format(value)
+            elif db_type == 'orientdb':
+                value = "'" + str(value) + "'"
     return str(value)
 
 
