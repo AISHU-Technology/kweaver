@@ -1,8 +1,3 @@
-/**
- * @description 知识网络接口
- * @author Haiyan
- * @date 2022/03/18
- */
 import React from 'react';
 import { Modal, message } from 'antd';
 import intl from 'react-intl-universal';

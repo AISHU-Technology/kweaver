@@ -1,11 +1,8 @@
 /**
- * @description 进出边选择栏
- * @author Eden
- * @date 2022/01/13
+ * 进出边选择栏
  */
 
 import React, { Component } from 'react';
-import G6 from '@antv/g6';
 import _ from 'lodash';
 import { Tooltip, Empty } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -71,14 +68,16 @@ class Information extends Component {
   getCount = item => {
     const { edges, selectedNode, inOrOut } = this.props;
     if (inOrOut === 'in') {
-      const classCount = edges.filter(element => element.class === item.class && selectedNode.id === element.target)
-        .length;
+      const classCount = edges.filter(
+        element => element.class === item.class && selectedNode.id === element.target
+      ).length;
       return classCount;
     }
 
     if (inOrOut === 'out') {
-      const classCount = edges.filter(element => element.class === item.class && selectedNode.id === element.source)
-        .length;
+      const classCount = edges.filter(
+        element => element.class === item.class && selectedNode.id === element.source
+      ).length;
 
       return classCount;
     }

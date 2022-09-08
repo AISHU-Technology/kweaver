@@ -1,7 +1,5 @@
 /**
- * @description 汇总信息
- * @author Eden
- * @date 2021/05/13
+ * 汇总信息
  */
 
 import React, { Component } from 'react';

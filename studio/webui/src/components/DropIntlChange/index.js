@@ -1,11 +1,3 @@
-/**
- * 国际化切换组件
- *
- * @author Eden
- * @date 2021/09/23
- *
- */
-
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
 import { connect } from 'react-redux';

@@ -1,9 +1,3 @@
-/**
- * @description 点汇总
- * @author Eden
- * @date 2021/05/13
- */
-
 import React, { Component, createRef } from 'react';
 import intl from 'react-intl-universal';
 import { Tooltip, Checkbox, Button, Modal, ConfigProvider, message } from 'antd';

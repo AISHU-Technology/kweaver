@@ -1,9 +1,3 @@
-/**
- * @description 搜索结果页请求
- * @author Eden
- * @date 2021/01/27
- */
-
 import apiService from '@/utils/axios-http';
 import { API } from '../api';
 

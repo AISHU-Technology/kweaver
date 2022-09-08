@@ -1,11 +1,3 @@
-/**
- * 定时任务列表
- *
- * @author Eden
- * @date 2021/12/211
- *
- */
-
 import React, { Component } from 'react';
 import { Table, Switch, Button, Modal, message } from 'antd';
 import { ExclamationCircleFilled, LoadingOutlined } from '@ant-design/icons';

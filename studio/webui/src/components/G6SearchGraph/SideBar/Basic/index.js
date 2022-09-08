@@ -1,9 +1,3 @@
-/**
- * @description 实体基本信息
- * @author Eden
- * @date 2022/01/20
- */
-
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { Radio } from 'antd';

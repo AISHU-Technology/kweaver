@@ -1,13 +1,4 @@
-/* eslint-disable */
-
-/**
- * @description graphQL 客户端配置
- *
- * @author Eden
- * @date 2020/05.27
- *
- */
-
+/* eslint-disable import/no-named-as-default */
 import ApolloClient from 'apollo-client';
 import fetch from 'unfetch';
 import intl from 'react-intl-universal';
@@ -20,7 +11,6 @@ import { message } from 'antd';
 import { handleBack } from './errorHandle';
 
 const cache = new InMemoryCache();
-
 const controller = window.AbortController ? new AbortController() : new XMLHttpRequest();
 const { signal } = controller;
 
@@ -65,7 +55,7 @@ const middlewareLoopAuthLink = new ApolloLink((operation, forward) => {
 });
 
 // 获取响应头配置,如果有token更新，则更新token放入cookie
-const afterwareLink = new ApolloLink((operation, forward) => {
+const afterWareLink = new ApolloLink((operation, forward) => {
   return forward(operation).map(response => {
     const context = operation.getContext();
     const {
@@ -146,17 +136,17 @@ const errorLink = onError(({ networkError, response }) => {
 
 const clientForKg = new ApolloClient({
   cache,
-  link: errorLink.concat(from([middlewareAuthLink, afterwareLink, graphQLLink]))
+  link: errorLink.concat(from([middlewareAuthLink, afterWareLink, graphQLLink]))
 });
 
 const clientForLoopKg = new ApolloClient({
   cache,
-  link: errorLink.concat(from([middlewareLoopAuthLink, afterwareLink, graphQLLink]))
+  link: errorLink.concat(from([middlewareLoopAuthLink, afterWareLink, graphQLLink]))
 });
 
 const clientForExplore = new ApolloClient({
   cache,
-  link: errorLink.concat(from([middlewareAuthLink, afterwareLink, exploreLink]))
+  link: errorLink.concat(from([middlewareAuthLink, afterWareLink, exploreLink]))
 });
 
 export { clientForKg, clientForExplore, clientForLoopKg };

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState, useEffect, useRef } from 'react';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
@@ -12,8 +11,8 @@ import serviceWorkflow from '@/services/workflow';
 import IconFont from '@/components/IconFont';
 import { getParam } from '@/utils/handleFunction';
 
-import Basic from './Basic';
 import TopSteps from './TopSteps';
+import Basic from './Basic';
 import InfoExtr from './InfoExtr';
 import DataSourceBox from './DataSource/index';
 import FlowCreateEntity from './FlowCreateEntity';
@@ -66,7 +65,6 @@ const Workflow = props => {
     }
 
     document.body.classList.add('hidden-scroll');
-
     return () => document.body.classList.remove('hidden-scroll');
   }, []);
 
@@ -91,29 +89,17 @@ const Workflow = props => {
     if (res?.Code) {
       switch (true) {
         case res.Code === 500001 && res.Cause.includes('not exist'):
-          graphTipModal.open(intl.get('graphList.hasBeenDel'));
-          break; // 图谱不存在
+          graphTipModal.open(intl.get('graphList.hasBeenDel')); // 图谱不存在
+          break;
         case res.Code === 'Manager.SoftAuth.UnknownServiceRecordError':
           graphTipModal.open(intl.get('graphList.authErr')); // 权限错误 500403
+          break;
         default:
           res.Cause && message.error(res.Cause);
       }
     }
   };
 
-  // 模拟屏幕缩放事件
-  const doResize = () => {
-    if (document.createEvent) {
-      const event = document.createEvent('HTMLEvents');
-
-      event.initEvent('resize', true, true);
-      window.dispatchEvent(event);
-    } else if (document.createEventObject) {
-      window.fireEvent('onresize');
-    }
-  };
-
-  // 下一步
   const next = res => {
     if (res) {
       const { Code, Cause, ErrorCode, Description } = res;
@@ -145,18 +131,17 @@ const Workflow = props => {
     if (current + 1 > 5) return;
 
     setCurrent(current + 1);
-    setTimeout(doResize, 100);
   };
 
-  // 上一步
   const prev = () => {
     if (current - 1 < 0) return;
 
     setCurrent(current - 1);
-    setTimeout(doResize, 100);
   };
 
-  // 点击退出 或 退出弹窗的确认按钮
+  /**
+   * 点击退出 或 退出弹窗的确认按钮
+   */
   const onExit = () => {
     if (current === 0 && !step1Ref.current.isModify()) {
       if (window.location.pathname.includes('edit')) {
@@ -172,12 +157,9 @@ const Workflow = props => {
     setQuitVisible(true);
   };
 
-  // 保存并退出按钮 打开弹框
-  const saveAndQuit = () => {
-    // setQuitVisible(true);
-  };
-
-  // 放弃保存
+  /**
+   * 放弃保存
+   */
   const handleCancel = () => {
     setQuitVisible(false);
 
@@ -191,11 +173,12 @@ const Workflow = props => {
 
     // 删除新增的任务
     deleteTaskList();
-
     history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}`);
   };
 
-  // 保存退出  等待接口
+  /**
+   * 确认保存
+   */
   const handleSave = async () => {
     Object.keys(apiService.sources).forEach(key => {
       if (key.includes('/api/builder/v1/ds/testconnect') || key.includes('/api/builder/v1/onto/auto/autogenschema')) {
@@ -239,7 +222,7 @@ const Workflow = props => {
   };
 
   /**
-   * @description 删除任务
+   * 删除任务
    */
   const deleteTaskList = () => {
     if (ontoData[0] && (ontoData[0].id || ontoData[0].ontology_id)) {
@@ -277,7 +260,6 @@ const Workflow = props => {
       ) : null}
 
       <div className="work-flow-container">
-        {/* 默认切换步骤不卸载其他步骤的dom结构。 */}
         <div className={`hide space center ${current === 0 && 'show'}`}>
           <Basic
             graphId={graphId}
@@ -341,7 +323,6 @@ const Workflow = props => {
             graphId={graphId}
             infoExtrData={infoExtrData}
             knowMapData={knowMapData}
-            saveAndQuit={saveAndQuit}
             setKnowMapData={setKnowMapData}
             ref={step5Ref}
           />
