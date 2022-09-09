@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
-import { Button, Modal, ConfigProvider, message } from 'antd';
+import { Button, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 

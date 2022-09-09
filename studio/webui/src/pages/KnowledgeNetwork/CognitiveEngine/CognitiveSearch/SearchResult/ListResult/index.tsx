@@ -34,7 +34,7 @@ const ListResult: React.FC<ListResultProps> = props => {
               <RightOutlined className="right-icon" />
 
               <p
-                className="file-name ellipsis-one"
+                className="file-name ad-ellipsis"
                 title={name}
                 onClick={e => {
                   e.stopPropagation();
@@ -46,7 +46,7 @@ const ListResult: React.FC<ListResultProps> = props => {
 
               <div className="pro-tags">
                 {/* 命中的实体 */}
-                <span className="pro-tag ellipsis-one" title={`class：${tag}`}>
+                <span className="pro-tag ad-ellipsis" title={`class：${tag}`}>
                   class：
                   <span className="circle-span" style={{ backgroundColor: color || '#126ee3' }} />
                   {tag}
@@ -56,7 +56,7 @@ const ListResult: React.FC<ListResultProps> = props => {
                   return (
                     <span
                       key={`${proIndex}`}
-                      className="pro-tag ellipsis-one"
+                      className="pro-tag ad-ellipsis"
                       title={`${key}：${value}`}
                       dangerouslySetInnerHTML={{ __html: `${key}：${value}` }}
                     />

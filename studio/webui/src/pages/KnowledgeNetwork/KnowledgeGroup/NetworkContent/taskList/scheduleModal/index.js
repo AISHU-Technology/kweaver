@@ -1,8 +1,9 @@
 import React, { memo } from 'react';
 import { Button, Modal, Steps } from 'antd';
-import { SearchOutlined, EllipsisOutlined, LoadingOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import IconFont from '@/components/IconFont';
+import './style.less';
 
 const { Step } = Steps;
 const stepMap = {

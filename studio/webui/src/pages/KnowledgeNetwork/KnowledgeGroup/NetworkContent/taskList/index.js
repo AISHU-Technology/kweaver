@@ -7,9 +7,9 @@ import { EllipsisOutlined, LoadingOutlined, ExclamationCircleFilled } from '@ant
 import HOOKS from '@/hooks';
 import serviceTaskManagement from '@/services/taskManagement';
 import IconFont from '@/components/IconFont';
-import ErrorModal from './errorModal/index';
-import DeleteModal from './deleteModal/index';
-import ScheduleModal from './scheduleModal/index';
+import ErrorModal from './errorModal';
+import DeleteModal from './deleteModal';
+import ScheduleModal from './scheduleModal';
 
 import kong from '@/assets/images/kong.svg';
 import full from '@/assets/images/quanliang.svg';

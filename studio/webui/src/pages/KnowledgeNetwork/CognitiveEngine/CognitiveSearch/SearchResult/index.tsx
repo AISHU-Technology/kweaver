@@ -158,7 +158,7 @@ const SearchResult: React.FC<SearchResultProps> = props => {
                   return (
                     <div key={tag} className="legend-item" title={tag}>
                       <span className="node-icon" style={{ background: color || '#126ee3' }} />
-                      <span className="node-name ellipsis-one">{tag}</span>
+                      <span className="node-name ad-ellipsis">{tag}</span>
                     </div>
                   );
                 })}

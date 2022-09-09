@@ -108,7 +108,7 @@ const SearchResult = props => {
 
                 <div className="info-row">
                   <h2
-                    className="title ellipsis-one"
+                    className="title ad-ellipsis"
                     title={name}
                     onClick={e => {
                       e.stopPropagation();
@@ -118,7 +118,7 @@ const SearchResult = props => {
                   />
 
                   <div className="pro-tags">
-                    <span className="pro-tag ellipsis-one" title={`class：${alias || item.class}`}>
+                    <span className="pro-tag ad-ellipsis" title={`class：${alias || item.class}`}>
                       class：
                       <span className="circle-span" style={{ backgroundColor: color || '#126ee3' }} />
                       {alias || item.class}
@@ -131,7 +131,7 @@ const SearchResult = props => {
                       return (
                         <span
                           key={`${proIndex}`}
-                          className="pro-tag ellipsis-one"
+                          className="pro-tag ad-ellipsis"
                           title={`${n}：${v}`}
                           dangerouslySetInnerHTML={{ __html: `${n}：${proValue}` }}
                         />

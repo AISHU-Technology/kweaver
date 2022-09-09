@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import { Input, Tooltip, message } from 'antd';
+import _ from 'lodash';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import IconFont from '@/components/IconFont';
@@ -10,7 +11,6 @@ import { RuleKey, RuleType, ExtractType, createRule } from '../assistFunction';
 import { verifyFunc, hasErr, deleteRule, verifyLast } from './assistFunction';
 import emptyImg from '@/assets/images/empty.svg';
 import './style.less';
-import _ from 'lodash';
 
 interface RuleListProps {
   data: Record<string, any>;

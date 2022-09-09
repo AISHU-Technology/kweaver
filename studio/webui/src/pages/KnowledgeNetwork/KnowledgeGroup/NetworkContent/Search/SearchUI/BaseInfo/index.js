@@ -11,7 +11,7 @@ const BaseInfo = props => {
         <div className="scroll-wrapper">
           <p className="title">
             <span className="circle-span" style={{ backgroundColor: color }}></span>
-            <span className="cl-name ellipsis-one" title={name}>
+            <span className="cl-name ad-ellipsis" title={name}>
               {name}
             </span>
           </p>
@@ -20,10 +20,10 @@ const BaseInfo = props => {
 
             return (
               <div key={`${index}`} className="row">
-                <p className="pro ellipsis-one" title={n}>
+                <p className="pro ad-ellipsis" title={n}>
                   {n}
                 </p>
-                <p className="value ellipsis-one" title={v}>
+                <p className="value ad-ellipsis" title={v}>
                   {v}
                 </p>
               </div>

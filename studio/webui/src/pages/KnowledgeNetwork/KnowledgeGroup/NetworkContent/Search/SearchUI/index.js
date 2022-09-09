@@ -5,7 +5,7 @@
 
 import React, { createRef, PureComponent } from 'react';
 import { Select, Button, Input, Empty, ConfigProvider, Checkbox, Tabs, Modal, message } from 'antd';
-import { UpOutlined, DownOutlined, ExclamationCircleFilled, CloseOutlined } from '@ant-design/icons';
+import { UpOutlined, DownOutlined, CloseOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { GET_CLASSDATA, GET_SEARCHLIST, GET_SEARCHE } from './gql';
@@ -15,7 +15,6 @@ import IconFont from '@/components/IconFont';
 import Analysis from '@/components/analysisInfo';
 import AdSpin from '@/components/AdSpin';
 import { boolCheckStatus, checkAllData, handleTags } from './assistFunction';
-// import Header from './Header';
 import FilterModal from './FilterModal';
 import FilterTag from './FilterTag';
 import SearchResult from './SearchResult';
@@ -64,11 +63,10 @@ class searchUI extends PureComponent {
     baseInfo: {}, // 基本信息
     searchLoading: false, // 搜索loading
     edgeLoading: false, // 进出边loading
-    analysLoading: false, // 分析报告loading
-    analysVisible: false, // 分析报告弹窗
+    analysisLoading: false, // 分析报告loading
+    analysisVisible: false, // 分析报告弹窗
     reportData: '', // 分析报告数据
     analysisTitle: '', // 分析报告标题
-    changeVisible: false, // 切换图谱确认弹窗
     viewType: V_ALL, // 结果筛选
     checkedCache: [], // 已选结果缓存
     rightKey: 'summary' // 侧边栏key值
@@ -140,7 +138,7 @@ class searchUI extends PureComponent {
    */
   getClassData = async id => {
     if (!id) {
-      this.setState({ analysLoading: false });
+      this.setState({ analysisLoading: false });
 
       return;
     }
@@ -150,7 +148,7 @@ class searchUI extends PureComponent {
 
       const res = await kgQuery(GET_CLASSDATA, { id });
 
-      this.setState({ analysLoading: false });
+      this.setState({ analysisLoading: false });
       if (this.resetFlag) return;
 
       if (res && res.data) {
@@ -162,7 +160,7 @@ class searchUI extends PureComponent {
         this.props.setClass(label || v[0] || {});
       }
     } catch (err) {
-      this.setState({ analysLoading: false });
+      this.setState({ analysisLoading: false });
     }
   };
 
@@ -292,28 +290,9 @@ class searchUI extends PureComponent {
    * @param {Object} graph 选择的图谱
    */
   onChoiceGraph = graph => {
-    // if (this.props.nodes.length || this.state.resData.length) {
-    //   this.graphCache = graph;
-    //   this.setState({ changeVisible: true });
-
-    //   return;
-    // }
     this.props.setGraph(graph);
-    this.setState({ analysLoading: true });
-    // this.getClassData(graph.kg_id);
+    this.setState({ analysisLoading: true });
     this.getClassData(graph?.graph_db_name);
-  };
-
-  /**
-   * 确认切换图谱
-   */
-  confirmChange = () => {
-    this.props.setGraph(this.graphCache);
-    this.props.onGraphChange(this.graphCache);
-    // this.getClassData(this.graphCache.kg_id);
-    this.getClassData(this.graphCache?.graph_db_name);
-    this.setState({ changeVisible: false });
-    this.clearData();
   };
 
   /**
@@ -537,12 +516,12 @@ class searchUI extends PureComponent {
       rid: encodeURIComponent(id)
     };
 
-    this.setState({ analysisTitle: name, analysLoading: true });
+    this.setState({ analysisTitle: name, analysisLoading: true });
     this.resetFlag && (this.resetFlag = false);
 
     const res = await servicesExplore.analysisReportGet(params);
 
-    this.setState({ analysLoading: false });
+    this.setState({ analysisLoading: false });
     if (this.resetFlag) return;
 
     if (res && res.ErrorCode === 'EngineServer.ErrNebulaStatsErr') {
@@ -569,7 +548,7 @@ class searchUI extends PureComponent {
 
     this.setState({
       reportData: res.res || res,
-      analysVisible: true
+      analysisVisible: true
     });
   };
 
@@ -607,11 +586,10 @@ class searchUI extends PureComponent {
       baseInfo,
       searchLoading,
       edgeLoading,
-      analysLoading,
-      analysVisible,
+      analysisLoading,
+      analysisVisible,
       reportData,
       analysisTitle,
-      changeVisible,
       viewType,
       rightKey
     } = this.state;
@@ -840,7 +818,7 @@ class searchUI extends PureComponent {
             )}
 
             {/* 空页面 */}
-            {!resInfo.time && !searchLoading && !analysLoading && (
+            {!resInfo.time && !searchLoading && !analysisLoading && (
               <div className="no-data">
                 <img src={smileImg} alt="nodata" />
                 <p className="desc">{intl.get('search.pleaseSearch')}</p>
@@ -872,7 +850,7 @@ class searchUI extends PureComponent {
         )}
 
         {/* 分析报告loading */}
-        <div className={`search-loading-mask analys ${analysLoading && 'spinning'}`}>
+        <div className={`search-loading-mask analys ${analysisLoading && 'spinning'}`}>
           <AdSpin />
         </div>
 
@@ -897,43 +875,13 @@ class searchUI extends PureComponent {
           width={'auto'}
           height={'calc(100% - 40px)'}
           destroyOnClose
-          visible={analysVisible}
+          visible={analysisVisible}
           maskClosable={false}
           footer={null}
           forceRender
-          onCancel={() => this.setState({ analysVisible: false })}
+          onCancel={() => this.setState({ analysisVisible: false })}
         >
           <Analysis reportData={reportData} analysisTitle={analysisTitle} />
-        </Modal>
-
-        {/* 切换图谱确认弹窗 */}
-        <Modal
-          className="graph-sw-modal"
-          visible={changeVisible}
-          focusTriggerAfterClose={false}
-          destroyOnClose
-          maskClosable={false}
-          width={432}
-          footer={null}
-          onCancel={() => this.setState({ changeVisible: false })}
-        >
-          <div className="m-title">
-            <ExclamationCircleFilled className="title-icon" />
-            <span className="title-text">{intl.get('search.swTitle')}</span>
-          </div>
-
-          <div className="m-body">{intl.get('search.swContent')}</div>
-
-          <div className="m-footer">
-            <ConfigProvider autoInsertSpaceInButton={false}>
-              <Button className="ant-btn-default cancel-btn" onClick={() => this.setState({ changeVisible: false })}>
-                {intl.get('global.cancel')}
-              </Button>
-              <Button type="primary" className="ok-btn" onClick={this.confirmChange}>
-                {intl.get('global.ok')}
-              </Button>
-            </ConfigProvider>
-          </div>
         </Modal>
       </div>
     );

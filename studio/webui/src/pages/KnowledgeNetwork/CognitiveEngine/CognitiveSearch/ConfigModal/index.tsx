@@ -396,7 +396,7 @@ const ModalContent = forwardRef(
                               return (
                                 <div className="list-item" key={id}>
                                   <span className="circle row-icon" style={{ background: color }} />
-                                  <span className="show-name ellipsis-one" title={alias}>
+                                  <span className="show-name ad-ellipsis" title={alias}>
                                     {alias}
                                   </span>
                                   <span className="switch-span">
@@ -490,10 +490,10 @@ const ModalContent = forwardRef(
                                 <div className="list-item" key={name}>
                                   <span className="row-icon" style={{ background: color }} />
                                   <div className="edge-info">
-                                    <p className="e-name ellipsis-one" title={alias}>
+                                    <p className="e-name ad-ellipsis" title={alias}>
                                       {alias}
                                     </p>
-                                    <p className="sub-name ellipsis-one" title={name}>
+                                    <p className="sub-name ad-ellipsis" title={name}>
                                       {intl.get('global.originalName')}：{name}
                                     </p>
                                   </div>

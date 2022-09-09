@@ -289,7 +289,7 @@ const SavedConfig: React.ForwardRefRenderFunction<unknown, SavedConfigProps> = (
           checked={selectedConfig[kg_id]?.conf_id === conf_id}
           onClick={() => onRadioChange({ kg_id, ...configItem })}
         />
-        <span className="c-name ellipsis-one" onClick={() => onRadioChange({ kg_id, ...configItem })}>
+        <span className="c-name ad-ellipsis" onClick={() => onRadioChange({ kg_id, ...configItem })}>
           {conf_name}
         </span>
 
@@ -356,7 +356,7 @@ const SavedConfig: React.ForwardRefRenderFunction<unknown, SavedConfigProps> = (
                         <span className="g-icon">
                           <IconFont type="icon-graph" />
                         </span>
-                        <span className="g-title ellipsis-one" title={kg_name}>
+                        <span className="g-title ad-ellipsis" title={kg_name}>
                           {kg_name}
                         </span>
                       </div>

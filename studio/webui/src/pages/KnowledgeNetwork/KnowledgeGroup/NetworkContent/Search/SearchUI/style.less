@@ -8,6 +8,10 @@
   margin: 0 auto;
   background-color: #f8f8f8;
 
+  .hl-text {
+    color: var(--ad-error-color);
+  }
+
   .main-box {
     display: flex;
     flex-direction: column;
@@ -346,55 +350,4 @@
 
 .normal-search-UI-no-visible {
   display: none;
-}
-
-// 切换图谱确认弹窗
-.graph-sw-modal {
-  .ant-modal-content {
-    min-height: 192px;
-
-    .ant-modal-body {
-      padding: 24px 32px;
-
-      .m-title {
-        position: relative;
-        margin-bottom: 12px;
-
-        .title-icon {
-          position: absolute;
-          top: 2px;
-          color: var(--ad-error-color);
-          font-size: 20px;
-          margin-right: 16px;
-        }
-
-        .title-text {
-          display: inline-block;
-          vertical-align: middle;
-          margin-left: 32px;
-          font-size: 16px;
-          font-weight: 800;
-          color: var(--ad-heading-color);
-          line-height: 24px;
-        }
-      }
-
-      .m-body {
-        margin-bottom: 32px;
-        padding-left: 32px;
-      }
-
-      .m-footer {
-        position: absolute;
-        bottom: 24px;
-        height: 32px;
-        width: 368px; // 432px - 32px * 2
-        text-align: right;
-
-        .cancel-btn {
-          margin-right: 10px;
-        }
-      }
-    }
-  }
 }

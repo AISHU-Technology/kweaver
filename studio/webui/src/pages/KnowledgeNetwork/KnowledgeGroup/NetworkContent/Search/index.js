@@ -131,12 +131,10 @@ class Search extends Component {
           footer={null}
           mask={false}
           push={false}
-          // zIndex={520}
           height={'100vh'}
           placement="bottom"
           onClose={() => this.setState({ searchVisible: true })}
           bodyStyle={{ padding: 0 }}
-          // className={searchVisible ? 'hide-graph' : ''}
         >
           <div className="search-graph-head">
             <Button
