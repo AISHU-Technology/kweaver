@@ -233,7 +233,7 @@ class TagContent extends Component {
           {reportData && reportData.ErrorCode && reportData.ErrorCode === 'EngineServer.ErrESContentErr' ? (
             <div className="error">
               <div className="icon-box">
-                <img src={listproperty} alt="AnyDATA" />
+                <img src={listproperty} alt="KWeaver" />
               </div>
               <div className="word">{intl.get('searchGraph.err')}</div>
             </div>

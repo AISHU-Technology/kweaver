@@ -8063,7 +8063,7 @@ istanbul-reports@^2.2.6:
   dependencies:
     html-escaper "^2.0.0"
 
-jest-canvas-mock@^2.4.0:
+jest-canvas-mock@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/jest-canvas-mock/-/jest-canvas-mock-2.4.0.tgz#947b71442d7719f8e055decaecdb334809465341"
   integrity sha512-mmMpZzpmLzn5vepIaHk5HoH3Ka4WykbSoLuG/EKoJd0x0ID/t+INo1l8ByfcUJuDM+RIsL4QDg/gDnBbrj2/IQ==

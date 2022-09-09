@@ -443,7 +443,7 @@ class NewCreateEntityHead extends Component {
             }}
           >
             <div className="icon-box">
-              <img src={dianIcon} alt="AnyDATA" className="hanle-icon" />
+              <img src={dianIcon} alt="KWeaver" className="hanle-icon" />
             </div>
             <div className="word word-o">{intl.get('createEntity.createEntityC')}</div>
           </div>
@@ -488,7 +488,7 @@ class NewCreateEntityHead extends Component {
             }}
           >
             <div className="icon-box">
-              <img src={edgeIcon} alt="AnyDATA" className="hanle-icon" />
+              <img src={edgeIcon} alt="KWeaver" className="hanle-icon" />
             </div>
             <div className="word word-t">{intl.get('createEntity.createR')}</div>
           </div>
@@ -541,7 +541,7 @@ class NewCreateEntityHead extends Component {
             }}
           >
             <div className="icon-box">
-              <img src={daoruIcon} alt="AnyDATA" className="hanle-icon" />
+              <img src={daoruIcon} alt="KWeaver" className="hanle-icon" />
             </div>
             <div className="word word-h">{intl.get('createEntity.clickI')}</div>
           </div>
@@ -593,7 +593,7 @@ class NewCreateEntityHead extends Component {
             }}
           >
             <div className="icon-box">
-              <img src={guanxileiIcon} alt="AnyDATA" className="hanle-icon" />
+              <img src={guanxileiIcon} alt="KWeaver" className="hanle-icon" />
             </div>
             <div className="word word-f">{intl.get('createEntity.bulikR')}</div>
           </div>
@@ -608,7 +608,7 @@ class NewCreateEntityHead extends Component {
             }}
           >
             <div className="icon-box">
-              <img src={helpIcon} alt="AnyDATA" className="hanle-icon" />
+              <img src={helpIcon} alt="KWeaver" className="hanle-icon" />
             </div>
             <div className="word word-k">{intl.get('createEntity.help')}</div>
           </div> */}
@@ -623,7 +623,7 @@ class NewCreateEntityHead extends Component {
             }}
           >
             <div className="icon-box">
-              <img src={changeIcon} alt="AnyDATA" className="hanle-icon" />
+              <img src={changeIcon} alt="KWeaver" className="hanle-icon" />
             </div>
             <div className="word word-k">{intl.get('createEntity.changeI')}</div>
           </div> */}

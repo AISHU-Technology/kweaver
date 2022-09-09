@@ -44,7 +44,7 @@ class CreateEntity extends Component {
   componentDidMount() {
     if (window.location.pathname === '/new-create-entity') {
       setTimeout(() => {
-        document.title = `${intl.get('createEntity.title')}_AnyDATA`;
+        document.title = `${intl.get('createEntity.title')}_KWeaver`;
       }, 0);
     }
     this.getEditData();

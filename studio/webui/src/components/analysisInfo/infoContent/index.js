@@ -203,7 +203,7 @@ class InfoContent extends Component {
                         return (
                           <div className="line" key={pIndex.toString()}>
                             <div className="node" title={pItem.name}>
-                              <img src={listproperty} alt="AnyDATA" />
+                              <img src={listproperty} alt="KWeaver" />
                               <span className="word">{pItem.name}</span>
                             </div>
                             {pItem &&
@@ -212,12 +212,12 @@ class InfoContent extends Component {
                               pItem.text.map((tItem, tIndex) => {
                                 return tIndex ? (
                                   <div className="property property-border" title={tItem} key={tIndex.toString()}>
-                                    <img className="icon-left" src={listentity} alt="AnyDATA" />
+                                    <img className="icon-left" src={listentity} alt="KWeaver" />
                                     <span className="word">{tItem}</span>
                                   </div>
                                 ) : (
                                   <div className="property" title={tItem} key={tIndex.toString()}>
-                                    <img className="icon-left" src={listentity} alt="AnyDATA" />
+                                    <img className="icon-left" src={listentity} alt="KWeaver" />
                                     <span className="word">{tItem}</span>
                                   </div>
                                 );
@@ -232,7 +232,7 @@ class InfoContent extends Component {
           ) : (
             <div className="no-data">
               <div className="image">
-                <img src={emptyImg} alt="AnyDATA" className="no-data-image" />
+                <img src={emptyImg} alt="KWeaver" className="no-data-image" />
               </div>
               <div className="describe">{intl.get('createEntity.noData')}</div>
             </div>

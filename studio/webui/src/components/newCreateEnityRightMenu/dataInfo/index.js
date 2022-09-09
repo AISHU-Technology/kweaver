@@ -791,9 +791,9 @@ class DataInfo extends Component {
         <div className="title">
           <div className="word">
             {isNode ? (
-              <img src={dianIcon} alt="AnyDATA" className="dian-icon" />
+              <img src={dianIcon} alt="KWeaver" className="dian-icon" />
             ) : (
-              <img src={edgeIcon} alt="AnyDATA" className="dian-icon" />
+              <img src={edgeIcon} alt="KWeaver" className="dian-icon" />
             )}
 
             <span>{isNode ? [intl.get('createEntity.ec')] : [intl.get('createEntity.rc')]}</span>

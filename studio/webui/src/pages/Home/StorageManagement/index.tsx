@@ -14,7 +14,7 @@ const SOURCE = [
   {
     label: '系统配置',
     key: 'system',
-    icon: <IconFont type="icon-setting" />,
+    icon: <IconFont type="icon-xitongpeizhi" />,
     children: [
       {
         label: '存储管理',
