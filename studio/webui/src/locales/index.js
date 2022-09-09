@@ -23,7 +23,6 @@ import configSys_zh from './configSys/zh-CN.json';
 import searchStrategy_zh from './searchStrategy/zh-CN.json';
 import searchConfig_zh from './searchConfig/zh-CN.json';
 import memberManage_zh from './member-management/zh-CN.json';
-import agreement_zh from './agreement/zh-CN.json';
 import search_zh from './search/zh-CN.json';
 import knowledgeNetwork_zh from './knowledgeNetwork/zh-CN.json';
 import uploadService_zh from './uploadService/zh-CN.json';
@@ -47,7 +46,6 @@ import configSys_en from './configSys/en-US.json';
 import searchStrategy_en from './searchStrategy/en-US.json';
 import searchConfig_en from './searchConfig/en-US.json';
 import memberManage_en from './member-management/en-US.json';
-import agreement_en from './agreement/en-US.json';
 import search_en from './search/en-US.json';
 import knowledgeNetwork_en from './knowledgeNetwork/en-US.json';
 import uploadService_en from './uploadService/en-US.json';
@@ -72,7 +70,6 @@ const zh_CN = {
   ...searchStrategy_zh,
   ...searchConfig_zh,
   ...memberManage_zh,
-  ...agreement_zh,
   ...search_zh,
   ...knowledgeNetwork_zh,
   ...uploadService_zh,
@@ -98,7 +95,6 @@ const en_US = {
   ...searchStrategy_en,
   ...searchConfig_en,
   ...memberManage_en,
-  ...agreement_en,
   ...search_en,
   ...knowledgeNetwork_en,
   ...uploadService_en,
