@@ -231,13 +231,6 @@ button[ant-click-animating-without-extra-node]:after {
   user-select: none;
 }
 
-// 一行文字省略
-.ellipsis-one {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 // 虚拟滚动条颜色样式
 .rc-virtual-list .rc-virtual-list-scrollbar-thumb {
   background: rgb(184, 184, 184) !important;
@@ -284,10 +277,9 @@ button[ant-click-animating-without-extra-node]:after {
 
 // 大数据量的受控分页器
 .controlled-pagination {
-
   // 搜索时隐藏最后页码
   &.infinite {
-    .ant-pagination-jump-next+.ant-pagination-item {
+    .ant-pagination-jump-next + .ant-pagination-item {
       display: none;
     }
   }

@@ -24,11 +24,11 @@ const SumInfo = props => {
 
     return (
       <div className="row">
-        <span className="line ellipsis-one" style={{ backgroundColor: color }} />
-        <span className="e-name ellipsis-one" title={alias || data.class}>
+        <span className="line ad-ellipsis" style={{ backgroundColor: color }} />
+        <span className="e-name ad-ellipsis" title={alias || data.class}>
           {alias || data.class}
         </span>
-        <span className="count ellipsis-one" title={count}>
+        <span className="count ad-ellipsis" title={count}>
           {count}
         </span>
       </div>

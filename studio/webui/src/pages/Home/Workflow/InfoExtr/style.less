@@ -1,6 +1,3 @@
-/**
-*@description 页脚按钮样式
-*/
 .info-extract-box {
   @other-height: 54px+24px+100px; // 页眉 + padding + 页脚
   @min-screen-height: 768px; // 文档中声明的最小分辨率1366 * 768
@@ -46,10 +43,6 @@
   display: flex;
   width: 100%;
   height: 100%;
-
-  .clear-flex {
-    flex: 1;
-  }
 
   // 数据源为空时数据源看板样式
   .source-show-board-null {
@@ -169,16 +162,6 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-
-        .anyshare-filetree-row {
-          .anyshare-filetree-type {
-            transform: translateY(1px);
-          }
-
-          .file-name {
-            white-space: nowrap;
-          }
-        }
       }
 
       // 预览loading
