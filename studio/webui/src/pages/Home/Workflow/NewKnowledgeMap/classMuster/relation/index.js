@@ -204,7 +204,7 @@ class Relation extends Component {
                     {!this.isReEmptyField(item) && !item.Type ? (
                       <div className="tag">
                         <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
-                          {/* <img className="icon-configured" src={Configured} alt="AnyData" /> */}
+                          {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                           <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                         </Tooltip>
                       </div>
@@ -259,7 +259,7 @@ class Relation extends Component {
                     {!this.isReEmptyField(item) && !item.Type ? (
                       <div className="tag">
                         <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
-                          {/* <img className="icon-configured" src={Configured} alt="AnyData" /> */}
+                          {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                           <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                         </Tooltip>
                       </div>
@@ -317,7 +317,7 @@ class Relation extends Component {
                     {!this.isReEmptyField(item) && !item.Type ? (
                       <div className="model-tag">
                         <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
-                          {/* <img className="icon-configured" src={Configured} alt="AnyData" /> */}
+                          {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                           <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                         </Tooltip>
                       </div>

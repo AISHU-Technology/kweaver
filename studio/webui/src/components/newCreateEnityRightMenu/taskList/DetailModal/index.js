@@ -126,7 +126,7 @@ class DetailModal extends Component {
       return (
         <div className="content-box content-box-error">
           <div className="error-image">
-            <img src={errorTip} alt="AnyDATA" className="error-i" />
+            <img src={errorTip} alt="KWeaver" className="error-i" />
           </div>
           <div className="error-word">{intl.get('createEntity.tokenError')}</div>
         </div>
@@ -137,7 +137,7 @@ class DetailModal extends Component {
       return (
         <div className="content-box content-box-error">
           <div className="error-image">
-            <img src={errorTip} alt="AnyDATA" className="error-i" />
+            <img src={errorTip} alt="KWeaver" className="error-i" />
           </div>
           <div className="error-word">{intl.get('createEntity.error500002')}</div>
         </div>
@@ -148,7 +148,7 @@ class DetailModal extends Component {
       return (
         <div className="content-box content-box-error">
           <div className="error-image">
-            <img src={errorTip} alt="AnyDATA" className="error-i" />
+            <img src={errorTip} alt="KWeaver" className="error-i" />
           </div>
           <div className="error-word">{intl.get('createEntity.error500006')}</div>
         </div>
@@ -159,7 +159,7 @@ class DetailModal extends Component {
       return (
         <div className="content-box content-box-error">
           <div className="error-image">
-            <img src={errorTip} alt="AnyDATA" className="error-i" />
+            <img src={errorTip} alt="KWeaver" className="error-i" />
           </div>
           <div className="error-word">{intl.get('createEntity.error500009')}</div>
         </div>
@@ -170,7 +170,7 @@ class DetailModal extends Component {
       return (
         <div className="content-box content-box-error">
           <div className="error-image">
-            <img src={errorTip} alt="AnyDATA" className="error-i" />
+            <img src={errorTip} alt="KWeaver" className="error-i" />
           </div>
           <div className="error-word">{intl.get('createEntity.error500001')}</div>
         </div>

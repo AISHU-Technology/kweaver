@@ -19,7 +19,7 @@ class Search extends Component {
   };
 
   componentDidMount() {
-    document.title = `${intl.get('search.exploreTitle')}_AnyDATA`;
+    document.title = `${intl.get('search.exploreTitle')}_KWeaver`;
   }
 
   componentDidUpdate(preProps) {

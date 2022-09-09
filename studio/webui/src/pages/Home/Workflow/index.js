@@ -48,10 +48,10 @@ const Workflow = props => {
 
   useEffect(() => {
     if (history?.location?.pathname === '/home/workflow/create') {
-      document.title = `${intl.get('workflow.newGraph')}_AnyDATA`;
+      document.title = `${intl.get('workflow.newGraph')}_KWeaver`;
     }
     if (history?.location?.pathname === '/home/workflow/edit') {
-      document.title = `${intl.get('workflow.editGraph')}_AnyDATA`;
+      document.title = `${intl.get('workflow.editGraph')}_KWeaver`;
     }
   }, []);
 
