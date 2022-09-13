@@ -4,6 +4,7 @@
 trigger:
   branches:
     include:
+      - release
       - develop
       - DATA-*
   paths:
