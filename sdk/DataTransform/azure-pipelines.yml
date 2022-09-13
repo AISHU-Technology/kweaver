@@ -1,0 +1,149 @@
+# Starter pipeline
+#
+
+trigger:
+  branches:
+    include:
+      - develop
+      - DATA-*
+
+pool:
+  name: algServer
+
+variables:
+  - group: global-context
+  - name: imageName
+    value: kg-dataflow
+  - name: packageName
+    value: DataTransform-0.0.1-py3-none-any.whl
+  - name: UTArtifactName
+    value: coverageFiles
+
+resources:
+  containers:
+    - container: compile
+      endpoint: acr.aishu.cn
+      image: ad/dataflow:latest
+    - container: scanner
+      endpoint: acr.aishu.cn
+      image: ad/openjdk:11.0.13-jre
+    - container: dotnet
+      endpoint: acr.aishu.cn
+      image: wing-biz/euop/dotnet-runtime:3.1
+
+stages:
+  - stage: makeWhl
+    jobs:
+    - job: utmake
+      displayName: utmake
+      container: compile
+      workspace:
+        clean: all
+      steps:
+        - checkout: self
+        - task: Bash@3
+          displayName: utRun
+          inputs:
+            targetType: 'inline'
+            script: |
+              pwd
+              pip install pytest pytest-azurepipelines pytest-cov wheel
+              # 这里单元测试改好后可以将注释取消
+              python setup.py bdist_wheel
+              pip install --no-index --find-links=dist/ DataTransform
+              # 这里单元测试改好后可以将test/test_abc.py改为test
+              pytest test/test_abc.py --doctest-modules --junitxml=junit_result/test-results.xml --cov=src --cov-report=xml
+              ls
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: $(Build.SourcesDirectory)
+            contents: |
+              coverage.xml
+              junit_result/*
+            targetFolder: $(Build.BinariesDirectory)
+        - task: PublishBuildArtifacts@1
+          inputs:
+            PathtoPublish: '$(Build.BinariesDirectory)'
+            ArtifactName:  ${{variables.UTArtifactName}}
+
+    - job: coverage
+      displayName: coverage
+      container: dotnet
+      dependsOn: utmake
+      steps:
+        - checkout: none
+        - task: DownloadBuildArtifacts@0
+          inputs:
+            artifactName: ${{variables.UTArtifactName}}
+            downloadPath: $(Build.SourcesDirectory)
+
+        - task: PublishCodeCoverageResults@1
+          displayName: Publish ALL Code Coverage Report
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/coverage.xml'
+
+        - task: PublishTestResults@2
+          condition: succeededOrFailed()
+          inputs:
+            testResultsFormat: "JUnit"
+            testResultsFiles: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/junit_result/*.xml'
+            testRunTitle: 'UT Result'
+            failTaskOnFailedTests: true
+          displayName: 'Publish linting and unit test results'
+
+    - job: scan
+      displayName: 静态扫描
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+      container: scanner
+      dependsOn: [utmake, coverage]
+      workspace:
+        clean: all
+      steps:
+        - task: SonarQubePrepare@4
+          displayName: Prepare SonarQube
+          inputs:
+            SonarQube: 'adS'
+            scannerMode: 'CLI'
+            configMode: 'manual'
+            cliProjectKey: 'sonar.graphengine-dataflow'
+            cliProjectName: 'graphengine-dataflow'
+            cliSources: '.'
+        - task: SonarQubeAnalyze@4
+          displayName: Run SonarQube Code Analysis task
+
+        - task: SonarQubePublish@4
+          displayName: Publish Quality Gate Result task
+          inputs:
+            pollingTimeoutSec: '300'
+    - job: build
+      displayName: build
+      container: compile
+      workspace:
+        clean: all
+      steps:
+        - checkout: self
+        - script: |
+            ls
+            python setup.py bdist_wheel
+            ls
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: $(Build.SourcesDirectory)
+            contents: |
+              dist/**
+            targetFolder: $(Build.BinariesDirectory)
+        - task: FtpUpload@2
+          displayName: uploadFtp
+          inputs:
+            credentialsOption: 'inputs'
+            serverUrl: 'ftp://ftp-ad.aishu.cn'
+            username: '$(ftpUser)'
+            password: '$(ftpPasswd)'
+            rootDirectory:
+            filePatterns: '**/dist/$(packageName)'
+            remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
+            clean: false
+            cleanContents: false
+            preservePaths: false
+            trustSSL: false
