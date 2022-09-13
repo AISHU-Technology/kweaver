@@ -371,7 +371,7 @@ def ds(dsid):
     ---
     parameters:
        -   name: dsid
-           in: query
+           in: path
            required: true
            description: Data source id
            type: integer
@@ -551,7 +551,7 @@ def get_acctoken_by_id(ds_id):
     ---
     parameters:
        -   name: ds_id
-           in: query
+           in: path
            required: true
            description: Data source id
            type: string
