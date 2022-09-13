@@ -82,7 +82,6 @@ type AdvSearchTestBody struct {
 }
 
 func AdvSearchTest(body AdvSearchTestBody, header map[string][]string) (httpcode int, response interface{}) {
-	// 判断用户是否有操作资源权限
 	kgidSplit := strings.Split(body.KGIDS, ",")
 
 	host := utils.CONFIG.AlgConf.IP + ":" + utils.CONFIG.AlgConf.Port

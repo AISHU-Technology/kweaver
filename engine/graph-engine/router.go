@@ -4,6 +4,8 @@
 package main
 
 import (
+	"github.com/swaggo/files"       // swagger embed files
+	"github.com/swaggo/gin-swagger" // gin-swagger middleware
 	"graph-engine/controllers"
 	"graph-engine/services"
 	"time"
@@ -13,12 +15,16 @@ import (
 )
 
 var uriRoot = "api/engine/"
+var s = ""
 
 var store = persistence.NewInMemoryStore(time.Second)
 
 // GroupRouters is the router of service
 
 var GroupGQLKGRouters = map[string][]leo.Router{
+	s: {
+		leo.NewRouter("get", "/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler)),
+	},
 	uriRoot + "v1": {
 		// 健康检测
 		leo.NewRouter("get", "/health/ready", controllers.ReadyHandler),
@@ -31,7 +37,7 @@ var GroupGQLKGRouters = map[string][]leo.Router{
 
 		// 分析详情
 		leo.NewRouter("get", "/analysis", services.AnalysisHandler),
-		// 智能搜索接口（2AD）
+		// 智能搜索接口
 		leo.NewRouter("get", "/adv-search/:confid", services.AdvSearchHandler),
 		leo.NewRouter("post", "/adv-search/test", services.AdvSearchTestHandler),
 		// 高级搜索配置

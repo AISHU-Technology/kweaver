@@ -18,11 +18,22 @@ func MakeExploreHandler() gin.HandlerFunc {
 	return leo.NewGraphqlHandler(gql.DataQuerySchema, &gql.DataQuery{})
 }
 
-// ExploreGqlHandler 创建 GraphQL handler 带入HTTP相关属性
+// ExploreGqlHandler
+// @Summary graphql search
+// @Description graphql search
+// @Tags Engine
+// @Param body body gql.DataQuery true "graphql search statement"
+// @Router /api/engine/v1/explore/ [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} gql.DataQuery "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: no vertexs class"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: graph in configuration status"
 func ExploreGqlHandler(c *gin.Context) {
 	schema := graphql.MustParseSchema(gql.DataQuerySchema, &gql.DataQuery{})
 	var gqlhandler = relay.Handler{Schema: schema}
-
 	ctx := context.WithValue(context.Background(), "Context", c)
 	//ctx := context.WithValue(c.Request.Context(), "Context", c)
 	newReq := c.Request.WithContext(ctx)

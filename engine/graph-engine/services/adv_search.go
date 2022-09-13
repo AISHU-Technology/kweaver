@@ -13,7 +13,24 @@ type ReqAdvSearch struct {
 	Limit int    `form:"limit"`
 }
 
-// 智能搜索（2AD）
+// AdvSearchHandler
+// @Summary advanced search
+// @Description semantic search
+// @Tags Engine
+// @Param confid path string true "config ids like'5,6,7'"
+// @Param query query string false "Query statement"
+// @Param page query int true  "number of pages" minimum(1)
+// @Param size query int true  "Number of pages displayed" minimum(1)
+// @Param limit query int false  "limit"
+// @Router /api/engine/v1/adv-search/{confid} [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} Response "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func AdvSearchHandler(c *gin.Context) {
 	var body ReqAdvSearch
 	err := c.ShouldBind(&body)
@@ -29,7 +46,20 @@ func AdvSearchHandler(c *gin.Context) {
 	c.JSON(httpcode, res)
 }
 
-// 语义搜索test
+// AdvSearchTestHandler
+// @Summary advanced search test
+// @Description semantic search test
+// @Tags Engine
+// @Param body body RequestModel true "adv-search query"
+// @Router /api/engine/v1/adv-search/test [get]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} Response "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func AdvSearchTestHandler(c *gin.Context) {
 	var body controllers.AdvSearchTestBody
 	err := c.ShouldBindJSON(&body)
@@ -42,4 +72,87 @@ func AdvSearchTestHandler(c *gin.Context) {
 	header := c.Request.Header
 	httpcode, res := controllers.AdvSearchTest(body, header)
 	c.JSON(httpcode, res)
+}
+
+//not used, just for swagger
+
+type Vertexes struct {
+	Open []string
+}
+
+type Edges struct {
+	Open []string
+}
+
+type SearchRange struct {
+	Vertexes Vertexes
+	Edges    Edges
+}
+
+type DisplayRange struct {
+	Vertexes Vertexes
+}
+
+type ConfContent struct {
+	Max_depth     int
+	Search_range  SearchRange
+	Display_range DisplayRange
+}
+type RequestModel struct {
+	Kg_ids       string
+	Query        string
+	Page         int
+	Size         int
+	Conf_content ConfContent
+}
+
+type Vertex struct {
+	Id    string
+	Tag   string
+	Name  string
+	Color string
+}
+
+type Edge struct {
+	From_id string
+	To_id   string
+	Tag     string
+	Name    string
+	Color   string
+}
+
+type PathMetaData struct {
+	From_entity_score float32
+	Depth             int
+	Weight            float32
+}
+
+type Path struct {
+	Vertexes  []Vertex
+	Edges     []Edge
+	Meta_data []PathMetaData
+}
+
+type TargetVertex struct {
+	Tag         string
+	Id          string
+	Name        string
+	Score       float32
+	Color       string
+	Analysis    bool
+	Properties  Dict
+	Search_path Path
+}
+
+type SearchResult struct {
+	Search []TargetVertex
+}
+
+type Response struct {
+	Time   float32
+	Number int
+	Res    SearchResult
+}
+
+type Dict struct {
 }

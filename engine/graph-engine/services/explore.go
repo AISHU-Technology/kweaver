@@ -97,10 +97,28 @@ type ReqExpandVArgs struct {
 	Size  int32  `form:"size" binding:"gte=-1"`
 }
 
-//expandV
+// KGExpandVHandler
+// @Summary expand vertexes
+// @Description expand edges by entity id
+// @Tags Engine
+// @Param class query string false "Edge class, when null, query all edges"
+// @Param page query int true "Number of pages" minimum(1)
+// @Param size query int true  "Number of edges, query all when page = -1" minimum(-1)
+// @Param io query string true  "The direction of the expanded edge" Enums(in,out,inout)
+// @Param rid query string true  "entity id"
+// @Param id query string  true  "graph id"
+// @Param name query string false "entity name"
+// @Router /api/engine/v1/explore/expandv [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} controllers.ExpandVertexRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func KGExpandVHandler(c *gin.Context) {
 	var body = ReqExpandVArgs{}
-
 	err := c.ShouldBind(&body)
 	if err != nil {
 		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))

@@ -28,6 +28,22 @@ type GetAdvSearchConf struct {
 	Sort   string `form:"sort" binding:"required,oneof=descend ascend"`
 }
 
+// GetAdvSearchConfigHandler
+// @Summary get configs
+// @Description get adv-search configs
+// @Tags Engine
+// @Param knowledge_network_id query int true "knowledge network id"
+// @Param filter query string true "'all' or config or kg name"
+// @Param query query string false  "query keyword"
+// @Param page query int true "Number of pages" minimum(1)
+// @Param size query int true  "Number of edges" minimum(1)
+// @Param sort query string true "sort type" Enums(descend,ascend)
+// @Router /api/engine/v1/adv-search-config [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} controllers.GetSearchConfRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 func GetAdvSearchConfigHandler(c *gin.Context) {
 	var body GetAdvSearchConf
 	err := c.ShouldBind(&body)
@@ -47,8 +63,19 @@ type DelAdvSearchConf struct {
 	ConfIDS []int `json:"conf_ids" binding:"required,min=1,dive,gt=0"`
 }
 
+// DelAdvSearchConfigHandler
+// @Summary delete configs
+// @Description delete adv-search configs
+// @Tags Engine
+// @Param conf_ids body DelAdvSearchConf true "config ids"
+// @Router /api/engine/v1/adv-search-config [delete]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.DelSearchConfRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrAdvSearchConfIDErr: config ID does not exist"
 func DelAdvSearchConfigHandler(c *gin.Context) {
-
 	var body DelAdvSearchConf
 
 	err := c.ShouldBindWith(&body, binding.JSON)
@@ -74,9 +101,21 @@ type AddAdvSearchConf struct {
 	ConfContent dao.ConfContent `json:"conf_content" binding:"required"`
 }
 
+// AddAdvSearchConfigHandler
+// @Summary add configs
+// @Description add adv-search configs
+// @Tags Engine
+// @Param conf_content body AddAdvSearchConf true "config content"
+// @Router /api/engine/v1/adv-search-config [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.AddSearchConfRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrAdvSearchConfIDErr: config ID does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrAdvConfContentErr: content error"
 func AddAdvSearchConfigHandler(c *gin.Context) {
 	var body AddAdvSearchConf
-
 	// 参数校验
 	err := c.ShouldBindWith(&body, binding.JSON)
 	if err != nil {
@@ -113,6 +152,19 @@ type UpdateAdvSearchConf struct {
 	ConfContent dao.ConfContent `json:"conf_content" binding:"required"`
 }
 
+// UpdateAdvSearchConfigHandler
+// @Summary update configs
+// @Description update adv-search configs
+// @Tags Engine
+// @Param conf_content body UpdateAdvSearchConf true "config content"
+// @Router /api/engine/v1/adv-search-config/update [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.UpdateSearchConfRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrAdvSearchConfIDErr: config ID does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrAdvConfContentErr: content error"
 func UpdateAdvSearchConfigHandler(c *gin.Context) {
 	var body UpdateAdvSearchConf
 
@@ -142,9 +194,18 @@ func UpdateAdvSearchConfigHandler(c *gin.Context) {
 	return
 }
 
-// -------------------------
-// 查询单一搜索配置
-// -------------------------
+// GetInfoAdvSearchConfigHandler
+// @Summary get config info
+// @Description get adv-search config info by id
+// @Tags Engine
+// @Param confid path string true "config id"
+// @Router /api/engine/v1/adv-search-config/info/{confid} [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} controllers.InfoSearchConfRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrAdvSearchConfIDErr: config ID does not exist"
 func GetInfoAdvSearchConfigHandler(c *gin.Context) {
 	id, _ := c.Params.Get("confid")
 
@@ -161,9 +222,17 @@ func GetInfoAdvSearchConfigHandler(c *gin.Context) {
 	c.JSON(httpcode, res)
 }
 
-// -------------------------
-// 获取图谱相应配置
-// -------------------------
+// GetConfByKGNameAdvSearchConfigHandler
+// @Summary get config ids
+// @Description add adv-search configs by knowledge graph id
+// @Tags Engine
+// @Param kgid path string true "knowledge graph id"
+// @Router /api/engine/v1/adv-search-config/conf/{kgid} [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} controllers.GetConfByKGNameRes "result string"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrKGIDErr: knowledge graph ID does not exist"
 func GetConfByKGNameAdvSearchConfigHandler(c *gin.Context) {
 	kgid, _ := c.Params.Get("kgid")
 
@@ -180,15 +249,22 @@ func GetConfByKGNameAdvSearchConfigHandler(c *gin.Context) {
 	c.JSON(httpcode, res)
 }
 
-// -------------------------
-// 包含AS模型图谱列表
-// -------------------------
-
 type KGListAsBody struct {
 	KNetworkId int    `json:"knowledge_network_id" binding:"required"`
 	KGName     string `json:"kg_name"`
 }
 
+// KGListAdvSearchConfigHandler
+// @Summary get kglist
+// @Description get knowledge graph list
+// @Tags Engine
+// @Param knowledge_network_id query string true "knowledge network id"
+// @Param knowledge_network_id query string false "knowledge network name"
+// @Router /api/engine/v1/adv-search-config/kglist [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} controllers.AdvConfKGListRes "result string"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 func KGListAdvSearchConfigHandler(c *gin.Context) {
 
 	var body KGListAsBody

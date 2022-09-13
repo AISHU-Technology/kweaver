@@ -17,6 +17,19 @@ type ReqAnalysisArgs struct {
 	Rid string `form:"rid" binding:"required"`
 }
 
+// AnalysisHandler
+// @Summary Document analysis report
+// @Description Document analysis report
+// @Tags Engine
+// @Param id query int true "knowledge graph id"
+// @Param rid query string true "entity id"
+// @Router /api/engine/v1/analysis [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} controllers.AnalysisRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func AnalysisHandler(c *gin.Context) {
 	var body ReqAnalysisArgs
 
