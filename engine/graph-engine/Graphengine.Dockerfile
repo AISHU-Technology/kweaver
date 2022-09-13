@@ -5,7 +5,7 @@ RUN mkdir -p /root/graph-engine && \
 ls -R .
 WORKDIR /root/graph-engine/
 COPY . .
-RUN ls && \
+RUN ls -R . && \
 go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
