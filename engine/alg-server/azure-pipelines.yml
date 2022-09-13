@@ -55,7 +55,9 @@ jobs:
       inputs:
         command: 'build'
         repository: $(imageNameWithHarbor)
-        tags: $(mainTag)
+        tags: |
+          $(mainTag)
+          latest
         Dockerfile: '**/Algserver.Dockerfile'
     - task: Docker@2
       inputs:
