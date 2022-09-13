@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
-import { SettingOutlined } from '@ant-design/icons';
 
 import { getParam } from '@/utils/handleFunction';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
@@ -100,7 +99,7 @@ const KnowledgeNetwork = () => {
         ]
       },
       {
-        label: '数据管理',
+        label: '数据源管理',
         key: '/knowledge/source',
         icon: <IconFont type="icon-shujuyuanguanli" />,
         onClick: () => history.push(`/knowledge/source?id=${currentId}`)

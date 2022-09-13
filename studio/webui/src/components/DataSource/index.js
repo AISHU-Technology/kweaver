@@ -531,7 +531,7 @@ const DataSource = props => {
       <div className="dataSource-toolbox">
         <Button type="primary" className="ad-mr-3" onClick={onCreate}>
           <IconFont type="icon-Add" />
-          {intl.get('datamanagement.create')}
+          {intl.get('datamanagement.add')}
         </Button>
 
         {!isWorkflow ? (
