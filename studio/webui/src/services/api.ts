@@ -109,7 +109,24 @@ const API = {
   graphGetBis: `${baseBuilder}/graph/getbis`,
   graphSaveNoCheck: `${baseBuilder}/graph/savenocheck`,
   graphCheckKmApInfo: `${baseBuilder}/graph/check_kmapinfo`,
-  graphGetInfoExt: `${baseBuilder}/graph/graph_InfoExt/graphid`
+  graphGetInfoExt: `${baseBuilder}/graph/graph_InfoExt/graphid`,
+
+  // thesaurus
+  thesaurusList: `${baseBuilder}/lexicon/getall`,
+  thesaurusInfoBasic: `${baseBuilder}/lexicon/getbyid`,
+  thesaurusCreate: `${baseBuilder}/lexicon/create`,
+  thesaurusLabelList: `${baseBuilder}/lexicon/labels`,
+  thesaurusExport: `${baseBuilder}/lexicon/export`,
+  thesaurusEdit: `${baseBuilder}/lexicon/edit`,
+  thesaurusDelete: `${baseBuilder}/lexicon/delete`,
+  thesaurusImportWords: `${baseBuilder}/lexicon/import_words`,
+  thesaurusInsertWords: `${baseBuilder}/lexicon/insert`,
+  thesaurusSearchWords: `${baseBuilder}/lexicon/search`,
+  thesaurusEditWords: `${baseBuilder}/lexicon/edit_words`,
+  thesaurusDeleteWords: `${baseBuilder}/lexicon/delete_words`,
+  downloadTemplate: `${baseBuilder}/lexicon/template`,
+  wordCloud: `${baseBuilder}/lexicon/word_cloud`,
+  searchWordCloud: `${baseBuilder}/lexicon/word_cloud_search`
 };
 
 export { API };

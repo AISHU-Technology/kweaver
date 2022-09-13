@@ -15,6 +15,7 @@ import headLogo from '@/assets/images/kw.svg';
 const KnowledgeGroup = asyncComponent(() => import('@/pages/KnowledgeNetwork/KnowledgeGroup'));
 const CognitiveEngine = asyncComponent(() => import('@/pages/KnowledgeNetwork/CognitiveEngine'));
 const DataSource = asyncComponent(() => import('@/components/DataSource'));
+const Thesaurus = asyncComponent(() => import('@/pages/KnowledgeNetwork/ThesaurusManagement'));
 
 const Breadcrumb = (props: any) => {
   const { kgData } = props;
@@ -103,6 +104,12 @@ const KnowledgeNetwork = () => {
         key: '/knowledge/source',
         icon: <IconFont type="icon-shujuyuanguanli" />,
         onClick: () => history.push(`/knowledge/source?id=${currentId}`)
+      },
+      {
+        label: '词库',
+        key: '/knowledge/thesaurus',
+        icon: <IconFont type="icon-ciku" />,
+        onClick: () => history.push(`/knowledge/thesaurus?id=${currentId}`)
       }
     ]
   };
@@ -114,6 +121,7 @@ const KnowledgeNetwork = () => {
           <Route path="/knowledge/network" render={() => <KnowledgeGroup kgData={selectedKnowledge} />} />
           <Route path="/knowledge/engine/search" render={() => <CognitiveEngine kgData={selectedKnowledge} />} />
           <Route path="/knowledge/source" render={() => <DataSource selectedKnowledge={selectedKnowledge} />} />
+          <Route path="/knowledge/thesaurus" render={() => <Thesaurus kgData={selectedKnowledge} />} />
         </Switch>
       </Layout>
     </div>

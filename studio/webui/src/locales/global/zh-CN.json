@@ -48,6 +48,7 @@
     "success": "成功",
     "failed": "失败",
     "emptyTableCreate": "【新建】",
-    "check": "查看"
+    "check": "查看",
+    "thesaurusManagement": "词库"
   }
 }
