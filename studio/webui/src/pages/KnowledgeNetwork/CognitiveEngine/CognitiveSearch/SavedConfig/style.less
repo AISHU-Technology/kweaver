@@ -1,0 +1,241 @@
+.saved-strategy-pane {
+  height: 100%;
+
+  .hide {
+    display: none;
+  }
+
+  .search-tool {
+    display: flex;
+    align-items: center;
+    padding: 20px 20px 16px 20px;
+
+    .search-wrap {
+      flex: 1;
+      min-width: 0;
+
+      .ad-search-input {
+        width: 100%;
+      }
+    }
+
+    .clear-icon,
+    .add-icon {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      text-align: center;
+      line-height: 24px;
+      cursor: pointer;
+    }
+
+    .clear-icon {
+      margin-left: 8px;
+      line-height: 24px;
+      opacity: 0.6;
+
+      img {
+        width: 16px;
+        height: auto;
+      }
+    }
+
+    .add-icon {
+      margin: 0 6px;
+    }
+  }
+
+  .config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 32px;
+    padding: 0 20px 10px;
+
+    h2 {
+      color: var(--ad-heading-color);
+    }
+
+    .refresh-icon {
+      margin: 0 8px;
+    }
+  }
+
+  .saved-config-scroll-wrap {
+    position: relative;
+    height: calc(100% - 68px);
+    padding-right: 4px;
+  }
+
+  .config-list-box {
+    padding: 0 16px 0 20px;
+
+    .config-collapse {
+      background: #fff;
+
+      .ant-collapse-header {
+        padding: 12px 40px 12px 0;
+      }
+
+      .ant-collapse-arrow {
+        right: 12px;
+        color: #666;
+      }
+
+      .ant-collapse-item {
+        border-color: var(--ad-line-color);
+      }
+
+      &.ant-collapse-borderless > .ant-collapse-item:last-child {
+        border-bottom: 1px solid var(--ad-line-color);
+      }
+
+      .ant-collapse-content-box {
+        padding: 0 0 12px;
+      }
+
+      .panel-header {
+        width: 100%;
+
+        .g-icon {
+          display: inline-block;
+          vertical-align: middle;
+          width: 24px;
+          height: 24px;
+          margin-right: 8px;
+          line-height: 24px;
+          font-size: 16px;
+          text-align: center;
+          border: 1px solid #f0f0f0;
+          background: #f8f8f8;
+          border-radius: 3px;
+        }
+
+        .g-title {
+          display: inline-block;
+          vertical-align: middle;
+          width: calc(100% - 32px - 32px);
+        }
+
+        .g-check {
+          vertical-align: middle;
+          margin-right: 8px;
+        }
+      }
+
+      .panel-list-box {
+        max-height: 40px * 5;
+        padding-right: 12px;
+        overflow-y: auto;
+      }
+
+      .v-list {
+        padding-right: 12px;
+      }
+
+      .list-row {
+        width: 100%;
+        height: 40px;
+        padding: 0 0 0 40px;
+        line-height: 38px;
+
+        &:hover {
+          background: var(--ad-hover-bg-color);
+
+          .ellipsis-btn {
+            display: inline-flex;
+          }
+        }
+
+        &.checked {
+          background: var(--ad-select-bg-color);
+
+          .ellipsis-btn {
+            display: inline-flex;
+          }
+        }
+
+        .c-radio {
+          vertical-align: middle;
+        }
+
+        .c-name {
+          display: inline-block;
+          vertical-align: middle;
+          width: calc(100% - 80px);
+          cursor: pointer;
+        }
+
+        .ellipsis-btn {
+          display: none;
+          justify-content: center;
+          align-items: center;
+          vertical-align: middle;
+          width: 24px;
+          height: 24px;
+          margin: 0 0 0 20px;
+          border: 1px solid var(--ad-border-color-base);
+          border-radius: 3px;
+          background-color: #fff;
+          transform: translateY(-1px);
+          cursor: pointer;
+
+          .e-icon {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+
+  .config-Pagination {
+    padding: 20px 0;
+    text-align: right;
+  }
+
+  .no-config-box {
+    padding-top: 120px;
+    text-align: center;
+
+    img {
+      width: 144px;
+      height: auto;
+    }
+
+    .desc {
+      margin-top: 10px;
+      color: var(--ad-text-color-secondary);
+    }
+  }
+
+  .saved-config-drop {
+    min-width: 96px !important;
+
+    .ant-dropdown-menu-item {
+      padding-left: 20px;
+    }
+  }
+
+  .pane-loading {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    text-align: center;
+
+    &.spanning {
+      display: block;
+    }
+
+    .l-icon {
+      position: absolute;
+      top: 30%;
+      font-size: 24px;
+      color: var(--ad-primary-color);
+    }
+  }
+}

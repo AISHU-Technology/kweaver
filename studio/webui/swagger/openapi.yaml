@@ -1,0 +1,2007 @@
+swagger: "2.0"
+info:
+  description: "欢迎使用AnyDATA Framework 2.0 OpenAPI"
+  version: "2.0.0"
+  title: "AnyDATA OpenAPI"
+  # termsOfService: "http://swagger.io/terms/"
+  # contact:
+  #   email: "apiteam@swagger.io"
+  # license:
+  #  name: "Apache 2.0"
+  #   url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "{host}:{port}"
+basePath: "/api"
+#tags:
+#- name: "AnyDATA OpenAPI"
+#  description: "AnyDATA OpenAPI 在线说明"
+  # externalDocs:
+  #   description: "Find out more"
+  #   url: "http://swagger.io"
+tags:
+- name: "Introduction"
+  description: "AnyDATA Framework 2.0 提供OpenAPI能力，通过调用AnyDATA的OpenAPI使用AnyDATA的各项功能，实现应用和AnyDATA的集成和交互操作。"
+
+- name: "Authentication"
+  description: "使用AnyDATA 的OpenAPI 需要经过 AnyDATA 系统的认证;通过appid和appkey的验证合法的访问。其中appid 是用户通过 /manager/v1/appid 获取的AnyDATA账户的APPID，用于数据科学家和开发者调用或者使用AnyDATA服务的唯一标识； appkey：是客户端使用特定的算法通过appid、时间戳和请求参数这三个参数生成的校验字符串，用于后端校验请求的合法性。"
+
+- name: "KN Builder"
+  description: "知识网络生成服务 Knowledge Network Builder（KN Builder）：利用人工智能技术，将不同形态的数据转化为知识网络，实现数据知识化。包括知识图谱、语言模型和规则库。"
+
+- name: "CEngine"
+  description: "认知引擎（CEngine）：在知识网络的基础上进行相关的计算，并最终实现认知智能应用。"
+
+
+
+schemes:
+- "https"
+#- "http"
+
+paths:
+  /manager/v1/appid:
+    post:
+      tags:
+      - "Authentication"
+      summary: "获取你账户的appid"
+      description: ""
+      operationId: "getappid"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "请求对象"
+        required: true
+        schema:
+          $ref: "#/definitions/Appid"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/ApiErrResponse"
+      # security:
+      # - petstore_auth:
+      #   - "write:pets"
+      #   - "read:pets"
+
+  /manager/v1/appid/produce:
+    post:
+      tags:
+      - "Authentication"
+      summary: "更新你账户的appid"
+      description: ""
+      operationId: "updateappid"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "请求对象"
+        required: true
+        schema:
+          $ref: "#/definitions/Appid"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/ApiErrResponse"
+      # security:
+      # - petstore_auth:
+      #   - "write:pets"
+      #   - "read:pets"
+  /builder/v1/open/task/{graph_id}:
+    get:
+      tags:
+        - "KN Builder"
+      summary: "分页获取任务列表"
+      description: ""
+      operationId: "gettask"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          type: "integer"
+          description: "图谱配置id"
+        - name: page
+          in: path
+          required: true
+          type: "integer"
+          description: "页码"
+        - name: size
+          in: path
+          required: true
+          type: "integer"
+          description: "每页数量"
+        - name: order
+          in: path
+          required: true
+          type: "integer"
+          description: "默认按照开始时间从新至旧排序，接受参数为：'descend'（从新到旧），'ascend'（从旧到新）"
+        - name: status
+          in: path
+          required: true
+          type: "string"
+          description: "默认all ,查询所有的，'normal', 'running', 'waiting', 'failed', 'stop', 'all'"
+        - name: graph_name
+          in: path
+          required: true
+          type: "string"
+          description: "模糊搜索，默认不填，返回所有数据"
+        - name: task_type
+          in: path
+          required: true
+          type: "string"
+          description: "任务类型，默认all ,查询所有的，full，increment，all"
+        - name: trigger_type
+          in: path
+          required: true
+          type: "integer"
+          description: "触发方式，默认all ，0：手动触发，1：定时自动触发，2：实时触发，默认查询，all"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/GetTaskRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+    post:
+      tags:
+        - "KN Builder"
+      summary: "执行任务"
+      description: ""
+      operationId: "starttask"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          type: "integer"
+          description: "图谱配置id"
+        - name: task_type
+          in: "body"
+          description: "图谱构建类型"
+          required: true
+          schema:
+            $ref: "#/definitions/Tasktype"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/builderRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+#    delete:
+#      tags:
+#        - "KN Builder"
+#      summary: "删除任务"
+#      description: ""
+#      operationId: "deletetask"
+#      consumes:
+#        - "application/json"
+#      produces:
+#        - "application/json"
+#      parameters:
+#        - name: graph_id
+#          in: path
+#          required: true
+#          type: "integer"
+#          description: "图谱配置id"
+#      responses:
+#        "200":
+#          description: "操作成功"
+#          schema:
+#            $ref: "#/definitions/builderRes"
+#        "500":
+#          description: "操作错误"
+#          schema:
+#            $ref: "#/definitions/BuilderErrResponse"
+#        "400":
+#          description: "参数错误"
+#          schema:
+#            $ref: "#/definitions/BuilderErrResponse"
+#      security:
+#       - petstore_auth:
+#         - "write:pets"
+#         - "read:pets"
+#  /builder/v1/open/task/get_run_task_num:
+#    get:
+#      tags:
+#        - "KN Builder"
+#      summary: "获取正在运行的任务数量"
+#      description: ""
+#      operationId: "get_run_task_num"
+#      consumes:
+#        - "application/json"
+#      produces:
+#        - "application/json"
+#      responses:
+#        "200":
+#          description: "操作成功"
+#          schema:
+#            $ref: "#/definitions/getRunTaskNumRes"
+#        "500":
+#          description: "操作错误"
+#          schema:
+#            $ref: "#/definitions/BuilderErrResponse"
+#        "400":
+#          description: "参数错误"
+#          schema:
+#            $ref: "#/definitions/BuilderErrResponse"
+#      security:
+#       - petstore_auth:
+#         - "write:pets"
+#         - "read:pets"
+  /builder/v1/open/onto/updateotlschema:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "本体编辑和图谱schema修改"
+      description: "同时支持orientdb和nebula， 但部分功能有差异，nebula不支持修改实体类或边类名称，nebula不支持修改类属性。"
+      operationId: "updateotlschema"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "请求对象"
+          required: true
+          schema:
+            $ref: "#/definitions/updateotlschema"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/builderRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+  #      security:
+  #       - petstore_auth:
+  #         - "write:pets"
+  #         - "read:pets"
+  /builder/v1/open/task/stoptask/{graph_id}:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "终止任务"
+      description: ""
+      operationId: "stoptask"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          type: "integer"
+          description: "图谱配置id"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/builderRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+#      security:
+#        - petstore_auth:
+#            - "write:pets"
+#            - "read:pets"
+  /builder/v1/open/task/get_progress/{graph_id}:
+    get:
+      tags:
+        - "KN Builder"
+      summary: "获取任务进度"
+      description: ""
+      operationId: "getTaskProgressRes"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          type: "integer"
+          description: "图谱配置id"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/getTaskProgressRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+#      security:
+#        - petstore_auth:
+#            - "write:pets"
+#            - "read:pets"
+#  /builder/v1/open/task/getdetail/{graph_id}:
+#    get:
+#      tags:
+#        - "KN Builder"
+#      summary: "获取任务详情,判断能否查看统计数量"
+#      description: ""
+#      operationId: "getTaskDetail"
+#      consumes:
+#        - "application/json"
+#      produces:
+#        - "application/json"
+#      parameters:
+#        - name: graph_id
+#          in: path
+#          required: true
+#          type: "integer"
+#          description: "图谱配置id"
+#      responses:
+#        "200":
+#          description: "操作成功"
+#          schema:
+#            $ref: "#/definitions/GetTaskDetailRes"
+#        "500":
+#          description: "操作错误"
+#          schema:
+#            $ref: "#/definitions/BuilderErrResponse"
+#        "400":
+#          description: "参数错误"
+#          schema:
+#            $ref: "#/definitions/BuilderErrResponse"
+  #      security:
+  #        - petstore_auth:
+  #            - "write:pets"
+  #            - "read:pets"
+  /api/builder/v1/open/graph/{graph_name}:
+    get:
+      tags:
+        - "KN Builder"
+      summary: "根据图谱名称读取图谱配置"
+      description: ""
+      operationId: "getGraphConfig"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: graph_name
+          in: path
+          required: true
+          type: "string"
+          description: "图谱名称"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/getGraphConfig"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+  #      security:
+  #        - petstore_auth:
+  #            - "write:pets"
+  #            - "read:pets"
+  /api/builder/v1/open/graph/getgraphbygns:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "通过gns查看图谱ID和名称接口"
+      description: ""
+      operationId: "getGraphByGns"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/getGraphByGns"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/getGraphByGnsRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/graphcount/{graph_id}:
+    get:
+      tags:
+        - "KN Builder"
+      summary: "图谱知识量统计接口"
+      description: ""
+      operationId: "getGraphByGns"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: graph_id
+          in: path
+          required: true
+          type: "integer"
+          description: "图谱配置id"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/getGraphCountRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/kc/subject:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "新增主题"
+      description: ""
+      operationId: "createKcSubject"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/createKcSubject"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/builderRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/kc/subject/update:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "修改主题"
+      description: ""
+      operationId: "updateKcSubject"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/createKcSubject"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/builderRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/kc/subject/deletion:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "删除主题"
+      description: ""
+      operationId: "deleteKcSubject"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/deleteKcSubject"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/builderRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/kc/subject/document:
+    get:
+      tags:
+        - "KN Builder"
+      summary: "分页查询主题相关的文档接口"
+      description: ""
+      operationId: "getSubjectDocument"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: subject_id
+          in: path
+          required: true
+          type: "integer"
+          description: "主题id"
+        - name: kg_id
+          in: path
+          required: true
+          type: "integer"
+          description: "图谱id"
+        - name: page
+          in: path
+          required: true
+          type: "integer"
+          description: "页码"
+        - name: limit
+          in: path
+          required: true
+          type: "integer"
+          description: "每页返回的数量"
+        - name: doc_title_keyword
+          in: path
+          required: true
+          type: "string"
+          description: "文档标题关键字"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/getSubjectDocumentRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/kc/subject/search:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "基于单个图谱搜索主题文档接口"
+      description: ""
+      operationId: "getSubjectSearch"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/getSubjectSearch"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/getSubjectSearchRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/kc/subject/knowledge_graphs/search:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "基于多个图谱搜索主题文档接口"
+      description: ""
+      operationId: "getSubjectSearchGraphs"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/getSubjectSearchGraphs"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/embeddingRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/kc/embedding:
+    post:
+      tags:
+        - "KN Builder"
+      summary: "文本向量计算接口"
+      description: ""
+      operationId: "embedding"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/embedding"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/embeddingRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/BuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/knw/get_all:
+    get:
+      tags:
+        - "KN Builder"
+      summary: "分页查询知识网络接口"
+      description: ""
+      operationId: "knwGetAll"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/knwGetAll"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/knwGetAllRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /api/builder/v1/open/knw/get_by_name:
+    get:
+      tags:
+        - "KN Builder"
+      summary: "根据名称分页查询知识网络接口"
+      description: ""
+      operationId: "knwGetByName"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          required: true
+          description: "请求对象"
+          schema:
+            $ref: "#/definitions/knwGetByName"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/knwGetByNameRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+        "400":
+          description: "参数错误"
+          schema:
+            $ref: "#/definitions/NewBuilderErrResponse"
+    #      security:
+    #        - petstore_auth:
+    #            - "write:pets"
+    #            - "read:pets"
+  /engine/v1/open/explore/:
+    post:
+      tags:
+        - "CEngine"
+      summary: "知识网络探索式分析 GraphQL"
+      description: "知识网络探索式分析相关API，可实现实体的搜索，以及探索与其相关联的实体。遵循GraphQL接口规范，详细schema可查看graphql schema"
+      operationId: "explore"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/GraphQLRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/ApiErrResponse"
+  /engine/v1/open/explore/{id}/searchv:
+    post:
+      tags:
+        - "CEngine"
+      summary: "搜索实体"
+      description: "知识网络探索式分析API，可实现实体的搜索与筛选。遵循RESTFul接口规范"
+      operationId: "explore searchv"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          description: "知识网络id"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/SearchVBody"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/SearchVRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/ApiErrResponse"
+  /engine/v1/open/explore/{id}/searche:
+    post:
+      tags:
+        - "CEngine"
+      summary: "搜索边"
+      description: "知识网络探索式分析API，可实现搜索某个实体所对应的关系类别。遵循RESTFul接口规范"
+      operationId: "explore searche"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          description: "知识网络id"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/SearchEBody"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/SearchERes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/ApiErrResponse"
+  /engine/v1/open/explore/{id}/expande:
+    post:
+      tags:
+        - "CEngine"
+      summary: "展开边"
+      description: "知识网络探索式分析API，可实现实展开某个关系类别所对应的实体集。遵循RESTFul接口规范"
+      operationId: "explore expande"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "integer"
+          description: "知识网络id"
+        - name: "body"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/ExpandEBody"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/ExpandERes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/ApiErrResponse"
+  /engine/v1/open/adv-search:
+    get:
+      tags:
+        - "CEngine"
+      summary: "认知搜索"
+      description: "高级搜索"
+      operationId: "adv search"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "kg_id"
+          in: "query"
+          required: false
+          type: "string"
+          description: "知识网络id"
+        - name: "query"
+          in: "query"
+          required: true
+          type: "string"
+          description: "搜索关键字"
+        - name: "page"
+          in: "query"
+          required: true
+          type: "integer"
+        - name: "size"
+          in: "query"
+          required: true
+          type: "integer"
+      responses:
+        "200":
+          description: "操作成功"
+          schema:
+            $ref: "#/definitions/AdvSearchRes"
+        "500":
+          description: "操作错误"
+          schema:
+            $ref: "#/definitions/ApiErrResponse"
+# securityDefinitions:
+#   petstore_auth:
+#     type: "oauth2"
+#    flow: "implicit"
+#     authorizationUrl: "http://swagger.io/api/oauth/dialog"
+#     scopes:
+#       write:pets: "modify perts in your account"
+#       read:pets: "read your pets"
+#   api_Key:
+#     type: "apiKey"
+#     name: "appkey"
+#     in: "header"
+#   api_secret1:
+#     type: "apiKey"
+#     name: "appid"
+#     in: "header"
+#   api_secret2:
+#     type: "apiKey"
+#     name: "timestamp"
+#     in: "header"
+definitions:
+  Tasktype:
+    type: "object"
+    required:
+      - "task_type"
+    properties:
+      task_type:
+        type: "string"
+        example: "full"
+    xml:
+      name: "task_type"
+  getGraphByGns:
+    type: "object"
+    required:
+      - "task_type"
+    properties:
+      gns:
+        type: "array"
+        description: "数据源gns的列表"
+        example: "['gns://9B9A09FDF3114855A7DE75E278CBC97B/9EA2556A5B084147BB696ACF48E048D6']"
+    xml:
+      name: "getGraphByGns"
+  getGraphByGnsRes:
+    type: "object"
+    properties:
+      res:
+        type: "object"
+        items:
+          $ref: "#/definitions/getGraphByGnsResObject"
+  getGraphByGnsResObject:
+    type: "object"
+    properties:
+      gns:
+        type: "array"
+        description: "数据源gns的地址"
+        items:
+          $ref: "#/definitions/getGraphByGnsResArray"
+  getGraphByGnsResArray:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+        description: "图谱id"
+      name:
+        type: "string"
+        format: "string"
+        description: "图谱名称"
+  builderRes:
+    type: "object"
+    properties:
+      res:
+        type: "string"
+        format: "string"
+        description: "success 提示"
+    xml:
+      name: "builderRes"
+  GetTaskDetailRes:
+    type: "object"
+    properties:
+      res:
+        type: "boolean"
+        format: "boolean"
+        description: "true代表可以获取数据，false不可以"
+  BuilderErrResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+        description: "错误码"
+      message:
+        type: "string"
+        format: "string"
+        description: "错误描述"
+      cause:
+        type: "string"
+        format: "string"
+        description: "错误提示"
+  getRunTaskNumRes:
+    type: "object"
+    properties:
+      res:
+        type: "object"
+        items:
+          $ref: "#/definitions/getRunTaskNumResObject"
+  getRunTaskNumResObject:
+    type: "object"
+    properties:
+      count:
+        type: "integer"
+        format: "int32"
+        description: "总数"
+  getGraphCountRes:
+    type: "object"
+    properties:
+      res:
+        type: "object"
+        items:
+          $ref: "#/definitions/getGraphCountResObject"
+  getGraphCountResObject:
+    type: "object"
+    properties:
+      entity_pro:
+        type: "integer"
+        format: "int32"
+        description: "实体数量"
+      edge_pro:
+        type: "integer"
+        format: "int32"
+        description: "关系数量"
+      pros:
+        type: "integer"
+        format: "int32"
+        description: "总数"
+      status:
+        type: "integer"
+        format: "int32"
+        description: "是否统计成功，0代表成功，-1代表统计失败或者nebula还在异步统计中"
+  NewBuilderErrResponse:
+    type: "object"
+    properties:
+      ErrorCode:
+        type: "string"
+        format: "string"
+        description: "错误码"
+      Description:
+        type: "string"
+        format: "string"
+        description: "错误描述"
+      ErrorDetails:
+        type: "string"
+        format: "string"
+        description: "错误详情"
+      Solution:
+        type: "string"
+        format: "string"
+        description: "解决方案"
+      ErrorLink:
+        type: "string"
+        format: "string"
+        description: "错误链接"
+  getSubjectSearchRes:
+    type: "object"
+    properties:
+      res:
+        type: "object"
+        items:
+          $ref: "#/definitions/getSubjectSearchResObject"
+  getSubjectSearchResObject:
+    type: "object"
+    properties:
+      count:
+        type: "integer"
+      kg_id:
+        type: "integer"
+      relate_document:
+        type: "array"
+  getSubjectDocumentRes:
+    type: "object"
+    properties:
+      res:
+        type: "object"
+        items:
+          $ref: "#/definitions/getSubjectDocumentResObject"
+  getSubjectDocumentResObject:
+    type: "object"
+    properties:
+      subject_id:
+        type: "integer"
+      kg_id:
+        type: "integer"
+      relate_document:
+        type: "array"
+  getGraphConfig:
+    type: "object"
+    properties:
+      res:
+        type: "object"
+        items:
+          $ref: "#/definitions/getGraphConfigObject"
+  getGraphConfigObject:
+    type: "object"
+    properties:
+      create_time:
+        type: "datetime"
+      create_user:
+        type: "string"
+      graph_InfoExt:
+        type: "array"
+      graph_KMap:
+        type: "array"
+      graph_KMerge:
+        type: "array"
+      graph_baseInfo:
+        type: "array"
+      graph_db_id:
+        type: "integer"
+      graph_ds:
+        type: "array"
+      graph_name:
+        type: "string"
+      graph_otl:
+        type: "array"
+      graph_otl_temp:
+        type: "array"
+      graph_status:
+        type: "string"
+      graph_used_ds:
+        type: "array"
+      id:
+        type: "integer"
+      is_upload:
+        type: "integer"
+      rabbitmq_ds:
+        type: "integer"
+      step_num:
+        type: "integer"
+      update_time:
+        type: "datetime"
+      upload:
+        type: "integer"
+      update_user:
+        type: "string"
+  getTaskProgressRes:
+    type: "object"
+    properties:
+      res:
+        type: "array"
+        items:
+          $ref: "#/definitions/getTaskProgressResArray"
+  getTaskProgressResArray:
+    type: "object"
+    properties:
+      create_time:
+        type: "datetime"
+      create_user:
+        type: "string"
+      create_user_email:
+        type: "string"
+      create_user_name:
+        type: "string"
+      error_report:
+        type: "string"
+      graph_id:
+        type: "integer"
+      graph_name:
+        type: "string"
+      task_id:
+        type: "string"
+      id:
+        type: "integer"
+      task_status:
+        type: "string"
+      task_type:
+        type: "string"
+      trigger_type:
+        type: "integer"
+  GetTaskRes:
+    type: "object"
+    properties:
+      count:
+        type: "integer"
+        format: "int32"
+        description: "总任务条数"
+      df:
+        type: "array"
+        items:
+          $ref: "#/definitions/GetTaskResArray"
+  GetTaskResArray:
+    type: "object"
+    properties:
+      all_num:
+        type: "integer"
+      all_time:
+        type: "time"
+      count_status:
+        type: "integer"
+      edge_num:
+        type: "integer"
+      edge_pro_num:
+        type: "integer"
+      effective_storage:
+        type: "boolean"
+      end_time:
+        type: "datetime"
+      entity_num:
+        type: "integer"
+      entity_pro_num:
+        type: "integer"
+      error_report:
+        type: "string"
+      graph_edge:
+        type: "integer"
+      graph_entity:
+        type: "integer"
+      graph_id:
+        type: "integer"
+      graph_name:
+        type: "string"
+      id:
+        type: "integer"
+      kg_id:
+        type: "integer"
+      propertyId:
+        type: "integer"
+      start_time:
+        type: "datetime"
+      task_id:
+        type: "string"
+      task_status:
+        type: "string"
+      task_type:
+        type: "boolean"
+      trigger_type:
+        type: "integer"
+      update_user_email:
+        type: "string"
+      update_user_name:
+        type: "string"
+  getSubjectSearch:
+    type: "object"
+    required:
+      - "kg_id"
+      - "subject_id"
+    properties:
+     kg_id:
+       type: "integer"
+       format: "int32"
+       description: "图谱id"
+     subject_path:
+       type: "string"
+       format: "string"
+       description: "主题路径"
+     subject_fold:
+       type: "string"
+       format: "string"
+       description: "主题相关目录（目录必须是知识网络的数据源的子目录）（gns）"
+     subject_name:
+       type: "string"
+       format: "string"
+       description: "主题名称（不为空字符串）"
+     subject_desc:
+       type: "string"
+       format: "string"
+       description: "主题描述"
+     subject_label:
+       type: "array"
+       format: "array"
+       description: "主题相关标签"
+     page:
+       type: "integer"
+       format: "int32"
+       description: "页码"
+     limit:
+       type: "integer"
+       format: "int32"
+       description: "每页返回的数量"
+  deleteKcSubject:
+    type: "object"
+    required:
+      - "kg_id"
+      - "subject_id"
+    properties:
+     kg_id:
+       type: "integer"
+       format: "int32"
+       description: "图谱id"
+     subject_id:
+       type: "integer"
+       format: "int32"
+       description: "主题id"
+  getSubjectSearchGraphs:
+    type: "object"
+    required:
+      - "kg_id_list"
+      - "subject_id"
+      - "subject_path"
+      - "subject_fold"
+      - "subject_name"
+      - "subject_desc"
+      - "subject_label"
+      - "subject_document"
+    properties:
+      kg_id_list:
+        type: "array"
+        format: "array"
+        description: "主题id列表"
+      subject_path:
+        type: "string"
+        format: "string"
+        description: "主题路径"
+      subject_fold:
+        type: "string"
+        format: "string"
+        description: "主题相关目录（目录必须是知识网络的数据源的子目录）（gns）"
+      subject_name:
+        type: "string"
+        format: "string"
+        description: "主题名称（不为空字符串）"
+      subject_desc:
+        type: "string"
+        format: "string"
+        description: "主题描述"
+      subject_label:
+        type: "array"
+        format: "array"
+        description: "主题相关标签"
+      filter_documents:
+        type: "array"
+        format: "array"
+        description: "过滤文档"
+      doc_title_keyword:
+        type: "string"
+        format: "string"
+        description: "文档标题关键字"
+      page:
+        type: "integer"
+        format: "int32"
+        description: "页码"
+      limit:
+        type: "integer"
+        format: "int32"
+        description: "每页返回的数量"
+  getSubjectSearchGraphsRes:
+    type: "object"
+    properties:
+      kg_id_list:
+        type: "array"
+        format: "array"
+      subject_path:
+        type: "string"
+        format: "string"
+      subject_fold:
+        type: "array"
+        format: "array"
+      subject_name:
+        type: "string"
+        format: "string"
+      subject_desc:
+        type: "string"
+        format: "string"
+      subject_label:
+        type: "array"
+        format: "array"
+      filter_documents:
+        type: "array"
+        format: "array"
+  embedding:
+    type: "object"
+    required:
+      - "text"
+    properties:
+      text:
+        type: "array"
+        format: "array"
+        description: "待处理文本的特征组成的list"
+      weights:
+        type: "array"
+        format: "array"
+        description: "不同特征的权重，默认为权重相同（默认自测较好的权重数值）"
+      type:
+        type: "string"
+        format: "string"
+        description: "单独一个文本（特征）的向量计算方式：mean：mean-pooling；max：max-pooling；默认mean方式"
+  embeddingRes:
+    type: "object"
+    properties:
+      res:
+        type: "array"
+        format: "array"
+  knwGetAll:
+    type: "object"
+    required:
+      - "page"
+      - "size"
+      - "order"
+      - "rule"
+    properties:
+      page:
+        type: "integer"
+        format: "int32"
+        description: "页码"
+      size:
+        type: "integer"
+        format: "int32"
+        description: "每页数据"
+      order:
+        type: "string"
+        format: "string"
+        description: "desc asc按时间升序降序"
+      rule:
+        type: "string"
+        format: "string"
+        description: "create按创建时间、update按更新时间"
+  knwGetByName:
+    type: "object"
+    required:
+      - "knw_name"
+      - "page"
+      - "size"
+      - "order"
+      - "rule"
+    properties:
+      knw_name:
+        type: "string"
+        format: "string"
+        description: "知识网络名称"
+      page:
+        type: "integer"
+        format: "int32"
+        description: "页码"
+      size:
+        type: "integer"
+        format: "int32"
+        description: "每页数据"
+      order:
+        type: "string"
+        format: "string"
+        description: "desc asc按时间升序降序"
+      rule:
+        type: "string"
+        format: "string"
+        description: "create按创建时间、update按更新时间"
+  knwGetAllRes:
+    type: "object"
+    properties:
+      count:
+        type: "integer"
+        format: "int32"
+        description: "总知识网络条数"
+      df:
+        type: "array"
+        items:
+          $ref: "#/definitions/knwGetAllResArray"
+  knwGetAllResArray:
+    type: "object"
+    properties:
+      color:
+        type: "string"
+      creation_time:
+        type: "datetime"
+      creator_email:
+        type: "string"
+      creator_id:
+        type: "integer"
+      creator_name:
+        type: "string"
+      final_operator:
+        type: "integer"
+      update_time:
+        type: "datetime"
+      id:
+        type: "integer"
+      knw_description:
+        type: "string"
+      knw_name:
+        type: "string"
+      operator_name:
+        type: "string"
+      operator_email:
+        type: "string"
+  knwGetByNameRes:
+    type: "object"
+    properties:
+      count:
+        type: "integer"
+        format: "int32"
+        description: "总知识网络条数"
+      df:
+        type: "array"
+        items:
+          $ref: "#/definitions/knwGetByNameResArray"
+  knwGetByNameResArray:
+    type: "object"
+    properties:
+      color:
+        type: "string"
+      creation_time:
+        type: "datetime"
+      creator_email:
+        type: "string"
+      creator_id:
+        type: "integer"
+      creator_name:
+        type: "string"
+      final_operator:
+        type: "integer"
+      update_time:
+        type: "datetime"
+      id:
+        type: "integer"
+      knw_description:
+        type: "string"
+      knw_name:
+        type: "string"
+      operator_name:
+        type: "string"
+      operator_email:
+        type: "string"
+  createKcSubject:
+    type: "object"
+    required:
+      - "kg_id"
+      - "subject_id"
+      - "subject_path"
+      - "subject_fold"
+      - "subject_name"
+      - "subject_desc"
+      - "subject_label"
+      - "subject_document"
+    properties:
+     kg_id:
+       type: "integer"
+       format: "int32"
+       description: "图谱id"
+     subject_id:
+       type: "integer"
+       format: "int32"
+       description: "主题id"
+     subject_path:
+       type: "string"
+       format: "string"
+       description: "主题路径"
+     subject_fold:
+       type: "string"
+       format: "string"
+       description: "主题相关目录（目录必须是知识网络的数据源的子目录）（gns）"
+     subject_name:
+       type: "string"
+       format: "string"
+       description: "主题名称（不为空字符串）"
+     subject_desc:
+       type: "string"
+       format: "string"
+       description: "主题描述"
+     subject_label:
+       type: "array"
+       format: "array"
+       description: "主题相关标签"
+     subject_document:
+       type: "array"
+       format: "array"
+       description: "主题相关文档"
+  updateotlschema:
+    type: "object"
+    required:
+      - "graph_id"
+      - "operationtype"
+      - "datatype"
+      - "classname"
+    properties:
+      graph_id:
+        type: "integer"
+        format: "int32"
+        description: "图谱id"
+      operationtype:
+        type: "string"
+        format: "string"
+        description: "操作类型，add delete update 如果是删除 propertyname不能是name, 如果是修改 oldname不能是name ;name属性不能被修改和删除;不在提供删除索引功能"
+      datatype:
+        type: "string"
+        format: "string"
+        description: "操作对象类型，要操作的schema数据类型实体类：entity 边类：edge 实体类属性：entityindex 边类属性：edgeindex 实体类索引：entityproperty 边类索引： edgeproperty"
+      classname:
+        type: "string"
+        format: "string"
+        description: "实体类，边类"
+      propertyname:
+        type: "string"
+        format: "string"
+        description: "属性名称"
+      propertytype:
+        type: "string"
+        format: "string"
+        description: "属性类型，boolean,float,double,string,decimal,datetime,date,integer"
+      altertype:
+        type: "string"
+        format: "string"
+        description: "修改类型，[name,type] 代表修改名称还是修改类型"
+      oldname:
+        type: "string"
+        format: "string"
+        description: "类或者属性名"
+      indextype:
+        type: "string"
+        format: "string"
+        description: "索引类型，[fulltext] 全文索引 只提供新增全文索引的功能， 新增全文索引的时候 删除已有的全文索引，根据参数indexproperties新建新的全文索引（包含name）;本体中的索引使用indexproperties覆盖"
+      indexproperties:
+        type: "array"
+        format: "string"
+        description: "索引字段，对哪些属性进行建立索引 [name,id,weight]"
+      edgein:
+        type: "string"
+        format: "string"
+        description: "入边"
+      edgeout:
+        type: "string"
+        format: "string"
+        description: "出边"
+      unsafe:
+        type: "string"
+        format: "string"
+        description: "安全模式，true，false 如果使用安全模式，索引不能删除和修改；不安全暴力删除修改"
+    xml:
+      name: "updateotlschema"
+  SearchVFilter:
+    type: "object"
+    required:
+      - "filter"
+    properties:
+      selected:
+        type: "string"
+        description: "仅支持'selected' 'unselected' 或者为空"
+      selectedRids:
+        type: "array"
+        items:
+          type: "string"
+        description: "需要过滤的实体rid"
+      filter:
+        type: "array"
+        items:
+          $ref: "#/definitions/FilterArray"
+  FilterArray:
+    type: "object"
+    properties:
+      property:
+        type: "string"
+        description: "属性名"
+      pt:
+        type: "string"
+        description: "属性类型"
+      condition:
+        type: "string"
+        description: "筛选条件"
+      range:
+        type: "array"
+        items:
+          type: "string"
+        description: "筛选值"
+  SearchVBody:
+    type: "object"
+    required:
+      - "class"
+      - "query"
+      - "query_all"
+      - "page"
+      - "size"
+      - "filter"
+    properties:
+      class:
+        type: "string"
+      query:
+        type: "string"
+      query_all:
+        type: "boolean"
+      page:
+        type: "integer"
+      size:
+        type: "integer"
+      filter:
+        $ref: "#/definitions/SearchVFilter"
+    xml:
+      name: "SearchVBody"
+  SearchEBody:
+    type: "object"
+    required:
+      - "rid"
+    properties:
+      rid:
+        type: "string"
+    xml:
+      name: "SearchEBody"
+  ExpandEBody:
+    type: "object"
+    required:
+      - "class"
+      - "io"
+      - "rid"
+      - "page"
+      - "size"
+    properties:
+      class:
+        type: "string"
+      io:
+        type: "string"
+      rid:
+        type: "string"
+      page:
+        type: "integer"
+      size:
+        type: "integer"
+    xml:
+      name: "ExpandEBody"
+  Res:
+    type: "object"
+    properties:
+      AppId:
+        type: "string"
+        format: "string"
+        description: ""
+    xml:
+      name: "Res"
+  Appid:
+    type: "object"
+    required:
+    - "name"
+    - "pass"
+    properties:
+      name:
+        type: "string"
+      pass:
+        type: "string"
+    xml:
+      name: "Appid"
+  ApiResponse:
+    type: "object"
+    properties:
+      res:
+        $ref: "#/definitions/Res"
+  ApiErrResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+        description: "错误码"
+      message:
+        type: "string"
+        format: "string"
+        description: "错误提示"
+  GraphQLRes:
+    type: "object"
+  SearchVRes:
+    type: "object"
+    properties:
+      res:
+        $ref: "#/definitions/SearchV"
+  SearchV:
+    type: "object"
+    properties:
+      time:
+        type: "string"
+      count:
+        type: "string"
+      vertexes:
+        type: "array"
+        items:
+          $ref: "#/definitions/Vertexes"
+  Vertexes:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      class:
+        type: "string"
+      name:
+        type: "string"
+      hl:
+        type: "string"
+      expand:
+        type: "boolean"
+      analysis:
+        type: "boolean"
+      properties:
+        type: "array"
+        items:
+          $ref: "#/definitions/HLProperties"
+  HLProperties:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      value:
+        type: "string"
+      hl:
+        type: "string"
+  SearchERes:
+    type: "object"
+    properties:
+      res:
+        $ref: "#/definitions/SearchE"
+  SearchE:
+    type: "object"
+    properties:
+      in_e:
+        type: "array"
+        items:
+          $ref: "#/definitions/InE"
+      out_e:
+        type: "array"
+        items:
+          $ref: "#/definitions/OutE"
+  InE:
+    type: "object"
+    properties:
+      class:
+        type: "string"
+      count:
+        type: "string"
+  OutE:
+    type: "object"
+    properties:
+      class:
+        type: "string"
+      count:
+        type: "string"
+  ExpandERes:
+    type: "object"
+    properties:
+      res:
+        $ref: "#/definitions/ExpandE"
+  ExpandE:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      class:
+        type: "string"
+      name:
+        type: "string"
+      properties:
+        type: "array"
+        items:
+          $ref: "#/definitions/Properties"
+      in_v:
+        type: "object"
+        $ref: "#/definitions/InV"
+      out_v:
+        type: "object"
+        $ref: "#/definitions/OutV"
+  Properties:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      value:
+        type: "string"
+  InV:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      class:
+        type: "string"
+      name:
+        type: "string"
+      expand:
+        type: "boolean"
+      properties:
+        type: "array"
+        items:
+          $ref: "#/definitions/Properties"
+  OutV:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      class:
+        type: "string"
+      name:
+        type: "string"
+      expand:
+        type: "boolean"
+      properties:
+        type: "array"
+        items:
+          $ref: "#/definitions/Properties"
+  AdvSearchRes:
+    type: "object"
+    properties:
+      number:
+        type: "integer"
+      time:
+        type: "string"
+        format: "time"
+      res:
+        type: "object"
+        properties:
+          search:
+            type: "array"
+            items:
+              $ref: "#/definitions/AdvSearch"
+  AdvSearch:
+    type: "object"
+    properties:
+      class:
+        type: "string"
+      explain:
+        type: "string"
+      gns:
+        type: "string"
+      id:
+        type: "string"
+      kg_id:
+        type: "integer"
+      labels:
+        type: "object"
+      name:
+        type: "string"
+      path:
+        type: "string"
+      score:
+        type: "integer"
+      theme_labels:
+        type: "object"
+
+# externalDocs:
+#   description: "Find out more about Swagger"
+#   url: "http://swagger.io"

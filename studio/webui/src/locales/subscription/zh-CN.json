@@ -1,0 +1,6 @@
+{
+  "subscription": {
+    "ipInputErr": "请输入正确的IP/地址",
+    "cannotNull": "输入不能为空"
+  }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="46px" height="37px" viewBox="0 0 46 37" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>编组 4</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="本体管理_配置-2" transform="translate(-1649.000000, -481.000000)" stroke="#54639C">
+            <g id="本体基本信息" transform="translate(1464.000000, 424.000000)">
+                <g id="DataEntry/Upload/Light/Drag-Upload" transform="translate(0.000000, 36.000000)">
+                    <g id="编组-4" transform="translate(185.000000, 21.000000)">
+                        <path d="M24,0.5 L5,0.5 C4.58578644,0.5 4.21078644,0.667893219 3.93933983,0.939339828 C3.66789322,1.21078644 3.5,1.58578644 3.5,2 L3.50531276,3.17043334 C3.51285097,3.3450936 3.52224935,3.57763956 3.5,4.01289204 L4,13.5 L42.5,13 L42,3.5 L25.5,3.5 L25.5,2 C25.5,1.58578644 25.3321068,1.21078644 25.0606602,0.939339828 C24.7892136,0.667893219 24.4142136,0.5 24,0.5 Z" id="形状结合" fill="#FFFFFF"></path>
+                        <rect id="矩形" fill="#FFFFFF" x="6.5" y="7.5" width="33" height="5"></rect>
+                        <path d="M44.9182808,11.5 L0.583257883,12.0391953 L2.96889874,36.5 L43.5295626,36.0391953 L44.9182808,11.5 Z" id="矩形" fill="#FFFFFF"></path>
+                        <g id="箭头" transform="translate(14.000000, 17.000000)" fill="#EDF2F8" fill-rule="nonzero">
+                            <polygon id="路径" points="15.7777778 7.69861816 8.27779453 0 0.777777778 7.69861816 5.19185136 7.69861816 5.19185136 14 11.3636874 14 11.3636874 7.69861816"></polygon>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

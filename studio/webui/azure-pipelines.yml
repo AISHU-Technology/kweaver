@@ -1,0 +1,86 @@
+# Starter pipeline
+#
+
+trigger:
+  branches:
+    include:
+      - develop
+      - DATA-*
+
+pool:
+  name: common
+
+variables:
+  - group: global-context
+  - name: imageTag
+    value: $(Build.SourceBranchName)-$(Build.BuildNumber)
+  - name: imageName
+    value: kg-studio
+
+resources:
+  containers:
+    - container: scanner
+      endpoint: acr.aishu.cn
+      image: ad/openjdk:11.0.13-jre
+    - container: dotnet
+      endpoint: acr.aishu.cn
+      image: wing-biz/euop/dotnet-runtime:3.1
+
+jobs:
+  - job: utmake
+    displayName: utmakeAndBuild
+    workspace:
+      clean: all
+    steps:
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            docker pull acr.aishu.cn/ad/kg-studio:base
+            echo '{"copyright":"$(copyRight)","version":"$(mainTag)"}' | python -mjson.tool > ./src/version.json
+            docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/root/studio $(harborUrl)/$(imageName):base /bin/sh -c 'cp -R  /root/node_modules/ /root/studio/ && npm run build'
+            jest --coverage --coverageReporters=cobertura || echo
+      - task: Bash@3
+        displayName: saveTar
+        inputs:
+          targetType: 'inline'
+          script: |
+            tar cvf ./studio_src.tar ./build
+            rm -rf ./node_modules
+            cp -f ./studio_src.tar studio_src-$(imageTag).tar
+
+      - task: FtpUpload@2
+        displayName: uploadFtp
+        inputs:
+          credentialsOption: 'inputs'
+          serverUrl: 'ftp://ftp-ad.aishu.cn'
+          username: '$(ftpUser)'
+          password: '$(ftpPasswd)'
+          rootDirectory:
+          filePatterns: '**/studio_src*.tar'
+          remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
+          clean: false
+          cleanContents: false
+          preservePaths: false
+          trustSSL: false
+
+  - job: coverage
+    displayName: coverage
+    container: dotnet
+    dependsOn: utmake
+    steps:
+      - checkout: none
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish ALL Code Coverage Report
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: '$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml'
+
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: '$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml'
+          testRunTitle: 'UT Result'
+          failTaskOnFailedTests: true
+        displayName: 'Publish linting and unit test results'

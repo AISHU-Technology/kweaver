@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>点icon</title>
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="创建实体类" transform="translate(-22.000000, 0.000000)">
+            <g id="点icon" transform="translate(22.000000, 0.000000)">
+                <circle id="点类" stroke="#555555" fill="#FFFFFF" cx="8" cy="8" r="7.5"></circle>
+                <circle id="点类" fill="#126EE3" cx="8" cy="8" r="5"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

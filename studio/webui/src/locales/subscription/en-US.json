@@ -1,0 +1,6 @@
+{
+  "subscription": {
+    "ipInputErr": "Please enter the correct address",
+    "cannotNull": "The value cannot be null"
+  }
+}

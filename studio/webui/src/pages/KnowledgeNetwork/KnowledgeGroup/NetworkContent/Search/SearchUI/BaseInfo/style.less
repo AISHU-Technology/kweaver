@@ -1,0 +1,59 @@
+.search-res-base-info {
+  height: 100%;
+
+  .base-scroll .ad-custom-scroll-thumb-y {
+    opacity: 0;
+  }
+
+  &:hover {
+    .base-scroll .ad-custom-scroll-thumb-y {
+      opacity: 1;
+    }
+  }
+
+  .scroll-wrapper {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .title {
+    height: 34px;
+    line-height: 20px;
+    border-bottom: 1px solid var(--ad-line-color);
+
+    .circle-span {
+      display: inline-block;
+      vertical-align: middle;
+      width: 14px;
+      height: 14px;
+      margin-right: 10px;
+      border-radius: 50%;
+      border: 1px solid #e5e5e5;
+    }
+
+    .cl-name {
+      display: inline-block;
+      vertical-align: middle;
+      width: calc(100% - 24px);
+      font-family: PingFangSC-Medium, PingFang SC;
+      color: var(--ad-heading-color);
+    }
+  }
+
+  .row {
+    padding: 6px 20px;
+    border-bottom: 1px solid var(--ad-line-color);
+
+    .pro {
+      height: 16px;
+      margin-bottom: 6px;
+      color: var(--ad-text-color-secondary);
+      line-height: 16px;
+    }
+
+    .value {
+      height: 20px;
+      line-height: 20px;
+    }
+  }
+}
