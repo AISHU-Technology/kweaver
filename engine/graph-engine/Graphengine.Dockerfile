@@ -1,7 +1,8 @@
 FROM alpine:3.11
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 FROM golang:1.17 as gomake
-RUN mkdir -p /root/graph-engine
+RUN mkdir -p /root/graph-engine && \
+ls -R .
 WORKDIR /root/graph-engine/
 COPY ./graph-engine .
 RUN ls && \
