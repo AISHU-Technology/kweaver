@@ -1,6 +1,10 @@
 FROM alpine:3.11
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-RUN ls -R . && \
+FROM golang:1.17 as gomake
+RUN mkdir -p /root/graph-engine
+WORKDIR /root/graph-engine/
+COPY ./graph-engine .
+RUN ls && \
 go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
@@ -13,7 +17,7 @@ ADD utils/direactory.txt /root/graph-engine/utils/
 ADD resources /root/graph-engine/resources
 
 VOLUME [./graph-engine/conf]
-WORKDIR /root/graph-engine
+
 
 EXPOSE 6474
 CMD ["./graph-engine"]
