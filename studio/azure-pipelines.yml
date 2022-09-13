@@ -21,6 +21,10 @@ parameters:
     displayName: 请手动输入程序的数据库版本值
     type: string
     default: '1.1.1'
+  - name: pushTag
+    displayName: 是否要推送到harbor
+    type: boolean
+    default: false
 
 variables:
   - group: global-context
@@ -54,12 +58,24 @@ jobs:
         inputs:
           command: 'build'
           repository: $(imageNameWithHarbor)
-          tags: $(mainTag)
+          tags: |
+            $(mainTag)
+            latest
           Dockerfile: '**/Studio.Dockerfile'
       - task: Docker@2
         inputs:
           containerRegistry: 'acr.aishu.cn'
           command: 'login'
+      - task: Docker@2
+        displayName: Push image
+        condition: and(succeeded(), eq(${{ parameters.pushTag }}, 'True'))
+        inputs:
+          containerRegistry: 'acr.aishu.cn'
+          repository: 'ad/kw-studio'
+          command: push
+          tags: |
+            $(mainTag)
+            latest
       - task: Bash@3
         displayName: saveTar
         inputs:
