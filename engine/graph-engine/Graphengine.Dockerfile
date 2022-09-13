@@ -5,13 +5,13 @@ FROM golang:1.17 as gomake
 RUN mkdir -p /root/graph-engine
 WORKDIR /root/graph-engine/
 COPY . .
-RUN ls -R . && \
+RUN ls && \
 go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
 go mod tidy && \
-go build 
-
+go build -o graph-engine && \
+ls -R .
 
 ADD ./graph-engine /root/graph-engine/
 ADD conf /root/graph-engine/conf
