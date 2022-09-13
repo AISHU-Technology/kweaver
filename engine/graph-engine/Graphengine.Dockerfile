@@ -10,7 +10,7 @@ go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
 go mod tidy && \
-go build -o graph-engine ./main.go
+go build 
 RUN apk add tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && ls -R .
 ADD ./graph-engine /root/graph-engine/
 ADD conf /root/graph-engine/conf
