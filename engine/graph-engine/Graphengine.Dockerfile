@@ -4,7 +4,7 @@ FROM golang:1.17 as gomake
 RUN mkdir -p /root/graph-engine && \
 ls -R .
 WORKDIR /root/graph-engine/
-COPY ./graph-engine .
+COPY ./engine/graph-engine .
 RUN ls && \
 go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
