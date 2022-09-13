@@ -11,9 +11,9 @@ go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
 go mod tidy && \
 go build -o graph-engine && \
-ls -R .
+ls -R .. 
 
-ADD ./graph-engine /root/graph-engine/
+ADD ./graph-engine/graph-engine /root/graph-engine/
 ADD conf /root/graph-engine/conf
 ADD utils/direactory.txt /root/graph-engine/utils/
 ADD resources /root/graph-engine/resources
