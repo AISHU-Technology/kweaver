@@ -13,10 +13,14 @@ go mod tidy && \
 go build -o graph-engine && \
 ls -R .. 
 
-ADD ./graph-engine/graph-engine /root/graph-engine/
-ADD conf /root/graph-engine/conf
-ADD utils/direactory.txt /root/graph-engine/utils/
-ADD resources /root/graph-engine/resources
+
+FROM acr.aishu.cn/public/ubuntu:21.10.20211119
+RUN apt-get install -y tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+COPY --from=gomake /root/graph-engine/graph-engine /root/graph-engine/
+COPY ./conf /root/graph-engine/conf
+COPY ./utils/direactory.txt /root/graph-engine/utils/
+COPY ./resources /root/graph-engine/resources
+WORKDIR /root/graph-engine
 
 VOLUME [./graph-engine/conf]
 
