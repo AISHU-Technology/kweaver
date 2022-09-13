@@ -65,7 +65,7 @@ class IndexConfig extends Component {
 
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
         message.error(response?.Description || '');
       }
@@ -91,7 +91,7 @@ class IndexConfig extends Component {
         });
       }
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode, Description } = response;
         if (ErrorCode === 'Manager.Opensearch.OSRecordNotFoundError') {
@@ -214,14 +214,14 @@ class IndexConfig extends Component {
 
     return (
       <div className="storage-index-config">
-        <div className="tool-box">
-          <div className="tool-box-left">
-            <Button type="primary" className="new-botton" onClick={this.onCreate}>
+        <div className="ad-space-between">
+          <div>
+            <Button type="primary" onClick={this.onCreate}>
               <IconFont type="icon-Add" className="add-icon" />
               {intl.get('datamanagement.create')}
             </Button>
           </div>
-          <div className="tool-box-right">
+          <div>
             <SearchInput
               placeholder={intl.get('configSys.searchTip')}
               ref={this.searchInput}

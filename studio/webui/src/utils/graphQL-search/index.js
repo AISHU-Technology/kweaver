@@ -1,11 +1,3 @@
-/**
- * @description graphQL 查询与变更
- *
- * @author Eden
- * @date 2020/06.21
- *
- */
-
 import { clientForKg, clientForExplore, clientForLoopKg } from '@/graphQLSerVer';
 
 /**

@@ -1,16 +1,15 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { sleep } from '@/tests';
 import store from '@/reduxConfig/store';
 import TaskList from '../index';
 import serviceTaskManagement from '@/services/taskManagement';
 import { taskList } from './mockData';
 import { act } from '@testing-library/react-hooks';
-const props = {
-  selectedGraph: { id: 1, kgconfid: 1 },
-  tabsKey: '4',
-  setGraphStatus: () => {},
-  getGraphList: () => {}
+const defaultProps = {
+  selectedGraph: { id: 1, kg_conf_id: 1 },
+  tabsKey: '3',
+  onUpdateGraphStatus: jest.fn()
 };
 
 serviceTaskManagement.taskGet = jest.fn(() => Promise.resolve(taskList));
@@ -40,12 +39,11 @@ jest.mock('react-router-dom', () => ({
   useHistory: () => ({ push: jest.fn(), location: { pathname: '' }, listen: jest.fn() })
 }));
 
-const init = (props = {}) => mount(<TaskList {...props} store={store} />);
+const init = (props = defaultProps) => mount(<TaskList {...props} store={store} />);
 
 describe('UI test', () => {
   it('should render', async () => {
-    const wrapper = init(props);
-
+    init();
     await sleep();
     expect(serviceTaskManagement.taskGet).toBeCalled();
   });
@@ -53,7 +51,7 @@ describe('UI test', () => {
 
 describe('fun test', () => {
   it('search select', async () => {
-    const wrapper = init(props);
+    const wrapper = init();
 
     act(() => {
       wrapper.find('.ant-select-selector').at(0).simulate('mousedown');
@@ -77,7 +75,7 @@ describe('fun test', () => {
   });
 
   it('status', async () => {
-    const wrapper = init(props);
+    const wrapper = init();
 
     act(() => {
       wrapper.find('.ant-select-selector').at(2).simulate('mousedown');
@@ -109,8 +107,8 @@ describe('option', () => {
               effective_storage: true
             },
             {
-              graph_name: '123',
-              graph_id: 1,
+              graph_name: '456',
+              graph_id: 2,
               task_status: 'running',
               id: 2,
               task_type: 'full',
@@ -118,11 +116,11 @@ describe('option', () => {
               effective_storage: true
             }
           ],
-          count: 1
+          count: 2
         }
       })
     );
-    const wrapper = init(props);
+    const wrapper = init();
 
     await sleep();
 

@@ -74,7 +74,7 @@ const Basic = (props, ref) => {
         setStorageList(res?.data);
       }
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message') message.error(response?.Description || '');
     }
   };

@@ -1,9 +1,3 @@
-/**
- * @description 数据源导入
- * @author Eden
- * @date 2021/05/13
- */
-
 import React, { Component } from 'react';
 import intl from 'react-intl-universal';
 import { Select, ConfigProvider, Empty } from 'antd';
@@ -78,19 +72,19 @@ class SourceImport extends Component {
    */
   getImage = item => {
     if (item.data_source === 'hive') {
-      return <img className="icon-ti" src={hive} alt="AnyDATA" />;
+      return <img className="icon-ti" src={hive} alt="KWeaver" />;
     }
 
     if (item.data_source === 'as' || item.data_source === 'as7') {
-      return <img className="icon-ti" src={AS} alt="AnyDATA" />;
+      return <img className="icon-ti" src={AS} alt="KWeaver" />;
     }
 
     if (item.data_source === 'mysql') {
-      return <img className="icon-ti" src={MySQL} alt="AnyDATA" />;
+      return <img className="icon-ti" src={MySQL} alt="KWeaver" />;
     }
 
     if (item.data_source === 'rabbitmq') {
-      return <img className="icon-ti" src={mqImg} alt="AnyDATA" />;
+      return <img className="icon-ti" src={mqImg} alt="KWeaver" />;
     }
 
     return null;

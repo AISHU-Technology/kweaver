@@ -4,12 +4,14 @@ import { sleep } from '@/tests';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 import Created from '../createModal/index';
 
-const props = {
+const defaultProps = {
   visible: true,
-  setVisible: jest.fn(),
-  optionType: 'add',
-  editNetwork: {},
-  getData: jest.fn()
+  source: {
+    type: 'add',
+    data: {}
+  },
+  onRefreshList: jest.fn(),
+  onCloseCreateOrEdit: jest.fn()
 };
 
 servicesKnowledgeNetwork.knowledgeNetEdit = jest.fn(() => Promise.resolve({ res: 'success' }));
@@ -19,23 +21,22 @@ jest.mock('react-router-dom', () => ({
   useHistory: () => ({ push: jest.fn(), location: { pathname: '' }, listen: jest.fn() })
 }));
 
-const init = (props = {}) => mount(<Created {...props} />);
+const init = (props = defaultProps) => mount(<Created {...props} />);
 
 describe('Function test', () => {
   it('ok btn click', async () => {
-    const wrapper = init(props);
+    const wrapper = init();
 
     await sleep();
 
     wrapper
       .find('.des-input')
       .at(0)
-      .simulate('change', { target: { value: 'ygname' } });
+      .simulate('change', { target: { value: 'desc' } });
     wrapper
       .find('.auth-input')
       .at(0)
       .simulate('change', { target: { value: 'admin' } });
-    // wrapper.find('.box').at(2).simulate('click');
 
     await sleep();
     wrapper.update();
@@ -49,14 +50,17 @@ describe('Function test', () => {
 
 describe('Function test', () => {
   it('edit', async () => {
-    const wrapper = init({ ...props, optionType: 'edit' });
+    const wrapper = init({
+      ...defaultProps,
+      source: { type: 'edit', data: { knw_name: 'name', knw_des: 'desc', knw_color: '#126EE3' } }
+    });
 
     await sleep();
 
     wrapper
       .find('.des-input')
       .at(0)
-      .simulate('change', { target: { value: 'yame' } });
+      .simulate('change', { target: { value: 'desc' } });
     wrapper
       .find('.auth-input')
       .at(0)

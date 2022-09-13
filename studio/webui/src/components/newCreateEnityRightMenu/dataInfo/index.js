@@ -1,12 +1,4 @@
 /* eslint-disable max-lines */
-/**
- * 点或边的信息
- *
- * @author Eden
- * @date 2020/05/14
- *
- */
-
 import React, { Component } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
@@ -799,9 +791,9 @@ class DataInfo extends Component {
         <div className="title">
           <div className="word">
             {isNode ? (
-              <img src={dianIcon} alt="AnyDATA" className="dian-icon" />
+              <img src={dianIcon} alt="KWeaver" className="dian-icon" />
             ) : (
-              <img src={edgeIcon} alt="AnyDATA" className="dian-icon" />
+              <img src={edgeIcon} alt="KWeaver" className="dian-icon" />
             )}
 
             <span>{isNode ? [intl.get('createEntity.ec')] : [intl.get('createEntity.rc')]}</span>

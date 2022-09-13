@@ -1,9 +1,3 @@
-/**
- * @description 本体导入
- * @author Eden
- * @date 2021/05/11
- */
-
 import React, { Component } from 'react';
 import intl from 'react-intl-universal';
 import { Select, ConfigProvider, Empty, message } from 'antd';

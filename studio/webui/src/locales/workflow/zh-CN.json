@@ -237,7 +237,7 @@
       "viewTask": "查看任务",
       "backGraph": "返回列表",
       "seeTask": "查看任务",
-      "enptyErr": "输入不能为空",
+      "emptyErr": "输入不能为空",
       "repeatErr": "重复选择，请修改",
       "delSuccess": "属性配置删除成功！",
       "timedrun": "定时运行"

@@ -22,6 +22,7 @@
     background-color: transparent;
     // antd
     .ant-menu-item-icon {
+      opacity: 0.5;
       font-size: 18px;
     }
     .ant-menu-inline {
@@ -38,6 +39,7 @@
       border-color: var(--ad-primary-color);
     }
 
+    // .ant-menu-item-icon
     .ant-menu-submenu-title,
     .ant-menu-submenu-selected {
       color: rgba(0, 0, 0, 0.85);
@@ -50,7 +52,9 @@
       border-radius: 0px 4px 4px 0px;
       background-color: rgba(145, 151, 169, 0.14);
       .ant-menu-item-icon {
-        filter: url(#filterRed);
+        opacity: 1.5;
+        filter: drop-shadow(var(--ad-primary-color) 80px 0);
+        transform: translateX(-80px);
       }
     }
     .ant-menu-item-selected:after,

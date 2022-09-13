@@ -1,6 +1,5 @@
 /**
  * UI无关的表单hook
- * @author Jason.ji
  */
 
 import { useState } from 'react';

@@ -44,7 +44,7 @@ type RequestType = {
   method: 'get' | 'post' | 'delete' | 'put';
 };
 const request = ({ url, data, config, method }: RequestType): any => {
-  const body = method === 'get' ? { params: data } : { data };
+  const body = method === 'get' ? { params: data } : data;
   return new Promise((resolve, reject) => {
     service[method](url, Object.assign(body, config))
       .then(response => {
@@ -58,9 +58,12 @@ const request = ({ url, data, config, method }: RequestType): any => {
           message.error([intl.get('createEntity.timeOut')]);
           return reject(error.response);
         }
+
         if (status === 500 || status === 403) {
-          if (ErrorCode || config?.url?.includes('/api/builder/v1/graph/output')) return reject(error.response);
-          if (ErrorCode === 'Gateway.PlatformAuth.AuthError') message.error('认证失败');
+          if (ErrorCode === 'Gateway.PlatformAuth.AuthError') return message.error('认证失败');
+          if (ErrorCode || config?.url?.includes('/api/builder/v1/graph/output')) {
+            reject({ type: 'message', config: error?.response?.config, response: error?.response?.data });
+          }
         } else if (status === 400) {
           return reject({ type: 'message', config: error?.response?.config, response: error?.response?.data });
         } else {

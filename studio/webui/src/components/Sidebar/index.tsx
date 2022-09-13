@@ -16,6 +16,8 @@ type MenuItem = {
   key: string;
   icon?: React.HTMLProps<HTMLSpanElement>;
   label: string;
+  bindRoute?: boolean;
+  onClick?: () => void;
   children?: any;
 };
 
@@ -92,17 +94,6 @@ const Sidebar = (props: SidebarType) => {
       <span className="toggleMenuBut" onClick={toggleCollapsed}>
         {isClose ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
       </span>
-      <svg>
-        <filter id="filterRed">
-          <feColorMatrix
-            values="0 0 0 0
-              0.022 0 0 0
-              0 0.2 0.3 0
-              0 0 1 1
-              0 0 1 0"
-          />
-        </filter>
-      </svg>
     </div>
   );
 };

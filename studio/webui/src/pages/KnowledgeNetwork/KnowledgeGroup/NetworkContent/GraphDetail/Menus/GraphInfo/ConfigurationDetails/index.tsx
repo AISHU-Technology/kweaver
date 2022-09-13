@@ -49,7 +49,7 @@ const ConfigurationDetails = (props: any) => {
       setIsFetching(false);
     } catch (error) {
       setIsFetching(false);
-      const { type, response } = error as any;
+      const { type = '', response = {} } = (error || {}) as any;
       if (type === 'message') message.error(response?.Description || '');
     }
   };

@@ -41,7 +41,7 @@ const NetworkContents = props => {
       const data = result?.res || {};
       setGraphBasicData(data);
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message') message.error(response?.Description || '');
     }
   };

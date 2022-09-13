@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * 属性配置
  */
@@ -22,9 +21,9 @@ const SetAttr = props => {
   const [attrList, setAttrList] = useState([]); // 属性列表
   const [properties, setProperties] = useState([]); // 配置列表
 
-  const ENPTYERR = intl.get('workflow.conflation.enptyErr'); // 定义错误信息“空”
-  const REPEATERR = intl.get('workflow.conflation.repeatErr'); // 定义错误信息“重复”
-  const DELSUCCESS = intl.get('workflow.conflation.delSuccess'); // 定义“删除成功”
+  const EMPTY_ERR = intl.get('workflow.conflation.emptyErr'); // 定义错误信息“空”
+  const REPEAT_ERR = intl.get('workflow.conflation.repeatErr'); // 定义错误信息“重复”
+  const DEL_SUCCESS = intl.get('workflow.conflation.delSuccess'); // 定义“删除成功”
 
   // 切换点类时展开相应的信息
   useEffect(() => {
@@ -57,7 +56,7 @@ const SetAttr = props => {
     if (properties[properties.length - 1] && !properties[properties.length - 1].property) {
       setIsError(true);
       setErrIndex(properties.length - 1);
-      setErrMsg(ENPTYERR);
+      setErrMsg(EMPTY_ERR);
       setTimeout(() => {
         if (attrScrollRef.current) attrScrollRef.current.scrollbars.scrollToBottom();
       }, 0);
@@ -104,7 +103,7 @@ const SetAttr = props => {
     if (properties.filter(pro => pro.property === value).length > 1) {
       setIsError(true);
       setErrIndex(index);
-      setErrMsg(REPEATERR);
+      setErrMsg(REPEAT_ERR);
       return;
     }
 
@@ -121,12 +120,12 @@ const SetAttr = props => {
    * @param {number} index 配置的索引
    */
   const onDelClick = (properties, index) => {
-    let pro = properties.filter((item, i) => i !== index);
+    const pro = properties.filter((item, i) => i !== index);
     updateProperties(pro);
-    message.success(DELSUCCESS);
+    message.success(DEL_SUCCESS);
 
     if (isError && index !== errIndex) {
-      let i = index > errIndex ? errIndex : errIndex - 1;
+      const i = index > errIndex ? errIndex : errIndex - 1;
       setErrIndex(i);
     }
 
@@ -156,7 +155,7 @@ const SetAttr = props => {
       ) {
         setIsError(true);
         setErrIndex(properties.length - 1);
-        setErrMsg(ENPTYERR);
+        setErrMsg(EMPTY_ERR);
 
         setTimeout(() => {
           if (attrScrollRef.current) attrScrollRef.current.scrollbars.scrollToBottom();
@@ -207,13 +206,13 @@ const SetAttr = props => {
                       <div className="vertex-select">
                         <ConfigProvider renderEmpty={customizeRenderEmpty}>
                           <Select
-                            key={'select' + pro.property + proIndex || 'no-select'}
+                            key={`select${pro.property}${proIndex}` || 'no-select'}
                             showSearch
                             allowClear
                             virtual={false}
                             className={isError && proIndex === errIndex ? 'attr-err' : 'vertex-selector '}
                             placeholder={intl.get('workflow.conflation.inputAndSelect')}
-                            listHeight={32 * 5} // 1条选项heigh=32px, 最多显示5条
+                            listHeight={32 * 5} //
                             value={pro.property}
                             disabled={isError && proIndex !== errIndex}
                             onSelect={value => onAttrSelect(value, properties, proIndex)}

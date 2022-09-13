@@ -1,9 +1,3 @@
-/**
- * @description 新普通搜索页面
- * @author Eden
- * @date 2022/01/05
- */
-
 import React, { Component } from 'react';
 import { Drawer, Button } from 'antd';
 import intl from 'react-intl-universal';
@@ -25,7 +19,7 @@ class Search extends Component {
   };
 
   componentDidMount() {
-    document.title = `${intl.get('search.exploreTitle')}_AnyDATA`;
+    document.title = `${intl.get('search.exploreTitle')}_KWeaver`;
   }
 
   componentDidUpdate(preProps) {
@@ -137,12 +131,10 @@ class Search extends Component {
           footer={null}
           mask={false}
           push={false}
-          // zIndex={520}
           height={'100vh'}
           placement="bottom"
           onClose={() => this.setState({ searchVisible: true })}
           bodyStyle={{ padding: 0 }}
-          // className={searchVisible ? 'hide-graph' : ''}
         >
           <div className="search-graph-head">
             <Button

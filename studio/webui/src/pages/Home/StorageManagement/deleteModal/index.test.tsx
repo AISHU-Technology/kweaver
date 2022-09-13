@@ -4,7 +4,7 @@ import { act, sleep } from '@/tests';
 import serviceStorageManagement from '@/services/storageManagement';
 import DeleteModal from './index';
 
-const props = {
+const defaultProps = {
   visible: true,
   delType: 'graph',
   deleteItem: { name: 'bbb' },
@@ -13,24 +13,21 @@ const props = {
 };
 
 serviceStorageManagement.graphDBDelete = jest.fn(() => Promise.resolve({ res: 'success' }));
-const init = (props = {}) => mount(<DeleteModal {...props} />);
+const init = (props = defaultProps) => mount(<DeleteModal {...props} />);
 
 describe('UI render', () => {
   it('render test', async () => {
-    init(props);
+    init();
     await sleep();
   });
 });
 
 describe('Function', () => {
   it('ok btn', async () => {
-    const wrapper = init(props);
-
+    const wrapper = init();
     const input = wrapper.find('.input').at(0);
     input.simulate('change', { target: { value: 'bbb' } });
-
     const ok = wrapper.find('.delete-ok').at(0);
-
     act(() => {
       ok.simulate('click');
     });
@@ -39,16 +36,13 @@ describe('Function', () => {
   });
 
   it('cancel btn', async () => {
-    const wrapper = init(props);
-
+    const wrapper = init();
     const cancel = wrapper.find('.ant-btn-default .delete-cancel').at(0);
-
     act(() => {
       cancel.simulate('click');
     });
     await sleep();
-
-    expect(props.setVisible).toHaveBeenCalled();
+    expect(defaultProps.setVisible).toHaveBeenCalled();
   });
 });
 
@@ -57,15 +51,10 @@ describe('error text', () => {
     serviceStorageManagement.graphDBDelete = jest.fn(() =>
       Promise.resolve({ ErrorCode: 'Manager.Common.ServerError' })
     );
-
-    const wrapper = init(props);
-
+    const wrapper = init();
     const input = wrapper.find('.input').at(0);
-
     input.simulate('change', { target: { value: 'aaa' } });
-
     const ok = wrapper.find('.delete-ok').at(0);
-
     act(() => {
       ok.simulate('click');
     });
@@ -76,15 +65,10 @@ describe('error text', () => {
     serviceStorageManagement.graphDBDelete = jest.fn(() =>
       Promise.resolve({ ErrorCode: 'Manager.GraphDB.GraphDBRecordNotFoundError' })
     );
-
-    const wrapper = init(props);
-
+    const wrapper = init();
     const input = wrapper.find('.input').at(0);
-
     input.simulate('change', { target: { value: 'bbb' } });
-
     const ok = wrapper.find('.delete-ok').at(0);
-
     act(() => {
       ok.simulate('click');
     });
@@ -95,23 +79,10 @@ describe('error text', () => {
     serviceStorageManagement.graphDBDelete = jest.fn(() =>
       Promise.resolve({ ErrorCode: 'Manager.Account.InsufficientAccountPermissionsError' })
     );
-
-    const props = {
-      visible: true,
-      delType: 'index',
-      deleteItem: { name: 'bbb' },
-      setVisible: jest.fn(),
-      getData: jest.fn()
-    };
-
-    const wrapper = init(props);
-
+    const wrapper = init();
     const input = wrapper.find('.input').at(0);
-
     input.simulate('change', { target: { value: 'bbb' } });
-
     const ok = wrapper.find('.delete-ok').at(0);
-
     act(() => {
       ok.simulate('click');
     });

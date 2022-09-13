@@ -1,8 +1,6 @@
-/* eslint-disable */
 /**
  * 融合
  */
-
 import React, { Component, createRef } from 'react';
 import intl from 'react-intl-universal';
 import { Switch, Button, Modal, ConfigProvider, Radio } from 'antd';
@@ -10,10 +8,11 @@ import { CheckCircleFilled, LoadingOutlined } from '@ant-design/icons';
 
 import serviceWorkflow from '@/services/workflow';
 import TimedTask from '@/components/timedTask';
+import { updateUrl } from '@/utils/handleFunction';
 
 import SetAttr from './SetAttr';
 import NodeInfo from './NodeInfo';
-import { isDocment, initConfig, updateConfig } from './assisFunction';
+import { isDocument, initConfig, updateConfig } from './assistFunction';
 
 import emptyImg from '@/assets/images/empty.svg';
 import full from '@/assets/images/quanliang.svg';
@@ -38,7 +37,7 @@ class Mix extends Component {
     timedTaskVisible: false // 定时任务弹窗
   };
 
-  runSingal = false;
+  runSignal = false;
 
   componentDidUpdate(preProps) {
     const { current, ontoData, infoExtrData, conflation, dataSourceData } = this.props;
@@ -47,7 +46,7 @@ class Mix extends Component {
     if (preProps.current !== current && current === 5 && this.isPassStep4.current) {
       const { entity } = ontoData[0]; // 第三步的点信息
       const extr = [...infoExtrData]; // 第四步的点信息
-      const isDocModel = isDocment(entity, extr); // 判断是否包含文档知识模型
+      const isDocModel = isDocument(entity, extr); // 判断是否包含文档知识模型
 
       if (conflation.length === 0) {
         // 初次进入, 直接取第三步的点
@@ -74,65 +73,66 @@ class Mix extends Component {
     }
   }
 
-  // 生成保存的数据让父组件调用
+  /**
+   * 生成保存的数据让父组件调用
+   */
   getFlowData = () => {
     const data = this.generateData();
     return data;
   };
 
   /**
-   * @description 上一步
+   * 上一步
    */
-  mixPrev = () => {
+  onPrev = () => {
     this.isPassStep4.current = false;
     this.saveState();
     this.props.prev();
   };
 
   /**
-   * @description 点击执行任务
+   * 点击执行任务
    */
   onImplementClick = async () => {
-    if (this.state.isError || this.state.saveLoading) return;
+    const { isError, saveLoading, isImmediately } = this.state;
+    if (isError || saveLoading) return;
 
     const data = this.generateData();
     const params = { graph_step: 'graph_KMerge', graph_process: data };
-
-    // 保存数据
     this.setSaveLoading(true);
-    const res = await serviceWorkflow.graphEdit(this.props.graphId, params);
+    const res = (await serviceWorkflow.graphEdit(this.props.graphId, params)) || {};
 
-    if (this.state.isImmediately) return this.setState({ updateType: 'full' }, this.updateTask);
-    if (res && res.res) this.setState({ modalVisible: true });
-
+    if (isImmediately) return this.setState({ updateType: 'full' }, this.updateTask);
+    res.res && this.setState({ modalVisible: true });
     this.setSaveLoading(false);
-    this.props.next(res || {});
+    this.props.next(res);
   };
 
   /**
-   * @description 执行任务
+   * 执行任务
    */
   updateTask = async () => {
-    if (this.runSingal) return;
-    this.runSingal = true;
+    if (this.runSignal) return;
+    this.runSignal = true;
     const { updateType, saveLoading } = this.state;
-    let data = { tasktype: updateType };
-    // 执行
+    const data = { tasktype: updateType };
     const taskRes = await serviceWorkflow.taskPerform(this.props.graphId, data);
     saveLoading && this.setState({ saveLoading: false });
-    if (taskRes && taskRes.res) {
-      window.history.pushState({}, null, window.origin + '/home/graph-list');
+
+    if (taskRes?.res) {
       this.setState({ taskModalType: 'save', modalVisible: true });
+      updateUrl('/home/graph-list');
     }
 
-    if (taskRes && taskRes.Code) this.props.next(taskRes);
+    if (taskRes?.Code) this.props.next(taskRes);
+
     setTimeout(() => {
-      this.runSingal = false;
+      this.runSignal = false;
     }, 100);
   };
 
   /**
-   * @description 点击执行任务的请求状态
+   * 点击执行任务的请求状态
    * @param {boolean} bool
    */
   setSaveLoading = bool => {
@@ -140,7 +140,7 @@ class Mix extends Component {
   };
 
   /**
-   * @description 保存state到父组件
+   * 保存state到父组件
    */
   saveState = () => {
     const data = this.generateData();
@@ -148,23 +148,23 @@ class Mix extends Component {
   };
 
   /**
-   * @description 是否融合开关
+   * 是否融合开关
    * @param {boolean} value
    */
   onChange = value => {
-    let index = this.state.showIndex === -1 ? 0 : this.state.showIndex;
+    const index = this.state.showIndex === -1 ? 0 : this.state.showIndex;
     this.setState({ check: value, showIndex: index });
   };
 
   /**
-   * @description 展开的点的索引
-   * @param {Number} index
+   * 展开的点的索引
+   * @param {number} index
    */
   setShowIndex = index => this.setState({ showIndex: index });
 
   /**
-   * @description 更新点类信息
-   * @param {Array} properties
+   * 更新点类信息
+   * @param {array} properties
    */
   setEntity = entity => this.setState({ entity });
 
@@ -175,22 +175,22 @@ class Mix extends Component {
   setIsError = boolean => this.setState({ isError: boolean });
 
   /**
-   * @description 设置错误信息
-   * @param {String} errMsg
+   * 设置错误信息
+   * @param {string} errMsg
    */
   setErrMsg = errMsg => this.setState({ errMsg });
 
   /**
-   * @description 设置错误索引
-   * @param {Number} index
+   * 设置错误索引
+   * @param {number} index
    */
   setErrIndex = index => this.setState({ errIndex: index });
 
   /**
-   * @description 生成后端接口需要的数据
+   * 生成后端接口需要的数据
    */
   generateData = () => {
-    let data = this.state.check
+    const data = this.state.check
       ? this.state.entity.map(item => {
           return { name: item.name, properties: item.properties };
         })
@@ -200,7 +200,7 @@ class Mix extends Component {
   };
 
   /**
-   * @description 点击返回知识网络列表
+   * 点击返回知识网络列表
    */
   returnGraph = () => {
     const knw_id =
@@ -210,7 +210,7 @@ class Mix extends Component {
   };
 
   /**
-   * @description 跳转到任务管理界面
+   * 跳转到任务管理界面
    */
   goToTask = () => {
     const knw_id =
@@ -244,7 +244,7 @@ class Mix extends Component {
         </div>
 
         <div className="content">
-          <div className={check ? 'hidden' : 'none'}>
+          <div className={check ? 'hidden' : 'none-box'}>
             <img className="none-img" src={emptyImg} alt="nodata" />
             <p className="none-info-sub-title">{intl.get('workflow.conflation.pleaseOpen')}</p>
           </div>
@@ -253,9 +253,9 @@ class Mix extends Component {
               <NodeInfo
                 entity={entity}
                 showIndex={showIndex}
+                isError={isError}
                 setShowIndex={this.setShowIndex}
                 setIsError={this.setIsError}
-                isError={isError}
                 setErrMsg={this.setErrMsg}
                 setErrIndex={this.setErrIndex}
               />
@@ -264,13 +264,13 @@ class Mix extends Component {
               <SetAttr
                 entity={entity}
                 showIndex={showIndex}
-                setEntity={this.setEntity}
-                isError={isError}
-                setIsError={this.setIsError}
+                errIndex={errIndex}
                 errMsg={errMsg}
+                isError={isError}
+                setEntity={this.setEntity}
+                setIsError={this.setIsError}
                 setErrMsg={this.setErrMsg}
                 setErrIndex={this.setErrIndex}
-                errIndex={errIndex}
               />
             </div>
           </div>
@@ -281,7 +281,7 @@ class Mix extends Component {
         </div>
 
         <div className="work-flow-footer">
-          <Button className="ant-btn-default btn" onClick={this.mixPrev}>
+          <Button className="ant-btn-default btn" onClick={this.onPrev}>
             {intl.get('workflow.previous')}
           </Button>
 
@@ -325,7 +325,7 @@ class Mix extends Component {
                       <Radio checked={updateType === 'increment'}></Radio>
                     </div>
                     <div>
-                      <img src={increment} className="image"></img>
+                      <img src={increment} className="image" alt="increment" />
                     </div>
                     <div className="word">
                       <div className="title">{intl.get('task.iu')}</div>
@@ -343,7 +343,7 @@ class Mix extends Component {
                       <Radio checked={updateType === 'full'}></Radio>
                     </div>
                     <div>
-                      <img src={full} className="image"></img>
+                      <img src={full} className="image" alt="full" />
                     </div>
                     <div className="word">
                       <div className="title">{intl.get('task.fu')}</div>
@@ -360,11 +360,11 @@ class Mix extends Component {
                       this.setState({ modalVisible: false });
                     }}
                   >
-                    {[intl.get('createEntity.cancel')]}
+                    {intl.get('createEntity.cancel')}
                   </Button>
 
                   <Button type="primary" className="save" onClick={this.updateTask}>
-                    {[intl.get('createEntity.ok')]}
+                    {intl.get('createEntity.ok')}
                   </Button>
                 </ConfigProvider>
               </div>

@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * 点信息
  */
@@ -13,7 +12,7 @@ import './style.less';
 const NodeInfo = props => {
   const { entity, showIndex, setShowIndex, isError, setIsError, setErrMsg, setErrIndex } = props;
 
-  const ENPTYERR = intl.get('workflow.conflation.enptyErr'); // 定义错误信息“空”
+  const EMPTY_ERR = intl.get('workflow.conflation.emptyErr'); // 定义错误信息“空”
 
   /**
    * @description 点击 点类列表
@@ -27,7 +26,7 @@ const NodeInfo = props => {
     if (properties.length > 0 && !properties[properties.length - 1].property) {
       setIsError(true);
       setErrIndex(properties.length - 1);
-      setErrMsg(ENPTYERR);
+      setErrMsg(EMPTY_ERR);
       setTimeout(() => {
         scrollToBottom();
       }, 0);
@@ -41,7 +40,7 @@ const NodeInfo = props => {
    * @description 有错误时属性列表滚动条滚动到底部
    */
   const scrollToBottom = () => {
-    let attrBox = document.querySelector('.mix-attr-scroll div:first-of-type');
+    const attrBox = document.querySelector('.mix-attr-scroll div:first-of-type');
     if (attrBox) attrBox.scrollTop = attrBox.scrollHeight;
   };
 

@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Button, Modal } from 'antd';
 import intl from 'react-intl-universal';
+import './style.less';
 
 // 弹窗内容
 const ModalContent = memo(props => {

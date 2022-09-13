@@ -1,11 +1,3 @@
-/**
- * 按月配置任务
- *
- * @author Eden
- * @date 2021/12/22
- *
- */
-
 import React, { Component } from 'react';
 import { Checkbox, TimePicker } from 'antd';
 import intl from 'react-intl-universal';

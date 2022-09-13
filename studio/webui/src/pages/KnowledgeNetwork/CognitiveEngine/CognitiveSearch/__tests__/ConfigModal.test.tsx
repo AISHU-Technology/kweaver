@@ -5,7 +5,7 @@ import ConfigModal, { ConfigModalProps } from '../ConfigModal';
 import { mockEditData, mockGraphData } from './mockData';
 import { convertData } from '../assistFunction';
 
-jest.mock('../ConfigGraph', () => (props = {}) => {
+jest.mock('../ConfigModal/ConfigGraph', () => (props = {}) => {
   const MockConfigGraph: any = () => <div />;
   return <MockConfigGraph className="mock-config-graph" {...props} />;
 });

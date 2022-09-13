@@ -1,9 +1,3 @@
-/**
- * @description 创建本体页请求
- * @author Eden
- * @date 2020/08/10
- */
-
 import apiService from '@/utils/axios-http';
 import { API } from '@/services/api';
 

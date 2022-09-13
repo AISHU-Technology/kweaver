@@ -8,13 +8,9 @@
   margin: 0 auto;
   background-color: #f8f8f8;
 
-  // &.has-footer {
-  //   padding-bottom: @footer-height;
-
-  //   .main-box {
-  //     height: calc(100vh - 100px - @footer-height);
-  //   }
-  // }
+  .hl-text {
+    color: var(--ad-error-color);
+  }
 
   .main-box {
     display: flex;
@@ -127,7 +123,7 @@
           background-color: var(--ad-line-color);
         }
 
-        &>span {
+        & > span {
           display: inline-block;
           transform: translateY(4px);
         }
@@ -242,7 +238,7 @@
           font-size: 16px;
           width: 64px;
 
-          &+.ant-tabs-tab {
+          & + .ant-tabs-tab {
             margin-left: 120px;
           }
         }
@@ -296,13 +292,15 @@
 
   // 底部
   .footer {
-    position: fixed;
-    z-index: 201;
     left: 0;
     bottom: 0;
-    right: 0;
+    width: 100%;
+    z-index: 201;
+    display: flex;
+    padding: 9px 40px;
+    position: absolute;
+    align-items: center;
     height: @footer-height;
-    padding: 9px 380px;
     background-color: #fff;
     border-top: 1px solid var(--ad-line-color);
 
@@ -352,55 +350,4 @@
 
 .normal-search-UI-no-visible {
   display: none;
-}
-
-// 切换图谱确认弹窗
-.graph-sw-modal {
-  .ant-modal-content {
-    min-height: 192px;
-
-    .ant-modal-body {
-      padding: 24px 32px;
-
-      .m-title {
-        position: relative;
-        margin-bottom: 12px;
-
-        .title-icon {
-          position: absolute;
-          top: 2px;
-          color: var(--ad-error-color);
-          font-size: 20px;
-          margin-right: 16px;
-        }
-
-        .title-text {
-          display: inline-block;
-          vertical-align: middle;
-          margin-left: 32px;
-          font-size: 16px;
-          font-weight: 800;
-          color: var(--ad-heading-color);
-          line-height: 24px;
-        }
-      }
-
-      .m-body {
-        margin-bottom: 32px;
-        padding-left: 32px;
-      }
-
-      .m-footer {
-        position: absolute;
-        bottom: 24px;
-        height: 32px;
-        width: 368px; // 432px - 32px * 2
-        text-align: right;
-
-        .cancel-btn {
-          margin-right: 10px;
-        }
-      }
-    }
-  }
 }

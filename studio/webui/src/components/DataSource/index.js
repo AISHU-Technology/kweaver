@@ -525,15 +525,13 @@ const DataSource = props => {
   return (
     <div className="dataSource">
       {!isWorkflow && (
-        <Format.Title className="ad-mt-5 ad-mb-5" level={5}>
-          {intl.get('datamanagement.datamanagement')}
-        </Format.Title>
+        <Format.Title className="ad-mt-5 ad-mb-5">{intl.get('datamanagement.datamanagement')}</Format.Title>
       )}
 
       <div className="dataSource-toolbox">
         <Button type="primary" className="ad-mr-3" onClick={onCreate}>
           <IconFont type="icon-Add" />
-          {intl.get('datamanagement.create')}
+          {intl.get('datamanagement.add')}
         </Button>
 
         {!isWorkflow ? (

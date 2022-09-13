@@ -7,9 +7,9 @@ import { EllipsisOutlined, LoadingOutlined, ExclamationCircleFilled } from '@ant
 import HOOKS from '@/hooks';
 import serviceTaskManagement from '@/services/taskManagement';
 import IconFont from '@/components/IconFont';
-import ErrorModal from './errorModal/index';
-import DeleteModal from './deleteModal/index';
-import ScheduleModal from './scheduleModal/index';
+import ErrorModal from './errorModal';
+import DeleteModal from './deleteModal';
+import ScheduleModal from './scheduleModal';
 
 import kong from '@/assets/images/kong.svg';
 import full from '@/assets/images/quanliang.svg';
@@ -382,7 +382,8 @@ const TaskList = props => {
   // 运行按钮
   const runTask = () => {
     // 取消按钮focus样式
-    document.getElementsByClassName('run')[0].focus = false;
+    const runBtn = document.getElementsByClassName('run')[0];
+    runBtn && (runBtn.focus = false);
 
     if (tableData.length === 0) {
       setSelectUpdateId(selectedGraph.kg_conf_id);

@@ -99,7 +99,7 @@ const SearchSelect: React.FC<SearchSelectProps> = props => {
                 : showData.map(i => {
                     return (
                       <li
-                        className="field-select-li"
+                        className="field-select-li ad-ellipsis"
                         key={i}
                         title={i}
                         onClick={() => onChange(i)}

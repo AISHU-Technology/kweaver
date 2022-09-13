@@ -11,6 +11,7 @@ import GraphG6 from './GraphG6';
 import Menus from './Menus';
 
 import empty from '@/assets/images/empty.svg';
+import gridImg from '@/assets/images/background_point.png';
 import './style.less';
 
 type GraphDetailType = {
@@ -71,7 +72,7 @@ const GraphDetail = (props: GraphDetailType) => {
       setGraphData({ nodes, edges });
     } catch (error) {
       setIsLoading(false);
-      const { type, response } = error as any;
+      const { type = '', response = {} } = (error || {}) as any;
       if (type === 'message') message.error(response?.Description || '');
     }
   };
@@ -100,7 +101,7 @@ const GraphDetail = (props: GraphDetailType) => {
 
   return (
     <div className="graphDetailRoot">
-      <div className="graphBox">
+      <div className="graphBox" style={{ backgroundImage: `url(${gridImg})` }}>
         {isFetching || isLoading ? null : graphBasicData.status === GRAPH_STATUS.CONFIGURATION ? (
           <div className="empty">
             <img className="ad-mb-2" src={empty} />

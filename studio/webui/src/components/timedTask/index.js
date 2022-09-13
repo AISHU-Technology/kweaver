@@ -1,11 +1,3 @@
-/**
- * 定时任务弹窗
- *
- * @author Eden
- * @date 2021/12/21
- *
- */
-
 import React, { Component } from 'react';
 import { Modal } from 'antd';
 import intl from 'react-intl-universal';

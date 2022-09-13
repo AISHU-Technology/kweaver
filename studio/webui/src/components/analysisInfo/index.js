@@ -1,9 +1,5 @@
 /**
  * 分析报告
- *
- * @author Eden
- * @date 2021/1/26
- *
  */
 
 import React, { Component } from 'react';
@@ -15,7 +11,7 @@ import InfoContent from './infoContent';
 
 import './style.less';
 
-const TAGYOFFSET = 40; // 由于重叠引起的位移偏移量
+const TAG_Y_OFFSET = 40; // 由于重叠引起的位移偏移量
 
 class Analysis extends Component {
   state = {
@@ -94,8 +90,8 @@ class Analysis extends Component {
         ];
 
         if (reportData.entity[i].repeat_freq > 0 && reportData.entity[i].line_index + 1 < texts.length) {
-          if (reportData.entity[i].repeat_freq * TAGYOFFSET > texts[reportData.entity[i].line_index + 1].yOffset) {
-            texts[reportData.entity[i].line_index + 1].yOffset = reportData.entity[i].repeat_freq * TAGYOFFSET;
+          if (reportData.entity[i].repeat_freq * TAG_Y_OFFSET > texts[reportData.entity[i].line_index + 1].yOffset) {
+            texts[reportData.entity[i].line_index + 1].yOffset = reportData.entity[i].repeat_freq * TAG_Y_OFFSET;
           }
         }
       }
@@ -138,7 +134,7 @@ class Analysis extends Component {
 
   render() {
     const { texts, bottomLines } = this.state;
-    const { anylysisTitle } = this.props;
+    const { analysisTitle } = this.props;
 
     return (
       <div id="signal-box" className="analysis-info">
@@ -146,7 +142,7 @@ class Analysis extends Component {
           <TagContent
             texts={texts}
             bottomLines={bottomLines}
-            title={anylysisTitle}
+            title={analysisTitle}
             reportData={this.props.reportData}
           />
         </div>

@@ -72,7 +72,7 @@ class GraphDatabase extends Component {
       const { res } = await serviceStorageManagement.graphDBGetList(data);
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode } = response;
         if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
@@ -108,7 +108,7 @@ class GraphDatabase extends Component {
         this.setState({ storageInfo: data, visible: true, optionType: option, optionStorage: record });
       }
     } catch (error) {
-      const { type, response } = error;
+      const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode } = response;
         if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));

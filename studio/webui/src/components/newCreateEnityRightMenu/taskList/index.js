@@ -1,9 +1,3 @@
-/**
- * @description 任务列表
- * @author Eden
- * @date 2021/05/20
- */
-
 import React, { Component } from 'react';
 import intl from 'react-intl-universal';
 import { Modal, Tooltip, Button, ConfigProvider } from 'antd';

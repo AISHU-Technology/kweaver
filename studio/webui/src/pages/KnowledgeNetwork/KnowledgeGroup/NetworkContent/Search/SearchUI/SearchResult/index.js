@@ -1,10 +1,3 @@
-/**
- * 搜索结果展示列表
- * @author Jason.ji
- * @date 2022/01/10
- *
- */
-
 import React, { memo, useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Checkbox, Pagination } from 'antd';
 import intl from 'react-intl-universal';
@@ -115,7 +108,7 @@ const SearchResult = props => {
 
                 <div className="info-row">
                   <h2
-                    className="title ellipsis-one"
+                    className="title ad-ellipsis"
                     title={name}
                     onClick={e => {
                       e.stopPropagation();
@@ -125,7 +118,7 @@ const SearchResult = props => {
                   />
 
                   <div className="pro-tags">
-                    <span className="pro-tag ellipsis-one" title={`class：${alias || item.class}`}>
+                    <span className="pro-tag ad-ellipsis" title={`class：${alias || item.class}`}>
                       class：
                       <span className="circle-span" style={{ backgroundColor: color || '#126ee3' }} />
                       {alias || item.class}
@@ -138,7 +131,7 @@ const SearchResult = props => {
                       return (
                         <span
                           key={`${proIndex}`}
-                          className="pro-tag ellipsis-one"
+                          className="pro-tag ad-ellipsis"
                           title={`${n}：${v}`}
                           dangerouslySetInnerHTML={{ __html: `${n}：${proValue}` }}
                         />

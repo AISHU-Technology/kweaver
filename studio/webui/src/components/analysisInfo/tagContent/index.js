@@ -1,11 +1,3 @@
-/**
- * 标注展示
- *
- * @author Eden
- * @date 2021/1/26
- *
- */
-
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import intl from 'react-intl-universal';
@@ -14,10 +6,10 @@ import { switchIcon, generatePassword } from '@/utils/handleFunction';
 import listproperty from '@/assets/images/bz.png';
 import './style.less';
 
-const SVGLEFT = 50; // 绘图区左边距
-const TEXTLINEHIGHT = 100; // 文字行高
-const CONNECTYOFFSET = 90; // 连线y轴上的偏移量
-const TAGYOFFSET = 40; // 由于重叠引起的位移偏移量
+const SVG_LEFT = 50; // 绘图区左边距
+const TEXT_LINE_HIGHT = 100; // 文字行高
+const CONNECT_Y_OFFSET = 90; // 连线y轴上的偏移量
+const TAG_Y_OFFSET = 40; // 由于重叠引起的位移偏移量
 const canvasContainerStyles = {
   position: 'relative',
   height: 'calc(100% - 4px)',
@@ -112,7 +104,7 @@ class TagContent extends Component {
       .attr(
         'height',
         texts[texts.length - 1]
-          ? texts[texts.length - 1] && texts.length * TEXTLINEHIGHT + 150 + texts[texts.length - 1].yOffset
+          ? texts[texts.length - 1] && texts.length * TEXT_LINE_HIGHT + 150 + texts[texts.length - 1].yOffset
           : 800
       );
 
@@ -127,9 +119,9 @@ class TagContent extends Component {
       .text(text => {
         return text.word;
       })
-      .attr('x', SVGLEFT)
+      .attr('x', SVG_LEFT)
       .attr('y', text => {
-        return 80 + text.line * TEXTLINEHIGHT + text.yOffset;
+        return 80 + text.line * TEXT_LINE_HIGHT + text.yOffset;
       })
       .attr('text-line', text => {
         return text.line;
@@ -160,14 +152,14 @@ class TagContent extends Component {
       .attr('rx', 6)
       .attr('ry', 6)
       .attr('x', line => {
-        return line.beforeWord + SVGLEFT;
+        return line.beforeWord + SVG_LEFT;
       })
       .attr('y', line => {
         return (
-          line.lineIndex * TEXTLINEHIGHT +
-          CONNECTYOFFSET +
+          line.lineIndex * TEXT_LINE_HIGHT +
+          CONNECT_Y_OFFSET +
           texts[line.lineIndex].yOffset +
-          line.selectedIndex * TAGYOFFSET
+          line.selectedIndex * TAG_Y_OFFSET
         );
       });
 
@@ -188,10 +180,12 @@ class TagContent extends Component {
         return `${text.desWord.substring(0, Math.floor(text.tagWidth / 14) - 1)}...`;
       })
       .attr('x', text => {
-        return text.beforeWord + SVGLEFT;
+        return text.beforeWord + SVG_LEFT;
       })
       .attr('y', text => {
-        return text.lineIndex * TEXTLINEHIGHT + 120 + texts[text.lineIndex].yOffset + text.selectedIndex * TAGYOFFSET;
+        return (
+          text.lineIndex * TEXT_LINE_HIGHT + 120 + texts[text.lineIndex].yOffset + text.selectedIndex * TAG_Y_OFFSET
+        );
       })
       .attr('text-line', text => {
         return text.line;
@@ -239,7 +233,7 @@ class TagContent extends Component {
           {reportData && reportData.ErrorCode && reportData.ErrorCode === 'EngineServer.ErrESContentErr' ? (
             <div className="error">
               <div className="icon-box">
-                <img src={listproperty} alt="AnyDATA" />
+                <img src={listproperty} alt="KWeaver" />
               </div>
               <div className="word">{intl.get('searchGraph.err')}</div>
             </div>
