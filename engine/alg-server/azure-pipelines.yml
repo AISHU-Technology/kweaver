@@ -55,7 +55,9 @@ jobs:
       inputs:
         command: 'build'
         repository: $(imageNameWithHarbor)
-        tags: $(mainTag)
+        tags: |
+          $(mainTag)
+          latest
         Dockerfile: '**/Algserver.Dockerfile'
     - task: Docker@2
       inputs:
@@ -66,7 +68,7 @@ jobs:
       condition: and(succeeded(), eq(${{ parameters.pushTag }}, 'True'))
       inputs:
         containerRegistry: 'acr.aishu.cn'
-        repository: 'ad/kw-algserver'
+        repository: 'ad/kw-alg-server'
         command: push
         tags: |
           $(mainTag)
