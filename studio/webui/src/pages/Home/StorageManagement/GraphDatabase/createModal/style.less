@@ -1,0 +1,105 @@
+.create-storage-modal {
+  .ant-modal-body {
+    padding: 0;
+  }
+
+  .ant-modal-content {
+    .m-body {
+      padding: 24px;
+
+      .storage-management-form {
+        .form-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 6px;
+
+          .ant-form-item {
+            width: calc(50% - 10px);
+          }
+
+          .pw {
+            width: 100%;
+          }
+        }
+
+        .add-address-btn {
+          color: #126ee3;
+          margin-top: -4px;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        .ip-input {
+          width: 92%;
+        }
+
+        .ip-input2 {
+          width: 95%;
+        }
+
+        .clear {
+          display: inline-block;
+          margin-left: 12px;
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        .delete-button {
+          display: inline-block;
+          margin-left: 12px;
+        }
+      }
+
+      .item-box {
+        height: 34px;
+        overflow: hidden;
+      }
+
+      // .ant-form-item-has-error {
+      //   .ant-form-item-control {
+      //     height: 58px;
+      //   }
+      // }
+      // .ant-form-item-control {
+      //   height: 34px;
+      // }
+      // .ant-form-item-explain-error {
+      //   display: inline-block;
+      // }
+
+      .disabled {
+        display: inline-block;
+        margin-left: 12px;
+        color: #999;
+      }
+
+      .none {
+        display: none;
+      }
+
+      .error-input {
+        border-color: red;
+      }
+
+      .error-info {
+        margin-top: -25px;
+        padding-left: 4px;
+        color: red;
+      }
+    }
+
+    .m-footer {
+      text-align: right;
+      border-top: solid 1px var(--ad-line-color);
+      padding: 8px 14px;
+
+      .btn-cancel {
+        margin-right: 12px;
+      }
+    }
+  }
+}

@@ -1,0 +1,108 @@
+@other-height: 54px + 24px + 100px; // 页眉 + padding + 页脚
+@min-screen-height: 768px; // 文档中声明的最小分辨率1366 * 768
+
+.mix {
+  height: calc(100vh - @other-height);
+  min-height: calc(@min-screen-height - @other-height);
+  max-height: calc(1080px - @other-height);
+  background-color: #fff;
+
+  .head {
+    height: 64px;
+    padding: 20px 0;
+    text-align: center;
+    border-top: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee;
+
+    .word {
+      margin: 0 8px 0 0;
+    }
+  }
+
+  .content {
+    position: relative;
+    height: calc(100% - 64px);
+    background-color: #ffffff;
+
+    .none-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+
+      .none-img {
+        width: 144px;
+        height: auto;
+        margin-bottom: 8px;
+      }
+
+      .none-info-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        color: rgba(0, 0, 0, 0.85);
+      }
+
+      .none-info-sub-title {
+        font-size: 14px;
+        color: var(--ad-text-color);
+      }
+    }
+
+    .info {
+      display: flex;
+      height: 100%;
+
+      .node-info {
+        width: 400px;
+        margin: 0;
+        border-right: 1px solid #eee;
+      }
+
+      .attr-set {
+        width: calc(100% - 400px);
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+  }
+
+  .mix-loading {
+    display: none;
+    position: fixed;
+    z-index: 250;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(240, 244, 250, 0.6);
+
+    &.isLoading {
+      display: block;
+    }
+
+    .icon {
+      font-size: 40px;
+      color: var(--ad-primary-color);
+      position: absolute;
+      left: 48%;
+      top: 40%;
+    }
+  }
+}
+
+.mix-modal {
+  .footer {
+    display: flex;
+    flex-direction: column;
+
+    button {
+      width: 160px;
+    }
+  }
+}

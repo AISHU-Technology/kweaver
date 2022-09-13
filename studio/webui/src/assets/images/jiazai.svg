@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="26px" viewBox="0 0 32 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Combined Shape Copy 17</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="9.12388554%" y2="5.86129703%" id="linearGradient-1">
+            <stop stop-color="#9ABBEF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Version3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="文件上传成功" transform="translate(-944.000000, -651.000000)" fill="url(#linearGradient-1)">
+            <path d="M960.25,651 C960.334694,651 960.418296,651.00468 960.50056,651.013794 C969.105571,651.272191 976,658.330955 976,667 C976,675.836556 968.836556,683 960,683 C951.163444,683 944,675.836556 944,667 L944,667 L948.022557,667.000432 C948.007591,667.24837 948,667.498299 948,667.75 C948,674.515488 953.484512,680 960.25,680 C967.015488,680 972.5,674.515488 972.5,667.75 C972.5,661.06826 967.15043,655.635978 960.500647,655.502513 L960.50056,655.486206 C960.418296,655.49532 960.334694,655.5 960.25,655.5 C959.007359,655.5 958,654.492641 958,653.25 C958,652.007359 959.007359,651 960.25,651 Z" id="Combined-Shape-Copy-17" transform="translate(960.000000, 667.000000) scale(-1, 1) rotate(-90.000000) translate(-960.000000, -667.000000) "></path>
+        </g>
+    </g>
+</svg>

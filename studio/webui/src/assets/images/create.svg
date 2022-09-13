@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="144px" height="144px" viewBox="0 0 144 144" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <defs>
+        <linearGradient x1="50%" y1="3.85205925%" x2="50%" y2="121.56033%" id="linearGradient-1">
+            <stop stop-color="#779EEA" stop-opacity="0.4" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <path d="M15,7 L59,7 C61.209139,7 63,8.790861 63,11 L63,30.8611111 C63,33.0702501 61.209139,34.8611111 59,34.8611111 L15,34.8611111 C12.790861,34.8611111 11,33.0702501 11,30.8611111 L11,11 C11,8.790861 12.790861,7 15,7 Z" id="path-2"></path>
+        <mask id="mask-3" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="0" y="0" width="52" height="27.8611111" fill="white">
+            <use xlink:href="#path-2"></use>
+        </mask>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="子主题_空" transform="translate(-1028.000000, -418.000000)">
+            <g id="编组-4" transform="translate(939.000000, 418.000000)">
+                <g id="编组" transform="translate(89.000000, 0.000000)">
+                    <g id="Group-4">
+                        <rect id="Rectangle-25" x="0" y="0" width="144" height="144"></rect>
+                        <path d="M72,100 C106.372614,100 135.319819,115.997855 143.9999,135.999771 L9.95177594e-05,135.999771 C8.68018075,115.997855 37.6273857,100 72,100 Z" id="Combined-Shape" fill="url(#linearGradient-1)"></path>
+                        <g id="Group-14-Copy" transform="translate(36.000000, 50.000000)">
+                            <polygon id="Clip-2" points="1.63636364 4.86237374 35.9673154 4.86237374 35.9673154 18.565875 1.63636364 18.565875"></polygon>
+                            <path d="M39.3425662,1 C40.1001876,1 40.8252897,1.21404557 41.445673,1.5975095 C42.0660564,1.98097343 42.5817208,2.53385573 42.9204667,3.2115292 L42.9204667,3.2115292 L59.2216522,35.8226403 C59.7155248,36.8106503 59.7621723,37.9053068 59.4383492,38.876429 C59.1145261,39.8475512 58.4202324,40.6951391 57.4322225,41.1890116 C56.8769005,41.4665982 56.2645872,41.6111111 55.6437517,41.6111111 L55.6437517,41.6111111 L5,41.6111111 C3.8954305,41.6111111 2.8954305,41.1633959 2.17157288,40.4395382 C1.44771525,39.7156806 1,38.7156806 1,37.6111111 L1,37.6111111 L1,5 C1,3.8954305 1.44771525,2.8954305 2.17157288,2.17157288 C2.8954305,1.44771525 3.8954305,1 5,1 L5,1 Z" id="Rectangle-3-Copy-7" stroke="#779EEA" stroke-width="2" fill="#FFFFFF"></path>
+                            <polygon id="Clip-5" points="22.4056237 10.6243295 56.958202 10.6243295 56.958202 50.2601124 22.4056237 50.2601124"></polygon>
+                            <use id="Rectangle-3-Copy-8" stroke="#779EEA" mask="url(#mask-3)" stroke-width="4" fill="#F8FAFE" stroke-dasharray="3" xlink:href="#path-2"></use>
+                            <polygon id="Clip-8" points="1.63641057 15.0353649 56.9205357 15.0353649 56.9205357 52.6165265 1.63641057 52.6165265"></polygon>
+                            <path d="M68,16 C69.3807119,16 70.6307119,16.5596441 71.5355339,17.4644661 C72.4403559,18.3692881 73,19.6192881 73,21 L73,21 L73,53.25 C73,54.6307119 72.4403559,55.8807119 71.5355339,56.7855339 C70.6307119,57.6903559 69.3807119,58.25 68,58.25 L68,58.25 L6,58.25 C4.61928813,58.25 3.36928813,57.6903559 2.46446609,56.7855339 C1.55964406,55.8807119 1,54.6307119 1,53.25 L1,53.25 L1,16 Z" id="Rectangle-3" stroke="#779EEA" stroke-width="2" fill="#FFFFFF"></path>
+                        </g>
+                    </g>
+                    <g id="Group" transform="translate(93.000000, 89.000000)">
+                        <rect id="Rectangle-5" stroke="#779EEA" stroke-width="2" fill="#FFFFFF" x="1" y="1" width="22" height="22" rx="4"></rect>
+                        <path d="M13,6 L13,11 L18,11 L18,13 L13,13 L13,18 L11,18 L11,12.999 L6,13 L6,11 L11,10.999 L11,6 L13,6 Z" id="Combined-Shape" fill="#779EEA"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

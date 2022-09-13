@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="58px" viewBox="0 0 64 58" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="配置设置（默认）" transform="translate(-800.000000, -236.000000)">
+            <g id="编组" transform="translate(720.000000, 137.000000)">
+                <g id="编组-4" transform="translate(24.000000, 79.000000)">
+                    <g id="编组" transform="translate(56.000000, 20.000000)">
+                        <g id="编组-10" transform="translate(11.000000, 0.000000)">
+                            <rect id="矩形" stroke="#779EEA" stroke-width="1.2" fill="#FFFFFF" x="0.6" y="0.6" width="42.8" height="56.8" rx="4.5"></rect>
+                            <g id="编组-6" transform="translate(8.000000, 5.000000)" fill="#779EEA">
+                                <rect id="矩形" opacity="0.199458531" x="0" y="0" width="9" height="7"></rect>
+                                <g id="编组-5" transform="translate(12.000000, 1.000000)" opacity="0.195377168">
+                                    <rect id="矩形" x="0" y="0" width="8" height="1.4" rx="0.7"></rect>
+                                    <rect id="矩形" x="0" y="4" width="16" height="1.4" rx="0.7"></rect>
+                                </g>
+                            </g>
+                            <g id="编组-6" transform="translate(8.000000, 45.000000)" fill="#779EEA">
+                                <rect id="矩形" opacity="0.199458531" x="0" y="0" width="9" height="7"></rect>
+                                <g id="编组-5" transform="translate(12.000000, 1.000000)" opacity="0.195377168">
+                                    <rect id="矩形" x="0" y="0" width="8" height="1.4" rx="0.7"></rect>
+                                    <rect id="矩形" x="0" y="4" width="16" height="1.4" rx="0.7"></rect>
+                                </g>
+                            </g>
+                        </g>
+                        <rect id="矩形" stroke="#779EEA" stroke-width="1.2" fill="#FFFFFF" x="0.6" y="17.6" width="62.8" height="22.8" rx="3.5"></rect>
+                        <g id="编组-8" transform="translate(7.000000, 25.000000)">
+                            <g id="编组-7" transform="translate(44.000000, 0.000000)">
+                                <path d="M4.42938762,0 C6.87573427,0 8.85877523,1.98151961 8.85877523,4.42570233 C8.85877523,6.87001361 6.87573427,8.85140467 4.42938762,8.85140467 C1.98304097,8.85140467 0,6.87001361 0,4.42570233 C0,1.98151961 1.98304097,0 4.42938762,0" id="Fill-18" fill="#779EEA"></path>
+                                <polygon id="路径" fill="#FFFFFF" fill-rule="nonzero" points="6.39415882 3.90437732 4.35241299 1.8205073 4.35173514 1.81977393 4.35171549 1.81979402 4.35168602 1.81977393 4.35129305 1.82017578 4.35089027 1.81977393 2.27702972 3.93648493 2.7209772 4.38993956 4.03877131 3.04491619 4.03830959 6.96190346 4.66717461 6.96190346 4.66763634 3.04880406 5.95021134 4.357842"></polygon>
+                            </g>
+                            <g id="编组-9" transform="translate(0.000000, 1.000000)" fill="#779EEA">
+                                <polygon id="Fill-19" points="0 1.5 18.3257276 1.5 18.3257276 0 0 0"></polygon>
+                                <polygon id="Fill-20" points="0 6.62397224 40.3859487 6.62397224 40.3859487 5.12397224 0 5.12397224"></polygon>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

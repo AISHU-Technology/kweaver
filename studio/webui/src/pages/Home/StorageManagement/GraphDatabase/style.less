@@ -1,0 +1,75 @@
+.graph-database-management {
+  .columnOp {
+    button {
+      padding: 0;
+      min-width: 30px;
+      margin-right: 20px;
+    }
+  }
+  .columnGraphInfo {
+    display: inline-block;
+    margin-left: 8px;
+    color: var(--ant-primary-color);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .typeText {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+  .storageSelect {
+    width: 190px;
+    height: 32px;
+    margin: 0 14px;
+  }
+
+  .table-box {
+    margin-top: 20px;
+
+    // 表格悬停
+    .ant-table-row:hover {
+      .ant-table-cell {
+        background-color: var(--ad-hover-bg-color);
+      }
+    }
+
+    .nodata-box {
+      margin: 80px auto;
+
+      .nodata-text {
+        margin-top: 8px;
+        font-size: 14px;
+        color: var(--ad-text-color);
+        cursor: default;
+      }
+    }
+
+    .ant-table-thead th.ant-table-column-sort {
+      background: #fafafa;
+    }
+
+    td.ant-table-column-sort {
+      background: #ffff;
+    }
+
+    .ant-table-thead th.ant-table-column-has-sorters {
+      &:hover {
+        background: #fafafa;
+      }
+    }
+
+    .ant-table-pagination.ant-pagination {
+      margin: 24px 0 40px;
+    }
+
+    .ant-table-placeholder {
+      .ant-table-cell {
+        border: none;
+      }
+    }
+  }
+}

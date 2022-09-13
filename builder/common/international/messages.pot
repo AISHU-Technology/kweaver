@@ -1,0 +1,125 @@
+# Translations template for PROJECT.
+# Copyright (C) 2022 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-07-22 09:30+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.3\n"
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:8
+msgid "Parameter [arg] Error."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:9
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:21
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:27
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:51
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:63
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:75
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:87
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:93
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:105
+msgid "Please check your parameter again."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:14
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:56
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:80
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:98
+msgid "[cause]"
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:15
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:57
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:81
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:99
+msgid "Please contact the developers."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:19
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:20
+msgid "graphid [graphid] not exists."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:25
+msgid "key type error"
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:26
+msgid "key should be list of string"
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:31
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:32
+msgid "graphdb id [graphdb_id] not exists"
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:33
+msgid "please config your graphdb again."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:43
+msgid "these keys are not supported: [unsupported_key]"
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:44
+msgid "some keys are not supported."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:45
+msgid "please check your parameter key again."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:50
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:74
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:92
+msgid "argument [arg] error"
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:61
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:62
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:85
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:86
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:103
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:104
+msgid "graph id [graphid] not exists"
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:67
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:68
+msgid "ontology id [otl_id] not exists"
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graph_error.py:69
+msgid "Please config the ontology."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graphdb_error.py:10
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graphdb_error.py:34
+msgid "Please check whether the OrientDB request information is correct."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graphdb_error.py:16
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graphdb_error.py:40
+msgid "Please check whether the Nebula request information is correct."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graphdb_error.py:22
+msgid "Please check whether your GraphDB service is running normally."
+msgstr ""
+
+#: /home/WorkCode/gbuilder-builder/common/errorcode/errors/graphdb_error.py:28
+msgid "Please check whether your DB name is correct."
+msgstr ""
+

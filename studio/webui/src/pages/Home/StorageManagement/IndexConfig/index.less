@@ -1,0 +1,84 @@
+.storage-index-config {
+  .index-table-box {
+    margin-top: 20px;
+
+    .icon-sub {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 26px;
+      height: 26px;
+    }
+    .columnOp {
+      button {
+        padding: 0;
+        min-width: 30px;
+        margin-right: 20px;
+      }
+    }
+
+    .ant-dropdown {
+      width: 150px;
+    }
+
+    // 选中行
+    .selectRow {
+      .ant-table-cell {
+        background-color: var(--ad-select-bg-color) !important;
+      }
+    }
+
+    // 表格悬停
+    .ant-table-row:hover {
+      .ant-table-cell {
+        background-color: var(--ad-hover-bg-color);
+      }
+    }
+
+    .nodata-box {
+      margin: 80px auto;
+      .nodata-text {
+        margin-top: 8px;
+        font-size: 14px;
+        color: var(--ad-text-color);
+        cursor: default;
+      }
+    }
+
+    .ant-table-thead th.ant-table-column-sort {
+      background: #fafafa;
+    }
+
+    td.ant-table-column-sort {
+      background: #ffff;
+    }
+
+    .ant-table-thead th.ant-table-column-has-sorters {
+      &:hover {
+        background: #fafafa;
+      }
+    }
+
+    .ant-table-pagination.ant-pagination {
+      margin: 24px 0 40px;
+    }
+
+    .ant-table-placeholder {
+      .ant-table-cell {
+        border: none;
+      }
+    }
+  }
+}
+
+.index-table-overlay {
+  width: 120px;
+
+  .ant-dropdown-menu-item,
+  .ant-dropdown-menu-submenu-title {
+    clear: both;
+    margin: 0;
+    padding: 5px 12px 5px 20px;
+    height: 40px;
+  }
+}

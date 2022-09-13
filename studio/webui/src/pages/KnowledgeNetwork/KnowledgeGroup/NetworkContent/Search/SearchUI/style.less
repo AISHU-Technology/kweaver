@@ -1,0 +1,353 @@
+@footer-height: 54px;
+
+.normal-search-UI {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  background-color: #f8f8f8;
+
+  .hl-text {
+    color: var(--ad-error-color);
+  }
+
+  .main-box {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  // 顶部
+  .main-header {
+    width: 100%;
+    padding: 24px 40px;
+    background-color: #fff;
+
+    // 输入区域
+    .input-group {
+      .ant-input-group {
+        display: inline-block;
+        vertical-align: top;
+        width: auto;
+      }
+
+      .class-select {
+        width: 130px;
+        height: 36px;
+
+        .ant-select-selector {
+          height: 36px;
+        }
+
+        .ant-select-selection-item {
+          line-height: 34px;
+        }
+      }
+
+      .ant-empty {
+        margin: -10px 0 20px 0;
+
+        .ant-empty-description {
+          color: var(--ad-text-color);
+        }
+      }
+
+      .search-input {
+        width: 490px;
+        height: 36px;
+        line-height: 36px;
+
+        .f-icon {
+          padding-left: 6px;
+        }
+
+        .s-icon {
+          color: var(--ad-disabled-color);
+        }
+      }
+
+      button {
+        height: 36px;
+        margin-left: 8px;
+      }
+    }
+
+    // 筛选
+    .tags-box {
+      position: relative;
+      display: flex;
+      width: calc(100% - 520px);
+      margin-top: 8px;
+
+      .tags-list {
+        flex: 1;
+        min-width: 0;
+        max-height: 40px;
+        overflow: hidden;
+        transition: height 0.3s;
+
+        &.open {
+          max-height: 120px;
+          overflow: auto;
+        }
+
+        &.close {
+          padding-right: 56px;
+        }
+
+        .flter-tag-item {
+          margin: 8px 16px 0 0;
+        }
+      }
+
+      .clear-tag {
+        position: relative;
+        min-width: 70px;
+        height: 32px;
+        // margin-top: 8px;
+        padding-left: 8px;
+        line-height: 40px;
+        color: var(--ad-primary-color);
+        user-select: none;
+        cursor: pointer;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(1px);
+          width: 2px;
+          height: 15px;
+          background-color: var(--ad-line-color);
+        }
+
+        & > span {
+          display: inline-block;
+          transform: translateY(4px);
+        }
+      }
+
+      .fold-icon {
+        margin: 0 0 0 4px;
+        font-size: 12px;
+      }
+
+      .open-btn {
+        position: absolute;
+        right: 72px;
+        top: 8px;
+        height: 32px;
+        line-height: 32px;
+        color: var(--ad-heading-color);
+        user-select: none;
+        cursor: pointer;
+      }
+
+      .clo-btn {
+        display: inline-block;
+        vertical-align: bottom;
+        height: 32px;
+        line-height: 32px;
+        color: var(--ad-heading-color);
+        user-select: none;
+        cursor: pointer;
+      }
+    }
+  }
+
+  // 结果页
+  .main-content {
+    position: relative;
+    display: flex;
+    flex: 1;
+    min-height: 0;
+
+    .list-wrapper {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      background-color: #fff;
+
+      .res-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 32px;
+        margin: 0 24px;
+        border-bottom: 1px solid var(--ad-line-color);
+
+        .ant-checkbox-wrapper {
+          margin: 0 20px;
+        }
+
+        .ant-select-item-option-disabled {
+          color: rgba(0, 0, 0, 0.25);
+        }
+
+        .res-select {
+          min-width: 105px;
+          text-align: center;
+
+          .option-icon {
+            font-size: 14px;
+            margin-right: 4px;
+            transform: translateY(1px);
+          }
+        }
+      }
+
+      .normal-search-result-list {
+        height: calc(100% - 32px - 54px);
+        overflow: auto;
+      }
+    }
+
+    .info-wrapper {
+      position: relative;
+      width: 520px;
+      background-color: #fff;
+      overflow: auto;
+
+      .close-wr {
+        text-align: right;
+        width: 379px;
+
+        .icon {
+          color: #cccccc;
+          cursor: pointer;
+        }
+      }
+
+      .right-info-tabs {
+        width: 400px;
+        height: 100%;
+        padding: 0 20px;
+        // border-top: 1px solid var(--ad-line-color);
+        border-left: 1px solid var(--ad-line-color);
+
+        .ant-tabs-nav {
+          height: 56px;
+          margin: 0;
+        }
+
+        .ant-tabs-tab {
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-size: 16px;
+          width: 64px;
+
+          & + .ant-tabs-tab {
+            margin-left: 120px;
+          }
+        }
+
+        .ant-tabs-content-holder {
+          height: calc(100% - 56px);
+
+          .ant-tabs-content,
+          .ant-tabs-tabpane {
+            height: 100%;
+          }
+        }
+      }
+    }
+
+    .empty-wrap {
+      position: absolute;
+      left: 0;
+      top: 32px;
+      bottom: 54px;
+      right: 0;
+    }
+
+    .no-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      padding: 200px 50px 100px;
+
+      &.no-res {
+        height: calc(100% - 32px);
+      }
+
+      img {
+        width: 144px;
+        height: auto;
+      }
+
+      .desc {
+        margin-top: 8px;
+        text-align: center;
+        height: 20px;
+        font-size: 14px;
+        color: var(--ad-text-color);
+        line-height: 20px;
+      }
+    }
+  }
+
+  // 底部
+  .footer {
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 201;
+    display: flex;
+    padding: 9px 40px;
+    position: absolute;
+    align-items: center;
+    height: @footer-height;
+    background-color: #fff;
+    border-top: 1px solid var(--ad-line-color);
+
+    .footer-check {
+      margin-right: 20px;
+    }
+
+    button {
+      height: 36px;
+      margin-right: 12px;
+    }
+  }
+
+  // loading
+  .search-loading-mask {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+
+    &.spinning {
+      display: block;
+    }
+
+    .ad-spin {
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    &.analys {
+      top: 64px;
+      height: calc(100% - 64px);
+
+      .ad-spin {
+        top: 45%;
+      }
+    }
+  }
+}
+
+.normal-search-UI-no-visible {
+  display: none;
+}

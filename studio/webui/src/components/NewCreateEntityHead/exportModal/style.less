@@ -1,0 +1,89 @@
+
+
+.export-modal {
+  display: flex;
+
+  .side-bar {
+    width: 228px;
+    height: 602px;
+    border-right: 1px solid rgba(230, 230, 230, 1);
+
+    .left-mark {
+      width: 3px;
+      height: 40px;
+      background: var(--ad-primary-color);
+      float: left;
+      margin: -10px 0 0 -24px;
+    }
+
+    .tag {
+      width: 228px;
+      height: 40px;
+      padding: 10px 0 0 24px;
+      cursor: pointer;
+    }
+
+    .tag-selected {
+      background: var(--ad-select-bg-color)!important;
+    }
+
+    .tag:hover {
+      background: var(--ad-hover-bg-color);
+    }
+  }
+
+  .content {
+    width: 772px;
+    padding: 0 10px 0 40px;
+
+    .title {
+      width: 709px;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: var(--ad-heading-color);
+      border-bottom: 1px solid rgba(230, 230, 230, 1);
+      padding: 8px 0;
+    }
+
+    .srcoll-box {
+      max-height: 510px;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+}
+
+.add-modal-create-entity-model {
+  .ant-modal-body {
+    padding: 24px 0 0 0;
+  }
+
+  .ant-modal-content {
+    width: 1000px;
+  }
+
+  .ant-modal-footer {
+    margin: -26px 0 0 0;
+    padding: 0px 2px 20px 2px;
+    border-top: 0;
+  }
+}
+
+.loading-4qwaqq {
+  width: 1000px;
+  height: 650px;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  background-color: rgba(240, 244, 250, 0.6);
+  position: absolute;
+
+  .icon {
+    font-size: 40px;
+    color: var(--ad-primary-color);
+    position: absolute;
+    left: 48%;
+    top: 50%;
+  }
+}
