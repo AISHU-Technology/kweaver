@@ -19,8 +19,8 @@ import addContentImg from '@/assets/images/create.svg';
 import './style.less';
 
 const ERROR_CODE = {
-  'Manager.Account.InsufficientAccountPermissionsError': 'configSys.PermissionsError',
-  'Manager.GraphDB.GraphDBRecordNotFoundError': 'configSys.NotFoundError'
+  'Studio.Account.InsufficientAccountPermissionsError': 'configSys.PermissionsError',
+  'Studio.GraphDB.GraphDBRecordNotFoundError': 'configSys.NotFoundError'
 };
 const antIconBig = <LoadingOutlined className="icon" style={{ fontSize: 24, top: '200px' }} spin />;
 const { Option } = Select;

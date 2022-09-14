@@ -8,10 +8,10 @@ import serviceStorageManagement from '@/services/storageManagement';
 import './index.less';
 
 const ERROR_CODE = {
-  'Manager.GraphDB.AccountError': 'configSys.nameError', // 账号或密码错误
-  'Manager.GraphDB.URLError': 'configSys.ipError', // ip或端口错误
-  'Manager.OpenSearch.OsRecordNotFoundError': 'configSys.notexist', // 记录不存在
-  'Manager.OpenSearch.DuplicateOsConfigError': 'configSys.duplicateOsConfigError' // 配置信息重复，有相同用户名密码，ip和port的数据源
+  'Studio.GraphDB.AccountError': 'configSys.nameError', // 账号或密码错误
+  'Studio.GraphDB.URLError': 'configSys.ipError', // ip或端口错误
+  'Studio.OpenSearch.OsRecordNotFoundError': 'configSys.notexist', // 记录不存在
+  'Studio.OpenSearch.DuplicateOsConfigError': 'configSys.duplicateOsConfigError' // 配置信息重复，有相同用户名密码，ip和port的数据源
 };
 const nameTest =
   /(^[\u4e00-\u9fa5_a-zA-Z0-9=~!@#$&%^&*()_+`'"{}[\];:,.?<>|/~！@#￥%…&*·（）—+。={}|【】：；‘’“”、《》？，。/\n\\]+$)|-/;
@@ -80,11 +80,11 @@ const ModalContent = props => {
   // 爆错
   const messageError = res => {
     // 存储位置名称已存在
-    if (res && res.ErrorCode === 'Manager.OpenSearch.DuplicateOsRecordNameError') {
+    if (res && res.ErrorCode === 'Studio.OpenSearch.DuplicateOsRecordNameError') {
       form.setFields([{ name: 'name', errors: [intl.get('configSys.nameRepeat')] }]);
       return;
     }
-    if (res && res.ErrorCode === 'Manager.Common.ServerError') return message.error(res.Description);
+    if (res && res.ErrorCode === 'Studio.Common.ServerError') return message.error(res.Description);
     if (ERROR_CODE[res?.ErrorCode]) return message.error(intl.get(ERROR_CODE[res?.ErrorCode]));
     message.error(res.Description);
   };

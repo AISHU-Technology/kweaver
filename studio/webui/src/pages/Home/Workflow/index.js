@@ -91,7 +91,7 @@ const Workflow = props => {
         case res.Code === 500001 && res.Cause.includes('not exist'):
           graphTipModal.open(intl.get('graphList.hasBeenDel')); // 图谱不存在
           break;
-        case res.Code === 'Manager.SoftAuth.UnknownServiceRecordError':
+        case res.Code === 'Studio.SoftAuth.UnknownServiceRecordError':
           graphTipModal.open(intl.get('graphList.authErr')); // 权限错误 500403
           break;
         default:
