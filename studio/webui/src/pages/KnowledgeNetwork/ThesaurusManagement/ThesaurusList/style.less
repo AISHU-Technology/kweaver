@@ -1,0 +1,153 @@
+.thesaurus-list {
+  height: 100%;
+
+  .search {
+    margin: 0 20px;
+
+    .search-icon {
+      color: rgba(0, 0, 0, 0.25);
+    }
+
+    .ant-input-affix-wrapper {
+      height: 40px;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+
+    .ant-input-affix-wrapper-focused {
+      border-bottom: 1px solid #000 !important;
+    }
+
+    .ant-input-affix-wrapper:hover {
+      border-bottom: 1px solid #000 !important;
+    }
+  }
+
+  .ant-btn[disabled] {
+    color: rgba(0, 0, 0, .25);
+    border-color: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .list-head {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    padding: 0 20px;
+
+
+    .op {
+      font-size: 16px;
+      height: 20px;
+
+      .order {
+        cursor: pointer;
+        color: #000000;
+      }
+
+      .order:hover {
+        color: var(--ad-primary-color-hover);
+      }
+
+      .disabled {
+        color: var(--ad-disabled-color);
+        cursor: not-allowed;
+      }
+    }
+
+    .direction {
+      transform: rotate(180deg);
+    }
+
+    .menu-selected {
+      background: var(--ad-select-bg-color);
+    }
+
+    .menu-select {
+      .select {
+        height: 30px;
+        display: flex;
+        line-height: 30px;
+
+        .icon {
+          width: 16px;
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  .list-btn-wrap {
+    padding: 8px 20px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .operate-btn {
+      width: 47%;
+    }
+  }
+
+  .select-all {
+    padding: 0 20px;
+    margin-top: 12px;
+  }
+
+  .search-none {
+    padding: 90px 0 0 0;
+    text-align: center;
+
+    .word {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ad-text-color);
+      line-height: 20px;
+    }
+  }
+
+  .lists-wrap {
+    padding-top: 13px;
+
+    .list-item {
+      height: 40px;
+      // line-height: 40px;
+      padding: 0 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+
+      .img {
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+        margin: 0 8px;
+        border: 1px solid var(--ad-line-color);
+      }
+
+      .name {
+        width: 184px;
+      }
+    }
+
+    .line {
+      flex: 1;
+    }
+
+    .line-selected {
+      .img {
+        .icon {
+          background: #f8f8f8;
+        }
+      }
+
+      background: rgba(var(--ad-primary-color-rgb), 0.06);
+    }
+  }
+
+  .pagina {
+    text-align: right;
+    margin: 20px 20px 0 0;
+    width: 270px;
+  }
+}

@@ -172,7 +172,7 @@ class TimedTaskConfig extends Component {
       message.error(intl.get('graphList.timeOut'));
     }
     // 500403
-    if (res && res.ErrorCode === 'Manager.SoftAuth.UnknownServiceRecordError') {
+    if (res && res.ErrorCode === 'Studio.SoftAuth.UnknownServiceRecordError') {
       message.error(intl.get('graphList.noP'));
 
       setTimeout(() => {

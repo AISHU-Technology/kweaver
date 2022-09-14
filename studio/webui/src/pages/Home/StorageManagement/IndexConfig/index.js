@@ -66,7 +66,7 @@ class IndexConfig extends Component {
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
     } catch (error) {
       const { type = '', response = {} } = error || {};
-      if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
+      if (type === 'message' && response.ErrorCode === 'Studio.Common.ServerError') {
         message.error(response?.Description || '');
       }
     }
@@ -94,10 +94,10 @@ class IndexConfig extends Component {
       const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode, Description } = response;
-        if (ErrorCode === 'Manager.Opensearch.OSRecordNotFoundError') {
+        if (ErrorCode === 'Studio.Opensearch.OSRecordNotFoundError') {
           message.error(intl.get('configSys.NotFoundError'));
         }
-        if (ErrorCode === 'Manager.Common.ServerError') message.error(Description);
+        if (ErrorCode === 'Studio.Common.ServerError') message.error(Description);
       }
     }
   };
@@ -158,17 +158,16 @@ class IndexConfig extends Component {
     {
       title: intl.get('configSys.storageName'),
       dataIndex: 'name',
-      ellipsis: true,
-      width: 200
+      ellipsis: true
     },
     {
       title: intl.get('configSys.username'),
-      dataIndex: 'user',
-      width: 190
+      dataIndex: 'user'
     },
     {
       title: intl.get('userManagement.createTime'),
       dataIndex: 'created',
+      width: 300,
       sorter: true,
       sortDirections: ['ascend', 'descend', 'ascend'],
       render: text => {
@@ -178,6 +177,7 @@ class IndexConfig extends Component {
     {
       title: intl.get('graphList.finalOperatorTime'),
       dataIndex: 'updated',
+      width: 300,
       sorter: true,
       defaultSortOrder: 'descend',
       sortDirections: ['ascend', 'descend', 'ascend'],
@@ -188,7 +188,7 @@ class IndexConfig extends Component {
     {
       title: intl.get('configSys.op'),
       fixed: 'right',
-      width: 110,
+      width: 160,
       render: (text, record) => {
         return record.name === '内置opensearch' ? (
           <span className="icon-sub">- -</span>

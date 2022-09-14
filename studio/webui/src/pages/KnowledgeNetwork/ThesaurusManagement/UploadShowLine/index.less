@@ -1,0 +1,68 @@
+.thesaurus-uploadShowLineRoot {
+  width: 412px;
+  min-height: 34px;
+  display: flex;
+  cursor: pointer;
+  padding: 6px 11px;
+  border-radius: 3px;
+  border: 1px solid #d9d9d9;
+
+  &:hover {
+    border-color: #126ee3;
+  }
+
+  .prefix {
+    display: flex;
+    padding-top: 4px;
+    margin-right: 8px;
+    color: rgba(0, 0, 0, 0.25);
+  }
+
+  .fileShowContainer {
+    display: flex;
+    row-gap: 5px;
+    margin-bottom: -5px; // 抵消tag的底部间距
+    flex-wrap: wrap;
+    align-items: center;
+
+    .placeholder {
+      color: rgba(0, 0, 0, 0.25);
+      margin-bottom: 4px;
+    }
+
+    .tag {
+      height: 22px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      border: none;
+      background: #fff;
+
+      .tagText {
+        width: 340px;
+        overflow: hidden;
+        white-space: nowrap;
+        display: inline-block;
+        text-overflow: ellipsis;
+      }
+
+      &:hover {
+        .ant-tag-close-icon {
+          color: rgba(0, 0, 0, .45);
+        }
+      }
+    }
+
+    .ant-tag-close-icon {
+      color: #fff;
+    }
+
+  }
+
+  // antd 样式
+  .ant-form-item-has-error {
+    .uploadShowLineRoot {
+      border-color: #f5222d;
+    }
+  }
+}

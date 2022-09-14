@@ -123,6 +123,10 @@ service.interceptors.response.use(
         return error.response;
       }
 
+      if (error.response.config.url.includes('/api/builder/v1/lexicon/export')) {
+        return error.response;
+      }
+
       if (curCode === 'Gateway.PlatformAuth.AuthError') {
         message.error('认证失败');
       }
