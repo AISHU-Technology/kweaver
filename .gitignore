@@ -1,0 +1,11 @@
+.vscode
+vendor
+go.sum
+*.exe
+/.idea/*.xml
+.idea
+*.pyc
+hooks
+hooks/*
+lfs
+lfs/*

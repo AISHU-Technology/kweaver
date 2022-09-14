@@ -56,7 +56,7 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: |
-          $(mainTag)
+          $(kwTag)
           latest
         Dockerfile: '**/Algserver.Dockerfile'
     - task: Docker@2
@@ -71,14 +71,14 @@ jobs:
         repository: 'ad/kw-algserver'
         command: push
         tags: |
-          $(mainTag)
+          $(kwTag)
           latest
     - task: Bash@3
       displayName: saveTar
       inputs:
         targetType: 'inline'
         script: |
-          docker save -o KWeaver-$(mainTag)-kw-algserver-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
+          docker save -o KWeaver-$(kwTag)-kw-algserver-$(imageTag).tar $(imageNameWithHarbor):$(kwTag)
     - task: FtpUpload@2
       displayName: uploadFtp
       inputs:
@@ -87,7 +87,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/KWeaver-$(mainTag)-kw-algserver-$(imageTag).tar'
+        filePatterns: '**/KWeaver-$(kwTag)-kw-algserver-$(imageTag).tar'
         remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false

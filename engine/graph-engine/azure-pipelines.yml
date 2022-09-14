@@ -88,7 +88,7 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: |
-          $(mainTag)
+          $(kwTag)
           latest
         Dockerfile: '**/Graphengine.Dockerfile'
     - task: Docker@2
@@ -103,15 +103,15 @@ jobs:
         repository: 'ad/kw-engine'
         command: push
         tags: |
-          $(mainTag)
+          $(kwTag)
           latest
     - task: Bash@3
       displayName: saveTar-engine
       inputs:
         targetType: 'inline'
         script: |
-          docker save -o KWeaver-$(mainTag)-$(imageName).tar $(imageNameWithHarbor):$(mainTag)
-          cp KWeaver-$(mainTag)-$(imageName).tar KWeaver-$(mainTag)-kw-$(imageName)-$(imageTag).tar
+          docker save -o KWeaver-$(kwTag)-$(imageName).tar $(imageNameWithHarbor):$(kwTag)
+          cp KWeaver-$(kwTag)-$(imageName).tar KWeaver-$(kwTag)-kw-$(imageName)-$(imageTag).tar
     - task: FtpUpload@2
       displayName: uploadFtp-engine
       inputs:
@@ -120,7 +120,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/KWeaver-$(mainTag)-kw-$(imageName)-$(imageTag).tar'
+        filePatterns: '**/KWeaver-$(kwTag)-kw-$(imageName)-$(imageTag).tar'
         remoteDirectory: '/packages/$(imageNameFtp)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false
