@@ -37,7 +37,7 @@ jobs:
           targetType: 'inline'
           script: |
             docker pull acr.aishu.cn/ad/kg-studio:base
-            echo '{"copyright":"$(copyRight)","version":"$(mainTag)"}' | python -mjson.tool > ./src/version.json
+            echo '{"copyright":"$(copyRight)","version":"$(kwTag)"}' | python -mjson.tool > ./src/version.json
             docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/root/studio $(harborUrl)/$(imageName):base /bin/sh -c 'cp -R  /root/node_modules/ /root/studio/ && npm run build'
             jest --coverage --coverageReporters=cobertura || echo
       - task: Bash@3
