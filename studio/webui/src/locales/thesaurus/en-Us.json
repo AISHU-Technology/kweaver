@@ -7,7 +7,7 @@
     "nameInput": "Please input thesaurus name",
     "fileUpload": "Upload file",
     "filetype": "The uploaded file format requires txt and csv",
-    "fileSize": "Only one file can be selected, the size of all file cannot exceed 10M，and within 350000 lines",
+    "fileSize": "Only one file can be selected, the size of file cannot exceed 10M,and within 350000 lines",
     "tamplate": "Download template",
     "labels": "Label",
     "addlabel": "Add label",

@@ -198,7 +198,7 @@ const Labels = (props: LabelsProps) => {
       {
         (!inputVisible && tags?.length < 10) && (
           <Tag className="site-tag-plus" onClick={showInput}>
-            <PlusOutlined /> {intl.get('ThesaurusManage.addlabel')}(<span>{tags?.length}/10</span>)
+            <PlusOutlined /> {intl.get('ThesaurusManage.addlabel')}({tags?.length}/10)
           </Tag>
         )
       }

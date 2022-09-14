@@ -100,35 +100,6 @@ module.exports = {
   },
 
   rules: {
-    // Possible Errors
-    // jsdoc
-    // 'jsdoc/check-alignment': ERROR, // 对齐
-    // 'jsdoc/check-examples': ERROR,
-    // 'jsdoc/check-indentation': ERROR,
-    // 'jsdoc/check-param-names': ERROR,
-    // 'jsdoc/check-syntax': ERROR,
-    // 'jsdoc/check-tag-names': ERROR,
-    // 'jsdoc/check-types': ERROR,
-    // 'jsdoc/implements-on-classes': ERROR,
-    // 'jsdoc/match-description': ERROR,
-    // 'jsdoc/newline-after-description': ERROR,
-    // 'jsdoc/no-types': ERROR,
-    // 'jsdoc/no-undefined-types': ERROR,
-    // 'jsdoc/require-description': ERROR,
-    // 'jsdoc/require-description-complete-sentence': ERROR,
-    // 'jsdoc/require-example': ERROR,
-    // 'jsdoc/require-hyphen-before-param-description': ERROR,
-    // 'jsdoc/require-jsdoc': ERROR,
-    // 'jsdoc/require-param': ERROR,
-    // 'jsdoc/require-param-description': ERROR,
-    // 'jsdoc/require-param-name': ERROR,
-    // 'jsdoc/require-param-type': ERROR,
-    // 'jsdoc/require-returns': ERROR,
-    // 'jsdoc/require-returns-check': ERROR,
-    // 'jsdoc/require-returns-description': ERROR,
-    // 'jsdoc/require-returns-type': ERROR,
-    // 'jsdoc/valid-types': ERROR,
-    // 'no-await-in-loop': ERROR,
     'no-console': [WARN, { allow: [WARN, ERROR] }],
     'no-debugger': WARN,
     'no-prototype-builtins': ERROR,
@@ -184,7 +155,6 @@ module.exports = {
     // Variables
     'no-shadow-restricted-names': ERROR,
     'no-undef-init': WARN,
-    // 'no-unused-vars': [WARN, { vars: 'all', args: 'after-used', ignoreRestSiblings: true }],
     'no-use-before-define': [OFF, { functions: false, classes: true, variables: false }],
 
     // Node.js and CommonJS
@@ -195,11 +165,8 @@ module.exports = {
     'array-bracket-spacing': [WARN, 'never'],
     'block-spacing': [WARN, 'always'],
     'brace-style': [WARN, '1tbs', { allowSingleLine: true }],
-    // camelcase: [OFF, { properties: 'never' }],
-    // 'comma-dangle': [WARN, 'never'],
     'comma-spacing': [WARN, { before: false, after: true }],
     'computed-property-spacing': [WARN, 'never'],
-    // 'eol-last': [ERROR, 'always'],
     'func-style': [WARN, 'declaration', { allowArrowFunctions: true }],
     'jsx-quotes': [WARN, 'prefer-double'],
     'key-spacing': [WARN, { beforeColon: false, afterColon: true }],
@@ -215,7 +182,6 @@ module.exports = {
         }
       }
     ],
-    // 'lines-between-class-members': [WARN, 'always', { exceptAfterSingleLine: false }],
     'max-len': [
       ERROR,
       120,
@@ -257,25 +223,8 @@ module.exports = {
     'one-var': [ERROR, 'never'],
     'operator-assignment': [ERROR, 'always'],
     'padded-blocks': [ERROR, { blocks: 'never', classes: 'never', switches: 'never' }],
-    // 'padding-line-between-statements': [
-    //   WARN,
-    //   {
-    //     blankLine: 'always',
-    //     prev: ['const', 'let', 'var'],
-    //     next: '*'
-    //   },
-    //   {
-    //     blankLine: 'any',
-    //     prev: ['const', 'let', 'var'],
-    //     next: ['const', 'let', 'var']
-    //   },
-    //   { blankLine: 'always', prev: 'directive', next: '*' },
-    //   { blankLine: 'any', prev: 'directive', next: 'directive' },
-    //   { blankLine: 'always', prev: '*', next: 'return' }
-    // ],
     'quote-props': [WARN, 'as-needed', { keywords: false, unnecessary: true, numbers: false }],
     quotes: [WARN, 'single', { avoidEscape: true }],
-    // semi: [WARN, 'always'],
     'semi-spacing': [ERROR, { before: false, after: true }],
     'semi-style': [ERROR, 'last'],
     'space-before-blocks': WARN,
@@ -305,7 +254,6 @@ module.exports = {
     'object-shorthand': [WARN, 'always', { ignoreConstructors: false, avoidQuotes: true }],
     'prefer-arrow-callback': WARN,
     'prefer-const': WARN,
-    // 'prefer-destructuring': [WARN, { array: false, object: true }, { enforceForRenamedProperties: false }],
     'prefer-numeric-literals': ERROR,
     'prefer-rest-params': WARN,
     'prefer-spread': WARN,
