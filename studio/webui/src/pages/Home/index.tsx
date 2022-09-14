@@ -1,6 +1,8 @@
 import React from 'react';
+import Cookie from 'js-cookie';
+import intl from 'react-intl-universal';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { SettingOutlined } from '@ant-design/icons';
+import { GlobalOutlined } from '@ant-design/icons';
 
 import Header from '@/components/Header';
 import IconFont from '@/components/IconFont';
@@ -20,16 +22,25 @@ const Home = () => {
       <Header
         logo={headLogo}
         operation={[
-          { float: 'left', text: '工作台', onClick: () => history.push('/home/graph-list') },
+          { float: 'left', text: intl.get('global.studio'), onClick: () => history.push('/home/graph-list') },
           {
             icon: <IconFont type="icon-wendang-xianxing" />,
-            text: 'API文档',
+            text: intl.get('global.document'),
             onClick: () => window.open('/apidoc')
           },
           {
             icon: <IconFont type="icon-setting" />,
-            text: '系统配置',
+            text: intl.get('global.systemConfig'),
             onClick: () => history.push('/home/system-config')
+          },
+          {
+            icon: <GlobalOutlined />,
+            text: intl.get('global.language'),
+            onClick: () => {
+              const language = Cookie.get('anyDataLang') || 'zh-CN';
+              Cookie.set('anyDataLang', language === 'zh-CN' ? 'en-US' : 'zh-CN', { expires: 365 });
+              window.location.reload();
+            }
           }
         ]}
       />
