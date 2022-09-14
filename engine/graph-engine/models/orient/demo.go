@@ -1,6 +1,5 @@
 // Package orient 是 Orientdb 的数据访问层
 // - 描述：预置OrientDB数据结构
-// - 作者：张坤 (zhang.kun@aishu.cn)
 // - 时间：2020-3-27
 package orient
 

@@ -1,4 +1,3 @@
-// @Author : yuan.qi@aishu.cn
 // @File : adv_search_config.go
 // @Time : 2021/3/13
 
@@ -31,7 +30,7 @@ type GetAdvSearchConf struct {
 // GetAdvSearchConfigHandler
 // @Summary get configs
 // @Description get adv-search configs
-// @Tags Engine
+// @Tags CEngine
 // @Param knowledge_network_id query int true "knowledge network id"
 // @Param filter query string true "'all' or config or kg name"
 // @Param query query string false  "query keyword"
@@ -66,7 +65,7 @@ type DelAdvSearchConf struct {
 // DelAdvSearchConfigHandler
 // @Summary delete configs
 // @Description delete adv-search configs
-// @Tags Engine
+// @Tags CEngine
 // @Param conf_ids body DelAdvSearchConf true "config ids"
 // @Router /api/engine/v1/adv-search-config [delete]
 // @Accept  json
@@ -104,7 +103,7 @@ type AddAdvSearchConf struct {
 // AddAdvSearchConfigHandler
 // @Summary add configs
 // @Description add adv-search configs
-// @Tags Engine
+// @Tags CEngine
 // @Param conf_content body AddAdvSearchConf true "config content"
 // @Router /api/engine/v1/adv-search-config [post]
 // @Accept  json
@@ -155,7 +154,7 @@ type UpdateAdvSearchConf struct {
 // UpdateAdvSearchConfigHandler
 // @Summary update configs
 // @Description update adv-search configs
-// @Tags Engine
+// @Tags CEngine
 // @Param conf_content body UpdateAdvSearchConf true "config content"
 // @Router /api/engine/v1/adv-search-config/update [post]
 // @Accept  json
@@ -197,7 +196,7 @@ func UpdateAdvSearchConfigHandler(c *gin.Context) {
 // GetInfoAdvSearchConfigHandler
 // @Summary get config info
 // @Description get adv-search config info by id
-// @Tags Engine
+// @Tags CEngine
 // @Param confid path string true "config id"
 // @Router /api/engine/v1/adv-search-config/info/{confid} [get]
 // @Accept  x-www-form-urlencoded
@@ -225,7 +224,7 @@ func GetInfoAdvSearchConfigHandler(c *gin.Context) {
 // GetConfByKGNameAdvSearchConfigHandler
 // @Summary get config ids
 // @Description add adv-search configs by knowledge graph id
-// @Tags Engine
+// @Tags CEngine
 // @Param kgid path string true "knowledge graph id"
 // @Router /api/engine/v1/adv-search-config/conf/{kgid} [get]
 // @Accept  x-www-form-urlencoded
@@ -257,7 +256,7 @@ type KGListAsBody struct {
 // KGListAdvSearchConfigHandler
 // @Summary get kglist
 // @Description get knowledge graph list
-// @Tags Engine
+// @Tags CEngine
 // @Param knowledge_network_id query string true "knowledge network id"
 // @Param knowledge_network_id query string false "knowledge network name"
 // @Router /api/engine/v1/adv-search-config/kglist [get]

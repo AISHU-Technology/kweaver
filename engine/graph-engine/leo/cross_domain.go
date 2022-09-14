@@ -1,6 +1,5 @@
 // Package leo 提供了 Web 框架使用的工具集
 // - 描述：中间件，解决跨域问题
-// - 作者：张坤 (zhang.kun@eisoo.com)
 // - 时间：2020-2-26
 package leo
 

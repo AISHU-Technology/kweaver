@@ -1,5 +1,4 @@
 // - 描述：服务入口
-// - 作者：张坤 (zhang.kun@aishu.cn)
 // - 时间：2020-2-29
 package main
 

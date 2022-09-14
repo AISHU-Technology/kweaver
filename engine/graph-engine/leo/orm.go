@@ -1,6 +1,5 @@
 // Package leo 提供了 Web 框架使用的工具集
 // - 描述：当前文件提供了ORM增删改查方法
-// - 作者：张坤 (zhang.kun@eisoo.com)
 // - 时间：2020-1-5
 package leo
 

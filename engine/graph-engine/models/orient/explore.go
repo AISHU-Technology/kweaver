@@ -1,6 +1,5 @@
 // Package orient 是 Orientdb 的数据访问层
 // - 描述：OrientDB 节点探索 访问层
-// - 作者：原琦 (yuan.qi@aishu.cn)
 // - 时间：2020-6-15
 
 package orient

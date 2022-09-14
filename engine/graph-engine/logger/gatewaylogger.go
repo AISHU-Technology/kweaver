@@ -1,4 +1,3 @@
-// @Author : yuan.qi@aishu.cn
 // @File : gatewaylogger.go
 // @Time : 2021/3/17
 
