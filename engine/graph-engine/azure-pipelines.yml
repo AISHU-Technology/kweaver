@@ -1,0 +1,153 @@
+# Starter pipeline
+#
+
+trigger:
+  branches:
+    include:
+      - release
+      - develop
+      - DATA-*
+  paths:
+    include:
+      - /engine/graph-engine/*
+    exclude:
+      - /engine/alg-server/*
+      - /builder/*
+      - /sdk/*
+
+pool:
+  name: go
+
+parameters:
+  - name: jobTag
+    displayName: please input engine database version to upgraded
+    type: string
+    default: '1.1.1'
+  - name: pushTag
+    displayName: 是否要推送到harbor
+    type: boolean
+    default: false
+
+resources:
+  containers:
+    - container: job
+      endpoint: acr.aishu.cn
+      image: ad/ad_go_env:goenv
+    - container: scanner
+      endpoint: acr.aishu.cn
+      image: ad/openjdk:11.0.13-jre
+
+variables:
+  - group: global-context
+  - name: imageTag
+    value: $(Build.SourceBranchName)-$(Build.BuildNumber)
+  - name: imageName
+    value: engine
+  - name: imageNameFtp
+    value: kw-engine
+  - name: imageNameWithHarbor
+    value: acr.aishu.cn/ad/kw-engine
+  - name: imageNameJob
+    value: engine
+  - name: imageNameJobFtp
+    value: kw-engine-job
+  - name: imageNameWithHarborJob
+    value: acr.aishu.cn/ad/kw-engine-job
+
+jobs:
+  - job:
+    displayName: buildJob
+    workspace:
+      clean: all
+    steps:
+    - task: Bash@3
+      displayName: ut
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/src --privileged=true ad/graph_builder:1.0.1 ls
+          docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/src --privileged=true ad_go_env:goenv /bin/bash -c "source /etc/bashrc;go test -coverprofile=cover.out -coverpkg=./controllers;gocov convert cover.out | gocov-xml > ut_coverage.xml;go test -v -coverpkg=./controllers | go-junit-report > coverage.xml";
+    # - task: FtpUpload@2ls
+    #   displayName: utUpload
+    #   inputs:
+    #     credentialsOption: 'inputs'
+    #     serverUrl: 'ftp://ftp-ad.aishu.cn'
+    #     username: '$(ftpUser)'
+    #     password: '$(ftpPasswd)'
+    #     rootDirectory:
+    #     filePatterns: '**/*coverage.xml'
+    #     remoteDirectory: '/report/$(imageName)/$(Build.SourceBranchName)'
+    #     clean: false
+    #     cleanContents: false
+    #     preservePaths: false
+    #     trustSSL: false
+
+    - task: Docker@2
+      displayName: buildImage-engine
+      inputs:
+        command: 'build'
+        repository: $(imageNameWithHarbor)
+        tags: |
+          $(mainTag)
+          latest
+        Dockerfile: '**/Graphengine.Dockerfile'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'acr.aishu.cn'
+        command: 'login'
+    - task: Docker@2
+      displayName: Push image
+      condition: and(succeeded(), eq(${{ parameters.pushTag }}, 'True'))
+      inputs:
+        containerRegistry: 'acr.aishu.cn'
+        repository: 'ad/kw-engine'
+        command: push
+        tags: |
+          $(mainTag)
+          latest
+    - task: Bash@3
+      displayName: saveTar-engine
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker save -o KWeaver-$(mainTag)-$(imageName).tar $(imageNameWithHarbor):$(mainTag)
+          cp KWeaver-$(mainTag)-$(imageName).tar KWeaver-$(mainTag)-kw-$(imageName)-$(imageTag).tar
+    - task: FtpUpload@2
+      displayName: uploadFtp-engine
+      inputs:
+        credentialsOption: 'inputs'
+        serverUrl: 'ftp://ftp-ad.aishu.cn'
+        username: '$(ftpUser)'
+        password: '$(ftpPasswd)'
+        rootDirectory:
+        filePatterns: '**/KWeaver-$(mainTag)-kw-$(imageName)-$(imageTag).tar'
+        remoteDirectory: '/packages/$(imageNameFtp)/$(Build.SourceBranchName)'
+        clean: false
+        cleanContents: false
+        preservePaths: false
+        trustSSL: false
+
+  - job: scan
+    displayName: 静态扫描
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    container: scanner
+    workspace:
+      clean: all
+    steps:
+      - task: SonarQubePrepare@4
+        displayName: Prepare SonarQube
+        inputs:
+          SonarQube: 'adS'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'sonar.gengine-engine'
+          cliProjectName: 'gengine-engine'
+          cliSources: '.'
+
+      - task: SonarQubeAnalyze@4
+        displayName: Run SonarQube Code Analysis task
+
+      - task: SonarQubePublish@4
+        displayName: Publish Quality Gate Result task
+        inputs:
+          pollingTimeoutSec: '300'

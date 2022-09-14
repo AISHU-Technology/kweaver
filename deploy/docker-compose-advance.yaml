@@ -1,0 +1,148 @@
+version: '3.7'
+
+services:
+  kw-nginx:
+    container_name: kw-nginx
+    image: nginx
+    restart: always
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/log/error.log:/var/log/nginx/error.log
+    ports:
+      - "80:80"
+    environment:
+      - NGINX_PORT=80
+      - TZ=Asia/Shanghai
+    networks:
+      - kw-network
+    depends_on:
+      - kw-studio
+      - kw-builder
+
+  kw-mariadb:
+    container_name: kw-mariadb
+    image: mariadb:10.5
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    environment:
+      - MARIADB_DATABASE=anydata
+      - MARIADB_USER=root
+      - MARIADB_PASSWORD=KWeaver
+      - MARIADB_ROOT_PASSWORD=KWeaver
+      - MARIADB_ALLOW_EMPTY_PASSWORD=false
+      - TZ=Asia/Shanghai
+    ports:
+      - '3307:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - kw-network
+
+  kw-redis:
+    container_name: kw-redis
+    image: redis:alpine
+    restart: always
+    networks:
+      - kw-network
+    ports:
+      - '6378:6379'
+    environment:
+      - TZ=Asia/Shanghai
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - db_data:/usr/local/redis/data
+      - ./redis/redis.log:/usr/local/redis/redis.log
+
+  kw-mongodb:
+    container_name: kw-mongodb
+    image: mongo:4.2.0
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=KWeaver
+      - TZ=Asia/Shanghai
+    volumes:
+      - db_data:/data/db
+    networks:
+      - kw-network
+    ports:
+      - '27018:27017'
+
+  kw-studio:
+    container_name: kw-studio
+    image: acr.aishu.cn/ad/kw-studio:2.0.0.5
+    restart: always
+    volumes:
+      - ./kwconfig-default/:/etc/studio/:ro
+    networks:
+      - kw-network
+    ports:
+      - '6800:6800'
+    environment:
+      - TZ=Asia/Shanghai
+    expose:
+      - '6800'
+    depends_on:
+      - kw-mariadb
+      - kw-redis
+
+  kw-builder:
+    container_name: kw-builder
+    image: acr.aishu.cn/ad/kw-builder:2.0.0.5
+    restart: always
+    volumes:
+      - ./kwconfig-default/:/etc/builder/:ro
+    networks:
+      - kw-network
+    ports:
+      - '6475:6475'
+    environment:
+      - TZ=Asia/Shanghai
+    expose:
+      - '6475'
+      - '6485'
+      - '6488'
+    depends_on:
+      - kw-mariadb
+      - kw-redis
+      - kw-mongodb
+      - kw-studio
+
+  kw-algserver:
+    container_name: kw-algserver
+    image: acr.aishu.cn/ad/kw-algserver:2.0.0.5
+    restart: always
+    volumes:
+      - ./kwconfig-default/:/etc/builder/:ro
+    networks:
+      - kw-network
+    ports:
+      - '8080:8080'
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - kw-mariadb
+
+  kw-engine:
+    container_name: kw-engine
+    image: acr.aishu.cn/ad/kw-engine:2.0.0.5
+    restart: always
+    volumes:
+      - ./kwconfig-default/:/etc/builder/:ro
+    networks:
+      - kw-network
+    ports:
+      - '6474:6474'
+    environment:
+      - TZ=Asia/Shanghai
+    depends_on:
+      - kw-mariadb
+      - kw-builder
+
+networks:
+  kw-network:
+    driver: bridge
+
+volumes:
+  db_data:

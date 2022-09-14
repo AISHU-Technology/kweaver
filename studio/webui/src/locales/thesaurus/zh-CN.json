@@ -71,6 +71,7 @@
     "importError": "词汇导入失败",
     "importAgain": "按钮重新导入",
     "editwordsError": "词库中有数据正在导入，请稍后重试",
-    "noLabels": "【暂无标签】"
+    "noLabels": "【暂无标签】",
+    "export": "导出"
   }
 }

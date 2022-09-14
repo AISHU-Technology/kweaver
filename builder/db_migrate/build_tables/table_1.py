@@ -424,6 +424,23 @@ class NetworkGraphRelation(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     knw_id = Column(Integer, nullable=True)
     graph_id = Column(Integer, nullable=True)
+    
+    
+class Lexicon(Base):
+    __tablename__ = "lexicon"
+    __table_args__ = {
+        'mysql_charset': 'utf8'
+    }
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    lexicon_name = Column(String(50), nullable=True, unique=True)
+    description = Column(String(150), nullable=True)
+    labels = Column(LONGTEXT, nullable=True)
+    columns = Column(LONGTEXT, nullable=True)
+    knowledge_id = Column(Integer, nullable=True)
+    create_time = Column(String(50), nullable=True)
+    update_time = Column(String(50), nullable=True)
+    status = Column(String(50), nullable=True)
+    error_info = Column(LONGTEXT, nullable=True)
 
 
 # 初始化数据库表

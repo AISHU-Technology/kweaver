@@ -193,7 +193,7 @@ const CreateThesaurusModal = (props: any) => {
           extra={
             <div className="createThessurus-extraBox">
               <div className="fileExtra">• {intl.get('ThesaurusManage.filetype')}</div>
-              <div className="fileExtra">• {intl.get('ThesaurusManage.fileSize')} </div>
+              <div className="fileExtra ad-flex">•<div className="ad-ml-1">{intl.get('ThesaurusManage.fileSize')}</div></div>
               <div>• <span className="ad-c-primary down-style"
                 onClick={() => download()}>{intl.get('ThesaurusManage.tamplate')}</span></div>
             </div>

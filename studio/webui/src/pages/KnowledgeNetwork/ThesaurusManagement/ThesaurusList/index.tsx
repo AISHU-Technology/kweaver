@@ -247,7 +247,7 @@ const ThesaurusList = (props: any) => {
               </Button>
               <Button className="operate-btn" disabled={_.isEmpty(selectedIds) || _.isEmpty(thesaurusList)} onClick={() => exportData()}>
                 <IconFont type="icon-daochu" />
-                {intl.get('uploadService.export')}
+                {intl.get('ThesaurusManage.export')}
               </Button>
             </div>
           </React.Fragment>

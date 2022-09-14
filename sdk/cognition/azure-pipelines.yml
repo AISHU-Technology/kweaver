@@ -1,0 +1,59 @@
+# Starter pipeline
+#
+
+trigger:
+  branches:
+    include:
+      - develop
+      - DATA-*
+
+pool:
+  name: algServer
+
+variables:
+  - group: global-context
+  - name: imageName
+    value: kg-dataflow
+  - name: packageName
+    value: cognition-0.0.1-py3-none-any.whl
+
+resources:
+  containers:
+    - container: compile
+      endpoint: acr.aishu.cn
+      image: ad/dataflow:latest
+
+stages:
+  - stage: makeWhl
+    jobs:
+    - job: build
+      displayName: build
+      container: compile
+      workspace:
+        clean: all
+      steps:
+        - checkout: self
+        - script: |
+            ls
+            python setup.py bdist_wheel
+            ls
+        - task: CopyFiles@2
+          inputs:
+            SourceFolder: $(Build.SourcesDirectory)
+            contents: |
+              dist/**
+            targetFolder: $(Build.BinariesDirectory)
+        - task: FtpUpload@2
+          displayName: uploadFtp
+          inputs:
+            credentialsOption: 'inputs'
+            serverUrl: 'ftp://ftp-ad.aishu.cn'
+            username: '$(ftpUser)'
+            password: '$(ftpPasswd)'
+            rootDirectory:
+            filePatterns: '**/dist/$(packageName)'
+            remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
+            clean: false
+            cleanContents: false
+            preservePaths: false
+            trustSSL: false

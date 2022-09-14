@@ -215,6 +215,7 @@ from controller.graph_count_controller import graph_count_controller_app
 from controller.timer_controller import timer_controller_app
 from controller.rebuild_fulltextindex_controller import rebuild_fulltextindex_controller_app
 from controller.knowledgeNetwork_controller import knowledgeNetwork_controller_app
+from controller.lexicon_controller import lexicon_controller_app
 
 
 app.register_blueprint(dsm_controller_app, url_prefix='/api/builder/v1/ds')
@@ -233,6 +234,8 @@ app.register_blueprint(timer_controller_app, url_prefix='/api/builder/v1/timer')
 
 app.register_blueprint(knowledgeNetwork_controller_app, name="knowledgeNetwork_controller_app",
                        url_prefix='/api/builder/v1/knw')
+app.register_blueprint(lexicon_controller_app, name="lexicon_controller_app",
+                       url_prefix='/api/builder/v1/lexicon')
 app.response_class = Gresponse
 if __name__ == '__main__':
     import sys
