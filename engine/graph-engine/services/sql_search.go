@@ -16,7 +16,7 @@ type ReqBody struct {
 // SearchSQLHandler
 // @Summary Orientdb sql API
 // @Description Orientdb sql API
-// @Tags Engine
+// @Tags CEngine
 // @Param id path string true "sql id"
 // @Param body body ReqBody true "body"
 // @Router /api/engine/v1/sql/{id} [post]

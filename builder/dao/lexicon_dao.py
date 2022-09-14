@@ -179,16 +179,6 @@ class LexiconDao:
         return df
     
     @connect_execute_commit_close_db
-    def get_account(self, connection, cursor):
-        """ 获取用户name和uuid"""
-        sql = """
-                    SELECT name, uuid FROM account;
-            """
-        Logger.log_info(sql)
-        df = pd.read_sql(sql, connection)
-        return df
-    
-    @connect_execute_commit_close_db
     def update_lexicon(self, id, name, labels, description, connection, cursor):
         """ 编辑词库信息"""
         sql = """

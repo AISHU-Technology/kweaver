@@ -1,6 +1,5 @@
 // Package controllers 为接口的控制逻辑
 // - 描述：GEngine KG 入口
-// - 作者：张坤 (xavier.chen@aishu.cn)
 // - 时间：2020-6-4
 package controllers
 
@@ -21,7 +20,7 @@ func MakeExploreHandler() gin.HandlerFunc {
 // ExploreGqlHandler
 // @Summary graphql search
 // @Description graphql search
-// @Tags Engine
+// @Tags CEngine
 // @Param body body gql.DataQuery true "graphql search statement"
 // @Router /api/engine/v1/explore/ [post]
 // @Accept  json
