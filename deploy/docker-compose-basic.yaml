@@ -21,7 +21,7 @@ services:
 
   kw-studio:
     container_name: kw-studio
-    image: acr.aishu.cn/ad/kw-studio:2.0.0.5
+    image: acr.aishu.cn/ad/kw-studio
     restart: always
     volumes:
       - ./kwconfig/:/etc/studio/:ro
@@ -36,7 +36,7 @@ services:
 
   kw-builder:
     container_name: kw-builder
-    image: acr.aishu.cn/ad/kw-builder:2.0.0.5
+    image: acr.aishu.cn/ad/kw-builder
     restart: always
     volumes:
       - ./kwconfig/:/etc/builder/:ro
@@ -55,7 +55,7 @@ services:
 
   kw-algserver:
     container_name: kw-algserver
-    image: acr.aishu.cn/ad/kw-algserver:2.0.0.5
+    image: acr.aishu.cn/ad/kw-algserver
     restart: always
     volumes:
       - ./kwconfig/:/etc/builder/:ro
@@ -70,7 +70,7 @@ services:
 
   kw-engine:
     container_name: kw-engine
-    image: acr.aishu.cn/ad/kw-engine:2.0.0.5
+    image: acr.aishu.cn/ad/kw-engine
     restart: always
     volumes:
       - ./kwconfig/:/etc/builder/:ro

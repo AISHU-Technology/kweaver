@@ -1,6 +1,5 @@
 // Package gql GQL 的实现
 // - 描述：提供 GQL 的 resolver
-// - 作者：陈骁 (xavier.chen@eisoo.com)
 // - 时间：2020-4-18
 package gql
 
