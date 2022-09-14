@@ -1,0 +1,129 @@
+.ad-tip-modal {
+  .ant-modal-content {
+    border-radius: 4px;
+  }
+
+  .ant-modal-body {
+    position: relative;
+    min-height: 192px;
+    padding: 32px 32px 24px;
+  }
+
+  .m-title {
+    display: flex;
+
+    .icon-box {
+      flex-shrink: 0;
+      width: 40px;
+      line-height: 22px;
+      font-size: 22px;
+    }
+
+    .err-icon {
+      color: var(--ad-error-color);
+    }
+
+    .t-text {
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 600;
+      color: var(--ad-heading-color);
+      line-height: 24px;
+    }
+  }
+
+  .m-body {
+    padding: 12px 0 40px 40px;
+    line-height: 22px;
+
+    .error-span {
+      color: var(--ad-error-color);
+    }
+  }
+
+  .m-footer {
+    position: absolute;
+    right: 32px;
+    bottom: 24px;
+    text-align: right;
+
+    button {
+      margin-left: 8px;
+    }
+  }
+}
+
+// 提示弹窗-函数式
+.ad-tip-modal-function {
+  .err-icon {
+    color: var(--ad-error-color) !important;
+  }
+
+  .ant-modal-body {
+    position: relative;
+    min-height: 192px;
+
+    .ant-modal-confirm-body-wrapper {
+      height: 100%;
+    }
+
+    .ant-modal-confirm-title {
+      height: 22px;
+      font-size: 16px;
+      font-family: PingFangSC-Medium;
+      font-weight: 600;
+      color: var(--ad-heading-color);
+      line-height: 22px;
+    }
+
+    .ant-modal-confirm-content {
+      margin-top: 12px;
+      line-height: 22px;
+      color: var(--ad-text-color);
+
+      & > span {
+        display: inline-block;
+        margin-bottom: 32px;
+      }
+
+      .error-span {
+        color: var(--ad-error-color);
+      }
+    }
+
+    .ant-modal-confirm-btns {
+      position: absolute;
+      float: none;
+      bottom: 24px;
+      right: 32px;
+    }
+  }
+}
+
+// 知道了弹窗-函数式
+.ad-know-modal-function {
+  .ant-modal-confirm-title {
+    font-size: 16px;
+    font-family: PingFangSC-Medium;
+    font-weight: 600;
+    color: var(--ad-heading-color);
+  }
+
+  .ant-modal-confirm-content {
+    color: var(--ad-text-color);
+  }
+
+  .ant-modal-body {
+    min-height: 192px;
+  }
+
+  .err-icon {
+    color: var(--ad-error-color) !important;
+  }
+
+  .ant-modal-confirm-btns {
+    position: absolute;
+    right: 32px;
+    bottom: 24px;
+  }
+}

@@ -1,0 +1,196 @@
+.new-relation-list {
+  .line {
+    display: flex;
+    height: 76px;
+    padding: 17px 0 38px 15px;
+    border-top: 1px solid var(--ad-line-color);
+    cursor: pointer;
+
+    .icon {
+      display: flex;
+      width: 14px;
+      height: 2px;
+      overflow: hidden;
+      border-radius: 4px;
+      margin: 11px 0 0 0;
+      .start,
+      .end {
+        width: 7px;
+        height: 2px;
+      }
+    }
+
+    .name {
+      height: 40px;
+      font-size: 14px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: var(--ad-text-color);
+      margin: 0 0 0 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      .sub-name {
+        display: flex;
+        font-size: 12px;
+        align-items: center;
+        .arrow {
+          font-size: 12px;
+          margin: 0px 4px;
+          padding-top: 2px;
+          color: rgba(0, 0, 0, 0.25);
+        }
+        .sub1,
+        .sub2 {
+          max-width: 100px;
+          overflow: hidden;
+          white-space: nowrap;
+          color: rgba(0, 0, 0, 0.45);
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .model-name {
+      width: 55%;
+    }
+
+    .automatic-name {
+      width: 74%;
+    }
+
+    .manual-name {
+      width: 48%;
+    }
+
+    .model {
+      // width: 64px;
+      height: 22px;
+      padding: 0 4px;
+      line-height: 22px;
+      font-size: 12px;
+      margin-top: 4px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      border-radius: 2px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--ad-heading-color);
+    }
+
+    .model-hidden {
+      width: 90px;
+      height: 22px;
+    }
+
+    .error-word {
+      color: #db0040;
+      padding-top: 11px;
+      margin: 0 16px 0 24px;
+    }
+
+    .tag {
+      padding-top: 8px;
+      margin: 0 16px 0 24px;
+
+      .icon-configured {
+        width: 14px;
+        font-size: 24px;
+        color: var(--ad-primary-color);
+      }
+    }
+
+    .model-tag {
+      margin: 0 16px 0 10px;
+
+      .icon-configured {
+        width: 14px;
+        font-size: 24px;
+        color: var(--ad-primary-color);
+      }
+    }
+
+    .model-error-word {
+      margin: 0 16px 0 10px;
+      color: #db0040;
+    }
+  }
+
+  .line-error {
+    background: #fef0f0 !important;
+  }
+
+  .line:hover {
+    background: #f9f9fb;
+  }
+
+  .line-selected {
+    background: var(--ad-select-bg-color) !important;
+  }
+
+  .ant-collapse {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 20px;
+    color: var(--ad-text-color);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    -webkit-font-feature-settings: 'tnum';
+    font-feature-settings: 'tnum', 'tnum';
+    background-color: #ffffff;
+    border: 0;
+    border-bottom: 0;
+    border-radius: 2px;
+  }
+
+  .ant-collapse-item {
+    border-color: var(--ad-line-color);
+  }
+
+  .ant-collapse-content {
+    overflow: hidden;
+    color: rgba(51, 51, 51, 1);
+    background-color: #fff;
+    border-top: 0;
+  }
+
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+    color: #364576;
+    font-style: normal;
+    line-height: 0;
+    text-align: center;
+    text-transform: none;
+    vertical-align: -0.125em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: absolute;
+    top: 49%;
+    left: 16px;
+    display: inline-block;
+    font-size: 12px;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    position: relative;
+    padding: 12px 16px;
+    padding-left: 40px !important;
+    color: var(--ad-heading-color);
+    line-height: 1.5715;
+    cursor: pointer;
+    transition: all 0.3s, visibility 0s;
+  }
+
+  .ant-collapse-borderless > .ant-collapse-item > .ant-collapse-content > .ant-collapse-content-box {
+    padding: 4px 0 0 0;
+  }
+
+  .ant-collapse-borderless > .ant-collapse-item {
+    border-bottom: 1px solid var(--ad-line-color);
+  }
+}

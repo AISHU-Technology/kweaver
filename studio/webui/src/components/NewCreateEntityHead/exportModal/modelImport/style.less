@@ -1,0 +1,199 @@
+.ellipsis-style {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.model-import {
+  .ant-empty-image {
+    height: 50px;
+  }
+
+  .data-type {
+    margin: 6px 0 0 0;
+
+    .name {
+      width: 160px;
+      line-height: 34px;
+    }
+
+    .data-input {
+      width: 692px;
+      height: 34px;
+      margin: 10px 0 0 0;
+      line-height: 20px;
+    }
+
+    .data-table {
+      background: rgba(255, 255, 255, 1);
+      border-radius: 3px;
+    }
+
+    .data-table-disabled {
+      margin: 15px 0 0 0;
+      width: 692px;
+      height: 34px;
+      background: rgba(249, 249, 250, 1);
+      border-radius: 3px;
+
+      .no-sub {
+        display: inline-block;
+        height: 20px;
+        background-color: rgba(243, 146, 36, 0.1);
+        color: var(--ad-warning-color);
+        line-height: 20px;
+        border: 1px solid var(--ad-warning-color);
+      }
+    }
+
+    .file-type {
+      width: 164px;
+      height: 34px;
+      margin: 0 0 0 12px;
+    }
+
+    .file {
+      width: 499px;
+      height: 34px;
+    }
+
+    .file-un {
+      width: 662px;
+      height: 34px;
+    }
+  }
+
+  .table {
+    width: 692px;
+    min-height: 362px;
+    border-top: 1px solid rgba(233, 233, 233, 1);
+    border-bottom: 1px solid rgba(233, 233, 233, 1);
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    .row {
+      display: flex;
+      width: max-content;
+      height: 52px;
+
+      .column {
+        width: 244px;
+        height: 50px;
+        border-bottom: 1px solid rgba(229, 229, 229, 1);
+        line-height: 50px;
+        padding: 0 12px;
+        background-color: white;
+      }
+
+      .column-un {
+        width: 230px;
+        height: 52px;
+        border-bottom: 1px solid rgba(229, 229, 229, 1);
+        // line-height: 50px;
+        padding: 12px 12px;
+        background-color: white;
+
+        .name {
+          padding: 4px 0 0 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .alias {
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 0.45);
+
+          .ellipsis-style;
+        }
+      }
+    }
+
+    .row-title {
+      display: flex;
+      width: max-content;
+      height: 50px;
+
+      .title {
+        height: 50px;
+        font-size: 14px;
+        width: 230px;
+        border-bottom: 1px solid rgba(229, 229, 229, 1);
+        line-height: 50px;
+        padding: 0px 12px;
+        color: var(--ad-heading-color);
+        background-color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background-color: #fafafa !important;
+      }
+    }
+  }
+
+  .preview {
+    margin: 24px 0 0 0;
+    min-height: 401px;
+
+    .title-pre {
+      .big {
+        font-size: 16px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: var(--ad-heading-color);
+      }
+
+      .little {
+        font-size: 12px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        color: var(--ad-text-color-secondary);
+      }
+    }
+
+    .content-pre {
+      width: 692px;
+      min-height: 362px;
+      margin: 14px 0 0 0;
+      position: relative;
+
+      .loading {
+        width: 692px;
+        height: 100%;
+        z-index: 10000;
+        background-color: rgba(240, 244, 250, 0.6);
+        position: absolute;
+
+        .icon {
+          font-size: 40px;
+          color: var(--ad-primary-color);
+          position: absolute;
+          left: 48%;
+          top: 50%;
+        }
+      }
+
+      .select-file {
+        width: 652px;
+        height: 34px;
+        margin: 20px 0 0 20px;
+        background: rgba(255, 255, 255, 1);
+      }
+    }
+  }
+
+  .graph-show {
+    width: 692px;
+    height: 474px;
+    margin: 20px 0 0 0;
+    background: rgba(249, 249, 249, 1);
+    border-radius: 3px;
+    border: 1px solid rgba(230, 230, 230, 1);
+  }
+
+  // 多了一层...
+  & > .graph-show {
+    border: none;
+  }
+}

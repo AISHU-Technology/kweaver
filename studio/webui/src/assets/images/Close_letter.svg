@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="51px" viewBox="0 0 40 51" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>邮件</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="40" height="51"></rect>
+        <filter x="-17.5%" y="-13.7%" width="135.0%" height="127.5%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="6" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.06 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="邮件">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="蒙版" opacity="0">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-1"></use>
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+            </g>
+            <g mask="url(#mask-2)" fill="#54639C" fill-opacity="0.2" fill-rule="nonzero">
+                <path d="M53.57,51 L6.43333332,51 C2.88464155,50.9927335 0.00916693426,48.1427778 0,44.6237604 L0,6.37623957 C0,2.86914252 2.89333333,0 6.43000003,0 L53.5666667,0 C57.1066667,0 60,2.86914252 60,6.37623957 L60,44.6237604 C60,48.127552 57.1066667,51 53.57,51 L53.57,51 Z M6.43333332,4.25082644 C5.2511224,4.25445592 4.29366008,5.20391297 4.28999995,6.37623957 L4.28999995,44.6237604 C4.28999995,45.7938946 5.2533333,46.7491737 6.43333332,46.7491737 L53.5666667,46.7491737 C54.7466667,46.7491737 55.7100001,45.7905892 55.7100001,44.6237604 L55.7100001,6.37623957 C55.7063399,5.20391297 54.7488776,4.25445592 53.5666667,4.25082644 L6.43333332,4.25082644 Z" id="形状"></path>
+                <path d="M29.5353568,33 C28.0255098,33 26.4082959,32.4614933 25.2205496,31.3878248 L8.71959939,16.7645262 C7.85065602,15.9804575 7.75596387,14.6529976 8.50486563,13.7542405 C9.29138488,12.8880045 10.6229935,12.7936074 11.5245596,13.5401757 L28.0255098,28.1601297 C28.8878001,28.912701 30.0721912,28.912701 30.9378369,28.1601297 L47.4387871,13.5401757 C48.3010774,12.7876044 49.7035575,12.7876044 50.4584811,13.7542405 C51.2134046,14.7242214 51.2134046,16.0119547 50.2403921,16.7645262 L33.850164,31.3878248 C32.6475686,32.4155752 31.1193197,32.9865868 29.5353568,33 L29.5353568,33 Z" id="路径"></path>
+            </g>
+        </g>
+    </g>
+</svg>

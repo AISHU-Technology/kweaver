@@ -1,0 +1,178 @@
+# Starter pipeline
+#
+
+trigger:
+  branches:
+    include:
+      - release
+      - develop
+      - DATA-*
+  paths:
+    include:
+      - /builder/*
+    exclude:
+      - /studio/*
+      - /sdk/*
+
+pool:
+  name: python
+
+parameters:
+  - name: jobTag
+    displayName: 请手动输入程序的数据库版本值
+    type: string
+    default: '1.1.1'
+  - name: pushTag
+    displayName: 是否要推送到harbor
+    type: boolean
+    default: false
+
+variables:
+  - group: global-context
+  - name: imageTag
+    value: $(Build.SourceBranchName)-$(Build.BuildNumber)
+  - name: imageName
+    value: kw-builder
+  - name: imageNameWithHarbor
+    value: acr.aishu.cn/ad/kw-builder
+  - name: UTArtifactName
+    value: coverageFiles
+
+resources:
+  containers:
+    - container: scanner
+      endpoint: acr.aishu.cn
+      image: ad/openjdk:11.0.13-jre
+    - container: dotnet
+      endpoint: acr.aishu.cn
+      image: wing-biz/euop/dotnet-runtime:3.1
+
+jobs:
+  - job: utmake
+    displayName: utmake
+    workspace:
+      clean: all
+    steps:
+      - checkout: self
+      - task: Bash@3
+        displayName: utRun
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd ./builder
+            /root/anaconda3/envs/python3.6.2/bin/python coverage_ut.py
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: $(Build.SourcesDirectory)
+          contents: |
+            builder/coverage.xml
+            builder/coverage_result/*
+          targetFolder: $(Build.BinariesDirectory)
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.BinariesDirectory)'
+          ArtifactName:  ${{variables.UTArtifactName}}
+
+  - job: coverage
+    displayName: coverage
+    container: dotnet
+    dependsOn: utmake
+    steps:
+      - checkout: none
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          artifactName: ${{variables.UTArtifactName}}
+          downloadPath: $(Build.SourcesDirectory)
+
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish ALL Code Coverage Report
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/builder/coverage.xml'
+
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFormat: "JUnit"
+          testResultsFiles: '$(Build.SourcesDirectory)/${{variables.UTArtifactName}}/builder/coverage_result/*.xml'
+          testRunTitle: 'UT Result'
+          failTaskOnFailedTests: true
+        displayName: 'Publish linting and unit test results'
+
+  - job: scan
+    displayName: 静态扫描
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    container: scanner
+    dependsOn: [utmake, coverage]
+    workspace:
+      clean: all
+    steps:
+      - task: SonarQubePrepare@4
+        displayName: Prepare SonarQube
+        inputs:
+          SonarQube: 'adS'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'sonar.kw-builder'
+          cliProjectName: 'kw-builder'
+          cliSources: '.'
+      - task: SonarQubeAnalyze@4
+        displayName: Run SonarQube Code Analysis task
+
+      - task: SonarQubePublish@4
+        displayName: Publish Quality Gate Result task
+        inputs:
+          pollingTimeoutSec: '300'
+
+  - job:
+    timeoutInMinutes: 120
+    displayName: build
+    workspace:
+      clean: all
+    steps:
+    - task: Docker@2
+      displayName: buildImage
+      inputs:
+        command: 'build'
+        repository: $(imageNameWithHarbor)
+        tags: |
+          $(kwTag)
+          latest
+        Dockerfile: '**/Builder.Dockerfile'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'acr.aishu.cn'
+        command: 'login'
+    - task: Docker@2
+      displayName: Push image
+      condition: and(succeeded(), eq(${{ parameters.pushTag }}, 'True'))
+      inputs:
+        containerRegistry: 'acr.aishu.cn'
+        repository: 'ad/kw-builder'
+        command: push
+        tags: |
+          $(kwTag)
+          latest
+    - task: Bash@3
+      displayName: saveTar
+      inputs:
+        targetType: 'inline'
+        script: |
+          docker save -o KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(kwTag)
+    - task: FtpUpload@2
+      displayName: uploadFtp
+      inputs:
+        credentialsOption: 'inputs'
+        serverUrl: 'ftp://ftp-ad.aishu.cn'
+        username: '$(ftpUser)'
+        password: '$(ftpPasswd)'
+        rootDirectory:
+        filePatterns: '**/KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar'
+        remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
+        clean: false
+        cleanContents: false
+        preservePaths: false
+        trustSSL: false
+
+
+

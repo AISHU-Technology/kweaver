@@ -1,0 +1,209 @@
+// 表格
+.show-table {
+  width: 100%;
+  height: 100%;
+
+  .file-tree {
+    display: inline-block;
+    min-width: 100%;
+
+    .ant-tree-treenode {
+      z-index: 0;
+      height: 48px;
+      padding: 0;
+      border-top: 1px solid var(--ad-line-color);
+      white-space: nowrap;
+      background: #fff;
+
+      .ant-tree-node-content-wrapper {
+        height: 48px;
+        padding: 0 10px 0 0;
+        line-height: 48px;
+
+        .board-file-name {
+          vertical-align: middle;
+        }
+
+        .ant-tree-iconEle {
+          vertical-align: middle;
+          height: 48px;
+          line-height: 50px;
+        }
+      }
+
+      .ant-tree-node-content-wrapper:hover {
+        background-color: transparent;
+      }
+
+      .ant-tree-switcher {
+        height: 48px;
+        line-height: 48px;
+
+        .ant-tree-switcher-icon {
+          color: var(--ad-primary-color);
+          font-size: 14px;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    .ant-tree-treenode::before {
+      bottom: 0 !important;
+    }
+  }
+
+  .extract-table {
+    width: 100%;
+
+    .row {
+      display: flex;
+      width: max-content;
+      height: 50px;
+      background-color: white;
+
+      .column {
+        width: 197px;
+        height: 50px;
+        padding: 0 12px;
+        border-bottom: 1px solid rgba(229, 229, 229, 1);
+        line-height: 50px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .row:first-child {
+      background: #e8e8e8;
+
+      .column {
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+      }
+    }
+
+    .model-row {
+      display: flex;
+      width: 100%;
+      height: 70px;
+      background-color: white;
+      // border-left: 1px solid #e5e5e5;
+      // border-right: 1px solid #e5e5e5;
+
+      .column {
+        height: 50px;
+        width: calc(100% / 3);
+        padding: 0 12px;
+        border-bottom: 1px solid rgba(229, 229, 229, 1);
+        line-height: 50px;
+        white-space: nowrap;
+      }
+
+      .column-un {
+        width: 244px;
+        height: 70px;
+        border-bottom: 1px solid rgba(229, 229, 229, 1);
+        // line-height: 50px;
+        padding: 12px 12px;
+        background-color: white;
+
+        .name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 12px 0 0 0;
+        }
+
+        .alias {
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 0.45);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+
+    .row-title {
+      display: flex;
+      width: max-content;
+      height: 50px;
+
+      .column {
+        height: 50px;
+        width: 244px;
+        border-bottom: 1px solid rgba(229, 229, 229, 1);
+        border-top: 1px solid rgba(229, 229, 229, 1);
+        color: var(--ad-heading-color);
+        line-height: 50px;
+        padding: 0px 12px;
+        background-color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        background-color: #fafafa !important;
+      }
+    }
+
+    .model-row:first-child {
+      background: #e8e8e8;
+
+      .column {
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        height: 50px;
+      }
+    }
+  }
+
+  // json区域
+  .json-text-area {
+    .ant-input-disabled {
+      border: none;
+      background: none;
+      color: var(--ad-text-color);
+      cursor: auto;
+    }
+
+    .ant-input:hover {
+      box-shadow: none !important;
+    }
+
+    textarea {
+      overflow: hidden;
+    }
+
+    // 强制改变safari的disabled默认样式
+    textarea:disabled {
+      -webkit-text-fill-color: var(--ad-text-color) !important;
+      color: var(--ad-text-color) !important;
+    }
+  }
+
+  .no-pre {
+    display: flex;
+    padding-bottom: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    .no-pre-icon {
+      width: 144px;
+      height: auto;
+
+      &.big {
+        width: 250px;
+      }
+    }
+
+    .word {
+      padding-top: 8px;
+      color: var(--ad-text-color);
+      font-size: 14px;
+    }
+  }
+}

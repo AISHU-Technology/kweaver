@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="520px" height="299px" viewBox="0 0 520 299" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>图</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="520" height="299" rx="6"></rect>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="模式四（文档结构）" transform="translate(-700.000000, -311.000000)">
+            <g id="操作指引" transform="translate(640.000000, 194.000000)">
+                <g id="图" transform="translate(60.000000, 117.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="背景" fill="#F0F4FA" xlink:href="#path-1"></use>
+                    <g id="多文件示意图" mask="url(#mask-2)">
+                        <g transform="translate(60.000000, 29.000000)" id="表1">
+                            <g transform="translate(0.000000, 0.500000)">
+                                <rect id="矩形" stroke-opacity="0.14" stroke="#989CAC" fill="#FFFFFF" x="0.5" y="100.5" width="419" height="99"></rect>
+                                <path d="M2,100.5 L418,100.5 C418.552285,100.5 419,100.947715 419,101.5 L419,150.5 L419,150.5 L1,150.5 L1,101.5 C1,100.947715 1.44771525,100.5 2,100.5 Z" id="矩形" fill="#CBD0E1"></path>
+                                <text id="Subject" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" fill="#333333">
+                                    <tspan x="42" y="132.5">Subject</tspan>
+                                </text>
+                                <text id="Predicate" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" fill="#333333">
+                                    <tspan x="179" y="132.5">Predicate</tspan>
+                                </text>
+                                <text id="Object" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" fill="#333333">
+                                    <tspan x="329" y="132.5">Object</tspan>
+                                </text>
+                                <text id="文档知识模型" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" fill="#333333">
+                                    <tspan x="168" y="15.5">文档知识模型</tspan>
+                                </text>
+                                <rect id="矩形" fill-opacity="0.14" fill="#989CAC" transform="translate(140.500000, 149.500000) scale(-1, 1) translate(-140.500000, -149.500000) " x="140" y="100.5" width="1" height="98"></rect>
+                                <rect id="矩形" fill-opacity="0.14" fill="#989CAC" transform="translate(280.500000, 149.500000) scale(-1, 1) translate(-280.500000, -149.500000) " x="280" y="100.5" width="1" height="98"></rect>
+                                <g id="关系" transform="translate(60.000000, 50.500000)">
+                                    <path id="路径-2" d="M146,13.5 C148.414273,13.5 150.384489,15.4012365 150.495102,17.7881643 L150.5,18 L150.5,41.5 L154.5,41.5 L150,50.5 L145.5,41.5 L149.5,41.5 L149.5,18 C149.5,16.1314366 148.035722,14.6048736 146.192035,14.5051789 L146,14.5 L4,14.5 C2.1314366,14.5 0.604873551,15.9642776 0.505178863,17.8079648 L0.5,18 L0.5,41.5 L4.5,41.5 L-3.061617e-17,50.5 L-4.5,41.5 L-0.5,41.5 L-0.5,18 C-0.5,15.5857267 1.40123652,13.6155109 3.7881643,13.504898 L4,13.5 L146,13.5 Z" fill="#54639C" fill-rule="nonzero"></path>
+                                    <path id="路径-2" d="M296,13.5 C298.414273,13.5 300.384489,15.4012365 300.495102,17.7881643 L300.5,18 L300.5,41.5 L304.5,41.5 L300,50.5 L295.5,41.5 L299.5,41.5 L299.5,18 C299.5,16.1314366 298.035722,14.6048736 296.192035,14.5051789 L296,14.5 L154,14.5 C152.131437,14.5 150.604874,15.9642776 150.505179,17.8079648 L150.5,18 L150.5,41.5 L154.5,41.5 L150,50.5 L145.5,41.5 L149.5,41.5 L149.5,18 C149.5,15.5857267 151.401237,13.6155109 153.788164,13.504898 L154,13.5 L296,13.5 Z" fill="#54639C" fill-rule="nonzero"></path>
+                                    <rect id="矩形" fill="#FFFFFF" x="126" y="0" width="48" height="26" rx="3"></rect>
+                                    <text font-family="PingFangSC-Medium, PingFang SC" font-size="12" font-weight="400" fill="#5163A0">
+                                        <tspan x="138" y="18">关系</tspan>
+                                    </text>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

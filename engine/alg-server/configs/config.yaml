@@ -1,0 +1,6 @@
+mariadb:
+  host: 10.4.106.255
+  port: 3306
+  user: anydata
+  password: Qwe123!@#
+  database: anydata

@@ -1,0 +1,82 @@
+node('kg_aishu_cn_idc'){
+    img_name = "kg-engine"
+    img_tag = "1.0.2.2"
+    pkg_name = "graph-engine-img.tar"
+    pkg_name_with_num = "graph-engine-img-${BRANCH_NAME}-${BUILD_NUMBER}.tar"
+    
+    package_dir_ftp_cover = "/report/kg-engine/${new Date().format('yyyyMMdd-HHmmss')}-${BUILD_NUMBER}"
+
+    // harbor 镜像地址
+    harbor="acr.aishu.cn/ad"
+
+	stage('builder graph-engine') {
+		dir('builder-engine') {
+		    def workspace = pwd()
+		    git credentialsId: 'f929d963-3e7e-45c9-9530-e3bc6bfe5b82', url: 'https://gitlab.aishu.cn/anydata-rnd/graphengine/graph-engine.git', branch: "${BRANCH_NAME}"
+			sh "docker run -u root --rm -v ${workspace}:/src --privileged=true ad/graph_builder:1.0.1 sh ./build.sh" 
+
+			sh "echo 'Begin to build image'"
+			sh "docker build . -t ${img_name}:${img_tag}"
+			sh "docker tag ${img_name}:${img_tag} ${harbor}/${img_name}:${img_tag}.${BRANCH_NAME.toLowerCase()}.${BUILD_NUMBER}"
+
+			sh "docker push ${harbor}/${img_name}:${img_tag}.${BRANCH_NAME.toLowerCase()}.${BUILD_NUMBER}"
+			sh "docker push ${harbor_url}/${img_name}:${main_tag}"
+		}
+	}
+
+	stage('save') {
+		sh "mkdir -p /root/jenkins/store/engine/${BRANCH_NAME}"
+		sh "docker save -o /root/jenkins/store/engine/${BRANCH_NAME}/${pkg_name} ${img_name}:${img_tag}"
+		sh "docker save -o /root/jenkins/store/engine/${BRANCH_NAME}/${pkg_name_with_num} ${img_name}:${img_tag}"
+	}
+	
+	stage("UT"){
+	    dir("builder-engine"){
+	        sh "/usr/local/go/bin/go test -coverprofile=cover.out -coverpkg=./controllers"
+	        sh "gocov convert cover.out | gocov-xml > ut_coverage.xml"
+            sh "/usr/local/go/bin/go test -v -coverpkg=./controllers | go-junit-report > coverage.xml"
+            sh "mv coverage.xml ut_coverage.xml ../"
+            sh "echo ${BUILD_URL} > /root/ut/ut/kg-engine-ut.info"
+	    }
+	}
+
+	stage('upload UT 2 ftp') {
+    		sh "ftp -n<<EOF \n\
+    		    open ftp-ad.aishu.cn \n\
+    		    user ftp_2 Q1c%k2h \n\
+    		    binary \n\
+    		        mkdir /report/kg-engine \n\
+                    mkdir ${package_dir_ftp_cover} \n\
+                    cd ${package_dir_ftp_cover} \n\
+                    prompt \n\
+                        put coverage.xml coverage.xml \n\
+                        put ut_coverage.xml ut_coverage.xml \n\
+                    close \n\
+    			bye \n\
+    		EOF"
+    	}
+
+	stage('upload 2 ftp') {
+		sh "ftp -n<<EOF \n\
+		    open ftp-ad.aishu.cn \n\
+		    user ftp_2 Q1c%k2h \n\
+		    binary \n\
+			mkdir /packages/engine/${BRANCH_NAME} \n\
+			cd /packages/engine/${BRANCH_NAME} \n\
+			lcd /root/jenkins/store/engine/${BRANCH_NAME} \n\
+			prompt \n\
+			put ${pkg_name} ${pkg_name} \n\
+			put ${pkg_name_with_num} ${pkg_name_with_num} \n\
+			close \n\
+			bye \n\
+		EOF"
+	}
+
+	stage('env') {
+    		sh "rm -rf /root/jenkins/store/engine/${BRANCH_NAME}"
+    		sh "rm -rf ./builder-engine"
+    		sh "mkdir -p ./builder-engine"
+    		sh "docker rmi ${harbor}/${img_name}:${img_tag}.${BRANCH_NAME.toLowerCase()}.${BUILD_NUMBER}"
+    		sh "docker rmi ${img_name}:${img_tag}"
+    }
+}
