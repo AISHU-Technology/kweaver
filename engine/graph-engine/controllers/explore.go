@@ -20,7 +20,7 @@ func MakeExploreHandler() gin.HandlerFunc {
 // ExploreGqlHandler
 // @Summary graphql search
 // @Description graphql search
-// @Tags Engine
+// @Tags CEngine
 // @Param body body gql.DataQuery true "graphql search statement"
 // @Router /api/engine/v1/explore/ [post]
 // @Accept  json

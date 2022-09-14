@@ -100,7 +100,7 @@ type ReqExpandVArgs struct {
 // KGExpandVHandler
 // @Summary expand vertexes
 // @Description expand edges by entity id
-// @Tags Engine
+// @Tags CEngine
 // @Param class query string false "Edge class, when null, query all edges"
 // @Param page query int true "Number of pages" minimum(1)
 // @Param size query int true  "Number of edges, query all when page = -1" minimum(-1)

@@ -11,7 +11,7 @@ import (
 // ReadyHandler
 // @Summary ready
 // @Description  Health detection
-// @Tags Engine
+// @Tags CEngine
 // @Router /api/engine/v1/health/ready [get]
 // @Success 200
 func ReadyHandler(c *gin.Context) {
@@ -22,7 +22,7 @@ func ReadyHandler(c *gin.Context) {
 // AliveHandler
 // @Summary alive
 // @Description  Health detection
-// @Tags Engine
+// @Tags CEngine
 // @Router /api/engine/v1/health/alive [get]
 // @Success 200
 func AliveHandler(c *gin.Context) {
