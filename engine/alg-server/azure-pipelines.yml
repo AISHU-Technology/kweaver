@@ -29,11 +29,11 @@ variables:
   - name: imageTag
     value: $(Build.SourceBranchName)-$(Build.BuildNumber)
   - name: imageName
-    value: kw-alg-server
+    value: kw-algserver
   - name: UTArtifactName
     value: coverageFiles
   - name: imageNameWithHarbor
-    value: acr.aishu.cn/ad/kw-alg-server
+    value: acr.aishu.cn/ad/kw-algserver
 
 resources:
   containers:
@@ -68,7 +68,7 @@ jobs:
       condition: and(succeeded(), eq(${{ parameters.pushTag }}, 'True'))
       inputs:
         containerRegistry: 'acr.aishu.cn'
-        repository: 'ad/kw-alg-server'
+        repository: 'ad/kw-algserver'
         command: push
         tags: |
           $(mainTag)
