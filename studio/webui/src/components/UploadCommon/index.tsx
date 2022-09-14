@@ -45,7 +45,7 @@ const UploadCommon = (props: any) => {
     renderButton = null,
     uploadConfig = {},
     onCallBackFileChange,
-    onError = () => {}
+    onError = () => { }
   } = props;
 
   const [pendingUploadFiles, setPendingUploadFiles] = useState<any>([]);
@@ -115,6 +115,11 @@ const UploadCommon = (props: any) => {
         onError([{ type: OVER_SINGLE_FILE_SIZE, message: `上传单个文件不能超过${HELPER.formatFileSize(limitSize)}` }]);
         return false;
       }
+    }
+    // 只允许上传一个文件
+    if (largestFileCount === 1) {
+      setPendingUploadFiles(fileList);
+      return;
     }
 
     onChangeExecuteOnce(fileList);
