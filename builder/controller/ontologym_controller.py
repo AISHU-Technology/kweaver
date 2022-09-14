@@ -38,7 +38,6 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def get_table():
     '''
     get data table by data source name
-    根据数据源名获取数据表
     ---
     parameters:
         -   name: ds_id
@@ -87,8 +86,6 @@ def get_table():
 def filter_by_postfix():
     '''
     expand the AS folder
-    展开AS文件夹
-    按需返回文件列表
     ---
     parameters:
         -   name: ds_id
@@ -104,7 +101,7 @@ def filter_by_postfix():
         -   name: postfix
             in: query
             required: true
-            description: '结构化："csv","json"; 非结构化：“all”'
+            description: 'structured："csv","json"; unstructured：“all”'
             type: string
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -131,7 +128,6 @@ def filter_by_postfix():
 def data_preview():
     '''
     preview the data
-    源数据预览
     ---
     parameters:
         -   name: ds_id
@@ -147,7 +143,7 @@ def data_preview():
         -   name: name
             in: query
             required: true
-            description: 'as:docid; mysql:表名'
+            description: 'as: docid; mysql: table name'
             type: string
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -178,8 +174,7 @@ def data_preview():
 @swag_from(swagger_old_response)
 def predict_ontology():
     '''
-    get extraction object and its properties
-    流程四，获取数据源抽取对象及属性
+    get extraction object and its properties in step 4
     ---
     parameters:
         -   name: ds_id
@@ -191,7 +186,7 @@ def predict_ontology():
         -   name: data_source
             in: body
             required: true
-            description: 'data source type. options: as mysql hive (as：json,csv V1.0 版本json只支持单行)'
+            description: 'data source type. options: as7 mysql hive'
             type: string
             example: as7
         -   name: file_list
@@ -248,7 +243,6 @@ def predict_ontology():
 def save_ontology():
     '''
     add an ontology
-    新建本体
     ---
     parameters:
         -   name: ontology_name
@@ -271,20 +265,19 @@ def save_ontology():
             example:  [
                 {
                   "colour": "#546CFF",
-                  "name": "边1",
+                  "name": "entity1",
                   "properties": [["name", "string"]],
-                  "relations": ["实体1", "边1", "实体2"],
-                  "ds_name": "数据源名或者本体名",
-                  "dataTtype": "数据类型（结构化，非结构化）",
-                  "extract_type": "选择模型（普通）",
+                  "relations": ["entity1", "edge1", "entity2"],
+                  "ds_name": "data source name or ontology name",
+                  "dataTtype": "data type(structured, unstructured)",
+                  "extract_type": "standardExtraction",
                   "model": "aishu",
-                  "file_type": "文件类型，csv，mysql数据来源 无文件类型",
+                  "file_type": "file type，data sources such as csv, mysql don't have file type",
                   "source": [
                     "docid",
-                    "table",
-                    "文件或者表，如果是本体导入或者手动创建为空"
+                    "table"
                   ],
-                  "source_type": " automatic,manual,import 自动预测,手动创建,本体导入"
+                  "source_type": " automatic,manual,import"
                 }
               ]
         -   name: edge
@@ -295,25 +288,24 @@ def save_ontology():
             example: [
                 {
                   "colour": "#123CDF",
-                  "ds_name": "数据源名或者本体名",
-                  "dataType": "数据类型（结构化，非结构化）",
-                  "extract_type": "选择模型（普通）",
+                  "ds_name": "data source name or ontology name",
+                  "dataType": "data type(structured, unstructured)",
+                  "extract_type": "standardExtraction",
                   "model": "aishu",
                   "data_source": "as",
                   "ds_path": "123",
                   "id": "7",
-                  "file_type": "文件类型，csv，mysql数据来源 无文件类型",
-                  "name": "实体1",
+                  "file_type": "file type，data sources such as csv, mysql don't have file type",
+                  "name": "entity1",
                   "properties": [
                     ["name", "string"],
                     ["age", "int"]
                   ],
                   "source": [
                     "docid",
-                    "table",
-                    "文件或者表，如果是本体导入或者手动创建为空"
+                    "table"
                   ],
-                  "source_type": " automatic,manual,import 自动预测,手动创建,本体导入"
+                  "source_type": " automatic,manual,import"
                 },
               ]
     '''
@@ -331,7 +323,6 @@ def save_ontology():
 def get_model_list():
     '''
     get model list
-    返回模型列表
     ---
     '''
     ret_code, ret_message = otl_service.get_model_list()
@@ -346,7 +337,6 @@ def get_model_list():
 def get_model_spo():
     '''
     get model spo
-    获取模型spo
     ---
     parameters:
         -   name: model
@@ -374,7 +364,6 @@ def get_model_spo():
 def get_model_otl():
     '''
     get model ontology
-    获取模型本体
     ---
     parameters:
         -   name: file_list
@@ -412,7 +401,6 @@ def get_model_otl():
 def getall():
     '''
     get ontology list
-    获取本体库列表
     ---
     parameters:
         -   name: page
@@ -458,7 +446,6 @@ def getall():
 def delotl():
     '''
     delete the ontology
-    删除本体
     ---
     parameters:
         -   name: otlids
@@ -481,7 +468,6 @@ def delotl():
 def getotlbyname():
     '''
     fuzzy query ontology by name
-    模糊查询
     ---
     parameters:
         -   name: page
@@ -528,7 +514,6 @@ def getotlbyname():
 def updateotlname(otlid):
     '''
     update ontology name and description
-    更新本体名称和描述
     ---
     parameters:
         -   name: otlid
@@ -579,7 +564,6 @@ def updateotlname(otlid):
 def updateotlinfo(otlid):
     '''
     update ontology information such as entity class information
-    更新本体entity等信息
     ---
     parameters:
         -   name: otlid
@@ -590,7 +574,7 @@ def updateotlinfo(otlid):
         -   name: entity
             in: body
             required: true
-            description: 'entity class information. 必须字段：entity_id,colour,ds_name,dataType,data_source,ds_path,ds_id,extract_type,name,source_table,source_type,properties. 非必须字段(可为空但字段必须)：file_type,task_id,properties_index,model，source_table. 注：之前的id改为ds_id，现在的entity_id为唯一标识'
+            description: 'entity class information. required fields：entity_id,colour,ds_name,dataType,data_source,ds_path,ds_id, extract_type, name, source_table, source_type, properties. not required fields(the value can be empty, but the field must exist): file_type, task_id, properties_index, model, source_table, ds_address, alias.'
             type: array
             example: [
                 {
@@ -619,25 +603,27 @@ def updateotlinfo(otlid):
                   "ds_path": "结构化数据",
                   "model": "",
                   "entity_id": 4,
-                  "ds_id": "5"
+                  "ds_id": "5",
+                  "ds_address":"https://10.4.69.44",
+                  "alias":"花花护花"
                 }
               ]
         -   name: edge
             in: body
             required: false
-            description: edge class information. edge_id. 其他同上
+            description: edge class information. edge_id. others(ditto)
             type: array
             example: []
         -   name: used_task
             in: body
             required: true
-            description: 被渲染过的task
+            description: rendered task
             type: array
             example: [1, 23]
         -   name: flag
             in: body
             required: true
-            description: '下一步则是“nextstep”--下一步校验entity不可为空，有运行的任务不可保存. 保存则是“save”--不校验entity为空，有运行的任务可保存'
+            description: '"nextstep": the next step is to verify that the entity cannot be empty, and the running tasks cannot be saved. "save": it is not verified that the entity is empty, and there are running tasks to save'
             type: string
             example: nextstep
     '''
@@ -675,7 +661,6 @@ def updateotlinfo(otlid):
 def ds(otlid):
     '''
     get ontology details by name
-    通过名字获取本体详细内容
     ---
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -698,7 +683,6 @@ def ds(otlid):
 def getotlbykgid(kgid):
     '''
     get ontology information by kgid
-    根据kgid返回本体信息
     ---
     parameters:
         -   name: kgid
@@ -738,7 +722,6 @@ def getotlbykgid(kgid):
 def getotlbyotlname():
     '''
     get ontology information by ontology name
-    根据本体名称获取本体信息
     ---
     parameters:
         -   name: name
@@ -790,25 +773,24 @@ def getotlbyotlname():
 def builde_onto_task():
     '''
     execute the task of predicting ontology
-    执行预测本体的任务
     ---
     parameters:
         -   name: ontology_id
             in: body
             required: true
-            description: 新建本体时第一次构建任务本体id为空，并返回临时本体id. 接下来构建任务都使用返回的临时本体id. 编辑本体时构建任务使用本体id
+            description: When creating an ontology, the ontology ID of the first build task is null, and the temporary ontology ID is returned. Next, all the build tasks use the returned temporary ontology ID. When editing an ontology, the build task uses the ontology ID.
             type: string
             example: 8
         -   name: file_list
             in: body
             required: true
-            description: 想要预测的文件
+            description: files you want to predict
             type: array
             example: [{"docid":"gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/3D77695B9C1641398944920D7B6D921E","name":"industry_info.csv","type":"file"}]
         -   name: postfix
             in: body
             required: true
-            description: 筛选条件. csv,json,""-->mysql/hive
+            description: 'Filter criteria: csv,json,""-->mysql/hive'
             type: string
             example: csv
         -   name: ds_id

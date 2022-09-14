@@ -38,8 +38,6 @@ jobs:
           script: |
             docker pull acr.aishu.cn/ad/kg-studio:base
             echo '{"copyright":"$(copyRight)","version":"$(mainTag)"}' | python -mjson.tool > ./src/version.json
-            redoc-cli bundle -o $(Build.Repository.LocalPath)/src/pages/SwaggerUI/openAPI.html $(Build.Repository.LocalPath)/swagger/openapi.yaml 
-            sed -i '/googleapis/d' $(Build.Repository.LocalPath)/src/pages/SwaggerUI/openAPI.html
             docker run -u root --network=host --rm -v $(Build.Repository.LocalPath):/root/studio $(harborUrl)/$(imageName):base /bin/sh -c 'cp -R  /root/node_modules/ /root/studio/ && npm run build'
             jest --coverage --coverageReporters=cobertura || echo
       - task: Bash@3

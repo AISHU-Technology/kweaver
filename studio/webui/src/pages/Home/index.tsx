@@ -26,7 +26,7 @@ const Home = () => {
           {
             icon: <IconFont type="icon-wendang-xianxing" />,
             text: intl.get('global.document'),
-            onClick: () => history.push('/home/system-config')
+            onClick: () => window.open('/apidoc')
           },
           {
             icon: <IconFont type="icon-setting" />,

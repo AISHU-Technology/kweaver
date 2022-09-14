@@ -5,7 +5,7 @@ type GraphDBItemVo struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
 	Type   string `json:"type"`
-	Count  int64  `json:"count"`
+	Count  int64  `json:"count"` //关联的图谱数量
 	OsName string `json:"osName"`
 	User   string `json:"user"`
 	TimeVo

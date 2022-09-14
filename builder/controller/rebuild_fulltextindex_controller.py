@@ -26,7 +26,6 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def rebuild_fulltextindex(KDB_name):
     '''
     submit rebuilding-fulltext-index task
-    提交重建索引任务
     ---
     parameters:
         -   name: KDB_name
@@ -108,7 +107,6 @@ def rebuild_fulltextindex(KDB_name):
 def rebuild_status(KDB_name):
     '''
     get status of rebuilding-fulltext-index task
-    获取重建索引状态
     ---
     parameters:
         -   name: KDB_name

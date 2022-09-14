@@ -27,6 +27,8 @@
     "officedocument",
     "openxmlformats",
     "iconfont",
-    "rabbitmq"
+    "rabbitmq",
+    "redoc",
+    "apidoc"
   ]
 }

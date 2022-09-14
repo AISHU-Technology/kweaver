@@ -111,6 +111,9 @@ const API = {
   graphCheckKmApInfo: `${baseBuilder}/graph/check_kmapinfo`,
   graphGetInfoExt: `${baseBuilder}/graph/graph_InfoExt/graphid`,
 
+  // swagger
+  swaggerDocGet: `${baseStudio}/swaggerDoc`,
+
   // thesaurus
   thesaurusList: `${baseBuilder}/lexicon/getall`,
   thesaurusInfoBasic: `${baseBuilder}/lexicon/getbyid`,

@@ -20,7 +20,9 @@ RUN ls -R . && \
 go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
 go env -w GOPRIVATE=gitlab.aishu.cn && \
+go get -u github.com/swaggo/swag/cmd/swag && \
 go mod tidy && \
+swag init && \
 go build -o studio ./main.go
 
 FROM acr.aishu.cn/public/ubuntu:21.10.20211119

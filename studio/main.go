@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/DeanThompson/ginpprof"
 	"github.com/gin-gonic/gin"
 	_ "kw-studio/docs"
 	"kw-studio/global"
@@ -14,6 +15,13 @@ import (
 //go:generate go mod tidy
 //go:generate go mod download
 
+//go:generate mockgen -destination=./test/mock/swagger_mock.go -package=mock kw-studio/http Swagger
+
+// @title KWeaver API
+// @version 1.0
+// @description 欢迎使用KWeaver 1.0 OpenAPI
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	//1.初始化配置文件和日志
 	global.Config = initialize.Config("./config.yaml", "/etc/studio/kwconfig.yaml")
@@ -22,10 +30,15 @@ func main() {
 	global.Redis = initialize.Redis()
 	//3.初始化gorm
 	global.DB = initialize.DB()
-	//4.升级
+	//4.初始化httpservice
+	initialize.HttpService()
+	//5.升级
 	upgrade.Upgrade()
-	//5.初始化路由
+	//6.初始化路由
 	router := initialize.Router()
+	// automatically add routers for net/http/pprof
+	// e.g. /debug/pprof, /debug/pprof/heap, etc.
+	ginpprof.Wrap(router)
 	webui.AddRoutes(router)
 
 	switch global.Config.Server.Mode {

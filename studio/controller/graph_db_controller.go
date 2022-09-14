@@ -19,40 +19,74 @@ type GraphDBController struct {
 }
 
 // GetGraphDBList
-// @Summary 根据page和size获取存储记录及存储记录中的谱图
-// @Description 根据page和size获取存储记录及存储记录中的谱图
+// @Summary Get storage configurations and graphs in storage configurations according to page and size
+// @Description Get storage configurations and graphs in storage configurations according to page and size
 // @Tags Studio
-// @Param page query int 1 "分页号"
-// @Param size query int 0 "每页数量"
-// @Param name query string orientdb_name "记录名称"
-// @Param type query string orientdb "配置类型"
-// @Param orderField query string created "排序字段"
-// @Param order query string ASC "排序顺序"
-// @Router /api/studio/v1/opensearch/list [get]
+// @Param page query int 1 "Page number"
+// @Param size query int 0 "Quantity per page"
+// @Param name query string orientdb_name "Configuration name"
+// @Param type query string orientdb "Configuration type"
+// @Param orderField query string created "Order field"
+// @Param order query string ASC "Order type"
+// @Router /api/studio/v1/graphdb/list [get]
 // @Accept  x-www-form-urlencoded
 // @Produce json
-// @Success 200 {object} vo.ListVo  "{"total": 10, "data": [{"id": 1, "name": "test_nebula", "type": "nebula", "count": 1, "osName": "opensearch", "user": "root", "created": 102223243, "updated": 1232343243}]}"
-// @Failure 500 "{"ErrorCode": "Studio.GraphDB.GraphDBRecordNotFoundError", "Description": "Data source record does not exist", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}"
-// @Failure 400 "{"ErrorCode": "Studio.Common.ParameterError", "Description": "Parameter error", ""Solution": "", "ErrorDetails": [], "ErrorLink": ""}"
+// @Success 200 {object} vo.ListVo  "Storage configuration list"
+// @Failure 500 {object} kw_errors.Error "Server internal error"
+// @Failure 400 {object} kw_errors.Error "Parameter error"
 func (controller *GraphDBController) GetGraphDBList(c *gin.Context) {
 	condition := &vo.GraphListSearchCondition{}
 	kw_errors.Try(c.ShouldBind(condition)).Throw(kw_errors.ParameterError)
 	response.Ok(c, controller.GraphDBService.GetGraphDBList(condition))
 }
 
-// GetGraphDBInfoById 根据id查询存储配置信息
+// GetGraphDBInfoById
+// @Summary Query storage configuration information based on id
+// @Description Query storage configuration information based on id
+// @Tags Studio
+// @Param id query int 1 "Storage configuration id"
+// @Router /api/studio/v1/graphdb [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} vo.GraphDBVo "Store configuration information"
+// @Failure 500 {object} kw_errors.Error "Server internal error"
+// @Failure 400 {object} kw_errors.Error "Parameter error"
 func (controller *GraphDBController) GetGraphDBInfoById(c *gin.Context) {
 	idVo := &vo.IdVo{}
 	kw_errors.Try(c.ShouldBind(idVo)).Throw(kw_errors.ParameterError)
 	response.Ok(c, controller.GraphDBService.GetGraphDBInfoById(idVo.ID))
 }
 
+// GetGraphInfoByGraphDBId
+// @Summary Query the associated graph based on the storage configuration id
+// @Description Query the associated graph based on the storage configuration id
+// @Tags Studio
+// @Param page query int 1 "Page number"
+// @Param size query int 0 "Quantity per page"
+// @Param id query int 1 "Storage configuration id"
+// @Router /api/studio/v1/graphdb/graph/list [get]
+// @Accept  x-www-form-urlencoded
+// @Produce json
+// @Success 200 {object} vo.ListVo  "Associated graph information"
+// @Failure 500 {object} kw_errors.Error "Server internal error"
+// @Failure 400 {object} kw_errors.Error "Parameter error"
 func (controller *GraphDBController) GetGraphInfoByGraphDBId(c *gin.Context) {
 	condition := &vo.GraphSearchCondition{}
 	kw_errors.Try(c.ShouldBind(condition)).Throw(kw_errors.ParameterError)
 	response.Ok(c, controller.GraphDBService.GetGraphInfoByGraphDBId(condition))
 }
 
+// AddGraphDB
+// @Summary Add storage configuration
+// @Description Add storage configuration
+// @Tags Studio
+// @Param graphDBVo body vo.GraphDBVo true "Storage configuration parameters"
+// @Router /api/studio/v1/graphdb/add [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {number} number "Added storage configuration id"
+// @Failure 500 {object} kw_errors.Error "Server internal error"
+// @Failure 400 {object} kw_errors.Error "Parameter error"
 func (controller *GraphDBController) AddGraphDB(c *gin.Context) {
 	graphDBVo := &vo.GraphDBVo{}
 	kw_errors.Try(c.ShouldBind(graphDBVo)).Throw(kw_errors.ParameterError)
@@ -62,6 +96,17 @@ func (controller *GraphDBController) AddGraphDB(c *gin.Context) {
 	response.Ok(c, controller.GraphDBService.AddGraphDB(graphDBVo))
 }
 
+// DeleteGraphDBById
+// @Summary Delete storage configuration based on id
+// @Description Delete storage configuration based on id
+// @Tags Studio
+// @Param id body vo.IdVo true "Storage configuration id"
+// @Router /api/studio/v1/graphdb/delete [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {string} string "ok"
+// @Failure 500 {object} kw_errors.Error "Server internal error"
+// @Failure 400 {object} kw_errors.Error "Parameter error"
 func (controller *GraphDBController) DeleteGraphDBById(c *gin.Context) {
 	idVo := &vo.IdVo{}
 	kw_errors.Try(c.ShouldBind(idVo)).Throw(kw_errors.ParameterError)
@@ -69,6 +114,17 @@ func (controller *GraphDBController) DeleteGraphDBById(c *gin.Context) {
 	response.Ok(c)
 }
 
+// UpdateGraphDB
+// @Summary Update storage configuration based on id
+// @Description Update storage configuration based on id
+// @Tags Studio
+// @Param graphDBUpdateVo body vo.GraphDBUpdateVo true "Storage configuration parameters"
+// @Router /api/studio/v1/graphdb/update [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {string} string "ok"
+// @Failure 500 {object} kw_errors.Error "Server internal error"
+// @Failure 400 {object} kw_errors.Error "Parameter error"
 func (controller *GraphDBController) UpdateGraphDB(c *gin.Context) {
 	graphDBUpdateVo := &vo.GraphDBUpdateVo{}
 	kw_errors.Try(c.ShouldBind(graphDBUpdateVo)).Throw(kw_errors.ParameterError)
@@ -79,7 +135,17 @@ func (controller *GraphDBController) UpdateGraphDB(c *gin.Context) {
 	response.Ok(c)
 }
 
-// TestGraphDBConfig 测试存储配置信息是否正确
+// TestGraphDBConfig
+// @Summary Test whether the storage configuration information is correct
+// @Description Test whether the storage configuration information is correct
+// @Tags Studio
+// @Param testVo body vo.ConnTestVo true "Storage configuration information to be tested"
+// @Router /api/studio/v1/graphdb/test [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {string} string "ok"
+// @Failure 500 {object} kw_errors.Error "Server internal error"
+// @Failure 400 {object} kw_errors.Error "Parameter error"
 func (controller *GraphDBController) TestGraphDBConfig(c *gin.Context) {
 	vo := &vo.ConnTestVo{}
 	kw_errors.Try(c.ShouldBind(vo)).Throw(kw_errors.ParameterError)

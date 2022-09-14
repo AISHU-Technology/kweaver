@@ -5,4 +5,5 @@ type Config struct {
 	Mariadb `mapstructure:"mariadb"`
 	Redis   `mapstructure:"redis"`
 	Zap     `mapstructure:"zap"`
+	Swagger `mapstructure:"swagger"`
 }

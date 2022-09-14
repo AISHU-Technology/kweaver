@@ -47,14 +47,14 @@ def auth():
             in: query
             required: true
             description: data source ip
-            type: integer
+            type: string
             example: 192.168.1.1
         -   name: ds_auth
             in: query
             required: true
-            description: Data source id, new data source is empty
+            description: Data source id, Empty when adding data source
             type: integer
-            example: " "
+            example:
         -   name: ds_port
             in: query
             required: true
@@ -159,7 +159,7 @@ def connectTest():
                in:  body
                required: true
                description: Data source id
-               type: string
+               type: integer
                example: 1
            -   name: ds_port
                in:  body
@@ -246,10 +246,10 @@ def dsopt():
                   type: string
                   example: ascend
               -   name: knw_id
-                  in:  body
+                  in:  query
                   required: true
                   description: knowledge network id
-                  type: string
+                  type: integer
                   example: 1
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -279,43 +279,43 @@ def dsopt_post():
            required: true
            description: Data source name
            type: string
-           example: test_rabbitmq
+           example: test_mysql
        -   name: data_source
            in:  body
            required: true
            description: mysql/as/as7/hive/rabbitmq
            type: string
-           example: rabbitmq
+           example: mysql
        -   name: ds_address
            in:  body
            required: true
            description: Data source url or ip
            type: string
-           example: 192.168.1.1
+           example: 10.4.69.47
        -   name: ds_port
            in:  body
            required: true
            description: Data source port
            type: integer
-           example: 5672
+           example: 3306
        -   name: ds_user
            in:  body
            required: true
            description: Data source user
            type: string
-           example: admin
+           example: root
        -   name: ds_password
            in:  body
            required: true
-           description: Data source password
+           description: Data source password,base64 code
            type: string
-           example: test123456
+           example: ZWlzb28uY29tMTIz
        -   name: ds_path
            in:  body
            required: true
            description: database or path
            type: string
-           example: " "
+           example: anydata
        -   name: extract_type
            in:  body
            required: true
@@ -327,13 +327,13 @@ def dsopt_post():
            required: true
            description: When data_source is not rabbitmq, pass ""
            type: string
-           example: test
+           example:
        -   name: queue
            in:  body
            required: true
            description: When data_source is not rabbitmq, pass ""
            type: string
-           example: test1
+           example:
        -   name: dataType
            in:  body
            required: true
@@ -344,8 +344,8 @@ def dsopt_post():
            in:  body
            required: true
            description: When data_source is not rabbitmq, pass ""
-           type: object
-           example: {"name": "xiaoming"}
+           type: string
+           example:
        -   name: knw_id
            in:  body
            required: true
@@ -371,10 +371,10 @@ def ds(dsid):
     ---
     parameters:
        -   name: dsid
-           in: query
+           in: path
            required: true
            description: Data source id
-           type: string
+           type: integer
            example: 1
        -   name: dsname
            in: body
@@ -417,12 +417,12 @@ def ds(dsid):
            required: true
            description: database or path
            type: string
-           example: " "
+           example: ""
        -   name: extract_type
            in:  body
            required: true
            description: extract type
-           type: integer
+           type: string
            example: standardExtraction
        -   name: vhost
            in:  body
@@ -446,7 +446,7 @@ def ds(dsid):
            in:  body
            required: true
            description: When data_source is not rabbitmq, pass ""
-           type: object
+           type: string
            example: {"name": "xiaoming"}
     '''
     # update datasource
@@ -470,7 +470,7 @@ def delds():
            in: body
            required: true
            description: Data source ids
-           type: array
+           type: string
            example: [1,2,3,4]
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -513,6 +513,12 @@ def getbydsname():
            description: ascend is in reverse chronological order,descend is opposite
            type: string
            example: ascend
+       -   name: knw_id
+           in:  query
+           required: true
+           description: knowledge network id
+           type: integer
+           example: 1
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
@@ -545,7 +551,7 @@ def get_acctoken_by_id(ds_id):
     ---
     parameters:
        -   name: ds_id
-           in: query
+           in: path
            required: true
            description: Data source id
            type: string
@@ -623,7 +629,7 @@ def ds_copy(ds_id):
                in:  body
                required: true
                description: extract type
-               type: integer
+               type: string
                example: standardExtraction
            -   name: vhost
                in:  body
@@ -653,7 +659,7 @@ def ds_copy(ds_id):
                in:  body
                required: true
                description: knowledge network id
-               type: inte
+               type: integer
                example: 1
 
         '''

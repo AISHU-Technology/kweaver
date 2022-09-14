@@ -26,7 +26,6 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def save_knowledgenetwork():
     '''
     add a knowledge network
-    新建知识网络
     ---
     parameters:
         -   name: knw_name
@@ -70,7 +69,6 @@ def save_knowledgenetwork():
 def getAllKnw():
     '''
     paging query knowledge network
-    分页查询全部知识网络
     ---
     parameters:
         -   name: page
@@ -86,12 +84,12 @@ def getAllKnw():
         -   name: order
             in: query
             required: true
-            description: desc asc按时间升序降序
+            description: desc asc (ascending and descending in time)
             type: string
         -   name: rule
             in: query
             required: true
-            description: create按创建时间、update按更新时间
+            description: 'create: by creation time, update: by update time'
             type: string
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -115,7 +113,6 @@ def getAllKnw():
 def getKnwByName():
     '''
     paging query knowledge network by name
-    按名称分页查询全部知识网络
     ---
     parameters:
         -   name: knw_name
@@ -136,12 +133,12 @@ def getKnwByName():
         -   name: order
             in: query
             required: true
-            description: desc asc按时间升序降序
+            description: desc asc (ascending and descending in time)
             type: string
         -   name: rule
             in: query
             required: true
-            description: create按创建时间、update按更新时间
+            description: 'create: by creation time, update: by update time'
             type: string
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -165,7 +162,6 @@ def getKnwByName():
 def editKnw():
     '''
     edit knowledge network
-    编辑知识网络
     ---
     parameters:
         -   name: knw_id
@@ -212,7 +208,6 @@ def editKnw():
 def deleteKnw():
     '''
     delete knowledge network
-    删除知识网络
     ---
     parameters:
         -   name: knw_id
@@ -240,7 +235,6 @@ def deleteKnw():
 def getGraph():
     '''
     query knowledge graph by knowledge network id
-    根据知识网络ID查询知识图谱
     ---
     parameters:
         -   name: knw_id
@@ -261,22 +255,22 @@ def getGraph():
         -   name: order
             in: query
             required: true
-            description: 只能为 desc（从新到旧） 或 asc（从旧到新）
+            description: Can only be desc (from new to old) or asc (from old to new)
             type: string
         -   name: name
             in: query
             required: true
-            description: 按照图谱名称模糊搜索，默认不填，返回所有数据
+            description: Fuzzy search according to the graph name, not filled in by default, all data will be returned
             type: string
         -   name: rule
             in: query
             required: true
-            description: create按照创建时间排序，update按照更新时间排序，name按照名字排序
+            description: 'create: sorted by creation time, update: sorted by update time, name: sorted by name'
             type: string
         -   name: upload_graph
             in: query
             required: false
-            description: 有效值true,false，默认为false，表示返回全部图谱，true表示只返回存储类型为nebula并且已经构建成功的图谱
+            description: The valid values are true and false. The default value is false, which means that all graphs are returned. True means that only graphs with the storage type of nebula and successfully constructed are returned
             type: boolean
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
