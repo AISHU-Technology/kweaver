@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="13px" viewBox="0 0 15 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 64 (93537) - https://sketch.com -->
+    <title>文件夹</title>
+    <desc>Created with Sketch.</desc>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="本体管理_配置-2" transform="translate(-1480.000000, -686.000000)">
+            <g id="文件" transform="translate(1464.000000, 592.000000)">
+                <g id="类别标题" transform="translate(0.000000, 75.000000)">
+                    <g id="文件夹" transform="translate(15.000000, 17.000000)">
+                        <rect id="矩形" x="0" y="0" width="16" height="16"></rect>
+                        <path d="M14.9979139,12 L1,12 L1,4 L13.956315,4 C14.5324294,4 15,4.44632545 15,4.99626268 L15,12 L14.9979126,12 L14.9979139,12 Z M9,4 C9,2.89498419 8.28418033,2 7.40038707,2 L1,2 L1,4 L9,4" id="形状" fill="#CE9F06" fill-rule="nonzero"></path>
+                        <polygon id="路径" fill="#FFFFFF" fill-rule="nonzero" points="2.90416666 12.0082204 2.90416666 5.00822037 12.9041667 5.00822037 12.9041667 12.0082204"></polygon>
+                        <path d="M15.0396258,13.1515581 L15.0396258,6.93634001 C15.0396258,6.49539602 14.6471341,6.13653236 14.1648797,6.13653236 L1.91436436,6.13653236 C1.43211003,6.13653236 1.03962582,6.49539602 1.03962582,6.93634001 L1.03962582,13.1496505 C1.03962582,13.6936732 1.52188015,14.1365324 2.11895816,14.1365324 L13.9623814,14.1365324 C14.5573715,14.1384351 15.0396258,13.6955822 15.0396258,13.1515595 L15.0396258,13.1515581 Z" id="路径" fill="#FFCD2C" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

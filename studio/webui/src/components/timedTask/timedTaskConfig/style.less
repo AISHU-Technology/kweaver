@@ -1,0 +1,74 @@
+.time-task-config {
+  margin: -24px 0 0 0;
+
+  .tent {
+    display: flex;
+    height: 580px;
+
+    .tab {
+      width: 240px;
+      border-right: 1px solid var(--ad-line-color);
+      margin: 0 0 0 -24px;
+      padding: 20px 0 0 0;
+
+      .line {
+        width: 239px;
+        height: 40px;
+        padding: 9px 0 9px 20px;
+        cursor: pointer;
+      }
+
+      .line:hover {
+        background: var(--ad-hover-bg-color);
+      }
+
+      .line-selected {
+        background: var(--ad-select-bg-color) !important;
+      }
+    }
+
+    .content {
+      padding: 24px;
+      height: 520px;
+
+      .model {
+        .title {
+          color: var(--ad-heading-color);
+          font-weight: 500;
+          font-size: 16px;
+        }
+
+        .update-type {
+          .radio-box {
+            margin: 14px 0 0 0;
+
+            .name {
+              color: var(--ad-heading-color);
+            }
+
+            .des {
+              color: var(--ad-text-color-secondary);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .bottom-button {
+    border-top: 1px solid var(--ad-line-color);
+    text-align: right;
+    margin: 0 -24px 0 -24px;
+    padding: 16px 24px 0px 0px;
+
+    .button-style {
+      width: 80px;
+      height: 36px;
+      border-radius: 3px;
+    }
+
+    .cancel {
+      margin: 0 8px 0 0;
+    }
+  }
+}

@@ -1,0 +1,10 @@
+# dependencies
+**/node_modules/**
+
+# public
+**/public/**
+
+# scripts
+**/scripts/**
+
+/src/assets/*.js

@@ -1,0 +1,15 @@
+node('kg_aishu_cn'){
+    stage('ut') {
+        dir('leo') {
+            sh "mkdir -p ./leo"
+            git credentialsId: 'f929d963-3e7e-45c9-9530-e3bc6bfe5b82', url: 'https://gitlab.aishu.cn/anydata-rnd/leo.git', branch: "${BRANCH_NAME}"
+            sh "gocov test ./ | gocov-xml > coverage.xml"
+        }
+    }
+    stage('report') {
+        dir('leo') {
+           // cobertura coberturaReportFile: 'coverage.xml', enableNewApi: true, lineCoverageTargets: '80, 60, 70'
+           cobertura coberturaReportFile: 'coverage.xml', lineCoverageTargets: '80, 60, 70'
+        }
+    }
+}

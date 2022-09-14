@@ -1,0 +1,184 @@
+.info-extract-box {
+  @other-height: 54px+24px+100px; // 页眉 + padding + 页脚
+  @min-screen-height: 768px; // 文档中声明的最小分辨率1366 * 768
+  @animation-time: 300ms; // 定义删除动画的执行事件
+
+  position: relative;
+  height: calc(100vh - @other-height);
+  min-height: calc(@min-screen-height - @other-height);
+  max-height: calc(1080px - @other-height);
+  background-color: #fff;
+
+  .hide {
+    display: none;
+  }
+
+  // 添加文件的loading
+  .extract-add-loading {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 54px;
+    width: 100%;
+    height: calc(100vh - 54px);
+    background-color: rgba(240, 244, 250, 0.6);
+
+    .icon {
+      font-size: 40px;
+      color: var(--ad-primary-color);
+      position: absolute;
+      left: 48%;
+      top: 40%;
+    }
+  }
+}
+
+/**
+*@description 内容区域样式
+*/
+.info-extract-content {
+  @side-width: 456px; // 左右栏定宽456px
+  @footer-btn-height: 64px; // 页脚按钮栏高度
+
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  // 数据源为空时数据源看板样式
+  .source-show-board-null {
+    width: 70%;
+    padding: 20px 30px 0;
+    background: #ffffff;
+
+    .show-board-title {
+      padding-bottom: 13px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--ad-line-color);
+      line-height: 20px;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: PingFangSC-Medium;
+    }
+
+    .show-board-content-null {
+      .source-show-board .show-board-content(); // 复用看板内容样式
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .no-info-box {
+        text-align: center;
+
+        .no-info-img {
+          max-width: 420px;
+        }
+
+        .no-info-text {
+          height: 22px;
+          margin-top: 8px;
+          font-size: 14px;
+          color: var(--ad-text-color);
+          line-height: 22px;
+        }
+      }
+    }
+  }
+
+  // 数据源展示看板
+  .source-show-board {
+    @word-width-CN: 112px;
+    @word-width-EN: 94px;
+    width: 40%;
+    padding: 20px 30px 0;
+    background: #ffffff;
+
+    .show-board-title {
+      padding-bottom: 13px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--ad-line-color);
+      line-height: 20px;
+      font-weight: 500;
+
+      .word {
+        display: inline-block;
+        width: @word-width-CN;
+        font-size: 16px;
+        white-space: nowrap;
+        vertical-align: top;
+      }
+
+      .title-line {
+        width: 18px;
+        padding: 0 4px;
+      }
+
+      .show-board-file-name {
+        height: 20px;
+        display: inline-block;
+        width: calc(100% - @word-width-CN - 18px);
+        vertical-align: top;
+        line-height: 21px;
+      }
+    }
+
+    // 看板英文
+    .show-board-title-EN {
+      padding-bottom: 13px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--ad-line-color);
+      line-height: 20px;
+      font-size: 14px;
+      font-weight: 500;
+
+      .word {
+        display: inline-block;
+        width: @word-width-EN;
+        font-size: 16px;
+        white-space: nowrap;
+        vertical-align: top;
+      }
+
+      .title-line {
+        width: 18px;
+        padding: 0 4px;
+      }
+
+      .show-board-file-name {
+        height: 20px;
+        display: inline-block;
+        width: calc(100% - @word-width-EN - 18px);
+        vertical-align: top;
+        line-height: 21px;
+      }
+    }
+
+    .show-board-content {
+      @show-board-title-height: 54px; // 看板标题盒子高度
+
+      height: calc(100% - @show-board-title-height - 5px);
+
+      .show-data-box {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
+
+      // 预览loading
+      .icon {
+        position: absolute;
+        left: 48%;
+        top: 40%;
+        font-size: 40px;
+        color: var(--ad-primary-color);
+      }
+    }
+  }
+
+  // 兼容safari禁用字体颜色
+  .ant-input:disabled {
+    -webkit-text-fill-color: #999;
+    color: #999;
+    background: #f9f9fa;
+  }
+}
