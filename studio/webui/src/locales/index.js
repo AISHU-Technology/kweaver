@@ -86,7 +86,7 @@ const en_US = {
   ...search_en,
   ...knowledgeNetwork_en,
   ...graphDetail_en,
-  ...thesaurus_zh
+  ...thesaurus_en
 };
 
 const locales = {

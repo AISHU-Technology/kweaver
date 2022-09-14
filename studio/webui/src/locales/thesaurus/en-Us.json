@@ -71,6 +71,7 @@
     "importError": "Words import failed",
     "importAgain": "Button import again",
     "editwordsError": "Data in thesaurus is being imported, please try again later",
-    "noLabels": "[No label]"
+    "noLabels": "[No label]",
+    "export": "Export"
   }
 }
