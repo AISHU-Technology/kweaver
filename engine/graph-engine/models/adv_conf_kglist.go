@@ -1,4 +1,3 @@
-// @Author : yuan.qi@aishu.cn
 // @File : adv_conf_.go
 // @Time : 2021/4/6
 

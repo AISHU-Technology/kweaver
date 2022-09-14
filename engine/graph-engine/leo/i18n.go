@@ -1,6 +1,5 @@
 // Package leo 提供了 Web 框架使用的工具集
 // - 描述：当前文件提供了 i18n 的工具包
-// - 作者：陈骁 (xavier.chen@eisoo.com)
 // - 时间：2020-1-4
 package leo
 

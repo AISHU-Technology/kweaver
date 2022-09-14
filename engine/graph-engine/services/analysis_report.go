@@ -1,6 +1,5 @@
 // Package services 为接口的控制逻辑
 // - 描述：分析报告 入口
-// - 作者：原琦 (yuan.qi@aishu.cn)
 // - 时间：2021-1-21
 
 package services
