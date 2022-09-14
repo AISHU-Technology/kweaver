@@ -5,6 +5,7 @@
 import React, { memo, useState, useEffect, useRef, useReducer, useCallback } from 'react';
 import { Button, Input, Tabs, ConfigProvider, Modal, message } from 'antd';
 import { CloseOutlined, LeftOutlined } from '@ant-design/icons';
+import classNames from 'classnames';
 import intl from 'react-intl-universal';
 import servicesSearchConfig from '@/services/searchConfig';
 import servicesExplore from '@/services/explore';
@@ -475,13 +476,13 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
       />
 
       <div
-        className={`content-flex-wrap ${
-          selfState.initLoading || (selfState.isNotGraph && selfState.isNotConfig) ? 'hide' : ''
-        }`}
+        className={classNames('content-flex-wrap', {
+          hide: selfState.initLoading || (selfState.isNotGraph && selfState.isNotConfig)
+        })}
       >
         <div className="left-tabs">
           <Tabs
-            className={editVisible ? 'hide' : ''}
+            className={classNames({ hide: editVisible })}
             centered
             animated={false}
             activeKey={tabKey}
@@ -540,7 +541,7 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
             </div>
           )}
 
-          <div className={`search-header ${isHideRightUI() && 'hide'}`}>
+          <div className={classNames('search-header', { hide: isHideRightUI() })}>
             <Input
               allowClear
               value={selfState.inputValue}
@@ -556,7 +557,7 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
             </ConfigProvider>
           </div>
 
-          <div className={`result-main ${isHideRightUI() && 'hide'}`}>
+          <div className={classNames('result-main', { hide: isHideRightUI() })}>
             {/* 结果界面 */}
             {!!resData.number && (
               <SearchResult
@@ -587,7 +588,7 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
             )}
 
             {/* 搜索loading */}
-            <div className={`loading-mask ${selfState.loading && 'spinning'}`}>
+            <div className={classNames('loading-mask', { spinning: selfState.loading })}>
               <AdSpin />
             </div>
           </div>
@@ -595,7 +596,7 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
       </div>
 
       {/* 分析报告loading */}
-      <div className={`loading-mask ${selfState.reportLoading && 'spinning'}`}>
+      <div className={classNames('loading-mask', { spinning: selfState.reportLoading })}>
         <AdSpin />
       </div>
 
@@ -619,7 +620,7 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
       </Modal>
 
       {/* 探索式分析 */}
-      <div className={`kg-search-explore-fixed ${selfState.canvasVisible && 'show-explore'}`}>
+      <div className={classNames('kg-search-explore-fixed', { 'show-explore': selfState.canvasVisible })}>
         <div className="explore-canvas-main">
           <div className="d-header">
             <div className="heder-wrap">
@@ -644,7 +645,6 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
                 selectGraph={exploreGraph}
                 selectedGraph={exploreGraph}
                 updateGraphData={updateGraphData}
-                // reExplore={() => setReExploreVisible(true)}
               />
             </div>
           </div>

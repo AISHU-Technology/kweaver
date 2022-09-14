@@ -216,7 +216,7 @@ class GraphDatabase extends Component {
     {
       title: intl.get('userManagement.createTime'),
       dataIndex: 'created',
-      width: 250,
+      width: 220,
       render: text => timeFormat.timeFormat(text),
       sorter: true,
       sortDirections: ['ascend', 'descend', 'ascend']
@@ -224,7 +224,7 @@ class GraphDatabase extends Component {
     {
       title: intl.get('graphList.finalOperatorTime'),
       dataIndex: 'updated',
-      width: 230,
+      width: 220,
       render: text => timeFormat.timeFormat(text),
       sorter: true,
       defaultSortOrder: 'descend',
@@ -233,7 +233,7 @@ class GraphDatabase extends Component {
     {
       title: intl.get('configSys.op'),
       fixed: 'right',
-      width: 110,
+      width: 160,
       render: (text, record) => {
         if (record.name === '内置OrientDB' || record.name === '内置Nebula') return '- -';
         return (

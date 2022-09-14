@@ -27,7 +27,13 @@ const ICON_ARRAY = [
     icon: <IconFont type="icon-data" style={{ fontSize: 16, color: 'rgba(0, 0, 0, 0.85)' }} />,
     intlText: 'global.dataManage',
     url: '/knowledge/source'
-  }
+  },
+  {
+    id: 4,
+    icon: <IconFont type="icon-ciku" style={{ fontSize: 16, color: 'rgba(0, 0, 0, 0.85)' }} />,
+    intlText: 'global.thesaurusManagement',
+    url: '/knowledge/thesaurus'
+  },
 ];
 
 type SidebarType = {
