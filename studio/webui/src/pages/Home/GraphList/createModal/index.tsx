@@ -65,7 +65,7 @@ const ModalContent = memo((props: ModalContentType) => {
             }
             if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
             if (ErrorCode === 'Builder.service.knw_service.knwService.editKnw.NameRepeat') {
-              form.setFields([{ name: 'name', errors: [intl.get('graphList.repeatName')] }]);
+              return form.setFields([{ name: 'name', errors: [intl.get('graphList.repeatName')] }]);
             }
           }
 
@@ -77,8 +77,9 @@ const ModalContent = memo((props: ModalContentType) => {
               history.push(`/knowledge/network?id=${result?.data}`);
             }
             if (ERROR_CODE[result?.ErrorCode]) message.error(intl.get(ERROR_CODE[result?.ErrorCode]));
+
             if (result?.ErrorCode === 'Builder.service.knw_service.knwService.knowledgeNetwork_save.NameRepeat') {
-              form.setFields([{ name: 'name', errors: [intl.get('graphList.repeatName')] }]);
+              return form.setFields([{ name: 'name', errors: [intl.get('graphList.repeatName')] }]);
             }
           }
         } catch (error) {
@@ -86,7 +87,7 @@ const ModalContent = memo((props: ModalContentType) => {
         }
         onCloseCreateOrEdit();
       })
-      .catch(err => {});
+      .catch(err => { });
   };
 
   // 选择显色回调函数
