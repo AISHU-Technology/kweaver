@@ -20,7 +20,7 @@ func MakeKGHandler() gin.HandlerFunc {
 // KGGqlHandler 创建 GraphQL handler 带入HTTP相关属性
 // @Summary graphql search
 // @Description graphql search
-// @Tags Engine
+// @Tags CEngine
 // Param body body gql.KGInfoQuery true "graphql search statement"
 // @Router /api/engine/v1/kg/ [post]
 // @Accept  json

@@ -15,7 +15,7 @@ type ReqExploreRelationArgs struct {
 // ExploreRelationHandler
 // @Summary Get relationship
 // @Description Get the direct relationship between two entities
-// @Tags Engine
+// @Tags CEngine
 // Param id query int true "knowledge graph id"
 // Param rids query []string true "IDs of the two entities, length=2"
 // @Param body body ReqExploreRelationArgs true "knowledge graph id and entity IDs"

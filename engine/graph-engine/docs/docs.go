@@ -29,7 +29,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "get configs",
                 "parameters": [
@@ -111,7 +111,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "add configs",
                 "parameters": [
@@ -155,7 +155,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "delete configs",
                 "parameters": [
@@ -201,7 +201,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "get config ids",
                 "parameters": [
@@ -239,7 +239,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "get config info",
                 "parameters": [
@@ -283,7 +283,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "get kglist",
                 "parameters": [
@@ -327,7 +327,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "update configs",
                 "parameters": [
@@ -373,7 +373,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "advanced search test",
                 "parameters": [
@@ -419,7 +419,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "advanced search",
                 "parameters": [
@@ -491,7 +491,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "Document analysis report",
                 "parameters": [
@@ -542,7 +542,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "graphql search",
                 "parameters": [
@@ -588,7 +588,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "expand vertexes",
                 "parameters": [
@@ -679,7 +679,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "Get relationship",
                 "parameters": [
@@ -719,7 +719,7 @@ const docTemplate = `{
             "get": {
                 "description": "Health detection",
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "alive",
                 "responses": {
@@ -733,7 +733,7 @@ const docTemplate = `{
             "get": {
                 "description": "Health detection",
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "ready",
                 "responses": {
@@ -753,7 +753,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "graphql search",
                 "responses": {
@@ -782,7 +782,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "attributes and types",
                 "parameters": [
@@ -828,7 +828,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "Orientdb sql API",
                 "parameters": [

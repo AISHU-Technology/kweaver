@@ -19,7 +19,7 @@ type ReqAnalysisArgs struct {
 // AnalysisHandler
 // @Summary Document analysis report
 // @Description Document analysis report
-// @Tags Engine
+// @Tags CEngine
 // @Param id query int true "knowledge graph id"
 // @Param rid query string true "entity id"
 // @Router /api/engine/v1/analysis [get]
