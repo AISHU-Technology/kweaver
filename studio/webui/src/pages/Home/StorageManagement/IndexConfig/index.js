@@ -158,17 +158,16 @@ class IndexConfig extends Component {
     {
       title: intl.get('configSys.storageName'),
       dataIndex: 'name',
-      ellipsis: true,
-      width: 200
+      ellipsis: true
     },
     {
       title: intl.get('configSys.username'),
-      dataIndex: 'user',
-      width: 190
+      dataIndex: 'user'
     },
     {
       title: intl.get('userManagement.createTime'),
       dataIndex: 'created',
+      width: 300,
       sorter: true,
       sortDirections: ['ascend', 'descend', 'ascend'],
       render: text => {
@@ -178,6 +177,7 @@ class IndexConfig extends Component {
     {
       title: intl.get('graphList.finalOperatorTime'),
       dataIndex: 'updated',
+      width: 300,
       sorter: true,
       defaultSortOrder: 'descend',
       sortDirections: ['ascend', 'descend', 'ascend'],
@@ -188,7 +188,7 @@ class IndexConfig extends Component {
     {
       title: intl.get('configSys.op'),
       fixed: 'right',
-      width: 110,
+      width: 160,
       render: (text, record) => {
         return record.name === '内置opensearch' ? (
           <span className="icon-sub">- -</span>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { LoadingOutlined } from '@ant-design/icons';
+import intl from 'react-intl-universal';
 import { RedocStandalone } from 'redoc';
 import servicesSwagger from '@/services/swagger';
 import failImg from '@/assets/images/LDAPServer.svg';
@@ -43,8 +44,8 @@ const SwaggerUI = () => {
       {!docData.paths && !loading && (
         <div className="swagger-doc-mask">
           <div className="ad-column-center ad-h-100">
-            <img src={failImg} alt="fail" />
-            <p>加载失败</p>
+            <img src={failImg} alt="fail" className="fail-img" />
+            <p>{intl.get('global.loadFail')}</p>
           </div>
         </div>
       )}

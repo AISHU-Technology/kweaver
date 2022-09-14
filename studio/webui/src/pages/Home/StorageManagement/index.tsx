@@ -12,12 +12,12 @@ import IndexConfig from './IndexConfig';
 
 const SOURCE = [
   {
-    label: '系统配置',
+    label: intl.get('global.systemConfig'),
     key: 'system',
     icon: <IconFont type="icon-xitongpeizhi" />,
     children: [
       {
-        label: '存储管理',
+        label: intl.get('global.storageManage'),
         key: '/home/system-config',
         bindRoute: true
       }
@@ -36,8 +36,8 @@ const StorageManagement = () => {
   return (
     <div className="storageManagementRoot">
       <Layout sidebar={sidebar} isHeaderHide={true} mainStyle={{ padding: 0 }}>
-        <div className="ad-p-5 ad-bg-white" style={{ height: '100%' }}>
-          <Format.Title className="ad-mb-2">存储管理</Format.Title>
+        <div className="ad-p-6 ad-bg-white" style={{ height: '100%' }}>
+          <Format.Title className="ad-mb-2">{intl.get('global.storageManage')}</Format.Title>
           <Tabs defaultActiveKey="index" activeKey={tabsKey} onChange={callback}>
             <Tabs.TabPane key="index" tab={intl.get('configSys.indexConfig')}>
               <IndexConfig tabsKey={tabsKey} />
