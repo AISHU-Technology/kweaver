@@ -1,7 +1,6 @@
 package leo
 
 // - 描述：token类
-// - 作者：alex
 // - 时间：2020-5-30
 
 import (

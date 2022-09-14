@@ -1,4 +1,3 @@
-// @Author : yuan.qi@aishu.cn
 // @File : check_health.go
 // @Time : 2021/4/1
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
 # @Time : 2022/5/27 14:58 
-# @Author : liqianlan
+
 
 
 def validate(mentions, mention):

@@ -1,4 +1,3 @@
-// @Author : yuan.qi@aishu.cn
 // @File : adv_search_config.go
 // @Time : 2021/3/13
 

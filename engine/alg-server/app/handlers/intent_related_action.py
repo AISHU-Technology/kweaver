@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
 # @Time : 2022/5/20 13:22 
-# @Author : liqianlan
+
 from ..utils.intent import Intent
 from .graph_search import ad_search
 
