@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
+import Cookie from 'js-cookie';
 import intl from 'react-intl-universal';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import { GlobalOutlined } from '@ant-design/icons';
 
 import { getParam } from '@/utils/handleFunction';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
@@ -67,27 +69,40 @@ const KnowledgeNetwork = () => {
   const header = {
     logo: headLogo,
     operation: [
-      { float: 'left', text: '工作台', onClick: () => history.push('/home/graph-list') },
+      { float: 'left', text: intl.get('global.studio'), onClick: () => history.push('/home/graph-list') },
       { float: 'left', component: () => <Breadcrumb kgData={selectedKnowledge} /> },
       {
         icon: <IconFont type="icon-wendang-xianxing" />,
-        text: 'API文档',
+        text: intl.get('global.document'),
         onClick: () => history.push('/home/system-config')
       },
-      { icon: <IconFont type="icon-setting" />, text: '系统配置', onClick: () => history.push('/home/system-config') }
+      {
+        icon: <IconFont type="icon-setting" />,
+        text: intl.get('global.systemConfig'),
+        onClick: () => history.push('/home/system-config')
+      },
+      {
+        icon: <GlobalOutlined />,
+        text: intl.get('global.language'),
+        onClick: () => {
+          const language = Cookie.get('anyDataLang') || 'zh-CN';
+          Cookie.set('anyDataLang', language === 'zh-CN' ? 'en-US' : 'zh-CN', { expires: 365 });
+          window.location.reload();
+        }
+      }
     ]
   };
   const sidebar = {
     value: location.pathname,
     source: [
       {
-        label: '知识图谱',
+        label: intl.get('global.graph'),
         key: '/knowledge/network',
         icon: <IconFont type="icon-zhishitupu" />,
         onClick: () => history.push(`/knowledge/network?id=${currentId}`)
       },
       {
-        label: '认知引擎',
+        label: intl.get('global.cognitiveEngine'),
         key: 'knowledgeEngine',
         icon: <IconFont type="icon-renzhiyinqing" />,
         children: [
@@ -99,7 +114,7 @@ const KnowledgeNetwork = () => {
         ]
       },
       {
-        label: '数据源管理',
+        label: intl.get('global.dataManage'),
         key: '/knowledge/source',
         icon: <IconFont type="icon-shujuyuanguanli" />,
         onClick: () => history.push(`/knowledge/source?id=${currentId}`)

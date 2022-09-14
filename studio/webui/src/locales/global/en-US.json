@@ -1,13 +1,17 @@
 {
   "global": {
+    "language": "English",
+    "studio": "Studio",
     "kgNet": "Knowledge network",
     "upRecord": "Upload record",
     "userManage": "User management",
+    "document": "API Document",
     "systemConfig": "Settings",
     "cognitiveEngine": "Cognitive engine",
     "cognitiveSearch": "Cognitive search",
     "knowledgeSearch": "Knowledge Search",
     "dataManage": "Data",
+    "storageManage": "Storage",
     "ok": "OK",
     "cancel": "Cancel",
     "delete": "Delete",

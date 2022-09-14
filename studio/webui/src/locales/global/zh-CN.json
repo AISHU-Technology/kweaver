@@ -1,13 +1,17 @@
 {
   "global": {
+    "language": "中文",
+    "studio": "工作台",
     "kgNet": "知识网络",
     "upRecord": "上传记录",
     "userManage": "用户管理",
+    "document": "API文档",
     "systemConfig": "系统配置",
     "cognitiveEngine": "认知引擎",
     "cognitiveSearch": "认知搜索",
     "knowledgeSearch": "知识网络搜索",
-    "dataManage": "数据管理",
+    "dataManage": "数据源管理",
+    "storageManage": "存储管理",
     "ok": "确定",
     "cancel": "取消",
     "delete": "删除",
