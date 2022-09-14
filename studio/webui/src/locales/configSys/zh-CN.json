@@ -91,7 +91,7 @@
     "accountPass": "访问账户密码",
     "storageAddress": "存储地址",
     "linkTest": "测试连接",
-    "nameRepeat": "该存储位置名称已存在，请重新输入",
+    "nameRepeat": "名称已被系统占用，请重新输入",
     "codeRule": "名称仅支持中英文、数字及键盘上的特殊字符",
     "max50": "最多输入50字符",
     "saveSuccess": "保存成功",

@@ -91,7 +91,7 @@
     "accountPass": "Access password",
     "storageAddress": "Storage ip",
     "linkTest": "Test connection",
-    "nameRepeat": "This  storage location name already exists, please reenter",
+    "nameRepeat": "The name is occupied by the system，Please re-enter",
     "codeRule": "Only supported in Chinese, English, numbers and special characters on the keyboard",
     "max50": "Up to 50 characters",
     "saveSuccess": "Saved successfully!",

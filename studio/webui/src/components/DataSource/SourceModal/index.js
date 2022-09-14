@@ -259,13 +259,13 @@ const ModalContent = props => {
           if (!curCode) return;
 
           switch (true) {
-            case curCode === '500403' || curCode === 'Manager.SoftAuth.UnknownServiceRecordError':
+            case curCode === '500403' || curCode === 'Studio.SoftAuth.UnknownServiceRecordError':
               message.error(intl.get('datamanagement.notAuth'));
               break;
             case curCode === 500002 || curCode === 'Builder.service.dsm_Service.DsmService.addds.SameNameError':
               message.error(intl.get('datamanagement.alreadyUsed'));
               break;
-            case curCode === 'Manager.Graph.AddDefaultPermissionError':
+            case curCode === 'Studio.Graph.AddDefaultPermissionError':
               message.error('datamanagement.addAuthError');
               break;
             case curCode === 500001 && curDes.includes('not exist'):

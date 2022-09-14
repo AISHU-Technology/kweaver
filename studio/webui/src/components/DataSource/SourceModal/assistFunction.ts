@@ -54,7 +54,7 @@ const TEST_ERROR_CODES = {
   500014: { msg: 'datamanagement.correctVhost', error: { vhost: ' ' } },
   500015: { msg: 'datamanagement.correctQueue', error: { queue: ' ' } },
   500016: { msg: 'datamanagement.as7.trueAddressAndPort', error: { ds_address: ' ', ds_port: ' ' } },
-  'Manager.Graph.KnowledgeNetworkNotFoundError': { msg: 'datamanagement.notExist' }
+  'Studio.Graph.KnowledgeNetworkNotFoundError': { msg: 'datamanagement.notExist' }
 };
 
 export { isJson, JSON_TEMP, setErrors, TEST_ERROR_CODES };

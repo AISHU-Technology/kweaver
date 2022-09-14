@@ -8,17 +8,16 @@ import serviceStorageManagement from '@/services/storageManagement';
 import './index.less';
 
 const ERROR_CODE = {
-  'Manager.GraphDB.AccountError': 'configSys.nameError', // 账号或密码错误
-  'Manager.GraphDB.URLError': 'configSys.ipError', // ip或端口错误
-  'Manager.OpenSearch.OsRecordNotFoundError': 'configSys.notexist', // 记录不存在
-  'Manager.OpenSearch.DuplicateOsConfigError': 'configSys.duplicateOsConfigError' // 配置信息重复，有相同用户名密码，ip和port的数据源
+  'Studio.GraphDB.AccountError': 'configSys.nameError', // 账号或密码错误
+  'Studio.GraphDB.URLError': 'configSys.ipError', // ip或端口错误
+  'Studio.OpenSearch.OsRecordNotFoundError': 'configSys.notexist', // 记录不存在
+  'Studio.OpenSearch.DuplicateOsConfigError': 'configSys.duplicateOsConfigError' // 配置信息重复，有相同用户名密码，ip和port的数据源
 };
 const nameTest =
   /(^[\u4e00-\u9fa5_a-zA-Z0-9=~!@#$&%^&*()_+`'"{}[\];:,.?<>|/~！@#￥%…&*·（）—+。={}|【】：；‘’“”、《》？，。/\n\\]+$)|-/;
 const ipTest =
   /^(?=^.{3,255}$)[a-zA-Z0-9][-_a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-_a-zA-Z0-9]{0,62})+$|^(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|[1-9])\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)\.(1\d{2}|2[0-4]\d|25[0-5]|[1-9]\d|\d)$/;
-const portTest =
-  /^([1-9][0-9]{0,3} | [1-5][0-9]{4} | 6[0-4][0-9]{3} | 65[0-4][0-9]{2} | 655[0-2][0-9]{1} | 6553[0-5])$/;
+const portTest = /^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]{1}|6553[0-5])$/;
 
 const ModalContent = props => {
   const { initData, optionType, closeModal, getData } = props;
@@ -81,11 +80,11 @@ const ModalContent = props => {
   // 爆错
   const messageError = res => {
     // 存储位置名称已存在
-    if (res && res.ErrorCode === 'Manager.OpenSearch.DuplicateOsRecordNameError') {
+    if (res && res.ErrorCode === 'Studio.OpenSearch.DuplicateOsRecordNameError') {
       form.setFields([{ name: 'name', errors: [intl.get('configSys.nameRepeat')] }]);
       return;
     }
-    if (res && res.ErrorCode === 'Manager.Common.ServerError') return message.error(res.Description);
+    if (res && res.ErrorCode === 'Studio.Common.ServerError') return message.error(res.Description);
     if (ERROR_CODE[res?.ErrorCode]) return message.error(intl.get(ERROR_CODE[res?.ErrorCode]));
     message.error(res.Description);
   };

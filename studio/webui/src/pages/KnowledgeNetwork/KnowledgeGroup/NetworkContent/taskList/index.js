@@ -155,13 +155,13 @@ const TaskList = props => {
 
     if (Code && Code === 500001) message.error(Cause || '');
     // 500403
-    if (Code === 500403 || Code === 'Manager.SoftAuth.UnknownServiceRecordError') {
+    if (Code === 500403 || Code === 'Studio.SoftAuth.UnknownServiceRecordError') {
       message.error(intl.get('graphList.authErr'));
       refresh();
       handleCancel();
     }
     // 500357
-    if (Code === 'Manager.Graph.KnowledgeNetworkNotFoundError') {
+    if (Code === 'Studio.Graph.KnowledgeNetworkNotFoundError') {
       message.error(intl.get('graphList.hasBeenDel'));
       refresh();
       handleCancel();
@@ -182,10 +182,10 @@ const TaskList = props => {
     if (res && !Code) message.success(intl.get('task.deleteSucc'));
     if (Code) {
       switch (true) {
-        case Code === 500403 || Code === 'Manager.SoftAuth.UnknownServiceRecordError':
+        case Code === 500403 || Code === 'Studio.SoftAuth.UnknownServiceRecordError':
           message.error(intl.get('graphList.authErr'));
           break;
-        case Code === 'Manager.Graph.KnowledgeNetworkNotFoundError':
+        case Code === 'Studio.Graph.KnowledgeNetworkNotFoundError':
           message.error(intl.get('graphList.hasBeenDel'));
           break;
         default:
@@ -226,10 +226,10 @@ const TaskList = props => {
     if (res && !Code) message.success(intl.get('task.stopSuccess'));
     if (Code) {
       switch (true) {
-        case Code === 500403 || Code === 'Manager.SoftAuth.UnknownServiceRecordError':
+        case Code === 500403 || Code === 'Studio.SoftAuth.UnknownServiceRecordError':
           message.error(intl.get('graphList.authErr'));
           break;
-        case Code === 'Manager.Graph.KnowledgeNetworkNotFoundError':
+        case Code === 'Studio.Graph.KnowledgeNetworkNotFoundError':
           message.error(intl.get('graphList.hasBeenDel'));
           break;
         default:
@@ -263,10 +263,10 @@ const TaskList = props => {
     if (res && !Code) message.success(intl.get('task.startRun'));
     if (Code) {
       switch (true) {
-        case Code === 500403 || Code === 'Manager.SoftAuth.UnknownServiceRecordError':
+        case Code === 500403 || Code === 'Studio.SoftAuth.UnknownServiceRecordError':
           message.error(intl.get('graphList.authErr'));
           break;
-        case Code === 'Manager.Graph.KnowledgeNetworkNotFoundError':
+        case Code === 'Studio.Graph.KnowledgeNetworkNotFoundError':
           message.error(intl.get('graphList.hasBeenDel'));
           break;
         case Code === 500055:
@@ -368,11 +368,11 @@ const TaskList = props => {
       }
 
       if (Code && Code === 500001) message.error(Cause || '');
-      if (Code === 500403 || Code === 'Manager.SoftAuth.UnknownServiceRecordError') {
+      if (Code === 500403 || Code === 'Studio.SoftAuth.UnknownServiceRecordError') {
         message.error(intl.get('graphList.authErr'));
         refresh();
       }
-      if (Code === 'Manager.Graph.KnowledgeNetworkNotFoundError') {
+      if (Code === 'Studio.Graph.KnowledgeNetworkNotFoundError') {
         message.error(intl.get('graphList.hasBeenDel'));
         refresh();
       }
