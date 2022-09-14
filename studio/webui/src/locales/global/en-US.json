@@ -51,6 +51,7 @@
     "failed": "Failed",
     "emptyTableCreate": "[create]",
     "check": "Check",
-    "thesaurusManagement": "Thesaurus"
+    "thesaurusManagement": "Thesaurus",
+    "loadFail": "Failed to load"
   }
 }

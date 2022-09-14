@@ -51,6 +51,7 @@
     "failed": "失败",
     "emptyTableCreate": "【新建】",
     "check": "查看",
-    "thesaurusManagement": "词库"
+    "thesaurusManagement": "词库",
+    "loadFail": "加载失败"
   }
 }
