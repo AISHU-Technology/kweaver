@@ -66,7 +66,7 @@ class IndexConfig extends Component {
       if (!_.isEmpty(res)) this.setState({ total: res?.total, tableData: res?.data });
     } catch (error) {
       const { type = '', response = {} } = error || {};
-      if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
+      if (type === 'message' && response.ErrorCode === 'Studio.Common.ServerError') {
         message.error(response?.Description || '');
       }
     }
@@ -94,10 +94,10 @@ class IndexConfig extends Component {
       const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode, Description } = response;
-        if (ErrorCode === 'Manager.Opensearch.OSRecordNotFoundError') {
+        if (ErrorCode === 'Studio.Opensearch.OSRecordNotFoundError') {
           message.error(intl.get('configSys.NotFoundError'));
         }
-        if (ErrorCode === 'Manager.Common.ServerError') message.error(Description);
+        if (ErrorCode === 'Studio.Common.ServerError') message.error(Description);
       }
     }
   };
