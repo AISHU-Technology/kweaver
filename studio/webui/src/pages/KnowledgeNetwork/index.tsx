@@ -121,7 +121,7 @@ const KnowledgeNetwork = () => {
         onClick: () => history.push(`/knowledge/source?id=${currentId}`)
       },
       {
-        label: '词库',
+        label: intl.get('global.thesaurusManagement'),
         key: '/knowledge/thesaurus',
         icon: <IconFont type="icon-ciku" />,
         onClick: () => history.push(`/knowledge/thesaurus?id=${currentId}`)
