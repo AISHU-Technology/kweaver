@@ -27,9 +27,9 @@ class TestCreateLexicon(TestCase):
         }
         self.params_correct = {"name": "lexicon1", "labels": json.dumps(["label1", "label2"]),
                                "description": "词库新建测试", "knowledge_id": 1}
-        self.params_error = {"name": "&^^$$",
+        self.params_error = {"name": "&^ ^$$",
                              "labels": json.dumps(["label1", "label2787yuyuuuuuuu675609(*(&^&%7e87r8e6rwe866r868e"]),
-                             "description": "词库新建测试*#$%#*", "knowledge_id": 1}
+                             "description": "词库新建测试*#$%#*", "knowledge_id": -1}
         self.knowledge_id_exist = pd.DataFrame.from_dict({"id": [1]})
         self.knowledge_id_Noexist = pd.DataFrame.from_dict({"id": []})
         self.lexicon_name_exist = pd.DataFrame.from_dict({"id": [2]})
