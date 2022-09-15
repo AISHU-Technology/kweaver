@@ -49,7 +49,7 @@ def taskcrud_post(graph_id):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/taskcrud_post'
+                $ref: '#/definitions/builder/celery_task/taskcrud_post'
     '''
     print(graph_id)
     if not graph_id.isdigit():
@@ -122,7 +122,7 @@ def taskcrud_delete(graph_id):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/taskcrud_delete'
+                $ref: '#/definitions/builder/celery_task/taskcrud_delete'
     '''
     print(graph_id)
     if not graph_id.isdigit():

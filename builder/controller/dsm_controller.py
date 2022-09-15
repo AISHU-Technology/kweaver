@@ -95,7 +95,7 @@ def gettoken():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/gettoken'
+                $ref: '#/definitions/builder/data_source/gettoken'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -142,7 +142,7 @@ def connectTest():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/connectTest'
+                $ref: '#/definitions/builder/data_source/connectTest'
        '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -227,7 +227,7 @@ def dsopt_post():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/dsopt_post'
+                $ref: '#/definitions/builder/data_source/dsopt_post'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     ret_code, ret_message, ds_id = dsm_service.addds(params_json)
@@ -257,7 +257,7 @@ def ds(dsid):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/ds'
+                $ref: '#/definitions/builder/data_source/ds'
     '''
     # update datasource
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -282,7 +282,7 @@ def delds():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/delds'
+                $ref: '#/definitions/builder/data_source/delds'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
@@ -402,7 +402,7 @@ def ds_copy(ds_id):
                 description: 'request body'
                 required: true
                 schema:
-                    $ref: '#/definitions/ds_copy'
+                    $ref: '#/definitions/builder/data_source/ds_copy'
         '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
