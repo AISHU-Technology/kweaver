@@ -1,6 +1,5 @@
 // Package leo 提供了 Web 框架使用的工具集
 // - 描述：创建一个 Web service 容器
-// - 作者：陈骁 (xavier.chen@eisoo.com)
 // - 时间：2020-1-4
 package leo
 

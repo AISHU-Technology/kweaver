@@ -20,7 +20,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "get configs",
                 "parameters": [
@@ -102,7 +102,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "add configs",
                 "parameters": [
@@ -146,7 +146,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "delete configs",
                 "parameters": [
@@ -192,7 +192,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "get config ids",
                 "parameters": [
@@ -230,7 +230,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "get config info",
                 "parameters": [
@@ -274,7 +274,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "get kglist",
                 "parameters": [
@@ -318,7 +318,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "update configs",
                 "parameters": [
@@ -364,7 +364,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "advanced search test",
                 "parameters": [
@@ -410,7 +410,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "advanced search",
                 "parameters": [
@@ -482,7 +482,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "Document analysis report",
                 "parameters": [
@@ -533,7 +533,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "graphql search",
                 "parameters": [
@@ -579,7 +579,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "expand vertexes",
                 "parameters": [
@@ -670,7 +670,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "Get relationship",
                 "parameters": [
@@ -710,7 +710,7 @@
             "get": {
                 "description": "Health detection",
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "alive",
                 "responses": {
@@ -724,7 +724,7 @@
             "get": {
                 "description": "Health detection",
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "ready",
                 "responses": {
@@ -744,7 +744,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "graphql search",
                 "responses": {
@@ -773,7 +773,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "attributes and types",
                 "parameters": [
@@ -819,7 +819,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Engine"
+                    "CEngine"
                 ],
                 "summary": "Orientdb sql API",
                 "parameters": [

@@ -13,7 +13,7 @@ const ICON_ARRAY = [
   {
     id: 1,
     icon: <IconFont type="icon-graph" style={{ fontSize: 16, color: 'rgba(0, 0, 0, 0.85)' }} />,
-    intlText: 'configSys.graph',
+    intlText: 'global.graph',
     url: '/knowledge/network'
   },
   {

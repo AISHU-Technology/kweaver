@@ -29,7 +29,7 @@ const API = {
   // dataSource
   sourceConnectTest: `${baseBuilder}/ds/testconnect`,
   dataSourcePost: `${baseBuilder}/ds`,
-  postCopyDs: `${baseBuilder}/ds/ds_copy/`,
+  postCopyDs: `${baseBuilder}/ds/ds_copy`,
   dataSourceGet: `${baseBuilder}/ds`,
   dataSourceGetByGraph: `${baseBuilder}/graph/ds/`,
   dataSourcePut: `${baseBuilder}/ds/`,
@@ -41,6 +41,8 @@ const API = {
   analysisReportGet: `${baseEngine}/analysis`,
   exploreRelation: `${baseEngine}/explore/relation`,
   expandEdges: `${baseEngine}/explore/expandv`,
+  explorePath: `${baseEngine}/explore/path`,
+  explorePathDetails: `${baseEngine}/explore/pathDetail`,
 
   // knowledgeNetwork
   graphOutput: `${baseBuilder}/graph/output`,

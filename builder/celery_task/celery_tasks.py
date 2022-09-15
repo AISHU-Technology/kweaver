@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/17 17:41
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import sys
 import os
 import datetime
@@ -79,19 +76,6 @@ from dao.builder_dao import MongoBuildDao
 from utils.ConnectUtil import HiveClient
 import pymysql
 
-
-# CELERY_BROKER_URL = 'redis://10.4.70.120:6379/1'
-# # 要存储 Celery 任务的状态或运行结果时就必须要配置
-# CELERY_RESULT_BACKEND = 'redis://10.4.70.120:6379/2'
-# cel= Celery(app.name, broker=CELERY_BROKER_URL, backend=CELERY_RESULT_BACKEND,include=[app.name])
-# 初始化Celery
-# cel = Celery(app.name,
-#              broker=app.config['CELERY_BROKER_URL'],
-#              broker_transport_options=app.config['CELERY_BROKER_TRANSPORT_OPTIONS'],
-#              backend=app.config['CELERY_RESULT_BACKEND'],
-#              result_backend_transport_options=app.config['CELERY_RESULT_BACKEND_TRANSPORT_OPTIONS'],
-#              include=[app.name])
-# print(cel.conf)
 # 初始化定时任务，默认为空
 beat_schedule = {}
 beat_scheduler = 'celery_task.celery_beat:DatabaseScheduler'
@@ -1951,7 +1935,6 @@ def buildertask(self, graphid, flag):
 @cel.task
 def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
     url = "http://kw-builder:6485/buildertask"
-    # url = "http://10.4.106.255:6485/buildertask" #本地测试
     payload = {"tasktype": task_type, "graph_id": graph_id, "trigger_type": trigger_type}
     print(f'start timer task,payload: {payload}')
     close_key = f'close_{graph_id}'

@@ -1,6 +1,5 @@
 // Package models 提供数据库连接和访问
 // - 描述：图数据库连接
-// - 作者：张坤 (zhang.kun@aishu.cn)
 // - 时间：2020-2-29
 package orient
 

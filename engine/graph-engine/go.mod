@@ -3,8 +3,6 @@ module graph-engine
 go 1.13
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.0
-	github.com/PuerkitoBio/purell v1.2.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	//github.com/dgrijalva/jwt-go v3.0.0+incompatible
 	github.com/fatih/structs v1.1.0
@@ -13,10 +11,9 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-openapi/spec v0.20.7 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
-	github.com/go-playground/assert/v2 v2.0.1
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/goccy/go-json v0.9.11 // indirect
-	github.com/golang/mock v1.6.0
 	github.com/graph-gophers/graphql-go v0.0.0-20200309224638-dae41bde9ef9
 	github.com/jonboulle/clockwork v0.2.2 // indirect
 	github.com/json-iterator/go v1.1.12
@@ -30,10 +27,9 @@ require (
 	github.com/sirupsen/logrus v1.4.2
 	github.com/streadway/amqp v1.0.0 // indirect
 	github.com/stretchr/testify v1.8.0
-	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a // indirect
-	github.com/swaggo/gin-swagger v1.5.3 // indirect
-	github.com/swaggo/swag v1.8.5 // indirect
-	github.com/urfave/cli/v2 v2.14.1 // indirect
+	github.com/swaggo/files v0.0.0-20220728132757-551d4a08d97a
+	github.com/swaggo/gin-swagger v1.5.3
+	github.com/swaggo/swag v1.8.5
 	//github.com/vesoft-inc/nebula-go/v2 v2.6.0
 	github.com/vesoft-inc/nebula-go/v3 v3.0.0
 	github.com/vladoatanasov/logrus_amqp v0.0.0-20181023103017-b21faf6f8ae3

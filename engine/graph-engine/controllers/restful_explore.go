@@ -1,6 +1,5 @@
 // Package controllers 为接口的控制逻辑
 // - 描述：GEngine KG 入口
-// - 作者：原琦 (yuan.qi@aishu.cn)
 // - 时间：2020-9-22
 
 package controllers

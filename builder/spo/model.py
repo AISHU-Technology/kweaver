@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/17 17:41
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 
 from spo.bert_keras.layers import LayerNormalization
 from spo.bert_keras.bert import build_bert_model

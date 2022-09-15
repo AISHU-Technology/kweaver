@@ -16,7 +16,7 @@ type ReqAdvSearch struct {
 // AdvSearchHandler
 // @Summary advanced search
 // @Description semantic search
-// @Tags Engine
+// @Tags CEngine
 // @Param confid path string true "config ids like'5,6,7'"
 // @Param query query string false "Query statement"
 // @Param page query int true  "number of pages" minimum(1)
@@ -49,7 +49,7 @@ func AdvSearchHandler(c *gin.Context) {
 // AdvSearchTestHandler
 // @Summary advanced search test
 // @Description semantic search test
-// @Tags Engine
+// @Tags CEngine
 // @Param body body RequestModel true "adv-search query"
 // @Router /api/engine/v1/adv-search/test [get]
 // @Accept  json

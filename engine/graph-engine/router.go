@@ -1,5 +1,4 @@
 // - 描述：服务路由
-// - 作者：张坤 (zhang.kun@aishu.cn)
 // - 时间：2020-2-29
 package main
 
@@ -54,5 +53,8 @@ var GroupGQLKGRouters = map[string][]leo.Router{
 		leo.NewRouter("post", "/explore/relation", services.ExploreRelationHandler),
 		//扩展点
 		leo.NewRouter("get", "/explore/expandv", services.KGExpandVHandler),
+		//探索路径
+		leo.NewRouter("post", "/explore/path", services.ExplorePathHandler),
+		leo.NewRouter("post", "/explore/pathDetail", services.PathDetail),
 	},
 }

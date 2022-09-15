@@ -1,6 +1,5 @@
 // Package gql GQL 的实现
 // - 描述：提供 GQL 的 测试数据
-// - 作者：陈骁 (xavier.chen@aishu.cn)
 // - 时间：2020-4-23
 package gql
 

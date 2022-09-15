@@ -1,9 +1,4 @@
 # -*-coding:utf-8-*-
-# @Author: Lowe.li
-# @Email: Lowe.li@aishu.cn
-# @CreatDate: 2020/7/7 16:01
-# @File : hiveUtil.py
-# @Software : PyCharm
 import yaml
 from impala.dbapi import connect
 import redis

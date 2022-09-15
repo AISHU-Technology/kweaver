@@ -601,7 +601,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: delete configs
       tags:
-      - Engine
+      - CEngine
     get:
       consumes:
       - application/x-www-form-urlencoded
@@ -658,7 +658,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: get configs
       tags:
-      - Engine
+      - CEngine
     post:
       consumes:
       - application/json
@@ -687,7 +687,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: add configs
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/adv-search-config/conf/{kgid}:
     get:
       consumes:
@@ -712,7 +712,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: get config ids
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/adv-search-config/info/{confid}:
     get:
       consumes:
@@ -741,7 +741,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: get config info
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/adv-search-config/kglist:
     get:
       consumes:
@@ -770,7 +770,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: get kglist
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/adv-search-config/update:
     post:
       consumes:
@@ -800,7 +800,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: update configs
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/adv-search/{confid}:
     get:
       consumes:
@@ -849,7 +849,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: advanced search
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/adv-search/test:
     get:
       consumes:
@@ -879,7 +879,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: advanced search test
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/analysis:
     get:
       consumes:
@@ -913,7 +913,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: Document analysis report
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/explore/:
     post:
       consumes:
@@ -943,7 +943,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: graphql search
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/explore/expandv:
     get:
       consumes:
@@ -1006,7 +1006,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: expand vertexes
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/explore/relation:
     post:
       consumes:
@@ -1036,7 +1036,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: Get relationship
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/health/alive:
     get:
       description: Health detection
@@ -1045,7 +1045,7 @@ paths:
           description: OK
       summary: alive
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/health/ready:
     get:
       description: Health detection
@@ -1054,7 +1054,7 @@ paths:
           description: OK
       summary: ready
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/kg/:
     post:
       consumes:
@@ -1073,7 +1073,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: graphql search
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/properties:
     post:
       consumes:
@@ -1103,7 +1103,7 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: attributes and types
       tags:
-      - Engine
+      - CEngine
   /api/engine/v1/sql/{id}:
     post:
       consumes:
@@ -1138,5 +1138,5 @@ paths:
             $ref: '#/definitions/utils.Error'
       summary: Orientdb sql API
       tags:
-      - Engine
+      - CEngine
 swagger: "2.0"

@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Author ：Jay.zhu
-@Date ：2022/9/14 9:01
-'''
 from flask_babel import gettext as _l
 
 errDict = {

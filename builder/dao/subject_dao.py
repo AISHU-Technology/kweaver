@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Time : 2021/10/15 15:52
-# @Author : jack.li
-# @Email : jack.li@aishu.cn
-# @File : task_manager.py
-# @Project : builder
 import os
 import time
 import bz2

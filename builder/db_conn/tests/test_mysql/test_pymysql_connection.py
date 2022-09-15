@@ -6,9 +6,9 @@ import time
 from unittest import mock
 
 import pymysql
-from tests.test_mysql import base
+from db_conn.tests.test_mysql import base
 from pymysql.constants import CLIENT
-from .base import (using_mysql, using_mysql_pool)
+from db_conn.tests.test_mysql.base import (using_mysql, using_mysql_pool)
 
 class TestConnection(base.PyMySQLTestCase):
     def test_utf8mb4(self):

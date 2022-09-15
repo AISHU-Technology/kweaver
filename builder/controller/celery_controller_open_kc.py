@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Time : 2021/10/13 17:03
-# @Author : jack.li
-# @Email : jack.li@aishu.cn
-# @File : celery_controller_open_kc.py
-# @Project : builder
 from flask import Blueprint, request, jsonify
 from utils.CommonUtil import commonutil
 from utils.Gview import Gview
@@ -17,7 +12,7 @@ from utils.ConnectUtil import mongoConnect
 task_controller_open_kc = Blueprint('task_controller_open_kc', __name__)
 
 
-# 参数检查
+# parameter verification
 def check_params(input_params_json, sub_method=None):
 
     if "kg_id" not in input_params_json:
@@ -192,7 +187,7 @@ def check_params_v2(input_params_json, sub_method=None):
     return 200, ""
 
 
-# 创建主题
+# create theme
 @task_controller_open_kc.route('/subject', methods=["POST"], strict_slashes=False)
 def create_subject():
     method = request.method
@@ -223,7 +218,7 @@ def create_subject():
                                          message="Incorrect parameter format"), CommonResponseStatus.SERVER_ERROR.value
 
 
-# 刪除主題
+# delete theme
 @task_controller_open_kc.route('/subject/deletion', methods=["POST"], strict_slashes=False)
 def delete_subject():
     method = request.method
@@ -250,7 +245,7 @@ def delete_subject():
                                          message="Incorrect parameter format"), CommonResponseStatus.SERVER_ERROR.value
 
 
-# 修改主題
+# Edit theme
 @task_controller_open_kc.route('/subject/update', methods=["POST"], strict_slashes=False)
 def update_subject():
     method = request.method
@@ -284,7 +279,7 @@ def update_subject():
                                          message="Incorrect parameter format"), CommonResponseStatus.SERVER_ERROR.value
 
 
-# 獲取主題相关的文档信息
+# Get topic-related documentation information
 @task_controller_open_kc.route('/subject/document', methods=["GET"], strict_slashes=False)
 def get_subject():
     method = request.method
@@ -387,8 +382,8 @@ def search_kgs_subject():
 
 def check_params_embedding(param_json):
     required_params = ["text"]
-    redundants = []  # 多余的参数
-    lacks = []  # 缺少的参数
+    redundants = []  # extra parameter
+    lacks = []  # missing parameter
     ret_code = 200
     message = ""
     for k in param_json.keys():
@@ -463,8 +458,8 @@ def get_embeddings():
         
 def check_params_topics(param_json):
     required_params = ["gns", "kg_id"]
-    redundants = []  # 多余的参数
-    lacks = []  # 缺少的参数
+    redundants = []  # extra parameter
+    lacks = []  # missing parameter
     ret_code = 200
     message = ""
     for k, v in param_json.items():
@@ -506,9 +501,7 @@ def check_params_topics(param_json):
     
 @task_controller_open_kc.route('/topics', methods=["POST"], strict_slashes=False)
 def get_topic_words():
-    """ 根据图谱id、gns查找对应主题词 """
-    # 如果gns为文档，返回前top个；如果是目录，根据该目录下所有文档的主题词计算该目录的主题词
-    # 根据graph_id获取图谱信息
+    """ Find the corresponding subject word according to gns and id"""
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
         ret_code, message = check_params_topics(params_json)
@@ -524,7 +517,7 @@ def get_topic_words():
         graph_id = params_json.get("kg_id")
         gns_list = params_json.get("gns", [])
         topk = params_json.get("topk", 10)
-        # graph_id不存在
+        # graph_id not found
         code, ret = graph_Service.checkById(graph_id)
         if code != 0:
             obj = {}
@@ -534,7 +527,7 @@ def get_topic_words():
             obj["ErrorDetails"] = "kg_id error"
             obj["ErrorLink"] = ""
             return Gview.VErrorreturn(obj), CommonResponseStatus.SERVER_ERROR.value
-        # # gns 不存在
+        # # gns not found
         # mongodb = "mongoDB-" + str(graph_id) + "_gnsInfo"
         #
         # query = {"gns": gns}

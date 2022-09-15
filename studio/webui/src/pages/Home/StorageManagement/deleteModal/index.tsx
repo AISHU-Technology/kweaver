@@ -1,17 +1,17 @@
 import React, { memo, useState, useRef } from 'react';
 import intl from 'react-intl-universal';
-import { Modal, Button, message, Input } from 'antd';
+import { Modal, Button, message, Input, Descriptions } from 'antd';
 
 import serviceStorageManagement from '@/services/storageManagement';
 
 import './style.less';
 
 const ERROR_CODE: any = {
-  'Manager.GraphDB.GraphDBRecordNotFoundError': 'configSys.NotFoundError', // 次记录不存在
-  'Manager.Account.InsufficientAccountPermissionsError': 'configSys.PermissionsError', // 全选不足
-  'Manager.Common.ServerError': 'configSys.delError', // 删除失败
-  'Manager.OpenSearch.OSRecordNotFoundError': 'configSys.NotFoundError', // opensearch记录不存在
-  'Manager.OpenSearch.OsIsUsedError': 'configSys.delUseing' // 配置正被使用
+  'Studio.GraphDB.GraphDBRecordNotFoundError': 'configSys.NotFoundError', // 次记录不存在
+  'Studio.Account.InsufficientAccountPermissionsError': 'configSys.PermissionsError', // 全选不足
+  'Studio.Common.ServerError': 'configSys.delError', // 删除失败
+  'Studio.OpenSearch.OSRecordNotFoundError': 'configSys.NotFoundError', // opensearch记录不存在
+  'Studio.OpenSearch.OsIsUsedError': 'configSys.delUseing' // 配置正被使用
 };
 
 type DeleteModalType = {
@@ -43,7 +43,9 @@ const DeleteModal = (props: DeleteModalType) => {
       const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode } = response;
-        if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
+
+        if (ERROR_CODE[ErrorCode]) return message.error(intl.get(ERROR_CODE[ErrorCode]));
+        message.error(response?.Description)
       }
     }
   };
@@ -66,6 +68,7 @@ const DeleteModal = (props: DeleteModalType) => {
         e.stopPropagation();
         setVisible();
       }}
+      afterClose={() => setIsError(false)}
     >
       <div className="delete-modal-body">
         <p className="input-label"> {intl.get('configSys.deldes')}</p>

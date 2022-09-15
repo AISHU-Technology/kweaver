@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Time    : 2020/2/21 10:03
-@Author  : Tian.gu
-'''
 from .name_rule import _2upper, upper2_,drop_adornment
 import pymysql
 # from pyhive import hive
@@ -45,14 +41,6 @@ class DataBase():
                 if len(self.table_list)>100:
                     self.table_list=self.table_list[0:100]
 
-
-        # if self.flag == "hive":
-        #     try:
-        #         # self.conn = pymysql.connect(host='localhost', user='root', passwd='root', db='kom_demo', port=3306)
-        #         self.conn = hive.connect(host='10.2.192.233', port=10000, username='hive', database='komdb_dw')
-        #         # print("hive connect success")
-        #     except:
-        #         raise RuntimeError
         if self.flag == "rabbitmq":
             self.ret = CommonResponseStatus.SUCCESS.value
 

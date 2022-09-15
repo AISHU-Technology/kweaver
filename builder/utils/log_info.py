@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2021/3/17 14:26
-# @Author  : yuan.qi
-# @Email   : yuan.qi@aishu.cn
-# @File    : log_info.py
-
 import logging
 import json
 import datetime

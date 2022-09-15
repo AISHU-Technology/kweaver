@@ -1,4 +1,3 @@
-// @Author : yuan.qi@aishu.cn
 // @File : kg_topic.go
 // @Time : 2021/4/10
 

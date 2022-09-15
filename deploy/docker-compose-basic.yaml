@@ -18,8 +18,8 @@ services:
     depends_on:
       - kw-studio
       - kw-builder
-      - kw-algserver
       - kw-engine
+      - kw-algserver
 
   kw-studio:
     container_name: kw-studio

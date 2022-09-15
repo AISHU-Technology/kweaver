@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Time    : 2020/3/6 15:14
-@Author  : Tian.gu
-'''
-
 
 class KomException(Exception):
     def __init__(self, message, errors):

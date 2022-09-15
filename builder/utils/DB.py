@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/8/11 13:13
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import pymysql
 class DB(object):
     def __init__(self, host, port, user, password, database, charset):

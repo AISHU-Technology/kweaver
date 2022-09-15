@@ -1,6 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2022/7/29
-# @Author  : flora_hu
 
 import time
 import json
