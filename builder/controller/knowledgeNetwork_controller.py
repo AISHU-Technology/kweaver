@@ -26,6 +26,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def save_knowledgenetwork():
     '''
     add a knowledge network
+    add a knowledge network
     ---
     parameters:
         -   name: knw_name
@@ -68,7 +69,8 @@ def save_knowledgenetwork():
 @swag_from(swagger_new_response)
 def getAllKnw():
     '''
-    paging query knowledge network
+    paging query knowledge all network
+    paging query knowledge all network
     ---
     parameters:
         -   name: page
@@ -112,6 +114,7 @@ def getAllKnw():
 @swag_from(swagger_new_response)
 def getKnwByName():
     '''
+    paging query knowledge network by name
     paging query knowledge network by name
     ---
     parameters:
@@ -162,6 +165,7 @@ def getKnwByName():
 def editKnw():
     '''
     edit knowledge network
+    edit knowledge network by knw_id
     ---
     parameters:
         -   name: knw_id
@@ -208,6 +212,7 @@ def editKnw():
 def deleteKnw():
     '''
     delete knowledge network
+    delete knowledge network by knw_id
     ---
     parameters:
         -   name: knw_id
@@ -234,6 +239,7 @@ def deleteKnw():
 @swag_from(swagger_new_response)
 def getGraph():
     '''
+    query knowledge graph by knowledge network id
     query knowledge graph by knowledge network id
     ---
     parameters:

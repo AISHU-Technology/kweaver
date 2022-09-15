@@ -35,6 +35,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def add_timed_task(graph_id):
     '''
     add a scheduled task
+    add a scheduled task by graph id
     ---
     parameters:
         -   name: graph_id
@@ -112,6 +113,7 @@ def add_timed_task(graph_id):
 def update_timed_task(graph_id):
     '''
     modify scheduled task
+    modify scheduled task by graph id
     ---
     parameters:
         -   name: graph_id
@@ -277,6 +279,7 @@ def delete_timed_task(graph_id):
 def get_timed_task():
     '''
     paging get scheduled task
+    Query timed tasks by paging by knowledge graph id
     ---
     parameters:
         -   name: graph_id
@@ -339,6 +342,7 @@ def get_timed_task():
 def get_timed_info():
     '''
     get scheduled task details
+    get scheduled task details by  graph id
     ---
     parameters:
         -   name: graph_id
@@ -381,6 +385,7 @@ def get_timed_info():
 def timed_switch(graph_id):
     '''
     scheduled task switch
+    scheduled task switch by graph id
     ---
     parameters:
         -   name: graph_id

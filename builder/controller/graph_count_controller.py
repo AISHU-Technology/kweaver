@@ -18,15 +18,15 @@ graph_count_controller_app = Blueprint('graph_count_controller_app', __name__)
 
 
 def get_entity_egdes_num(graph_id):
-    '''统计实体和边分别对应的个数
+    '''Count the number of entities and relationships
     Returns:
-        code: 返回码
-        res: 正确则返回下列值
-            edges: 边的总数
-            entities: 点的总数
-            name2count: {点/边的名字: 个数}
-            edge2pros: {边名: 属性个数}
-            entity2pros: {实体名: 属性个数}
+        code: return code
+        res: If it is correct, it will return as follows
+            edges: total number of relationships
+            entities: total number of entities
+            name2count: Total number of entity and relationship classes
+            edge2pros: The number of attributes of the relationship
+            entity2pros: The number of attributes of the entity
     '''
     ret_code, obj = graph_Service.getGraphById(graph_id)
     if ret_code != 200:
@@ -87,7 +87,7 @@ def getGraphCount(graph_id):
 
 def get_graph_count_all():
     '''
-    GET请求：返回所有图谱的entity、edge、property总数量
+    Returns the total count of all graph entities, relationships, and attributes
     '''
     entities, edges, properties, all_num = 0, 0, 0, 0
     # select 所有的graph_id对应的graph_baseInfo
@@ -128,6 +128,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r
 def graphs_count_all():
     '''
     get the graph count
+    get the graph count
     ---
     responses:
         200:
@@ -157,6 +158,7 @@ def graphs_count_all():
 def graphs_count_by_id(graph_id):
     '''
     get graph statistics
+    get the total number of graph entities, relationships, and attributes by graph id
     ---
     parameters:
         -   name: graph_id

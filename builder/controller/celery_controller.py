@@ -36,6 +36,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def taskcrud_post(graph_id):
     '''
     execute the task of building the graph
+    execute the task of building the graph
     ---
     parameters:
         -   name: 'graph_id'
@@ -108,6 +109,7 @@ def taskcrud_post(graph_id):
 def taskcrud_delete(graph_id):
     '''
     delete the task of building the graph
+    delete the task of building the graph
     ---
     parameters:
         -   name: 'graph_id'
@@ -167,6 +169,7 @@ def taskcrud_delete(graph_id):
 def getalltask(graph_id):
     '''
     get task list by page
+    paging to get the task list of the knowledge graph
     ---
     parameters:
         -   name: graph_id
@@ -264,6 +267,7 @@ def getalltask(graph_id):
 def stoptask(graph_id):
     '''
     terminate the task of building the graph
+    terminate the task of building the graph
     ---
     parameters:
         -   name: graph_id
@@ -303,6 +307,7 @@ def stoptask(graph_id):
 def getprogress(graph_id):
     '''
     get task progress
+    get the progress of the knowledge graph construction task
     ---
     parameters:
         -   name: graph_id
@@ -347,6 +352,7 @@ def getprogress(graph_id):
 def health():
     '''
     health detection
+    service health check
     ---
     responses:
         '200':
@@ -375,6 +381,7 @@ def health():
 def healthalive():
     '''
     health detection
+    service health detection
     ---
     responses:
         '200':

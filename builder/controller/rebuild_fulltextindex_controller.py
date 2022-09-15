@@ -108,7 +108,7 @@ def rebuild_fulltextindex(KDB_name):
 def rebuild_status(KDB_name):
     '''
     get status of rebuilding-fulltext-index task
-    called by uploading task.
+    get status of rebuilding-fulltext-index task by KDB_name
     ---
     parameters:
         -   name: KDB_name

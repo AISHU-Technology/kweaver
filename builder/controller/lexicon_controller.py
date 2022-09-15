@@ -36,6 +36,7 @@ def getHostUrl():
 def create_lexicon():
     '''
     Create a new lexicon
+    Create a new lexicon
     ---
     parameters:
         -   name: name
@@ -158,6 +159,7 @@ def create_lexicon():
 def get_labels():
     '''
     get candidate labels
+    get candidate labels by knowledge_id
     ---
     parameters:
         -   name: knowledge_id
@@ -192,6 +194,7 @@ def get_labels():
 def get_lexicon():
     '''
     get a list of all lexicons
+    Paginate to get all lexicons
     ---
     parameters:
         -   name: knowledge_id
@@ -263,6 +266,7 @@ def get_lexicon():
 def get_lexicon_by_id():
     '''
     get lexicon according to lexicon id
+    get lexicon according to lexicon id
     ---
     parameters:
         -   name: id
@@ -311,6 +315,7 @@ def get_lexicon_by_id():
 @swag_from(swagger_new_response)
 def insert_word2lexicon():
     '''
+    Add new words to the specified lexicon
     Add new words to the specified lexicon
     ---
     parameters:
@@ -361,6 +366,7 @@ def insert_word2lexicon():
 @swag_from(swagger_new_response)
 def search_word_in_lexicon():
     '''
+    Search words in the specified lexicon
     Search words in the specified lexicon
     ---
     parameters:
@@ -414,6 +420,7 @@ def search_word_in_lexicon():
 @swag_from(swagger_new_response)
 def edit_word_in_lexicon():
     '''
+    Edit word in the specified lexicon
     Edit word in the specified lexicon
     ---
     parameters:
@@ -480,6 +487,7 @@ def edit_word_in_lexicon():
 def delete_word_in_lexicon():
     '''
     Batch delete word in the specified lexicon
+    Batch delete word in the specified lexicon
     ---
     parameters:
         -   name: id
@@ -527,6 +535,7 @@ def delete_word_in_lexicon():
 @swag_from(swagger_new_response)
 def edit_lexicon():
     '''
+    Edit basic information of lexicon
     Edit basic information of lexicon
     ---
     parameters:
@@ -590,6 +599,7 @@ def edit_lexicon():
 def delete_lexicon():
     '''
     Batch delete lexicon
+    Batch delete lexicon by lexicon id
     ---
     parameters:
         -   name: id_list
@@ -625,6 +635,7 @@ def delete_lexicon():
 @swag_from(swagger_new_response)
 def import_word2lexicon():
     '''
+    Import word information into lexicon
     Import word information into lexicon
     ---
     parameters:
@@ -735,6 +746,7 @@ def import_word2lexicon():
 def export_lexicon():
     '''
     Export lexicons
+    Export lexicons by lexicon id list
     ---
     parameters:
         -   name: id_list
@@ -776,6 +788,7 @@ def export_lexicon():
 @swag_from(swagger_new_response)
 def download_template():
     '''
+    Download lexicon file format template
     Download lexicon file format template
     ---
     '''
