@@ -52,7 +52,7 @@ swagger:
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
   tags:
     - { "name": "Introduction", "description": "Kweaver provides OpenAPI capabilities, and uses KWeaver's capabilities by calling KWeaver's OpenAPI to realize and apply KWeaver integration and interaction." }
-    - { "name": "Studio", "description": "KWeaver Admin UI" }
+    - { "name": "Studio", "description": "KWeaver UI" }
     - { "name": "KN Builder", "description": "Knowledge Network Builder (KN Builder): Use artificial intelligence technology to transform data of different forms into knowledge networks to realize data knowledge. Including knowledge graph, language model and rule base." }
     - { "name": "Engine", "description": "Knowledge network exploratory analysis related API, which can realize the search of entities and explore the entities associated with them. Follow the GraphQL interface specification, the detailed schema can be viewed in graphql schema" }
   doc_urls:
