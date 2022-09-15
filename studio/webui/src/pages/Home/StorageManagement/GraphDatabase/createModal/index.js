@@ -30,7 +30,7 @@ const ModalContent = memo(props => {
   const [testLoading, setTestLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState(intl.get('configSys.ipPlace')); // 输入框展位符
   const [repeatIp, setRepeatIP] = useState([]); // IP重复
-  const [defaultIndex, setDefaultIndex] = useState(0); // 默认绑定的opensearch
+  const [defaultIndex, setDefaultIndex] = useState(undefined); // 默认绑定的opensearch
 
   useEffect(() => {
     getIndexList();
@@ -253,6 +253,7 @@ const ModalContent = memo(props => {
                     getPopupContainer={triggerNode => triggerNode.parentElement}
                     autoComplete="off"
                     disabled={optionType !== 'create'}
+                    placeholder={intl.get('configSys.osIdPlaceholder')}
                   >
                     {_.map(list, item => {
                       return (
