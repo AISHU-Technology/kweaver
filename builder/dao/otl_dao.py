@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/17 17:41
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
 import pymysql
 import time

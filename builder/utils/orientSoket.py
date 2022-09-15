@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/9/29 17:50
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 
 from pyorient import OrientSocket
 

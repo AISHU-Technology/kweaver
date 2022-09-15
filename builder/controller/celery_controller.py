@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/11/9 10:42
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 from flask import Blueprint, request, jsonify
 import time
 from utils.CommonUtil import commonutil

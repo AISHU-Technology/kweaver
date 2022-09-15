@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/11/28 18:50
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import time
 
 from dao.graph_dao import graph_dao

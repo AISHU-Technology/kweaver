@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/9/7 18:31
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import re
 
 import pymongo

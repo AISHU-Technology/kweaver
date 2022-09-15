@@ -1,9 +1,4 @@
 # -*-coding:utf-8-*-
-# @Author: Lowe.li
-# @Email: Lowe.li@aishu.cn
-# @CreatDate: 2020/7/1 9:45
-# @File : pymysql_pool.py
-# @Software : PyCharm
 import threading
 
 import pymysql
