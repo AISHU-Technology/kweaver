@@ -22,7 +22,9 @@ const dataSourcePost = async data => await apiService.axiosPost(API.dataSourcePo
 /**
  * 复制数据源
  */
-const postCopyDs = async ({ ds_id, ...data }) => await apiService.axiosPost(`${API.postCopyDs}${ds_id}`, data);
+const postCopyDs = async ({ ds_id, ...data }) => {
+  return await apiService.axiosPost(`${API.postCopyDs}/${ds_id}`, data);
+};
 
 /**
  * 获取数据源
