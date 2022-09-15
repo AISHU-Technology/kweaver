@@ -14,7 +14,7 @@ on:
 # 定义 DOCKERHUB_REPO 标记 docker hub repo 名称
 env:
   APP_NAME: kw-studio
-  DOCKERHUB_REPO: aishu/kw-studio
+  DOCKERHUB_REPO: xavierhuang/kw-studio
   
 jobs:
   build_docker_image:
