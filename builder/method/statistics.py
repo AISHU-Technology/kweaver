@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Time    : 2020/3/26 17:59
-@Author  : Tian.gu
-'''
 from collections import defaultdict
 
 class Statistics():

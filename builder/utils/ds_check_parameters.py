@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/8/18 23:14
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 from flask import request
 import json
 from config import config as Config

@@ -108,7 +108,7 @@ class ExportModal extends Component {
             {[intl.get('createEntity.dataSourceImport')]}
           </div>
 
-          <div
+          {/* <div
             className={selectedTag === 'model' ? 'tag tag-selected' : 'tag'}
             onClick={() => {
               this.setState({
@@ -118,7 +118,7 @@ class ExportModal extends Component {
           >
             {selectedTag === 'model' ? <div className="left-mark"></div> : null}
             {[intl.get('createEntity.modelImport')]}
-          </div>
+          </div> */}
         </div>
 
         <div className="content">

@@ -136,7 +136,7 @@ jobs:
         command: 'build'
         repository: $(imageNameWithHarbor)
         tags: |
-          $(mainTag)
+          $(kwTag)
           latest
         Dockerfile: '**/Builder.Dockerfile'
     - task: Docker@2
@@ -151,14 +151,14 @@ jobs:
         repository: 'ad/kw-builder'
         command: push
         tags: |
-          $(mainTag)
+          $(kwTag)
           latest
     - task: Bash@3
       displayName: saveTar
       inputs:
         targetType: 'inline'
         script: |
-          docker save -o KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
+          docker save -o KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(kwTag)
     - task: FtpUpload@2
       displayName: uploadFtp
       inputs:
@@ -167,7 +167,7 @@ jobs:
         username: '$(ftpUser)'
         password: '$(ftpPasswd)'
         rootDirectory:
-        filePatterns: '**/KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar'
+        filePatterns: '**/KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar'
         remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
         clean: false
         cleanContents: false

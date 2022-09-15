@@ -48,9 +48,7 @@ describe('Function', () => {
 
 describe('error text', () => {
   it('error', async () => {
-    serviceStorageManagement.graphDBDelete = jest.fn(() =>
-      Promise.resolve({ ErrorCode: 'Manager.Common.ServerError' })
-    );
+    serviceStorageManagement.graphDBDelete = jest.fn(() => Promise.resolve({ ErrorCode: 'Studio.Common.ServerError' }));
     const wrapper = init();
     const input = wrapper.find('.input').at(0);
     input.simulate('change', { target: { value: 'aaa' } });
@@ -63,7 +61,7 @@ describe('error text', () => {
 
   it('dbErr', async () => {
     serviceStorageManagement.graphDBDelete = jest.fn(() =>
-      Promise.resolve({ ErrorCode: 'Manager.GraphDB.GraphDBRecordNotFoundError' })
+      Promise.resolve({ ErrorCode: 'Studio.GraphDB.GraphDBRecordNotFoundError' })
     );
     const wrapper = init();
     const input = wrapper.find('.input').at(0);
@@ -77,7 +75,7 @@ describe('error text', () => {
 
   it('InsufficientAccountPermissionsError', async () => {
     serviceStorageManagement.graphDBDelete = jest.fn(() =>
-      Promise.resolve({ ErrorCode: 'Manager.Account.InsufficientAccountPermissionsError' })
+      Promise.resolve({ ErrorCode: 'Studio.Account.InsufficientAccountPermissionsError' })
     );
     const wrapper = init();
     const input = wrapper.find('.input').at(0);

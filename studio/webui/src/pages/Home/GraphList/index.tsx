@@ -165,7 +165,7 @@ const GraphList = () => {
     {
       title: intl.get('graphList.creationTime'),
       dataIndex: 'creation_time',
-      width: 225,
+      width: 220,
       sorter: true,
       sortDirections: ['ascend', 'descend', 'ascend']
     },
@@ -199,7 +199,7 @@ const GraphList = () => {
 
   return (
     <div id="netWork" className="netWork">
-      <div className="ad-p-5 ad-bg-white" style={{ height: '100%' }}>
+      <div className="ad-p-6 ad-bg-white" style={{ height: '100%' }}>
         <Format.Title className="ad-mb-5">{intl.get('graphList.mygraph')}</Format.Title>
         <div className="netWork-list">
           <div className="netWork-list-top">

@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/9/7 18:35
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 from datetime import datetime, timedelta
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
 import pandas as pd

@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/9/7 19:42
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import re
 from utils.CommonUtil import commonutil
 from utils.ds_check_parameters import dsCheckParameters

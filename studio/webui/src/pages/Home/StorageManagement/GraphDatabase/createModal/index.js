@@ -12,10 +12,10 @@ import ScrollBar from '@/components/ScrollBar';
 import './style.less';
 
 const ERROR_CODE = {
-  'Manager.Account.InsufficientAccountPermissionsError': 'configSys.PermissionsError',
-  'Manager.GraphDB.AccountError': 'configSys.nameError', // 账号或密码错误
-  'Manager.GraphDB.URLError': 'configSys.ipError', // ip或端口错误
-  'Manager.OpenSearch.OsRecordNotFoundError': 'configSys.notexist' // opensearch 记录不存在
+  'Studio.Account.InsufficientAccountPermissionsError': 'configSys.PermissionsError',
+  'Studio.GraphDB.AccountError': 'configSys.nameError', // 账号或密码错误
+  'Studio.GraphDB.URLError': 'configSys.ipError', // ip或端口错误
+  'Studio.OpenSearch.OsRecordNotFoundError': 'configSys.notexist' // opensearch 记录不存在
 };
 const nameTest =
   /(^[\u4e00-\u9fa5_a-zA-Z0-9=~!@#$&%^&*()_+`'"{}[\];:,.?<>|/~！@#￥%…&*·（）—+。={}|【】：；‘’“”、《》？，。/\n\\]+$)|-/;
@@ -30,7 +30,7 @@ const ModalContent = memo(props => {
   const [testLoading, setTestLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState(intl.get('configSys.ipPlace')); // 输入框展位符
   const [repeatIp, setRepeatIP] = useState([]); // IP重复
-  const [defaultIndex, setDefaultIndex] = useState(0); // 默认绑定的opensearch
+  const [defaultIndex, setDefaultIndex] = useState(undefined); // 默认绑定的opensearch
 
   useEffect(() => {
     getIndexList();
@@ -65,7 +65,7 @@ const ModalContent = memo(props => {
       }
     } catch (error) {
       const { type = '', response = {} } = error || {};
-      if (type === 'message' && response.ErrorCode === 'Manager.Common.ServerError') {
+      if (type === 'message' && response.ErrorCode === 'Studio.Common.ServerError') {
         message.error(response?.Description || '');
       }
     }
@@ -166,13 +166,14 @@ const ModalContent = memo(props => {
 
   // 报错
   const messageError = res => {
-    if (ERROR_CODE[res?.ErrorCode]) message.error(intl.get(ERROR_CODE[res?.ErrorCode]));
+    if (ERROR_CODE[res?.ErrorCode]) return message.error(intl.get(ERROR_CODE[res?.ErrorCode]));
     // 配置信息重复，有相同用户名密码，ip和port的数据源
-    if (res && res.ErrorCode === 'Manager.GraphDB.DuplicateConfigError') setConfigRepeat(true);
-    if (res && res.ErrorCode === 'Manager.Common.ServerError') message.error(res.Description);
-    if (res && res.ErrorCode === 'Manager.GraphDB.DuplicateGraphDBRecordNameError') {
-      form.setFields([{ name: 'name', errors: [intl.get('configSys.nameRepeat')] }]);
+    if (res && res.ErrorCode === 'Studio.GraphDB.DuplicateConfigError') return setConfigRepeat(true);
+    if (res && res.ErrorCode === 'Studio.Common.ServerError') return message.error(res.Description);
+    if (res && res.ErrorCode === 'Studio.GraphDB.DuplicateGraphDBRecordNameError') {
+      return form.setFields([{ name: 'name', errors: [intl.get('configSys.nameRepeat')] }]);
     }
+    message.error(res.Description);
   };
 
   // 切换类型
@@ -252,6 +253,7 @@ const ModalContent = memo(props => {
                     getPopupContainer={triggerNode => triggerNode.parentElement}
                     autoComplete="off"
                     disabled={optionType !== 'create'}
+                    placeholder={intl.get('configSys.osIdPlaceholder')}
                   >
                     {_.map(list, item => {
                       return (

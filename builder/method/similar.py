@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Time    : 2020/1/17 17:19
-@Author  : Tian.gu
-'''
-
 def Similar(word1,word2):
     word1_len,word2_len=len(word1),len(word2)
     a,b=(word1,word2) if word1_len <= word2_len else (word2,word1)

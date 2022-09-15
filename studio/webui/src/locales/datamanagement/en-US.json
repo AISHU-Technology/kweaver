@@ -26,7 +26,7 @@
     "total": "Total Records {data}",
     "search": "Search data name",
     "results": "No results",
-    "noDataF": "Click the | [create] | button to add a data",
+    "noDataF": "Click the | [add] | button to add a data",
     "noOntoF": "Click the | [create] | button to add a data",
     "structured": "Structured",
     "semiStructured": "semi-structured",

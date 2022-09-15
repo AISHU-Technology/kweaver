@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/11/28 18:50
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 
 def update_otl_data():
 	print("实时刷新")

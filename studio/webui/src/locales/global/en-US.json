@@ -7,7 +7,7 @@
     "systemConfig": "Settings",
     "cognitiveEngine": "Cognitive engine",
     "cognitiveSearch": "Cognitive search",
-    "knowledgeSearch": "Knowledge Search",
+    "knowledgeSearch": "Knowledge search",
     "dataManage": "Data",
     "storageManage": "Storage",
     "ok": "OK",
@@ -51,6 +51,7 @@
     "failed": "Failed",
     "emptyTableCreate": "[create]",
     "check": "Check",
-    "thesaurusManagement": "Thesaurus"
+    "thesaurusManagement": "Thesaurus",
+    "loadFail": "Failed to load"
   }
 }

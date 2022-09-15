@@ -1,4 +1,0 @@
-src
-public
-config
-scripts

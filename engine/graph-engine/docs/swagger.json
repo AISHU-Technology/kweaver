@@ -1,0 +1,1728 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "KWeaver graph-engine and alg-server",
+        "title": "kw_engine",
+        "contact": {},
+        "license": {
+            "name": "Apache 2.0"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/engine/v1/adv-search-config": {
+            "get": {
+                "description": "get adv-search configs",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "get configs",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "knowledge network id",
+                        "name": "knowledge_network_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "'all' or config or kg name",
+                        "name": "filter",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "query keyword",
+                        "name": "query",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Number of pages",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Number of edges",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "descend",
+                            "ascend"
+                        ],
+                        "type": "string",
+                        "description": "sort type",
+                        "name": "sort",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetSearchConfRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrInternalErr: internal error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "add adv-search configs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "add configs",
+                "parameters": [
+                    {
+                        "description": "config content",
+                        "name": "conf_content",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.AddAdvSearchConf"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.AddSearchConfRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrAdvConfContentErr: content error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete adv-search configs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "delete configs",
+                "parameters": [
+                    {
+                        "description": "config ids",
+                        "name": "conf_ids",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.DelAdvSearchConf"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DelSearchConfRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrAdvSearchConfIDErr: config ID does not exist",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/adv-search-config/conf/{kgid}": {
+            "get": {
+                "description": "add adv-search configs by knowledge graph id",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "get config ids",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "knowledge graph id",
+                        "name": "kgid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetConfByKGNameRes"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrKGIDErr: knowledge graph ID does not exist",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/adv-search-config/info/{confid}": {
+            "get": {
+                "description": "get adv-search config info by id",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "get config info",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "config id",
+                        "name": "confid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.InfoSearchConfRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrAdvSearchConfIDErr: config ID does not exist",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/adv-search-config/kglist": {
+            "get": {
+                "description": "get knowledge graph list",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "get kglist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "knowledge network id",
+                        "name": "knowledge_network_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "knowledge network name",
+                        "name": "knowledge_network_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.AdvConfKGListRes"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrInternalErr: internal error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/adv-search-config/update": {
+            "post": {
+                "description": "update adv-search configs",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "update configs",
+                "parameters": [
+                    {
+                        "description": "config content",
+                        "name": "conf_content",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.UpdateAdvSearchConf"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.UpdateSearchConfRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrAdvConfContentErr: content error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/adv-search/test": {
+            "get": {
+                "description": "semantic search test",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "advanced search test",
+                "parameters": [
+                    {
+                        "description": "adv-search query",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.RequestModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/services.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/adv-search/{confid}": {
+            "get": {
+                "description": "semantic search",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "advanced search",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "config ids like'5,6,7'",
+                        "name": "confid",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Query statement",
+                        "name": "query",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "number of pages",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Number of pages displayed",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/services.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/analysis": {
+            "get": {
+                "description": "Document analysis report",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "Document analysis report",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "knowledge graph id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "entity id",
+                        "name": "rid",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.AnalysisRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/explore/": {
+            "post": {
+                "description": "graphql search",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "graphql search",
+                "parameters": [
+                    {
+                        "description": "graphql search statement",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/gql.DataQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/gql.DataQuery"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrConfigStatusErr: graph in configuration status",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/explore/expandv": {
+            "get": {
+                "description": "expand edges by entity id",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "expand vertexes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Edge class, when null, query all edges",
+                        "name": "class",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Number of pages",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "minimum": -1,
+                        "type": "integer",
+                        "description": "Number of edges, query all when page = -1",
+                        "name": "size",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "enum": [
+                            "in",
+                            "out",
+                            "inout"
+                        ],
+                        "type": "string",
+                        "description": "The direction of the expanded edge",
+                        "name": "io",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "entity id",
+                        "name": "rid",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "graph id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "entity name",
+                        "name": "name",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ExpandVertexRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/explore/relation": {
+            "post": {
+                "description": "Get the direct relationship between two entities",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "Get relationship",
+                "parameters": [
+                    {
+                        "description": "knowledge graph id and entity IDs",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ReqExploreRelationArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Relation"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/health/alive": {
+            "get": {
+                "description": "Health detection",
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "alive",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/health/ready": {
+            "get": {
+                "description": "Health detection",
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "ready",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/kg/": {
+            "post": {
+                "description": "graphql search",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "graphql search",
+                "responses": {
+                    "200": {
+                        "description": "result data",
+                        "schema": {
+                            "type": "json"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrResourceErr: did not find configuration file ",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/properties": {
+            "post": {
+                "description": "Get attributes and types, for configuring search filter",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "attributes and types",
+                "parameters": [
+                    {
+                        "description": "class id and name",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ReqPropertiesArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetPropertiesRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/sql/{id}": {
+            "post": {
+                "description": "Orientdb sql API",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "Orientdb sql API",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "sql id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ReqBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.SearchSQLRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controllers.AddSearchConfRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.AdvConf": {
+            "type": "object",
+            "properties": {
+                "conf_id": {
+                    "type": "integer"
+                },
+                "conf_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.AdvConfKG": {
+            "type": "object",
+            "properties": {
+                "adv_conf": {
+                    "description": "KGDesc  string    `json:\"kg_desc\"`\nASModel bool      `json:\"as_model\"`",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.AdvConf"
+                    }
+                },
+                "kg_id": {
+                    "type": "integer"
+                },
+                "kg_name": {
+                    "type": "string"
+                },
+                "property_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "controllers.AdvConfKGList": {
+            "type": "object",
+            "properties": {
+                "config_status": {
+                    "type": "string"
+                },
+                "kg_id": {
+                    "type": "integer"
+                },
+                "kg_name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "task_status": {
+                    "type": "string"
+                },
+                "update_time": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.AdvConfKGListRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.AdvConfKGList"
+                    }
+                }
+            }
+        },
+        "controllers.AnaRes": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "entity": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.VPosition"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.AnalysisRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "$ref": "#/definitions/controllers.AnaRes"
+                }
+            }
+        },
+        "controllers.DelSearchConfRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.EdgeProperties": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.ExpandProperty": {
+            "type": "object",
+            "properties": {
+                "n": {
+                    "type": "string"
+                },
+                "v": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.ExpandVEdgeRes": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "class": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.ExpandProperty"
+                    }
+                }
+            }
+        },
+        "controllers.ExpandVertexRes": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "analysis": {
+                    "type": "boolean"
+                },
+                "class": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "expand": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "in_e": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.ExpandVEdgeRes"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "out_e": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.ExpandVEdgeRes"
+                    }
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.ExpandProperty"
+                    }
+                }
+            }
+        },
+        "controllers.GetConfByKGName": {
+            "type": "object",
+            "properties": {
+                "adv_conf": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dao.ConfListByKgid"
+                    }
+                },
+                "as_model": {
+                    "type": "boolean"
+                },
+                "kg_desc": {
+                    "type": "string"
+                },
+                "kg_id": {
+                    "type": "integer"
+                },
+                "kg_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.GetConfByKGNameRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.GetConfByKGName"
+                    }
+                }
+            }
+        },
+        "controllers.GetPropertiesRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.Properties"
+                    }
+                }
+            }
+        },
+        "controllers.GetSearchConfRes": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "res": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.AdvConfKG"
+                    }
+                }
+            }
+        },
+        "controllers.InfoSearchConfRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "$ref": "#/definitions/dao.InfoSearchConf"
+                }
+            }
+        },
+        "controllers.Properties": {
+            "type": "object",
+            "properties": {
+                "p_name": {
+                    "type": "string"
+                },
+                "p_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.Relation": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.RelationEdges"
+                    }
+                }
+            }
+        },
+        "controllers.RelationEdges": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "class": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "in": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "out": {
+                    "type": "string"
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.EdgeProperties"
+                    }
+                },
+                "rid": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.SearchSQLRes": {
+            "type": "object",
+            "properties": {
+                "res": {},
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.UpdateSearchConfRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.VPosition": {
+            "type": "object",
+            "properties": {
+                "before_word": {
+                    "description": "Color string\t`json:\"color\"`",
+                    "type": "string"
+                },
+                "end_index": {
+                    "type": "integer"
+                },
+                "line_index": {
+                    "type": "integer"
+                },
+                "repeat_freq": {
+                    "type": "integer"
+                },
+                "selected_index": {
+                    "type": "integer"
+                },
+                "start_index": {
+                    "type": "integer"
+                },
+                "unique_mark": {
+                    "type": "integer"
+                },
+                "v_alias": {
+                    "type": "string"
+                },
+                "v_class": {
+                    "type": "string"
+                },
+                "v_color": {
+                    "type": "string"
+                },
+                "v_proper": {
+                    "type": "string"
+                },
+                "word_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dao.ConfContent": {
+            "type": "object",
+            "required": [
+                "display_range",
+                "search_range"
+            ],
+            "properties": {
+                "display_range": {
+                    "$ref": "#/definitions/dao.DisplayRange"
+                },
+                "max_depth": {
+                    "type": "integer"
+                },
+                "search_range": {
+                    "$ref": "#/definitions/dao.SearchRange"
+                }
+            }
+        },
+        "dao.ConfListByKgid": {
+            "type": "object",
+            "properties": {
+                "conf_desc": {
+                    "type": "string"
+                },
+                "conf_id": {
+                    "type": "integer"
+                },
+                "conf_name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "update_time": {
+                    "type": "string"
+                }
+            }
+        },
+        "dao.DisplayRange": {
+            "type": "object",
+            "required": [
+                "vertexes"
+            ],
+            "properties": {
+                "vertexes": {
+                    "$ref": "#/definitions/dao.RangeVertexes"
+                }
+            }
+        },
+        "dao.InfoSearchConf": {
+            "type": "object",
+            "properties": {
+                "conf_content": {
+                    "$ref": "#/definitions/dao.ConfContent"
+                },
+                "conf_desc": {
+                    "type": "string"
+                },
+                "conf_id": {
+                    "type": "integer"
+                },
+                "conf_name": {
+                    "type": "string"
+                },
+                "kg_id": {
+                    "type": "integer"
+                },
+                "kg_name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "dao.RangeEdges": {
+            "type": "object",
+            "properties": {
+                "open": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "dao.RangeVertexes": {
+            "type": "object",
+            "properties": {
+                "open": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "dao.SearchRange": {
+            "type": "object",
+            "required": [
+                "edges",
+                "vertexes"
+            ],
+            "properties": {
+                "edges": {
+                    "$ref": "#/definitions/dao.RangeEdges"
+                },
+                "vertexes": {
+                    "$ref": "#/definitions/dao.RangeVertexes"
+                }
+            }
+        },
+        "gql.DataQuery": {
+            "type": "object"
+        },
+        "services.AddAdvSearchConf": {
+            "type": "object",
+            "required": [
+                "conf_content",
+                "conf_name",
+                "kg_id"
+            ],
+            "properties": {
+                "conf_content": {
+                    "$ref": "#/definitions/dao.ConfContent"
+                },
+                "conf_desc": {
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "conf_name": {
+                    "type": "string",
+                    "maxLength": 50
+                },
+                "kg_id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.ConfContent": {
+            "type": "object",
+            "properties": {
+                "display_range": {
+                    "$ref": "#/definitions/services.DisplayRange"
+                },
+                "max_depth": {
+                    "type": "integer"
+                },
+                "search_range": {
+                    "$ref": "#/definitions/services.SearchRange"
+                }
+            }
+        },
+        "services.DelAdvSearchConf": {
+            "type": "object",
+            "required": [
+                "conf_ids"
+            ],
+            "properties": {
+                "conf_ids": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "services.Dict": {
+            "type": "object"
+        },
+        "services.DisplayRange": {
+            "type": "object",
+            "properties": {
+                "vertexes": {
+                    "$ref": "#/definitions/services.Vertexes"
+                }
+            }
+        },
+        "services.Edge": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "from_id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tag": {
+                    "type": "string"
+                },
+                "to_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.Edges": {
+            "type": "object",
+            "properties": {
+                "open": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "services.Path": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.Edge"
+                    }
+                },
+                "meta_data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.PathMetaData"
+                    }
+                },
+                "vertexes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.Vertex"
+                    }
+                }
+            }
+        },
+        "services.PathMetaData": {
+            "type": "object",
+            "properties": {
+                "depth": {
+                    "type": "integer"
+                },
+                "from_entity_score": {
+                    "type": "number"
+                },
+                "weight": {
+                    "type": "number"
+                }
+            }
+        },
+        "services.ReqBody": {
+            "type": "object",
+            "required": [
+                "sql"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "mode": {
+                    "description": "允许为空或者graph",
+                    "type": "string",
+                    "enum": [
+                        "graph"
+                    ]
+                },
+                "sql": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "transaction": {
+                    "description": "是否执行事务",
+                    "type": "boolean"
+                }
+            }
+        },
+        "services.ReqExploreRelationArgs": {
+            "type": "object",
+            "required": [
+                "id",
+                "rids"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "rids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "services.ReqPropertiesArgs": {
+            "type": "object",
+            "required": [
+                "class",
+                "id"
+            ],
+            "properties": {
+                "class": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "services.RequestModel": {
+            "type": "object",
+            "properties": {
+                "conf_content": {
+                    "$ref": "#/definitions/services.ConfContent"
+                },
+                "kg_ids": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
+        },
+        "services.Response": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "integer"
+                },
+                "res": {
+                    "$ref": "#/definitions/services.SearchResult"
+                },
+                "time": {
+                    "type": "number"
+                }
+            }
+        },
+        "services.SearchRange": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "$ref": "#/definitions/services.Edges"
+                },
+                "vertexes": {
+                    "$ref": "#/definitions/services.Vertexes"
+                }
+            }
+        },
+        "services.SearchResult": {
+            "type": "object",
+            "properties": {
+                "search": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.TargetVertex"
+                    }
+                }
+            }
+        },
+        "services.TargetVertex": {
+            "type": "object",
+            "properties": {
+                "analysis": {
+                    "type": "boolean"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "properties": {
+                    "$ref": "#/definitions/services.Dict"
+                },
+                "score": {
+                    "type": "number"
+                },
+                "search_path": {
+                    "$ref": "#/definitions/services.Path"
+                },
+                "tag": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.UpdateAdvSearchConf": {
+            "type": "object",
+            "required": [
+                "conf_content",
+                "conf_id",
+                "conf_name"
+            ],
+            "properties": {
+                "conf_content": {
+                    "$ref": "#/definitions/dao.ConfContent"
+                },
+                "conf_desc": {
+                    "type": "string",
+                    "maxLength": 150
+                },
+                "conf_id": {
+                    "type": "integer"
+                },
+                "conf_name": {
+                    "type": "string",
+                    "maxLength": 50
+                }
+            }
+        },
+        "services.Vertex": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tag": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.Vertexes": {
+            "type": "object",
+            "properties": {
+                "open": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "utils.Error": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "error": {},
+                "errorCode": {
+                    "type": "string"
+                },
+                "errorDetails": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "errorLink": {
+                    "type": "string"
+                },
+                "solution": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -1,9 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/17 17:41
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
-
-# from keras.layers import *
 import numpy as np
 class dataGenerator:
     """数据生成器模版

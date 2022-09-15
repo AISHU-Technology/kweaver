@@ -1,4 +1,4 @@
-from .base import (PyMySQLTestCase, using_mysql, using_mysql_pool)
+from db_conn.tests.test_mysql.base import (PyMySQLTestCase, using_mysql, using_mysql_pool)
 import pymysql.cursors
 
 import datetime

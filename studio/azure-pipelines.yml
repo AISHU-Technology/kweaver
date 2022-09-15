@@ -4,6 +4,7 @@
 trigger:
   branches:
     include:
+      - release
       - develop
       - DATA-*
   paths:
@@ -21,6 +22,10 @@ parameters:
     displayName: 请手动输入程序的数据库版本值
     type: string
     default: '1.1.1'
+  - name: pushTag
+    displayName: 是否要推送到harbor
+    type: boolean
+    default: false
 
 variables:
   - group: global-context
@@ -54,18 +59,30 @@ jobs:
         inputs:
           command: 'build'
           repository: $(imageNameWithHarbor)
-          tags: $(mainTag)
+          tags: |
+            $(kwTag)
+            latest
           Dockerfile: '**/Studio.Dockerfile'
       - task: Docker@2
         inputs:
           containerRegistry: 'acr.aishu.cn'
           command: 'login'
+      - task: Docker@2
+        displayName: Push image
+        condition: and(succeeded(), eq(${{ parameters.pushTag }}, 'True'))
+        inputs:
+          containerRegistry: 'acr.aishu.cn'
+          repository: 'ad/kw-studio'
+          command: push
+          tags: |
+            $(kwTag)
+            latest
       - task: Bash@3
         displayName: saveTar
         inputs:
           targetType: 'inline'
           script: |
-            docker save -o KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(mainTag)
+            docker save -o KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(kwTag)
       - task: FtpUpload@2
         displayName: uploadFtp
         inputs:
@@ -74,7 +91,7 @@ jobs:
           username: '$(ftpUser)'
           password: '$(ftpPasswd)'
           rootDirectory:
-          filePatterns: '**/KWeaver-$(mainTag)-$(imageName)-$(imageTag).tar'
+          filePatterns: '**/KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar'
           remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
           clean: false
           cleanContents: false

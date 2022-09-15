@@ -94,7 +94,7 @@ const Contentheader = (props: any) => {
       </Menu.Item>
 
       <Menu.Item key="2" onClick={() => exportData()} disabled={_.isEmpty(selectedThesaurus?.columns)}>
-        {intl.get('uploadService.export')}
+        {intl.get('ThesaurusManage.export')}
 
       </Menu.Item>
 
