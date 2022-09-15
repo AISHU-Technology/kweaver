@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Time : 2021/7/16 13:15
-# @Author : jack.li
-# @Email : jack.li@aishu.cn
-# @File : tools.py.py
-# @Project : builder
 import re
 from collections import defaultdict
 

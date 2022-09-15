@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/19 13:42
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import datetime
 
 from celery import group

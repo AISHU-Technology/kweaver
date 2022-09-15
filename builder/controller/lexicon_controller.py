@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Author ：Jay.zhu
-@Date ：2022/9/14 8:59
-'''
 import os
 from flask import Blueprint, request, send_from_directory, jsonify, make_response
 from common.errorcode.codes.lexicon_code import *

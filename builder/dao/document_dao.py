@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/17 17:41
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import sys
 import os
 import base64
@@ -574,8 +571,6 @@ class Anyshare():
         import requests
         # address = address.replace("https", "http")
         esgnsid = gns.split('/')[-1]
-        # address = "http://10.4.69.44"
-        # esgnsid = "1D2666C81D6B4A6B8999DD13082F28A2"  # json 515D42AD63FF424B9DEFA4F40270F724
         url = esapi.format(address,port, esgnsid)
         payload = {}
         headers = {}

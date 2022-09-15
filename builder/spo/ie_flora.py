@@ -1,6 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2022/7/27
-# @Author  : flora_hu
 
 import json
 import numpy as np

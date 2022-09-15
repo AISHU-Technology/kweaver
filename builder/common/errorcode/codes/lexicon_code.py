@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Author ：Jay.zhu
-@Date ：2022/9/14 9:01
-'''
 from __future__ import (absolute_import, unicode_literals)
 # 数据库异常
 Builder_LexiconController_DatabaseError = "Builder.LexiconController.DatabaseError"

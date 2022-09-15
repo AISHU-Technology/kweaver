@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Time    : 2019/12/31 16:58
-@Author  : Tian.gu
-'''
-
 import pyorient
 import os
 

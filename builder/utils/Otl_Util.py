@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/17 17:41
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import requests
 import json
 from utils.common_response_status import CommonResponseStatus
@@ -23,22 +20,21 @@ class Otl_Util(object):
                 newfilelist.append(file)
         count = len(newfilelist)
         return count, newfilelist
+
     def is_special(self,char):
         # 将 下划线、字母、数字、汉字 以外的字符 转为空字符
-        if  not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', char):
-            char=re.sub('[^A-Za-z0-9\u4e00-\u9fa5_]', '', char)
+        if not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', char):
+            char = re.sub('[^A-Za-z0-9\u4e00-\u9fa5_]', '', char)
         # 去掉开头的下划线
             char = char.lstrip('_')
-        if len(char)>=50:
-            char=char[:50]
+        if len(char) >= 50:
+            char = char[:50]
         return char
     
     def is_sprcial_no_cut(self, char):
         if not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', char):
             char = re.sub('[^A-Za-z0-9\u4e00-\u9fa5_]', '_', char)
         return char
-    
-    # def get_entity_edge(self,params):
     
     def Levenshtein_Distance(self, str1, str2):
         """

@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/8/10 18:24
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import pika
 from utils.log_info import Logger
 from utils.Gview import Gview

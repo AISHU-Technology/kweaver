@@ -1,8 +1,8 @@
 
 import functools
-from common.db.mysql.pyMySql import DBMySqlLib
-from config.mysql_conf import host, port, user, password, database, mysql_log_open,pooled_db_config
-from common.log.logger import logger
+from db_conn.common.db.mysql.pyMySql import DBMySqlLib
+from db_conn.config.mysql_conf import host, port, user, password, database, mysql_log_open,pooled_db_config
+from db_conn.common.log.logger import logger
 
 
 # PyMySQL的数据库入口方法

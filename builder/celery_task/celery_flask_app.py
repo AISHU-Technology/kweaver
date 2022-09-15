@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/17 13:46
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import time
 import redis
 import json

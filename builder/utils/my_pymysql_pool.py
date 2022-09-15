@@ -1,9 +1,4 @@
 # -*-coding:utf-8-*-
-# @Author: Lowe.li
-# @Email: Lowe.li@aishu.cn
-# @CreatDate: 2020/7/1 9:44
-# @File : my_pymysql_pool.py
-# @Software : PyCharm
 
 import sys
 import os
@@ -11,7 +6,6 @@ import os
 from utils.pymysql_pool import PymysqlPool
 import pymysql
 
-# 自测 read_write docker_db read_write_ceshi
 db_type = "docker_db"
 
 
