@@ -41,9 +41,7 @@ class Knw_check_params(object):
                         message += " parameters: " + key + " can not empty! "
                         ret_status = self.INVALID
                     elif len(value) > 50 or (
-                            not re.search(
-                                u'^[-_a-zA-Z0-9 =~!@#$&%^&*\'\"\“、\‘()_+`{}[\];:,.·?<>|/~！$\s/\n\\\s@#￥%…&*“”（）—+。={}|【】：；、《》？，。\u4e00-\u9fa5]+$', 
-                                value) and value != ""):
+                            not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5\x21-\x7e]+$', value) and value != ""):
                         message += " parameters: " + key + " Length over 50 or Characters are not _, Chinese, English！"
                         ret_status = self.INVALID
 
@@ -244,9 +242,7 @@ class Knw_check_params(object):
                         message += " parameters: " + key + " can not empty! "
                         ret_status = self.INVALID
                     elif len(value) > 50 or (
-                            not re.search(
-                                u'^[-_a-zA-Z0-9 =~!@#$&%^&*\'\"\“、\‘()_+`{}[\];:,.·?<>|/~！$\s/\n\\\s@#￥%…&*“”（）—+。={}|【】：；、《》？，。\u4e00-\u9fa5]+$', 
-                                value) and value != ""):
+                            not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5\x21-\x7e]+$', value) and value != ""):
                         message += " parameters: " + key + " Length over 50 or Characters are not _, Chinese, English！"
                         ret_status = self.INVALID
 

@@ -231,6 +231,8 @@ class TestLexiconExport(TestCase):
                                                           "lexicon_name": [],
                                                           "description": [],
                                                           "labels": [],
+                                                          "create_user": [],
+                                                          "operate_user": [],
                                                           "create_time": [],
                                                           "update_time": []})
         self.lexicon_info = pd.DataFrame.from_dict({
@@ -238,6 +240,8 @@ class TestLexiconExport(TestCase):
             "lexicon_name": ["ciku1"],
             "description": ["xxxxxxxxxxxx"],
             "labels": ['["label1", "label2", "label3"]'],
+            "create_user": ["123456789"],
+            "operate_user": ["123456789"],
             "create_time": ["2022-07-25 13:47:46"],
             "update_time": ["2022-07-25 13:47:46"]})
         
@@ -303,12 +307,16 @@ class TestLexiconInserWord(TestCase):
             "lexicon_name": ["ciku1"],
             "description": ["xxxxxxxxxxxx"],
             "labels": ['["label1", "label2", "label3"]'],
+            "create_user": ["123456789"],
+            "operate_user": ["123456789"],
             "create_time": ["2022-07-25 13:47:46"],
             "update_time": ["2022-07-25 13:47:46"]})
         self.lexicon_id_Noexist = pd.DataFrame.from_dict({"id": [],
                                                           "lexicon_name": [],
                                                           "description": [],
                                                           "labels": [],
+                                                          "create_user": [],
+                                                          "operate_user": [],
                                                           "create_time": [],
                                                           "update_time": []})
         self.status = pd.DataFrame.from_dict({"id": [1]})
@@ -393,12 +401,16 @@ class TestLexiconSearchWord(TestCase):
             "lexicon_name": ["ciku1"],
             "description": ["xxxxxxxxxxxx"],
             "labels": ['["label1", "label2", "label3"]'],
+            "create_user": ["123456789"],
+            "operate_user": ["123456789"],
             "create_time": ["2022-07-25 13:47:46"],
             "update_time": ["2022-07-25 13:47:46"]})
         self.lexicon_id_Noexist = pd.DataFrame.from_dict({"id": [],
                                                           "lexicon_name": [],
                                                           "description": [],
                                                           "labels": [],
+                                                          "create_user": [],
+                                                          "operate_user": [],
                                                           "create_time": [],
                                                           "update_time": []})
         self.search_res = {"count": 1, "df": [{"word": "难过"}]}
@@ -440,12 +452,16 @@ class TestLexiconEditWord(TestCase):
             "lexicon_name": ["ciku1"],
             "description": ["xxxxxxxxxxxx"],
             "labels": ['["label1", "label2", "label3"]'],
+            "create_user": ["123456789"],
+            "operate_user": ["123456789"],
             "create_time": ["2022-07-25 13:47:46"],
             "update_time": ["2022-07-25 13:47:46"]})
         self.lexicon_id_Noexist = pd.DataFrame.from_dict({"id": [],
                                                           "lexicon_name": [],
                                                           "description": [],
                                                           "labels": [],
+                                                          "create_user": [],
+                                                          "operate_user": [],
                                                           "create_time": [],
                                                           "update_time": []})
         self.word_info_mismatch = {"_id": "23214sda", "word1": "测试"}
@@ -521,12 +537,16 @@ class TestLexiconDeleteWord(TestCase):
             "lexicon_name": ["ciku1"],
             "description": ["xxxxxxxxxxxx"],
             "labels": ['["label1", "label2", "label3"]'],
+            "create_user": ["123456789"],
+            "operate_user": ["123456789"],
             "create_time": ["2022-07-25 13:47:46"],
             "update_time": ["2022-07-25 13:47:46"]})
         self.lexicon_id_Noexist = pd.DataFrame.from_dict({"id": [],
                                                           "lexicon_name": [],
                                                           "description": [],
                                                           "labels": [],
+                                                          "create_user": [],
+                                                          "operate_user": [],
                                                           "create_time": [],
                                                           "update_time": []})
         self.status = pd.DataFrame.from_dict({"id": [1]})
@@ -601,12 +621,16 @@ class TestLexiconEdit(TestCase):
             "lexicon_name": ["ciku1"],
             "description": ["xxxxxxxxxxxx"],
             "labels": ['["label1", "label2", "label3"]'],
+            "create_user": ["123456789"],
+            "operate_user": ["123456789"],
             "create_time": ["2022-07-25 13:47:46"],
             "update_time": ["2022-07-25 13:47:46"]})
         self.lexicon_id_Noexist = pd.DataFrame.from_dict({"id": [],
                                                           "lexicon_name": [],
                                                           "description": [],
                                                           "labels": [],
+                                                          "create_user": [],
+                                                          "operate_user": [],
                                                           "create_time": [],
                                                           "update_time": []})
         self.knowledge_info = pd.DataFrame.from_dict({"knowledge_id": [10]})
@@ -666,6 +690,8 @@ class TestLexiconDelete(TestCase):
             "lexicon_name": ["ciku1"],
             "description": ["xxxxxxxxxxxx"],
             "labels": ['["label1", "label2", "label3"]'],
+            "create_user": ["123456789"],
+            "operate_user": ["123456789"],
             "create_time": ["2022-07-25 13:47:46"],
             "update_time": ["2022-07-25 13:47:46"],
             "columns": '[]'})
@@ -673,6 +699,8 @@ class TestLexiconDelete(TestCase):
                                                           "lexicon_name": [],
                                                           "description": [],
                                                           "labels": [],
+                                                          "create_user": [],
+                                                          "operate_user": [],
                                                           "create_time": [],
                                                           "update_time": []})
     
@@ -715,12 +743,16 @@ class TestLexiconImportWords(TestCase):
             "lexicon_name": ["ciku1"],
             "description": ["xxxxxxxxxxxx"],
             "labels": ['["label1", "label2", "label3"]'],
+            "create_user": ["123456789"],
+            "operate_user": ["123456789"],
             "create_time": ["2022-07-25 13:47:46"],
             "update_time": ["2022-07-25 13:47:46"]})
         self.lexicon_id_Noexist = pd.DataFrame.from_dict({"id": [],
                                                           "lexicon_name": [],
                                                           "description": [],
                                                           "labels": [],
+                                                          "create_user": [],
+                                                          "operate_user": [],
                                                           "create_time": [],
                                                           "update_time": []})
         self.headers = {

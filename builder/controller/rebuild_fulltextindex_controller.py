@@ -26,6 +26,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def rebuild_fulltextindex(KDB_name):
     '''
     submit rebuilding-fulltext-index task
+    called by uploading task. rebuild fulltext index of nebula graph to support fulltext searching.
     ---
     parameters:
         -   name: KDB_name
@@ -107,6 +108,7 @@ def rebuild_fulltextindex(KDB_name):
 def rebuild_status(KDB_name):
     '''
     get status of rebuilding-fulltext-index task
+    called by uploading task.
     ---
     parameters:
         -   name: KDB_name

@@ -334,27 +334,12 @@ def getbyinfoext():
     get the extraction rule according to the extraction file list and graph configuration step
     ---
     parameters:
-        -   name: 'graphid'
-            in: 'body'
-            description: 'graph id'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: 'integer'
-            example: 116
-        -   name: 'graph_step'
-            in: 'body'
-            description: 'graph configuration step'
-            required: true
-            type: 'string'
-            example: 'graph_InfoExt'
-        -   name: 'infoext_list'
-            in: 'body'
-            description: 'extraction file list containing data source name and file source'
-            required: true
-            type: 'array'
-            example: [
-              { "ds_name": "data_source_name1", "file_source": "document identification：fileid or tablename" },
-              { "ds_name": "data_source_name1", "file_source": "document identification：fileid or tablename" }
-            ]
+            schema:
+                $ref: '#/definitions/getbyinfoext'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -400,31 +385,12 @@ def check_kmapinfo():
     <b>Scenario</b>: information extraction in step 4 modifies the extracted entities and properties used in step 5. It is judged whether the information in step 5 exists. 0: exists, 1: does not exist, 2: property content under it does not exist.
     ---
     parameters:
-        -   name: 'graphid'
-            in: 'body'
-            description: 'graph id'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: 'integer'
-            example: 116
-        -   name: 'graph_KMap'
-            in: 'body'
-            description: 'details of the graph mapping'
-            required: true
-            type: 'array'
-            example: [{
-                  "otls_map": [
-                    {
-                      "otl_name": "test_json",
-                      "entity_type": "test_json",
-                      "property_map": [
-                        { "otl_prop": "name", "entity_prop": "a1" },
-                        { "otl_prop": "a1", "entity_prop": "a1" },
-                        { "otl_prop": "a2", "entity_prop": "a2" }
-                      ]
-                    }
-                  ],
-                  "relations_map": []
-                }]
+            schema:
+                $ref: '#/definitions/check_kmapinfo'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -458,42 +424,12 @@ def savenocheck():
     Exit after saving knowledge graph configuration information
     ---
     parameters:
-        -   name: 'graph_id'
-            in: 'body'
-            description: 'graph id'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: 'integer'
-            example: 4
-        -   name: 'graph_baseInfo'
-            in: 'body'
-            description: 'graph basic information'
-            required: false
-            type: 'object'
-        -   name: 'graph_ds'
-            in: 'body'
-            description: 'graph data source information'
-            required: false
-            type: 'object'
-        -   name: 'graph_otl'
-            in: 'body'
-            description: 'graph ontology information'
-            required: false
-            type: 'object'
-        -   name: 'graph_InfoExt'
-            in: 'body'
-            description: 'graph extraction information'
-            required: false
-            type: 'object'
-        -   name: 'graph_KMap'
-            in: 'body'
-            description: 'graph mapping information'
-            required: false
-            type: 'object'
-        -   name: 'graph_KMerge'
-            in: 'body'
-            description: 'graph merging information'
-            required: false
-            type: 'object'
+            schema:
+                $ref: '#/definitions/savenocheck'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -560,18 +496,12 @@ def graphDeleteByIds():
     batch delete graph by graph ids
     ---
     parameters:
-        -   name: graphids
-            in: body
-            description: list of graph ids to be deleted
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: array
-            example: [1, 2]
-        -   name: knw_id
-            in: body
-            description: knowledge network id
-            required: true
-            type: integer
-            example: 1
+            schema:
+                $ref: '#/definitions/graphDeleteByIds'
     '''
     runs, noAuthority, noExist, normal = [], [], [], []
     mess = ""
@@ -792,12 +722,12 @@ def graph_config_output():
     export the configuration information of the knowledge graph
     ---
     parameters:
-        -   name: ids
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: list of graph ids to be exported. If its length exceeds 1, an error will be reported.
-            type: array
-            example: ["86"]
+            schema:
+                $ref: '#/definitions/graph_config_output'
     '''
     config_ids = request.json.get("ids")
     if len(config_ids) > 1:
@@ -845,26 +775,12 @@ def graph_config_input():
     import the configuration information of the knowledge graph
     ---
     parameters:
-        -   name: knw_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: knowledge network id
-            type: integer
-        -   name: file
-            in: body
-            required: true
-            description: data file to be uploaded
-            type: file
-        -   name: graph_id
-            in: body
-            required: true
-            description: graph id
-            type: integer
-        -   name: method
-            in: body
-            required: true
-            description: '0: skip when graph id exists; 1: update when graph id exists'
-            type: integer
+            schema:
+                $ref: '#/definitions/graph_config_input'
     consumes:
         -   application/x-www-form-urlencoded
     '''
