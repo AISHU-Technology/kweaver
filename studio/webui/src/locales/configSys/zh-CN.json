@@ -79,6 +79,7 @@
     "userPassDes": "管理用户密码时使用的属性域。",
     "userEncDes": "请为您的目录密码选择加密算法。",
     "servernamePlaceholder": "请输入LDAP服务器名称",
+    "osIdPlaceholder": "请选择索引",
     "hostPlaceholder": "请输入LDAP服务器主机名",
     "userPlaceholder": "请输入用户名",
     "passPlaceholder": "请输入密码",

@@ -29,7 +29,7 @@ const API = {
   // dataSource
   sourceConnectTest: `${baseBuilder}/ds/testconnect`,
   dataSourcePost: `${baseBuilder}/ds`,
-  postCopyDs: `${baseBuilder}/ds/ds_copy/`,
+  postCopyDs: `${baseBuilder}/ds/ds_copy`,
   dataSourceGet: `${baseBuilder}/ds`,
   dataSourceGetByGraph: `${baseBuilder}/graph/ds/`,
   dataSourcePut: `${baseBuilder}/ds/`,

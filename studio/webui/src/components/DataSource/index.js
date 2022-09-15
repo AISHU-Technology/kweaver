@@ -6,8 +6,8 @@
  */
 
 import React, { useState, useEffect, useImperativeHandle, useCallback, useMemo, useRef } from 'react';
-import { Table, Button, Modal, message, Checkbox, Dropdown, Menu, Tooltip } from 'antd';
-import { ExclamationCircleFilled, LoadingOutlined, EllipsisOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Table, Button, Modal, message, Checkbox, Tooltip } from 'antd';
+import { ExclamationCircleFilled, LoadingOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import apiService from '@/utils/axios-http';
 import servicesDataSource from '@/services/dataSource';
 import intl from 'react-intl-universal';
@@ -39,12 +39,6 @@ const DELETE_ERROR_CODE = {
   500001: 'datamanagement.deleteError',
   500005: 'datamanagement.noDelete'
 };
-const TEST_ERROR_CODES = {
-  500001: 'datamanagement.testError',
-  500002: 'datamanagement.incorrectChange',
-  500012: 'datamanagement.as7.needAuth',
-  500013: 'datamanagement.as7.authTimeOut'
-};
 
 const DataSource = props => {
   const { dataSourceData, setDataSourceData, useDs = [], dataSourceRef, graphId, selectedKnowledge } = props;
@@ -67,12 +61,12 @@ const DataSource = props => {
   const [checked, setChecked] = useState(false);
   const [currentSelected, setCurrentSelected] = useState(1);
   const [checkedSort, setCheckedSort] = useState('ascend'); // 选中数据排序
-  const [testLoading, setTestLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [operationVisible, setOperationVisible] = useState(false); // 操作下拉卡片
   const [lockMqId, setLockMqId] = useState(0); // 锁定的rabbitMQ数据源id, 0正常, > 0 禁用其他, -1禁用MQ
   const usedID = useMemo(() => useDs.map(d => d.id), [useDs]); // 已使用的数据源id
   const isWorkflow = useMemo(() => window.location.pathname.includes(WORKFLOW_URL), []); // 是否是在构建流程中
+
   // 含有rabbitMQ数据源时禁用全选
   const isUnCheckAll = useMemo(() => {
     if (!isWorkflow) return false;
@@ -86,7 +80,6 @@ const DataSource = props => {
       setSelectKey('');
       setSourceVisible(false);
       setDeleteVisible(false);
-      setTestLoading(false);
     }
   }));
 
@@ -328,6 +321,7 @@ const DataSource = props => {
    * @returns
    */
   const onEdit = record => {
+    setSelectKey(record?.id);
     setFormInfo({ ...record });
     setOperation('edit');
     setSourceVisible(true);
@@ -338,6 +332,7 @@ const DataSource = props => {
    * @param {Object} record 行数据
    */
   const onCopy = record => {
+    setSelectKey(record?.id);
     const { data_source, dsname } = record;
     const reset = !data_source.includes('as') ? { ds_password: '' } : {};
 
@@ -357,52 +352,10 @@ const DataSource = props => {
    * @param {Object} record 行数据
    */
   const onOperationDel = record => {
+    setSelectKey(record?.id);
     setOperation('delete');
     setDeleteData([record.id]);
     setDeleteVisible(true);
-  };
-
-  /**
-   * 点击下拉操作中的测试
-   * @param {Object} record 行数据
-   */
-  const onOperationTest = async record => {
-    if (testLoading) return;
-
-    const {
-      id,
-      data_source,
-      dsname,
-      ds_address,
-      ds_port,
-      ds_auth,
-      ds_path,
-      ds_user,
-      ds_password,
-      queue = '',
-      vhost = ''
-    } = record;
-    const otherKeys = data_source === 'as7' ? { ds_auth } : { ds_user, ds_password };
-    const body = {
-      ds_id: id || 0,
-      data_source,
-      ds_address,
-      ds_port: parseInt(ds_port),
-      ds_path,
-      queue,
-      vhost,
-      ...otherKeys
-    };
-
-    try {
-      setTestLoading(true);
-      const res = await servicesDataSource.sourceConnectTest(body);
-      setTestLoading(false);
-      res?.res && message.success(`${dsname} ${intl.get('datamanagement.testSuccessfullow')}`);
-      res?.Code in TEST_ERROR_CODES && message.error(`${dsname} ${intl.get(TEST_ERROR_CODES[res.Code])}`);
-    } catch {
-      setTestLoading(false);
-    }
   };
 
   // 定义列表
