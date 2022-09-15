@@ -4,29 +4,22 @@ import intl from 'react-intl-universal';
 import IconFont from '@/components/IconFont';
 import Summary from './Summary';
 import Basic from './Basic';
-import Pathexploration from './PathExploration';
-
+import PathExploration from './PathExploration';
 import './style.less';
 
 const ICON_ARRAY = [
   { id: 1, type: 'icon-iconzhengli_dangan', intlText: 'searchGraph.Summary' },
-  { id: 2, type: 'icon-jibenxinxi', intlText: 'searchGraph.baseInfo' },
-  { id: 3, type: 'icon-lujingtansuo', intlText: 'searchGraph.pathExploration' }
+  { id: 2, type: 'icon-jibenxinxi', intlText: 'searchGraph.baseInfo' }
 ];
 class SideBar extends Component {
-  onClickIcon = () => {
-    const { setSideBarVisible, setAutoOpen, sideBarVisible, lefSelect, setTabSelect } = this.props;
-    setSideBarVisible(!sideBarVisible);
+  state = {
+    lefSelect: 0
+  };
 
-    // 默认打开汇总信息
-    if (!lefSelect) {
-      setTabSelect(1);
-    }
-
-    // 手动关闭，点击实体不再打开
-    if (sideBarVisible) {
-      setAutoOpen();
-    }
+  setTabSelect = e => {
+    this.setState({
+      lefSelect: e
+    });
   };
 
   render() {
@@ -44,22 +37,7 @@ class SideBar extends Component {
       setStartNode,
       setEndNode,
       setTabSelect,
-      lefSelect,
-      setPathList,
-      selectGraph,
-      pathList,
-      addGraphData,
-      direction,
-      setDirection,
-      pathType,
-      setType,
-      setSelectedPath,
-      isExplorePath,
-      setIsExplorePath,
-      pathLoading,
-      setPathLoading,
-      isCognitive,
-      searchVisible
+      lefSelect
     } = this.props;
     return (
       <div className="side-bar-right">
@@ -67,7 +45,9 @@ class SideBar extends Component {
           <div
             className="icon-menu-box"
             onClick={() => {
-              this.onClickIcon();
+              setSideBarVisible(!sideBarVisible);
+              !lefSelect && setTabSelect(1);
+              sideBarVisible && this.props.setAutoOpen(); // 手动关闭，点击实体不再打开
             }}
           >
             {sideBarVisible ? (
@@ -107,31 +87,11 @@ class SideBar extends Component {
             />
           )}
           {lefSelect === 3 && (
-            <Pathexploration
+            <PathExploration
               startNode={startNode}
               endNode={endNode}
               setStartNode={setStartNode}
               setEndNode={setEndNode}
-              nodes={nodes}
-              lefSelect={lefSelect}
-              selectedNode={selectedNode}
-              sideBarVisible={sideBarVisible}
-              setPathList={setPathList}
-              pathList={pathList}
-              selectGraph={selectGraph}
-              edges={edges}
-              addGraphData={addGraphData}
-              direction={direction}
-              setDirection={setDirection}
-              pathType={pathType}
-              setType={setType}
-              setSelectedPath={setSelectedPath}
-              isExplorePath={isExplorePath}
-              setIsExplorePath={setIsExplorePath}
-              pathLoading={pathLoading}
-              setPathLoading={setPathLoading}
-              isCognitive={isCognitive}
-              searchVisible={searchVisible}
             />
           )}
         </div>

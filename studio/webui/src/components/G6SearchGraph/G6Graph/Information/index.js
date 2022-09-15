@@ -1,9 +1,8 @@
 /**
- * @description 进出边选择栏
+ * 进出边选择栏
  */
 
 import React, { Component } from 'react';
-import G6 from '@antv/g6';
 import _ from 'lodash';
 import { Tooltip, Empty } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -101,7 +100,7 @@ class Information extends Component {
                 <div className="in-out-loading-data">
                   <LoadingOutlined className="icon" />
                 </div>
-              ) : inData?.length ? (
+              ) : inData.length ? (
                 inData.map((item, index) => {
                   return (
                     <div
@@ -116,12 +115,12 @@ class Information extends Component {
                       }}
                     >
                       <div className="edge-name-tooltip edge-name-tooltip-in">
-                        <Tooltip placement="topLeft" title={item?.class}>
-                          <span className="word">{item?.class}</span>
+                        <Tooltip placement="topLeft" title={item.class}>
+                          <span className="word">{item.class}</span>
                         </Tooltip>
                       </div>
                       <span className="word">
-                        (<span className="opened">{this.getCount(item)}</span>/{item?.count})
+                        (<span className="opened">{this.getCount(item)}</span>/{item.count})
                       </span>
                       <IconFont type="icon-fanye" className="right-out" />
                     </div>
@@ -140,7 +139,7 @@ class Information extends Component {
               </div>
             ) : (
               <div className="edge-muster">
-                {outData?.length ? (
+                {outData.length ? (
                   outData.map((item, index) => {
                     return (
                       <div
@@ -155,12 +154,12 @@ class Information extends Component {
                         }}
                       >
                         <div className="edge-name-tooltip edge-name-tooltip-in">
-                          <Tooltip placement="topLeft" title={item?.class}>
-                            <span className="word">{item?.class}</span>
+                          <Tooltip placement="topLeft" title={item.class}>
+                            <span className="word">{item.class}</span>
                           </Tooltip>
                         </div>
                         <span className="word">
-                          (<span className="opened">{this.getCount(item)}</span>/{item?.count})
+                          (<span className="opened">{this.getCount(item)}</span>/{item.count})
                         </span>
 
                         <IconFont type="icon-fanye" className="right-out" />

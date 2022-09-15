@@ -72,7 +72,6 @@
     "importAgain": "按钮重新导入",
     "editwordsError": "词库中有数据正在导入，请稍后重试",
     "noLabels": "【暂无标签】",
-    "export": "导出",
-    "refreshSuccess": "刷新成功！"
+    "export": "导出"
   }
 }

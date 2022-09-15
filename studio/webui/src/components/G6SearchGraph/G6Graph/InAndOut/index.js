@@ -1,5 +1,8 @@
+/**
+ * 进出边拓展点
+ */
+
 import React, { Component } from 'react';
-import _ from 'lodash';
 import { Tooltip, Checkbox, Empty } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import G6 from '@antv/g6';
@@ -19,7 +22,7 @@ class InAndOut extends Component {
     sourceData: [], // 每页数据
     searchValue: '', // 搜索的值
     openEdges: this.props.edges, // 需要展开的边
-    loadding: false,
+    loading: false,
     openNodes: this.props.nodes // 需要展开的点
   };
 
@@ -59,7 +62,7 @@ class InAndOut extends Component {
    */
   getEdgeData = async ({ id, typeClass, io, rid, page, size, name }) => {
     this.setState({
-      loadding: true
+      loading: true
     });
     try {
       const res = await servicesExplore.expandEdges({
@@ -84,11 +87,11 @@ class InAndOut extends Component {
         });
       }
       this.setState({
-        loadding: false
+        loading: false
       });
     } catch (error) {
       this.setState({
-        loadding: false
+        loading: false
       });
     }
   };
@@ -101,11 +104,11 @@ class InAndOut extends Component {
 
     // 遇到无颜色的的问题
     const defaultColor = 'rgba(0,0,0,0)';
-    _.forEach(data, item => {
+    data.forEach(item => {
       const { id, color, name, expand, analysis, alias, properties } = item;
 
       if (selectEdge.type === 'in') {
-        _.forEach(item.out_e, outItem => {
+        item.out_e.forEach(outItem => {
           outItem.source = item.id;
           outItem.target = selectedNode.id;
           // outItem.start = {
@@ -120,7 +123,7 @@ class InAndOut extends Component {
           // outItem.end = selectedNode;
         });
       } else {
-        _.forEach(item.in_e, inItem => {
+        item.in_e.forEach(inItem => {
           inItem.source = selectedNode.id;
           inItem.target = item.id;
           // inItem.start = selectedNode;
@@ -468,7 +471,7 @@ class InAndOut extends Component {
 
   render() {
     const { selectEdge, openInformation, inOrOut } = this.props;
-    const { page, sourceData, loadding } = this.state;
+    const { page, sourceData, loading } = this.state;
 
     return (
       <div id="inAndOut">
@@ -502,7 +505,7 @@ class InAndOut extends Component {
             onPressEnter={e => this.onSearch(e)}
           />
         </div>
-        {loadding ? (
+        {loading ? (
           <div className="in-out-loading-data">
             <LoadingOutlined className="icon" />
           </div>
@@ -530,23 +533,23 @@ class InAndOut extends Component {
                     return (
                       <div className="box" key={index.toString()}>
                         <Checkbox
-                          key={item?.id}
+                          key={item.id}
                           checked={this.setChecked(item)}
                           onChange={e => {
                             this.checkboxChange(e, item);
                           }}
                         ></Checkbox>
                         <div className="check-box-content">
-                          <span className="check-box-span-tooltip" title={item?.data?.name}>
-                            {item?.data?.name}
+                          <span className="check-box-span-tooltip" title={item.data.name}>
+                            {item.data.name}
                           </span>
                         </div>
                         <div className="check-box-relation">
                           <span
                             className="check-box-span-tooltip-relation"
-                            title={selectEdge.type === 'in' ? item?.out_e[0]?.name : item?.in_e[0]?.name}
+                            title={selectEdge.type === 'in' ? item.out_e[0].name : item.in_e[0].name}
                           >
-                            {selectEdge.type === 'in' ? item?.out_e[0]?.name : item?.in_e[0]?.name}
+                            {selectEdge.type === 'in' ? item.out_e[0].name : item.in_e[0].name}
                           </span>
                         </div>
                       </div>

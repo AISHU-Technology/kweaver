@@ -111,7 +111,7 @@ def new_word_extract(dataset_dict, out_path, batched, batch_size, **kwargs):
     from DataTransform.Utils.example import New_Word
     N_W = New_Word(out_path, **kwargs)
     for k, dataset in dataset_dict.items():
-        update_dataset = dataset.map(N_W.pre_process_new_word, batched=batched, batch_size=batch_size, load_from_cache_file=False)
+        update_dataset = dataset.map(N_W.pre_process_new_word, batched=batched, batch_size=batch_size)
         list(update_dataset)
     dataset = N_W.process_new_word(out_path)
     dataset_dict = DataflowDatasetDict({"NewWord": dataset})

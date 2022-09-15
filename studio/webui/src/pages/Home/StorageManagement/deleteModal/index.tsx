@@ -1,6 +1,6 @@
 import React, { memo, useState, useRef } from 'react';
 import intl from 'react-intl-universal';
-import { Modal, Button, message, Input, Descriptions } from 'antd';
+import { Modal, Button, message, Input } from 'antd';
 
 import serviceStorageManagement from '@/services/storageManagement';
 
@@ -43,9 +43,7 @@ const DeleteModal = (props: DeleteModalType) => {
       const { type = '', response = {} } = error || {};
       if (type === 'message') {
         const { ErrorCode } = response;
-
-        if (ERROR_CODE[ErrorCode]) return message.error(intl.get(ERROR_CODE[ErrorCode]));
-        message.error(response?.Description)
+        if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
       }
     }
   };
@@ -68,7 +66,6 @@ const DeleteModal = (props: DeleteModalType) => {
         e.stopPropagation();
         setVisible();
       }}
-      afterClose={() => setIsError(false)}
     >
       <div className="delete-modal-body">
         <p className="input-label"> {intl.get('configSys.deldes')}</p>
