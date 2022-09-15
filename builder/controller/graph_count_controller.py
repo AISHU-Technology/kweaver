@@ -132,7 +132,8 @@ def graphs_count_all():
     responses:
         200:
             description: operation success
-            type: object
+            schema:
+                $ref: '#/definitions/graphs_count_all'
     '''
     db = "0"
     r = redisConnect.connect_redis(db, model="read")

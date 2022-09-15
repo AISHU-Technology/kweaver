@@ -177,47 +177,12 @@ def predict_ontology():
     get extraction object and its properties in step 4
     ---
     parameters:
-        -   name: ds_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: data source id
-            type: string
-            example: 8
-        -   name: data_source
-            in: body
-            required: true
-            description: 'data source type. options: as7 mysql hive'
-            type: string
-            example: as7
-        -   name: file_list
-            in: body
-            required: true
-            description: file list
-            type: array
-            example: [
-                {
-                    "docid": "gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/667CDDD12E364766B72F8652F624A072",
-                    "type": "file",
-                    "name": "cuostomer.csv"
-                }
-            ]
-        -   name: extract_type
-            in: body
-            required: true
-            description: labelExtraction or standardExtraction
-            type: string
-            example: standardExtraction
-        -   name: step
-            in: body
-            required: false
-            description: Otl or Ext. only valid when extract type is labelExtraction
-            type: string
-        -   name: postfix
-            in: body
-            required: true
-            description: the file postfix
-            type: integer
-            example: csv
+            schema:
+                $ref: '#/definitions/predict_ontology'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -245,69 +210,12 @@ def save_ontology():
     add an ontology
     ---
     parameters:
-        -   name: ontology_name
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: ontology name
-            type: string
-            example: ontology_name
-        -   name: ontology_des
-            in: body
-            required: false
-            description: ontology description
-            type: string
-            example: ontology_des
-        -   name: entity
-            in: body
-            required: true
-            description: entity class information
-            type: array
-            example:  [
-                {
-                  "colour": "#546CFF",
-                  "name": "entity1",
-                  "properties": [["name", "string"]],
-                  "relations": ["entity1", "edge1", "entity2"],
-                  "ds_name": "data source name or ontology name",
-                  "dataTtype": "data type(structured, unstructured)",
-                  "extract_type": "standardExtraction",
-                  "model": "aishu",
-                  "file_type": "file type，data sources such as csv, mysql don't have file type",
-                  "source": [
-                    "docid",
-                    "table"
-                  ],
-                  "source_type": " automatic,manual,import"
-                }
-              ]
-        -   name: edge
-            in: body
-            required: true
-            description: edge class information
-            type: array
-            example: [
-                {
-                  "colour": "#123CDF",
-                  "ds_name": "data source name or ontology name",
-                  "dataType": "data type(structured, unstructured)",
-                  "extract_type": "standardExtraction",
-                  "model": "aishu",
-                  "data_source": "as",
-                  "ds_path": "123",
-                  "id": "7",
-                  "file_type": "file type，data sources such as csv, mysql don't have file type",
-                  "name": "entity1",
-                  "properties": [
-                    ["name", "string"],
-                    ["age", "int"]
-                  ],
-                  "source": [
-                    "docid",
-                    "table"
-                  ],
-                  "source_type": " automatic,manual,import"
-                },
-              ]
+            schema:
+                $ref: '#/definitions/save_ontology'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -366,18 +274,12 @@ def get_model_otl():
     get model ontology
     ---
     parameters:
-        -   name: file_list
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: file list
-            type: array
-            example: [["gns://3B3FDF44E3FD48FEB0F0C38C0C4D9C13/C6B5BF7F283144E897CA818707F14812/AE3E13B7F7674CF7BA6C48D420D1AD07", "anyshare//anydata研发线//aaa.csv", "aaa.csv"]]
-        -   name: model
-            in: body
-            required: true
-            description: model name
-            type: string
-            example: AImodel
+            schema:
+                $ref: '#/definitions/get_model_otl'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -448,12 +350,12 @@ def delotl():
     delete the ontology
     ---
     parameters:
-        -   name: otlids
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: ontology ids
-            type: array
-            example: [990,103,101,102,95,87,89]
+            schema:
+                $ref: '#/definitions/delotl'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     ret_code, ret_message = otl_service.delete(params_json)
@@ -521,18 +423,12 @@ def updateotlname(otlid):
             required: true
             description: ontology id
             type: integer
-        -   name: ontology_name
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: ontology name
-            type: string
-            example: ontology_name
-        -   name: ontology_des
-            in: body
-            required: true
-            description: ontology description
-            type: string
-            example: ontology_des
+            schema:
+                $ref: '#/definitions/updateotlname'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
@@ -571,61 +467,12 @@ def updateotlinfo(otlid):
             required: true
             description: ontolody id
             type: integer
-        -   name: entity
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: 'entity class information. required fields：entity_id,colour,ds_name,dataType,data_source,ds_path,ds_id, extract_type, name, source_table, source_type, properties. not required fields(the value can be empty, but the field must exist): file_type, task_id, properties_index, model, source_table, ds_address, alias.'
-            type: array
-            example: [
-                {
-                  "colour": "#805A9C",
-                  "ds_name": "结构化数据",
-                  "dataType": "structured",
-                  "extract_type": "standardExtraction",
-                  "file_type": "csv",
-                  "task_id": "55",
-                  "name": "nei1",
-                  "source_table": [
-                    [
-                      "gns://B4FFFD35301B43B78DAEA4737A364C47/DC6942AC590846C297A52346AE9B27F0/EDEA69091B1B4538BE74AAA9535D0E66",
-                      "结构化数据/csv/nei1.csv",
-                      "nei1.csv"
-                    ]
-                  ],
-                  "source_type": "automatic",
-                  "properties": [
-                    ["name", "string"],
-                    ["p", "string"],
-                    ["s", "string"]
-                  ],
-                  "properties_index": ["name", "p", "s"],
-                  "data_source": "as7",
-                  "ds_path": "结构化数据",
-                  "model": "",
-                  "entity_id": 4,
-                  "ds_id": "5",
-                  "ds_address":"https://10.4.69.44",
-                  "alias":"花花护花"
-                }
-              ]
-        -   name: edge
-            in: body
-            required: false
-            description: edge class information. edge_id. others(ditto)
-            type: array
-            example: []
-        -   name: used_task
-            in: body
-            required: true
-            description: rendered task
-            type: array
-            example: [1, 23]
-        -   name: flag
-            in: body
-            required: true
-            description: '"nextstep": the next step is to verify that the entity cannot be empty, and the running tasks cannot be saved. "save": it is not verified that the entity is empty, and there are running tasks to save'
-            type: string
-            example: nextstep
+            schema:
+                $ref: '#/definitions/updateotlinfo'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
@@ -775,30 +622,12 @@ def builde_onto_task():
     execute the task of predicting ontology
     ---
     parameters:
-        -   name: ontology_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: When creating an ontology, the ontology ID of the first build task is null, and the temporary ontology ID is returned. Next, all the build tasks use the returned temporary ontology ID. When editing an ontology, the build task uses the ontology ID.
-            type: string
-            example: 8
-        -   name: file_list
-            in: body
-            required: true
-            description: files you want to predict
-            type: array
-            example: [{"docid":"gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/3D77695B9C1641398944920D7B6D921E","name":"industry_info.csv","type":"file"}]
-        -   name: postfix
-            in: body
-            required: true
-            description: 'Filter criteria: csv,json,""-->mysql/hive'
-            type: string
-            example: csv
-        -   name: ds_id
-            in: body
-            required: true
-            description: data source id
-            type: integer
-            example: 7
+            schema:
+                $ref: '#/definitions/builde_onto_task'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -836,30 +665,12 @@ def gettaskinfo():
     query task list
     ---
     parameters:
-        -   name: page
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: page number
-            type: integer
-            example: 1
-        -   name: size
-            in: body
-            required: true
-            description: number per page
-            type: integer
-            example: 20
-        -   name: ontology_id
-            in: body
-            required: true
-            description: ontology id
-            type: string
-            example: 7
-        -   name: used_task
-            in: body
-            required: true
-            description: rendered tasks
-            type: array
-            example: []
+            schema:
+                $ref: '#/definitions/gettaskinfo'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -892,15 +703,15 @@ def gettaskinfo():
 @swag_from(swagger_old_response)
 def deletetask():
     '''
-    delete the task
+    delete the task of building the ontology
     ---
     parameters:
-        -   name: task_list
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: task list
-            type: array
-            example: [13]
+            schema:
+                $ref: '#/definitions/deletetask'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -990,16 +801,12 @@ def deletealltask():
     exit without saving all tasks related to deleting ontology
     ---
     parameters:
-        -   name: ontology_id
-            in: query
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: ontology id
-            type: integer
-        -   name: state
-            in: query
-            required: true
-            description: "'edit': edit without saving (delete some tasks); 'notedit': create without saving (delete all tasks)"
-            type: string
+            schema:
+                $ref: '#/definitions/deletealltask'
     '''
     params_json = request.args.to_dict()
     paramscode, message = celery_check_params.valid_params_check("deletealltask", params_json)
@@ -1040,18 +847,12 @@ def copy_otl(otlid):
             required: true
             description: ontology id
             type: integer
-        -   name: ontology_name
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: ontology name
-            type: string
-            example: ontology_name
-        -   name: ontology_des
-            in: body
-            required: false
-            description: ontology description
-            type: string
-            example: ontology_description
+            schema:
+                $ref: '#/definitions/copy_otl'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:

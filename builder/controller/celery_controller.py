@@ -34,41 +34,25 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
     swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
     swagger_new_response.update(swagger_definitions)
 
-swagger_taskcrud_post = {
-    'summary': 'execute the task',
-    'parameters': [
-        {
-            'name': 'graph_id',
-            'in': 'path',
-            'required': True,
-            'description': 'graph id',
-            'type': 'integer'
-        },
-        {
-            'name': 'task_type',
-            'description': 'full or increment',
-            'type': 'string'
-        }
-    ]
-}
-swagger_taskcrud_post.update(swagger_old_response)
-swagger_taskcrud_delete = {
-    'summary': 'delete the task',
-    'parameters': [
-        {
-            'name': 'graph_id',
-            'in': 'path',
-            'required': True,
-            'description': 'graph id',
-            'type': 'integer'
-        },
-    ]
-}
-swagger_taskcrud_delete.update(swagger_old_response)
-
 @task_controller_app.route('/<graph_id>', methods=["post"], strict_slashes=False)
-@swag_from(swagger_taskcrud_post, methods=['post'])
+@swag_from(swagger_old_response)
 def taskcrud_post(graph_id):
+    '''
+    execute the task of building the graph
+    ---
+    parameters:
+        -   name: 'graph_id'
+            in: 'path'
+            required: True
+            description: 'graph id'
+            type: 'integer'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
+            required: true
+            schema:
+                $ref: '#/definitions/taskcrud_post'
+    '''
     print(graph_id)
     if not graph_id.isdigit():
         message = "The parameter graph_id type must be int!"
@@ -123,8 +107,24 @@ def taskcrud_post(graph_id):
 
 
 @task_controller_app.route('/<graph_id>', methods=["DELETE"], strict_slashes=False)
-@swag_from(swagger_taskcrud_delete, methods=['delete'])
+@swag_from(swagger_old_response)
 def taskcrud_delete(graph_id):
+    '''
+    delete the task of building the graph
+    ---
+    parameters:
+        -   name: 'graph_id'
+            in: 'path'
+            required: True
+            description: 'graph id'
+            type: 'integer'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
+            required: true
+            schema:
+                $ref: '#/definitions/taskcrud_delete'
+    '''
     print(graph_id)
     if not graph_id.isdigit():
         message = "The parameter graph_id type must be int!"
@@ -266,7 +266,7 @@ def getalltask(graph_id):
 @swag_from(swagger_old_response)
 def stoptask(graph_id):
     '''
-    terminate the task
+    terminate the task of building the graph
     ---
     parameters:
         -   name: graph_id
@@ -346,7 +346,15 @@ def getprogress(graph_id):
 
 # 健康检查 /api/builder/v1/task/health/ready
 @task_controller_app.route('/health/ready', methods=["GET"], strict_slashes=False)
+@swag_from(swagger_definitions)
 def health():
+    '''
+    health detection
+    ---
+    responses:
+        '200':
+            description: success
+    '''
     try:
         url = "http://localhost:6485/graph/health/ready"
         payload = {}
@@ -366,7 +374,15 @@ def health():
 
 
 @task_controller_app.route('/health/alive', methods=["GET"], strict_slashes=False)
+@swag_from(swagger_definitions)
 def healthalive():
+    '''
+    health detection
+    ---
+    responses:
+        '200':
+            description: success
+    '''
     try:
         url = "http://localhost:6485/graph/health/alive"
         payload = {}

@@ -42,36 +42,12 @@ def add_timed_task(graph_id):
             required: true
             description: graph id
             type: integer
-        -   name: task_type
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: 'building task type. allowableValues: full, increment'
-            example: increment
-            type: string
-        -   name: cycle
-            in: body
-            required: true
-            description: "'one': execute once; 'day': execute daily; 'week': execute weekly; 'month': execute monthly. "
-            type: string
-            example: month
-        -   name: datetime
-            in: body
-            required: true
-            description: "The delivery parameters that are only executed once are the specific date, such as: '2021-12-20 15:54', the delivery parameters are hours and minutes for daily, week and month, such as: '16:40'."
-            type: string
-            example: "17:20"
-        -   name: enabled
-            in: body
-            required: false
-            description: 任务开关，开启：1，关闭：0，默认开启
-            type: integer
-            example: 1
-        -   name: date_list
-            in: body
-            required: true
-            description: Indicates the day of the week / day of execution. The content of the list is int, the effective value of the page every week is 1 ~ 7, the number of elements cannot be greater than 7, and the effective value of the page every month is 1 ~ 31. For example, [1, 4], the number of elements cannot be greater than 31, which represents Monday to Sunday or 1 ~ 31 in turn. The page of one execution and daily execution can only send an empty list, and other values will be directly discarded.
-            type: array
-            example: [1,2,3,4,5]
+            schema:
+                $ref: '#/definitions/add_timed_task'
     '''
     method = request.method
     if method == "POST":
