@@ -31,7 +31,8 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 @swag_from(swagger_old_response)
 def auth():
     '''
-    Get authorization URL
+    get authorization url
+    get the url of as authorization authentication
     ---
     parameters:
         -   name: ds_route
@@ -85,7 +86,8 @@ def auth():
 @swag_from(swagger_old_response)
 def gettoken():
     '''
-    Get token interface
+    get token
+    get the token token of as
     ---
     parameters:
         -   name: ds_code
@@ -138,6 +140,7 @@ def testauth():
 def connectTest():
     '''
        test connect
+       test the availability of the data source
        ---
        parameters:
            -   name: data_source
@@ -222,6 +225,7 @@ def connectTest():
 def dsopt():
     '''
           get all datasource
+          get all data sources under the current knowledge network
           ---
           parameters:
               -   name: page
@@ -269,6 +273,7 @@ def dsopt():
 def dsopt_post():
     '''
     add datasource
+    add data sources below the current knowledge network
     ---
     parameters:
        -   name: dsname
@@ -365,6 +370,7 @@ def dsopt_post():
 def ds(dsid):
     '''
     edit datasource
+    edit data source based on data source id
     ---
     parameters:
        -   name: dsid
@@ -461,6 +467,7 @@ def ds(dsid):
 def delds():
     '''
     delete datasource
+    delete data sources in batches by id
     ---
     parameters:
        -   name: dsids
@@ -483,7 +490,8 @@ def delds():
 @swag_from(swagger_new_response)
 def getbydsname():
     '''
-    Fuzzy query data source by name
+    fuzzy query data source by name
+    fuzzy search for data sources under the current knowledge network by data source name
     ---
     parameters:
        -   name: dsname
@@ -545,6 +553,7 @@ def getbydsname():
 def get_acctoken_by_id(ds_id):
     '''
     get as token
+    get as token based on data source id
     ---
     parameters:
        -   name: ds_id
@@ -578,6 +587,7 @@ def get_acctoken_by_id(ds_id):
 def ds_copy(ds_id):
     '''
         copy datasource
+        copy the data source under the current knowledge network according to the data source id
         ---
         parameters:
            -   name: dsname

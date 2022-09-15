@@ -42,7 +42,8 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 @swag_from(swagger_old_response)
 def graphopt():
     '''
-    add a knowledge graph
+    create a new knowledge graph
+    create a new knowledge graph under the knowledge network
     ---
     parameters:
         -   in: 'body'
@@ -79,6 +80,7 @@ def graphopt():
 @swag_from(swagger_old_response)
 def graph(grapid):
     '''
+    edit the graph information according to the graph id
     edit the graph information according to the graph id
     ---
     parameters:
@@ -236,6 +238,7 @@ def graph(grapid):
 def getgraphdb():
     '''
     query database connection information
+    query database connection information
     ---
     '''
     ret_code, ret_message = graph_Service.getGraphDB()
@@ -250,6 +253,7 @@ def getgraphdb():
 def getbis():
     """
     get base info switch
+    get base info switch
     """
     ret_code, ret_message = graph_Service.getbis()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
@@ -263,6 +267,7 @@ def getbis():
 def getgraphbyid(graphid):
     '''
     query the graph
+    query the graph information by graphid
     ---
     parameters:
         -   name: 'graphid'
@@ -292,6 +297,7 @@ def getgraphbyid(graphid):
 @swag_from(swagger_old_response)
 def getgraphbystep(graphid, graph_step):
     '''
+    get the entity class collection and its property collection in the specific graph configuration step
     get the entity class collection and its property collection in the specific graph configuration step
     ---
     parameters:
@@ -324,6 +330,7 @@ def getgraphbystep(graphid, graph_step):
 @swag_from(swagger_old_response)
 def getbyinfoext():
     '''
+    get the extraction rule according to the extraction file list and graph configuration step
     get the extraction rule according to the extraction file list and graph configuration step
     ---
     parameters:
@@ -448,6 +455,7 @@ def check_kmapinfo():
 def savenocheck():
     '''
     save and exit
+    Exit after saving knowledge graph configuration information
     ---
     parameters:
         -   name: 'graph_id'
@@ -548,6 +556,7 @@ def getdsbygraphids():
 @swag_from(swagger_new_response)
 def graphDeleteByIds():
     '''
+    batch delete graph by graph ids
     batch delete graph by graph ids
     ---
     parameters:
@@ -700,6 +709,7 @@ def graphDeleteByIds():
 def graphDsList(graphid):
     '''
     get data source list in the graph editing process
+    get data source list in the graph editing process by graphid
     ---
     parameters:
         -   name: graphid
@@ -751,6 +761,7 @@ def graphDsList(graphid):
 def get_adv_search(net_id):
     '''
     get knowledge graph list configuration by network id
+    get knowledge graph list configuration by network id
     ---
     parameters:
         -   name: net_id
@@ -778,6 +789,7 @@ def get_adv_search(net_id):
 def graph_config_output():
     '''
     export the knowledge graph
+    export the configuration information of the knowledge graph
     ---
     parameters:
         -   name: ids
@@ -830,6 +842,7 @@ def graph_config_output():
 def graph_config_input():
     '''
     import the knowledge graph
+    import the configuration information of the knowledge graph
     ---
     parameters:
         -   name: knw_id
@@ -931,6 +944,7 @@ def graph_config_input():
 def get_graph_info_basic():
     '''
     get the graph information
+    get the graph information by graph id
     ---
     parameters:
         -   name: graph_id
@@ -998,6 +1012,7 @@ def get_graph_info_basic():
 def get_graph_info_onto():
     '''
     get the ontology of the graph
+    get the ontology of the graph by graph id
     ---
     parameters:
         -   name: graph_id
@@ -1028,6 +1043,7 @@ def get_graph_info_onto():
 def get_graph_info_count():
     '''
     get the count of the graph
+    count the number of entities and relationships in the knowledge graph
     ---
     parameters:
         -   name: graph_id
@@ -1057,6 +1073,7 @@ def get_graph_info_count():
 @swag_from(swagger_new_response)
 def get_graph_info_detail():
     '''
+    get the configuration details of entities or edges in the graph
     get the configuration details of entities or edges in the graph
     ---
     parameters:

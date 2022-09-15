@@ -34,6 +34,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 @swag_from(swagger_old_response)
 def get_table():
     '''
+    Get data source details
     get data table by data source name
     ---
     parameters:
@@ -82,7 +83,8 @@ def get_table():
 @swag_from(swagger_old_response)
 def filter_by_postfix():
     '''
-    expand the AS folder
+    expand the folder
+    get the list of files in the next level of the current directory
     ---
     parameters:
         -   name: ds_id
@@ -125,6 +127,7 @@ def filter_by_postfix():
 def data_preview():
     '''
     preview the data
+    preview the data of the current file
     ---
     parameters:
         -   name: ds_id
@@ -171,6 +174,7 @@ def data_preview():
 @swag_from(swagger_old_response)
 def predict_ontology():
     '''
+    get extraction object and its properties in step 4
     get extraction object and its properties in step 4
     ---
     parameters:
@@ -239,6 +243,7 @@ def predict_ontology():
 @swag_from(swagger_old_response)
 def save_ontology():
     '''
+    add an ontology
     add an ontology
     ---
     parameters:
@@ -320,6 +325,7 @@ def save_ontology():
 def get_model_list():
     '''
     get model list
+    get a list of models in the system
     ---
     '''
     ret_code, ret_message = otl_service.get_model_list()
@@ -333,6 +339,7 @@ def get_model_list():
 @swag_from(swagger_old_response)
 def get_model_spo():
     '''
+    get model spo
     get model spo
     ---
     parameters:
@@ -360,6 +367,7 @@ def get_model_spo():
 @swag_from(swagger_old_response)
 def get_model_otl():
     '''
+    get model ontology
     get model ontology
     ---
     parameters:
@@ -397,6 +405,7 @@ def get_model_otl():
 @swag_from(swagger_old_response)
 def getall():
     '''
+    get ontology list
     get ontology list
     ---
     parameters:
@@ -443,6 +452,7 @@ def getall():
 def delotl():
     '''
     delete the ontology
+    Delete ontologies in batches by ontology id
     ---
     parameters:
         -   name: otlids
@@ -464,6 +474,7 @@ def delotl():
 @swag_from(swagger_old_response)
 def getotlbyname():
     '''
+    fuzzy query ontology by name
     fuzzy query ontology by name
     ---
     parameters:
@@ -511,6 +522,7 @@ def getotlbyname():
 def updateotlname(otlid):
     '''
     update ontology name and description
+    update ontology and description according to ontology id
     ---
     parameters:
         -   name: otlid
@@ -560,6 +572,7 @@ def updateotlname(otlid):
 @swag_from(swagger_old_response)
 def updateotlinfo(otlid):
     '''
+    update ontology information such as entity class information
     update ontology information such as entity class information
     ---
     parameters:
@@ -657,8 +670,15 @@ def updateotlinfo(otlid):
 @swag_from(swagger_old_response)
 def ds(otlid):
     '''
-    get ontology details by name
+    get ontology details by id
+    get ontology details by id
     ---
+    parameters:
+        -   name: otlid
+            in: path
+            required: true
+            description: ontology id
+            type: integer
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
@@ -680,6 +700,7 @@ def ds(otlid):
 def getotlbykgid(kgid):
     '''
     get ontology information by kgid
+    Get ontology information by kgid
     ---
     parameters:
         -   name: kgid
@@ -718,6 +739,7 @@ def getotlbykgid(kgid):
 @swag_from(swagger_old_response)
 def getotlbyotlname():
     '''
+    get ontology information by ontology name
     get ontology information by ontology name
     ---
     parameters:
@@ -769,6 +791,7 @@ def getotlbyotlname():
 @swag_from(swagger_old_response)
 def builde_onto_task():
     '''
+    execute the task of predicting ontology
     execute the task of predicting ontology
     ---
     parameters:
@@ -831,6 +854,7 @@ def builde_onto_task():
 def gettaskinfo():
     '''
     query task list
+    query the ontology list by paging by ontology id
     ---
     parameters:
         -   name: page
@@ -890,6 +914,7 @@ def gettaskinfo():
 def deletetask():
     '''
     delete the task
+    delete Ontology tasks in batches by task id
     ---
     parameters:
         -   name: task_list
@@ -932,6 +957,7 @@ def deletetask():
 def get_task_files():
     '''
     get the status of predicting files
+    get the status of predicting files on task id
     ---
     parameters:
         -   name: task_id
@@ -985,6 +1011,7 @@ def get_task_files():
 def deletealltask():
     '''
     exit without saving all tasks related to deleting ontology
+    exit without saving all tasks related to deleting ontology
     ---
     parameters:
         -   name: ontology_id
@@ -1030,6 +1057,7 @@ def deletealltask():
 def copy_otl(otlid):
     '''
     copy ontology
+    make a copy of the ontology
     ---
     parameters:
         -   name: otlid
@@ -1101,6 +1129,7 @@ def copy_otl(otlid):
 @swag_from(swagger_old_response)
 def graphDsList():
     '''
+    get data source list when clicking 'batching import' in step 3: ontology
     get data source list when clicking 'batching import' in step 3: ontology
     ---
     '''
