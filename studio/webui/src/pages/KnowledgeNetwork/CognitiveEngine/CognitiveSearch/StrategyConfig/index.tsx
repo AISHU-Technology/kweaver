@@ -533,7 +533,11 @@ const StrategyConfig: React.ForwardRefRenderFunction<unknown, StrategyConfigProp
             <div className="config-row">
               <p className="row-title">
                 {intl.get('searchConfig.searchScope')}
-                <Tooltip placement="right" title={intl.get('searchConfig.scopeTip')}>
+                <Tooltip
+                  getPopupContainer={triggerNode => triggerNode.parentElement!}
+                  placement="right"
+                  title={intl.get('searchConfig.scopeTip')}
+                >
                   <QuestionCircleOutlined className="q-icon" />
                 </Tooltip>
               </p>
@@ -584,7 +588,11 @@ const StrategyConfig: React.ForwardRefRenderFunction<unknown, StrategyConfigProp
             <div className="config-row">
               <p className="row-title" style={{ marginTop: 24 }}>
                 {intl.get('searchConfig.searchRes')}
-                <Tooltip placement="right" title={intl.get('searchConfig.resTip')}>
+                <Tooltip
+                  getPopupContainer={triggerNode => triggerNode!}
+                  placement="right"
+                  title={intl.get('searchConfig.resTip')}
+                >
                   <QuestionCircleOutlined className="q-icon" />
                 </Tooltip>
               </p>
