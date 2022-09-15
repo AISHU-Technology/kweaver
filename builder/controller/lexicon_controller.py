@@ -26,10 +26,6 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
     swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
     swagger_new_response.update(swagger_definitions)
 
-def getHostUrl():
-    hostUrl = request.host_url
-    return hostUrl
-
 
 @lexicon_controller_app.route('/create', methods=["POST"], strict_slashes=False)
 @swag_from(swagger_new_response)
@@ -38,38 +34,19 @@ def create_lexicon():
     Create a new lexicon
     ---
     parameters:
-        -   name: name
-            in: body
-            description: lexicon name,Input 50 characters at most. Only Chinese and English numbers can be underlined. It cannot be blank. The name of the lexicon under the same knowledge network cannot be duplicate
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: string
-            example: "lexicon1"
-        -   name: labels
-            in: body
-            description: label of lexicon
-            required: true
-            type: array
-            example: ["finance", "economy"]
-        -   name: description
-            in: body
-            description: description of lexicon
-            required: true
-            type: string
-            example: "This is a lexicon in the financial field"
+            schema:
+                $ref: '#/definitions/builder/lexicon/create_lexicon'
         -   name: file
             in: formData
             description: lexicon file, Please refer to the template
             required: false
             type: file
             example:
-        -   name: knowledge_id
-            in: body
-            description: knowledge network id
-            required: true
-            type: integer
-            example: 1
     '''
-    host_url = getHostUrl()
     try:
         params_json = {}
         params_json["name"] = request.form.get("name")
@@ -167,7 +144,6 @@ def get_labels():
             type: integer
             example: 1
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_get_labels_lexicon(params_json)
@@ -232,7 +208,6 @@ def get_lexicon():
             example: "test"
     '''
     # 获取接口参数
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_get_all_lexicon(params_json)
@@ -285,7 +260,6 @@ def get_lexicon_by_id():
             example: 10
     '''
     # 获取接口参数
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_get_lexicon_by_id(params_json)
@@ -314,19 +288,13 @@ def insert_word2lexicon():
     Add new words to the specified lexicon
     ---
     parameters:
-        -   name: id
-            in: body
-            description: lexicon id
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: integer
-            example: 1
-        -   name: word_info
-            in: body
-            description: word info
-            type: object
-            example: {"word1": "test1", "word2": "test2"}
+            schema:
+                $ref: '#/definitions/builder/lexicon/insert_word2lexicon'
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_add_lexicon_word(params_json)
@@ -364,17 +332,12 @@ def search_word_in_lexicon():
     Search words in the specified lexicon
     ---
     parameters:
-        -   name: id
-            in: body
-            description: lexicon id
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: integer
-            example: 1
-        -   name: word
-            in: body
-            description: search term
-            type: string
-            example: "test"
+            schema:
+                $ref: '#/definitions/builder/lexicon/search_word_in_lexicon'
         -   name: page
             in: query
             description: page number when the results are returned in pages
@@ -388,7 +351,6 @@ def search_word_in_lexicon():
             type: integer
             example: 10
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_search_lexicon_word(params_json)
@@ -417,25 +379,13 @@ def edit_word_in_lexicon():
     Edit word in the specified lexicon
     ---
     parameters:
-        -   name: id
-            in: body
-            description: lexicon id
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: integer
-            example: 1
-        -   name: old_info
-            in: body
-            description: word to be modified
-            type: object
-            example: {"word": "old_word"}
-        -   name: new_info
-            in: body
-            description: modified word information
-            required: true
-            type: object
-            example: {"word": "new_word"}
+            schema:
+                $ref: '#/definitions/builder/lexicon/edit_word_in_lexicon'
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_edit_lexicon_word(params_json)
@@ -482,19 +432,13 @@ def delete_word_in_lexicon():
     Batch delete word in the specified lexicon
     ---
     parameters:
-        -   name: id
-            in: body
-            description: lexicon id
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: integer
-            example: 1
-        -   name: word_info_list
-            in: body
-            description: words to be deleted
-            type: array
-            example: [{"word": "word1"}, {"word": "word2"}]
+            schema:
+                $ref: '#/definitions/builder/lexicon/delete_word_in_lexicon'
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_delete_lexicon_word(params_json)
@@ -530,33 +474,14 @@ def edit_lexicon():
     Edit basic information of lexicon
     ---
     parameters:
-        -   name: id
-            in: body
-            description: lexicon id
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: integer
-            example: 1
-        -   name: name
-            in: body
-            description: lexicon name
-            required: true
-            type: string
-            example: "lexicon1"
-        -   name: labels
-            in: body
-            description: label of lexicon
-            required: true
-            type: string
-            example: ["finance", "economy"]
-        -   name: description
-            in: body
-            description: description of lexicon
-            required: true
-            type: string
-            example: "This is a lexicon in the financial field"
+            schema:
+                $ref: '#/definitions/builder/lexicon/edit_lexicon'
     '''
     # 获取接口参数
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_edit_lexicon(params_json)
@@ -592,14 +517,13 @@ def delete_lexicon():
     Batch delete lexicon
     ---
     parameters:
-        -   name: id_list
-            in: body
-            description: lexicon id list
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: array
-            example: [1, 2, 3]
+            schema:
+                $ref: '#/definitions/builder/lexicon/delete_lexicon'
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_delete_lexicon(params_json)
@@ -628,25 +552,19 @@ def import_word2lexicon():
     Import word information into lexicon
     ---
     parameters:
-        -   name: id
-            in: body
-            description: graph id
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: integer
-            example: 1
+            schema:
+                $ref: '#/definitions/builder/lexicon/import_word2lexicon'
         -   name: file
             in: formData
             description: lexicon file
             type: file
             example:
-        -   name: mode
-            in: body
-            description: node of importing words
-            type: string
-            example: 'add'
     '''
     # 获取接口参数
-    host_url = getHostUrl()
     # param_code, params_json, param_message = commonutil.getMethodParam()
     params_json = {}
     params_json["mode"] = request.form.get("mode")
@@ -737,14 +655,13 @@ def export_lexicon():
     Export lexicons
     ---
     parameters:
-        -   name: id_list
-            in: body
-            description: lexicon id list
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: array
-            example: [1, 2, 3]
+            schema:
+                $ref: '#/definitions/builder/lexicon/export_lexicon'
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_export_lexicon(params_json)
@@ -779,7 +696,6 @@ def download_template():
     Download lexicon file format template
     ---
     '''
-    host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
     # 参数校验
     check_res, message = lexicon_check_parameters.check_download_template(params_json)

@@ -183,7 +183,7 @@ def predict_ontology():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/predict_ontology'
+                $ref: '#/definitions/builder/ontology/predict_ontology'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -217,7 +217,7 @@ def save_ontology():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/save_ontology'
+                $ref: '#/definitions/builder/ontology/save_ontology'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -284,7 +284,7 @@ def get_model_otl():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/get_model_otl'
+                $ref: '#/definitions/builder/ontology/get_model_otl'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -362,7 +362,7 @@ def delotl():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/delotl'
+                $ref: '#/definitions/builder/ontology/delotl'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     ret_code, ret_message = otl_service.delete(params_json)
@@ -437,7 +437,7 @@ def updateotlname(otlid):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/updateotlname'
+                $ref: '#/definitions/builder/ontology/updateotlname'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
@@ -482,7 +482,7 @@ def updateotlinfo(otlid):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/updateotlinfo'
+                $ref: '#/definitions/builder/ontology/updateotlinfo'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if not otlid.isdigit():
@@ -647,7 +647,7 @@ def builde_onto_task():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/builde_onto_task'
+                $ref: '#/definitions/builder/ontology/builde_onto_task'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -691,7 +691,7 @@ def gettaskinfo():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/gettaskinfo'
+                $ref: '#/definitions/builder/ontology/gettaskinfo'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -733,7 +733,7 @@ def deletetask():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/deletetask'
+                $ref: '#/definitions/builder/ontology/deletetask'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -830,7 +830,7 @@ def deletealltask():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/deletealltask'
+                $ref: '#/definitions/builder/ontology/deletealltask'
     '''
     params_json = request.args.to_dict()
     paramscode, message = celery_check_params.valid_params_check("deletealltask", params_json)
@@ -877,7 +877,7 @@ def copy_otl(otlid):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/copy_otl'
+                $ref: '#/definitions/builder/ontology/copy_otl'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:

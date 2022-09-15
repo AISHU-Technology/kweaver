@@ -28,24 +28,12 @@ def save_knowledgenetwork():
     add a knowledge network
     ---
     parameters:
-        -   name: knw_name
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: knowledge network name
-            type: string
-            example: knowledge_network_name
-        -   name: knw_des
-            in: body
-            required: false
-            description: knowledge network description
-            type: string
-            example: knowledge network description
-        -   name: knw_color
-            in: body
-            required: true
-            description: knowledge network color
-            type: string
-            example: '#126EE3'
+            schema:
+                $ref: '#/definitions/builder/knowledge_network/save_knowledgenetwork'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
 
@@ -164,30 +152,12 @@ def editKnw():
     edit knowledge network
     ---
     parameters:
-        -   name: knw_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: knowledge network id
-            type: integer
-            example: 1
-        -   name: knw_name
-            in: body
-            required: true
-            description: knowledge network name
-            type: string
-            example: knw_name
-        -   name: knw_des
-            in: body
-            required: false
-            description: knowledge network description
-            type: string
-            example: knw_des
-        -   name: knw_color
-            in: body
-            required: true
-            description: knowledge network color
-            type: string
-            example: '#126EE3'
+            schema:
+                $ref: '#/definitions/builder/knowledge_network/editKnw'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     check_res, message = knw_check_params.editParams(params_json)

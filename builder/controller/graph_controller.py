@@ -51,7 +51,7 @@ def graphopt():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/graph'
+                $ref: '#/definitions/builder/graph/graph'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     params_json["graph_process"][0]["graph_DBName"] = other_dao.get_random_uuid()
@@ -94,7 +94,7 @@ def graph(grapid):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/graph'
+                $ref: '#/definitions/builder/graph/graph'
     '''
     # graphCheckParameters.graphAddPar进行参数格式校验
     # graph_Service.update编辑图谱
@@ -339,7 +339,7 @@ def getbyinfoext():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/getbyinfoext'
+                $ref: '#/definitions/builder/graph/getbyinfoext'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -390,7 +390,7 @@ def check_kmapinfo():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/check_kmapinfo'
+                $ref: '#/definitions/builder/graph/check_kmapinfo'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -429,7 +429,7 @@ def savenocheck():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/savenocheck'
+                $ref: '#/definitions/builder/graph/savenocheck'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -501,7 +501,7 @@ def graphDeleteByIds():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/graphDeleteByIds'
+                $ref: '#/definitions/builder/graph/graphDeleteByIds'
     '''
     runs, noAuthority, noExist, normal = [], [], [], []
     mess = ""
@@ -727,7 +727,7 @@ def graph_config_output():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/graph_config_output'
+                $ref: '#/definitions/builder/graph/graph_config_output'
     '''
     config_ids = request.json.get("ids")
     if len(config_ids) > 1:
@@ -780,9 +780,13 @@ def graph_config_input():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/graph_config_input'
-    consumes:
-        -   application/x-www-form-urlencoded
+                $ref: '#/definitions/builder/graph/graph_config_input'
+        -   name: file
+            in: formData
+            description: data file to be uploaded
+            required: true
+            type: file
+            example:
     '''
     # 获取form表单当中的知识网络id和图谱id
     graph_id = request.form.get("graph_id")
