@@ -2,7 +2,6 @@
 import G6 from '@antv/g6';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import reduxStore from '@/reduxConfig/store';
 import menuDelete from '@/assets/images/d3-delete.svg';
 import anylist from '@/assets/images/wendang-xianxing.svg';
 import out from '@/assets/images/chuqu.svg';
@@ -35,7 +34,7 @@ const hoverIn = (e, group, graph, openInformation) => {
     group.findById('path3').attr('fill', '#637083');
     group.findById('path4')?.attr('fill', '#637083');
     group.findById('path5').attr('fill', '#637083');
-    openInformation('');
+    openInformation('path');
 
     return;
   }
@@ -86,11 +85,11 @@ const hoverIn = (e, group, graph, openInformation) => {
     return;
   }
 
-  group.findById('path1').attr('fill', '#637083');
-  group.findById('path2').attr('fill', '#637083');
-  group.findById('path3').attr('fill', '#637083');
+  group.findById('path1')?.attr('fill', '#637083');
+  group.findById('path2')?.attr('fill', '#637083');
+  group.findById('path3')?.attr('fill', '#637083');
   group.findById('path4')?.attr('fill', '#637083');
-  group.findById('path5').attr('fill', '#637083');
+  group.findById('path5')?.attr('fill', '#637083');
 };
 
 /**
@@ -174,7 +173,7 @@ const addToolPanel = (group, data, language, fourParts = false) => {
   });
 
   // 分析报告
-  !fourParts &&
+  if (!fourParts) {
     group.addShape('path', {
       attrs: {
         path: 'M23.5 32.3 L47 64.7 A 80 80, 0, 0, 1, -47 64.7 L-23.5 32.3 A 40 40, 1, 0, 0 23.5 32.3',
@@ -186,6 +185,7 @@ const addToolPanel = (group, data, language, fourParts = false) => {
       id: 'path4',
       name: 'path4'
     });
+  }
 
   // 出边
   const inPath = fourParts
@@ -287,7 +287,7 @@ const addToolPanel = (group, data, language, fourParts = false) => {
   });
 
   // 分析报告
-  !fourParts &&
+  if (!fourParts) {
     group.addShape('image', {
       attrs: {
         x: -10,
@@ -302,7 +302,6 @@ const addToolPanel = (group, data, language, fourParts = false) => {
       name: 'image-anylist'
     });
 
-  !fourParts &&
     group.addShape('text', {
       attrs: {
         x: -20,
@@ -315,6 +314,7 @@ const addToolPanel = (group, data, language, fourParts = false) => {
       id: 'text-anylist',
       name: 'text-anylist'
     });
+  }
 
   // 进边
   const inXY = fourParts ? { x: -50, y: 25 } : { x: -65, y: 5 };
@@ -391,23 +391,20 @@ const setInAndOutposition = (selectedNode, graph, inOrOut) => {
   }
 };
 
-// 设置操作tip
-// const setTip = (e, graph, operation) => {
-//   const op = document.querySelectorAll(`#operation-tip span`);
+/**
+ * @description 进出边选择栏定位
+ */
+const setPathExplorePosition = (selectedNode, graph) => {
+  const infoPosition = document.getElementById('pathExploreTab');
+  if (infoPosition && selectedNode) {
+    // 坐标系转化，用于dom元素定位
 
-//   if (!op) return;
-//   const { x, y } = graph.getCanvasByPoint(e.x, e.y);
+    const { x, y } = graph.getCanvasByPoint(selectedNode.x, selectedNode.y);
 
-//   op.forEach(node => {
-//     node.classList.remove('show');
-
-//     if (node.classList.contains(operation)) {
-//       node.classList.add('show');
-//       node.style.left = `${x - 24}px`;
-//       node.style.top = `${y - 48}px`;
-//     }
-//   });
-// };
+    infoPosition.style.left = `${x + 95}px`;
+    infoPosition.style.top = `${y - 150}px`;
+  }
+};
 
 // 关闭操作tip
 const closeTip = () => {
@@ -433,211 +430,100 @@ const getRelationByNode = (nodeId, edges) => {
   return [...new Set(data)];
 };
 const getEdgesByNode = (nodeId, edges) => {
-  const data = edges.reduce((res, { id, target, source }) => ([target, source].includes(nodeId) ? [...res, id] : res), [
-    nodeId
-  ]);
+  const data = edges.reduce(
+    (res, { id, target, source }) => ([target, source].includes(nodeId) ? [...res, id] : res),
+    [nodeId]
+  );
 
   return [...new Set(data)];
 };
-
 /**
- * @description 处理探索数据
+ *
+ * @param nodes 画布中的点
+ * @param edges 画布中的边
+ * @param data 探索路径返回的数据
  */
-const handleEXData = (nodes, edges, hashMap, data) => {
-  let result = edges;
+const handleEXData = (nodes, edges, data) => {
+  let openNodes = nodes;
+  let openEdges = edges;
 
-  if (data.length === 1 && !hashMap.has(data[0].rid)) {
-    const { alias, color, out, name, properties, rid } = data[0];
+  const edgeHashMap = new Map();
+  const nodeHashMap = new Map();
 
-    if (data[0].in !== out) {
-      result = [
-        ...result,
-        {
-          source: out,
-          target: data[0].in,
-          start: getNodeFromId(nodes, out),
-          end: getNodeFromId(nodes, data[0].in),
-          name,
-          label: name.length < 20 ? name : `${name.substring(0, 17)}...`,
-          alias,
-          class: data[0].class,
-          color,
-          id: rid,
-          properties,
-          type: 'line',
-          curveOffset: 40,
-          curvePosition: 0.5,
-          style: {
-            startArrow: {
-              fill: color,
-              path: G6.Arrow.triangle(0, 0, 20),
-              d: 20
+  _.forEach(edges, (item, index) => {
+    edgeHashMap.set(item.id, index);
+  });
+
+  _.forEach(nodes, (item, index) => {
+    nodeHashMap.set(item.id, index);
+  });
+
+  _.forEach(data, pathItem => {
+    // 点
+    _.forEach(pathItem?.vertices, item => {
+      if (!nodeHashMap.has(item.id)) {
+        openNodes = [
+          ...openNodes,
+          {
+            data: { ...item },
+            depth: 0,
+            name: item.name,
+            id: item.id,
+            label: item?.name?.length < 20 ? item?.name : `${item?.name?.substring(0, 17)}...`,
+            size: [40, 40],
+            type: 'circle',
+            labelCfg: {
+              position: 'top',
+              dist: 100
             },
-            endArrow: {
-              fill: color,
-              path: G6.Arrow.triangle(10, 12, 25),
-              d: 25
+            style: {
+              fill: item.color,
+              stroke: 'white'
             }
+            // x: x + Math.random() * 100,
+            // y: y + Math.random() * 100
           }
-        }
-      ];
-    } else {
-      result = [
-        ...result,
-        {
-          source: out,
-          target: data[0].in,
-          start: getNodeFromId(nodes, out),
-          end: getNodeFromId(nodes, data[0].in),
-          name,
-          label: name.length < 20 ? name : `${name.substring(0, 17)}...`,
-          alias,
-          class: data[0].class,
-          color,
-          id: rid,
-          properties,
-          type: 'loop',
-          loopCfg: { position: 'top', dist: 100 },
-          style: {
-            endArrow: {
-              fill: color,
-              path: G6.Arrow.triangle(10, 12, 0),
-              d: 0
-            }
-          }
-        }
-      ];
-    }
-  }
-
-  if (data.length === 2 && !hashMap.has(data[0].rid) && !hashMap.has(data[1].rid)) {
-    data.forEach(item => {
-      const { alias, color, out, name, properties, rid } = item;
-
-      result = [
-        ...result,
-        {
-          source: out,
-          target: item.in,
-          start: getNodeFromId(nodes, out),
-          end: getNodeFromId(nodes, item.in),
-          name,
-          label: name.length < 20 ? name : `${name.substring(0, 17)}...`,
-          alias,
-          class: item.class,
-          color,
-          id: rid,
-          properties,
-          style: {
-            startArrow: {
-              fill: color,
-              path: G6.Arrow.triangle(0, 0, 20),
-              d: 20
-            },
-            endArrow: {
-              fill: color,
-              path: G6.Arrow.triangle(10, 12, 25),
-              d: 25
-            }
-          },
-          type: 'quadratic',
-          curveOffset: 40,
-          curvePosition: 0.5
-        }
-      ];
+        ];
+        nodeHashMap.set(item.id, openNodes.length);
+      }
     });
 
-    result[result.length - 2].reverse = result.length - 1;
-    result[result.length - 1].reverse = result.length - 2;
-  }
-
-  if (data.length === 2 && !hashMap.has(data[0].rid) && hashMap.has(data[1].rid)) {
-    const { alias, color, out, name, properties, rid } = data[0];
-
-    result = [
-      ...result,
-      {
-        source: out,
-        target: data[0].in,
-        start: getNodeFromId(nodes, out),
-        end: getNodeFromId(nodes, data[0].in),
-        name,
-        label: name.length < 20 ? name : `${name.substring(0, 17)}...`,
-        alias,
-        class: data[0].class,
-        color,
-        id: rid,
-        properties,
-        style: {
-          startArrow: {
-            fill: color,
-            path: G6.Arrow.triangle(0, 0, 20),
-            d: 20
-          },
-          endArrow: {
-            fill: color,
-            path: G6.Arrow.triangle(10, 12, 25),
-            d: 25
+    // 边
+    _.forEach(pathItem?.edges, item => {
+      if (!edgeHashMap.has(item.id)) {
+        const type = item.in !== item.out ? 'line' : 'loop';
+        openEdges = [
+          ...openEdges,
+          {
+            ...item,
+            source: item.out,
+            target: item.in,
+            start: getNodeFromId(openNodes, item.out),
+            end: getNodeFromId(openNodes, item.in),
+            label: item?.name?.length < 20 ? item?.name : `${item?.name.substring(0, 17)}...`,
+            type,
+            curveOffset: 40,
+            curvePosition: 0.5,
+            style: {
+              startArrow: {
+                fill: item.color,
+                path: G6.Arrow.triangle(0, 0, 20),
+                d: 20
+              },
+              endArrow: {
+                fill: item.color,
+                path: G6.Arrow.triangle(10, 12, 25),
+                d: 25
+              }
+            }
           }
-        },
-        type: 'quadratic',
-        curveOffset: 40,
-        curvePosition: 0.5
+        ];
+        edgeHashMap.set(item.id, openEdges.length);
       }
-    ];
+    });
+  });
 
-    result[result.length - 1].reverse = hashMap.get(data[1].rid);
-
-    result[hashMap.get(data[1].rid)].reverse = result.length - 1;
-    result[hashMap.get(data[1].rid)].type = 'quadratic';
-    result[hashMap.get(data[1].rid)].curveOffset = 40;
-    result[hashMap.get(data[1].rid)].curvePosition = 0.5;
-  }
-
-  if (data.length === 2 && hashMap.has(data[0].rid) && !hashMap.has(data[1].rid)) {
-    const { alias, color, out, name, properties, rid } = data[1];
-
-    result = [
-      ...result,
-      {
-        source: out,
-        target: data[1].in,
-        start: getNodeFromId(nodes, out),
-        end: getNodeFromId(nodes, data[0].in),
-        name,
-        label: name.length < 20 ? name : `${name.substring(0, 17)}...`,
-        alias,
-        class: data[1].class,
-        color,
-        id: rid,
-        properties,
-        style: {
-          startArrow: {
-            fill: color,
-            path: G6.Arrow.triangle(0, 0, 20),
-            d: 20
-          },
-          endArrow: {
-            fill: color,
-            path: G6.Arrow.triangle(10, 12, 25),
-            d: 25
-          }
-        },
-        type: 'quadratic',
-        curveOffset: 40,
-        curvePosition: 0.5
-      }
-    ];
-
-    result[result.length - 1].reverse = hashMap.get(data[0].rid);
-
-    result[hashMap.get(data[0].rid)].reverse = result.length - 1;
-    result[hashMap.get(data[0].rid)].type = 'quadratic';
-    result[hashMap.get(data[0].rid)].curveOffset = 40;
-    result[hashMap.get(data[0].rid)].curvePosition = 0.5;
-  }
-
-  return result;
+  return { openNodes, openEdges };
 };
 
 /**
@@ -667,7 +553,7 @@ const getExpandHandleData = (data, selectedNode, nodes, edges) => {
 
   let currentData = []; //暂存点的数据
 
-  data.forEach(item => {
+  _.forEach(data, item => {
     const { id, color, name, expand, analysis, alias, properties } = item;
 
     // 处理点的数据
@@ -683,7 +569,7 @@ const getExpandHandleData = (data, selectedNode, nodes, edges) => {
     currentData = [...currentData, newItem];
     // 处理该点的出边
     if (item.out_e) {
-      item.out_e.forEach(outItem => {
+      _.forEach(item.out_e, outItem => {
         const outEdge = {
           ...outItem,
           source: item.id,
@@ -709,7 +595,7 @@ const getExpandHandleData = (data, selectedNode, nodes, edges) => {
     }
     // 处理该点的进边
     if (item.in_e) {
-      item.in_e.forEach(inItem => {
+      _.forEach(item.in_e, inItem => {
         const inEdge = {
           ...inItem,
           source: selectedNode.id,
@@ -844,6 +730,26 @@ const drawMark = (graph, id, isDelete = false, size = 16) => {
   });
 };
 
+/**
+ *
+ * @param arr 数组去重
+ */
+const duplicateRemoval = arr => {
+  const array = [];
+
+  const obj = {};
+
+  for (let i = 0; i < arr.length; i++) {
+    if (!obj[arr[i]]) {
+      array.push(arr[i]);
+
+      obj[arr[i]] = true;
+    }
+  }
+
+  return array;
+};
+
 export {
   hoverIn,
   hoverOut,
@@ -854,5 +760,7 @@ export {
   handleEXData,
   getExpandHandleData,
   getEdgesByNode,
-  drawMark
+  setPathExplorePosition,
+  drawMark,
+  duplicateRemoval
 };

@@ -18,6 +18,8 @@ services:
     depends_on:
       - kw-studio
       - kw-builder
+      - kw-engine
+      - kw-algserver
 
   kw-mariadb:
     container_name: kw-mariadb
