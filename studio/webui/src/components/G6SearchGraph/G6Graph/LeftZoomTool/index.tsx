@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Input, Tooltip, Popover, Button } from 'antd';
+import { Input, Tooltip, Popover } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import IconFont from '@/components/IconFont';
@@ -53,20 +53,19 @@ const ZoomTool: React.FC<ZoomToolProps> = props => {
       setIsError(false);
     }
   }
+
+  // 卡片状态改变
+  const onVisibleChange = (visible: boolean) => {
+    if (!visible) {
+      if (!isClick) setVisible(false);
+      return;
+    }
+    setVisible(visible);
+  }
+
   return (
     <div id="search-graph-zoom">
-      <div className="search-count-config"
-      // onMouseEnter={() => {
-      //   setVisible(true);
-      // }}
-      // onMouseLeave={() => {
-      //   !isClick && setVisible(false);
-      // }}
-      // onClick={() => {
-      //   setVisible(true);
-      //   setIsClick(true);
-      // }}
-      >
+      <div className="search-count-config">
         <Popover
           content={(
             <div className="set-count-box" id="set-count-box">
@@ -95,27 +94,19 @@ const ZoomTool: React.FC<ZoomToolProps> = props => {
               </p>
             </div>
           )
-
           }
           title={null}
           trigger={['hover']}
           placement="right"
           getPopupContainer={triggerNode => triggerNode?.parentElement?.parentElement || document.body}
           visible={visible}
-          onVisibleChange={visible => {
-            if (!visible) {
-              !isClick && setVisible(false);
-              return;
-            }
-            setVisible(visible);
-          }}
+          onVisibleChange={visible => onVisibleChange(visible)}
         >
           <IconFont type="icon-setting" className="icon" onClick={() => {
             setVisible(true);
             setIsClick(true);
           }} />
         </Popover>
-        {/* <IconFont type="icon-setting" className="icon" /> */}
       </div>
       <div className="move" onClick={moveToSelect}>
         <IconFont type="icon-dingwei" className="icon" />
@@ -128,9 +119,9 @@ const ZoomTool: React.FC<ZoomToolProps> = props => {
       >
         +
       </div>
-      <div className="line-image"></div>
+      {/* <div className="line-image"></div> */}
       <div
-        className="reduce"
+        className="add reduce"
         onClick={() => {
           zoomGraph('reduce');
         }}

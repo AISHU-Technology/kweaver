@@ -74,11 +74,11 @@ class Basic extends Component {
                 <p>{intl.get('searchGraph.selectDes')}</p>
                 <Radio.Group
                   onChange={e => {
-                    const type = selectedNode.source ? 'edge' : 'node';
+                    const type = selectedNode?.source ? 'edge' : 'node';
                     setShowNodeProperty({ key: selectedNodeClass, value: e.target.value }, type);
                   }}
                   value={
-                    selectedNode.source ? showEdgeProperty?.[selectedNodeClass] : showNodeProperty?.[selectedNodeClass]
+                    selectedNode?.source ? showEdgeProperty?.[selectedNodeClass] : showNodeProperty?.[selectedNodeClass]
                   }
                 >
                   <div className="set-show-item">
