@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import { Input, Tooltip, Popover } from 'antd';
-import { QuestionCircleOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import IconFont from '@/components/IconFont';
 import './style.less';
@@ -24,7 +24,7 @@ const ZoomTool: React.FC<ZoomToolProps> = props => {
       setCount(100);
     }
     setIsClick(false); // 初始化值为false
-  }, [visible]);
+  }, [visible])
 
   /**
    * 输入框的值改变
@@ -52,12 +52,22 @@ const ZoomTool: React.FC<ZoomToolProps> = props => {
       setCount(1);
       setIsError(false);
     }
-  };
+  }
+
+  // 卡片状态改变
+  const onVisibleChange = (visible: boolean) => {
+    if (!visible) {
+      if (!isClick) setVisible(false);
+      return;
+    }
+    setVisible(visible);
+  }
+
   return (
     <div id="search-graph-zoom">
       <div className="search-count-config">
         <Popover
-          content={
+          content={(
             <div className="set-count-box" id="set-count-box">
               <div className="set-count-title">{intl.get('searchGraph.analysisConfig')}</div>
               <p className="label">
@@ -77,50 +87,48 @@ const ZoomTool: React.FC<ZoomToolProps> = props => {
                 placeholder={intl.get('searchGraph.inputPlace')}
                 value={count}
                 onChange={e => {
-                  changeNumber(e);
-                }}
-              />
-              <p className={isError ? 'error-text' : 'hidden'}>{intl.get('searchGraph.numberError')}</p>
+                  changeNumber(e)
+                }} />
+              <p className={isError ? 'error-text' : 'hidden'}>
+                {intl.get('searchGraph.numberError')}
+              </p>
             </div>
+          )
           }
           title={null}
           trigger={['hover']}
           placement="right"
           getPopupContainer={triggerNode => triggerNode?.parentElement?.parentElement || document.body}
           visible={visible}
-          onVisibleChange={visible => {
-            if (!visible) {
-              !isClick && setVisible(false);
-              return;
-            }
-            setVisible(visible);
-          }}
+          onVisibleChange={visible => onVisibleChange(visible)}
         >
-          <IconFont
-            type="icon-setting"
-            className="icon"
-            onClick={() => {
-              setVisible(true);
-              setIsClick(true);
-            }}
-          />
+          <IconFont type="icon-setting" className="icon" onClick={() => {
+            setVisible(true);
+            setIsClick(true);
+          }} />
         </Popover>
       </div>
-      <div className="toolButton" onClick={moveToSelect}>
-        <IconFont type="icon-dingwei" style={{ fontSize: 14 }} />
+      <div className="move" onClick={moveToSelect}>
+        <IconFont type="icon-dingwei" className="icon" />
       </div>
-      <Tooltip placement="right" title={intl.get('graphDetail.zoomOut')}>
-        <PlusOutlined
-          className="toolButton add"
-          onClick={() => {
-            zoomGraph('add');
-          }}
-        />
-      </Tooltip>
-      <Tooltip placement="right" title={intl.get('graphDetail.zoomIn')}>
-        <MinusOutlined className="toolButton reduce" onClick={() => zoomGraph('reduce')} />
-      </Tooltip>
-    </div>
-  );
-};
+      <div
+        className="add"
+        onClick={() => {
+          zoomGraph('add');
+        }}
+      >
+        +
+      </div>
+      {/* <div className="line-image"></div> */}
+      <div
+        className="add reduce"
+        onClick={() => {
+          zoomGraph('reduce');
+        }}
+      >
+        -
+      </div>
+    </div >
+  )
+}
 export default ZoomTool;
