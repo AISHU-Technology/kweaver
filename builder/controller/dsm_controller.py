@@ -31,7 +31,8 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 @swag_from(swagger_old_response)
 def auth():
     '''
-    Get authorization URL
+    get authorization url
+    get the url of as authorization authentication
     ---
     parameters:
         -   name: ds_route
@@ -85,21 +86,16 @@ def auth():
 @swag_from(swagger_old_response)
 def gettoken():
     '''
-    Get token interface
+    get token
+    get the token token of as
     ---
     parameters:
-        -   name: ds_code
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: Authorization code
-            type: string
-            example: fd4645y6u6756454e5423465gbfxefef
-        -   name: ds_auth
-            in: body
-            required: true
-            description: Data source id
-            type: integer
-            example: 66
+            schema:
+                $ref: '#/definitions/builder/data_source/gettoken'
     '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
@@ -137,63 +133,16 @@ def testauth():
 @swag_from(swagger_old_response)
 def connectTest():
     '''
-       test connect
-       ---
-       parameters:
-           -   name: data_source
-               in:  body
-               required: true
-               description: mysql/as/as7/hive/rabbitmq
-               type: string
-               example: my_mysql
-           -   name: ds_address
-               in:  body
-               required: true
-               description: Data source url or ip
-               type: string
-               example: 192.168.0.1
-           -   name: ds_id
-               in:  body
-               required: true
-               description: Data source id
-               type: integer
-               example: 1
-           -   name: ds_port
-               in:  body
-               required: true
-               description: Data source port
-               type: integer
-               example: 3306
-           -   name: ds_user
-               in:  body
-               required: false
-               description: Data source user,as does not have this parameter
-               type: string
-               example: admin
-           -   name: ds_password
-               in:  body
-               required: false
-               description: Data source password,as does not have this parameter
-               type: string
-               example: ZWlzb28uY29tMTIz
-           -   name: ds_path
-               in:  body
-               required: true
-               description: database or path
-               type: string
-               example: anydata
-           -   name: vhost
-               in:  body
-               required: true
-               description: When data_source is not rabbitmq, pass ""
-               type: string
-               example: " "
-           -   name: queue
-               in:  body
-               required: true
-               description: When data_source is not rabbitmq, pass ""
-               type: string
-               example: " "
+    test connect
+    test the availability of the data source
+    ---
+    parameters:
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
+            required: true
+            schema:
+                $ref: '#/definitions/builder/data_source/connectTest'
        '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -222,6 +171,7 @@ def connectTest():
 def dsopt():
     '''
           get all datasource
+          get all data sources under the current knowledge network
           ---
           parameters:
               -   name: page
@@ -269,87 +219,15 @@ def dsopt():
 def dsopt_post():
     '''
     add datasource
+    add data sources below the current knowledge network
     ---
     parameters:
-       -   name: dsname
-           in: body
-           required: true
-           description: Data source name
-           type: string
-           example: test_mysql
-       -   name: data_source
-           in:  body
-           required: true
-           description: mysql/as/as7/hive/rabbitmq
-           type: string
-           example: mysql
-       -   name: ds_address
-           in:  body
-           required: true
-           description: Data source url or ip
-           type: string
-           example: 10.4.69.47
-       -   name: ds_port
-           in:  body
-           required: true
-           description: Data source port
-           type: integer
-           example: 3306
-       -   name: ds_user
-           in:  body
-           required: true
-           description: Data source user
-           type: string
-           example: root
-       -   name: ds_password
-           in:  body
-           required: true
-           description: Data source password,base64 code
-           type: string
-           example: ZWlzb28uY29tMTIz
-       -   name: ds_path
-           in:  body
-           required: true
-           description: database or path
-           type: string
-           example: anydata
-       -   name: extract_type
-           in:  body
-           required: true
-           description: extract type
-           type: string
-           example: standardExtraction
-       -   name: vhost
-           in:  body
-           required: true
-           description: When data_source is not rabbitmq, pass ""
-           type: string
-           example:
-       -   name: queue
-           in:  body
-           required: true
-           description: When data_source is not rabbitmq, pass ""
-           type: string
-           example:
-       -   name: dataType
-           in:  body
-           required: true
-           description: datasource type,structured、unstructured,rabbitmq is structured
-           type: string
-           example: structured
-       -   name: json_schema
-           in:  body
-           required: true
-           description: When data_source is not rabbitmq, pass ""
-           type: string
-           example:
-       -   name: knw_id
-           in:  body
-           required: true
-           description: knowledge network id
-           type: integer
-           example: 1
-
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
+            required: true
+            schema:
+                $ref: '#/definitions/builder/data_source/dsopt_post'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     ret_code, ret_message, ds_id = dsm_service.addds(params_json)
@@ -365,86 +243,21 @@ def dsopt_post():
 def ds(dsid):
     '''
     edit datasource
+    edit data source based on data source id
     ---
     parameters:
-       -   name: dsid
-           in: path
-           required: true
-           description: Data source id
-           type: integer
-           example: 1
-       -   name: dsname
-           in: body
-           required: true
-           description: Data source name
-           type: string
-           example: test_rabbitmq
-       -   name: data_source
-           in:  body
-           required: true
-           description: mysql/as/as7/hive/rabbitmq
-           type: string
-           example: rabbitmq
-       -   name: ds_address
-           in:  body
-           required: true
-           description: Data source url or ip
-           type: string
-           example: 192.168.1.1
-       -   name: ds_port
-           in:  body
-           required: true
-           description: Data source port
-           type: integer
-           example: 5672
-       -   name: ds_user
-           in:  body
-           required: true
-           description: Data source user
-           type: string
-           example: admin
-       -   name: ds_password
-           in:  body
-           required: true
-           description: Data source password
-           type: string
-           example: test123456
-       -   name: ds_path
-           in:  body
-           required: true
-           description: database or path
-           type: string
-           example: ""
-       -   name: extract_type
-           in:  body
-           required: true
-           description: extract type
-           type: string
-           example: standardExtraction
-       -   name: vhost
-           in:  body
-           required: true
-           description: When data_source is not rabbitmq, pass ""
-           type: string
-           example: test
-       -   name: queue
-           in:  body
-           required: true
-           description: When data_source is not rabbitmq, pass ""
-           type: string
-           example: test1
-       -   name: dataType
-           in:  body
-           required: true
-           description: datasource type,structured、unstructured,rabbitmq is structured
-           type: string
-           example: structured
-       -   name: json_schema
-           in:  body
-           required: true
-           description: When data_source is not rabbitmq, pass ""
-           type: string
-           example: {"name": "xiaoming"}
+        -   name: dsid
+            in: path
+            required: true
+            description: Data source id
+            type: integer
+            example: 1
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
+            required: true
+            schema:
+                $ref: '#/definitions/builder/data_source/ds'
     '''
     # update datasource
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -461,14 +274,15 @@ def ds(dsid):
 def delds():
     '''
     delete datasource
+    delete data sources in batches by id
     ---
     parameters:
-       -   name: dsids
-           in: body
-           required: true
-           description: Data source ids
-           type: string
-           example: [1,2,3,4]
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
+            required: true
+            schema:
+                $ref: '#/definitions/builder/data_source/delds'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
@@ -483,7 +297,8 @@ def delds():
 @swag_from(swagger_new_response)
 def getbydsname():
     '''
-    Fuzzy query data source by name
+    fuzzy query data source by name
+    fuzzy search for data sources under the current knowledge network by data source name
     ---
     parameters:
        -   name: dsname
@@ -545,6 +360,7 @@ def getbydsname():
 def get_acctoken_by_id(ds_id):
     '''
     get as token
+    get as token based on data source id
     ---
     parameters:
        -   name: ds_id
@@ -578,87 +394,15 @@ def get_acctoken_by_id(ds_id):
 def ds_copy(ds_id):
     '''
         copy datasource
+        copy the data source under the current knowledge network according to the data source id
         ---
         parameters:
-           -   name: dsname
-               in: body
-               required: true
-               description: Data source name
-               type: string
-               example: test_rabbitmq
-           -   name: data_source
-               in:  body
-               required: true
-               description: mysql/as/as7/hive/rabbitmq
-               type: string
-               example: rabbitmq
-           -   name: ds_address
-               in:  body
-               required: true
-               description: Data source url or ip
-               type: string
-               example: 192.168.1.1
-           -   name: ds_port
-               in:  body
-               required: true
-               description: Data source port
-               type: integer
-               example: 5672
-           -   name: ds_user
-               in:  body
-               required: true
-               description: Data source user
-               type: string
-               example: admin
-           -   name: ds_password
-               in:  body
-               required: true
-               description: Data source password
-               type: string
-               example: test123456
-           -   name: ds_path
-               in:  body
-               required: true
-               description: database or path
-               type: string
-               example: " "
-           -   name: extract_type
-               in:  body
-               required: true
-               description: extract type
-               type: string
-               example: standardExtraction
-           -   name: vhost
-               in:  body
-               required: true
-               description: When data_source is not rabbitmq, pass ""
-               type: string
-               example: test
-           -   name: queue
-               in:  body
-               required: true
-               description: When data_source is not rabbitmq, pass ""
-               type: string
-               example: test1
-           -   name: dataType
-               in:  body
-               required: true
-               description: datasource type,structured、unstructured,rabbitmq is structured
-               type: string
-               example: structured
-           -   name: json_schema
-               in:  body
-               required: true
-               description: When data_source is not rabbitmq, pass ""
-               type: string
-               example: {"name": "xiaoming"}
-           -   name: knw_id
-               in:  body
-               required: true
-               description: knowledge network id
-               type: integer
-               example: 1
-
+            -   in: 'body'
+                name: 'body'
+                description: 'request body'
+                required: true
+                schema:
+                    $ref: '#/definitions/builder/data_source/ds_copy'
         '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:

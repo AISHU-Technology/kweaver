@@ -42,7 +42,8 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 @swag_from(swagger_old_response)
 def graphopt():
     '''
-    add a knowledge graph
+    create a new knowledge graph
+    create a new knowledge graph under the knowledge network
     ---
     parameters:
         -   in: 'body'
@@ -50,7 +51,7 @@ def graphopt():
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/graph'
+                $ref: '#/definitions/builder/graph/graph'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     params_json["graph_process"][0]["graph_DBName"] = other_dao.get_random_uuid()
@@ -80,6 +81,7 @@ def graphopt():
 def graph(grapid):
     '''
     edit the graph information according to the graph id
+    edit the graph information according to the graph id
     ---
     parameters:
         -   name: 'graphid'
@@ -92,7 +94,7 @@ def graph(grapid):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/graph'
+                $ref: '#/definitions/builder/graph/graph'
     '''
     # graphCheckParameters.graphAddPar进行参数格式校验
     # graph_Service.update编辑图谱
@@ -236,6 +238,7 @@ def graph(grapid):
 def getgraphdb():
     '''
     query database connection information
+    query database connection information
     ---
     '''
     ret_code, ret_message = graph_Service.getGraphDB()
@@ -250,6 +253,7 @@ def getgraphdb():
 def getbis():
     """
     get base info switch
+    get base info switch
     """
     ret_code, ret_message = graph_Service.getbis()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
@@ -263,6 +267,7 @@ def getbis():
 def getgraphbyid(graphid):
     '''
     query the graph
+    query the graph information by graphid
     ---
     parameters:
         -   name: 'graphid'
@@ -292,6 +297,7 @@ def getgraphbyid(graphid):
 @swag_from(swagger_old_response)
 def getgraphbystep(graphid, graph_step):
     '''
+    get the entity class collection and its property collection in the specific graph configuration step
     get the entity class collection and its property collection in the specific graph configuration step
     ---
     parameters:
@@ -325,29 +331,15 @@ def getgraphbystep(graphid, graph_step):
 def getbyinfoext():
     '''
     get the extraction rule according to the extraction file list and graph configuration step
+    get the extraction rule according to the extraction file list and graph configuration step
     ---
     parameters:
-        -   name: 'graphid'
-            in: 'body'
-            description: 'graph id'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: 'integer'
-            example: 116
-        -   name: 'graph_step'
-            in: 'body'
-            description: 'graph configuration step'
-            required: true
-            type: 'string'
-            example: 'graph_InfoExt'
-        -   name: 'infoext_list'
-            in: 'body'
-            description: 'extraction file list containing data source name and file source'
-            required: true
-            type: 'array'
-            example: [
-              { "ds_name": "data_source_name1", "file_source": "document identification：fileid or tablename" },
-              { "ds_name": "data_source_name1", "file_source": "document identification：fileid or tablename" }
-            ]
+            schema:
+                $ref: '#/definitions/builder/graph/getbyinfoext'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -393,31 +385,12 @@ def check_kmapinfo():
     <b>Scenario</b>: information extraction in step 4 modifies the extracted entities and properties used in step 5. It is judged whether the information in step 5 exists. 0: exists, 1: does not exist, 2: property content under it does not exist.
     ---
     parameters:
-        -   name: 'graphid'
-            in: 'body'
-            description: 'graph id'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: 'integer'
-            example: 116
-        -   name: 'graph_KMap'
-            in: 'body'
-            description: 'details of the graph mapping'
-            required: true
-            type: 'array'
-            example: [{
-                  "otls_map": [
-                    {
-                      "otl_name": "test_json",
-                      "entity_type": "test_json",
-                      "property_map": [
-                        { "otl_prop": "name", "entity_prop": "a1" },
-                        { "otl_prop": "a1", "entity_prop": "a1" },
-                        { "otl_prop": "a2", "entity_prop": "a2" }
-                      ]
-                    }
-                  ],
-                  "relations_map": []
-                }]
+            schema:
+                $ref: '#/definitions/builder/graph/check_kmapinfo'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -448,44 +421,15 @@ def check_kmapinfo():
 def savenocheck():
     '''
     save and exit
+    Exit after saving knowledge graph configuration information
     ---
     parameters:
-        -   name: 'graph_id'
-            in: 'body'
-            description: 'graph id'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: 'integer'
-            example: 4
-        -   name: 'graph_baseInfo'
-            in: 'body'
-            description: 'graph basic information'
-            required: false
-            type: 'object'
-        -   name: 'graph_ds'
-            in: 'body'
-            description: 'graph data source information'
-            required: false
-            type: 'object'
-        -   name: 'graph_otl'
-            in: 'body'
-            description: 'graph ontology information'
-            required: false
-            type: 'object'
-        -   name: 'graph_InfoExt'
-            in: 'body'
-            description: 'graph extraction information'
-            required: false
-            type: 'object'
-        -   name: 'graph_KMap'
-            in: 'body'
-            description: 'graph mapping information'
-            required: false
-            type: 'object'
-        -   name: 'graph_KMerge'
-            in: 'body'
-            description: 'graph merging information'
-            required: false
-            type: 'object'
+            schema:
+                $ref: '#/definitions/builder/graph/savenocheck'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code == 0:
@@ -549,20 +493,15 @@ def getdsbygraphids():
 def graphDeleteByIds():
     '''
     batch delete graph by graph ids
+    batch delete graph by graph ids
     ---
     parameters:
-        -   name: graphids
-            in: body
-            description: list of graph ids to be deleted
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            type: array
-            example: [1, 2]
-        -   name: knw_id
-            in: body
-            description: knowledge network id
-            required: true
-            type: integer
-            example: 1
+            schema:
+                $ref: '#/definitions/builder/graph/graphDeleteByIds'
     '''
     runs, noAuthority, noExist, normal = [], [], [], []
     mess = ""
@@ -700,6 +639,7 @@ def graphDeleteByIds():
 def graphDsList(graphid):
     '''
     get data source list in the graph editing process
+    get data source list in the graph editing process by graphid
     ---
     parameters:
         -   name: graphid
@@ -751,6 +691,7 @@ def graphDsList(graphid):
 def get_adv_search(net_id):
     '''
     get knowledge graph list configuration by network id
+    get knowledge graph list configuration by network id
     ---
     parameters:
         -   name: net_id
@@ -778,14 +719,15 @@ def get_adv_search(net_id):
 def graph_config_output():
     '''
     export the knowledge graph
+    export the configuration information of the knowledge graph
     ---
     parameters:
-        -   name: ids
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: list of graph ids to be exported. If its length exceeds 1, an error will be reported.
-            type: array
-            example: ["86"]
+            schema:
+                $ref: '#/definitions/builder/graph/graph_config_output'
     '''
     config_ids = request.json.get("ids")
     if len(config_ids) > 1:
@@ -830,30 +772,21 @@ def graph_config_output():
 def graph_config_input():
     '''
     import the knowledge graph
+    import the configuration information of the knowledge graph
     ---
     parameters:
-        -   name: knw_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: knowledge network id
-            type: integer
+            schema:
+                $ref: '#/definitions/builder/graph/graph_config_input'
         -   name: file
-            in: body
-            required: true
+            in: formData
             description: data file to be uploaded
+            required: true
             type: file
-        -   name: graph_id
-            in: body
-            required: true
-            description: graph id
-            type: integer
-        -   name: method
-            in: body
-            required: true
-            description: '0: skip when graph id exists; 1: update when graph id exists'
-            type: integer
-    consumes:
-        -   application/x-www-form-urlencoded
+            example:
     '''
     # 获取form表单当中的知识网络id和图谱id
     graph_id = request.form.get("graph_id")
@@ -931,6 +864,7 @@ def graph_config_input():
 def get_graph_info_basic():
     '''
     get the graph information
+    get the graph information by graph id
     ---
     parameters:
         -   name: graph_id
@@ -998,6 +932,7 @@ def get_graph_info_basic():
 def get_graph_info_onto():
     '''
     get the ontology of the graph
+    get the ontology of the graph by graph id
     ---
     parameters:
         -   name: graph_id
@@ -1028,6 +963,7 @@ def get_graph_info_onto():
 def get_graph_info_count():
     '''
     get the count of the graph
+    count the number of entities and relationships in the knowledge graph
     ---
     parameters:
         -   name: graph_id
@@ -1057,6 +993,7 @@ def get_graph_info_count():
 @swag_from(swagger_new_response)
 def get_graph_info_detail():
     '''
+    get the configuration details of entities or edges in the graph
     get the configuration details of entities or edges in the graph
     ---
     parameters:
