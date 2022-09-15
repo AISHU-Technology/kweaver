@@ -94,7 +94,7 @@ const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
       }
       setSelectedThesaurus(res);
       setLoading(false);
-      if (refresh) message.success(intl.get('userManagement.refreshSuccess'));
+      if (refresh) message.success(intl.get('ThesaurusManage.refreshSuccess'));
     } catch (err) {
       //
     }
