@@ -3,11 +3,11 @@ import time
 import concurrent.futures
 import pymysql
 import threading
-from .base import (using_mysql, using_mysql_pool)
-from tests.test_mysql import base
+from db_conn.tests.test_mysql.base import (using_mysql, using_mysql_pool)
+from db_conn.tests.test_mysql import base
 from pymysql.constants import CLIENT
-from common.log.logger import logger
-from common.db.mysql.pyMySql import DBMySqlLib
+from db_conn.common.log.logger import logger
+from db_conn.common.db.mysql.pyMySql import DBMySqlLib
 
 class TestThreadingMysql(base.PyMySQLTestCase):
 
@@ -21,7 +21,7 @@ class TestThreadingMysql(base.PyMySQLTestCase):
         # logger.info(sql)
         print(res)
 
-        self.assertEqual(res, dict({'id': 1, 'manager_version': None, 'builder_version': 'builder-1.1.5', 'engine_version': None}))
+        self.assertEqual(res, dict({'id': 1, 'manager_version': 'manager-1.1.3', 'builder_version': 'builder-1.1.6', 'engine_version': 'engine-1.1.1', 'dataio_version': 'dataio-1.1.1'}))
 
 
 

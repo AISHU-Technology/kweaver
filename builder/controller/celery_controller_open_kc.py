@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Time : 2021/10/13 17:03
-# @Author : jack.li
-# @Email : jack.li@aishu.cn
-# @File : celery_controller_open_kc.py
-# @Project : builder
 from flask import Blueprint, request, jsonify
 from utils.CommonUtil import commonutil
 from utils.Gview import Gview

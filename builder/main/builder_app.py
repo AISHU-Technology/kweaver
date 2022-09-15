@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Author: Lowe.li
-# @Email: Lowe.li@aishu.cn
-# @CreatDate: 2020/6/30 14:50
 import copy
 import os
 import sys
