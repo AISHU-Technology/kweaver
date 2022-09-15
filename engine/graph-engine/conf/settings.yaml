@@ -16,7 +16,7 @@ builderServer:
   port: 6475
 mariadb:
   #host: rds-proton-rds-mariadb-cluster
-  host: 10.4.106.255
+  host: 10.2.235.242
   port: 3320
   user: anydata
   password: Qwe123!@#

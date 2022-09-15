@@ -53,5 +53,8 @@ var GroupGQLKGRouters = map[string][]leo.Router{
 		leo.NewRouter("post", "/explore/relation", services.ExploreRelationHandler),
 		//扩展点
 		leo.NewRouter("get", "/explore/expandv", services.KGExpandVHandler),
+		//探索路径
+		leo.NewRouter("post", "/explore/path", services.ExplorePathHandler),
+		leo.NewRouter("post", "/explore/pathDetail", services.PathDetail),
 	},
 }
