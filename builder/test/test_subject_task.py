@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Time : 2021/10/27 11:32
-# @Author : jack.li
-# @Email : jack.li@aishu.cn
-# @File : test_subject.py
-# @Project : builder
 import unittest
 import faiss
 import pandas as pd

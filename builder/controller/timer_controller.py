@@ -35,6 +35,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def add_timed_task(graph_id):
     '''
     add a scheduled task
+    add a scheduled task by graph id
     ---
     parameters:
         -   name: graph_id
@@ -42,36 +43,12 @@ def add_timed_task(graph_id):
             required: true
             description: graph id
             type: integer
-        -   name: task_type
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: 'building task type. allowableValues: full, increment'
-            example: increment
-            type: string
-        -   name: cycle
-            in: body
-            required: true
-            description: "'one': execute once; 'day': execute daily; 'week': execute weekly; 'month': execute monthly. "
-            type: string
-            example: month
-        -   name: datetime
-            in: body
-            required: true
-            description: "The delivery parameters that are only executed once are the specific date, such as: '2021-12-20 15:54', the delivery parameters are hours and minutes for daily, week and month, such as: '16:40'."
-            type: string
-            example: "17:20"
-        -   name: enabled
-            in: body
-            required: false
-            description: 任务开关，开启：1，关闭：0，默认开启
-            type: integer
-            example: 1
-        -   name: date_list
-            in: body
-            required: true
-            description: Indicates the day of the week / day of execution. The content of the list is int, the effective value of the page every week is 1 ~ 7, the number of elements cannot be greater than 7, and the effective value of the page every month is 1 ~ 31. For example, [1, 4], the number of elements cannot be greater than 31, which represents Monday to Sunday or 1 ~ 31 in turn. The page of one execution and daily execution can only send an empty list, and other values will be directly discarded.
-            type: array
-            example: [1,2,3,4,5]
+            schema:
+                $ref: '#/definitions/builder/timer/add_timed_task'
     '''
     method = request.method
     if method == "POST":
@@ -136,6 +113,7 @@ def add_timed_task(graph_id):
 def update_timed_task(graph_id):
     '''
     modify scheduled task
+    modify scheduled task by graph id
     ---
     parameters:
         -   name: graph_id
@@ -143,42 +121,12 @@ def update_timed_task(graph_id):
             required: true
             description: graph id
             type: integer
-        -   name: task_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: scheduled task id
-            type: string
-            example: "edfeca62-77f8-11ec-9513-4281da722808"
-        -   name: task_type
-            in: body
-            required: true
-            description: build task type，full, increment
-            type: string
-            example: increment
-        -   name: cycle
-            in: body
-            required: true
-            description: 'Valid values are one, day, week, month, one: execute once, day: execute every day, week: execute every week, month: execute every month'
-            type: string
-            example: week
-        -   name: datetime
-            in: body
-            required: true
-            description: "The delivery parameters that are only executed once are the specific date, such as: '2021-12-20 15:54', the delivery parameters are hours and minutes of each day, week and month, such as: '16:40'"
-            type: string
-            example: 17:02
-        -   name: enabled
-            in: body
-            required: false
-            description: 'Task switch, on: 1, off: 0, on by default'
-            type: integer
-            example: 1
-        -   name: date_list
-            in: body
-            required: true
-            description: Indicates the day of the week / day of execution. The content of the list is int, the effective value of the page every week is 1 ~ 7, the number of elements cannot be greater than 7, and the effective value of the page every month is 1 ~ 31. For example, [1, 4], the number of elements cannot be greater than 31, which represents Monday to Sunday or 1 ~ 31 in turn. The page of one execution and daily execution can only send an empty list, and other values will be directly discarded.
-            type: array
-            example: [1]
+            schema:
+                $ref: '#/definitions/builder/timer/update_timed_task'
     '''
     method = request.method
     if method == "POST":
@@ -252,12 +200,12 @@ def delete_timed_task(graph_id):
             required: true
             description: graph id
             type: integer
-        -   name: task_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: List of scheduled task IDs. The contents of the list are scheduled task IDS, such as ['aaa','BBBB']
-            type: array
-            example: ["122","4bfc6d8e-68ab-11ec-b9d3-005056ba834d"]
+            schema:
+                $ref: '#/definitions/builder/timer/delete_timed_task'
     '''
     method = request.method
     if method == "POST":
@@ -301,6 +249,7 @@ def delete_timed_task(graph_id):
 def get_timed_task():
     '''
     paging get scheduled task
+    Query timed tasks by paging by knowledge graph id
     ---
     parameters:
         -   name: graph_id
@@ -363,6 +312,7 @@ def get_timed_task():
 def get_timed_info():
     '''
     get scheduled task details
+    get scheduled task details by  graph id
     ---
     parameters:
         -   name: graph_id
@@ -405,6 +355,7 @@ def get_timed_info():
 def timed_switch(graph_id):
     '''
     scheduled task switch
+    scheduled task switch by graph id
     ---
     parameters:
         -   name: graph_id
@@ -412,18 +363,12 @@ def timed_switch(graph_id):
             required: true
             description: graph id
             type: integer
-        -   name: task_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: scheduled task id
-            type: string
-            example: "ce29686e-7352-11ec-8b53-005056ba834d"
-        -   name: enabled
-            in: body
-            required: true
-            description: 'Task switch, on: 1, off: 0'
-            type: integer
-            example: 1
+            schema:
+                $ref: '#/definitions/builder/timer/timed_switch'
     '''
     method = request.method
     if method == "POST":

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
 # @Time : 2022/5/20 13:50 
-# @Author : liqianlan
+
 
 
 class Intent(object):

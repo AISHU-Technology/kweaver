@@ -1,6 +1,6 @@
 // Package orient 是 Orientdb 的数据访问层
 // - 描述：OrientDB 节点探索 访问层
-// - 作者：原琦 (yuan.qi@aishu.cn)
+
 // - 时间：2020-6-15
 
 package orient
@@ -173,6 +173,50 @@ func ProcessV(rec *VRecord, k string, v interface{}) {
 	}
 
 }
+func ExplorePathProcessV(rec *ExplorePathVertexRes, k string, v interface{}) {
+	if strings.HasPrefix(k, "@") {
+		return
+	}
+
+	if k == "out" {
+		return
+	}
+	if k == "in" {
+		return
+	}
+
+	// 空属性值
+	if v == "nan" {
+		return
+	}
+
+	var value string
+	switch v.(type) {
+	case string:
+		{
+			value = v.(string)
+		}
+	case float64:
+		{
+			value = strconv.FormatFloat(v.(float64), 'f', -1, 64)
+		}
+	case bool:
+		{
+			value = strconv.FormatBool(v.(bool))
+		}
+	}
+
+	prop := &ExplorePathProperty{
+		Name:  k,
+		Value: value,
+	}
+	rec.Properties = append(rec.Properties, prop)
+
+	if ok := strings.HasSuffix(strings.ToLower(k), "name"); rec.Name != "" && ok && len([]rune(v.(string))) != 0 {
+		rec.Name = v.(string)
+	}
+
+}
 
 func ProcessExpandV(rec *ExpandVRecord, k string, v interface{}) {
 	if strings.HasPrefix(k, "@") {
@@ -266,6 +310,46 @@ func ProcessE(rec *ERecord, k string, v interface{}, vrid string) string {
 	rec.Properties = append(rec.Properties, prop)
 
 	return relatedV
+}
+
+func ExplorePathProcessE(rec *ExplorePathEdgeRes, k string, v interface{}) (outV, inV string) {
+	if strings.HasPrefix(k, "@") {
+		return "", ""
+	}
+
+	// 进出顶点处理
+	if k == "out" {
+		rec.Out = v.(string)
+		return rec.Out, ""
+	}
+	if k == "in" {
+		rec.In = v.(string)
+		return "", rec.In
+	}
+
+	var value string
+	switch v.(type) {
+	case string:
+		{
+			value = v.(string)
+		}
+	case float64:
+		{
+			value = strconv.FormatFloat(v.(float64), 'f', -1, 64)
+		}
+	}
+	prop := &ExplorePathProperty{
+		Name:  k,
+		Value: value,
+	}
+
+	if ok := strings.HasSuffix(strings.ToLower(k), "name"); rec.Name != "" && ok {
+		rec.Name = v.(string)
+	}
+
+	rec.Properties = append(rec.Properties, prop)
+
+	return "", ""
 }
 
 type SearchFilterArgs struct {
@@ -936,6 +1020,12 @@ func (e *ESearchRes) GetE(conf *utils.KGConf, eclass string, vrid string, inout 
 		URL:    conf.URL + "/command/" + conf.DB + "/sql",
 		Method: "command",
 	}
+	//var operator = Operator{
+	//	User:   "root",
+	//	PWD:    "YW55ZGF0YTEyMw==",
+	//	URL:    "http://10.4.68.144:2480" + "/command/" + conf.DB + "/sql",
+	//	Method: "command",
+	//}
 
 	// 首次配置无推荐
 	if conf.ConfigStatus == "edit" {
@@ -956,22 +1046,26 @@ func (e *ESearchRes) GetE(conf *utils.KGConf, eclass string, vrid string, inout 
 		return utils.ErrInfo(utils.ErrVClassErr, errors.New("KG not have class"))
 	}
 
-	if eclass == "" || inout == "" {
-		return utils.ErrInfo(utils.ErrOrientDBErr, errors.New("Not Found"))
-	}
+	//if eclass == "" || inout == "" {
+	//	return utils.ErrInfo(utils.ErrOrientDBErr, errors.New("Not Found"))
+	//}
 
 	// 查询边属性
 	var io string
 	if inout == "out" {
 		io = "outE"
-	} else {
+	} else if inout == "in" {
 		io = "inE"
+	} else {
+		io = "bothE"
 	}
 
 	skip, limit := (page-1)*size, size
 
-	sqlPro := `select expand( %s('%s')) from %s skip %d limit %d`
-	sqlPro = fmt.Sprintf(sqlPro, io, eclass, vrid, skip, limit)
+	sqlPro := fmt.Sprintf(`select expand( %s(%s)) from %s`, io, eclass, vrid)
+	if size > -1 {
+		sqlPro = sqlPro + fmt.Sprintf(" skip %d limit %d", skip, limit)
+	}
 
 	//logger.Info(sqlPro)
 	responsePro, errPro := GetGraphData(&operator, sqlPro)
@@ -1006,8 +1100,9 @@ func (e *ESearchRes) GetE(conf *utils.KGConf, eclass string, vrid string, inout 
 
 	// 为了将边与顶点匹配，先保存一个边的 map
 	// eMap := make(map[string]*ERecord)
-
-	for _, r := range ePro.([]interface{}) {
+	eProList := ePro.([]interface{})
+	relatedVIDList := make([]string, len(eProList))
+	for i, r := range eProList {
 		rMap := r.(map[string]interface{})
 		rec := ERecord{
 			Class:   rMap["@class"].(string),
@@ -1017,19 +1112,19 @@ func (e *ESearchRes) GetE(conf *utils.KGConf, eclass string, vrid string, inout 
 		}
 
 		processFunc := func(k string, v interface{}) {
-			relatedV := ProcessE(&rec, k, v, inout)
+			relatedV := ProcessE(&rec, k, v, vrid)
 
 			if relatedV != "" {
 				vrec := VRecord{
 					Rid: relatedV,
 				}
 
-				if inout == "out" {
+				if rMap["in"].(string) == vrid { //进边
+					rec.Out = vrec
+				} else { //出边
 					rec.In = vrec
 				}
-				if inout == "in" {
-					rec.Out = vrec
-				}
+				relatedVIDList[i] = relatedV
 			}
 		}
 
@@ -1047,21 +1142,13 @@ func (e *ESearchRes) GetE(conf *utils.KGConf, eclass string, vrid string, inout 
 	}
 
 	// inout:查询进边或出边
-	var vSearch string
-	if inout == "in" {
-		vSearch = "in"
-	} else {
-		vSearch = "out"
-	}
-
-	sql := ""
+	var sql string
 	if conf.Version == 2 {
-		sql = `select expand(@this.exclude("in_*", "out_*")) from (select *, out().size() as out, in().size() as in from (select expand( %s("%s")) from %s skip %d limit %d))`
-		sql = fmt.Sprintf(sql, vSearch, eclass, vrid, skip, limit)
+		sql = `select expand(@this.exclude("in_*", "out_*")) from (select *, out().size() as out, in().size() as in from (select * from V where @rid in [%s]))`
+		sql = fmt.Sprintf(sql, strings.Join(relatedVIDList, ","))
 	} else {
-		sql = `select expand(res) from (select @this:{!out_*, !in_*} as res from (select *, out().size() as out, in().size() as in from (select expand( %s("%s")) from %s skip %d limit %d)))
-`
-		sql = fmt.Sprintf(sql, vSearch, eclass, vrid, skip, limit)
+		sql = `select expand(res) from (select @this:{!out_*, !in_*} as res from (select *, out().size() as out, in().size() as in from (select * from V where @rid in [%s])))`
+		sql = fmt.Sprintf(sql, strings.Join(relatedVIDList, ","))
 	}
 
 	//logger.Info(sql)
@@ -1130,17 +1217,12 @@ func (e *ESearchRes) GetE(conf *utils.KGConf, eclass string, vrid string, inout 
 		}
 
 		for _, ev := range e.Res {
-			if inout == "out" {
-				if ev.In.Rid == vrec.Rid && ev.Out.Class == "" {
-					ev.In = vrec
-					break
-				}
-			}
-			if inout == "in" {
-				if ev.Out.Rid == vrec.Rid && ev.Out.Class == "" {
-					ev.Out = vrec
-					break
-				}
+			if ev.In.Rid == vrec.Rid {
+				ev.In = vrec
+				break
+			} else if ev.Out.Rid == vrec.Rid {
+				ev.Out = vrec
+				break
 			}
 		}
 	}

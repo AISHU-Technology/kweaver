@@ -1,6 +1,5 @@
 // Package utils 项目的通用的工具
 // - 描述：服务、图数据库配置的数据结构
-// - 作者：张坤 (zhang.kun@aishu.cn)
 // - 时间：2020-2-29
 package utils
 

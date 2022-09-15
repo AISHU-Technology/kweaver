@@ -72,6 +72,7 @@
     "importAgain": "Button import again",
     "editwordsError": "Data in thesaurus is being imported, please try again later",
     "noLabels": "[No label]",
-    "export": "Export"
+    "export": "Export",
+    "refreshSuccess": "Refresh succeeded!"
   }
 }

@@ -1,11 +1,13 @@
-/* eslint-disable max-lines */
+/* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, message } from 'antd';
+import _ from 'lodash';
+import { Button, message, Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import G6 from '@antv/g6';
 import IconFont from '@/components/IconFont';
+import apiService from '@/utils/axios-http';
 import servicesExplore from '@/services/explore';
 import {
   hoverIn,
@@ -17,13 +19,16 @@ import {
   handleEXData,
   getExpandHandleData,
   getEdgesByNode,
-  drawMark
+  setPathExplorePosition,
+  drawMark,
+  duplicateRemoval
 } from './assistFunction';
 import Information from './Information';
 import InAndOut from './InAndOut';
 import ModalDelete from './ModalDelete';
 import AnalysisModal from './Analysis';
 import ZoomTool from './LeftZoomTool';
+import PathExplore from './PathExplore';
 import { DELETE, IN, OUT, EXPLORE, ANALYSIS } from './operationType';
 import deleteImage from '@/assets/images/delete-edge.svg';
 import gridBg from '@/assets/images/net.png';
@@ -46,32 +51,66 @@ class G6Graph extends Component {
     loadingFull: false, // 加载数据全屏loading
     selectEdge: '', // 选择需要展开的边
     visible: false, // 控制分析弹窗
-    analysisTitle: '',
+    anylysisTitle: '',
     inOrOut: 'in', // 进出边
     modalVisible: false, // 一键清除
     tipHidden: false, // 框选删除弹窗
-    selectedNodes: [], // 框选的点
+    selectedNodes: [], //框选的点
     configBoxVisible: false, // 设置框框
-    isClickTool: false // 点击进出边操作圈
+    pathExploreVisible: false, // 路径探索的弹窗
+    startItem: '', // 探索路径的触发的起点
+    isClickTool: false, // 点击进出边操作圈
+    pathAllData: [] // 路径探索的数据
   };
 
-  timer = null;
+  timer = null; // 单击双击某点
+  timer1 = null; // 路径数详情量定时查询
 
   componentDidMount() {
     this.props.setG6GraphRef(this);
     this.init();
 
     window.addEventListener('resize', this.changeGraphSize);
+
+    this.timer1 = setInterval(() => {
+      const data = _.cloneDeep(this.state.pathAllData);
+      if (!_.isEmpty(data)) {
+        if (data?.length > 300) {
+          this.loop(data.splice(0, 300));
+        } else {
+          this.loop(data.splice(0));
+        }
+        this.setState({
+          pathAllData: data
+        });
+      }
+    }, 5 * 1000);
   }
 
   componentDidUpdate(preProps) {
-    if (this.props.selectedNode !== preProps.selectedNode) {
+    const { selectedNode, selectedPath, selectGraph } = this.props;
+
+    if (this.props.isCognitive && _.isEmpty(selectGraph)) {
+      this.clearAll();
+    }
+
+    if (selectedNode !== preProps.selectedNode) {
       this.setSelectedStyle();
+    }
+
+    if (selectedPath !== preProps.selectedPath) {
+      if (!selectedPath?.length) {
+        this.recoveryStyle();
+        return;
+      }
+
+      this.pathHeightLight();
     }
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.changeGraphSize);
+    clearInterval(this.timer1);
   }
 
   /**
@@ -226,8 +265,10 @@ class G6Graph extends Component {
     this.graph.on('click', e => {
       // 点击空白区域或者边，关闭操作盘
       if (!e.item || e.item.getModel().source) {
-        !e.item && this.props.setSelectedNode('');
-        !e.item && this.recoveryStyle(); // 恢复高亮
+        if (!e.item) {
+          this.props.setSelectedNode('');
+          this.recoveryStyle(); //恢复高亮
+        }
 
         this.closeAll();
 
@@ -260,13 +301,13 @@ class G6Graph extends Component {
 
     // 双击节点组
     this.graph.on('node:dblclick', e => {
-      clearTimeout(this.timer); // 清除未执行的定时器
+      clearTimeout(this.timer); //清除未执行的定时器
       this.expandEdges(e.item.get('model'));
     });
 
     // 点击节点组
     this.graph.on('node:click', e => {
-      clearTimeout(this.timer); // 清除未执行的定时器
+      clearTimeout(this.timer); //清除未执行的定时器
       this.timer = setTimeout(() => {
         // 固定点击过的节点
         const model = e.item.get('model');
@@ -274,11 +315,12 @@ class G6Graph extends Component {
         model.fx = e.x;
         model.fy = e.y;
 
-        const { selectedNode, nodes, edges, selectGraph, addE } = this.props;
+        const { selectedNode, nodes, edges, addE, autoOpen, startNode, endNode } = this.props;
         const { informationVisible, inAndOutVisible } = this.state;
 
         // 选择探索边，不在打开操作栏
         if (addE) {
+          this.openSideBar();
           this.props.setSelectedNode(e.item.getModel());
           return;
         }
@@ -293,7 +335,6 @@ class G6Graph extends Component {
             dir = 'in';
           }
 
-          // this.closeToolPanel();
           this.setState({
             isClickTool: true
           });
@@ -317,7 +358,7 @@ class G6Graph extends Component {
 
           this.setState({
             visible: true,
-            analysisTitle: selectedNode.data.name
+            anylysisTitle: selectedNode.data.name
           });
 
           return;
@@ -332,15 +373,17 @@ class G6Graph extends Component {
             return;
           }
 
-          this.closeAll();
-          this.props.setAddE(true);
-          this.graph.emit('node:click', { item: e.item }); // 开启建边模式后立即触发该点类
+          this.setState({
+            startItem: e.item,
+            isClickTool: true
+          });
+
+          this.openPathExplore();
           return;
         }
 
         // 点击打开侧边栏
-        this.props.setTabSelect(2);
-        this.props.autoOpen && this.props.setSideBarVisible(true);
+        this.openSideBar();
 
         if (e.item.getModel().id === selectedNode.id) {
           // 重复点击一个点
@@ -348,11 +391,23 @@ class G6Graph extends Component {
             this.openToolPanel(e);
           }
 
+          if (autoOpen && !startNode) {
+            this.props.setStartNode(selectedNode);
+            return;
+          }
+
+          if (autoOpen && !endNode) {
+            this.props.setEndNode(selectedNode);
+          }
+
           return;
         }
 
-        this.closeOpen();
+        this.setState({
+          startItem: e.item
+        });
 
+        this.closeOpen();
         this.openToolPanel(e);
       }, 300);
     });
@@ -360,13 +415,14 @@ class G6Graph extends Component {
     // 点击边
     this.graph.on('edge:click', e => {
       const { selectedNode, setSelectedNode } = this.props;
+
       if (e.target.cfg.name === 'delete-edge') {
         this.deleteEdge(e.item.getModel());
         return;
       }
+
       // 点击边侧边栏打开
-      this.props.setTabSelect(2);
-      this.props.autoOpen && this.props.setSideBarVisible(true);
+      this.openSideBar();
 
       if (selectedNode.id === e.item.getModel().id) return;
       setSelectedNode(e.item.getModel());
@@ -378,6 +434,7 @@ class G6Graph extends Component {
 
       setInfoPosition(selectedNode, this.graph, this.state.inOrOut);
       setInAndOutposition(selectedNode, this.graph, this.state.inOrOut);
+      setPathExplorePosition(this.props.selectedNode, this.graph);
     });
 
     this.graph.on('node:drag', e => {
@@ -405,6 +462,7 @@ class G6Graph extends Component {
 
       setInfoPosition(selectedNode, this.graph, this.state.inOrOut);
       setInAndOutposition(selectedNode, this.graph, this.state.inOrOut);
+      setPathExplorePosition(this.props.selectedNode, this.graph);
     });
 
     // 鼠标移入节点组
@@ -414,53 +472,125 @@ class G6Graph extends Component {
 
     // 鼠标移出节点组
     this.graph.on('mouseout', e => {
-      const { isClickTool } = this.state;
       hoverOut(this.group);
-      if (!isClickTool) {
-        this.setState({
-          informationVisible: false,
-          selectEdge: ''
-        });
-      }
     });
 
     // 探索关系
     this.graph.on('aftercreateedge', async e => {
-      const { nodes, edges, selectGraph, updateGraphData } = this.props;
-
+      const { nodes, selectGraph, setEndNode, setStartNode, direction, setPathList, setIsExplorePath, pathType } =
+        this.props;
       const model = e.edge.get('model');
-
+      nodes.forEach(item => {
+        if (item.id === model.target) {
+          setEndNode(item);
+        }
+        if (item.id === model.source) {
+          setStartNode(item);
+        }
+      });
       const data = {
-        id: parseInt(selectGraph.kg_id),
-        rids: [model.source, model.target]
+        id: selectGraph.kg_id,
+        startRid: model.source,
+        endRid: model.target,
+        direction,
+        shortest: pathType
       };
 
       setTimeout(() => {
         this.graph.removeItem(model.id);
       }, 0);
 
-      const res = await servicesExplore.exploreRelation(data);
+      this.cancelRequest(); // 取消上次请求
 
-      if (res && res.res) {
-        if (!res.res.length) {
-          message.error([intl.get('searchGraph.exploreNone')]);
+      this.setState({
+        pathAllData: []
+      });
 
+      this.props.setPathLoading(true);
+      this.setLoadingFull(true);
+      setIsExplorePath(true);
+
+      try {
+        const res = await servicesExplore.explorePath(data); // 探索两点之间的路径
+
+        if (res && res.res) {
+          let data = res.res;
+          setPathList({ data: [], count: data.length });
+          this.setState({
+            pathAllData: data
+          });
           return;
         }
+        // 两点之间路径为空
+        if (res?.res === null) {
+          message.warning([intl.get('searchGraph.exploreNone')]);
+        }
+        // 报错
+        if (res?.ErrorCode) {
+          message.error(res.Description);
+        }
+        this.props.setPathLoading(false);
+        this.setLoadingFull(false);
 
-        const hashMap = new Map();
-
-        edges.forEach((item, index) => {
-          hashMap.set(item.id, index);
-        });
-
-        const result = handleEXData(nodes, edges, hashMap, res.res);
-
-        this.addNodes(nodes, result);
-
-        updateGraphData({ nodes, edges: result }, this.setSelectedStyle);
+        setPathList({ data: [], count: 0 });
+      } catch (err) {
+        this.props.setPathLoading(false);
       }
     });
+  };
+
+  //批量查询路径详情
+  loop = data => {
+    const { pathList, setPathList } = this.props;
+
+    let vertices = []; // 批量查询的实体点id
+    let edges = []; // 批量查询的边id
+    let list = pathList?.data; // 路径
+    _.forEach(data, item => {
+      vertices = [...vertices, ...item.vertices];
+
+      const edgeIds = _.map(item.edges, e => e.id);
+
+      edges = [...edges, ...edgeIds];
+      list = [...list, item.vertices];
+    });
+
+    // 去掉重复的id
+    vertices = duplicateRemoval(vertices);
+    edges = duplicateRemoval(edges);
+
+    this.getPathDeatil(vertices, edges);
+    setPathList({ ...pathList, data: list });
+  };
+
+  /**
+   * 获取点和边的详细信息
+   */
+  getPathDeatil = async (vids, eids) => {
+    const { nodes, edges, selectGraph } = this.props;
+
+    const response = await servicesExplore.explorePathDetails({ id: selectGraph.kg_id, paths: [{ vids, eids }] });
+
+    if (response && response.res) {
+      const { openNodes, openEdges } = handleEXData(nodes, edges, response.res);
+      this.addNodes(openNodes, openEdges);
+      this.recoveryStyle();
+      this.props.setPathLoading(false);
+      this.setLoadingFull(false);
+    }
+  };
+
+  /**
+   * 点击点或边打开侧边栏
+   */
+  openSideBar = () => {
+    const { lefSelect, autoOpen, setTabSelect, setSideBarVisible } = this.props;
+    if (lefSelect !== 3) {
+      setTabSelect(2); // 非用户选中侧边路径板块，选中点和边自动选中基本信息板块
+    }
+    if (autoOpen) {
+      setSideBarVisible(true); // 除用户手动关闭外，选中打开侧边栏
+    }
   };
 
   /**
@@ -479,11 +609,10 @@ class G6Graph extends Component {
    * @description 关闭所有弹层
    */
   closeAll = () => {
-    // this.props.setSelectedNode('');
-
     this.setState({
       informationVisible: false,
       inAndOutVisible: false,
+      pathExploreVisible: false,
       selectEdge: ''
     });
 
@@ -527,7 +656,7 @@ class G6Graph extends Component {
     this.graph.changeData({ nodes: newNodes, edges: newEdges });
     this.props.updateGraphData({ nodes: newNodes, edges: newEdges });
     this.graph.refresh();
-
+    // this.recoveryStyle();
     setTimeout(() => {
       this.changeGraphSize();
     }, 10);
@@ -576,13 +705,14 @@ class G6Graph extends Component {
 
     setInfoPosition(selectedNode, this.graph, this.state.inOrOut);
     setInAndOutposition(selectedNode, this.graph, this.state.inOrOut);
+    setPathExplorePosition(this.props.selectedNode, this.graph);
   };
 
   /**
    * @description 改变图谱大小
    */
   changeGraphSize = () => {
-    this.graph.changeSize(this.ref.current.clientWidth, this.ref.current.clientHeight);
+    this.graph.changeSize(this.ref?.current?.clientWidth, this.ref?.current?.clientHeight);
   };
 
   /**
@@ -599,6 +729,7 @@ class G6Graph extends Component {
 
     setInfoPosition(selectedNode, this.graph, this.state.inOrOut);
     setInAndOutposition(selectedNode, this.graph, this.state.inOrOut);
+    setPathExplorePosition(this.props.selectedNode, this.graph);
   };
 
   /**
@@ -643,18 +774,18 @@ class G6Graph extends Component {
 
   // 打开进出边的弹窗
   openInformation = (direction, hover = true) => {
-    const { isClickTool, inOrOut } = this.state;
+    // 悬停打开路径的弹窗
+    if (direction === 'path') {
+      this.openPathExplore();
+      return;
+    }
 
     // 悬停操作圈其他模块，并且不是点击打开弹窗
-    if (!direction && !isClickTool) {
+    if (!direction) {
       this.setState({
         informationVisible: false,
         selectEdge: ''
       });
-      return;
-    }
-    // 点击打开进出弹窗，悬停或点击进出模块切换
-    if (!direction || (direction !== inOrOut && isClickTool && hover)) {
       return;
     }
 
@@ -662,6 +793,7 @@ class G6Graph extends Component {
       {
         inOrOut: direction,
         inAndOutVisible: false,
+        pathExploreVisible: false,
         informationVisible: true
       },
       () => {
@@ -671,13 +803,26 @@ class G6Graph extends Component {
     );
   };
 
+  // 打开探索路径的弹窗
+  openPathExplore = () => {
+    this.setState(
+      {
+        pathExploreVisible: true,
+        inAndOutVisible: false,
+        informationVisible: false
+      },
+      () => {
+        setPathExplorePosition(this.props.selectedNode, this.graph);
+      }
+    );
+  };
   /**
    * 更新节点、边透明度
    * @param {String} id 节点或边id
    * @param {Number} opacity 透明度
    */
   setOpacity = (id, opacity = 1) => {
-    this.graph.updateItem(id, {
+    this.graph?.updateItem(id, {
       style: { opacity },
       labelCfg: { style: { opacity } }
     });
@@ -689,7 +834,6 @@ class G6Graph extends Component {
   setSelectedStyle = () => {
     const { nodes, edges, selectedNode } = this.props;
     const totalData = [...nodes, ...edges];
-
     // 没有选中内容, 恢复高亮
     if (!selectedNode) {
       totalData.forEach(({ id }) => this.setOpacity(id, 1));
@@ -751,12 +895,22 @@ class G6Graph extends Component {
     this.addNodes([], []);
 
     this.props.setSelectedNode('');
+    this.props.setPathList({ data: [], count: 0 }); // 路径清空
+    this.props.setEndNode('');
+    this.props.setStartNode('');
+    this.props.setSideBarVisible(false);
+    this.props.setPathLoading(false);
+    this.props.setType(1);
+    this.props.setDirection('positive');
 
     this.setState({
       informationVisible: false, // 进出边选择栏
       inAndOutVisible: false, // 进出边拓展栏
+      pathExploreVisible: false,
       loadingFull: false, // 加载数据全屏loading
-      selectEdge: ''
+      selectEdge: '',
+      pathAllData: [],
+      loadingFull: false
     });
   };
 
@@ -808,8 +962,9 @@ class G6Graph extends Component {
    */
   deleteNode = (deleteNode, nodes, edges) => {
     const { selectedNodes } = this.state;
-    const curDeleteNode = deleteNode || selectedNodes;
-    const deleteIds = curDeleteNode.map(item => item.id || item?._cfg.id);
+    deleteNode = deleteNode || selectedNodes;
+
+    const deleteIds = deleteNode.map(item => item.id || item?._cfg.id);
 
     const newNodes = nodes.filter(item => {
       return !deleteIds.includes(item.id);
@@ -820,14 +975,12 @@ class G6Graph extends Component {
     });
 
     this.closeAll();
+    // 恢复高亮
+    this.recoveryStyle();
 
     this.addNodes(newNodes, newEdges);
 
     this.props.setSelectedNode('');
-
-    // 恢复高亮
-    const totalData = [...newNodes, ...newEdges];
-    totalData.forEach(({ id }) => this.setOpacity(id, 1));
   };
 
   // 双击展开
@@ -849,6 +1002,7 @@ class G6Graph extends Component {
         this.addNodes(newNodes, openEdges);
       }
 
+      //报错
       if (res?.ErrorCode) {
         EXPAND_ERROR.forEach(item => {
           if (item.ErrorCode === res?.ErrorCode) {
@@ -856,9 +1010,7 @@ class G6Graph extends Component {
           }
         });
       }
-    } catch (error) {
-      return 0;
-    }
+    } catch (error) {}
   };
 
   // 关闭分析报告弹窗
@@ -867,6 +1019,7 @@ class G6Graph extends Component {
       visible: false
     });
   };
+
   // 控制左边设置弹窗
   setConfigBoxVisible = visible => {
     this.setState({
@@ -874,13 +1027,54 @@ class G6Graph extends Component {
     });
   };
 
+  // 画布中选择起点
+  setStartNodeProperty = (type, dir) => {
+    const { setDirection, setTabSelect, setType } = this.props;
+    const { startItem } = this.state;
+    this.closeAll();
+
+    this.props.setAddE(true);
+    setType(type);
+    setDirection(dir);
+    setTabSelect(3);
+
+    setTimeout(() => {
+      this.graph.emit('node:click', { item: startItem }); // 开启建边模式后立即触发该点类
+    }, 100);
+  };
+
+  // 取消请求
+  cancelRequest = () => {
+    Object.keys(apiService.sources).forEach(key => {
+      apiService.sources[key]('取消请求');
+    });
+  };
+
+  // 路径高亮
+  pathHeightLight = () => {
+    const { nodes, edges, selectedPath } = this.props;
+    const totalData = [...nodes, ...edges];
+
+    // 高亮的id
+    let ids = [];
+    edges.forEach(item => {
+      if (selectedPath.includes(item.source) && selectedPath.includes(item.target)) {
+        ids = [...ids, item.id];
+      }
+    });
+
+    ids = [...ids, ...selectedPath];
+    totalData.forEach(({ id }) => {
+      this.setOpacity(id, ids.includes(id) ? 1 : 0.2);
+    });
+  };
   render() {
     const {
       informationVisible,
       inAndOutVisible,
       loadingFull,
       selectEdge,
-      analysisTitle,
+      anylysisTitle,
       visible,
       inOrOut,
       modalVisible,
@@ -896,7 +1090,9 @@ class G6Graph extends Component {
       selectedNode,
       setSearchVisible,
       isCognitive,
-      count
+      setTabSelect,
+      count,
+      setIsExplorePath
     } = this.props;
 
     return (
@@ -930,6 +1126,11 @@ class G6Graph extends Component {
           </span>
         </div>
 
+        <div className={loadingFull ? 'top-tip-box' : 'hidden'}>
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 20 }} spin />} />
+          <span className="ad-ml-2">{intl.get('searchGraph.loadingTip')}</span>
+        </div>
+
         {/* 左边缩放 */}
         <div className="zoom-graph">
           <ZoomTool
@@ -961,6 +1162,7 @@ class G6Graph extends Component {
                 type="primary"
                 onClick={() => {
                   setSearchVisible(true);
+                  this.closeAll();
                 }}
               >
                 {/* 继续探索 */}
@@ -988,7 +1190,6 @@ class G6Graph extends Component {
             selectEdge={selectEdge}
             selectGraph={selectGraph}
             selectedNode={selectedNode}
-            setLoadingFull={this.setLoadingFull}
             nodes={nodes}
             edges={edges}
             addNodes={this.addNodes}
@@ -1001,24 +1202,31 @@ class G6Graph extends Component {
           />
         ) : null}
 
-        {loadingFull ? (
+        {this.state.pathExploreVisible ? (
+          <PathExplore count={count} setTabSelect={setTabSelect} setStartNodeProperty={this.setStartNodeProperty} />
+        ) : null}
+
+        {/* {loadingFull ? (
           <div className="loading-full">
             <LoadingOutlined className="icon" />
           </div>
-        ) : null}
+        ) : null} */}
 
         <AnalysisModal
           visible={visible}
           selectGraph={selectGraph}
           selectedNode={selectedNode}
           onCancel={this.closeAnalysis}
-          analysisTitle={analysisTitle}
+          anylysisTitle={anylysisTitle}
         />
 
         <ModalDelete
           isVisible={modalVisible}
           onOk={() => {
+            // 重新探索
             this.clearAll();
+            this.cancelRequest();
+            setIsExplorePath(false);
             setSearchVisible(true);
             this.setState({ modalVisible: false });
           }}

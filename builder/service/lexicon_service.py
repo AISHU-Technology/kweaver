@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Author ：Jay.zhu
-@Date ：2022/9/14 9:03
-'''
 import os
 import re
 import time
@@ -93,13 +89,6 @@ class LexiconService:
     def get_lexicon_by_id(self, params_json):
         """ 获取指定id的词库信息 """
         try:
-            uuid2name = {}
-            # 获取用户信息
-            user_infos = lexicon_dao.get_account()
-            user_infos = user_infos.to_dict("records")
-            for user_info in user_infos:
-                uuid2name[user_info.get("uuid")] = user_info.get("name")
-            
             # 获取词库信息
             df = lexicon_dao.get_lexicon_by_id(int(params_json.get("id")))
             res = df.to_dict("records")[0]
@@ -111,8 +100,6 @@ class LexiconService:
             res["labels"] = eval(res.get("labels"))
             res["columns"] = eval(res.get("columns"))
             res["count"] = count
-            res["create_user"] = uuid2name.get(res["create_user"])
-            res["operate_user"] = uuid2name.get(res["operate_user"])
             if word_info:
                 titles = list(word_info[0].keys())
                 titles.sort()

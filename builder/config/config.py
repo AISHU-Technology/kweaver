@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/10/17 17:41
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import datetime
 # 服务器日志路径
 APP_LOG_PATH = "/var/log"

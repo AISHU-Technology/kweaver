@@ -259,13 +259,13 @@ const ModalContent = props => {
           if (!curCode) return;
 
           switch (true) {
-            case curCode === '500403' || curCode === 'Manager.SoftAuth.UnknownServiceRecordError':
+            case curCode === '500403' || curCode === 'Studio.SoftAuth.UnknownServiceRecordError':
               message.error(intl.get('datamanagement.notAuth'));
               break;
             case curCode === 500002 || curCode === 'Builder.service.dsm_Service.DsmService.addds.SameNameError':
               message.error(intl.get('datamanagement.alreadyUsed'));
               break;
-            case curCode === 'Manager.Graph.AddDefaultPermissionError':
+            case curCode === 'Studio.Graph.AddDefaultPermissionError':
               message.error('datamanagement.addAuthError');
               break;
             case curCode === 500001 && curDes.includes('not exist'):
@@ -369,10 +369,6 @@ const ModalContent = props => {
                   >
                     <Option value={MYSQL}>MySQL</Option>
                     <Option value={HIVE}>Hive</Option>
-                    <Option value={`${AS}-${STRUCTURED}`}>AnyShare 7-{intl.get('datamanagement.structured')}</Option>
-                    <Option value={`${AS}-${UNSTRUCTURED}`}>
-                      AnyShare 7-{intl.get('datamanagement.unstructured')}
-                    </Option>
                     <Option value={MQ}>RabbitMQ</Option>
                   </Select>
                 </FormItem>

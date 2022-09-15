@@ -26,26 +26,15 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 def save_knowledgenetwork():
     '''
     add a knowledge network
+    add a knowledge network
     ---
     parameters:
-        -   name: knw_name
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: knowledge network name
-            type: string
-            example: knowledge_network_name
-        -   name: knw_des
-            in: body
-            required: false
-            description: knowledge network description
-            type: string
-            example: knowledge network description
-        -   name: knw_color
-            in: body
-            required: true
-            description: knowledge network color
-            type: string
-            example: '#126EE3'
+            schema:
+                $ref: '#/definitions/builder/knowledge_network/save_knowledgenetwork'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
 
@@ -68,7 +57,8 @@ def save_knowledgenetwork():
 @swag_from(swagger_new_response)
 def getAllKnw():
     '''
-    paging query knowledge network
+    paging query knowledge all network
+    paging query knowledge all network
     ---
     parameters:
         -   name: page
@@ -112,6 +102,7 @@ def getAllKnw():
 @swag_from(swagger_new_response)
 def getKnwByName():
     '''
+    paging query knowledge network by name
     paging query knowledge network by name
     ---
     parameters:
@@ -162,32 +153,15 @@ def getKnwByName():
 def editKnw():
     '''
     edit knowledge network
+    edit knowledge network by knw_id
     ---
     parameters:
-        -   name: knw_id
-            in: body
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: knowledge network id
-            type: integer
-            example: 1
-        -   name: knw_name
-            in: body
-            required: true
-            description: knowledge network name
-            type: string
-            example: knw_name
-        -   name: knw_des
-            in: body
-            required: false
-            description: knowledge network description
-            type: string
-            example: knw_des
-        -   name: knw_color
-            in: body
-            required: true
-            description: knowledge network color
-            type: string
-            example: '#126EE3'
+            schema:
+                $ref: '#/definitions/builder/knowledge_network/editKnw'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     check_res, message = knw_check_params.editParams(params_json)
@@ -208,6 +182,7 @@ def editKnw():
 def deleteKnw():
     '''
     delete knowledge network
+    delete knowledge network by knw_id
     ---
     parameters:
         -   name: knw_id
@@ -234,6 +209,7 @@ def deleteKnw():
 @swag_from(swagger_new_response)
 def getGraph():
     '''
+    query knowledge graph by knowledge network id
     query knowledge graph by knowledge network id
     ---
     parameters:

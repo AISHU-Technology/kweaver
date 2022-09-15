@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*- 
 # @Time : 2022/5/19 15:48 
-# @Author : liqianlan
+
 import re
 import json
 from typing import List

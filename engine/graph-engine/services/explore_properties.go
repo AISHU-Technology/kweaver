@@ -15,7 +15,7 @@ type ReqPropertiesArgs struct {
 // GetPropertiesHandler
 // @Summary attributes and types
 // @Description Get attributes and types, for configuring search filter
-// @Tags Engine
+// @Tags CEngine
 // Param id query int true "knowledge graph id"
 // Param class query string true "class name"
 // @Param body body ReqPropertiesArgs true "class id and name"

@@ -151,7 +151,7 @@ const LeftSpace = props => {
             {!name && (
               <React.Fragment>
                 <div className="head">
-                  <h2>{intl.get('configSys.graph')}</h2>
+                  <h2>{intl.get('global.graph')}</h2>
                   <div className="op">
                     <Tooltip title={intl.get('knowledge.sort')} placement="bottom">
                       <Dropdown
@@ -206,7 +206,7 @@ const LeftSpace = props => {
           </div>
         ) : (
           <div className="knowledge-list-table">
-            <h2 className="title">{intl.get('configSys.graph')}</h2>
+            <h2 className="title">{intl.get('global.graph')}</h2>
             {buttonCreateAndImport}
           </div>
         )}

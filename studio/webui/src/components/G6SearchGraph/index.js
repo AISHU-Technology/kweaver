@@ -9,11 +9,18 @@ class G6SearchGraph extends Component {
     addE: false, // 是否探索边
     selectedNode: '', // 选中的节点
     count: 100, // 设置的探索数量, 1-200 默认100
-    direction: 'inout', // 探索路径的方向
+    direction: 'positive', // 探索路径的方向
     lefSelect: 0, // 侧边信息
     showNodeProperty: {}, // 画布上实体的显示，同一类显示相同属性 默认显示的name属性
     showEdgeProperty: {}, // 画布上边的显示，同一类显示相同属性，默认显示name
-    autoOpen: true // 是否自动展开侧边栏
+    autoOpen: true, // 是否自动展开侧边栏
+    startNode: '',
+    endNode: '',
+    pathList: { data: [], count: 0 }, // 保存路径信息
+    pathType: 1, // 最短或最长路径
+    selectedPath: [], // 选中高亮的路径
+    isExplorePath: false, // 路径探索
+    pathLoading: false
   };
 
   /**
@@ -31,6 +38,24 @@ class G6SearchGraph extends Component {
   setAutoOpen = () => {
     this.setState({
       autoOpen: false
+    });
+  };
+
+  /**
+   * 设置起点
+   */
+  setStartNode = startNode => {
+    this.setState({
+      startNode
+    });
+  };
+
+  /**
+   * 设置终点
+   */
+  setEndNode = endNode => {
+    this.setState({
+      endNode
     });
   };
 
@@ -99,9 +124,9 @@ class G6SearchGraph extends Component {
     const { nodeProperty, edgeProperty } = this.initShowProp(nodes, edges);
     const newNodes = nodes.map(item => {
       const classShowProp = nodeProperty[item.data.class];
-      let label = item.data.name;
+      let label = item?.data?.name;
       let tag = 0;
-      const { properties } = item.data;
+      const { properties } = item?.data;
       properties.forEach(i => {
         if (i.n === classShowProp) {
           label = i.v || '--';
@@ -109,7 +134,7 @@ class G6SearchGraph extends Component {
         }
       });
       if (!tag) {
-        label = item.data[classShowProp];
+        label = item?.data[classShowProp];
       }
       return {
         ...item,
@@ -119,16 +144,16 @@ class G6SearchGraph extends Component {
 
     const newEdges = edges.map(item => {
       const classShowProp = edgeProperty[item.class];
-      let label = item.name;
+      let label = item?.name;
       let tag = 0;
-      item.properties.forEach(i => {
+      item?.properties.forEach(i => {
         if (i.n === classShowProp) {
           label = i.v || '--';
           tag = 1;
         }
       });
       if (!tag) {
-        label = item[classShowProp];
+        label = item[classShowProp] || '--';
       }
 
       return {
@@ -145,7 +170,7 @@ class G6SearchGraph extends Component {
     const { showNodeProperty, showEdgeProperty } = this.state;
 
     nodes.forEach(item => {
-      const itemClass = item.class || item.data.class;
+      const itemClass = item?.class || item?.data?.class;
 
       if (!(itemClass in showNodeProperty)) {
         showNodeProperty[itemClass] = 'name';
@@ -168,6 +193,48 @@ class G6SearchGraph extends Component {
     return { nodeProperty: showNodeProperty, edgeProperty: showEdgeProperty };
   };
 
+  // 设置类型
+  setType = type => {
+    this.setState({
+      pathType: type
+    });
+  };
+
+  // 更新路径列表
+  setPathList = list => {
+    this.setState({
+      pathList: list
+    });
+  };
+
+  // 添加数据到画布中
+  addGraphData = (nodes, edges) => {
+    this.props.G6GraphRef?.addNodes(nodes, edges);
+  };
+
+  // 设置选择的高亮的路径
+  setSelectedPath = paths => {
+    this.setState({
+      selectedPath: paths
+    });
+  };
+
+  // 改变路径探索状态
+  setIsExplorePath = isExplorePath => {
+    this.setState({
+      isExplorePath
+    });
+  };
+
+  /**
+   * @description 设置路径探索loading状态
+   */
+  setPathLoading = pathLoading => {
+    this.setState({
+      pathLoading
+    });
+  };
+
   render() {
     const {
       sideBarVisible,
@@ -178,7 +245,14 @@ class G6SearchGraph extends Component {
       direction,
       showNodeProperty,
       showEdgeProperty,
-      autoOpen
+      autoOpen,
+      startNode,
+      endNode,
+      pathList,
+      pathType,
+      isExplorePath,
+      pathLoading,
+      selectedPath
     } = this.state;
     const {
       setSearchVisible,
@@ -190,7 +264,8 @@ class G6SearchGraph extends Component {
       updateGraphData,
       className,
       reExplore,
-      isCognitive
+      isCognitive,
+      searchVisible
     } = this.props;
     return (
       <div className={`G6-search-graph ${className}`} id="newSeach#1">
@@ -206,17 +281,30 @@ class G6SearchGraph extends Component {
             updateGraphData={updateGraphData}
             selectedNode={selectedNode}
             sideBarVisible={sideBarVisible}
-            setSelectedNode={this.setSelectedNode}
             setSearchVisible={setSearchVisible}
             reExplore={reExplore}
             isCognitive={isCognitive}
-            changeLabel={this.changeLabel}
             count={count}
-            setCount={this.setCount}
             direction={direction}
-            setSideBarVisible={this.setSideBarVisible}
-            setTabSelect={this.setTabSelect}
             autoOpen={autoOpen}
+            endNode={endNode}
+            startNode={startNode}
+            lefSelect={lefSelect}
+            pathList={pathList}
+            setSelectedNode={this.setSelectedNode}
+            setCount={this.setCount}
+            changeLabel={this.changeLabel}
+            setTabSelect={this.setTabSelect}
+            setSideBarVisible={this.setSideBarVisible}
+            setStartNode={this.setStartNode}
+            setEndNode={this.setEndNode}
+            setDirection={this.setDirection}
+            setPathList={this.setPathList}
+            pathType={pathType}
+            setType={this.setType}
+            setIsExplorePath={this.setIsExplorePath}
+            setPathLoading={this.setPathLoading}
+            selectedPath={selectedPath}
           />
         </div>
 
@@ -233,6 +321,25 @@ class G6SearchGraph extends Component {
           setTabSelect={this.setTabSelect}
           lefSelect={lefSelect}
           setAutoOpen={this.setAutoOpen}
+          endNode={endNode}
+          startNode={startNode}
+          setStartNode={this.setStartNode}
+          setEndNode={this.setEndNode}
+          setPathList={this.setPathList}
+          selectGraph={selectGraph}
+          addGraphData={this.addGraphData}
+          pathList={pathList}
+          direction={direction}
+          setDirection={this.setDirection}
+          pathType={pathType}
+          setType={this.setType}
+          setSelectedPath={this.setSelectedPath}
+          isExplorePath={isExplorePath}
+          setIsExplorePath={this.setIsExplorePath}
+          setPathLoading={this.setPathLoading}
+          pathLoading={pathLoading}
+          isCognitive={isCognitive}
+          searchVisible={searchVisible}
         />
       </div>
     );

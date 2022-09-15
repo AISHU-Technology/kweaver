@@ -1,4 +1,3 @@
-// @Author : yuan.qi@aishu.cn
 // @File : class_model_type.go
 // @Time : 2021/3/26
 

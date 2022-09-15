@@ -73,30 +73,33 @@ const CreateThesaurusModal = (props: any) => {
           labels: JSON.stringify(tags),
           knowledge_id: knowledge?.id
         }
-
-        const response = await serverThesaurus.thesaurusCreate(data);
-        const { ErrorCode, ErrorDetails } = response || {};
-        if (ErrorCode === 'Builder.LexiconController.CreateLexicon.DuplicatedName') {
-          // 重复的名字
-          form.setFields([
-            {
-              name: 'name',
-              errors: [intl.get('ThesaurusManage.nameRepeat')]
-            }
-          ]);
-          return;
-        }
-        if (ErrorCode) {
-          ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode])) : message.error(ErrorDetails);
+        try {
+          const response = await serverThesaurus.thesaurusCreate(data);
+          const { ErrorCode, ErrorDetails } = response || {};
+          if (ErrorCode === 'Builder.LexiconController.CreateLexicon.DuplicatedName') {
+            // 重复的名字
+            form.setFields([
+              {
+                name: 'name',
+                errors: [intl.get('ThesaurusManage.nameRepeat')]
+              }
+            ]);
+            return;
+          }
+          if (ErrorCode) {
+            ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode])) : message.error(ErrorDetails);
+            closeModal();
+            return;
+          }
+          if (response?.res) {
+            message.success(intl.get('graphList.addSuccess'));
+          }
+          setPage(1);
           closeModal();
-          return;
+          getThesaurusList({});
+        } catch (err) {
+          closeModal();
         }
-        if (response?.res) {
-          message.success(intl.get('graphList.addSuccess'));
-        }
-        setPage(1);
-        closeModal();
-        getThesaurusList({});
       })
   }
   // 取消

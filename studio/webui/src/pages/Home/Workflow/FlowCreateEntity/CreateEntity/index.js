@@ -476,7 +476,7 @@ class CreateEntity extends Component {
             if (res && res.Code === 500026) {
               message.warning([intl.get('createEntity.predicting')]);
             }
-            if (res && res.Code === 'Manager.Graph.KnowledgeNetworkNotFoundError') {
+            if (res && res.Code === 'Studio.Graph.KnowledgeNetworkNotFoundError') {
               message.error([intl.get('createEntity.entityDelete')]);
               setTimeout(() => {
                 this.props.history.push('/home/data-management/onto');
@@ -501,7 +501,7 @@ class CreateEntity extends Component {
     if (res && res.Code === 500026) {
       message.warning([intl.get('createEntity.predicting')]);
     }
-    if (res && res.Code === 'Manager.Graph.KnowledgeNetworkNotFoundError') {
+    if (res && res.Code === 'Studio.Graph.KnowledgeNetworkNotFoundError') {
       message.error([intl.get('createEntity.entityDelete')]);
       setTimeout(() => {
         this.props.history.push('/home/data-management/onto');

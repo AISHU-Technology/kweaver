@@ -26,7 +26,7 @@
     "total": "共计{data}条数据",
     "search": "搜索数据源名",
     "results": "无匹配结果",
-    "noDataF": "点击|【新建】|按钮新增数据源",
+    "noDataF": "点击|【添加】|按钮新增数据源",
     "noOntoF": "点击|【新建】|按钮新增本体库",
     "structured": "结构化",
     "semiStructured": "半结构化",

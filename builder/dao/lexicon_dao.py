@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Author ：Jay.zhu
-@Date ：2022/9/14 9:03
-'''
 import arrow
 import pandas as pd
 
@@ -174,16 +170,6 @@ class LexiconDao:
         sql = """
                     SELECT columns FROM lexicon WHERE id={};
             """.format(id)
-        Logger.log_info(sql)
-        df = pd.read_sql(sql, connection)
-        return df
-    
-    @connect_execute_commit_close_db
-    def get_account(self, connection, cursor):
-        """ 获取用户name和uuid"""
-        sql = """
-                    SELECT name, uuid FROM account;
-            """
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df

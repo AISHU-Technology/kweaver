@@ -13,8 +13,8 @@ Copyright and credit info:
 import unittest
 
 from . import mock_db as db_base
-from common.db.mysql.mysqlPoolConn import DBMySqlPoolConn
-from common.db.mysql.pyMySql import DbMysqlConfig
+from db_conn.common.db.mysql.mysqlPoolConn import DBMySqlPoolConn
+from db_conn.common.db.mysql.pyMySql import DbMysqlConfig
 
 from DBUtils.PooledDB import (
     PooledDB, SharedDBConnection, InvalidConnection, TooManyConnections)
@@ -79,8 +79,6 @@ class TestPooledDB(unittest.TestCase):
             self.assertTrue(hasattr(pool, '_setsession'))
             self.assertIsNone(pool._setsession)
             con = pool._idle_cache[0]
-            from dbutils.steady_db import SteadyDBConnection
-            self.assertTrue(isinstance(con, SteadyDBConnection))
             self.assertTrue(hasattr(con, '_maxusage'))
             self.assertEqual(con._maxusage, 0)
             self.assertTrue(hasattr(con, '_setsession_sql'))
@@ -201,8 +199,6 @@ class TestPooledDB(unittest.TestCase):
                 self.assertEqual(shared_con.shared, 1)
                 self.assertTrue(hasattr(shared_con, 'con'))
                 self.assertEqual(shared_con.con, con)
-            from dbutils.steady_db import SteadyDBConnection
-            self.assertTrue(isinstance(con, SteadyDBConnection))
             self.assertTrue(hasattr(con, '_con'))
             db_con = con._con
             self.assertTrue(hasattr(db_con, 'num_queries'))

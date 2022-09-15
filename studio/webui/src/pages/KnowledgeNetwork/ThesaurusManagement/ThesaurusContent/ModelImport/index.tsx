@@ -44,17 +44,18 @@ const ModalImport = (props: any) => {
         const response = await serverThesaurus.thesaurusImportWords(data);
         const { ErrorCode, ErrorDetails } = response || {};
         if (ErrorCode) {
-          //
           ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode])) : message.error(ErrorDetails);
           closeModal();
           setErrorInfo(ErrorDetails);
           getThesaurusById(selectedThesaurus, page);
           return;
         }
-        message.success(intl.get('knowledge.importSuccess'));
-        setpage(1);
-        closeModal();
-        getThesaurusList({});
+        if (response?.res) {
+          message.success(intl.get('knowledge.importSuccess'));
+          setpage(1);
+          closeModal();
+          getThesaurusList({});
+        }
       } catch (err) {
         closeModal();
       }

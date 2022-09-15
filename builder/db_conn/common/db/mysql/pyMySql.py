@@ -1,10 +1,10 @@
 
 import time
 import pymysql
-from common.db.mysql.mysqlPoolConn import DBMySqlPoolConn
+from db_conn.common.db.mysql.mysqlPoolConn import DBMySqlPoolConn
 from timeit import default_timer
-from common.log.logger import logger
-from common.db.mysql.mySqlConfig import DbMysqlConfig
+from db_conn.common.log.logger import logger
+from db_conn.common.db.mysql.mySqlConfig import DbMysqlConfig
 
 
 # 建立MySQL的连接
