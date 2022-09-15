@@ -31,8 +31,8 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 @swag_from(swagger_new_response)
 def create_lexicon():
     '''
-    Create a new lexicon
-    Create a new lexicon
+    create a new lexicon
+    create a new lexicon
     ---
     parameters:
         -   in: 'body'
@@ -170,7 +170,7 @@ def get_labels():
 def get_lexicon():
     '''
     get a list of all lexicons
-    Paginate to get all lexicons
+    paginate to get all lexicons
     ---
     parameters:
         -   name: knowledge_id
@@ -289,8 +289,8 @@ def get_lexicon_by_id():
 @swag_from(swagger_new_response)
 def insert_word2lexicon():
     '''
-    Add new words to the specified lexicon
-    Add new words to the specified lexicon
+    add new words to the specified lexicon
+    add new words to the specified lexicon
     ---
     parameters:
         -   in: 'body'
@@ -334,8 +334,8 @@ def insert_word2lexicon():
 @swag_from(swagger_new_response)
 def search_word_in_lexicon():
     '''
-    Search words in the specified lexicon
-    Search words in the specified lexicon
+    search words in the specified lexicon
+    search words in the specified lexicon
     ---
     parameters:
         -   in: 'body'
@@ -382,8 +382,8 @@ def search_word_in_lexicon():
 @swag_from(swagger_new_response)
 def edit_word_in_lexicon():
     '''
-    Edit word in the specified lexicon
-    Edit word in the specified lexicon
+    edit word in the specified lexicon
+    edit word in the specified lexicon
     ---
     parameters:
         -   in: 'body'
@@ -436,8 +436,8 @@ def edit_word_in_lexicon():
 @swag_from(swagger_new_response)
 def delete_word_in_lexicon():
     '''
-    Batch delete word in the specified lexicon
-    Batch delete word in the specified lexicon
+    batch delete word in the specified lexicon
+    batch delete word in the specified lexicon
     ---
     parameters:
         -   in: 'body'
@@ -479,8 +479,8 @@ def delete_word_in_lexicon():
 @swag_from(swagger_new_response)
 def edit_lexicon():
     '''
-    Edit basic information of lexicon
-    Edit basic information of lexicon
+    edit basic information of lexicon
+    edit basic information of lexicon
     ---
     parameters:
         -   in: 'body'
@@ -523,8 +523,8 @@ def edit_lexicon():
 @swag_from(swagger_new_response)
 def delete_lexicon():
     '''
-    Batch delete lexicon
-    Batch delete lexicon by lexicon id
+    batch delete lexicon
+    batch delete lexicon by lexicon id
     ---
     parameters:
         -   in: 'body'
@@ -559,8 +559,8 @@ def delete_lexicon():
 @swag_from(swagger_new_response)
 def import_word2lexicon():
     '''
-    Import word information into lexicon
-    Import word information into lexicon
+    import word information into lexicon
+    import word information into lexicon
     ---
     parameters:
         -   in: 'body'
@@ -663,8 +663,8 @@ def import_word2lexicon():
 @swag_from(swagger_new_response)
 def export_lexicon():
     '''
-    Export lexicons
-    Export lexicons by lexicon id list
+    export lexicons
+    export lexicons by lexicon id list
     ---
     parameters:
         -   in: 'body'
@@ -705,8 +705,8 @@ def export_lexicon():
 @swag_from(swagger_new_response)
 def download_template():
     '''
-    Download lexicon file format template
-    Download lexicon file format template
+    download lexicon file format template
+    download lexicon file format template
     ---
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
