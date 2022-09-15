@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/8/10 17:53
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import yaml
 from flask import Blueprint, request
 from dao.graph_dao import graph_dao

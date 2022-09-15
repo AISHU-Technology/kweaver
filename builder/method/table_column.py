@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Time    : 2020/2/21 10:31
-@Author  : Tian.gu
-'''
-
 from .database import DataBase
 # import name_rule
 import re

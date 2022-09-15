@@ -1,7 +1,7 @@
 import pymysql
 from DBUtils.PooledDB import PooledDB
-from common.db.mysql.mySqlConfig import DbMysqlConfig
-from config.mysql_conf import host, port, user, password, database, mysql_log_open,pooled_db_config
+from db_conn.common.db.mysql.mySqlConfig import DbMysqlConfig
+from db_conn.config.mysql_conf import host, port, user, password, database, mysql_log_open,pooled_db_config
 
 
 # 基于DBUtils.PooledDB 数据库连接池的初始化

@@ -8,9 +8,9 @@ import unittest
 import pymysql
 import functools
 
-from common.db.usingMysql import using_mysql
-from config.mysql_conf import mysql_log_open
-from common.db.mysql.pyMySql import DBMySqlLib
+from db_conn.common.db.usingMysql import using_mysql
+from db_conn.config.mysql_conf import mysql_log_open
+from db_conn.common.db.mysql.pyMySql import DBMySqlLib
 
 
 class PyMySQLTestCase(unittest.TestCase):
@@ -23,11 +23,11 @@ class PyMySQLTestCase(unittest.TestCase):
     else:
         databases = [
             {
-                "host": "10.4.128.208",
-                "user": "root",
-                "passwd": "anydata123",
-                "database": "test_anydata",
-                "port": 3306,
+                "host": "10.4.106.255",
+                "user": "anydata",
+                "passwd": "Qwe123!@#",
+                "database": "anydata",
+                "port": 3320,
                 "use_unicode": True,
                 "local_infile": True,
             },

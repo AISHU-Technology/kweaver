@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-# @Time : 2021/10/18 15:30
-# @Author : jack.li
-# @Email : jack.li@aishu.cn
-# @File : mongo2orientdb.py
-# @Project : builder
 import re
 import os
 import sys
@@ -19,7 +14,7 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 class Celeryconfig(object):
     def __init__(self):
-        self.mongodb_add = "kg-mongodb"  # 10.4.81.11  kg-mongodb
+        self.mongodb_add = "kg-mongodb"
         self.mongodb_port = "27017"
 
 celeryconfig = Celeryconfig()

@@ -95,7 +95,6 @@ class OperationMaintenanceModel(object):
             address = self.__ds_address.replace("https://", "").replace("http://", "")
             post_url = "https://{}/api/shared-link/v1/document/realname".format(address)
             get_url = "https://{}/api/shared-link/v1/document/file/{}?type=realname".format(address, gns.replace("/", "%2F"))
-            # get_url = "https://10.240.0.133/api/shared-link/v1/document/file/gns%3A%2F%2FD15B4AC09E534D779A481AEF4CF30575%2F61EE3BC88AD64DD1889110F96A904176%2F7FBD870308564B08AF0DC77E3FC89094?type=realname"
             payload = {"item": {
                 "id": gns,
                 "type": "file"}}

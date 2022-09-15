@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/9/7 18:22
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import requests
 from flask import Blueprint, request, jsonify, send_file, send_from_directory, make_response
 

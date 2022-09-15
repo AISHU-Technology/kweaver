@@ -1,8 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/9/8 12:02
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
-
 import jwt
 class jwtToken(object):
     def jwtencoded(self, req):

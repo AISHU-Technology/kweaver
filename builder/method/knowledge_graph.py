@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Time    : 2020/1/18 13:27
-@Author  : Tian.gu
-'''
-
 # import orientdb
 import re
 from .name_rule import _2upper,upper2_

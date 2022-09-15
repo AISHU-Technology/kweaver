@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/8/12 15:57
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 from config import config
 from service.Otl_Service import otl_service
 from utils.ontology_check_params import otl_check_params
