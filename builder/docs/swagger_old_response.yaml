@@ -2,12 +2,12 @@ responses:
   '200':
     description: 'operation success'
     schema:
-      $ref: '#/definitions/BuilderRes'
+      $ref: '#/definitions/builder/BuilderRes'
   '500':
     description: 'operation failure'
     schema:
-      $ref: '#/definitions/OldBuilderErrResponse'
+      $ref: '#/definitions/builder/OldBuilderErrResponse'
   '400':
     description: 'parameter error'
     schema:
-      $ref: '#/definitions/OldBuilderErrResponse'
+      $ref: '#/definitions/builder/OldBuilderErrResponse'

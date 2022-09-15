@@ -18,6 +18,8 @@ services:
     depends_on:
       - kw-studio
       - kw-builder
+      - kw-engine
+      - kw-algserver
 
   kw-studio:
     container_name: kw-studio
@@ -65,8 +67,6 @@ services:
       - '8080:8080'
     environment:
       - TZ=Asia/Shanghai
-    depends_on:
-      - kw-mariadb
 
   kw-engine:
     container_name: kw-engine
@@ -81,7 +81,6 @@ services:
     environment:
       - TZ=Asia/Shanghai
     depends_on:
-      - kw-mariadb
       - kw-builder
         
 networks:

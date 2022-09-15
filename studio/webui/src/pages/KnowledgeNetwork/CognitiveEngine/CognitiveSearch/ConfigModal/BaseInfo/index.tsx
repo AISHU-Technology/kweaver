@@ -45,11 +45,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ anyDataLang, data, graphData, confi
       <div className="config-row">
         <p className="row-title">
           {intl.get('searchConfig.searchScope')}
-          <Tooltip
-            getPopupContainer={triggerNode => triggerNode.parentElement!}
-            placement="right"
-            title={intl.get('searchConfig.scopeTip')}
-          >
+          <Tooltip placement="right" title={intl.get('searchConfig.scopeTip')}>
             <QuestionCircleOutlined className="q-icon" />
           </Tooltip>
         </p>
@@ -90,11 +86,7 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ anyDataLang, data, graphData, confi
       <div className="config-row">
         <p className="row-title" style={{ marginTop: 24 }}>
           {intl.get('searchConfig.searchRes')}
-          <Tooltip
-            getPopupContainer={triggerNode => triggerNode!}
-            placement="right"
-            title={intl.get('searchConfig.resTip')}
-          >
+          <Tooltip placement="right" title={intl.get('searchConfig.resTip')}>
             <QuestionCircleOutlined className="q-icon" />
           </Tooltip>
         </p>
