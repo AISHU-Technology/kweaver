@@ -20,7 +20,7 @@
     "Summary": "Summary",
     "report": "Analysis",
     "err": "Opening the file is not supported",
-    "exploreNone": "The system cannot find the relationship between the two selected entity points, please try again!",
+    "exploreNone": "The system cannot find the route between the two selected entity points, please try again!",
     "noNode": "At present, there is no entity point to explore",
     "noNodeT": "ou can go to explore and add response entity points for analysis",
     "goSeach": "Go explore",
@@ -62,7 +62,7 @@
     "notNull": "Select/input cannot be empty",
     "startExplore": "Start exploring",
     "pathList": "Path list",
-    "pathType": "Path Type: ",
+    "pathType": "Path direction",
     "baseInfo": "Basic Info",
     "searchplace": "Enter entity name",
     "deleteDes": "Can remove selected content",
@@ -71,6 +71,15 @@
     "ErrInternalErr": "Internal Error",
     "ErrConfigStatusErr": "Operation failed, the knowledge map is in configuration and cannot be explored!",
     "ErrVClassErr": "Operation failed, the knowledge map has been deleted!",
-    "ErrOrientDBErr": "orientdb Error"
+    "ErrOrientDBErr": "orientdb Error",
+    "noPath": "The system cannot find the relationship between the two entity points. You can choose to explore again",
+    "nodeRemoved": "Start / end entity has been removed",
+    "noStartNode": "Start select/input cannot be empty",
+    "noEndNode": "End select/input cannot be empty",
+    "loadingTip": "Exploring, please wait patiently...",
+    "shortToLong": "From short to long",
+    "longToShort": "From long to short",
+    "allDirection": "All direction",
+    "path": "Path"
   }
 }

@@ -8,7 +8,7 @@ import servicesExplore from '@/services/explore';
 import './style.less';
 
 const AnalysisModal = (props: any) => {
-  const { visible, analysisTitle, selectGraph, selectedNode, onCancel } = props;
+  const { visible, anylysisTitle, selectGraph, selectedNode, onCancel } = props;
   const [reportData, setReportData] = useState<any>();
 
   useEffect(() => {
@@ -16,9 +16,9 @@ const AnalysisModal = (props: any) => {
       return;
     }
     if (selectedNode) {
-      getReport({ id: selectGraph.kg_id, rid: selectedNode?.id?.replace('#', '%23') });
+      getReport({ id: selectGraph.kg_id, rid: selectedNode?.id?.replace('#', '%23') })
     }
-  }, [selectedNode, visible]);
+  }, [selectedNode, visible])
 
   /**
    * @description 获取分析报告
@@ -54,7 +54,7 @@ const AnalysisModal = (props: any) => {
 
     if (res && res.ErrorCode) {
       setReportData(res.res);
-      return res.res;
+      return res.res
     }
 
     if (res && res.res) {
@@ -82,8 +82,8 @@ const AnalysisModal = (props: any) => {
         footer={null}
         forceRender
       >
-        {/* {reportData?.content ? <Analysis reportData={reportData} analysisTitle={analysisTitle} /> : null} */}
-        <Analysis reportData={reportData} analysisTitle={analysisTitle} />
+        {/* {reportData?.content ? <Analysis reportData={reportData} anylysisTitle={anylysisTitle} /> : null} */}
+        <Analysis reportData={reportData} anylysisTitle={anylysisTitle} />
       </Modal>
     </div>
   );

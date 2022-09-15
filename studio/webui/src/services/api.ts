@@ -41,6 +41,8 @@ const API = {
   analysisReportGet: `${baseEngine}/analysis`,
   exploreRelation: `${baseEngine}/explore/relation`,
   expandEdges: `${baseEngine}/explore/expandv`,
+  explorePath: `${baseEngine}/explore/path`,
+  explorePathDetails: `${baseEngine}/explore/pathDetail`,
 
   // knowledgeNetwork
   graphOutput: `${baseBuilder}/graph/output`,
