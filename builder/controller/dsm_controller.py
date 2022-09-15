@@ -28,38 +28,38 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 
 
 @dsm_controller_app.route('/Auth', methods=["GET"], strict_slashes=False)
-@swag_from(swagger_old_response)
+# @swag_from(swagger_old_response)
 def auth():
-    '''
-    get authorization url
-    get the url of as authorization authentication
-    ---
-    parameters:
-        -   name: ds_route
-            in: query
-            required: true
-            description: routing, only for auth-success
-            type: string
-            example: auth-success
-        -   name: ds_address
-            in: query
-            required: true
-            description: data source ip
-            type: string
-            example: 192.168.1.1
-        -   name: ds_auth
-            in: query
-            required: true
-            description: Data source id, Empty when adding data source
-            type: integer
-            example:
-        -   name: ds_port
-            in: query
-            required: true
-            description: data source port
-            type: integer
-            example: 443
-    '''
+    # '''
+    # get authorization url
+    # get the url of as authorization authentication
+    # ---
+    # parameters:
+    #     -   name: ds_route
+    #         in: query
+    #         required: true
+    #         description: routing, only for auth-success
+    #         type: string
+    #         example: auth-success
+    #     -   name: ds_address
+    #         in: query
+    #         required: true
+    #         description: data source ip
+    #         type: string
+    #         example: 192.168.1.1
+    #     -   name: ds_auth
+    #         in: query
+    #         required: true
+    #         description: Data source id, Empty when adding data source
+    #         type: integer
+    #         example:
+    #     -   name: ds_port
+    #         in: query
+    #         required: true
+    #         description: data source port
+    #         type: integer
+    #         example: 443
+    # '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     print(params_json)
     if param_code == 0:
@@ -83,20 +83,20 @@ def auth():
 
 
 @dsm_controller_app.route('/gettoken', methods=["POST"], strict_slashes=False)
-@swag_from(swagger_old_response)
+# @swag_from(swagger_old_response)
 def gettoken():
-    '''
-    get token
-    get the token token of as
-    ---
-    parameters:
-        -   in: 'body'
-            name: 'body'
-            description: 'request body'
-            required: true
-            schema:
-                $ref: '#/definitions/builder/data_source/gettoken'
-    '''
+    # '''
+    # get token
+    # get the token token of as
+    # ---
+    # parameters:
+    #     -   in: 'body'
+    #         name: 'body'
+    #         description: 'request body'
+    #         required: true
+    #         schema:
+    #             $ref: '#/definitions/builder/data_source/gettoken'
+    # '''
     params_json = request.get_data()
     params_json = json.loads(params_json)
     paramscode, message = dsCheckParameters.gettokencheck(params_json)  ####增加校验
