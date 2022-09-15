@@ -88,7 +88,7 @@ const ThesaurusContent = (props: any) => {
       title: intl.get('global.operation'),
       dataIndex: 'operation',
       fixed: 'right',
-      width: 125,
+      width: 135,
       render: (_: any, record: { key: React.Key }) => {
         return (
           <div >
