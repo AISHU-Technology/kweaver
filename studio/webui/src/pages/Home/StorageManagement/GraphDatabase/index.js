@@ -193,7 +193,7 @@ class GraphDatabase extends Component {
       ellipsis: true
     },
     {
-      title: intl.get('configSys.graph'),
+      title: intl.get('global.graph'),
       dataIndex: 'graph',
       width: 160,
       render: (text, record) => {
