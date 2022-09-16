@@ -116,9 +116,11 @@ const Header = (props: HeaderInterface) => {
       <Menu.Item key="1" style={{ height: 40 }} onClick={onOpenModalTask}>
         {intl.get('graphList.timedTask')}
       </Menu.Item>
-      <Menu.Item key="3" style={{ height: 40 }} onClick={onExportGraph}>
-        {intl.get('knowledge.export')}
-      </Menu.Item>
+      {graphBasicData.status === GRAPH_STATUS.NORMAL && (
+        <Menu.Item key="3" style={{ height: 40 }} onClick={onExportGraph}>
+          {intl.get('knowledge.export')}
+        </Menu.Item>
+      )}
       <Menu.Item key="4" style={{ height: 40 }} onClick={onOpenModalDelete}>
         {intl.get('knowledge.delete')}
       </Menu.Item>
