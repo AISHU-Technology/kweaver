@@ -52,6 +52,12 @@
     "emptyTableCreate": "【新建】",
     "check": "查看",
     "thesaurusManagement": "词库",
-    "loadFail": "加载失败"
+    "loadFail": "加载失败",
+    "thousand": "千",
+    "tenThousand": "万",
+    "tenMillion": "千万",
+    "100Million": "亿",
+    "100Billion": "千亿",
+    "trillion": "兆"
   }
 }

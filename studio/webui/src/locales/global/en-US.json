@@ -52,6 +52,12 @@
     "emptyTableCreate": "[create]",
     "check": "Check",
     "thesaurusManagement": "Thesaurus",
-    "loadFail": "Failed to load"
+    "loadFail": "Failed to load",
+    "thousand": "thousand",
+    "tenThousand": "ten thousand",
+    "tenMillion": "ten million",
+    "100Million": "hundred million",
+    "100Billion": "hundred billion",
+    "trillion": "trillion"
   }
 }
