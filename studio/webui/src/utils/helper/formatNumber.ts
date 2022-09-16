@@ -1,4 +1,5 @@
 import numeral from 'numeral';
+import intl from 'react-intl-universal';
 
 const isNumberAndParseInt = (num: string | number) => {
   if (typeof num === 'number') return num;
@@ -48,13 +49,26 @@ const formatNumberWithComma = (num: number) => {
 const formatNumberWithSuffix = (num: number) => {
   const number = isNumberAndParseInt(num);
   let result = '';
+
   if (number < 1000) result = numeral(number).format(0, 0);
-  if (number >= 1000 && number < 10000) result = `${numeral(number / 1000).format(0, 0)}千`;
-  if (number >= 10000 && number < 10000000) result = `${numeral(number / 10000).format(0, 0)}万`;
-  if (number >= 10000000 && number < 100000000) result = `${numeral(number / 10000000).format(0, 0)}千万`;
-  if (number >= 100000000 && number < 100000000000) result = `${numeral(number / 100000000).format(0, 0)}亿`;
-  if (number >= 100000000000 && number < 1000000000000) result = `${numeral(number / 100000000000).format(0, 0)}千亿`;
-  if (number >= 1000000000000) result = `${numeral(number / 1000000000000).format(0, 0)}兆`;
+  if (number >= 1000 && number < 10000) {
+    result = `${numeral(number / 1000).format(0, 0)} ${intl.get('global.thousand')}`;
+  }
+  if (number >= 10000 && number < 10000000) {
+    result = `${numeral(number / 10000).format(0, 0)} ${intl.get('global.tenThousand')}`;
+  }
+  if (number >= 10000000 && number < 100000000) {
+    result = `${numeral(number / 10000000).format(0, 0)} ${intl.get('global.tenMillion')}`;
+  }
+  if (number >= 100000000 && number < 100000000000) {
+    result = `${numeral(number / 100000000).format(0, 0)} ${intl.get('global.100Million')}`;
+  }
+  if (number >= 100000000000 && number < 1000000000000) {
+    result = `${numeral(number / 100000000000).format(0, 0)} ${intl.get('global.100Billion')}`;
+  }
+  if (number >= 1000000000000) {
+    result = `${numeral(number / 1000000000000).format(0, 0)} ${intl.get('global.trillion')}`;
+  }
   return result;
 };
 formatNumberWithSuffix.limit = 1000;
