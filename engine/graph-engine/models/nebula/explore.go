@@ -740,9 +740,9 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 
 	var gql string
 	if inout == "in" {
-		gql = "match (v)<-[e:`%s`]-(v2) where id(v) in ['%s'] return e, v2 skip %d limit %d;"
+		gql = "match (v)<-[e:%s]-(v2) where id(v) in ['%s'] return e, v2 skip %d limit %d;"
 	} else {
-		gql = "match (v)-[e:`%s`]->(v2) where id(v) in ['%s'] return e, v2 skip %d limit %d;"
+		gql = "match (v)-[e:%s]->(v2) where id(v) in ['%s'] return e, v2 skip %d limit %d;"
 	}
 	gql = fmt.Sprintf(gql, eclass, vrid, skip, limit)
 
