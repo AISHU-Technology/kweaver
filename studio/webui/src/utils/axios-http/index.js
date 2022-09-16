@@ -114,16 +114,15 @@ service.interceptors.response.use(
 
       return error;
     }
-
     const { status, data: { Code, ErrorCode, code } = {} } = error.response;
     const curCode = `${Code || ErrorCode || code || ''}`;
 
     if (status === 500 || status === 403) {
-      if (curCode || error.response.config.url.includes('/api/builder/v1/graph/output')) {
+      if (curCode || error.response.config.url.includes('api/builder/v1/graph/output')) {
         return error.response;
       }
 
-      if (error.response.config.url.includes('/api/builder/v1/lexicon/export')) {
+      if (error.response.config.url.includes('api/builder/v1/lexicon/export')) {
         return error.response;
       }
 
