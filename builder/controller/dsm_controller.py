@@ -86,8 +86,9 @@ def auth():
 # @swag_from(swagger_old_response)
 def gettoken():
     # '''
-    # get token
-    # get the token token of as
+    # get the token of as
+    # after the AS authorization is completed, the access_token and the refresh_token are obtained by code which is
+    # returned by AS. And the access_token and the refresh_token are store in database.
     # ---
     # parameters:
     #     -   in: 'body'
