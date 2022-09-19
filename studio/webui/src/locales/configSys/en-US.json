@@ -92,7 +92,7 @@
     "accountPass": "Access password",
     "storageAddress": "Storage ip",
     "linkTest": "Test connection",
-    "nameRepeat": "The name is occupied by the system，Please re-enter",
+    "nameRepeat": "The name already exists，Please re-enter",
     "codeRule": "Only supported in Chinese, English, numbers and special characters on the keyboard",
     "max50": "Up to 50 characters",
     "saveSuccess": "Saved successfully!",
@@ -144,7 +144,7 @@
     "duplicateOsConfigError": "Including system user name, password, IP and port index configuration",
     "notexist": "Opensearch record does not exist",
     "graphDatabase": "Graph database",
-    "indexConfig": "Opensearch",
+    "indexConfig": "OpenSearch",
     "addIndex": "button add index configuration"
   }
 }
