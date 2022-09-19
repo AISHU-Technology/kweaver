@@ -137,7 +137,7 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 			}
 		}
 		//fulltext
-		fullTextName := fmt.Sprintf("%s_%s", conf.DB, vclass.Name)
+		fullTextName := fmt.Sprintf("%s_%s", conf.DB, strings.ToLower(vclass.Name))
 
 		if fullTextIndex, ok := allFullTextIndexes[fullTextName]; ok {
 			mappings := fullTextIndex.(map[string]interface{})["mappings"].(map[string]interface{})
