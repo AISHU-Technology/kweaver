@@ -92,7 +92,7 @@
     "accountPass": "访问账户密码",
     "storageAddress": "存储地址",
     "linkTest": "测试连接",
-    "nameRepeat": "名称已被系统占用，请重新输入",
+    "nameRepeat": "名称已存在，请重新输入",
     "codeRule": "名称仅支持中英文、数字及键盘上的特殊字符",
     "max50": "最多输入50字符",
     "saveSuccess": "保存成功",
@@ -144,7 +144,7 @@
     "duplicateOsConfigError": "有相同用户名密码，ip和port的索引配置",
     "notexist": "Opensearch 记录不存在",
     "graphDatabase": "图数据库",
-    "indexConfig": "Opensearch",
+    "indexConfig": "OpenSearch",
     "addIndex": "按钮添加索引配置"
   }
 }
