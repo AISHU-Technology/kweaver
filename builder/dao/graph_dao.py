@@ -822,15 +822,17 @@ class GraphDao():
         '''
         # delete ontology data
         sql_get_oyl_id = 'SELECT graph_otl FROM graph_config_table WHERE id IN ({});'\
-                                .format(",".join(map(str, graph_ids)))
-        otl_id = pd.read_sql(sql_get_oyl_id, connection).to_dict('records')[0]['graph_otl']
-        otl_id = eval(otl_id)
-        sql = """DELETE FROM ontology_table WHERE id IN ({});"""\
-            .format(",".join(map(str, otl_id)))
-        cursor.execute(sql)
-        sql = """DELETE FROM ontology_task_table WHERE ontology_id IN ({});""" \
-            .format(",".join(map(str, otl_id)))
-        cursor.execute(sql)
+            .format(",".join(map(str, graph_ids)))
+        otl_id = []
+        for record in pd.read_sql(sql_get_oyl_id, connection).to_dict('records'):
+            otl_id.extend(eval(record['graph_otl']))
+        if otl_id:
+            sql = """DELETE FROM ontology_table WHERE id IN ({});"""\
+                .format(",".join(map(str, otl_id)))
+            cursor.execute(sql)
+            sql = """DELETE FROM ontology_task_table WHERE ontology_id IN ({});""" \
+                .format(",".join(map(str, otl_id)))
+            cursor.execute(sql)
         # delete graph data
         sql1 = """DELETE FROM graph_config_table WHERE id in ({});""".format(",".join(map(str, graph_ids)))
         sql2 = """DELETE FROM search_config WHERE kg_id IN (SELECT id FROM knowledge_graph WHERE KG_config_id IN ({}));"""\

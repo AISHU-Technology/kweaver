@@ -555,12 +555,12 @@ def graphDeleteByIds():
         # normal
         if len(normal) == 1:
             mess += "删除成功：%s; " % ",".join(map(str, normal))
-            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
+            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
         # not exist
         if len(noExist) != 0:
             mess += "%s 不存在; " % ",".join(map(str, noExist))
             mess += "删除成功：%s; " % ",".join(map(str, normal))
-            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
+            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
         if len(runs) == 1:
             obj, obj_code = {"Cause": "当前知识网络正在运行任务不可删除，请先停止或删除任务！",
                              "Code": CommonResponseStatus.SINGLE_RUNNING.value,
@@ -569,7 +569,7 @@ def graphDeleteByIds():
     else:
         # all not exist
         if len(noExist) == len(graphids):
-            obj, obj_code = {"state": "sucess"}, CommonResponseStatus.SUCCESS.value
+            obj, obj_code = {"state": "success"}, CommonResponseStatus.SUCCESS.value
         # all running
         if len(runs) > 0 and len(normal) == 0:
             obj, obj_code = {"Cause": "知识网络正在运行任务不可删除，请先停止或删除任务！！",
@@ -582,7 +582,7 @@ def graphDeleteByIds():
                              "message": "正在运行的网络不可以删除"}, CommonResponseStatus.SERVER_ERROR.value
         # all normal
         if len(runs) == 0 and len(normal) > 0:
-            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
+            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
     if len(normal) > 0:
         # delete normal graphs
         res, code = graph_Service.deleteGraphByIds(normal)
