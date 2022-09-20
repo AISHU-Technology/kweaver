@@ -717,38 +717,6 @@ class NewCreateEntityHead extends Component {
           </div>
         </div>
 
-        {/* 编辑本体弹层 */}
-        <Modal
-          className="set-entity-244-edit"
-          title={this.props.ontology_id ? intl.get('createEntity.editE') : intl.get('createEntity.createEntity')}
-          width={640}
-          destroyOnClose={true}
-          maskClosable={false}
-          visible={editEntityModal}
-          footer={null}
-          closable={false}
-        >
-          <EditEntityModal
-            setEditEntityModal={this.setEditEntityModal}
-            setOntologyId={this.props.setOntologyId}
-            ontology_name={this.props.ontology_name}
-            setName={this.props.setName}
-            ontology_des={this.props.ontology_des}
-            setDes={this.props.setDes}
-            ontology_id={this.props.ontology_id}
-            nodes={nodes}
-            edges={edges}
-            freeGraphRef={this.props.freeGraphRef}
-            graphId={this.props.graphId}
-            ontoData={this.props.ontoData}
-            prev={this.props.prev}
-            setQuitVisible={this.props.setQuitVisible}
-            setTouch={this.props.setTouch}
-            setOntoData={this.props.setOntoData}
-            onEditEntityModalRef={this.props.onEditEntityModalRef}
-          />
-        </Modal>
-
         {/* 关系类管理弹层 */}
         <Modal
           className="edge-modal-qzdj-true"

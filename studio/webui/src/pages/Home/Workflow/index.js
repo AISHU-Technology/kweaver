@@ -297,6 +297,7 @@ const Workflow = props => {
             graphId={graphId}
             childRef={step3Ref}
             setQuitVisible={setQuitVisible}
+            graphName={basicData.graph_Name}
           />
         </div>
         <div className={`hide space center ${current === 3 && 'show'}`}>

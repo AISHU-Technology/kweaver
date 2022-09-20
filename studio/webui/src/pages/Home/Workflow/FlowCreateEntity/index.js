@@ -21,6 +21,7 @@ class FlowCreateEntity extends Component {
           getFlowCreateEntity={this.props.getFlowCreateEntity}
           childRef={this.props.childRef}
           setQuitVisible={this.props.setQuitVisible}
+          graphName={this.props.graphName}
         />
       </div>
     );
