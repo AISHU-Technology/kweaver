@@ -349,7 +349,7 @@ class NewCreateEntityHead extends Component {
 
   render() {
     const { edgesModal, exportModal, saveData, editEntityModal } = this.state;
-    const { centerSelect, nodes, edges, ontology_name } = this.props;
+    const { centerSelect, nodes, edges, graphName } = this.props;
     const TYPE = window?.location?.pathname?.includes('knowledge') ? 'view' : analyUrl(window.location.search).type; // 进入图谱的类型
 
     return (
@@ -385,8 +385,8 @@ class NewCreateEntityHead extends Component {
             </div>
           )}
 
-          <div className="entity-name" title={ontology_name}>
-            {ontology_name}
+          <div className="entity-name" title={graphName}>
+            {graphName}
           </div>
 
           {TYPE === 'view' ? null : (
