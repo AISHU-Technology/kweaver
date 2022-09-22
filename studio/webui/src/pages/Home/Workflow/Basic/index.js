@@ -5,6 +5,7 @@ import { Form, Button, Input, message, ConfigProvider, Select } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
 import serviceStorageManagement from '@/services/storageManagement';
+import servicesCreateEntity from '@/services/createEntity';
 import serviceWorkflow from '@/services/workflow';
 
 import './style.less';
@@ -20,7 +21,21 @@ const graphNameTest = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/;
 const graphDesTest = /^[!-~a-zA-Z0-9_\u4e00-\u9fa5 ！￥……（）——“”：；，。？、‘’《》｛｝【】·\s]+$/;
 
 const Basic = (props, ref) => {
-  const { next, setBasicData, graphId, setGraphId, graphStatus, dataLoading, basicData, setDbType } = props;
+  const {
+    next,
+    setBasicData,
+    graphId,
+    setGraphId,
+    graphStatus,
+    dataLoading,
+    basicData,
+    setDbType,
+    graphName,
+    graphDes,
+    setOntologyId,
+    setName,
+    setDes
+  } = props;
   const [form] = Form.useForm();
   const formSnapshot = useRef({}); // 保存时生成表单数据快照, 用于判断表单是否被修改
   const [disabled, setDisabled] = useState(false);
@@ -168,9 +183,59 @@ const Basic = (props, ref) => {
     setNextLoad(false);
   };
 
-  const basicNext = e => saveData(e, true);
+  const dataSave = () => {
+    if (typeof graphName === 'number') {
+      const data = {
+        ontology_name: graphName,
+        ontology_des: graphDes || ''
+      };
+      storageData(data);
+    }
+  }
 
-  const onSave = e => saveData(e);
+  const storageData = async data => {
+    const res = await servicesCreateEntity.addEntity(data);
+    if (res && res.res) {
+      addEntityT(res, data);
+
+      return;
+    }
+
+    if (res && res.Code === 500002) {
+      // addEntityF();
+    }
+  };
+  // const basicNext = e => saveData(e, true);
+  const basicNext = e => {
+    dataSave()
+    saveData(e, true);
+  };
+
+  /**
+   * @description 创建成功执行
+   */
+  const addEntityT = (res, data) => {
+    setOntologyId(res.res.ontology_id);
+    setName(data.ontology_name);
+    setDes(data.ontology_des);
+  };
+
+  /**
+   * @description 创建失败执行
+   */
+  // const addEntityF = () => {
+  //   this.formeRef.current.setFields([
+  //     {
+  //       name: 'entityname',
+  //       errors: [intl.get('createEntity.repeatName')]
+  //     }
+  //   ]);
+  // };
+
+  const onSave = e => {
+    saveData(e);
+    dataSave();
+  };
 
   return (
     <div className="graph-basic-wrapper">

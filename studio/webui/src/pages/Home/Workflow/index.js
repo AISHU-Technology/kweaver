@@ -271,6 +271,8 @@ const Workflow = props => {
             setBasicData={setBasicData}
             setGraphId={setGraphId}
             ref={step1Ref}
+            graphName={basicData.graph_Name}
+            graphDes={basicData.graph_des}
           />
         </div>
         <div className={`hide space center ${current === 1 && 'show'}`}>

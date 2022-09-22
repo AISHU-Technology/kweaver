@@ -40,7 +40,6 @@ class NewCreateEntityHead extends Component {
     this.props.onNewCreateEntityHeadRef(this);
     this.interValGetData();
     setName(graphName);
-    // setOntologyId();
     if (typeof graphId === 'number') {
       const ontology_id = graphId;
       setOntologyId(graphId);
