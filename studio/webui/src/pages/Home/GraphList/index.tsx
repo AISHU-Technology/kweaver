@@ -39,7 +39,7 @@ const GraphList = () => {
   const { size, total, page } = pagination;
 
   useEffect(() => {
-    document.title = ` ${intl.get('graphList.mygraph')}_AnyDATA`;
+    document.title = ` ${intl.get('graphList.mygraph')}_KWeaver`;
     getData(sorter.rule, sorter.order);
   }, [page, sorter.rule, sorter.order]);
 
