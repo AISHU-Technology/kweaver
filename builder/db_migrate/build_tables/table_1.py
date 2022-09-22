@@ -8,7 +8,7 @@ from sqlalchemy.pool import NullPool
 from sqlalchemy import Column, String, create_engine, Integer, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mysql import LONGTEXT
-
+from sqlalchemy.sql.schema import UniqueConstraint
 from config.config import db_config_path
 from utils.log_info import Logger
 import sqlalchemy as sa
@@ -441,6 +441,7 @@ class Lexicon(Base):
     update_time = Column(String(50), nullable=True)
     status = Column(String(50), nullable=True)
     error_info = Column(LONGTEXT, nullable=True)
+    UniqueConstraint(lexicon_name, knowledge_id, name="lexicon_name_kwn_id")
 
 
 # 初始化数据库表
