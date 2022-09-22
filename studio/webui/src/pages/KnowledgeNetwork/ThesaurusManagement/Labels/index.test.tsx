@@ -26,6 +26,6 @@ describe('function', () => {
     });
     await sleep();
     wrapper.update();
-    expect(wrapper.find('.tag-input').length).toBe(1)
-  })
-})
+    expect(wrapper.find('.site-tag-plus').exists()).toBe(true);
+  });
+});
