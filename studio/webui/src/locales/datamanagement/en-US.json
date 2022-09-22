@@ -112,7 +112,7 @@
       "authed": "Authorized",
       "reAuth": "Reauthorization",
       "authSuccess": "Authorization authentication successful!",
-      "authSuccessText": "Authorized authentication is complete!Click the browser tab to return to 'AnyDATA' for subsequent operations.",
+      "authSuccessText": "Authorized authentication is complete!Click the browser tab to return to 'KWeaver' for subsequent operations.",
       "authError": "Authorization authenticatio  failed!",
       "authErrorText": "The reason for the failure may be that multiple authorization windows are opened for authorization and authentication or the link fails to operate for a long time. Please re authorize.",
       "sure": "OK",
