@@ -2301,6 +2301,8 @@ class RelationManualBuilder(object):
 
         results = dict()
         for one_data in batch_data:
+            if batch_prop not in one_data:
+                continue
             key = one_data[batch_prop]
             if key not in end_item_dict:
                 continue
