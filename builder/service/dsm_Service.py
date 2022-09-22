@@ -80,7 +80,7 @@ class DsmService():
                 obj["res"]="Anyshare7 test connection success"
                 return ret_code, obj
             else:
-                if "JSONDecodeError" in obj["cause"]:
+                if "JSONDecodeError" in obj_test["cause"]:
                     obj_test["cause"] = "Please check parameter ds_address and ds_port, May not match!"
                 return ret_code, obj_test
 
