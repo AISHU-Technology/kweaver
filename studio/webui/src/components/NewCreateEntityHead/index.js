@@ -25,20 +25,26 @@ class NewCreateEntityHead extends Component {
   state = {
     edgesModal: false, // 关系类管理弹窗
     exportModal: false, // 一键导入弹窗
-    editEntityModal: false, // 编辑本体弹窗
+    editEntityModal: true, // 编辑本体弹窗
     saveData: {
       data: undefined, // 数据
       type: 'entity' // 导入类型
     } // 预测点数据
   };
-
   isGetTaskData = false; // 是否有获取任务数据的接口正在调用(如果有，则定时器不发送请求)
 
   isBuildTaskAPIRun = false; // 是否构建任务的接口被点击（如果被点击，则下次请求不触发，用于阻止双击产生两个任务）
 
   componentDidMount() {
+    const { graphName, setName, setOntologyId, graphId } = this.props;
     this.props.onNewCreateEntityHeadRef(this);
     this.interValGetData();
+    setName(graphName);
+    // setOntologyId();
+    if (typeof graphId === 'number') {
+      const ontology_id = graphId;
+      setOntologyId(graphId);
+    }
   }
 
   componentWillUnmount() {
@@ -351,7 +357,6 @@ class NewCreateEntityHead extends Component {
     const { edgesModal, exportModal, saveData, editEntityModal } = this.state;
     const { centerSelect, nodes, edges, graphName } = this.props;
     const TYPE = window?.location?.pathname?.includes('knowledge') ? 'view' : analyUrl(window.location.search).type; // 进入图谱的类型
-
     return (
       <div className="new-create-entity-head">
         <div className="name">
@@ -716,6 +721,39 @@ class NewCreateEntityHead extends Component {
             <div className="word word-t">{intl.get('createEntity.taskList')}</div>
           </div>
         </div>
+
+        {/* 编辑本体弹层 */}
+        <Modal
+          className="set-entity-244-edit"
+          title={this.props.ontology_id ? intl.get('createEntity.editE') : intl.get('createEntity.createEntity')}
+          width={640}
+          destroyOnClose={true}
+          maskClosable={false}
+          // visible={editEntityModal}
+          visible={false}
+          footer={null}
+          closable={false}
+        >
+          <EditEntityModal
+            setEditEntityModal={this.setEditEntityModal}
+            setOntologyId={this.props.setOntologyId}
+            ontology_name={this.props.ontology_name}
+            setName={this.props.setName}
+            ontology_des={this.props.ontology_des}
+            setDes={this.props.setDes}
+            ontology_id={this.props.ontology_id}
+            nodes={nodes}
+            edges={edges}
+            freeGraphRef={this.props.freeGraphRef}
+            graphId={this.props.graphId}
+            ontoData={this.props.ontoData}
+            prev={this.props.prev}
+            setQuitVisible={this.props.setQuitVisible}
+            setTouch={this.props.setTouch}
+            setOntoData={this.props.setOntoData}
+            onEditEntityModalRef={this.props.onEditEntityModalRef}
+          />
+        </Modal>
 
         {/* 关系类管理弹层 */}
         <Modal

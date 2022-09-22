@@ -34,7 +34,9 @@ class CreateEntity extends Component {
     ontology_des: '', // 本体描述
     modalVisible: false, // 退出弹框
     isTouch: false,
-    editEntityModalRef: ''
+    editEntityModalRef: '',
+    graphName: '',
+    graphId: 1
   };
 
   isFistLoading = true;
@@ -77,7 +79,6 @@ class CreateEntity extends Component {
           used_task: res.res.df[0].used_task,
           ontology_id: res.res.df[0].id
         });
-
         const { Hentity, Hedge } = handleTaskId(res.res.df[0].entity, res.res.df[0].edge);
 
         this.state.freeGraphRef.externalImport({ entity: Hentity, edge: Hedge });
@@ -255,7 +256,7 @@ class CreateEntity extends Component {
    * @description 保存并关闭
    */
   getFlowData = () => {
-    const { nodes, edges, ontology_id, used_task, ontology_name, ontology_des } = this.state;
+    const { nodes, edges, ontology_id, used_task, ontology_name, ontology_des, graphId, graphName } = this.state;
 
     if (!ontology_name) return [];
 
@@ -264,9 +265,12 @@ class CreateEntity extends Component {
       entity,
       edge,
       used_task,
-      id: ontology_id,
-      ontology_id: ontology_id.toString(),
-      ontology_name,
+      // id: ontology_id,
+      // ontology_id: ontology_id.toString(),
+      id: graphId,
+      ontology_id: graphId.toString(),
+      // ontology_name,
+      ontology_name: graphName,
       ontology_des
     };
 
@@ -451,7 +455,6 @@ class CreateEntity extends Component {
 
     const { nodes, edges, ontology_id, used_task, dataInfoRef } = this.state;
     const { entity, edge } = setSaveData(nodes, edges);
-
     const data = { entity, edge, used_task, flag: 'save' };
 
     // 如果输入栏有错误，则取消操作
@@ -512,8 +515,11 @@ class CreateEntity extends Component {
   /**
    * @description 设置本体id
    */
-  setOntologyId = ontology_id => {
-    this.setState({ ontology_id });
+  // setOntologyId = ontology_id => {
+  //   this.setState({ ontology_id });
+  // };
+  setOntologyId = graphId => {
+    this.setState({ graphId });
   };
 
   /**
@@ -647,15 +653,16 @@ class CreateEntity extends Component {
   saveFlowData = async type => {
     if (this.checkSaveData() || this.signalNext) return;
 
-    const { nodes, edges, ontology_id, used_task, dataInfoRef, ontology_name, ontology_des } = this.state;
+    const { nodes, edges, ontology_id, used_task, dataInfoRef, ontology_name, ontology_des, graphId } = this.state;
     const { entity, edge } = setSaveData(nodes, edges);
-
     const data = {
       entity,
       edge,
       used_task,
-      id: ontology_id,
-      ontology_id: ontology_id.toString(),
+      // id: ontology_id,
+      // ontology_id: ontology_id.toString(),
+      id: graphId,
+      ontology_id: graphId.toString(),
       flag: type === 'check' ? 'save' : 'nextstep'
     };
 
@@ -769,7 +776,6 @@ class CreateEntity extends Component {
     } = this.state;
 
     const TYPE = window?.location?.pathname?.includes('knowledge') ? 'view' : analyUrl(window.location.search).type; // 进入图谱的类型 // 进入图谱的类型
-
     return (
       <div className="new-create-entity">
         <div className="head-tent-c">
@@ -803,6 +809,7 @@ class CreateEntity extends Component {
             quit={this.quit}
             onEditEntityModalRef={this.onEditEntityModalRef}
             selectedElement={selectedElement}
+            graphName={this.props.graphName}
           />
         </div>
 
@@ -856,7 +863,38 @@ class CreateEntity extends Component {
           </div>
         ) : null}
 
-        {!ontology_id || TYPE === 'view' ? null : isFlow() ? (
+        <div className="bottom-box bottom-flow">
+          <ConfigProvider autoInsertSpaceInButton={false}>
+            <Button className="ant-btn-default cancel" onClick={this.props.prev}>
+              {[intl.get('createEntity.previous')]}
+            </Button>
+          </ConfigProvider>
+
+          <ConfigProvider autoInsertSpaceInButton={false}>
+            <Button
+              type="primary"
+              className="check"
+              onClick={() => {
+                this.saveFlowData('check');
+              }}
+            >
+              {[intl.get('createEntity.check')]}
+            </Button>
+          </ConfigProvider>
+
+          <ConfigProvider autoInsertSpaceInButton={false}>
+            <Button
+              className="ant-btn-default cancel"
+              onClick={() => {
+                this.saveFlowData('next');
+              }}
+            >
+              {[intl.get('createEntity.next')]}
+            </Button>
+          </ConfigProvider>
+        </div>
+
+        {/* {!ontology_id || TYPE === 'view' ? null : isFlow() ? (
           <div className="bottom-box bottom-flow">
             <ConfigProvider autoInsertSpaceInButton={false}>
               <Button className="ant-btn-default cancel" onClick={this.props.prev}>
@@ -918,7 +956,7 @@ class CreateEntity extends Component {
               </Button>
             </ConfigProvider>
           </div>
-        )}
+        )} */}
 
         <Modal
           className="delete-create-info-4567911-cne"
