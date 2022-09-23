@@ -1,9 +1,9 @@
 import React, { memo, useState, useEffect } from 'react';
 import _ from 'lodash';
-import { message, Spin, notification } from 'antd';
-import { LoadingOutlined, CheckCircleFilled } from '@ant-design/icons';
+import { message, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
-import useInterval from '@/utils/useInterval/index';
+import HOOKS from '@/hooks';
 
 import servicesThesaurus from '@/services/thesaurus';
 
@@ -19,7 +19,7 @@ interface ThesaurusProps {
 const ERROR_CODE: Record<string, string> = {
   'Builder.LexiconController.GetLexiconList.KnowledgeIdNotExist': 'ThesaurusManage.nullKnowlegeId',
   'Builder.LexiconController.GetLexiconById.LexiconIdNotExist': 'ThesaurusManage.nullThesaurusId'
-}
+};
 const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
   const { kgData } = props;
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,14 @@ const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
   /**
    * 获取词库列表
    */
-  const getThesaurusList = async ({ page = 1, size = 20, order = 'desc', word = '', rule = 'update_time', isUseInterval = false }) => {
+  const getThesaurusList = async ({
+    page = 1,
+    size = 20,
+    order = 'desc',
+    word = '',
+    rule = 'update_time',
+    isUseInterval = false
+  }) => {
     if (!kgData?.id) return;
     const data = {
       knowledge_id: kgData?.id,
@@ -44,8 +51,8 @@ const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
       size,
       order,
       word,
-      rule,
-    }
+      rule
+    };
     if (!isUseInterval) setLoading(true);
 
     try {
@@ -69,11 +76,11 @@ const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
     } catch (err) {
       setLoading(false);
     }
-  }
+  };
 
   /**
    * 根据ID查询词库的信息
-  */
+   */
   const getThesaurusById = async (thesaurus: any, page = 1, refresh = false) => {
     if (!thesaurus?.id) {
       setLoading(false);
@@ -85,7 +92,7 @@ const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
         id: thesaurus?.id,
         page,
         size: 50
-      }
+      };
       const response = await servicesThesaurus.thesaurusInfoBasic(data);
       const { ErrorCode, res } = response || {};
       if (ErrorCode) {
@@ -98,15 +105,15 @@ const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
     } catch (err) {
       //
     }
-  }
+  };
 
   /**
-  * 轮询数据
-  */
-  useInterval(() => {
-    const list = _.filter(thesaurusList, ((item: any) => item?.status === 'running'));
+   * 轮询数据
+   */
+  HOOKS.useInterval(() => {
+    const list = _.filter(thesaurusList, (item: any) => item?.status === 'running');
     if (!_.isEmpty(list)) {
-      getThesaurusList({ page: listPage, isUseInterval: true })
+      getThesaurusList({ page: listPage, isUseInterval: true });
     }
   }, 10 * 1000);
 
@@ -130,13 +137,14 @@ const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
           <div className="ad-center" style={{ height: '100%' }}>
             <Spin indicator={<LoadingOutlined style={{ fontSize: 30 }} spin />}></Spin>
           </div>
-        ) : !_.isEmpty(thesaurusList) ?
+        ) : !_.isEmpty(thesaurusList) ? (
           <ThesaurusContent
             selectedThesaurus={selectedThesaurus}
             knowledge={kgData}
             getThesaurusList={getThesaurusList}
             getThesaurusById={getThesaurusById}
-          /> :
+          />
+        ) : (
           <div className="thesaurus-empty">
             <div className="empty-content">
               <img src={knowledgeEmpty} alt="nodata" className="nodata-img"></img>
@@ -151,9 +159,9 @@ const ThesaurusManagement: React.FC<ThesaurusProps> = props => {
               </div>
             </div>
           </div>
-        }
+        )}
       </div>
     </div>
-  )
-}
-export default (memo)(ThesaurusManagement);
+  );
+};
+export default memo(ThesaurusManagement);
