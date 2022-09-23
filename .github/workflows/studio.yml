@@ -14,7 +14,7 @@ on:
 # 定义 DOCKERHUB_REPO 标记 docker hub repo 名称
 env:
   APP_NAME: kw-studio
-  DOCKERHUB_REPO: xavierhuang/kw-studio
+  DOCKERHUB_REPO: kweaverai/kw-studio
   
 jobs:
   build_docker_image:
@@ -47,6 +47,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: "{{defaultContext}}:studio"
+          file: "Studio.Dockerfile"
           # 是否 docker push
           push: true
           # docker build arg, 注入 APP_NAME/APP_VERSION

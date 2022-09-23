@@ -25,7 +25,7 @@ go mod tidy && \
 swag init && \
 go build -o studio ./main.go
 
-FROM acr.aishu.cn/public/ubuntu:21.10.20211119
+FROM xavierhuang/ubuntu:v1
 RUN apt-get install -y tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY --from=gomake /root/studio/studio /root/studio/
 COPY ./config.yaml /root/studio/
