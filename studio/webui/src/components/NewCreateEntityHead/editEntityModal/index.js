@@ -12,7 +12,7 @@ class EditEntityModal extends Component {
     this.props.onEditEntityModalRef(this);
 
     this.formeRef.current.setFieldsValue({
-      entityname: this.props.ontology_name,
+      entityname: this.props.ontology_name ? this.props.ontology_name : this.props.graphName,
       entitydescribe: this.props.ontology_des
     });
   }
@@ -23,7 +23,8 @@ class EditEntityModal extends Component {
    * @description 提交表单
    */
   onFinish = value => {
-    const { ontology_id } = this.props;
+    const { ontology_id, setEditNewName } = this.props;
+    setEditNewName(value.entityname);
 
     const data = {
       ontology_name: value.entityname,
@@ -38,31 +39,31 @@ class EditEntityModal extends Component {
     }
 
     // 创建本体模块
-    if (ontology_id) {
-      this.changeEntity(data, ontology_id);
+    // if (ontology_id) {
+    //   this.changeEntity(data, ontology_id);
 
-      return;
-    }
+    //   return;
+    // }
 
-    this.addEntity(data);
+    // this.addEntity(data);
   };
 
   /**
    * @description 创建本体
    */
-  addEntity = async data => {
-    const res = await servicesCreateEntity.addEntity(data);
+  // addEntity = async data => {
+  //   const res = await servicesCreateEntity.addEntity(data);
 
-    if (res && res.res) {
-      this.addEntityT(res, data);
+  //   if (res && res.res) {
+  //     this.addEntityT(res, data);
 
-      return;
-    }
+  //     return;
+  //   }
 
-    if (res && res.Code === 500002) {
-      this.addEntityF();
-    }
-  };
+  //   if (res && res.Code === 500002) {
+  //     this.addEntityF();
+  //   }
+  // };
 
   /**
    * @description 创建成功执行
@@ -127,7 +128,7 @@ class EditEntityModal extends Component {
       return;
     }
 
-    this.flowAddEntity(value);
+    // this.flowAddEntity(value);
   };
 
   /**
@@ -181,6 +182,7 @@ class EditEntityModal extends Component {
       ontology_des: value.entitydescribe || '',
       id: this.props.ontology_id
     };
+    this.props.setName(value.entityname);
 
     const requestData = {
       graph_step: 'graph_otl',

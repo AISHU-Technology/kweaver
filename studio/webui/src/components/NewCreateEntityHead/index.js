@@ -25,25 +25,20 @@ class NewCreateEntityHead extends Component {
   state = {
     edgesModal: false, // 关系类管理弹窗
     exportModal: false, // 一键导入弹窗
-    editEntityModal: true, // 编辑本体弹窗
+    editEntityModal: false, // 编辑本体弹窗
     saveData: {
       data: undefined, // 数据
       type: 'entity' // 导入类型
-    } // 预测点数据
+    }, // 预测点数据
+    editNewName: '' // 编辑后的本体名
   };
   isGetTaskData = false; // 是否有获取任务数据的接口正在调用(如果有，则定时器不发送请求)
 
   isBuildTaskAPIRun = false; // 是否构建任务的接口被点击（如果被点击，则下次请求不触发，用于阻止双击产生两个任务）
 
   componentDidMount() {
-    const { graphName, setName, setOntologyId, graphId } = this.props;
     this.props.onNewCreateEntityHeadRef(this);
     this.interValGetData();
-    setName(graphName);
-    if (typeof graphId === 'number') {
-      const ontology_id = graphId;
-      setOntologyId(graphId);
-    }
   }
 
   componentWillUnmount() {
@@ -352,6 +347,15 @@ class NewCreateEntityHead extends Component {
     });
   };
 
+  /**
+   * 修改后的本体名
+   */
+  setEditNewName = editNewName => {
+    this.setState({
+      editNewName
+    });
+  };
+
   render() {
     const { edgesModal, exportModal, saveData, editEntityModal } = this.state;
     const { centerSelect, nodes, edges, graphName } = this.props;
@@ -390,9 +394,11 @@ class NewCreateEntityHead extends Component {
           )}
 
           <div className="entity-name" title={graphName}>
-            {graphName}
+            {/* {graphName} */}
+            {this.props.ontology_name ? this.props.ontology_name : graphName}
           </div>
 
+          {/* 编辑按钮 */}
           {TYPE === 'view' ? null : (
             <div
               className="icon"
@@ -724,23 +730,24 @@ class NewCreateEntityHead extends Component {
         {/* 编辑本体弹层 */}
         <Modal
           className="set-entity-244-edit"
-          title={this.props.ontology_id ? intl.get('createEntity.editE') : intl.get('createEntity.createEntity')}
+          // title={this.props.ontology_id ? intl.get('createEntity.editE') : intl.get('createEntity.createEntity')}
+          title={intl.get('createEntity.editE')}
           width={640}
           destroyOnClose={true}
           maskClosable={false}
-          // visible={editEntityModal}
-          visible={false}
+          visible={this.state.editEntityModal}
           footer={null}
           closable={false}
         >
           <EditEntityModal
             setEditEntityModal={this.setEditEntityModal}
-            setOntologyId={this.props.setOntologyId}
             ontology_name={this.props.ontology_name}
             setName={this.props.setName}
+            setOntologyDes={this.props.setOntologyDes}
             ontology_des={this.props.ontology_des}
             setDes={this.props.setDes}
             ontology_id={this.props.ontology_id}
+            setOntologyId={this.props.setOntologyId}
             nodes={nodes}
             edges={edges}
             freeGraphRef={this.props.freeGraphRef}
@@ -751,6 +758,8 @@ class NewCreateEntityHead extends Component {
             setTouch={this.props.setTouch}
             setOntoData={this.props.setOntoData}
             onEditEntityModalRef={this.props.onEditEntityModalRef}
+            setEditNewName={this.setEditNewName}
+            graphName={this.props.graphName}
           />
         </Modal>
 

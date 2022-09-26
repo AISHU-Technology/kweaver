@@ -30,11 +30,12 @@ const Basic = (props, ref) => {
     dataLoading,
     basicData,
     setDbType,
-    graphName,
-    graphDes,
     setOntologyId,
-    setName,
-    setDes
+    ontologyId,
+    setOntologyDes,
+    setNewOntologyId,
+    ontoData,
+    setOntoData
   } = props;
   const [form] = Form.useForm();
   const formSnapshot = useRef({}); // 保存时生成表单数据快照, 用于判断表单是否被修改
@@ -101,6 +102,8 @@ const Basic = (props, ref) => {
     await form.validateFields();
 
     if (form.getFieldError('password')?.[0] && form.getFieldError('username')?.[0]) return;
+    // const isSuccess = await saveEntity(graphId, form.getFieldsValue());
+    // if (!isSuccess) return;
     setNextLoad(true);
 
     form.validateFields().then(async values => {
@@ -120,18 +123,42 @@ const Basic = (props, ref) => {
           parseInt(window.sessionStorage.getItem('selectedKnowledgeId'))
       };
 
+      // 创建本体
+      const data = {
+        ontology_name: values.graph_Name,
+        ontology_des: values.graph_des || ''
+      };
+      const requestData = {
+        graph_step: 'graph_otl',
+        updateoradd: 'add',
+        graph_process: [data]
+      };
+
       if (!graphId) {
         // 新建
         const res = await serviceWorkflow.graphCreate(body);
 
         if (res && res.res) {
-          setGraphId(parseInt(res.res.split(' ')[0]));
+          const newGraphId = parseInt(res.res.split(' ')[0]);
+          setGraphId(newGraphId);
           window.history.replaceState({}, 0, `/home/workflow/create?id=${res.res.split(' ')[0]}&status=edit`);
           setBasicData(body.graph_process[0]);
           isNext && next();
           formSnapshot.current = values;
 
           !isNext && message.success(intl.get('datamanagement.savedSuccessfully'));
+          const mess = await servicesCreateEntity.changeFlowData(newGraphId, requestData);
+          if (mess && mess.res) {
+            const newOntologyId = mess.res.ontology_id;
+            setOntologyId(newOntologyId);
+          }
+
+          if (mess?.Code === 500002) {
+            message.error(mess.Cause);
+            return false;
+          }
+          const newOntologyId = mess.res.ontology_id;
+          setOntologyId(newOntologyId);
         }
 
         if (res && res.Code) {
@@ -183,58 +210,46 @@ const Basic = (props, ref) => {
     setNextLoad(false);
   };
 
-  const dataSave = () => {
-    if (typeof graphName === 'number') {
-      const data = {
-        ontology_name: graphName,
-        ontology_des: graphDes || ''
-      };
-      storageData(data);
-    }
-  }
+  // const saveEntity = async (action, formData) => {
+  //   const data = {
+  //     ontology_name: formData.graph_Name,
+  //     ontology_des: formData.graph_des || ''
+  //   };
+  //   const requestData = {
+  //     graph_step: 'graph_otl',
+  //     updateoradd: 'add',
+  //     graph_process: [data]
+  //   };
+  //   const res = await servicesCreateEntity.changeFlowData(graphId, requestData);
+  //   const newOntologyId = res.res.ontology_id;
+  //   setOntologyId(newOntologyId);
+  //   setOntologyDes(data.ontology_des);
 
-  const storageData = async data => {
-    const res = await servicesCreateEntity.addEntity(data);
-    if (res && res.res) {
-      addEntityT(res, data);
+  //   // TODO 编辑时缺少本体id
+  //   if (action === 'create') {
+  //     const res = await servicesCreateEntity.addEntity(data);
+  //     if (res && res.res) {
+  //       const newOntologyId = res.res.ontology_id;
+  //       setOntologyId(newOntologyId);
+  //       setNewOntologyId(newOntologyId);
+  //       return true;
+  //     }
 
-      return;
-    }
+  //     if (res?.Code === 500002) {
+  //       message.error(res.Cause);
+  //       return false;
+  //     }
+  //   }
+  //   }
+  //   return true;
+  // };
 
-    if (res && res.Code === 500002) {
-      // addEntityF();
-    }
-  };
-  // const basicNext = e => saveData(e, true);
   const basicNext = e => {
-    dataSave()
     saveData(e, true);
   };
 
-  /**
-   * @description 创建成功执行
-   */
-  const addEntityT = (res, data) => {
-    setOntologyId(res.res.ontology_id);
-    setName(data.ontology_name);
-    setDes(data.ontology_des);
-  };
-
-  /**
-   * @description 创建失败执行
-   */
-  // const addEntityF = () => {
-  //   this.formeRef.current.setFields([
-  //     {
-  //       name: 'entityname',
-  //       errors: [intl.get('createEntity.repeatName')]
-  //     }
-  //   ]);
-  // };
-
   const onSave = e => {
     saveData(e);
-    dataSave();
   };
 
   return (

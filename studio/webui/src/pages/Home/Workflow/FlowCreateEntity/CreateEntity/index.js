@@ -34,9 +34,7 @@ class CreateEntity extends Component {
     ontology_des: '', // 本体描述
     modalVisible: false, // 退出弹框
     isTouch: false,
-    editEntityModalRef: '',
-    graphName: '',
-    graphId: 1
+    editEntityModalRef: ''
   };
 
   isFistLoading = true;
@@ -68,7 +66,6 @@ class CreateEntity extends Component {
     }
 
     const { name, type } = analyUrl(window.location.search);
-
     if (name && (type === 'edit' || type === 'view')) {
       const res = await servicesCreateEntity.getEntityInfo(decodeURI(name));
 
@@ -79,6 +76,7 @@ class CreateEntity extends Component {
           used_task: res.res.df[0].used_task,
           ontology_id: res.res.df[0].id
         });
+        this.props.setOntologyId(res.res.df[0].id);
         const { Hentity, Hedge } = handleTaskId(res.res.df[0].entity, res.res.df[0].edge);
 
         this.state.freeGraphRef.externalImport({ entity: Hentity, edge: Hedge });
@@ -103,7 +101,6 @@ class CreateEntity extends Component {
       // 流程第三步编辑处理
       if (this.props.ontoData && this.props.ontoData[0]) {
         const { used_task, entity, edge, id, ontology_name, ontology_des } = this.props.ontoData[0];
-
         this.setState({
           ontology_id: id,
           used_task,
@@ -122,7 +119,7 @@ class CreateEntity extends Component {
    */
   openEditEntityModal = () => {
     setTimeout(() => {
-      this.state.newCreateEntityHeadRefRef.setEditEntityModal(true);
+      this.state.newCreateEntityHeadRefRef.setEditEntityModal(false);
     }, 0);
   };
 
@@ -256,7 +253,7 @@ class CreateEntity extends Component {
    * @description 保存并关闭
    */
   getFlowData = () => {
-    const { nodes, edges, ontology_id, used_task, ontology_name, ontology_des, graphId, graphName } = this.state;
+    const { nodes, edges, ontology_id, used_task, ontology_name } = this.state;
 
     if (!ontology_name) return [];
 
@@ -265,13 +262,10 @@ class CreateEntity extends Component {
       entity,
       edge,
       used_task,
-      // id: ontology_id,
-      // ontology_id: ontology_id.toString(),
-      id: graphId,
-      ontology_id: graphId.toString(),
-      // ontology_name,
-      ontology_name: graphName,
-      ontology_des
+      id: ontology_id,
+      ontology_id: ontology_id.toString(),
+      ontology_name,
+      ontology_des: this.props.ontology_des
     };
 
     return [data];
@@ -515,11 +509,8 @@ class CreateEntity extends Component {
   /**
    * @description 设置本体id
    */
-  // setOntologyId = ontology_id => {
-  //   this.setState({ ontology_id });
-  // };
-  setOntologyId = graphId => {
-    this.setState({ graphId });
+  setOntologyId = ontology_id => {
+    this.setState({ ontology_id });
   };
 
   /**
@@ -653,16 +644,14 @@ class CreateEntity extends Component {
   saveFlowData = async type => {
     if (this.checkSaveData() || this.signalNext) return;
 
-    const { nodes, edges, ontology_id, used_task, dataInfoRef, ontology_name, ontology_des, graphId } = this.state;
+    const { nodes, edges, used_task, dataInfoRef, ontology_name, ontology_des, ontology_id } = this.state;
     const { entity, edge } = setSaveData(nodes, edges);
     const data = {
       entity,
       edge,
       used_task,
-      // id: ontology_id,
-      // ontology_id: ontology_id.toString(),
-      id: graphId,
-      ontology_id: graphId.toString(),
+      id: ontology_id !== '' ? ontology_id : this.props.ontologyId,
+      ontology_id: ontology_id !== '' ? ontology_id.toString() : this.props.ontologyId.toString(),
       flag: type === 'check' ? 'save' : 'nextstep'
     };
 
@@ -766,10 +755,9 @@ class CreateEntity extends Component {
       rightSelect,
       selectedElement,
       dataInfoRef,
-      ontology_id,
       used_task,
       ontology_name,
-      ontology_des,
+      ontology_id,
       taskListRef,
       modalVisible,
       isTouch
@@ -788,14 +776,14 @@ class CreateEntity extends Component {
             selectRightTool={this.selectRightTool}
             nodes={nodes}
             edges={edges}
-            setOntologyId={this.setOntologyId}
             checkSaveData={this.checkSaveData}
+            ontologyId={this.props.ontologyId}
             ontology_id={ontology_id}
+            setOntologyId={this.setOntologyId}
             used_task={used_task}
             setUsedTask={this.setUsedTask}
             ontology_name={ontology_name}
             setName={this.setName}
-            ontology_des={ontology_des}
             setDes={this.setDes}
             taskListRef={taskListRef}
             graphId={this.props.graphId}
@@ -810,6 +798,8 @@ class CreateEntity extends Component {
             onEditEntityModalRef={this.onEditEntityModalRef}
             selectedElement={selectedElement}
             graphName={this.props.graphName}
+            setOntologyDes={this.props.setOntologyDes}
+            ontology_des={this.props.ontology_des}
           />
         </div>
 
@@ -852,7 +842,7 @@ class CreateEntity extends Component {
               onNodeFamilyRef={this.onNodeFamilyRef}
               onEdgeFamilyRef={this.onEdgeFamilyRef}
               onGatherListRef={this.onGatherListRef}
-              ontology_id={ontology_id}
+              ontology_id={this.props.ontologyId}
               setEdges={this.setEdges}
               cancelSource={this.cancelSource}
               onTaskListRef={this.onTaskListRef}

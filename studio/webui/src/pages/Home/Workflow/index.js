@@ -45,6 +45,8 @@ const Workflow = props => {
   const [graphStatus, setGraphStatus] = useState(''); // 图谱状态
   const [quitVisible, setQuitVisible] = useState(false); // 控制退出弹框
   const [dataLoading, setDataLoading] = useState(false); // 流程一加载loading
+  const [ontologyId, setOntologyId] = useState(0); // 本体id
+  const [ontologyDes, setOntologyDes] = useState(''); // 本体描述信息
 
   useEffect(() => {
     if (history?.location?.pathname === '/home/workflow/create') {
@@ -59,7 +61,6 @@ const Workflow = props => {
   // 取出id
   useEffect(() => {
     const id = parseInt(getParam('id'));
-
     if (id) {
       getGraph(id);
     }
@@ -222,6 +223,13 @@ const Workflow = props => {
   };
 
   /**
+   * 本体id值
+   */
+  const setNewOntologyId = data => {
+    setOntologyId(data);
+  };
+
+  /**
    * 删除任务
    */
   const deleteTaskList = () => {
@@ -270,9 +278,13 @@ const Workflow = props => {
             setDbType={setDbType}
             setBasicData={setBasicData}
             setGraphId={setGraphId}
+            setOntologyId={setOntologyId}
+            ontologyId={ontologyId}
             ref={step1Ref}
-            graphName={basicData.graph_Name}
-            graphDes={basicData.graph_des}
+            setOntologyDes={setOntologyDes}
+            setNewOntologyId={setNewOntologyId}
+            ontoData={ontoData}
+            setOntoData={setOntoData}
           />
         </div>
         <div className={`hide space center ${current === 1 && 'show'}`}>
@@ -297,9 +309,12 @@ const Workflow = props => {
             setOntoData={setOntoData}
             current={current}
             graphId={graphId}
+            ontologyId={ontologyId}
             childRef={step3Ref}
             setQuitVisible={setQuitVisible}
             graphName={basicData.graph_Name}
+            setOntologyDes={setOntologyDes}
+            ontology_des={ontologyDes}
           />
         </div>
         <div className={`hide space center ${current === 3 && 'show'}`}>
