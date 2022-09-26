@@ -2017,8 +2017,39 @@ class RelationBuildBase(object):
         self.graph_mongo_Name = graph_mongo_Name
         self.graphdb = GraphDB(self.graph_db_id)
         self.sqlProcessor = SQLProcessor(self.graphdb.type)
+        self.merge_entity = self.get_merge_entity()
+        self.entity_prop_dict = self.get_entity_prop_dict()
 
-    def gen_vid(self, otl_name, one_data):
+    def get_merge_entity(self):
+        """
+        将融合属性映射表，由实体类字典转成抽取对象类字典，方便后续写边vid计算
+        """
+        merge_entity = dict()
+        for key, value in self.merge_otls.items():
+            entity_name = self.get_entity_class(key)
+            merge_dict = dict()
+            for merge_key in value.keys():
+                entity_merge_key = self.get_entity_prop(key, merge_key)
+                merge_dict[entity_merge_key] = value.get(merge_key)
+            merge_entity[entity_name] = merge_dict
+        return merge_entity
+
+    def get_entity_prop_dict(self):
+        """
+        将实体类属性字典转换成抽取对象属性字典，方便后续计算
+        """
+        entity_prop_dict = dict()
+        for otl, prop_dict in self.en_pro_dict.items():
+            entity_name = self.get_entity_class(otl)
+            en_prop_dict = dict()
+            for prop in prop_dict.keys():
+                entity_prop = self.get_entity_prop(otl, prop)
+                en_prop_dict[entity_prop] = prop_dict.get(prop)
+            entity_prop_dict[entity_name] = en_prop_dict
+        return entity_prop_dict
+
+
+    def gen_vid(self, entity_name, one_data):
         """
         计算实体one_data在图数据库中的的VertexId，支持nebula和orientdb
 
@@ -2026,7 +2057,7 @@ class RelationBuildBase(object):
             根据实体类的融合属性，根据web页面的先后顺序，计算出MD5结果
 
         参数
-            otl_name: 实体类名称，用来获实体类的融合属性
+            entity_name: 抽取对象名称，用来获实体类的融合属性
             one_data: 实际的实体点数据
 
         条件
@@ -2036,7 +2067,7 @@ class RelationBuildBase(object):
             MD5字符串
                 demo: 7f3fdf6fbbbcb5875062a88473303e0a
         """
-        return gen_doc_vid(self.merge_otls, otl_name, one_data, self.en_pro_dict, self.graphdb.type)
+        return gen_doc_vid(self.merge_entity, entity_name, one_data, self.entity_prop_dict, self.graphdb.type)
 
     def get_collection_name(self, class_name):
         """
@@ -2046,6 +2077,32 @@ class RelationBuildBase(object):
             class_name: 实体类名
         """
         return self.graph_mongo_Name + "_" + class_name
+
+    def get_entity_class(self, otl_class_name):
+        """
+        根据实体类或者关系类的名称，找出抽取对象类名称
+        参数：
+            otl_class_name： 实体类或者关系类的名称
+        """
+        entity_dict = self.otl_tab_map.get(otl_class_name, None)
+        if not entity_dict or not isinstance(entity_dict, dict):
+            return otl_class_name
+        return entity_dict.get('entity_data', otl_class_name)
+
+    def get_entity_prop(self, otl_class_name, otl_prop):
+        """
+        根据抽取对象的属性，给出实体类对象属性，差不到返回原值
+        参数：
+            otl_class_name： 实体类或者关系类的名称
+            otl_prop： 实体类或者关系类的属性
+        """
+        entity_dict = self.otl_tab_map.get(otl_class_name, None)
+        if not entity_dict or not isinstance(entity_dict, dict):
+            return otl_prop
+        prop_map = entity_dict.get('pro_map', None)
+        if not prop_map or not isinstance(prop_map, dict):
+            return otl_prop
+        return prop_map.get(otl_prop, otl_prop)
 
 
 class RelationManualBase(object):
@@ -2334,15 +2391,14 @@ class RelationIn2Class(RelationManualBuilder):
         """
             边构建的前期准备，主要是准备一些属性
         """
-        self.start_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
-                                     self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
-        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
-                                   self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.start_entity_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
+        self.start_collection_ame = self.buildInfo.graph_mongo_Name + "_" + self.start_entity_class
 
-        self.start_collection = MongoBuildDao.get_collection(
-            self.start_collection_name)
-        self.end_collection = MongoBuildDao.get_collection(
-            self.end_collection_name)
+        self.end_entity_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + self.end_entity_class
+
+        self.start_collection = MongoBuildDao.get_collection(self.start_collection_name)
+        self.end_collection = MongoBuildDao.get_collection(self.end_collection_name)
 
         self.start_data_count = self.start_collection.count_documents({})
         self.end_data_count = self.end_collection.count_documents({})
@@ -2431,8 +2487,7 @@ class RelationIn2Class(RelationManualBuilder):
         batch_begin = self.gen_batch_vid(self.find_class, batch_data)
 
         if self.equation == "包含" or self.equation == "被包含":
-            batch_end = self.batch_contain_relations(batch_data, self.find_prop, self.relation_class,
-                                                     self.relation_prop)
+            batch_end = self.batch_contain_relations(batch_data, self.find_prop, self.relation_class, self.relation_prop)
 
         if self.equation == "等于":
             batch_end = self.batch_equal_relations(batch_data, self.find_prop, self.relation_class, self.relation_prop)
@@ -2466,10 +2521,11 @@ class RelationIn3Class(RelationManualBuilder):
     def __init__(self, relation_base_info: RelationManualBase):
         super().__init__(relation_base_info)
 
-        self.start_collection_ame = self.buildInfo.graph_mongo_Name + "_" + \
-                                    self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
-        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
-                                   self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.start_entity_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
+        self.start_collection_ame = self.buildInfo.graph_mongo_Name + "_" + self.start_entity_class
+
+        self.end_entity_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + self.end_entity_class
 
         self.start_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
         self.end_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
@@ -2539,20 +2595,20 @@ class RelationIn3Class(RelationManualBuilder):
             print("edge_class:{}=>{}->{} current: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, current))
 
         if self.equation_begin == "等于":
-            batch_begin = self.batch_equal_relations(batch_data, self.relation_begin_pro, self.begin_vertex_class,
-                                                     self.begin_class_prop)
+            batch_begin = self.batch_equal_relations(batch_data, self.relation_begin_pro, self.start_entity_class,
+                                                     self.start_prop)
 
         if self.equation_begin == "被包含":
-            batch_begin = self.batch_contain_relations(batch_data, self.relation_begin_pro, self.begin_vertex_class,
-                                                       self.begin_class_prop)
+            batch_begin = self.batch_contain_relations(batch_data, self.relation_begin_pro, self.start_entity_class,
+                                                       self.start_prop)
 
         if self.equation_end == "等于":
-            batch_end = self.batch_equal_relations(batch_data, self.relation_end_pro, self.end_vertex_class,
-                                                   self.end_class_prop)
+            batch_end = self.batch_equal_relations(batch_data, self.relation_end_pro, self.end_entity_class,
+                                                   self.end_prop)
 
         if self.equation_end == "包含":
-            batch_end = self.batch_contain_relations(batch_data, self.relation_end_pro, self.end_vertex_class,
-                                                     self.end_class_prop)
+            batch_end = self.batch_contain_relations(batch_data, self.relation_end_pro, self.end_entity_class,
+                                                     self.end_prop)
 
         self.create_batch_edges(batch_data, batch_begin, batch_end)
 

@@ -53,31 +53,31 @@ def type_transform(db_type, value, type, sql_format=True):
     return str(value)
 
 
-def gen_doc_vid(merge_otls, otl_name, one_data, en_pro_dict, gtype='nebula'):
+def gen_doc_vid(merge_entity_list, entity_name, one_data, en_pro_dict, gtype='nebula'):
     """
     计算图数据库点的vid, 兼容nebula和orientdb
 
     参数
-        merge_otls: 融合属性字典
+        merge_entity_list: 融合属性字典
             demo: {"t_stock_percent_wide": {"name": "equality"}}
                 t_stock_percent_wide： 实体名
-                name: 是融合属性
-                equality: 是融合的方法
-        otl_name: 实体名
+                name: 融合属性
+                equality: 融合的方法
+        entity_name: 抽取实体名
         one_data: 一个实体数据
         en_pro_dict: 属性字典
         gtype: 图数据库的名称，默认nabule
 
     """
     tab_val_index = []  # 属性列表
-    for k, v in merge_otls[otl_name].items():
-        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[otl_name][k])
+    for k, v in merge_entity_list[entity_name].items():
+        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[entity_name][k])
         if gtype == "orientdb":
             value = "  `{}` = '{}' ".format(k, one_data[k])
         tab_val_index.append(value)
 
     if gtype == "orientdb":
-        return 'SELECT FROM `{}` WHERE {}'.format(otl_name, ','.join(tab_val_index))
+        return 'SELECT FROM `{}` WHERE {}'.format(entity_name, ','.join(tab_val_index))
 
     props_str = ''
     for m in tab_val_index:
