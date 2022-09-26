@@ -25,6 +25,7 @@ class FlowCreateEntity extends Component {
           graphName={this.props.graphName}
           setOntologyDes={this.props.setOntologyDes}
           ontology_des={this.props.ontology_des}
+          graphDes={this.props.graphDes}
         />
       </div>
     );

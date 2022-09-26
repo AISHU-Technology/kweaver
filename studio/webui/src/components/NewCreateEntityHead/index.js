@@ -394,12 +394,11 @@ class NewCreateEntityHead extends Component {
           )}
 
           <div className="entity-name" title={graphName}>
-            {/* {graphName} */}
-            {this.props.ontology_name ? this.props.ontology_name : graphName}
+            {graphName}
           </div>
 
           {/* 编辑按钮 */}
-          {TYPE === 'view' ? null : (
+          {/* {TYPE === 'view' ? null : (
             <div
               className="icon"
               onClick={() => {
@@ -409,7 +408,7 @@ class NewCreateEntityHead extends Component {
             >
               <IconFont type="icon-edit" className="icon" />
             </div>
-          )}
+          )} */}
         </div>
 
         <div className="tool tool-center">

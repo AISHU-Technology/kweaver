@@ -23,13 +23,17 @@ class EditEntityModal extends Component {
    * @description 提交表单
    */
   onFinish = value => {
-    const { ontology_id, setEditNewName } = this.props;
+    const { ontology_id, setEditNewName, ontologyError } = this.props;
     setEditNewName(value.entityname);
 
     const data = {
       ontology_name: value.entityname,
       ontology_des: value.entitydescribe || ''
     };
+
+    if (ontologyError !== '') {
+      this.flowAddEntity(value);
+    }
 
     // 流程模块
     if (this.isFlow()) {
@@ -39,11 +43,11 @@ class EditEntityModal extends Component {
     }
 
     // 创建本体模块
-    // if (ontology_id) {
-    //   this.changeEntity(data, ontology_id);
+    if (ontology_id) {
+      this.changeEntity(data, ontology_id);
 
-    //   return;
-    // }
+      return;
+    }
 
     // this.addEntity(data);
   };
@@ -155,6 +159,7 @@ class EditEntityModal extends Component {
 
     if (resData && resData.res && resData.res.ontology_id) {
       this.props.setOntologyId(resData.res.ontology_id);
+      this.props.setOntologyError('');
       this.changeEntityT(data);
 
       // 初始化数据

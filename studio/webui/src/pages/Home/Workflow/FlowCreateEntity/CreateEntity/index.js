@@ -47,7 +47,9 @@ class CreateEntity extends Component {
         document.title = `${intl.get('createEntity.title')}_KWeaver`;
       }, 0);
     }
-    this.getEditData();
+    if (this.props.graphId !== '') {
+      this.getEditData();
+    }
     this.props.childRef && (this.props.childRef.current = this);
   }
 
@@ -76,11 +78,43 @@ class CreateEntity extends Component {
           used_task: res.res.df[0].used_task,
           ontology_id: res.res.df[0].id
         });
+        const ontologyId = res.res.df[0].id;
+        this.props.ontoData([{ ontology_id: res.res.df[0].id }]);
         this.props.setOntologyId(res.res.df[0].id);
         const { Hentity, Hedge } = handleTaskId(res.res.df[0].entity, res.res.df[0].edge);
 
         this.state.freeGraphRef.externalImport({ entity: Hentity, edge: Hedge });
+        this.flowEditEntity(ontologyId);
       }
+    }
+  };
+
+  /**
+   * @param 编辑本体
+   */
+
+  flowEditEntity = async value => {
+    const { graphName, graphDes, graphId } = this.props;
+    const data = {
+      ontology_name: graphName,
+      ontology_des: graphDes,
+      id: value
+    };
+
+    const requestData = {
+      graph_step: 'graph_otl',
+      updateoradd: 'update_otl_name',
+      graph_process: [data]
+    };
+
+    const resData = await servicesCreateEntity.changeFlowData(graphId, requestData);
+
+    if (resData && resData.Code === 500002) {
+      this.addEntityF();
+    }
+
+    if (resData && resData.res) {
+      this.changeEntityT(data);
     }
   };
 
@@ -118,9 +152,11 @@ class CreateEntity extends Component {
    * @description 打开编辑弹窗
    */
   openEditEntityModal = () => {
-    setTimeout(() => {
-      this.state.newCreateEntityHeadRefRef.setEditEntityModal(false);
-    }, 0);
+    if (this.props.ontologyError !== '') {
+      setTimeout(() => {
+        this.state.newCreateEntityHeadRefRef.setEditEntityModal(false);
+      }, 0);
+    }
   };
 
   /**
