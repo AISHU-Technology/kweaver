@@ -2045,7 +2045,11 @@ class RelationBuildBase(object):
             for prop in prop_dict.keys():
                 entity_prop = self.get_entity_prop(otl, prop)
                 en_prop_dict[entity_prop] = prop_dict.get(prop)
-            entity_prop_dict[entity_name] = en_prop_dict
+
+            entity_prop_dict[entity_name] = {
+                "otl_name": otl,
+                "pro_map": en_prop_dict
+            }
         return entity_prop_dict
 
 
@@ -2835,7 +2839,7 @@ class Transfer(object):
             exist_rule = [r for r in self.rules if r in columns_dict]
 
             for row in data:
-                temp_dict = {k: row[v] for k, v in columns_dict.items() if row[v]}
+                temp_dict = {k: row[v] for k, v in columns_dict.items()}
                 m = {k: str(temp_dict[k]) if temp_dict[k] is not None else None for k in exist_rule if k in temp_dict}
                 m["ds_id"] = self.ds_id
                 mongo_data.append(m)
