@@ -2130,31 +2130,6 @@ class RelationManualBuilder(object):
             len_dict[class_name] = len_value
             self.len_dict = len_dict
 
-    def props_filter(self):
-        """
-        mongo查询，没必要获取文档的所有属性，将相关的属性返回即可
-
-        逻辑
-            包含
-                1. 起点和终点的融合属性  》 计算VertexID
-                2. 起点和终点，关系类的关联属性   》 直接关系和间接关系的所有属性
-        """
-        merge_pro = {}
-        # 起点的融合属性
-        for k, v in self.buildInfo.merge_otls[self.begin_vertex_class].items():
-            merge_pro[k] = 1
-        # 终点的融合属性
-        for k, v in self.buildInfo.merge_otls[self.end_vertex_class].items():
-            merge_pro[k] = 1
-
-        filter_dict = {
-            self.begin_class_prop: 1,
-            self.relation_begin_pro: 1,
-            self.relation_end_pro: 1,
-            self.end_class_prop: 1}
-        filter_dict.update(merge_pro)
-        return filter_dict
-
     def edge_sql(self, one_data):
         """
         构造边的属性值sql语句
@@ -2179,7 +2154,7 @@ class RelationManualBuilder(object):
 
         """
         sub_strings = MongoBuildDao.gen_sub_str(len_dict, find_value)
-        exist_items = MongoBuildDao.relations(collection, collection_prop, sub_strings, self.props_filter())
+        exist_items = MongoBuildDao.relations(collection, collection_prop, sub_strings)
         return exist_items
 
     def find_equal_relations(self, batch_data, batch_prop, relation_collection, relation_prop):
@@ -2200,7 +2175,7 @@ class RelationManualBuilder(object):
         返回： 字典 one_of_batch[batch_prop]:list[mongo_document]
         """
         values = [one[batch_prop] for one in batch_data if batch_prop in one]
-        items = relation_collection.find({relation_prop: {"$in": values}}, self.props_filter())
+        items = relation_collection.find({relation_prop: {"$in": values}})
 
         results = dict()
         for item in items:
@@ -2448,7 +2423,7 @@ class RelationIn2Class(RelationManualBuilder):
             current: 当前数据的索引
             iter_size: 每次数据的长度
         """
-        batch_results = collection.find({}, self.props_filter()).skip(current).limit(iter_size)
+        batch_results = collection.find({}).skip(current).limit(iter_size)
         batch_data = list(batch_results)
         print("edge_class:{}=>{}->{} current: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, current))
 
@@ -2558,7 +2533,7 @@ class RelationIn3Class(RelationManualBuilder):
             current: 当前数据的索引
             iter_size: 每次数据的长度
         """
-        batch_results = collection.find({}, self.props_filter()).skip(current).limit(iter_size)
+        batch_results = collection.find({}).skip(current).limit(iter_size)
         batch_data = list(batch_results)
         if current % 100000 == 0:
             print("edge_class:{}=>{}->{} current: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, current))
