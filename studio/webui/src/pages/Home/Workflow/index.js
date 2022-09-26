@@ -47,6 +47,7 @@ const Workflow = props => {
   const [dataLoading, setDataLoading] = useState(false); // 流程一加载loading
   const [ontologyId, setOntologyId] = useState(0); // 本体id
   const [graphDes, setGraphDes] = useState(''); // 本体描述信息
+  const [graphType, setGraphType] = useState('create'); // 本体描述信息
 
   useEffect(() => {
     if (history?.location?.pathname === '/home/workflow/create') {
@@ -299,6 +300,8 @@ const Workflow = props => {
             graphName={basicData.graph_Name}
             graphDes={graphDes}
             setOntologyId={setOntologyId}
+            setGraphType={setGraphType}
+            ontoData={ontoData}
           />
         </div>
         <div className={`hide ${current === 2 && 'show'}`}>
@@ -317,6 +320,8 @@ const Workflow = props => {
             setQuitVisible={setQuitVisible}
             graphName={basicData.graph_Name}
             graphDes={graphDes}
+            graphType={graphType}
+            setGraphType={setGraphType}
           />
         </div>
         <div className={`hide space center ${current === 3 && 'show'}`}>

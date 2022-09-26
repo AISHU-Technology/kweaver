@@ -47,9 +47,7 @@ class CreateEntity extends Component {
         document.title = `${intl.get('createEntity.title')}_KWeaver`;
       }, 0);
     }
-    if (this.props.graphId !== '') {
       this.getEditData();
-    }
     this.props.childRef && (this.props.childRef.current = this);
   }
 

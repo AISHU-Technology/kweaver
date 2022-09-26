@@ -19,10 +19,13 @@ const DataSourceBox = props => {
     dataSourceRef,
     graphName,
     graphDes,
-    setOntologyId
+    setOntologyId,
+    setGraphType,
+    ontoData
   } = props;
   const [disabled, setDisabled] = useState(false);
   const [getNewData, setGetNewData] = useState(false);
+  const [createOntology, setCreateOntology] = useState(true);
 
   const dataPrev = e => {
     e.preventDefault();
@@ -48,7 +51,8 @@ const DataSourceBox = props => {
       /**
        * 创建本体
        */
-      if (!graphId) {
+
+      if (ontoData.length === 0) {
         const data = {
           ontology_name: graphName,
           ontology_des: graphDes || ''
@@ -62,6 +66,7 @@ const DataSourceBox = props => {
         if (mess && mess.res) {
           const newOntologyId = mess.res.ontology_id;
           setOntologyId(newOntologyId);
+          setGraphType('edit');
         }
 
         if (mess?.Code === 500002) {
