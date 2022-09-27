@@ -71,13 +71,13 @@ def gen_doc_vid(merge_entity_list, entity_name, one_data, en_pro_dict, gtype='ne
     """
     tab_val_index = []  # 属性列表
     for k, v in merge_entity_list[entity_name].items():
-        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[entity_name][k])
+        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[entity_name]['pro_map'][k])
         if gtype == "orientdb":
             value = "  `{}` = '{}' ".format(k, one_data[k])
         tab_val_index.append(value)
 
     if gtype == "orientdb":
-        return 'SELECT FROM `{}` WHERE {}'.format(entity_name, ','.join(tab_val_index))
+        return 'SELECT FROM `{}` WHERE {}'.format(en_pro_dict[entity_name]['otl_name'], ','.join(tab_val_index))
 
     props_str = ''
     for m in tab_val_index:
@@ -98,6 +98,11 @@ def default_value(sql_format=True):
         return "NULL"
     else:
         return ""
+
+def value_transfer(value):
+    if not value:
+        return default_value()
+    return normalize_text(str(value))
 
 
 def normalize_text(text):
@@ -2014,11 +2019,17 @@ class SQLProcessor:
                         if otl_pro == 'name':
                             name_exists = True
                         if self.type == 'orientdb':
-                            prop_val_sql[0].append(
-                                str(otl_pro) + "=" + "'" + normalize_text(str(onedata[tab_pro])) + "'")
+                            if not onedata[tab_pro]:
+                                prop_val_sql[0].append(str(otl_pro) + "=" + value_transfer(onedata[tab_pro]))
+                            else:
+                                prop_val_sql[0].append(
+                                    str(otl_pro) + "=" + "'" + value_transfer(onedata[tab_pro]) + "'")
                         elif self.type == 'nebula':
                             prop_val_sql[0].append(str(otl_pro))
-                            prop_val_sql[1].append("'" + normalize_text(str(onedata[tab_pro])) + "'")
+                            if not onedata[tab_pro]:
+                                prop_val_sql[1].append(value_transfer(onedata[tab_pro]))
+                            else:
+                                prop_val_sql[1].append("'" + value_transfer(onedata[tab_pro]) + "'")
             if not name_exists:
                 if self.type == 'orientdb':
                     prop_val_sql[0].append("`name`=" + "'" + str(edge_class) + "'")
