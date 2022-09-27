@@ -63,12 +63,16 @@ class Entity extends Component {
     });
 
     this.setState({ manual, automatic, model });
-    let selectInclude = true;
+    let selectInclude = false;
 
     // 若删除了选中的点
     if (typeof selectedElement.entity_id === 'number') {
-      selectInclude = nodes.some(item => {
-        return selectedElement.name === item.name;
+      nodes.forEach(item => {
+        if (selectedElement.entity_id === item.entity_id) {
+          selectInclude = true;
+          this.props.setSelectedElement(item);
+        }
+        // return selectedElement.name === item.name;
       });
     }
 
@@ -155,7 +159,6 @@ class Entity extends Component {
 
   render() {
     const { manual, automatic, model, activeKey } = this.state;
-    const { selectedElement } = this.props;
 
     return (
       <div className="new-entity-list">
@@ -198,7 +201,6 @@ class Entity extends Component {
                       {!this.isEmptyField(item) && !item.Type ? (
                         <div className="tag">
                           <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
-                            {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                             <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                           </Tooltip>
                         </div>
@@ -241,7 +243,6 @@ class Entity extends Component {
                       {!this.isEmptyField(item) && !item.Type ? (
                         <div className="tag">
                           <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
-                            {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                             <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                           </Tooltip>
                         </div>
@@ -288,7 +289,6 @@ class Entity extends Component {
                       {!this.isEmptyField(item) && !item.Type ? (
                         <div className="model-tag">
                           <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
-                            {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                             <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                           </Tooltip>
                         </div>
