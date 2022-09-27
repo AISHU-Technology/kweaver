@@ -64,7 +64,7 @@ class MongoBuildDao(object):
         return None
 
     @classmethod
-    def relations(cls, c: Collection, prop: str, props: list[str], prop_filter):
+    def relations(cls, c: Collection, prop: str, props: list[str]):
         """
         查找集合中某个属性包含某个列表值的文档
 
@@ -72,9 +72,8 @@ class MongoBuildDao(object):
             c: mongo集合对象
             prop: Mongodb的属性
             props: 值list
-            prop_filter:选择合适的属性返回
         """
-        return list(c.find({prop: {"$in": props}}, prop_filter))
+        return list(c.find({prop: {"$in": props}}))
 
     @classmethod
     def gen_sub_str(cls, pld: dict[int, int], s: str) -> list[str]:
