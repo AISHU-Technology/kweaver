@@ -106,8 +106,10 @@ def value_transfer(value):
 
 
 def normalize_text(text):
-    text = re.sub(r"[\n\t\'\"]", " ", text)
-    text = text.replace("\\", "\\\\").strip()
+    text = re.sub(r"[\n\t]", " ", text)
+    text = text.replace("\\", "\\\\")
+    text = re.sub(r"[\"]", "\\\"", text)
+    text = re.sub(r"[\']", "\\\'", text).strip()
     return text
 
 
