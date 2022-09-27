@@ -63,16 +63,15 @@ class Entity extends Component {
     });
 
     this.setState({ manual, automatic, model });
-    let selectInclude = false;
+    let selectInclude = true;
 
     // 若删除了选中的点
     if (typeof selectedElement.entity_id === 'number') {
-      nodes.forEach(item => {
+      selectInclude = nodes.some(item => {
         if (selectedElement.entity_id === item.entity_id) {
-          selectInclude = true;
           this.props.setSelectedElement(item);
         }
-        // return selectedElement.name === item.name;
+        return selectedElement.entity_id === item.entity_id;
       });
     }
 
@@ -159,6 +158,7 @@ class Entity extends Component {
 
   render() {
     const { manual, automatic, model, activeKey } = this.state;
+    const { selectedElement } = this.props;
 
     return (
       <div className="new-entity-list">
