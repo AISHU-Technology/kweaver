@@ -23,6 +23,12 @@ function checkCliTools() {
   fi
 }
 
+function installYQ() {
+  if [ ! -x "$(command -v yq)" ]; then
+    tar -zxf yq_linux_amd64.tar.gz && chmod +x yq_linux_amd64 && mv yq_linux_amd64 /usr/local/bin/yq
+  fi
+}
+
 function checkDockerComposeCli() {
   if [ ! -x "$(command -v docker-compose)" ]; then
     DOCKER_COMPOSE="docker compose"
@@ -128,6 +134,7 @@ function checkParameters() {
 clear
 chmod 777 -R ./
 checkCliTools
+installYQ
 checkDockerComposeCli
 checkDockerComposeStatus
 checkDockerComposeService
@@ -140,12 +147,6 @@ case $answer in
   echo "You selected yes,will use the project's default database."
   ;;
 (N | n)
-  function installYQ() {
-    if [ ! -x "$(command -v yq)" ]; then
-      tar -zxf yq_linux_amd64.tar.gz && chmod +x yq_linux_amd64 && mv yq_linux_amd64 /usr/local/bin/yq
-    fi
-  }
-
   function operateWithYaml() {
     if [[ ! -d "$CONFIG_DIR" ]]; then
       mkdir $CONFIG_DIR
@@ -326,8 +327,6 @@ case $answer in
       fi
     done
   }
-
-  installYQ
 
   operateWithYaml
 
