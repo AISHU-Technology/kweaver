@@ -202,11 +202,6 @@ jobs:
     steps:
       - checkout: none
 
-      - task: DownloadBuildArtifacts@0
-        inputs:
-          artifactName: ${{variables.UTArtifactName}}
-          downloadPath: $(Build.SourcesDirectory)
-
       - task: PublishCodeCoverageResults@1
         displayName: Publish ALL Code Coverage Report
         inputs:
