@@ -178,8 +178,8 @@ jobs:
 #        inputs:
 #          pollingTimeoutSec: '300'
 
-  - job: webui-ut
-    displayName: webui-ut
+  - job: webui_ut
+    displayName: webui_ut
     pool:
       name: common
     workspace:
@@ -191,8 +191,8 @@ jobs:
           script: |
             jest --coverage --coverageReporters=cobertura || echo
 
-  - job: webui-coverage
-    displayName: webui-coverage
+  - job: webui_coverage
+    displayName: webui_coverage
     pool:
       name: common
     container: dotnet
