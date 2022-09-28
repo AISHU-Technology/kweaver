@@ -193,10 +193,7 @@ jobs:
             npm i
             jest --coverage --coverageReporters=cobertura || echo
             echo "--------> Begin"
-            pwd
-            ls $(Build.SourcesDirectory)
-            ls $(Build.SourcesDirectory)/studio
-            ls $(Build.SourcesDirectory)/studio/webui
+            ls $(Build.SourcesDirectory)/studio/webui/coverage
             echo "--------> End"
 
 
