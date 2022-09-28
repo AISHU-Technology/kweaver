@@ -189,6 +189,7 @@ jobs:
         inputs:
           targetType: 'inline'
           script: |
+            cd /webui
             jest --coverage --coverageReporters=cobertura || echo
 
   - job: webui_coverage
