@@ -190,8 +190,7 @@ jobs:
           targetType: 'inline'
           script: |
             cd ./studio/webui
-            node -v
-            npm -v
+            npm i
             jest --coverage --coverageReporters=cobertura || echo
 
   - job: webui_coverage
