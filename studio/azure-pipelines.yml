@@ -189,12 +189,7 @@ jobs:
         inputs:
           targetType: 'inline'
           script: |
-            echo "------> Begin"
-            pwd
-            echo $(Build.Repository.LocalPath)
-            echo "------> End"
-            docker pull acr.aishu.cn/ad/kg-studio:base
-            docker run -u root --network=host --rm -v $(Build.Repository.LocalPath)/studio/webui:/root/studio acr.aishu.cn/ad/kg-studio:base /bin/sh -c 'cp -R /root/node_modules/ /root/studio/ && npm run build'
+            cd ./studio/webui
             jest --coverage --coverageReporters=cobertura || echo
 
   - job: webui_coverage
