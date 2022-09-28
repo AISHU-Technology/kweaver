@@ -202,12 +202,10 @@ jobs:
     steps:
       - checkout: none
 
-      - task: Bash@3
+      - task: DownloadBuildArtifacts@0
         inputs:
-          targetType: 'inline'
-          script: |
-            ls $(Build.SourcesDirectory)/studio/webui/coverage
-            cat $(Build.SourcesDirectory)/studio/webui/coverage/cobertura-coverage.xml
+          artifactName: ${{variables.UTArtifactName}}
+          downloadPath: $(Build.SourcesDirectory)
 
       - task: PublishCodeCoverageResults@1
         displayName: Publish ALL Code Coverage Report
@@ -218,7 +216,7 @@ jobs:
       - task: PublishTestResults@2
         condition: succeededOrFailed()
         inputs:
-          testResultsFormat: 'JUnit'
+          testResultsFormat: "JUnit"
           testResultsFiles: '$(Build.SourcesDirectory)/studio/webui/coverage/cobertura-coverage.xml'
           testRunTitle: 'UT Result'
           failTaskOnFailedTests: true
