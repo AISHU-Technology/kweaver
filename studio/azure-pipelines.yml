@@ -182,8 +182,6 @@ jobs:
     displayName: webui_ut
     pool:
       name: common
-    workspace:
-      clean: all
     steps:
       - task: Bash@3
         inputs:
@@ -203,6 +201,8 @@ jobs:
       name: common
     container: dotnet
     dependsOn: webui_ut
+    workspace:
+      clean: all
     steps:
       - checkout: none
       - task: PublishCodeCoverageResults@1
