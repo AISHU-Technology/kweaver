@@ -189,7 +189,10 @@ jobs:
         inputs:
           targetType: 'inline'
           script: |
+            echo "------> Begin"
+            pwd
             echo $(Build.Repository.LocalPath)
+            echo "------> End"
             cd ./studio/webui
             jest --coverage --coverageReporters=cobertura || echo
 
