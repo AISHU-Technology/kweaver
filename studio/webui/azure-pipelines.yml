@@ -71,7 +71,7 @@ jobs:
           SonarQube: 'adS'
           scannerMode: 'CLI'
           configMode: 'manual'
-          cliProjectKey: 'sonar.kw-studio'
+          cliProjectKey: 'sonar.kw-studio-webui'
           cliProjectName: 'kw-studio-webui'
           cliSources: '.'
 
