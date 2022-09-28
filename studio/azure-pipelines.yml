@@ -51,52 +51,52 @@ resources:
       image: wing-biz/euop/dotnet-runtime:3.1
 
 jobs:
-#  - job:
-#    displayName: build
-#    steps:
-#      - task: Docker@2
-#        displayName: buildImage
-#        inputs:
-#          command: 'build'
-#          repository: $(imageNameWithHarbor)
-#          tags: |
-#            $(kwTag)
-#            latest
-#          Dockerfile: '**/Studio.Dockerfile'
-#      - task: Docker@2
-#        inputs:
-#          containerRegistry: 'acr.aishu.cn'
-#          command: 'login'
-#      - task: Docker@2
-#        displayName: Push image
-#        condition: and(succeeded(), eq(${{ parameters.pushTag }}, 'True'))
-#        inputs:
-#          containerRegistry: 'acr.aishu.cn'
-#          repository: 'ad/kw-studio'
-#          command: push
-#          tags: |
-#            $(kwTag)
-#            latest
-#      - task: Bash@3
-#        displayName: saveTar
-#        inputs:
-#          targetType: 'inline'
-#          script: |
-#            docker save -o KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(kwTag)
-#      - task: FtpUpload@2
-#        displayName: uploadFtp
-#        inputs:
-#          credentialsOption: 'inputs'
-#          serverUrl: 'ftp://ftp-ad.aishu.cn'
-#          username: '$(ftpUser)'
-#          password: '$(ftpPasswd)'
-#          rootDirectory:
-#          filePatterns: '**/KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar'
-#          remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
-#          clean: false
-#          cleanContents: false
-#          preservePaths: false
-#          trustSSL: false
+  - job:
+    displayName: build
+    steps:
+      - task: Docker@2
+        displayName: buildImage
+        inputs:
+          command: 'build'
+          repository: $(imageNameWithHarbor)
+          tags: |
+            $(kwTag)
+            latest
+          Dockerfile: '**/Studio.Dockerfile'
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'acr.aishu.cn'
+          command: 'login'
+      - task: Docker@2
+        displayName: Push image
+        condition: and(succeeded(), eq(${{ parameters.pushTag }}, 'True'))
+        inputs:
+          containerRegistry: 'acr.aishu.cn'
+          repository: 'ad/kw-studio'
+          command: push
+          tags: |
+            $(kwTag)
+            latest
+      - task: Bash@3
+        displayName: saveTar
+        inputs:
+          targetType: 'inline'
+          script: |
+            docker save -o KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar $(imageNameWithHarbor):$(kwTag)
+      - task: FtpUpload@2
+        displayName: uploadFtp
+        inputs:
+          credentialsOption: 'inputs'
+          serverUrl: 'ftp://ftp-ad.aishu.cn'
+          username: '$(ftpUser)'
+          password: '$(ftpPasswd)'
+          rootDirectory:
+          filePatterns: '**/KWeaver-$(kwTag)-$(imageName)-$(imageTag).tar'
+          remoteDirectory: '/packages/$(imageName)/$(Build.SourceBranchName)'
+          clean: false
+          cleanContents: false
+          preservePaths: false
+          trustSSL: false
   - job: utmake
     container: utmake
     displayName: utmake
@@ -177,42 +177,3 @@ jobs:
         displayName: Publish Quality Gate Result task
         inputs:
           pollingTimeoutSec: '300'
-
-  - job: webui_ut
-    displayName: webui_ut
-    pool:
-      name: common
-    workspace:
-      clean: all
-    steps:
-      - task: Bash@3
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd ./studio/webui
-            npm i
-            jest --coverage --coverageReporters=cobertura || echo
-
-  - job: webui_coverage
-    displayName: webui_coverage
-    pool:
-      name: common
-    container: dotnet
-    dependsOn: webui_ut
-    steps:
-      - checkout: none
-
-      - task: PublishCodeCoverageResults@1
-        displayName: Publish ALL Code Coverage Report
-        inputs:
-          codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Build.SourcesDirectory)/studio/webui/coverage/cobertura-coverage.xml'
-
-      - task: PublishTestResults@2
-        condition: succeededOrFailed()
-        inputs:
-          testResultsFormat: "JUnit"
-          testResultsFiles: '$(Build.SourcesDirectory)/studio/webui/coverage/cobertura-coverage.xml'
-          testRunTitle: 'UT Result'
-          failTaskOnFailedTests: true
-        displayName: 'Publish linting and unit test results'
