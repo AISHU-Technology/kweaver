@@ -19,6 +19,9 @@ resources:
     - container: dotnet
       endpoint: acr.aishu.cn
       image: wing-biz/euop/dotnet-runtime:3.1
+    - container: scanner
+      endpoint: acr.aishu.cn
+      image: ad/openjdk:11.0.13-jre
 
 jobs:
   - job: webui_ut
@@ -53,3 +56,29 @@ jobs:
           testRunTitle: 'UT Result'
           failTaskOnFailedTests: true
         displayName: 'Publish linting and unit test results'
+
+    - job: scan
+      displayName: 静态扫描
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+      container: scanner
+      dependsOn: webui_coverage
+      workspace:
+        clean: all
+      steps:
+        - task: SonarQubePrepare@4
+          displayName: Prepare SonarQube
+          inputs:
+            SonarQube: 'adS'
+            scannerMode: 'CLI'
+            configMode: 'manual'
+            cliProjectKey: 'sonar.kw-studio'
+            cliProjectName: 'kw-studio-webui'
+            cliSources: '.'
+
+        - task: SonarQubeAnalyze@4
+          displayName: Run SonarQube Code Analysis task
+
+        - task: SonarQubePublish@4
+          displayName: Publish Quality Gate Result task
+          inputs:
+            pollingTimeoutSec: '300'
