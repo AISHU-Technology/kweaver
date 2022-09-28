@@ -1169,5 +1169,12 @@ class GraphDao():
         df = pd.read_sql(sql, connection)
         return df
 
+    @connect_execute_close_db
+    def get_name_and_otl_by_id(self, graph_id, connection, cursor):
+        sql = 'SELECT graph_name, graph_otl FROM `graph_config_table` WHERE id IN ({})'\
+            .format(",".join(map(str, graph_id)))
+        df = pd.read_sql(sql, connection)
+        return df
+
 
 graph_dao = GraphDao()
