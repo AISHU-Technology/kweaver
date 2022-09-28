@@ -374,7 +374,7 @@ function dockerComposeInit() {
   checkParameters "Enter the host that you want to deploy aishu-kweaver: " "$EMPTY_EXP"
   sed -i '/.*server_name*./c\server_name  '"$tempInput"';' ./nginx/nginx.conf
   # edit compose yaml
-  yq -i '.services.kw-builder.extra_hosts = [{"kwhost":"'"$tempInput"'"}]' "$1"
+  yq -i '.services.kw-builder.extra_hosts = ["kwhost : '"$tempInput"'"]' "$1"
   $DOCKER_COMPOSE -p $SERVICE_NAME -f "$1" up -d
 }
 
