@@ -10,9 +10,6 @@ trigger:
   paths:
     include:
       - /studio/*
-    exclude:
-      - /builder/*
-      - /sdk/*
 
 pool:
   name: go
