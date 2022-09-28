@@ -46,7 +46,8 @@ const Workflow = props => {
   const [quitVisible, setQuitVisible] = useState(false); // 控制退出弹框
   const [dataLoading, setDataLoading] = useState(false); // 流程一加载loading
   const [ontologyId, setOntologyId] = useState(0); // 本体id
-  const [ontologyDes, setOntologyDes] = useState(''); // 本体描述信息
+  const [graphDes, setGraphDes] = useState(''); // 本体描述信息
+  const [graphType, setGraphType] = useState('create'); // 本体描述信息
 
   useEffect(() => {
     if (history?.location?.pathname === '/home/workflow/create') {
@@ -281,7 +282,7 @@ const Workflow = props => {
             setOntologyId={setOntologyId}
             ontologyId={ontologyId}
             ref={step1Ref}
-            setOntologyDes={setOntologyDes}
+            setGraphDes={setGraphDes}
             setNewOntologyId={setNewOntologyId}
             ontoData={ontoData}
             setOntoData={setOntoData}
@@ -296,6 +297,11 @@ const Workflow = props => {
             next={next}
             prev={prev}
             dataSourceRef={step2Ref}
+            graphName={basicData.graph_Name}
+            graphDes={graphDes}
+            setOntologyId={setOntologyId}
+            setGraphType={setGraphType}
+            ontoData={ontoData}
           />
         </div>
         <div className={`hide ${current === 2 && 'show'}`}>
@@ -313,8 +319,9 @@ const Workflow = props => {
             childRef={step3Ref}
             setQuitVisible={setQuitVisible}
             graphName={basicData.graph_Name}
-            setOntologyDes={setOntologyDes}
-            ontology_des={ontologyDes}
+            graphDes={graphDes}
+            graphType={graphType}
+            setGraphType={setGraphType}
           />
         </div>
         <div className={`hide space center ${current === 3 && 'show'}`}>
