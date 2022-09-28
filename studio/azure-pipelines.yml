@@ -196,7 +196,7 @@ jobs:
     pool:
       name: common
     container: dotnet
-    dependsOn: webui-ut
+    dependsOn: webui_ut
     steps:
       - checkout: none
       - task: PublishCodeCoverageResults@1
