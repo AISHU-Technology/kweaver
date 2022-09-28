@@ -192,6 +192,7 @@ jobs:
             cd ./studio/webui
             npm i
             jest --coverage --coverageReporters=cobertura || echo
+            ls -R .
 
   - job: webui_coverage
     displayName: webui_coverage
