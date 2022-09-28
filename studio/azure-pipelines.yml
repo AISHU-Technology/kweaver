@@ -182,6 +182,9 @@ jobs:
     displayName: webui_ut
     pool:
       name: common
+    workspace:
+      clean: all
+    container: dotnet
     steps:
       - task: Bash@3
         inputs:
@@ -192,25 +195,12 @@ jobs:
             jest --coverage --coverageReporters=cobertura || echo
             echo "--------> Begin"
             ls $(Build.SourcesDirectory)/studio/webui/coverage
-            echo "--------> End"
-
-
-  - job: webui_coverage
-    displayName: webui_coverage
-    pool:
-      name: common
-    container: dotnet
-    dependsOn: webui_ut
-    workspace:
-      clean: all
-    steps:
-      - checkout: none
+            echo "--------> End
       - task: PublishCodeCoverageResults@1
         displayName: Publish ALL Code Coverage Report
         inputs:
           codeCoverageTool: 'Cobertura'
           summaryFileLocation: '$(Build.SourcesDirectory)/sutdio/webui/coverage/cobertura-coverage.xml'
-
       - task: PublishTestResults@2
         condition: succeededOrFailed()
         inputs:
