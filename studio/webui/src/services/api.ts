@@ -36,6 +36,7 @@ const API = {
   dataSourceDelete: `${baseBuilder}/ds/delbydsids`,
   getDsByName: `${baseBuilder}/ds/searchbyname`,
   asAuthGet: `${baseBuilder}/ds/Auth`,
+  asAuthPost: `${baseBuilder}/ds/gettoken`,
 
   // explore
   analysisReportGet: `${baseEngine}/analysis`,
