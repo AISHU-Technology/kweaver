@@ -6,10 +6,27 @@
 
   .netWork-list {
     position: relative;
+
     .netWork-list-top {
       display: flex;
       margin-bottom: 21px;
       justify-content: space-between;
+    }
+
+    .ad-search-input {
+      vertical-align: middle;
+    }
+
+    .sort-btn {
+      vertical-align: middle;
+      min-width: 32px;
+      margin-left: 12px;
+      padding: 0;
+
+      .sort-icon {
+        font-size: 20px;
+        transform: translateY(2px);
+      }
     }
   }
 
@@ -78,12 +95,6 @@
       .ant-table-cell {
         background-color: var(--ad-hover-bg-color);
       }
-    }
-    td.ant-table-column-sort {
-      background-color: #fff;
-    }
-    .ant-table-thead th.ant-table-column-sort {
-      background: #fafafa;
     }
   }
 }

@@ -211,9 +211,7 @@
 
     "conflation": {
       "conflation": "融合",
-      "isMix": "是否融合",
       "noMixRule": "暂无融合规则",
-      "pleaseOpen": "暂无融合规则，点击上方【是否融合】按钮打开融合可填写将相同的实体合并",
       "performTask": "执行任务",
       "RunNow": "立即运行",
       "vertexsTitle": "【实体类】汇总信息",

@@ -1,22 +1,20 @@
 import React, { memo, useState, useEffect } from 'react';
-import _ from 'lodash';
-import intl from 'react-intl-universal';
-import { useHistory } from 'react-router-dom';
 import { Modal, Button, Input, Form, ConfigProvider, message, Radio } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
-
+import { useHistory } from 'react-router-dom';
+import intl from 'react-intl-universal';
+import _ from 'lodash';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
+import './style.less';
 
-import './index.less';
-
-const COLOR_LIST: any = [
+const COLOR_LIST: { id: string; color: string }[] = [
   { id: 'a', color: '#126EE3' },
   { id: 'b', color: '#7CBE00' },
   { id: 'c', color: '#FF8600' },
   { id: 'd', color: '#019688' },
   { id: 'e', color: '#8c8c8c' }
 ];
-const ERROR_CODE: any = {
+const ERROR_CODE: Record<string, string> = {
   'Builder.service.knw_service.knwService.editKnw.RequestError': 'graphList.errorEdit', // 编辑失败
   'Builder.controller.knowledgeNetwork_controller.editKnw.PermissionError': 'graphList.editperMissionError',
   'Builder.service.knw_service.knwService.knowledgeNetwork_save.RequestError': 'graphList.errorCreate', // 创建失败
@@ -33,12 +31,12 @@ const DES_TEST =
 type ModalContentType = {
   source: any;
   optionType: string;
-  onRefreshList: () => void;
-  onCloseCreateOrEdit: () => void;
+  onSuccess: () => void;
+  onCancel: () => void;
 };
 // 弹窗内容
 const ModalContent = memo((props: ModalContentType) => {
-  const { source, optionType, onRefreshList, onCloseCreateOrEdit } = props;
+  const { source, optionType, onSuccess, onCancel } = props;
   const [form] = Form.useForm();
   const history = useHistory();
   const [selectColor, setSelectColor] = useState('a'); // 默认选择第一个颜色
@@ -61,7 +59,7 @@ const ModalContent = memo((props: ModalContentType) => {
             const { res = {}, ErrorCode = '' } = await servicesKnowledgeNetwork.knowledgeNetEdit(data);
             if (!_.isEmpty(res)) {
               message.success(intl.get('graphList.editSuccess'));
-              onRefreshList();
+              onSuccess();
             }
             if (ERROR_CODE[ErrorCode]) message.error(intl.get(ERROR_CODE[ErrorCode]));
             if (ErrorCode === 'Builder.service.knw_service.knwService.editKnw.NameRepeat') {
@@ -85,9 +83,9 @@ const ModalContent = memo((props: ModalContentType) => {
         } catch (error) {
           // console.log('error')
         }
-        onCloseCreateOrEdit();
+        onCancel();
       })
-      .catch(err => { });
+      .catch(err => {});
   };
 
   // 选择显色回调函数
@@ -176,7 +174,7 @@ const ModalContent = memo((props: ModalContentType) => {
 
       <div className="m-footer">
         <ConfigProvider autoInsertSpaceInButton={false}>
-          <Button className="ant-btn-default btn" onClick={() => onCloseCreateOrEdit()}>
+          <Button className="ant-btn-default btn" onClick={() => onCancel()}>
             {intl.get('graphList.cancel')}
           </Button>
 
@@ -190,17 +188,17 @@ const ModalContent = memo((props: ModalContentType) => {
 });
 
 // 弹窗
-type CreateNetworkModalType = {
+type KnowledgeModalType = {
   visible: boolean;
   source: {
     type: string;
     data: any;
   };
-  onRefreshList: () => void;
-  onCloseCreateOrEdit: () => void;
+  onSuccess: () => void;
+  onCancel: () => void;
 };
-const CreateNetworkModal = (props: CreateNetworkModalType) => {
-  const { visible, source, onRefreshList, onCloseCreateOrEdit } = props;
+const KnowledgeModal = (props: KnowledgeModalType) => {
+  const { visible, source, onSuccess, onCancel } = props;
   const { type, data = {} } = source;
   const title = type === 'add' ? [intl.get('graphList.createNetwork')] : [intl.get('graphList.editNetwork')];
 
@@ -208,24 +206,19 @@ const CreateNetworkModal = (props: CreateNetworkModalType) => {
     <Modal
       visible={visible}
       title={title}
-      onCancel={e => {
-        e.stopPropagation();
-        onCloseCreateOrEdit();
-      }}
       className="add-netWork-modal"
-      destroyOnClose={true}
+      destroyOnClose
       focusTriggerAfterClose={false}
       maskClosable={false}
       footer={null}
+      onCancel={e => {
+        e.stopPropagation();
+        onCancel();
+      }}
     >
-      <ModalContent
-        optionType={type}
-        source={data}
-        onRefreshList={onRefreshList}
-        onCloseCreateOrEdit={onCloseCreateOrEdit}
-      />
+      <ModalContent optionType={type} source={data} onSuccess={onSuccess} onCancel={onCancel} />
     </Modal>
   );
 };
 
-export default memo(CreateNetworkModal);
+export default memo(KnowledgeModal);

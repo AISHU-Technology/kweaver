@@ -1,0 +1,42 @@
+.kg-iq-table {
+  flex: 1;
+  min-width: 690px;
+  height: 100%;
+  overflow: auto;
+
+  .tool-box {
+    margin: 0 24px;
+    margin-bottom: 20px;
+    text-align: right;
+  }
+
+  .main-table {
+    .ad-question-icon {
+      color: var(--ad-text-color);
+    }
+
+    .name-column {
+      &-text {
+        width: calc(100% - 38px);
+      }
+
+      .g-icon {
+        margin-right: 8px;
+        font-size: 28px;
+        background: #f8f8f8;
+        border-radius: 3px;
+        border: 1px solid #f0f0f0;
+      }
+    }
+
+    .op-column {
+      justify-content: flex-start;
+
+      button {
+        min-width: auto;
+        margin-right: 32px;
+        padding: 0;
+      }
+    }
+  }
+}

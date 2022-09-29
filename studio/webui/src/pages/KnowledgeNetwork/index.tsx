@@ -14,6 +14,7 @@ import asyncComponent from '@/components/AsyncComponent';
 
 import headLogo from '@/assets/images/kw.svg';
 
+const DomainIQ = asyncComponent(() => import('@/pages/KnowledgeNetwork/DomainIQ'));
 const KnowledgeGroup = asyncComponent(() => import('@/pages/KnowledgeNetwork/KnowledgeGroup'));
 const CognitiveEngine = asyncComponent(() => import('@/pages/KnowledgeNetwork/CognitiveEngine'));
 const DataSource = asyncComponent(() => import('@/components/DataSource'));
@@ -97,10 +98,22 @@ const KnowledgeNetwork = () => {
     value: location.pathname,
     source: [
       {
+        label: intl.get('global.domainIQ'),
+        key: '/knowledge/iq',
+        icon: <IconFont type="icon-lingyuzhishang" />,
+        onClick: () => history.push(`/knowledge/iq?id=${currentId}`)
+      },
+      {
         label: intl.get('global.graph'),
         key: '/knowledge/network',
         icon: <IconFont type="icon-zhishitupu" />,
         onClick: () => history.push(`/knowledge/network?id=${currentId}`)
+      },
+      {
+        label: intl.get('global.thesaurusManagement'),
+        key: '/knowledge/thesaurus',
+        icon: <IconFont type="icon-ciku" />,
+        onClick: () => history.push(`/knowledge/thesaurus?id=${currentId}`)
       },
       {
         label: intl.get('global.cognitiveEngine'),
@@ -119,12 +132,6 @@ const KnowledgeNetwork = () => {
         key: '/knowledge/source',
         icon: <IconFont type="icon-shujuyuanguanli" />,
         onClick: () => history.push(`/knowledge/source?id=${currentId}`)
-      },
-      {
-        label: intl.get('global.thesaurusManagement'),
-        key: '/knowledge/thesaurus',
-        icon: <IconFont type="icon-ciku" />,
-        onClick: () => history.push(`/knowledge/thesaurus?id=${currentId}`)
       }
     ]
   };
@@ -133,6 +140,7 @@ const KnowledgeNetwork = () => {
     <div className="knowledgeNetwork">
       <Layout header={header} sidebar={sidebar} mainStyle={{ padding: 0, background: '#fff' }}>
         <Switch>
+          <Route path="/knowledge/iq" render={() => <DomainIQ kgData={selectedKnowledge} />} />
           <Route path="/knowledge/network" render={() => <KnowledgeGroup kgData={selectedKnowledge} />} />
           <Route path="/knowledge/engine/search" render={() => <CognitiveEngine kgData={selectedKnowledge} />} />
           <Route path="/knowledge/source" render={() => <DataSource selectedKnowledge={selectedKnowledge} />} />

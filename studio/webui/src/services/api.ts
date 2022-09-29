@@ -131,7 +131,12 @@ const API = {
   thesaurusDeleteWords: `${baseBuilder}/lexicon/delete_words`,
   downloadTemplate: `${baseBuilder}/lexicon/template`,
   wordCloud: `${baseBuilder}/lexicon/word_cloud`,
-  searchWordCloud: `${baseBuilder}/lexicon/word_cloud_search`
+  searchWordCloud: `${baseBuilder}/lexicon/word_cloud_search`,
+
+  // intelligence
+  intelligenceCalculate: `${baseBuilder}/graph/intelligence`,
+  intelligenceGetByKnw: `${baseBuilder}/knw/intelligence`,
+  intelligenceGetByGraph: `${baseBuilder}/graph/intelligence`
 };
 
 export { API };

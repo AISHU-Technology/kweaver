@@ -18,3 +18,4 @@ export { default as numToThousand } from './NumToThousand';
 export { getScrollWidth } from './GetScrollWidth';
 export { formatModel } from './FormatModel';
 export { updateUrl } from './UpdateUrl';
+export { formatID } from './FormatID';
