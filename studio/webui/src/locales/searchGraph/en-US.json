@@ -81,6 +81,6 @@
     "longToShort": "From long to short",
     "allDirection": "All direction",
     "path": "Path",
-    "explorationTimeOut": "The amount of exploration data is too large, please try again"
+    "explorationTimeOut": "Data volume is too large, single direction can be selected"
   }
 }
