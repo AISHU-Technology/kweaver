@@ -80,6 +80,7 @@
     "shortToLong": "From short to long",
     "longToShort": "From long to short",
     "allDirection": "All direction",
-    "path": "Path"
+    "path": "Path",
+    "explorationTimeOut": "The amount of exploration data is too large, please try again"
   }
 }
