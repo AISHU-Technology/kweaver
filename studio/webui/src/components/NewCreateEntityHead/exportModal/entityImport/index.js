@@ -37,7 +37,6 @@ class EntityImport extends Component {
     };
 
     const data = await servicesCreateEntity.getAllNoumenon(OntologData);
-console.log(data)
     if (data && data.res && data.res.df) {
       this.setState({
         selectData: data.res.df

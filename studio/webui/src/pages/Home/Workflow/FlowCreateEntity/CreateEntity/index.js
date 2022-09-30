@@ -62,18 +62,12 @@ class CreateEntity extends Component {
   handleFlowData = () => {
     const { ontoData } = this.props;
     if (isFlow()) {
-      // 流程第三步新增处理(判断弹窗的 可去除)
-      // if (this.props.ontoData.length === 0) return this.openEditEntityModal();
-      // if (!this.props.ontoData[0].ontology_name || typeof this.props.ontoData[0].id !== 'number') {
-      //   this.openEditEntityModal();
-      //   return;
-      // }
       if (!this.isFistLoading) return;
       this.isFistLoading = false;
 
       // 流程第三步 编辑状态获得本体信息
       if (ontoData && ontoData.length !== 0) {
-        const { used_task, entity, edge, id, ontology_name, ontology_des } = this.props.ontoData[0];
+        const { used_task, entity, edge, id, ontology_name, ontology_des } = ontoData[0];
         this.setState({
           ontology_id: id,
           used_task,
@@ -86,36 +80,6 @@ class CreateEntity extends Component {
       }
     }
   };
-
-  /**
-   * @description 获取初始数据（编辑进入）
-   */
-  // getEditData = async () => {
-  //   if (isFlow()) {
-  //     return;
-  //   }
-
-  //   const { name, type } = analyUrl(window.location.search);
-  //   if (name && (type === 'edit' || type === 'view')) {
-  //     const res = await servicesCreateEntity.getEntityInfo(decodeURI(name));
-
-  //     if (res && res.res && res.res.df[0]) {
-  //       this.setState({
-  //         ontology_name: res.res.df[0].ontology_name,
-  //         ontology_des: res.res.df[0].ontology_des,
-  //         used_task: res.res.df[0].used_task,
-  //         ontology_id: res.res.df[0].id
-  //       });
-  //       const ontologyId = res.res.df[0].id;
-  //       this.props.ontoData([{ ontology_id: res.res.df[0].id }]);
-  //       this.props.setOntologyId(res.res.df[0].id);
-  //       const { Hentity, Hedge } = handleTaskId(res.res.df[0].entity, res.res.df[0].edge);
-
-  //       this.state.freeGraphRef.externalImport({ entity: Hentity, edge: Hedge });
-  //       this.flowEditEntity(ontologyId);
-  //     }
-  //   }
-  // };
 
   /**
    * @description 打开编辑弹窗
@@ -629,7 +593,7 @@ class CreateEntity extends Component {
 
     const { nodes, edges, used_task, dataInfoRef, ontology_name, ontology_des, ontology_id } = this.state;
 
-    // ontology_id为编辑状态时获取到的本体id ontologyId为创建本体时的id
+    // ontology_id为编辑状态时获取到的本体id ontologyId为创建本体时拿到的id
     const { entity, edge } = setSaveData(nodes, edges);
     const data = {
       entity,
@@ -766,12 +730,10 @@ class CreateEntity extends Component {
             setUsedTask={this.setUsedTask}
             taskListRef={taskListRef}
             graphId={this.props.graphId}
-            ontoData={this.props.ontoData}
             setModalVisible={this.setModalVisible}
             prev={this.props.prev}
             setQuitVisible={this.props.setQuitVisible}
             setTouch={this.setTouch}
-            setOntoData={this.props.setOntoData}
             isTouch={isTouch}
             quit={this.quit}
             onEditEntityModalRef={this.onEditEntityModalRef}

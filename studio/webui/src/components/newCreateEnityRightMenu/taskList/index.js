@@ -68,7 +68,6 @@ class TaskList extends Component {
     }
 
     const res = await servicesCreateEntity.getEntityTasks(data);
-
     if (res && res.res && res.res.task_info) {
       this.setState({
         taskListData: res.res.task_info.tasks,

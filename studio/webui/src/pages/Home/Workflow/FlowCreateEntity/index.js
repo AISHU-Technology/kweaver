@@ -15,7 +15,6 @@ class FlowCreateEntity extends Component {
           useDs={this.props.useDs}
           setUseDs={this.props.setUseDs}
           ontoData={this.props.ontoData}
-          setOntoData={this.props.setOntoData}
           current={this.props.current}
           graphId={this.props.graphId}
           ontologyId={this.props.ontologyId}

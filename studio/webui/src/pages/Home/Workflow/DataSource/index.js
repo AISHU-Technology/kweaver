@@ -36,7 +36,8 @@ const DataSourceBox = props => {
       const res = await serviceWorkFlow.graphEdit(graphId, body);
 
       if (res?.res) {
-        const buildOntology = createOntology();
+        const buildOntology = await createOntology();
+        console.log(buildOntology);
         if (!buildOntology) return;
         next();
       }
@@ -74,17 +75,16 @@ const DataSourceBox = props => {
           graph_process: [data]
         };
         const mess = await servicesCreateEntity.changeFlowData(graphId, requestData);
-        console.log(mess)
         if (mess && mess.res) {
           setOntologyId(mess.res.ontology_id);
           return true;
         }
 
-        if (mess?.Code === 500002) {
+        if (mess?.Code === 500002 || mess?.Code === 500001) {
           message.error(mess.Cause);
-          return false;
         }
       }
+      return false;
     } catch (error) {
       message.error(error);
     }

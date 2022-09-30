@@ -31,8 +31,6 @@ const Basic = (props, ref) => {
     dataLoading,
     basicData,
     setDbType,
-    setGraphDes,
-    ontoData
   } = props;
   const [form] = Form.useForm();
   const formSnapshot = useRef({}); // 保存时生成表单数据快照, 用于判断表单是否被修改
@@ -58,9 +56,6 @@ const Basic = (props, ref) => {
     didMount();
     /* eslint-disable-next-line */
   }, [graphId]);
-  useEffect(() => {
-    console.log(ontoData)
-  },[])
 
   const didMount = async () => {
     if (basicData?.graph_Name) {
@@ -120,11 +115,6 @@ const Basic = (props, ref) => {
           parseInt(window.sessionStorage.getItem('selectedKnowledgeId'))
       };
 
-      const graphMessage = {
-        graph_Name: values.graph_Name,
-        graph_des: values.graph_des || '',
-      };
-
       if (!graphId) {
         // 新建
         const res = await serviceWorkflow.graphCreate(body);
@@ -132,7 +122,6 @@ const Basic = (props, ref) => {
         if (res && res.res) {
           const newGraphId = parseInt(res.res.split(' ')[0]);
           setGraphId(newGraphId);
-          setGraphDes(values.graph_des);
           window.history.replaceState({}, 0, `/home/workflow/create?id=${res.res.split(' ')[0]}&status=edit`);
           setBasicData(body.graph_process[0]);
           isNext && next();

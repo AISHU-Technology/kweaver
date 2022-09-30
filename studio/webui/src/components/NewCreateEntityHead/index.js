@@ -66,8 +66,7 @@ class NewCreateEntityHead extends Component {
    */
   getPageOneData = async () => {
     const { ontology_id, used_task, ontologyId } = this.props;
-
-    if (typeof ontology_id !== 'number' || ontologyId === 0) {
+    if (ontology_id === '' && ontologyId === 0) {
       return;
     }
 
