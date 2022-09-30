@@ -23,11 +23,6 @@ class FlowCreateEntity extends Component {
           childRef={this.props.childRef}
           setQuitVisible={this.props.setQuitVisible}
           graphName={this.props.graphName}
-          setOntologyDes={this.props.setOntologyDes}
-          ontology_des={this.props.ontology_des}
-          graphDes={this.props.graphDes}
-          graphType={this.props.graphType}
-          setGraphType={this.props.setGraphType}
         />
       </div>
     );

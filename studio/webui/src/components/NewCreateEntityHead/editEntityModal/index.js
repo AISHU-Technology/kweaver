@@ -49,7 +49,7 @@ class EditEntityModal extends Component {
       return;
     }
 
-    // this.addEntity(data);
+    this.addEntity(data);
   };
 
   /**

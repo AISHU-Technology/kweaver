@@ -9,23 +9,10 @@ import DataSource from '@/components/DataSource';
 import './style.less';
 
 const DataSourceBox = props => {
-  const {
-    next,
-    prev,
-    dataSourceData,
-    setDataSourceData,
-    graphId,
-    useDs,
-    dataSourceRef,
-    graphName,
-    graphDes,
-    setOntologyId,
-    setGraphType,
-    ontoData
-  } = props;
+  const { next, prev, dataSourceData, setDataSourceData, graphId, useDs, dataSourceRef, setOntologyId, ontoData } =
+    props;
   const [disabled, setDisabled] = useState(false);
   const [getNewData, setGetNewData] = useState(false);
-  const [createOntology, setCreateOntology] = useState(true);
 
   const dataPrev = e => {
     e.preventDefault();
@@ -48,33 +35,9 @@ const DataSourceBox = props => {
 
       const res = await serviceWorkFlow.graphEdit(graphId, body);
 
-      /**
-       * 创建本体
-       */
-
-      if (ontoData.length === 0) {
-        const data = {
-          ontology_name: graphName,
-          ontology_des: graphDes || ''
-        };
-        const requestData = {
-          graph_step: 'graph_otl',
-          updateoradd: 'add',
-          graph_process: [data]
-        };
-        const mess = await servicesCreateEntity.changeFlowData(graphId, requestData);
-        if (mess && mess.res) {
-          const newOntologyId = mess.res.ontology_id;
-          setOntologyId(newOntologyId);
-          setGraphType('edit');
-        }
-
-        if (mess?.Code === 500002) {
-          message.error(mess.Cause);
-        }
-      }
-
       if (res?.res) {
+        const buildOntology = createOntology();
+        if (!buildOntology) return;
         next();
       }
 
@@ -93,6 +56,38 @@ const DataSourceBox = props => {
     }
 
     setDisabled(false);
+  };
+
+  /**
+   * 创建本体
+   */
+  const createOntology = async () => {
+    try {
+      if (ontoData.length === 0) {
+        const data = {
+          ontology_name: '',
+          ontology_des: ''
+        };
+        const requestData = {
+          graph_step: 'graph_otl',
+          updateoradd: 'add',
+          graph_process: [data]
+        };
+        const mess = await servicesCreateEntity.changeFlowData(graphId, requestData);
+        console.log(mess)
+        if (mess && mess.res) {
+          setOntologyId(mess.res.ontology_id);
+          return true;
+        }
+
+        if (mess?.Code === 500002) {
+          message.error(mess.Cause);
+          return false;
+        }
+      }
+    } catch (error) {
+      message.error(error);
+    }
   };
 
   return (

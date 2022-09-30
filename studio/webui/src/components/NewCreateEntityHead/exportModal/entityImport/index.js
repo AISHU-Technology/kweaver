@@ -27,9 +27,17 @@ class EntityImport extends Component {
    */
   getSelectData = async () => {
     this.props.openLoading();
+    const OntologData = {
+      page: -1,
+      size: 10,
+      order: 'descend',
+      knw_id:
+        window.sessionStorage.getItem('selectedKnowledgeId') &&
+        parseInt(window.sessionStorage.getItem('selectedKnowledgeId'))
+    };
 
-    const data = await servicesCreateEntity.getAllNoumenon();
-
+    const data = await servicesCreateEntity.getAllNoumenon(OntologData);
+console.log(data)
     if (data && data.res && data.res.df) {
       this.setState({
         selectData: data.res.df
@@ -106,8 +114,8 @@ class EntityImport extends Component {
             >
               {selectData.map((item, index) => {
                 return (
-                  <Option value={item.ontology_name} key={index.toString()} data={item}>
-                    {item.ontology_name}
+                  <Option value={item.graph_name} key={index.toString()} data={item}>
+                    {item.graph_name}
                   </Option>
                 );
               })}

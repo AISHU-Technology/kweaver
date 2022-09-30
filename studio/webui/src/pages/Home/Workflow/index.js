@@ -47,7 +47,6 @@ const Workflow = props => {
   const [dataLoading, setDataLoading] = useState(false); // 流程一加载loading
   const [ontologyId, setOntologyId] = useState(0); // 本体id
   const [graphDes, setGraphDes] = useState(''); // 本体描述信息
-  const [graphType, setGraphType] = useState('create'); // 本体描述信息
 
   useEffect(() => {
     if (history?.location?.pathname === '/home/workflow/create') {
@@ -85,6 +84,8 @@ const Workflow = props => {
       res.res.graph_KMap && setKnowMapData(res.res.graph_KMap);
       res.res.graph_KMerge && setConflation(res.res.graph_KMerge);
       res.res.graph_status && setGraphStatus(res.res.graph_status);
+      const ontologyDes = res.res.graph_otl
+      setOntoData(ontologyDes);
       setGraphId(id);
     }
 
@@ -283,9 +284,10 @@ const Workflow = props => {
             ontologyId={ontologyId}
             ref={step1Ref}
             setGraphDes={setGraphDes}
-            setNewOntologyId={setNewOntologyId}
+            graphDes={graphDes}
             ontoData={ontoData}
             setOntoData={setOntoData}
+            graphName={basicData.graph_Name}
           />
         </div>
         <div className={`hide space center ${current === 1 && 'show'}`}>
@@ -297,11 +299,10 @@ const Workflow = props => {
             next={next}
             prev={prev}
             dataSourceRef={step2Ref}
-            graphName={basicData.graph_Name}
+            ontoData={ontoData}
             graphDes={graphDes}
             setOntologyId={setOntologyId}
-            setGraphType={setGraphType}
-            ontoData={ontoData}
+            graphName={basicData.graph_Name}
           />
         </div>
         <div className={`hide ${current === 2 && 'show'}`}>
@@ -320,8 +321,6 @@ const Workflow = props => {
             setQuitVisible={setQuitVisible}
             graphName={basicData.graph_Name}
             graphDes={graphDes}
-            graphType={graphType}
-            setGraphType={setGraphType}
           />
         </div>
         <div className={`hide space center ${current === 3 && 'show'}`}>

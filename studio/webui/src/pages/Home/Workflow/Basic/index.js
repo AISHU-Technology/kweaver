@@ -7,6 +7,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import serviceStorageManagement from '@/services/storageManagement';
 import servicesCreateEntity from '@/services/createEntity';
 import serviceWorkflow from '@/services/workflow';
+import { handleTaskId } from '../FlowCreateEntity/CreateEntity/assistFunction';
 
 import './style.less';
 
@@ -30,8 +31,8 @@ const Basic = (props, ref) => {
     dataLoading,
     basicData,
     setDbType,
-    setOntologyId,
-    setGraphDes
+    setGraphDes,
+    ontoData
   } = props;
   const [form] = Form.useForm();
   const formSnapshot = useRef({}); // 保存时生成表单数据快照, 用于判断表单是否被修改
@@ -55,9 +56,11 @@ const Basic = (props, ref) => {
   useEffect(() => {
     getStorage();
     didMount();
-
     /* eslint-disable-next-line */
   }, [graphId]);
+  useEffect(() => {
+    console.log(ontoData)
+  },[])
 
   const didMount = async () => {
     if (basicData?.graph_Name) {
@@ -98,8 +101,6 @@ const Basic = (props, ref) => {
     await form.validateFields();
 
     if (form.getFieldError('password')?.[0] && form.getFieldError('username')?.[0]) return;
-    // const isSuccess = await saveEntity(graphId, form.getFieldsValue());
-    // if (!isSuccess) return;
     setNextLoad(true);
 
     form.validateFields().then(async values => {
@@ -117,6 +118,11 @@ const Basic = (props, ref) => {
         knw_id:
           window.sessionStorage.getItem('selectedKnowledgeId') &&
           parseInt(window.sessionStorage.getItem('selectedKnowledgeId'))
+      };
+
+      const graphMessage = {
+        graph_Name: values.graph_Name,
+        graph_des: values.graph_des || '',
       };
 
       if (!graphId) {

@@ -51,13 +51,13 @@ class TaskList extends Component {
    * @param {boolean} cancelLoading 是否取消加载动画
    */
   getTaskList = async cancelLoading => {
-    const { ontology_id } = this.props;
+    const { ontology_id, ontologyId } = this.props;
     const { page } = this.state;
 
     const data = {
       page,
       size: PAGESIZE,
-      ontology_id,
+      ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
       used_task: []
     };
 
@@ -75,7 +75,6 @@ class TaskList extends Component {
         taskCount: res.res.task_info.task_count
       });
     }
-
     this.setState({
       loading: false
     });
@@ -321,6 +320,7 @@ class TaskList extends Component {
         >
           <DetailModal
             ontology_id={this.props.ontology_id}
+            ontologyId={this.props.ontologyId}
             page={page}
             selectedTaskData={selectedTaskData}
             deleteTask={this.deleteTask}

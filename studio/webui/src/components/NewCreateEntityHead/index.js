@@ -10,7 +10,6 @@ import servicesCreateEntity from '@/services/createEntity';
 import IconFont from '@/components/IconFont';
 import EdgesModal from './edgesModal';
 import ExportModal from './exportModal';
-import EditEntityModal from './editEntityModal';
 import { handleTaskData, asError, handAsData, isFlow, analyUrl } from './assistFunction';
 
 import dianIcon from '@/assets/images/dian.svg';
@@ -66,16 +65,16 @@ class NewCreateEntityHead extends Component {
    * @description 获取第一页点数据(正在预测点任务一直在第一页，所以用第一页也判断是否预测完点状态)
    */
   getPageOneData = async () => {
-    const { ontology_id, used_task } = this.props;
+    const { ontology_id, used_task, ontologyId } = this.props;
 
-    if (typeof ontology_id !== 'number') {
+    if (typeof ontology_id !== 'number' || ontologyId === 0) {
       return;
     }
 
     const data = {
       page: this.props.taskListRef ? this.props.taskListRef.state.page : 1,
       size: PAGESIZE,
-      ontology_id,
+      ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
       used_task
     };
 
@@ -128,7 +127,7 @@ class NewCreateEntityHead extends Component {
    */
   onSave = async () => {
     const { saveData } = this.state;
-    const { ontology_id } = this.props;
+    const { ontology_id, ontologyId } = this.props;
 
     if (saveData.type === 'entity') {
       // 如果data为 '',给输入框添加报错状态
@@ -167,7 +166,7 @@ class NewCreateEntityHead extends Component {
         const resquestData = {
           ds_id: saveData.selectedValue.id,
           file_list: saveData.data,
-          ontology_id,
+          ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
           postfix: ''
         };
 
@@ -230,7 +229,7 @@ class NewCreateEntityHead extends Component {
           const resquestData = {
             ds_id: saveData.selectedValue.id,
             file_list,
-            ontology_id,
+            ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
             postfix: saveData.selectedValue.postfix
           };
 
@@ -264,7 +263,7 @@ class NewCreateEntityHead extends Component {
       const resquestData = {
         ds_id: saveData.data.id,
         file_list: [saveData.data.queue],
-        ontology_id,
+        ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
         postfix: ''
       };
 
@@ -357,7 +356,7 @@ class NewCreateEntityHead extends Component {
   };
 
   render() {
-    const { edgesModal, exportModal, saveData, editEntityModal } = this.state;
+    const { edgesModal, exportModal, saveData } = this.state;
     const { centerSelect, nodes, edges, graphName } = this.props;
     const TYPE = window?.location?.pathname?.includes('knowledge') ? 'view' : analyUrl(window.location.search).type; // 进入图谱的类型
     return (
@@ -726,42 +725,6 @@ class NewCreateEntityHead extends Component {
           </div>
         </div>
 
-        {/* 编辑本体弹层 */}
-        <Modal
-          className="set-entity-244-edit"
-          // title={this.props.ontology_id ? intl.get('createEntity.editE') : intl.get('createEntity.createEntity')}
-          title={intl.get('createEntity.editE')}
-          width={640}
-          destroyOnClose={true}
-          maskClosable={false}
-          visible={this.state.editEntityModal}
-          footer={null}
-          closable={false}
-        >
-          <EditEntityModal
-            setEditEntityModal={this.setEditEntityModal}
-            ontology_name={this.props.ontology_name}
-            setName={this.props.setName}
-            setOntologyDes={this.props.setOntologyDes}
-            ontology_des={this.props.ontology_des}
-            setDes={this.props.setDes}
-            ontology_id={this.props.ontology_id}
-            setOntologyId={this.props.setOntologyId}
-            nodes={nodes}
-            edges={edges}
-            freeGraphRef={this.props.freeGraphRef}
-            graphId={this.props.graphId}
-            ontoData={this.props.ontoData}
-            prev={this.props.prev}
-            setQuitVisible={this.props.setQuitVisible}
-            setTouch={this.props.setTouch}
-            setOntoData={this.props.setOntoData}
-            onEditEntityModalRef={this.props.onEditEntityModalRef}
-            setEditNewName={this.setEditNewName}
-            graphName={this.props.graphName}
-          />
-        </Modal>
-
         {/* 关系类管理弹层 */}
         <Modal
           className="edge-modal-qzdj-true"
@@ -817,6 +780,8 @@ class NewCreateEntityHead extends Component {
             setSaveData={this.setSaveData}
             setTouch={this.props.setTouch}
             graphId={this.props.graphId}
+            ontology_id={this.props.ontology_id}
+            ontologyId={this.props.ontologyId}
           />
         </Modal>
       </div>
