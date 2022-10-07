@@ -231,6 +231,9 @@ class IntelligenceQueryService(object):
             knw_intelligence['knw_id'] = graph_info_list[0]["knw_id"]
             knw_intelligence['knw_name'] = graph_info_list[0]["knw_name"]
             knw_intelligence['knw_description'] = graph_info_list[0]["knw_description"]
+            knw_intelligence['color'] = graph_info_list[0]["color"]
+            knw_intelligence['creation_time'] = graph_info_list[0]["creation_time"]
+            knw_intelligence['update_time'] = graph_info_list[0]["update_time"]
             knw_intelligence['total'] = round(math.log(total, 10)*10, 2) if has_value else -1
             knw_intelligence['recent_calculate_time'] = recent_calculate_time
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list

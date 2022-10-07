@@ -275,11 +275,16 @@ def getGraph():
 @knowledgeNetwork_controller_app.route('/intelligence', methods=['get'])
 @swag_from(swagger_new_response)
 def intelligence_stats():
-    """
-    查询领域智商
+    '''
+    query knowledge network intelligence calculate result
     ---
-    parameter
-    """
+    parameters:
+        -   name: know_id
+            in: query
+            required: true
+            description: knowledge network id
+            type: integer
+    '''
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0 or 'knw_id' not in params_json:
         code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError

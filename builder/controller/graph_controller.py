@@ -1061,11 +1061,17 @@ def get_graph_info_detail():
 @graph_controller_app.route('/intelligence/task', methods=['post'], strict_slashes=False)
 @swag_from(swagger_new_response)
 def intelligence_calculate_task():
-    """
-    计算领域智商, 提交计算任务
+    '''
+    post knowledge graph intelligence calculate task
     ---
-    parameter
-    """
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+    '''
+
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code < 0 or 'graph_id' not in params_json:
         code = codes.Builder_GraphController_IntelligenceCalculateTask_ParamError
@@ -1083,11 +1089,16 @@ def intelligence_calculate_task():
 @graph_controller_app.route('/intelligence/<graph_id>', methods=['get'], strict_slashes=False)
 @swag_from(swagger_new_response)
 def intelligence_stats(graph_id):
-    """
-    查询领域智商
+    '''
+    query knowledge graph intelligence calculate result
     ---
-    parameter
-    """
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+    '''
     if not graph_id:
         code = codes.Builder_GraphController_IntelligenceStats_ParamError
         return Gview2.error_return(code, arg='graph_id'), 400
