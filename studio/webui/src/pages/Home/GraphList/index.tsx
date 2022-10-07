@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import { Button, Table, message } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Button, Table, message, Dropdown, Menu } from 'antd';
+import { LoadingOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 
@@ -11,8 +11,8 @@ import Format from '@/components/Format';
 import AvatarName from '@/components/Avatar';
 import IconFont from '@/components/IconFont';
 import SearchInput from '@/components/SearchInput';
+import KnowledgeModal from '@/components/KnowledgeModal';
 
-import CreateModal from './createModal';
 import DeleteModal from './deleteModal';
 
 import NoResult from '@/assets/images/noResult.svg';
@@ -24,10 +24,25 @@ const ERROR_CODE: any = {
   'Builder.controller.knowledgeNetwork_controller.getAllKnw.PermissionError': 'graphList.permissionError' // 权限错误
 };
 const indicator = <LoadingOutlined style={{ fontSize: 24, color: '#54639c', top: '200px' }} spin />;
-
+const SORTER_MENU = [
+  { key: 'create', text: intl.get('knowledge.byCreate') },
+  { key: 'update', text: intl.get('knowledge.byUpdate') },
+  { key: 'intelligence_score', text: intl.get('knowledge.byIQ') }
+];
+const SORTER_MAP: Record<string, string> = {
+  descend: 'desc',
+  ascend: 'asc',
+  desc: 'descend',
+  asc: 'ascend',
+  create: 'creation_time',
+  update: 'update_time',
+  creation_time: 'create',
+  update_time: 'update',
+  intelligence_score: 'intelligence_score'
+};
+const sorter2sorter = (key: string) => SORTER_MAP[key] || key;
 const GraphList = () => {
   const history = useHistory();
-
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [sorter, setSorter] = useState({ rule: 'update', order: 'desc' });
@@ -39,7 +54,7 @@ const GraphList = () => {
   const { size, total, page } = pagination;
 
   useEffect(() => {
-    document.title = ` ${intl.get('graphList.mygraph')}_AnyDATA`;
+    document.title = ` ${intl.get('graphList.mygraph')}_KWeaver`;
     getData(sorter.rule, sorter.order);
   }, [page, sorter.rule, sorter.order]);
 
@@ -76,9 +91,10 @@ const GraphList = () => {
   /**
    * 表格排序
    */
-  const sortOrderChange = (pagination: any, filters: any, sorter: any) => {
-    const order = sorter.order === 'descend' ? 'desc' : 'asc';
-    const rule = sorter.field === 'creation_time' ? 'create' : 'update';
+  const sortOrderChange = (_: any, __: any, sorter: any, extra: any) => {
+    if (extra.action !== 'sort') return;
+    const order = sorter2sorter(sorter.order);
+    const rule = sorter2sorter(sorter.field);
     setSorter({ rule, order });
   };
 
@@ -126,7 +142,18 @@ const GraphList = () => {
     const type = _.isEmpty(data) ? 'add' : 'edit';
     setCreateOrEditData({ type, data });
   };
+
   const onCloseCreateOrEdit = () => setCreateOrEditData({});
+
+  /**
+   * 点击排序按钮
+   */
+  const onSortMenuClick = (key: string) => {
+    setSorter(({ rule, order }) => ({
+      rule: key,
+      order: rule === key ? (order === 'desc' ? 'asc' : 'desc') : order
+    }));
+  };
 
   const columns: any = [
     {
@@ -142,14 +169,7 @@ const GraphList = () => {
         const { id = '', color = '', knw_description = '' } = record;
         return (
           <div className="columnKnwName" onClick={() => onToPageNetwork(id)}>
-            <AvatarName
-              str={text}
-              style={{
-                color: `${color}`,
-                background: `${`${color}15`}`,
-                border: `1px solid ${`${color}10`}`
-              }}
-            />
+            <AvatarName str={text} color={color} />
             <div className="name-text" title={text}>
               <div className="name ad-ellipsis">{text}</div>
               {knw_description ? (
@@ -163,33 +183,43 @@ const GraphList = () => {
       }
     },
     {
-      title: intl.get('graphList.creationTime'),
+      title: intl.get('global.domainIQ'),
+      dataIndex: 'intelligence_score',
+      width: 210,
+      sorter: true,
+      sortOrder: sorter.rule === 'intelligence_score' && sorter2sorter(sorter.order),
+      sortDirections: ['ascend', 'descend', 'ascend'],
+      render: (source: number) => source || '--'
+    },
+    {
+      title: intl.get('global.creationTime'),
       dataIndex: 'creation_time',
-      width: 220,
+      width: 210,
       sorter: true,
+      sortOrder: sorter.rule === 'create' && sorter2sorter(sorter.order),
       sortDirections: ['ascend', 'descend', 'ascend']
     },
     {
-      title: intl.get('graphList.finalOperatorTime'),
+      title: intl.get('global.finalOperatorTime'),
       dataIndex: 'update_time',
-      width: 220,
+      width: 210,
       sorter: true,
-      defaultSortOrder: 'descend',
+      sortOrder: sorter.rule === 'update' && sorter2sorter(sorter.order),
       sortDirections: ['ascend', 'descend', 'ascend']
     },
     {
-      title: intl.get('graphList.operation'),
+      title: intl.get('global.operation'),
       dataIndex: 'op',
-      width: 110,
+      width: 160,
       fixed: 'right',
       render: (text: string, record: any) => {
         return (
           <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => onOpenCreateOrEdit(record)}>
-              {intl.get('graphList.edit')}
+              {intl.get('global.edit')}
             </Button>
             <Button type="link" onClick={() => onOpenDelete(record)}>
-              {intl.get('graphList.delete')}
+              {intl.get('global.delete')}
             </Button>
           </div>
         );
@@ -203,16 +233,43 @@ const GraphList = () => {
         <Format.Title className="ad-mb-5">{intl.get('graphList.mygraph')}</Format.Title>
         <div className="netWork-list">
           <div className="netWork-list-top">
-            <Button type="primary" onClick={() => onOpenCreateOrEdit({})}>
-              <IconFont type="icon-Add" style={{ color: '#fff' }} />
-              {intl.get('graphList.create')}
-            </Button>
-            <SearchInput
-              placeholder={intl.get('graphList.searchName')}
-              onChange={searchChange}
-              onPressEnter={(e: any) => onSearch(e?.target?.value)}
-              onClear={() => onSearch('')}
-            />
+            <div>
+              <Button type="primary" onClick={() => onOpenCreateOrEdit({})}>
+                <IconFont type="icon-Add" style={{ color: '#fff' }} />
+                {intl.get('graphList.create')}
+              </Button>
+            </div>
+
+            <div>
+              <SearchInput
+                placeholder={intl.get('graphList.searchName')}
+                onChange={searchChange}
+                onPressEnter={(e: any) => onSearch(e?.target?.value)}
+                onClear={() => onSearch('')}
+              />
+
+              <Dropdown
+                placement="bottomLeft"
+                overlay={
+                  <Menu selectedKeys={[sorter.rule]} onClick={({ key }) => onSortMenuClick(key)}>
+                    {SORTER_MENU.map(({ key, text }) => (
+                      <Menu.Item key={key}>
+                        <ArrowDownOutlined
+                          className="ad-mr-2"
+                          rotate={sorter.order === 'desc' ? 0 : 180}
+                          style={{ opacity: sorter.rule === key ? 0.8 : 0, fontSize: 16, verticalAlign: 'middle' }}
+                        />
+                        {text}
+                      </Menu.Item>
+                    ))}
+                  </Menu>
+                }
+              >
+                <Button className="sort-btn">
+                  <IconFont type="icon-paixu11" className="sort-icon" />
+                </Button>
+              </Dropdown>
+            </div>
           </div>
           <div className="table-box">
             <Table
@@ -256,11 +313,11 @@ const GraphList = () => {
           </div>
         </div>
 
-        <CreateModal
+        <KnowledgeModal
           visible={!_.isEmpty(createOrEditData)}
           source={createOrEditData}
-          onRefreshList={onRefreshList}
-          onCloseCreateOrEdit={onCloseCreateOrEdit}
+          onSuccess={onRefreshList}
+          onCancel={onCloseCreateOrEdit}
         />
 
         <DeleteModal visible={!!delId} delId={delId} onCloseDelete={onCloseDelete} onRefreshList={onRefreshList} />

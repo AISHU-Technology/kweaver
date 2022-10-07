@@ -1,0 +1,61 @@
+.kg-graph-info-statistics {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  .error-tip {
+    min-height: 34px;
+    padding: 6px 20px;
+    background: rgba(var(--ad-error-color-rgb), 0.06);
+
+    .error-icon {
+      color: var(--ad-error-color);
+    }
+
+    .error-text {
+      flex: 1;
+      padding: 0 8px;
+    }
+
+    .close-icon {
+      cursor: pointer;
+      color: var(--ad-text-color-secondary);
+
+      &:hover {
+        color: var(--ad-text-color);
+      }
+    }
+  }
+
+  .content {
+    flex: 1;
+    overflow-y: auto;
+
+    .header {
+      border-bottom: 1px solid #f4f4f4;
+
+      .compute-btn {
+        cursor: pointer;
+        user-select: none;
+
+        &.disabled {
+          cursor: not-allowed;
+          opacity: 0.35;
+        }
+      }
+    }
+  }
+
+  .data-row {
+    line-height: 17px;
+    margin-bottom: 12px;
+
+    &:first-of-type {
+      margin-top: 16px;
+    }
+
+    &:last-of-type {
+      margin-bottom: 16px;
+    }
+  }
+}

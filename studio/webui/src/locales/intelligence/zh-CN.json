@@ -1,0 +1,25 @@
+{
+  "intelligence": {
+    "calculate": "计算",
+    "calculating": "计算中...",
+    "knwSource": "知识量得分",
+    "totalKnw": "总计知识量",
+    "qualitySource": "数据质量得分",
+    "repeatRate": "重复率",
+    "missRate": "缺失率",
+    "opEdit": "编辑图谱",
+    "opAnalysis": "探索分析",
+    "domainDetail": "领域智商详情",
+    "statisticsTip": "再次构建知识图谱时，系统会重新计算统计数",
+    "checkDetail": "查看详情",
+    "collapseDetails": "收起详情",
+    "domainIQTip1": "度量领域知识网络的认知能力和价值",
+    "domainIQTip2": "领域智商=知识量得分*数据质量得分",
+    "knwSourceTip1": "评估知识图谱知识量大小的标准",
+    "knwSourceTip2": "知识量得分=log",
+    "knwSourceTip3": "Nx10(N=知识)",
+    "totalKnwTip": "实体数量*实体属性数量+关系数量*关系属性数量",
+    "qualitySourceTip1": "评估知识图谱数据重复率和缺失值的综合指标",
+    "qualitySourceTip2": "数据质量得分=(1-重复率)+(1-缺失值比例)/2"
+  }
+}

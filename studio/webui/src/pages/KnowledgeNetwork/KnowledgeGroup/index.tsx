@@ -64,19 +64,11 @@ const KnowledgeGroup = (props: any) => {
   useEffect(() => {
     // 其他页面跳转来，给路由加上selectedKnowledge.id
     const isFromTask = () => {
-      if (window.location.search.includes('&tabsKey')) {
-        const graphId = parseInt(getParam('tabsKey')) || 0;
-        const graph = graphList.filter((item: any) => item.kgconfid === graphId);
-
-        if (graph.length > 0) _setSelectedGraph(graph[0]);
-      }
-
-      if (window.location.search.includes('&editId')) {
-        const graphId = parseInt(getParam('editId')) || 0;
-        const graph = graphList.filter((item: any) => item.kgconfid === graphId);
-
-        if (graph.length > 0) _setSelectedGraph(graph[0]);
-      }
+      const { gid, cid } = getParam(['gid', 'cid']);
+      if (!gid || !cid) return;
+      const graphId = parseInt(gid || cid) || 0;
+      const graph = graphList.find((item: any) => item[gid ? 'id' : 'kgconfid'] === graphId);
+      graph && _setSelectedGraph(graph);
     };
     isFromTask();
   }, [JSON.stringify(graphList)]);
@@ -84,7 +76,7 @@ const KnowledgeGroup = (props: any) => {
   const _setSelectedGraph = (data: any) => {
     const { pathname, search } = window.location;
     setSelectedGraph(data);
-    if (search.includes('tabsKey')) history.push(`${pathname}?id=${kgData?.id}`);
+    if (search.includes('tab')) history.push(`${pathname}?id=${kgData?.id}`);
   };
 
   const openModalImport = () => setIsVisibleImport(true);

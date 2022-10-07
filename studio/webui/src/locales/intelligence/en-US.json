@@ -1,0 +1,25 @@
+{
+  "intelligence": {
+    "calculate": "Calculate",
+    "calculating": "Calculating...",
+    "knwSource": "Knowledge score",
+    "totalKnw": "Total knowledge",
+    "qualitySource": "Quality score",
+    "repeatRate": "Repetition rate",
+    "missRate": "Missing rate",
+    "opEdit": "Edit",
+    "opAnalysis": "Analysis",
+    "domainDetail": "Domain IQ details",
+    "statisticsTip": "When building the knowledge graph again, the system will recalculate the statistics",
+    "checkDetail": "Check details",
+    "collapseDetails": "Collapse details",
+    "domainIQTip1": "Measuring the Cognitive Ability and Value of Domain Knowledge Networks",
+    "domainIQTip2": "Domain IQ = Knowledge score * Quality score",
+    "knwSourceTip1": "Criteria for evaluating the amount of knowledge in knowledge graphs",
+    "knwSourceTip2": "Knowledge score=log",
+    "knwSourceTip3": "Nx10(N=knowledge)",
+    "totalKnwTip": "Entity * Entity properties + Relationship * Relationship properties",
+    "qualitySourceTip1": "Comprehensive metrics for assessing duplication rates and missing values in Knowledge graph data",
+    "qualitySourceTip2": "Quality score = (1 - repetition rate) + (1 - missing ratio) / 2"
+  }
+}
