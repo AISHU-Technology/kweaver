@@ -1,4 +1,6 @@
 # -*-coding:utf-8-*-
+import time
+
 import requests
 from flask import Blueprint, request, jsonify, send_file, send_from_directory, make_response
 
@@ -20,12 +22,16 @@ import json
 import os
 from utils.log_info import Logger
 from service.task_Service import task_service
+from service.intelligence_service import intelligence_query_service
+from service.intelligence_service import intelligence_calculate_service
+
 from controller.knowledgeNetwork_controller import saveRelation, deleteRelation, updateKnw
 from common.errorcode.gview import Gview as Gview2
 from common.errorcode import codes
 import uuid
 from flasgger import swag_from
 import yaml
+
 graph_controller_app = Blueprint('graph_controller_app', __name__)
 
 GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -37,6 +43,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
     swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
     swagger_new_response.update(swagger_definitions)
+
 
 @graph_controller_app.route('', methods=["post"], strict_slashes=False)
 @swag_from(swagger_old_response)
@@ -892,8 +899,8 @@ def get_graph_info_basic():
         if not graph_id or not graph_id.isdigit():
             code = codes.Builder_GraphController_GetGraphInfoBasic_ParamError
             return Gview2.TErrorreturn(code,
-                                      arg='graph_id',
-                                      description='请确保graph_id存在，且graph_id应为数字'), 400
+                                       arg='graph_id',
+                                       description='请确保graph_id存在，且graph_id应为数字'), 400
         # is_all
         if is_all.lower() == 'true':
             is_all = True
@@ -902,8 +909,8 @@ def get_graph_info_basic():
         else:
             code = codes.Builder_GraphController_GetGraphInfoBasic_ParamError
             return Gview2.TErrorreturn(code,
-                                      arg='is_all',
-                                      description='is_all应为“True”或“False”'), 400
+                                       arg='is_all',
+                                       description='is_all应为“True”或“False”'), 400
         # key参数校验
         if key:
             try:
@@ -926,6 +933,7 @@ def get_graph_info_basic():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
+
 
 @graph_controller_app.route('/info/onto', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
@@ -958,6 +966,7 @@ def get_graph_info_onto():
                                    cause=str(e),
                                    description=str(e)), 400
 
+
 @graph_controller_app.route('/info/count', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def get_graph_info_count():
@@ -988,6 +997,7 @@ def get_graph_info_count():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
+
 
 @graph_controller_app.route('/info/detail', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
@@ -1046,3 +1056,45 @@ def get_graph_info_detail():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
+
+
+@graph_controller_app.route('/intelligence/task', methods=['post'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def intelligence_calculate_task():
+    """
+    计算领域智商, 提交计算任务
+    ---
+    parameter
+    """
+    param_code, params_json, param_message = commonutil.getMethodParam()
+    if param_code < 0 or 'graph_id' not in params_json:
+        code = codes.Builder_GraphController_IntelligenceCalculateTask_ParamError
+        return Gview2.error_return(code, arg='graph_id'), 400
+
+    graph_id = params_json['graph_id']
+
+    code, resp = intelligence_calculate_service.send_task(graph_id)
+    if code != codes.successHttpCode:
+        code = codes.Builder_GraphController_IntelligenceCalculateTask_CreateTaskError
+        return Gview2.error_return(code, description='提交计算任务失败', cause='未知错误'), 500
+    return Gview2.json_return(resp['res']), 200
+
+
+@graph_controller_app.route('/intelligence/<graph_id>', methods=['get'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def intelligence_stats(graph_id):
+    """
+    查询领域智商
+    ---
+    parameter
+    """
+    if not graph_id:
+        code = codes.Builder_GraphController_IntelligenceStats_ParamError
+        return Gview2.error_return(code, arg='graph_id'), 400
+
+    res_code, result = intelligence_query_service.query_graph_intelligence(graph_id)
+    if res_code != codes.successCode:
+        code = codes.Builder_GraphController_IntelligenceStat_QueryError
+        return Gview2.error_return(code, description='查询图谱智商错误', cause='未知错误')
+
+    return Gview2.json_return(result), 200

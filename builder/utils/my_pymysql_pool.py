@@ -13,6 +13,7 @@ def connect_execute_commit_close_db(func):
     def wrapper(*args, **kwargs):
         pymysql_pool = PymysqlPool.get_pool()
         connection = pymysql_pool.connection()
+        connection.begin()
         cursor = connection.cursor(cursor=pymysql.cursors.DictCursor)
         kwargs['connection'] = connection
         kwargs['cursor'] = cursor

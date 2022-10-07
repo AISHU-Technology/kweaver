@@ -181,3 +181,15 @@ Builder_GraphService_GetGraphInfoDetail_GraphidNotExist = 'Builder.GraphService.
     }
 '''
 Builder_GraphService_GetGraphInfoDetail_NameNotExist = 'Builder.GraphService.GetGraphInfoDetail.NameNotExist'
+
+# 领域智商相关接口错误码
+Builder_GraphController_IntelligenceCalculateTask_ParamError = 'Builder.GraphController.IntelligenceCalculateTask.ParamError'
+Builder_GraphController_IntelligenceCalculateTask_CreateTaskError = 'Builder.GraphController.IntelligenceCalculateTask.CreateTaskError'
+
+Builder_GraphController_IntelligenceStats_ParamError = 'Builder.GraphController.IntelligenceStats.ParamError'
+Builder_GraphController_IntelligenceStat_QueryError = 'Builder.GraphController.IntelligenceStats.QueryError'
+
+Builder_KnowledgeNetworkController_IntelligenceStats_ParamError = 'Builder.KnowledgeNetworkController.IntelligenceStats.ParamError'
+Builder_KnowledgeNetworkController_IntelligenceStats_QueryError = 'Builder.KnowledgeNetworkController.IntelligenceStats.QueryError'
+
+
