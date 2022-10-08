@@ -81,8 +81,8 @@ const DataSourceBox = props => {
 
         if (mess?.Code === 500002 || mess?.Code === 500001) {
           message.error(mess.Cause);
+          return false;
         }
-        return false;
       }
       return true;
     } catch (error) {

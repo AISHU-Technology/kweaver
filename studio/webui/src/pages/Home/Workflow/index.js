@@ -196,7 +196,7 @@ const Workflow = props => {
       return;
     }
 
-    const step3Data = step3Ref.current?.getFlowData();
+    // const step3Data = step3Ref.current?.getFlowData();
     const step4Data = step4Ref.current?.getFlowData();
     const step5Data = step5Ref.current?.getFlowData();
     const step6Data = step6Ref.current?.getFlowData();
@@ -210,7 +210,8 @@ const Workflow = props => {
       graph_id: parseInt(graphId),
       graph_baseInfo: basicData ? [basicData] : [],
       graph_ds: dataSourceData.map(value => value.id),
-      graph_otl: step3Data.length ? step3Data : ontoData,
+      // graph_otl: step3Data.length ? step3Data : ontoData,
+      graph_otl: ontoData,
       graph_InfoExt: step4Data,
       graph_KMap: step5Data.length ? step5Data : knowMapData,
       graph_KMerge: step6Data.length ? step6Data : conflation
