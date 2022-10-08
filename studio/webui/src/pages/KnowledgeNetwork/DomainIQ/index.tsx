@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect, useReducer } from 'react';
 import { message } from 'antd';
 import _ from 'lodash';
+import HOOKS from '@/hooks';
 import servicesIntelligence from '@/services/intelligence';
 import KnowledgeInfo from './KnowledgeInfo';
 import IQTable from './IQTable';
@@ -35,6 +36,14 @@ const DomainIQ: React.FC<DomainIQProps> = ({ kgData }) => {
     setKgInfo({ ...(kgData as KgInfo) });
     getData({}, kgData.id);
   }, [kgData.id]);
+
+  /**
+   * 轮询数据
+   */
+  HOOKS.useInterval(() => {
+    if (!kgData.id) return;
+    getData(tableState, kgData.id, false);
+  }, 30 * 1000);
 
   /**
    * 获取数据

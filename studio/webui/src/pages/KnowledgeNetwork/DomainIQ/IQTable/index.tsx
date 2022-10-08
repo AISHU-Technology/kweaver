@@ -192,7 +192,7 @@ const IQTable: React.FC<QTableProps> = ({ kid, data, tableState, onChange }) => 
           }}
           loading={
             tableState.loading && {
-              indicator: <LoadingOutlined className="table-loading" />
+              indicator: <LoadingOutlined className="ad-c-primary" style={{ fontSize: 24 }} />
             }
           }
           locale={{

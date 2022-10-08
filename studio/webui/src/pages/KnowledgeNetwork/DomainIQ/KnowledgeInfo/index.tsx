@@ -21,6 +21,7 @@ const KnowledgeInfo: React.FC<KnowledgeInfoProps> = ({ kgInfo, onEditSuccess }) 
   const [editVisible, setEditVisible] = useState(false); // 编辑知识图谱弹窗
 
   const onEdit = () => {
+    if (!id) return;
     setEditVisible(true);
   };
 

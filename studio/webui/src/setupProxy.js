@@ -24,20 +24,22 @@ const TARGET_URL = 'http://10.4.131.17';
  */
 const PROXY_URLS = ['studio', 'builder', 'engine'];
 
+/**
+ * 单独设置某个服务的地址，默认都使用 TARGET_URL
+ */
+const RESET = {
+  // studio: '127.0.0.0',
+  // builder: '127.0.0.0',
+  // engine: '127.0.0.0'
+};
+
 module.exports = function (app) {
   if (process.env.NODE_ENV === 'production') return;
-
-  // 单独设置某个服务的地址，默认都使用 TARGET_URL
-  const reset = {
-    // studio: '127.0.0.0',
-    // builder: '127.0.0.0',
-    // engine: '127.0.0.0'
-  };
 
   PROXY_URLS.forEach(url => {
     app.use(
       createProxyMiddleware(`/api/${url}`, {
-        target: reset[url] || TARGET_URL,
+        target: RESET[url] || TARGET_URL,
         changeOrigin: true,
         secure: false
       })

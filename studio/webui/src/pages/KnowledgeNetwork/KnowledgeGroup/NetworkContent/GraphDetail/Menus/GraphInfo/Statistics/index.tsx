@@ -22,7 +22,7 @@ interface StatisticsProps {
 interface DataRowProps {
   field: React.ReactNode;
   tip?: React.ReactNode;
-  value: number;
+  value?: number;
 }
 
 const { NORMAL, FAIL } = GRAPH_STATUS;
@@ -31,14 +31,13 @@ const KEY_INTL: Record<string, string> = {
   nodeProCount: intl.get('graphList.entityProCount'),
   edgeCount: intl.get('graphList.relationshipCount'),
   edgeProCount: intl.get('graphList.relationshipProCount'),
-  data_quality_B: intl.get('intelligence.totalKnw'), // 总计知识量
+  totalKnw: intl.get('intelligence.totalKnw'), // 总计知识量
   data_repeat_C1: intl.get('intelligence.repeatRate'), // 重复率
   data_missing_C2: intl.get('intelligence.missRate') // 缺失率
 };
 
-const SOURCE_KEYS = ['nodeCount', 'nodeProCount', 'edgeCount', 'edgeProCount', 'data_quality_B'];
+const SOURCE_KEYS = ['nodeCount', 'nodeProCount', 'edgeCount', 'edgeProCount', 'totalKnw'];
 const QUALITY_KEYS = ['data_repeat_C1', 'data_missing_C2'];
-
 const DataRow = ({ field, tip, value }: DataRowProps) => {
   return (
     <div className="ad-space-between data-row">
@@ -46,7 +45,7 @@ const DataRow = ({ field, tip, value }: DataRowProps) => {
         {field}
         {tip}
       </div>
-      <div>{value < 0 ? '--' : numToThousand(value)}</div>
+      <div>{value !== undefined && value >= 0 ? numToThousand(value) : '--'}</div>
     </div>
   );
 };
@@ -71,11 +70,12 @@ const Statistics = (props: StatisticsProps) => {
   /**
    * 整合 实体、关系数量
    */
-  const counter = useMemo(() => {
+  const counter: Record<string, number> = useMemo(() => {
     const { nodes = [], edges = [], nodeCount = 0, edgeCount = 0 } = graphCount;
     const nodeProCount = nodes.reduce((res: number, item: any) => res + item.count, 0);
     const edgeProCount = edges.reduce((res: number, item: any) => res + item.count, 0);
-    return { nodeProCount, edgeProCount, nodeCount, edgeCount };
+    const totalKnw = nodeCount + edgeCount + nodeProCount + edgeProCount;
+    return { nodeProCount, edgeProCount, nodeCount, edgeCount, totalKnw };
   }, [graphCount]);
 
   useEffect(() => {
@@ -185,15 +185,15 @@ const Statistics = (props: StatisticsProps) => {
               <ExplainTip.KNW_SOURCE />
             </>
           }
-          source={62}
+          source={detail.data_quality_score}
           icon={<IconFont type="icon-zhishiliang" style={{ color: 'rgb(18,110,227)', fontSize: 16 }} />}
         >
           {SOURCE_KEYS.map(key => (
             <DataRow
               key={key}
               field={KEY_INTL[key]}
-              value={{ ...counter, ...detail }[key]}
-              tip={key === 'data_quality_B' ? <ExplainTip.KNW_TOTAL_SOURCE /> : undefined}
+              value={counter[key]}
+              tip={key === 'totalKnw' ? <ExplainTip.KNW_TOTAL_SOURCE /> : undefined}
             />
           ))}
         </SourceCard>
@@ -204,11 +204,10 @@ const Statistics = (props: StatisticsProps) => {
           title={
             <>
               {intl.get('intelligence.qualitySource')}
-
               <ExplainTip.QUALITY_SOURCE />
             </>
           }
-          source={0.85}
+          source={detail.data_quality_B}
           icon={<IconFont type="icon-shujuzhiliang" style={{ color: 'rgb(0,147,144)', fontSize: 16 }} />}
         >
           {QUALITY_KEYS.map(key => (
