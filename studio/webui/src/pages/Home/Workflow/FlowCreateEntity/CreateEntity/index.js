@@ -668,7 +668,7 @@ class CreateEntity extends Component {
       data.ontology_name = ontology_name;
       data.ontology_des = ontology_des;
 
-      this.props.setOntoData([data]);
+      // this.props.setOntoData([data]);
 
       if (type === 'check') {
         message.success([intl.get('createEntity.vc')]);

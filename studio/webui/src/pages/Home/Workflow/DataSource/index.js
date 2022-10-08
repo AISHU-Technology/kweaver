@@ -37,7 +37,6 @@ const DataSourceBox = props => {
 
       if (res?.res) {
         const buildOntology = await createOntology();
-        console.log(buildOntology);
         if (!buildOntology) return;
         next();
       }
@@ -83,8 +82,9 @@ const DataSourceBox = props => {
         if (mess?.Code === 500002 || mess?.Code === 500001) {
           message.error(mess.Cause);
         }
+        return false;
       }
-      return false;
+      return true;
     } catch (error) {
       message.error(error);
     }
