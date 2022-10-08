@@ -988,18 +988,6 @@ class Otl_check_params(object):
         message += "\n"
         return ret_status,message
 
-
-
-
-
-
-
-
-    #####逻辑校验
-    # def logic_params_check(self, flag):
-    #     if flag == "gettable_params":
-
-    # lzg add
     def getAllParOnto(self, params_json):
         ret_status = 0
         message = ""
