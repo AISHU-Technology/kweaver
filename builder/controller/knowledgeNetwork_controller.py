@@ -1,15 +1,20 @@
 from flask import Blueprint, request, jsonify
+
+from common.errorcode import codes
+from common.errorcode.gview import Gview
+from service.intelligence_service import intelligence_calculate_service
 from service.knw_service import knw_service
 from dao.knw_dao import knw_dao
 from utils.knw_check_params import knw_check_params
 from utils.log_info import Logger
-from utils.Gview import Gview
 from utils.common_response_status import CommonResponseStatus
 from utils.CommonUtil import commonutil
 import json
 from flasgger import swag_from
 import yaml
 import os
+
+from builder.service.intelligence_service import intelligence_query_service
 
 knowledgeNetwork_controller_app = Blueprint('knowledgeNetwork_controller_app', __name__)
 
@@ -265,6 +270,31 @@ def getGraph():
         return ret_message, ret_code
 
     return jsonify(ret_message), CommonResponseStatus.SUCCESS.value
+
+
+@knowledgeNetwork_controller_app.route('/intelligence', methods=['get'])
+@swag_from(swagger_new_response)
+def intelligence_stats():
+    '''
+    query knowledge network intelligence calculate result
+    ---
+    parameters:
+        -   name: know_id
+            in: query
+            required: true
+            description: knowledge network id
+            type: integer
+    '''
+    param_code, params_json, param_message = commonutil.getMethodParam()
+    if param_code != 0 or 'knw_id' not in params_json:
+        code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+        return Gview.error_return(code, arg='knw_id'), 400
+
+    res_code, result = intelligence_query_service.query_network_intelligence(params_json)
+    if res_code != codes.successCode:
+        code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_QueryError
+        return Gview.error_return(code, description='查询知识网络智商错误', cause='原因未知')
+    return Gview.json_return(result), 200
 
 
 # 添加网络与图谱关系

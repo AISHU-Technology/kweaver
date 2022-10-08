@@ -1,9 +1,9 @@
 from distutils.util import strtobool
 
 from dao.knw_dao import knw_dao
+from service.intelligence_service import intelligence_query_service
 from utils.common_response_status import CommonResponseStatus
 from utils.log_info import Logger
-from flask import request
 
 
 class knwService:
@@ -67,6 +67,8 @@ class knwService:
 
             ret = knw_dao.get_knw_by_name(knw_name, page - 1, size, order, rule)
             rec_dict = ret.to_dict('records')
+            for rec in rec_dict:
+                rec['intelligence_score'] = intelligence_query_service.query_network_intelligence_score(rec['id'])
             res = {"count": count, "df": rec_dict}
             obj["res"] = res
 

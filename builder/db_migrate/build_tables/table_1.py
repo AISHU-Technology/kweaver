@@ -5,7 +5,7 @@ import base64
 import yaml
 from sqlalchemy.orm import sessionmaker, relationship, foreign, remote
 from sqlalchemy.pool import NullPool
-from sqlalchemy import Column, String, create_engine, Integer, Boolean
+from sqlalchemy import Column, String, create_engine, Integer, Boolean, Text, DateTime, SmallInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.sql.schema import UniqueConstraint
@@ -424,8 +424,8 @@ class NetworkGraphRelation(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     knw_id = Column(Integer, nullable=True)
     graph_id = Column(Integer, nullable=True)
-    
-    
+
+
 class Lexicon(Base):
     __tablename__ = "lexicon"
     __table_args__ = {
@@ -442,6 +442,39 @@ class Lexicon(Base):
     status = Column(String(50), nullable=True)
     error_info = Column(LONGTEXT, nullable=True)
     UniqueConstraint(lexicon_name, knowledge_id, name="lexicon_name_kwn_id")
+
+
+class IntelligenceRecords(Base):
+    __tablename__ = "intelligence_records"
+    __table_args__ = {
+        'mysql_charset': 'utf8'
+    }
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    graph_id = Column(Integer, nullable=True)
+    entity = Column(String(200), nullable=True)
+    entity_type = Column(SmallInteger, nullable=True)
+    entity_status = Column(SmallInteger, nullable=True)
+    prop_number = Column(SmallInteger, nullable=True)
+    data_length = Column(Integer, nullable=True)
+    empty_number = Column(Integer, nullable=True)
+    updated_time = Column(DateTime, nullable=True)
+
+
+class async_task_records(Base):
+    __tablename__ = "async_tasks"
+    __table_args__ = {
+        'mysql_charset': 'utf8'
+    }
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    task_type = Column(String(100), nullable=True)
+    task_status = Column(String(50), nullable=True)
+    task_name = Column(String(200), nullable=True)
+    celery_task_id = Column(String(200), nullable=True)
+    relation_id = Column(String(200), nullable=True)
+    task_params = Column(Text, nullable=True)
+    result = Column(Text, nullable=True)
+    created_time = Column(DateTime, nullable=True)
+    finished_time = Column(DateTime, nullable=True)
 
 
 # 初始化数据库表

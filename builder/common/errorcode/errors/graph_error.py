@@ -110,4 +110,40 @@ errDict = {
         "ErrorDetails": _l('[class_type] [name] not exists'),
         "Solution": _l("Please check your parameter again.")  # "请重新检查输入参数"
     },
+    'Builder.GraphController.IntelligenceCalculateTask.ParamError': {
+        "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.ParamError",
+        "Description": "parameter [arg] error",
+        "ErrorDetails": _l("[arg] not exists or invalid"),
+        "Solution": _l("please ensure [arg] exists and valid")
+    },
+    'Builder.GraphController.IntelligenceCalculateTask.CreateTaskError': {
+        "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.CreateTaskError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
+    },
+    "Builder.GraphController.IntelligenceStats.ParamError": {
+        "ErrorCode": "Builder.GraphController.IntelligenceStats.ParamError",
+        "Description": "parameter [arg] error",
+        "ErrorDetails": _l("[arg] not exists or invalid"),
+        "Solution": _l("please ensure [arg] exists and valid")
+    },
+    'Builder.GraphController.IntelligenceStats.QueryError':{
+        "ErrorCode": "Builder.GraphController.IntelligenceStats.QueryError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
+    },
+    "Builder.KnowledgeNetworkController.IntelligenceStats.ParamError": {
+        "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.ParamError",
+        "Description": "parameter [arg] error",
+        "ErrorDetails": _l("[arg] not exists or invalid"),
+        "Solution": _l("please ensure [arg] exists and valid")
+    },
+    'Builder.KnowledgeNetworkController.IntelligenceStats.QueryError': {
+        "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.QueryError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
+    }
 }

@@ -177,7 +177,7 @@ class GraphDB(object):
                 print(res.error_msg())
                 state_code = 500
         if ngql:
-            ngql = re.sub('[\r|\n]*', "", ngql)
+            ngql = re.sub('[\r\n]*', "", ngql)
             res = session.execute(ngql)
             if not res.is_succeeded():
                 print(ngql)
@@ -1736,6 +1736,29 @@ class GraphDB(object):
                 code, r_json = self._orientdb_http(update_sql, db)
                 if code != 200:
                     print(r_json)
+
+    def graph_entity_prop_empty(self, db, entity_name, otl_type, prop):
+        """
+        查询某个实体类的非空值数量,该查询可能非常耗时
+        """
+        if self.type == 'orientdb':
+            return self._orientdb_prop_empty(db, entity_name, otl_type, prop)
+        return self._nebula_prop_empty(db, entity_name, otl_type, prop)
+
+    def _orientdb_prop_empty(self, db, entity_name, otl_type, prop):
+        empty_value_list = """ [NULL,"","()","[]","{}"] """
+        sql = f"""select count(*) from {entity_name} where {prop} not in {empty_value_list}"""
+        code, res = self._orientdb_http(sql, db)
+        return code, res
+
+    def _nebula_prop_empty(self, db, entity_name, otl_type, prop):
+        if otl_type != "edge":
+            otl_type = "vertex"
+        empty_value_list = """ ["","()","[]","{}"] """
+        sql = f"""lookup on {entity_name} where {entity_name}.`{prop}` not in {empty_value_list} 
+                yield properties({otl_type}).`{prop}` as props | yield count(*) as not_empty"""
+        code, res = self._nebula_session_exec_(sql, db)
+        return code, res
 
 
 class SQLProcessor:
