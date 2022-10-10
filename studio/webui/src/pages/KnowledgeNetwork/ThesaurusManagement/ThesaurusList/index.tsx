@@ -48,6 +48,11 @@ const ThesaurusList = (props: any) => {
   }, [order, rule]);
 
   useEffect(() => {
+    if (_.isEmpty(thesaurusList)) {
+      setSelectedIds([]);
+      return;
+    }
+
     pageListIsSelected(selectedIds);
     if (page !== listPage) setPage(listPage);
     const errorList = _.map(thesaurusList, item => {
@@ -129,10 +134,11 @@ const ThesaurusList = (props: any) => {
 
   // 判断是否选择
   const indeterminate = () => {
-    if (_.isEmpty(thesaurusList)) return
+    if (_.isEmpty(thesaurusList)) return;
     const list = thesaurusList.filter((item: any) => {
-      return (!_.isEmpty(item?.columns) && item?.status !== 'running')
+      return (!_.isEmpty(item?.columns) && item?.status !== 'running');
     });
+    console.log(!!selectedIds.length && selectedIds.length < list.length, selectedIds);
 
     return !!selectedIds.length && selectedIds.length < list.length;
   }
