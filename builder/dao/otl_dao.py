@@ -1805,7 +1805,6 @@ class OtlDao(object):
         new_id = cursor.lastrowid
         return new_id
 
-    # lzg add
     @connect_execute_close_db
     def getCount(self, connection, cursor, ):
         sql = """SELECT id FROM ontology_table;"""
