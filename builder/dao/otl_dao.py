@@ -1070,7 +1070,7 @@ class OtlDao(object):
                             return ret_code, info
 
 
-                    elif fileresponse.status_code == 206  or fileresponse.status_code == 200:
+                    elif fileresponse.status_code == 206 or fileresponse.status_code == 200:
                         file_type = name.split(".")[-1]
                         # encode=chardet.detect(fileresponse.content[0:1024])["encoding"]
 
@@ -1848,6 +1848,14 @@ class OtlDao(object):
         return new_id
 
     @connect_execute_close_db
+    def getbyname(self, name, connection, cursor, ):
+        sql = """SELECT * FROM ontology_table where ontology_name = %s""" % ('"' + name + '"')
+        Logger.log_info(sql)
+        # sql = sql.format()
+        df = pd.read_sql(sql, connection)
+        return df
+
+    @connect_execute_close_db
     def getbyids(self, ids, connection, cursor, ):
 
         sql = """SELECT * FROM ontology_table where id in (%s) """ % (",".join([str(id) for id in ids]))
@@ -2056,7 +2064,6 @@ class OtlDao(object):
         sql = sql.format('"' + state + '"', page * size, size)
         df = pd.read_sql(sql, connection)
         return df
-
 
     @connect_execute_close_db
     def getallbynameandstate(self, name, page, size, order, state, connection, cursor):
