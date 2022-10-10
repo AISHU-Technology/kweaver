@@ -197,7 +197,6 @@ class NewCreateEntityHead extends Component {
             data_source: saveData.selectedValue.data_source,
             ds_id: saveData.selectedValue.id.toString(),
             extract_type: 'labelExtraction',
-            // file_list: [[saveData.data[0][0].docid, saveData.data[0][2], saveData.data[0][0].name]],
             file_list: [
               { docid: saveData.data[0][0].docid, type: saveData.data[0][0].type, name: saveData.data[0][0].name }
             ],
@@ -395,18 +394,6 @@ class NewCreateEntityHead extends Component {
             {graphName}
           </div>
 
-          {/* 编辑按钮 */}
-          {/* {TYPE === 'view' ? null : (
-            <div
-              className="icon"
-              onClick={() => {
-                this.setEditEntityModal(true);
-                this.props.setTouch(true);
-              }}
-            >
-              <IconFont type="icon-edit" className="icon" />
-            </div>
-          )} */}
         </div>
 
         <div className="tool tool-center">
