@@ -440,7 +440,8 @@ class OtlDao(object):
         try:
             modeldir = Config.modeldir
             print(modeldir)
-            files = os.listdir(modeldir)
+            # files = os.listdir(modeldir)
+            files = next(os.walk(modeldir))[1]
             files.sort()
             if "basemodel" in files:
                 files.remove("basemodel")
