@@ -23,6 +23,12 @@ function checkCliTools() {
   fi
 }
 
+function installYQ() {
+  if [ ! -x "$(command -v yq)" ]; then
+    tar -zxf yq_linux_amd64.tar.gz && chmod +x yq_linux_amd64 && mv yq_linux_amd64 /usr/local/bin/yq
+  fi
+}
+
 function checkDockerComposeCli() {
   if [ ! -x "$(command -v docker-compose)" ]; then
     DOCKER_COMPOSE="docker compose"
@@ -128,6 +134,7 @@ function checkParameters() {
 clear
 chmod 777 -R ./
 checkCliTools
+installYQ
 checkDockerComposeCli
 checkDockerComposeStatus
 checkDockerComposeService
@@ -140,12 +147,6 @@ case $answer in
   echo "You selected yes,will use the project's default database."
   ;;
 (N | n)
-  function installYQ() {
-    if [ ! -x "$(command -v yq)" ]; then
-      tar -zxf yq_linux_amd64.tar.gz && chmod +x yq_linux_amd64 && mv yq_linux_amd64 /usr/local/bin/yq
-    fi
-  }
-
   function operateWithYaml() {
     if [[ ! -d "$CONFIG_DIR" ]]; then
       mkdir $CONFIG_DIR
@@ -327,8 +328,6 @@ case $answer in
     done
   }
 
-  installYQ
-
   operateWithYaml
 
   if [ $OPERATE_TYPE = "new_type" ]; then
@@ -375,7 +374,7 @@ function dockerComposeInit() {
   checkParameters "Enter the host that you want to deploy aishu-kweaver: " "$EMPTY_EXP"
   sed -i '/.*server_name*./c\server_name  '"$tempInput"';' ./nginx/nginx.conf
   # edit compose yaml
-  yq -i '.services.kw-builder.extra_hosts = [{"kwhost":"'"$tempInput"'"}]' "$1"
+  yq -i '.services.kw-builder.extra_hosts = ["kwhost : '"$tempInput"'"]' "$1"
   $DOCKER_COMPOSE -p $SERVICE_NAME -f "$1" up -d
 }
 
