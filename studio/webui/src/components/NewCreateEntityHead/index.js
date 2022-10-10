@@ -65,9 +65,7 @@ class NewCreateEntityHead extends Component {
    * @description 获取第一页点数据(正在预测点任务一直在第一页，所以用第一页也判断是否预测完点状态)
    */
   getPageOneData = async () => {
-    const { ontology_id, used_task, ontologyId} = this.props;
-    console.log(ontology_id)
-    console.log(ontologyId)
+    const { ontology_id, used_task, ontologyId } = this.props;
     if (ontology_id === '' && ontologyId === 0) {
       return;
     }
