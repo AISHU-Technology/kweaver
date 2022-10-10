@@ -83,8 +83,6 @@ const Workflow = props => {
       res.res.graph_KMap && setKnowMapData(res.res.graph_KMap);
       res.res.graph_KMerge && setConflation(res.res.graph_KMerge);
       res.res.graph_status && setGraphStatus(res.res.graph_status);
-      const ontologyDes = res.res.graph_otl
-      setOntoData(ontologyDes);
       setGraphId(id);
     }
 
@@ -175,7 +173,7 @@ const Workflow = props => {
 
     // 删除新增的任务
     deleteTaskList();
-    history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}`);
+    history.push(`/knowledhandleSavege/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}`);
   };
 
   /**
@@ -196,7 +194,7 @@ const Workflow = props => {
       return;
     }
 
-    // const step3Data = step3Ref.current?.getFlowData();
+    const step3Data = step3Ref.current?.getFlowData();
     const step4Data = step4Ref.current?.getFlowData();
     const step5Data = step5Ref.current?.getFlowData();
     const step6Data = step6Ref.current?.getFlowData();
@@ -210,8 +208,7 @@ const Workflow = props => {
       graph_id: parseInt(graphId),
       graph_baseInfo: basicData ? [basicData] : [],
       graph_ds: dataSourceData.map(value => value.id),
-      // graph_otl: step3Data.length ? step3Data : ontoData,
-      graph_otl: ontoData,
+      graph_otl: step3Data.length ? step3Data : ontoData,
       graph_InfoExt: step4Data,
       graph_KMap: step5Data.length ? step5Data : knowMapData,
       graph_KMerge: step6Data.length ? step6Data : conflation
@@ -222,13 +219,6 @@ const Workflow = props => {
     if (res) {
       history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}`);
     }
-  };
-
-  /**
-   * 本体id值
-   */
-  const setNewOntologyId = data => {
-    setOntologyId(data);
   };
 
   /**
@@ -294,6 +284,7 @@ const Workflow = props => {
             dataSourceRef={step2Ref}
             ontoData={ontoData}
             setOntologyId={setOntologyId}
+            setOntoData={setOntoData}
           />
         </div>
         <div className={`hide ${current === 2 && 'show'}`}>
@@ -325,6 +316,7 @@ const Workflow = props => {
             infoExtrData={infoExtrData}
             setInfoExtrData={setInfoExtrData}
             ref={step4Ref}
+            ontologyId={ontologyId}
           />
         </div>
         <div className={`hide space ${current === 4 && 'show center'}`}>
@@ -338,6 +330,7 @@ const Workflow = props => {
             knowMapData={knowMapData}
             setKnowMapData={setKnowMapData}
             ref={step5Ref}
+            ontologyId={ontologyId}
           />
         </div>
         <div className={`hide space center ${current === 5 && 'show'}`}>
@@ -354,6 +347,7 @@ const Workflow = props => {
             next={next}
             setConflation={setConflation}
             ref={step6Ref}
+            ontologyId={ontologyId}
           />
         </div>
       </div>

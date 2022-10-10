@@ -10,7 +10,7 @@ import servicesCreateEntity from '@/services/createEntity';
 import FreeGraph from '@/components/freeGraph';
 import NewCreateEntityHead from '@/components/NewCreateEntityHead';
 import NewCreateEnityRightMenu from '@/components/newCreateEnityRightMenu';
-import { setSaveData, analyUrl, isFlow, handleTaskId } from './assistFunction';
+import { setSaveData, isFlow, handleTaskId } from './assistFunction';
 
 import './style.less';
 
@@ -207,24 +207,24 @@ class CreateEntity extends Component {
   /**
    * @description 保存并关闭
    */
-  // getFlowData = () => {
-  //   const { nodes, edges, ontology_id, used_task, ontology_name } = this.state;
+  getFlowData = () => {
+    const { nodes, edges, ontology_id, used_task, ontology_name } = this.state;
 
-  //   if (!ontology_name) return [];
+    // if (!ontology_name) return [];
 
-  //   const { entity, edge } = setSaveData(nodes, edges);
-  //   const data = {
-  //     entity,
-  //     edge,
-  //     used_task,
-  //     id: ontology_id !== '' ? ontology_id : this.props.ontologyId,
-  //     ontology_id: ontology_id !== '' ? ontology_id.toString() : this.props.ontologyId.toString(),
-  //     ontology_name,
-  //     ontology_des: this.props.ontology_des
-  //   };
+    const { entity, edge } = setSaveData(nodes, edges);
+    const data = {
+      entity,
+      edge,
+      used_task,
+      id: ontology_id !== '' ? ontology_id : this.props.ontologyId,
+      ontology_id: ontology_id !== '' ? ontology_id.toString() : this.props.ontologyId.toString(),
+      ontology_name,
+      ontology_des: this.props.ontology_des
+    };
 
-  //   return [data];
-  // };
+    return [data];
+  };
 
   /**
    * @description 选择右侧操作工具
@@ -632,7 +632,7 @@ class CreateEntity extends Component {
             if (resData && resData.res) {
               data.ontology_name = ontology_name;
               data.ontology_des = ontology_des;
-              this.props.setOntoData([data]);
+              // this.props.setOntoData([data]);
               if (type === 'check') {
                 message.success([intl.get('createEntity.vc')]);
               }
@@ -651,7 +651,7 @@ class CreateEntity extends Component {
               this.props.next(resData);
             }
           })
-          .catch(() => {
+          .catch(e => {
             message.error([intl.get('createEntity.de')]);
             this.state.dataInfoRef.setActiveKey(['1', '2']);
           });
@@ -661,7 +661,6 @@ class CreateEntity extends Component {
     }
 
     const resData = await servicesCreateEntity.changeFlowData(this.props.graphId, requestData);
-
     this.signalNext = false;
 
     if (resData && resData.res) {
