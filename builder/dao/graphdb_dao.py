@@ -112,6 +112,11 @@ def normalize_text(text):
     text = re.sub(r"[\']", "\\\'", text).strip()
     return text
 
+def normalize_text_es(text):
+    text = re.sub(r"[\n\t]", " ", text)
+    text = text.replace("\\", "\\\\").strip()
+    return text
+
 
 class GraphDB(object):
     def __init__(self, graph_db_id):
@@ -1932,7 +1937,7 @@ class SQLProcessor:
                         if not (isinstance(row_val_t, float) and math.isnan(row_val_t)):
                             if ot_tb == 'name':
                                 name_exists = True
-                            otlvalue = type_transform(self.type, normalize_text(str(row_val_t)),
+                            otlvalue = type_transform(self.type, normalize_text_es(str(row_val_t)),
                                                       en_pro_dict[otl_name][ot_tb],
                                                       sql_format=False)
                             vals.append(otlvalue)
@@ -1988,7 +1993,7 @@ class SQLProcessor:
         body_field = {}
         for pro in index_props:
             if pro in p_pro:
-                body_field[pro] = normalize_text(str(p_pro[pro]))
+                body_field[pro] = normalize_text_es(str(p_pro[pro]))
             else:
                 body_field[pro] = ''
         return json.dumps(body_index) + '\n' + json.dumps(body_field)
