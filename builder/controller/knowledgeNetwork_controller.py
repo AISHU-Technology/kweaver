@@ -14,7 +14,7 @@ from flasgger import swag_from
 import yaml
 import os
 
-from builder.service.intelligence_service import intelligence_query_service
+from service.intelligence_service import intelligence_query_service
 
 knowledgeNetwork_controller_app = Blueprint('knowledgeNetwork_controller_app', __name__)
 
