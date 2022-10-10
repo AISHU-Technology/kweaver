@@ -1,7 +1,6 @@
 FROM node:16-slim as nodemake
 RUN mkdir -p /root/studio && \
-ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
-npm install yarn -g --registry=https://r.npm.taobao.org
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 WORKDIR /root/studio/
 COPY . .
 WORKDIR /root/studio/webui
