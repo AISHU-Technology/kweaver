@@ -16,7 +16,7 @@ type GraphDBItemVo struct {
 type GraphDBVo struct {
 	ID       int      `json:"id"`
 	Name     string   `json:"name" binding:"graphdbName"`
-	Type     string   `json:"type" binding:"oneof=orientdb nebula opensearch"`
+	Type     string   `json:"type" binding:"oneof=orientdb nebula"`
 	User     string   `json:"user" binding:"required,lte=50"`
 	Password string   `json:"password" binding:"required,lte=150"`
 	Ip       []string `json:"ip" binding:"ipList"`
@@ -28,7 +28,7 @@ type GraphDBVo struct {
 type GraphDBUpdateVo struct {
 	ID       int      `json:"id" binding:"gt=0"`
 	Name     string   `json:"name" binding:"graphdbName"`
-	Type     string   `json:"type" binding:"oneof=orientdb nebula opensearch"`
+	Type     string   `json:"type" binding:"oneof=orientdb nebula"`
 	User     string   `json:"user" binding:"required,lte=50"`
 	Password string   `json:"password" binding:"required,lte=150"`
 	Ip       []string `json:"ip" binding:"ipList"`
@@ -37,7 +37,7 @@ type GraphDBUpdateVo struct {
 
 // ConnTestVo 测试配置是否正确时的请求
 type ConnTestVo struct {
-	Type     string   `json:"type" binding:"oneof=orientdb nebula opensearch"`
+	Type     string   `json:"type" binding:"oneof=orientdb nebula"`
 	User     string   `json:"user" binding:"required,lte=50"`
 	Password string   `json:"password" binding:"required,lte=150"`
 	Ip       []string `json:"ip" binding:"ipList"`
@@ -46,6 +46,6 @@ type ConnTestVo struct {
 
 type GraphListSearchCondition struct {
 	SearchCondition
-	Type string `form:"type"  json:"type" binding:"required,oneof=orientdb nebula opensearch all"`
+	Type string `form:"type"  json:"type" binding:"required,oneof=orientdb nebula all"`
 	Name string `form:"name" json:"name"`
 }
