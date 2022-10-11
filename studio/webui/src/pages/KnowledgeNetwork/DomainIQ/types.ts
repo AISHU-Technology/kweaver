@@ -17,6 +17,7 @@ export type TableState = {
   page: number;
   total: number;
   order: string;
+  rule: string;
 };
 
 export type ListItem = {

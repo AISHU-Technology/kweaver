@@ -28,7 +28,7 @@ const NetworkContents = props => {
   const { ad_onChangeGraphStatus } = props;
   const { loading, selectedGraph, selectedKnowledge, setSelectedGraph } = props;
   const { onRefreshLeftSpace, openModalImport } = props;
-  const [tabsKey, setTabsKey] = useState(initTab());
+  const [tabsKey, setTabsKey] = useState(() => initTab());
   const [graphBasicData, setGraphBasicData] = useState({});
   const [isFetching, setIsFetching] = useState(false);
 
@@ -44,9 +44,12 @@ const NetworkContents = props => {
       const result = await serviceGraphDetail.graphGetInfoBasic(getData);
       const data = result?.res || {};
       setGraphBasicData(data);
+
+      if (data.step_num < 6 && tabsKey !== '1') setTabsKey('1');
     } catch (error) {
       const { type = '', response = {} } = error || {};
       if (type === 'message') message.error(response?.Description || '');
+      setTabsKey('1');
     }
   };
 

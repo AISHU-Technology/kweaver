@@ -1,6 +1,6 @@
 const mockIQList = (() => {
   const data = Array.from({ length: 3 }, (_, i) => ({
-    graph_id: i + 1,
+    graph_id: i + 54,
     graph_config_id: i + 1,
     graph_name: `图谱${i + 1}`,
     calculate_status: i ? 'CALCULATED' : 'CALCULATED',
@@ -28,19 +28,6 @@ const mockIQList = (() => {
 })();
 
 const knwIQGet = ({ knw_id, graph_id, page, size, graph_name }: any) => {
-  const data = Array.from({ length: 55 }, (_, i) => ({
-    graph_id: i + 1,
-    graph_config_id: i + 1,
-    graph_name: `图谱${i + 1}`,
-    calculate_status: 'CALCULATED',
-    last_task_message: '',
-    last_task_time: '2022-01-01 00:00:00',
-    data_repeat_C1: -1,
-    data_missing_C2: -1,
-    data_quality_B: -1,
-    data_quality_score: -1
-  }));
-
   return Promise.resolve(mockIQList);
 };
 

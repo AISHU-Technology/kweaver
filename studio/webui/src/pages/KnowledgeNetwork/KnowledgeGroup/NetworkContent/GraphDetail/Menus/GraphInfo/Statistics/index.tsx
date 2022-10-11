@@ -13,6 +13,7 @@ import SourceCard from './SourceCard';
 import { StatisticsData } from './types';
 import { intelligenceCalculate, intelligenceGetByGraph } from './__tests__/mockData';
 import './style.less';
+import { message } from 'antd';
 
 interface StatisticsProps {
   isShow: boolean;
@@ -25,19 +26,19 @@ interface DataRowProps {
   value?: number;
 }
 
-const { NORMAL, FAIL } = GRAPH_STATUS;
-const KEY_INTL: Record<string, string> = {
-  nodeCount: intl.get('graphList.entityCount'),
-  nodeProCount: intl.get('graphList.entityProCount'),
-  edgeCount: intl.get('graphList.relationshipCount'),
-  edgeProCount: intl.get('graphList.relationshipProCount'),
-  totalKnw: intl.get('intelligence.totalKnw'), // 总计知识量
-  data_repeat_C1: intl.get('intelligence.repeatRate'), // 重复率
-  data_missing_C2: intl.get('intelligence.missRate') // 缺失率
+const { NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION } = GRAPH_STATUS;
+const KEY_INTL: Record<string, { field: string; tip?: React.ReactNode }> = {
+  nodeCount: { field: intl.get('graphList.entityCount') },
+  nodeProCount: { field: intl.get('graphList.entityProCount') },
+  edgeCount: { field: intl.get('graphList.relationshipCount') },
+  edgeProCount: { field: intl.get('graphList.relationshipProCount') },
+  totalKnw: { field: intl.get('intelligence.totalKnw'), tip: <ExplainTip.KNW_TOTAL_SOURCE /> }, // 总计知识量
+  data_repeat_C1: { field: intl.get('intelligence.repeatRate'), tip: <ExplainTip.REPEAT_RATE /> }, // 重复率
+  data_missing_C2: { field: intl.get('intelligence.missRate'), tip: <ExplainTip.MISSING /> } // 缺失率
 };
-
 const SOURCE_KEYS = ['nodeCount', 'nodeProCount', 'edgeCount', 'edgeProCount', 'totalKnw'];
 const QUALITY_KEYS = ['data_repeat_C1', 'data_missing_C2'];
+
 const DataRow = ({ field, tip, value }: DataRowProps) => {
   return (
     <div className="ad-space-between data-row">
@@ -59,10 +60,10 @@ const Statistics = (props: StatisticsProps) => {
 
   /**
    * `正常` | `失败` 状态的图谱可计算
+   * WARNING `失败` 的nebule图谱无法计算出点和边数量
    */
   const shouldCalculate = useMemo(() => {
     const { status, graphdb_type } = graphBasicData;
-    // WARNING `失败` 的nebule图谱无法计算出点和边数量
     const statusArr = [NORMAL, graphdb_type !== 'nebula' && FAIL].filter(Boolean);
     return statusArr.includes(status);
   }, [graphBasicData.status]);
@@ -94,12 +95,11 @@ const Statistics = (props: StatisticsProps) => {
   const getDetail = async (id: number, needLoading = false): Promise<boolean> => {
     try {
       needLoading && setLoading(true);
-      // const { res, Description }: any = (await intelligenceGetByGraph({ graph_id: id })) || {};
       const { res, Description }: any = (await servicesIntelligence.intelligenceGetByGraph({ graph_id: id })) || {};
       if (res) {
         setDetail(res);
         const isFinish = res.calculate_status !== CALCULATE_STATUS.IN_CALCULATING;
-        needLoading && setLoading(!isFinish);
+        setLoading(!isFinish);
         return isFinish;
       }
 
@@ -126,19 +126,39 @@ const Statistics = (props: StatisticsProps) => {
   };
 
   /**
+   * 无法计算时报错提示
+   */
+  const alertErr = () => {
+    const { status, graphdb_type } = graphBasicData;
+    switch (true) {
+      case status === WAITING:
+        return message.error(intl.get('intelligence.waitErr'));
+      case status === RUNNING:
+        return message.error(intl.get('intelligence.runErr'));
+      case status === CONFIGURATION:
+        return message.error(intl.get('intelligence.configErr'));
+      case status === FAIL && graphdb_type === 'nebula':
+        return message.error(intl.get('intelligence.failErr'));
+      default:
+        break;
+    }
+  };
+
+  /**
    * 点击计算
    */
   const onCalculateClick = async () => {
-    if (!shouldCalculate || loading) return;
+    if (loading) return;
+    if (!shouldCalculate) return alertErr();
     setErrMsg('');
 
     try {
       setLoading(true);
-      // const { res, Description }: any = (await intelligenceCalculate({ graph_id: graphBasicData.id })) || {};
-      const { res, Description }: any =
+      const { res, Description } =
         (await servicesIntelligence.intelligenceCalculate({ graph_id: graphBasicData.id })) || {};
+      if (res) return pollingDetail();
       Description && setErrMsg(Description);
-      res && pollingDetail();
+      setLoading(false);
     } catch {
       setLoading(false);
     }
@@ -162,7 +182,7 @@ const Statistics = (props: StatisticsProps) => {
           </Format.Title>
 
           <div
-            className={classNames('compute-btn', 'ad-c-primary', { disabled: !shouldCalculate })}
+            className={classNames('compute-btn', 'ad-c-primary')}
             style={{ cursor: loading ? 'default' : undefined }}
             onClick={onCalculateClick}
           >
@@ -188,14 +208,10 @@ const Statistics = (props: StatisticsProps) => {
           source={detail.data_quality_score}
           icon={<IconFont type="icon-zhishiliang" style={{ color: 'rgb(18,110,227)', fontSize: 16 }} />}
         >
-          {SOURCE_KEYS.map(key => (
-            <DataRow
-              key={key}
-              field={KEY_INTL[key]}
-              value={counter[key]}
-              tip={key === 'totalKnw' ? <ExplainTip.KNW_TOTAL_SOURCE /> : undefined}
-            />
-          ))}
+          {SOURCE_KEYS.map(key => {
+            const { field, tip } = KEY_INTL[key];
+            return <DataRow key={key} field={field} value={counter[key]} tip={tip} />;
+          })}
         </SourceCard>
 
         <SourceCard
@@ -210,9 +226,10 @@ const Statistics = (props: StatisticsProps) => {
           source={detail.data_quality_B}
           icon={<IconFont type="icon-shujuzhiliang" style={{ color: 'rgb(0,147,144)', fontSize: 16 }} />}
         >
-          {QUALITY_KEYS.map(key => (
-            <DataRow key={key} field={KEY_INTL[key]} value={detail[key]} />
-          ))}
+          {QUALITY_KEYS.map(key => {
+            const { field, tip } = KEY_INTL[key];
+            return <DataRow key={key} field={field} value={detail[key]} tip={tip} />;
+          })}
         </SourceCard>
       </div>
     </div>

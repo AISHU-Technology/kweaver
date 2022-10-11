@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import intl from 'react-intl-universal';
-import BaseTip from './BaseTip';
+import BaseTip from '../BaseTip';
 
 const DomainIQTip = () => (
   <BaseTip

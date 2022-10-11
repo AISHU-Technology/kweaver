@@ -189,7 +189,7 @@ const GraphList = () => {
       sorter: true,
       sortOrder: sorter.rule === 'intelligence_score' && sorter2sorter(sorter.order),
       sortDirections: ['ascend', 'descend', 'ascend'],
-      render: (source: number) => source || '--'
+      render: (source: number) => (source < 0 ? '--' : source)
     },
     {
       title: intl.get('global.creationTime'),

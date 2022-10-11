@@ -10,8 +10,9 @@
     "knowledgeSearch": "知识网络搜索",
     "dataManage": "数据源管理",
     "storageManage": "存储管理",
-    "thesaurusManagement": "词库",
+    "thesaurusManagement": "领域词库",
     "domainIQ": "领域智商",
+    "domainGraph": "领域知识图谱",
     "ok": "确定",
     "cancel": "取消",
     "delete": "删除",
@@ -61,6 +62,7 @@
     "tenMillion": "千万",
     "100Million": "亿",
     "100Billion": "千亿",
-    "trillion": "兆"
+    "trillion": "兆",
+    "graphID": "知识图谱ID"
   }
 }

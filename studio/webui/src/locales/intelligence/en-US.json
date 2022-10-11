@@ -20,6 +20,16 @@
     "knwSourceTip3": "Nx10(N=knowledge)",
     "totalKnwTip": "Entity * Entity properties + Relationship * Relationship properties",
     "qualitySourceTip1": "Comprehensive metrics for assessing duplication rates and missing values in Knowledge graph data",
-    "qualitySourceTip2": "Quality score = (1 - repetition rate) + (1 - missing ratio) / 2"
+    "qualitySourceTip2": "Quality score = (1 - repetition rate) + (1 - missing ratio) / 2",
+    "missingTip1": "Indicates the repetition of the amount of knowledge",
+    "missingTip2": "Repetition rate = (knowledge before deduplication - knowledge after deduplication) / knowledge before deduplication",
+    "repeatTip1": "Indicates the lack of knowledge",
+    "repeatTip2": "The attribute value is NULL, and \"\", '', \"()\", \"[]\", \"{}\" are all judged as lack of knowledge",
+    "waitErr": "The knowledge graph is waiting to run, and can be calculated after the construction is completed",
+    "runErr": "The knowledge graph is running and can be calculated after the construction is complete",
+    "configErr": "The knowledge graph is being configured and can be calculated after the construction is completed",
+    "failErr": "Since the knowledge graph is stored in the nebula database, if you need to calculate, please build the graph successfully",
+    "byKnwSource": "By knowledge score",
+    "byQualitySource": "By Quality score"
   }
 }
