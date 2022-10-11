@@ -21,7 +21,7 @@ type GraphDBVo struct {
 	Password string   `json:"password" binding:"required,lte=150"`
 	Ip       []string `json:"ip" binding:"ipList"`
 	Port     []string `json:"port" binding:"portList"`
-	OsId     int      `json:"osId" binding:"required,gte=1"`
+	OsId     int      `json:"osId" binding:"required_unless=Type orientdb,gte=1"`
 }
 
 // GraphDBUpdateVo 根据id更新存储记录时的请求
