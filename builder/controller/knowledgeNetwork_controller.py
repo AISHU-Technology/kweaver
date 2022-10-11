@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
 
 from common.errorcode import codes
-from common.errorcode.gview import Gview
 from service.intelligence_service import intelligence_calculate_service
 from service.knw_service import knw_service
 from dao.knw_dao import knw_dao
+from utils.Gview import Gview
 from utils.knw_check_params import knw_check_params
 from utils.log_info import Logger
 from utils.common_response_status import CommonResponseStatus
@@ -14,7 +14,7 @@ from flasgger import swag_from
 import yaml
 import os
 
-from builder.service.intelligence_service import intelligence_query_service
+from service.intelligence_service import intelligence_query_service
 
 knowledgeNetwork_controller_app = Blueprint('knowledgeNetwork_controller_app', __name__)
 
@@ -285,6 +285,7 @@ def intelligence_stats():
             description: knowledge network id
             type: integer
     '''
+    from common.errorcode.gview import Gview
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0 or 'knw_id' not in params_json:
         code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError

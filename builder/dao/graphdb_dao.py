@@ -1464,6 +1464,33 @@ class GraphDB(object):
             print(es_bulk_index_body)
             print(self.state)
 
+    def stats(self, db):
+        '''
+        统计数据量
+
+        Returns:
+            code: 返回码
+            res: 正确则返回以下字段
+                edges: 边的总数
+                entities: 点的总数
+                name2count: {点/边的名字: 个数}
+                entity_count: {点的名字: 个数}
+                edge_count: {边的名字: 个数}
+                edge2pros: {边名: 属性个数}
+                entity2pros: {实体名: 属性个数}
+        '''
+        databaselist = self.get_list()
+        if databaselist == -1:
+            code = codes.Builder_GraphdbDao_Count_GraphDBConnectionError
+            return code, None
+        if db not in databaselist:
+            return codes.Builder_GraphdbDao_Count_DBNameNotExitsError, None
+
+        if self.type == 'orientdb':
+            return self._count_orientdb(db)
+        elif self.type == 'nebula':
+            return self._count_nebula(db)
+
     def count(self, db):
         '''
         统计数据量

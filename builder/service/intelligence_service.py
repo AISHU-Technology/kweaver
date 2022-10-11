@@ -33,7 +33,6 @@ class IntelligenceCalculateService(object):
 
         entity_onto_list = intelligence_query_service.query_real_entity_list(graph_db, graph_id, space_id)
 
-
         quality_dict_list = list()
         for entity_info in entity_onto_list:
             quality_dict = self.entity_quality(graph_db, entity_info)
@@ -75,7 +74,7 @@ class IntelligenceCalculateService(object):
             not_empty_total += total if code != 200 else res.column_values('not_empty').pop(0).as_int()
 
         entity_info['total'] = entity_info['total']
-        entity_info['empty'] = entity_info['total']*len(properties) - not_empty_total
+        entity_info['empty'] = entity_info['total'] * len(properties) - not_empty_total
         entity_info['prop_number'] = len(properties)
         return entity_info
 
@@ -84,8 +83,7 @@ class IntelligenceCalculateService(object):
         发送异步任务到celery, 参数未知
         """
 
-        url = "http://kw-builder:6488/task"
-        #url = "http://10.4.129.62:6488/intelligence/task"
+        url = "http://localhost:6488/task/intelligence"
         headers = {
             'Content-Type': 'application/json',
         }
@@ -178,7 +176,7 @@ class IntelligenceQueryService(object):
                     (2 - graph_quality['data_quality_C1'] - graph_quality['data_quality_C2']) / 2)
         if total <= 0:
             return -1
-        return round(math.log(total, 10)*10, 2)
+        return round(math.log(total, 10) * 10, 2)
 
     def query_network_intelligence(self, query_params: dict):
         """
@@ -225,7 +223,7 @@ class IntelligenceQueryService(object):
                 # 更新最大时间
                 recent_calculate_time = self.max_time(graph_quality['last_task_time'], recent_calculate_time)
                 # 总得分
-                total += graph_quality['total_knowledge']*(1-graph_quality['data_quality_C2']/2)
+                total += graph_quality['total_knowledge'] * (1 - graph_quality['data_quality_C2'] / 2)
                 has_value = True
 
             knw_intelligence['knw_id'] = graph_info_list[0]["knw_id"]
@@ -234,7 +232,7 @@ class IntelligenceQueryService(object):
             knw_intelligence['color'] = graph_info_list[0]["color"]
             knw_intelligence['creation_time'] = graph_info_list[0]["creation_time"]
             knw_intelligence['update_time'] = graph_info_list[0]["update_time"]
-            knw_intelligence['total'] = round(math.log(total, 10)*10, 2) if has_value else -1
+            knw_intelligence['total'] = round(math.log(total, 10) * 10, 2) if has_value else -1
             knw_intelligence['recent_calculate_time'] = recent_calculate_time
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list
 
@@ -279,7 +277,7 @@ class IntelligenceQueryService(object):
         """
         比较mysql中的本体和实际图数据库中的本体，最终以图数据库中的为准
         """
-        res_code, class_list = graph_db.count(space_id)
+        res_code, class_list = graph_db.stats(space_id)
         if res_code != codes.successCode:
             log.error("query graph onto info error")
             return []
@@ -400,7 +398,7 @@ class IntelligenceQueryService(object):
             updated_time = record['updated_time']
 
         graph_quality['data_quality_C1'] = 0
-        graph_quality['data_quality_C2'] = 1 - round(not_empty / total, 2)
+        graph_quality['data_quality_C2'] = round(1 - not_empty / total, 2)
         graph_quality['data_quality_B'] = round(math.log(total, 10) * 10, 2)
         graph_quality['total_knowledge'] = total
         graph_quality['intelligence_score'] = graph_quality['data_quality_B'] * \

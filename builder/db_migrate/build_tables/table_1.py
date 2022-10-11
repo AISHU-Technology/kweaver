@@ -452,7 +452,7 @@ class IntelligenceRecords(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     graph_id = Column(Integer, nullable=True)
     entity = Column(String(200), nullable=True)
-    entity_type = Column(SmallInteger, nullable=True)
+    entity_type = Column(String(50), nullable=True)
     entity_status = Column(SmallInteger, nullable=True)
     prop_number = Column(SmallInteger, nullable=True)
     data_length = Column(Integer, nullable=True)
