@@ -265,35 +265,6 @@ const ModalContent = memo(props => {
                   </Select>
                 </Form.Item>
               </div>
-              <div className="form-row">
-                {/* 访问账户名称 */}
-                <Form.Item
-                  name="user"
-                  label={[intl.get('configSys.username')]}
-                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
-                >
-                  <Input
-                    className="user-input"
-                    autoComplete="off"
-                    placeholder={intl.get('configSys.userPlaceholder')}
-                    disabled={optionType === 'check'}
-                  ></Input>
-                </Form.Item>
-                {/* 访问存储密码 */}
-                <Form.Item
-                  name="password"
-                  label={[intl.get('configSys.password')]}
-                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
-                >
-                  <Input.Password
-                    autoComplete="off"
-                    visibilityToggle={false}
-                    placeholder={intl.get('configSys.passPlaceholder')}
-                    disabled={optionType === 'check'}
-                    className="pass-input"
-                  ></Input.Password>
-                </Form.Item>
-              </div>
               {/* 存储地址 */}
               <Form.List name="ips" className="form-list">
                 {(fields, { add, remove }, { errors }) => (
@@ -370,6 +341,35 @@ const ModalContent = memo(props => {
                   </>
                 )}
               </Form.List>
+              <div className="form-row">
+                {/* 访问账户名称 */}
+                <Form.Item
+                  name="user"
+                  label={[intl.get('configSys.username')]}
+                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
+                >
+                  <Input
+                    className="user-input"
+                    autoComplete="off"
+                    placeholder={intl.get('configSys.userPlaceholder')}
+                    disabled={optionType === 'check'}
+                  ></Input>
+                </Form.Item>
+                {/* 访问存储密码 */}
+                <Form.Item
+                  name="password"
+                  label={[intl.get('configSys.password')]}
+                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
+                >
+                  <Input.Password
+                    autoComplete="off"
+                    visibilityToggle={false}
+                    placeholder={intl.get('configSys.passPlaceholder')}
+                    disabled={optionType === 'check'}
+                    className="pass-input"
+                  ></Input.Password>
+                </Form.Item>
+              </div>
             </Form>
           </div>
         </ScrollBar>
