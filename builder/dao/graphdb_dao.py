@@ -50,6 +50,12 @@ def type_transform(db_type, value, type, sql_format=True):
                 value = ' datetime("{}") '.format(value)
             elif db_type == 'orientdb':
                 value = "'" + str(value) + "'"
+        if type == 'boolean':
+            if value.lower() not in ['true', 'false']:
+                try:
+                    value = str(bool(eval(value)))
+                except Exception:
+                    value = default_value(db_type, type)
     return str(value)
 
 
@@ -93,16 +99,24 @@ def data_type_transform(data_type: str):
     return mapping[data_type.lower()]
 
 
-def default_value(sql_format=True):
-    if sql_format:
-        return "NULL"
-    else:
+def default_value(db_type='nebula', type='other', sql_format=True):
+    '''
+    当数据为空时插入图数据库或者opensearch的默认值
+    Args:
+        db_type: 图数据库类型 nebula or orientdb
+        type: 数据类型
+        sql_format: False: opensearch使用
+    '''
+    if not sql_format:
         return ""
+    if db_type == 'orientdb' and type == 'string':
+        return '""'  # 如果为NULL，engine搜索会报错
+    return "NULL"
 
-def value_transfer(value):
+def value_transfer(value, db_type, type):
     if not value:
-        return default_value()
-    return normalize_text(str(value))
+        return default_value(db_type, type)
+    return type_transform(db_type, normalize_text(str(value)), type)
 
 
 def normalize_text(text):
@@ -1082,9 +1096,9 @@ class GraphDB(object):
         properties = []
         for p in props:
             if pro_dict[p] == 'string':
-                properties.append(p + '(' + str(index_len) + ')')
+                properties.append('`' + p + '`' + '(' + str(index_len) + ')')
             else:
-                properties.append(p)
+                properties.append('`' + p + '`')
         edge_index = 'CREATE EDGE INDEX IF NOT EXISTS`{}` ON `{}` ({})' \
             .format(index_name, edge_name, ','.join(properties))
         self._nebula_exec(edge_index, db)
@@ -1279,7 +1293,7 @@ class GraphDB(object):
         create_edge = 'CREATE EDGE IF NOT EXISTS `{}`'.format(edge_class)
         props = []
         for o_p in edge_otl_pro:
-            prop = '`' + o_p + '` ' + edge_pro_dict[edge_class][o_p]
+            prop = '`' + o_p + '` ' + data_type_transform(edge_pro_dict[edge_class][o_p])
             props.append(prop)
         props.append('`timestamp` double')
         create_edge += '(' + ','.join(props) + ')'
@@ -1783,7 +1797,7 @@ class SQLProcessor:
             batch_sql = 'INSERT VERTEX `{}` ({}) VALUES {}' \
                 .format(otl_name,
                         ','.join(pros),
-                        ','.join(batch_sql))
+                        ',\n'.join(batch_sql))
         # pool.close()
         # pool.join()
         return batch_sql
@@ -1838,14 +1852,14 @@ class SQLProcessor:
             if not valueExist:
                 tab_val.append("%(otlpro)s=%(otlvalue)s" \
                                % {"otlpro": "`" + ot_tb + "`",
-                                  "otlvalue": default_value()})
-                vals.append(default_value())
+                                  "otlvalue": default_value(self.type, en_pro_dict[otl_name][ot_tb])})
+                vals.append(default_value(self.type, en_pro_dict[otl_name][ot_tb]))
         if tab_val:
             if "ds_id" in row.keys():
                 tab_val.append('`ds_id`=\'' + str(row["ds_id"]) + '\'')
                 vals.append('\'' + str(row["ds_id"]) + '\'')
             else:
-                vals.append(default_value())
+                vals.append(default_value(self.type, 'string'))
             ts = time.time()
             tab_val.append(" `timestamp` = " + str(ts))
             vals.append(str(ts))
@@ -1999,7 +2013,7 @@ class SQLProcessor:
         return json.dumps(body_index) + '\n' + json.dumps(body_field)
 
     def prop_value_sql(self, entity_data=None, edge_otl_tab_pro=None, onedata=None, prop=None, value=None,
-                       edge_class=None):
+                       edge_class=None, edge_pro_dict=None):
         '''获取赋值sql
         如果onedata存在,将MongoDB数据中的需要的实体属性值dict转换为字符串list
         否则通过prop和value构造
@@ -2011,6 +2025,7 @@ class SQLProcessor:
             prop: 属性列表
             value: 值列表
             edge_class: 边名, 没有name属性值时则将属性name赋值为边名
+            edge_pro_dict: {边名: {属性名: 属性类型}}
 
         Returns:
             orientdb只有返回值第一项有意义,为给属性赋值的字符串列表
@@ -2026,17 +2041,15 @@ class SQLProcessor:
                         if otl_pro == 'name':
                             name_exists = True
                         if self.type == 'orientdb':
-                            if not onedata[tab_pro]:
-                                prop_val_sql[0].append(str(otl_pro) + "=" + value_transfer(onedata[tab_pro]))
-                            else:
-                                prop_val_sql[0].append(
-                                    str(otl_pro) + "=" + "'" + value_transfer(onedata[tab_pro]) + "'")
+                            prop_val_sql[0].append(str(otl_pro) + "=" +
+                                                   value_transfer(onedata[tab_pro],
+                                                                  self.type,
+                                                                  edge_pro_dict[edge_class][otl_pro]))
                         elif self.type == 'nebula':
                             prop_val_sql[0].append(str(otl_pro))
-                            if not onedata[tab_pro]:
-                                prop_val_sql[1].append(value_transfer(onedata[tab_pro]))
-                            else:
-                                prop_val_sql[1].append("'" + value_transfer(onedata[tab_pro]) + "'")
+                            prop_val_sql[1].append(value_transfer(onedata[tab_pro],
+                                                                  self.type,
+                                                                  edge_pro_dict[edge_class][otl_pro]))
             if not name_exists:
                 if self.type == 'orientdb':
                     prop_val_sql[0].append("`name`=" + "'" + str(edge_class) + "'")
@@ -2209,7 +2222,7 @@ class SQLProcessor:
                                                edge_pro_dict[edge_class][pro])
                     vals.append(pro_value)
                 else:
-                    vals.append(default_value())
+                    vals.append(default_value(self.type, edge_pro_dict[edge_class][pro]))
             ngql = '"{}" -> "{}" : ({})' \
                 .format(s_sql, o_sql, ','.join(vals))
             return ngql

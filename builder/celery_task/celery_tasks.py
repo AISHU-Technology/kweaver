@@ -771,7 +771,7 @@ def operation_maintenance_model_extract(conn_db, graph_mongo_Name, ds_id, file_s
         # 写入mongodb
         ar_model.write2mongodb(conn_db, graph_mongo_Name, spos)
     Logger.log_info("operation maintenance model extract finished!")
-    
+
     
 
 
