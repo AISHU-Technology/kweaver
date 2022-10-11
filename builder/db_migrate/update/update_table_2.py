@@ -32,14 +32,14 @@ def updateDatabase(connection, cursor):
               `graph_id` int(11) DEFAULT NULL,
               `entity` varchar(200) DEFAULT NULL,
               `entity_type` varchar(50) DEFAULT NULL,
-              `entity_status` smallint(6) DEFAULT NULL,
               `prop_number` smallint(6) DEFAULT NULL,
-              `data_length` int(11) DEFAULT NULL,
+              `data_number` int(11) DEFAULT NULL,
               `empty_number` int(11) DEFAULT NULL,
+              `repeat_number` int(11) DEFAULT NULL,
               `updated_time` datetime DEFAULT NULL,
               PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-               """
+         """
     Logger.log_info(sql)
     cursor.execute(sql)
 

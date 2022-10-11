@@ -31,15 +31,15 @@ class IntelligenceDao:
         value_list.append(params_json['graph_id'])
         value_list.append(params_json['entity'])
         value_list.append(params_json['entity_type'])
-        value_list.append(params_json['entity_status'])
         value_list.append(params_json['prop_number'])
-        value_list.append(params_json['data_length'])
+        value_list.append(params_json['data_number'])
         value_list.append(params_json['empty_number'])
+        value_list.append(params_json['repeat_number'])
         value_list.append(params_json['updated_time'])
 
         sql = """
         INSERT INTO intelligence_records 
-            (graph_id, entity, entity_type, entity_status, prop_number, data_length, empty_number, updated_time) 
+            (graph_id, entity, entity_type, prop_number, data_number, empty_number, repeat_number, updated_time) 
         VALUES
             (%s, %s, %s, %s, %s, %s, %s, %s)
               """
@@ -56,6 +56,7 @@ class IntelligenceDao:
         # 插入
         new_ids = []
         for params_json in params_json_list:
+            params_json['repeat_number'] = 0
             new_id = self.__insert_record(params_json, cursor, connection)
             new_ids.append(new_id)
         return new_ids

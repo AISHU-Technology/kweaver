@@ -44,9 +44,8 @@ class IntelligenceCalculateService(object):
             record['graph_id'] = graph_id
             record['entity'] = quality_dict['name']
             record['entity_type'] = quality_dict['otl_type']
-            record['entity_status'] = 1
             record['prop_number'] = quality_dict['prop_number']
-            record['data_length'] = quality_dict['total']
+            record['data_number'] = quality_dict['total']
             record['empty_number'] = quality_dict['empty']
             record['updated_time'] = datetime.datetime.now()
 
@@ -390,7 +389,7 @@ class IntelligenceQueryService(object):
         updated_time = None
         for record in records:
             # 计算总数
-            entity_total = record['prop_number'] * record['data_length']
+            entity_total = record['prop_number'] * record['data_number']
             total += entity_total
             # 计算缺失总数
             not_empty += (entity_total - record['empty_number'])

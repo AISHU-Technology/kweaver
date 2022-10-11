@@ -453,10 +453,10 @@ class IntelligenceRecords(Base):
     graph_id = Column(Integer, nullable=True)
     entity = Column(String(200), nullable=True)
     entity_type = Column(String(50), nullable=True)
-    entity_status = Column(SmallInteger, nullable=True)
     prop_number = Column(SmallInteger, nullable=True)
-    data_length = Column(Integer, nullable=True)
+    data_number = Column(Integer, nullable=True)
     empty_number = Column(Integer, nullable=True)
+    repeat_number = Column(Integer, nullable=True)
     updated_time = Column(DateTime, nullable=True)
 
 
