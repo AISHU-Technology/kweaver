@@ -169,6 +169,9 @@ jobs:
           cliProjectKey: 'sonar.kw-studio'
           cliProjectName: 'kw-studio'
           cliSources: 'studio'
+          extraProperties: |
+            sonar.sources=studio
+            sonar.exclusions=studio/webui/**
 
       - task: SonarQubeAnalyze@4
         displayName: Run SonarQube Code Analysis task
