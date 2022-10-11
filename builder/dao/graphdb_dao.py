@@ -1877,16 +1877,16 @@ class SQLProcessor:
                     vid = get_md5(idval)
                     sql = '"{}":({})'.format(vid, ','.join(vals))
             else:
-                if self.type == 'orientdb':
-                    sql = "UPDATE `{}` SET {} UPSERT WHERE {}" \
-                        .format(otl_name,
-                                ",".join(m for m in tab_val),
-                                " and ".join(m for m in tab_val))
-                elif self.type == 'nebula':
-                    # 报错
-                    print(
-                        'missing merge properties, can\'t get nebula vid. otl_name: {}. batch_iter: {}'.format(otl_name,
-                                                                                                               batch_iter))
+                # if self.type == 'orientdb':
+                #     sql = "UPDATE `{}` SET {} UPSERT WHERE {}" \
+                #         .format(otl_name,
+                #                 ",".join(m for m in tab_val),
+                #                 " and ".join(m for m in tab_val))
+                # elif self.type == 'nebula':
+                # 报错
+                print(
+                    'missing merge properties, can\'t get nebula vid. otl_name: {}. batch_iter: {}'.format(otl_name,
+                                                                                                           batch_iter))
                     # idval = ''
                     # for m in vals:
                     #     idval += f'{m}_'
