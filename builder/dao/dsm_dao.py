@@ -340,6 +340,7 @@ class DsmDao(object):
                     SELECT *
                     FROM
                       data_source_table
+                    where knw_id={2}
                     order by
                       update_time asc
                     limit
@@ -349,6 +350,7 @@ class DsmDao(object):
                     SELECT *
                     FROM
                       data_source_table
+                    where knw_id={2}
                     order by
                       update_time Desc
                     limit
