@@ -10,9 +10,6 @@ trigger:
   paths:
     include:
       - /studio/*
-    exclude:
-      - /builder/*
-      - /sdk/*
 
 pool:
   name: go
@@ -180,7 +177,3 @@ jobs:
         displayName: Publish Quality Gate Result task
         inputs:
           pollingTimeoutSec: '300'
-
-
-
-
