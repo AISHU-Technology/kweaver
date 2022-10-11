@@ -1079,6 +1079,18 @@ def intelligence_calculate_task():
 
     graph_id = params_json['graph_id']
 
+    # query graph status
+    ret_code, resp = graph_Service.get_graph_info_basic(graph_id, False, ['status'])
+    if ret_code != codes.successCode:
+        return resp
+
+    # only normal and failed status could be calculated
+    graph_status = resp.json.get('res', {}).get('status', '')
+    if graph_status != "normal" and graph_status != "failed":
+        code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphStatusError
+        return Gview2.error_return(code)
+
+    # send async task, because large graph will cause a very long time query
     code, resp = intelligence_calculate_service.send_task(graph_id)
     if code != codes.successHttpCode:
         code = codes.Builder_GraphController_IntelligenceCalculateTask_CreateTaskError

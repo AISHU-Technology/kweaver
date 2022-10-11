@@ -122,6 +122,18 @@ errDict = {
         "ErrorDetails": _l("[cause]"),
         "Solution": _l("Please contact the developers.")
     },
+    'Builder.GraphController.IntelligenceCalculateTask.GraphStatusQueryError': {
+        "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.GraphStatusQueryError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
+    },
+    'Builder.GraphController.IntelligenceCalculateTask.GraphStatusError': {
+        "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.GraphStatusError",
+        "Description": _l("only normal and failed status allowed intelligence calculate"),
+        "ErrorDetails": _l("graph build status not matched"),
+        "Solution": _l("Please check graph status")
+    },
     "Builder.GraphController.IntelligenceStats.ParamError": {
         "ErrorCode": "Builder.GraphController.IntelligenceStats.ParamError",
         "Description": "parameter [arg] error",
