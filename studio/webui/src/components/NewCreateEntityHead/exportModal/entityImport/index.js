@@ -102,9 +102,6 @@ class EntityImport extends Component {
 
     return (
       <div className="entity-import">
-        {/* <div className="title-ontolog-name">
-          <label className="name">{[intl.get('createEntity.ontologyName')]}</label>
-        </div> */}
         <div className={saveData && saveData.data === '' ? 'select-false' : 'select-true'}>
           <ConfigProvider renderEmpty={this.customizeRenderEmpty}>
             <Select

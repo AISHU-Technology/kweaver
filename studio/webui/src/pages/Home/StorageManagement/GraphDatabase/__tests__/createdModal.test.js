@@ -74,18 +74,19 @@ describe('Function test', () => {
   });
 
   it('edit', async () => {
-    const wrapper = init({ ...props, optionType: 'edit' });
-
+    const initData = {
+      id: 1,
+      name: 'nebula111',
+      type: 'nebula',
+      count: 1,
+      osName: '内置opensearch',
+      user: 'root',
+      updated: 1662637067,
+      created: 1662625054
+    };
+    const wrapper = init({ ...props, initData, optionType: 'edit' });
     await sleep();
     act(() => {
-      wrapper
-        .find('.name-input')
-        .at(0)
-        .simulate('change', { target: { value: 'ygname' } });
-      wrapper
-        .find('.user-input')
-        .at(0)
-        .simulate('change', { target: { value: 'admin' } });
       wrapper
         .find('.pass-input')
         .at(0)
@@ -97,12 +98,10 @@ describe('Function test', () => {
     });
     await sleep();
     wrapper.update();
-
     act(() => {
       wrapper.find('.btn.primary').at(0).simulate('click');
     });
     await sleep();
-
     expect(serviceStorageManagement.graphDBUpdate).toHaveBeenCalled();
   });
 });
