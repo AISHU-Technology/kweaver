@@ -134,7 +134,7 @@ const API = {
   searchWordCloud: `${baseBuilder}/lexicon/word_cloud_search`,
 
   // intelligence
-  intelligenceCalculate: `${baseBuilder}/graph/intelligence`,
+  intelligenceCalculate: `${baseBuilder}/graph/intelligence/task`,
   intelligenceGetByKnw: `${baseBuilder}/knw/intelligence`,
   intelligenceGetByGraph: `${baseBuilder}/graph/intelligence`
 };

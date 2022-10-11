@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Progress } from 'antd';
 import intl from 'react-intl-universal';
 import AvatarName from '@/components/Avatar';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
 import KnowledgeModal from '@/components/KnowledgeModal';
-import ExplainTip from '@/components/ExplainTip';
+import RatePlate from './RatePlate';
 import { formatID } from '@/utils/handleFunction';
-import { sourceToPercent } from './assistFunction';
 import { KgInfo } from '../types';
 import './style.less';
 
@@ -36,21 +34,8 @@ const KnowledgeInfo: React.FC<KnowledgeInfoProps> = ({ kgInfo, onEditSuccess }) 
           <IconFont type="icon-edit" />
         </div>
       </div>
-      <div className="ad-pt-6 ad-pb-8 source-icon">
-        <Progress
-          type="circle"
-          percent={sourceToPercent(118.75)}
-          width={190}
-          format={() => (
-            <div className="source-format">
-              <p className="s-text">{knw_intelligence_score || '118.75'}</p>
-              <p className="tip-text">
-                {intl.get('global.domainIQ')}
-                <ExplainTip.DOMAIN_IQ />
-              </p>
-            </div>
-          )}
-        />
+      <div className="source-icon">
+        <RatePlate source={knw_intelligence_score} />
       </div>
 
       <div className="ad-pt-4 ad-pb-6 info-box">
@@ -65,8 +50,7 @@ const KnowledgeInfo: React.FC<KnowledgeInfoProps> = ({ kgInfo, onEditSuccess }) 
           </div>
         </div>
         <Format.Title className="desc-text" strong={4}>
-          {knw_description ||
-            '我随手一打就是十个字我随手一打就是十个就是十个字随手一打就是一打就是十个字我随手一打就是十个字'}
+          {knw_description || '--'}
         </Format.Title>
       </div>
 

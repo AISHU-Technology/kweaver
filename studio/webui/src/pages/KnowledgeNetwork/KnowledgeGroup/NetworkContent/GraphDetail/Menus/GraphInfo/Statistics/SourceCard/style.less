@@ -18,6 +18,15 @@
       text-align: center;
       line-height: 34px;
     }
+
+    .dashed-line {
+      @text-color: var(--ad-heading-color);
+      width: 24px;
+      height: 2px;
+      background: linear-gradient(to right, @text-color 83.3%, #fff 16.7%);
+      background-size: 12px 100%;
+      transform: translateY(9px);
+    }
   }
 
   .children-wrapper {

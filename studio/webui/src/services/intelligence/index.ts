@@ -28,10 +28,10 @@ const intelligenceGetByKnw = async (data: {
 
 /**
  * 知识图谱智商详情查询
- * @param data.graph_id 图谱id
+ * @param graph_id 图谱id
  */
-const intelligenceGetByGraph = async (data: { graph_id: number }) =>
-  apiService.axiosGetData(API.intelligenceGetByGraph, data);
+const intelligenceGetByGraph = async ({ graph_id }: { graph_id: number }) =>
+  apiService.axiosGet(`${API.intelligenceGetByGraph}/${graph_id}`);
 
 const servicesIntelligence = {
   intelligenceCalculate,

@@ -104,7 +104,7 @@ const KnowledgeNetwork = () => {
         onClick: () => history.push(`/knowledge/iq?id=${currentId}`)
       },
       {
-        label: intl.get('global.graph'),
+        label: intl.get('global.domainGraph'),
         key: '/knowledge/network',
         icon: <IconFont type="icon-zhishitupu" />,
         onClick: () => history.push(`/knowledge/network?id=${currentId}`)
