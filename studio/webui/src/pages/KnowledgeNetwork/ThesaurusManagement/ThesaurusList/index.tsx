@@ -139,12 +139,7 @@ const ThesaurusList = (props: any) => {
       return (!_.isEmpty(item?.columns) && item?.status !== 'running');
     });
 
-    // 当前页选择
-    const currPageSelect = _.filter(list, item => {
-      return selectedIds.includes(item.id);
-    })
-
-    return !!currPageSelect.length && currPageSelect.length < list.length;
+    return !!selectedIds.length && selectedIds.length < list.length;
   }
 
   // 当前页已选
