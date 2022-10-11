@@ -9,6 +9,7 @@ import { wrapperTitle } from '@/utils/handleFunction';
 
 import IconFont from '@/components/IconFont';
 import ScrollBar from '@/components/ScrollBar';
+import serviceStorageManagement from '@/services/storageManagement';
 
 import noResult from '@/assets/images/noResult.svg';
 import './index.less';
@@ -38,7 +39,32 @@ const LeftSpace = props => {
     getGraphList({ page, order, rule });
   }, []);
 
-  const createGraph = () => history.push('/home/workflow/create');
+  const createGraph = async () => {
+    try {
+      const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '' };
+      const { res = {} } = await serviceStorageManagement.openSearchGet(data);
+      if (res?.data?.length > 0) {
+        history.push('/home/workflow/create');
+        return;
+      }
+      message.warning({
+        content: (
+          <div>
+            {intl.get('global.openSearchNull')}
+            <span
+              style={{ cursor: 'pointer' }}
+              className="ad-c-primary"
+              onClick={() => history.push('/home/system-config')}
+            >
+              {intl.get('global.goNow')}
+            </span>
+          </div>
+        )
+      });
+    } catch (error) {
+      //
+    }
+  };
 
   const searchGraph = e => {
     const { value } = e.target;

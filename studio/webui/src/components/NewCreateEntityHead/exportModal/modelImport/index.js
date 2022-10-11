@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
-import { Select, ConfigProvider, Empty } from 'antd';
+import { Select, ConfigProvider, Empty, message } from 'antd';
 
 import servicesCreateEntity from '@/services/createEntity';
+import serviceStorageManagement from '@/services/storageManagement';
 
 import GraphShow from '../graphShow';
 import { handleUnStructDataSourceData, setSourceAndTarget, showError } from './assistFunction';
@@ -51,6 +52,13 @@ class ModelImport extends Component {
    * @description 选择模型
    */
   selectModel = async selectTypeValue => {
+    // 图谱绑定orientdb，选择文档知识模型，在没有配置opensearch的情况选择无效并提示
+    if (selectTypeValue === 'Anysharedocumentmodel' && this.props.dbType === 'orientdb') {
+      const a = await this.getOpensearchList();
+
+      if (!a) return;
+    }
+
     const res = await servicesCreateEntity.getModelPreview(selectTypeValue);
 
     if (res && res.res && res.res.modelspo) {
@@ -116,6 +124,35 @@ class ModelImport extends Component {
       },
       type: 'model'
     });
+  };
+
+  getOpensearchList = async () => {
+    try {
+      const data = { page: 1, size: 20, orderField: 'updated', order: 'DESC', name: '' };
+      const { res = {} } = await serviceStorageManagement.openSearchGet(data);
+
+      if (res?.total >= 1) {
+        return true;
+      }
+      message.warning({
+        content: (
+          <div>
+            {intl.get('global.openSearchNull')}
+
+            <span
+              style={{ cursor: 'pointer' }}
+              className="ad-c-primary"
+              onClick={() => history.push('/home/system-config')}
+            >
+              {intl.get('global.goNow')}
+            </span>
+          </div>
+        )
+      });
+      return false;
+    } catch (error) {
+      return false;
+    }
   };
 
   /**

@@ -48,7 +48,7 @@ const ModalContent = memo(props => {
       if (!_.isEmpty(result?.res)) {
         setList(result.res?.data);
         if (optionType === 'create') {
-          const dt = result.res?.data.filter(item => item.name === '内置opensearch')[0];
+          const dt = result.res?.data?.[0];
 
           dt && form.setFieldsValue({ osId: dt.id });
           dt && setDefaultIndex(dt.id);
@@ -71,6 +71,10 @@ const ModalContent = memo(props => {
     }
   };
 
+  /**
+   *
+   * 提交
+   */
   const onOk = e => {
     form.validateFields().then(async values => {
       const { ips, name, user, type, password, osId } = values;
@@ -102,7 +106,15 @@ const ModalContent = memo(props => {
 
       try {
         if (optionType === 'create') {
-          const result = await serviceStorageManagement.graphDBCreate({ ip, name, user, type, password, port, osId });
+          const result = await serviceStorageManagement.graphDBCreate({
+            ip,
+            name,
+            user,
+            type,
+            password,
+            port,
+            osId: osId || ''
+          });
           if (result && result.res) {
             message.success(intl.get('configSys.saveSuccess'));
             closeModal();
@@ -125,7 +137,9 @@ const ModalContent = memo(props => {
       }
     });
   };
-
+  /**
+   * 测试连接
+   */
   const testConnection = () => {
     form.validateFields().then(async values => {
       const { ips, name, user, type, password } = values;
@@ -197,7 +211,7 @@ const ModalContent = memo(props => {
               layout="vertical"
               initialValues={{
                 name: initData.name || '',
-                type: initData.type || 'orientdb',
+                type: initData.type || props.dbType,
                 user: initData.user || '',
                 password: initData.password || '',
                 ips: initData.ips || [''],
@@ -231,7 +245,7 @@ const ModalContent = memo(props => {
                   <Select
                     getPopupContainer={triggerNode => triggerNode.parentElement}
                     autoComplete="off"
-                    disabled={optionType === 'check'}
+                    disabled
                     onChange={resetForm}
                   >
                     <Select.Option key="orientdb" value="orientdb">
@@ -247,7 +261,19 @@ const ModalContent = memo(props => {
                   label={intl.get('configSys.bindIndex')}
                   name="osId"
                   validateFirst={true}
-                  rules={[{ required: true, message: [intl.get('subscription.cannotNull')] }]}
+                  rules={[
+                    {
+                      required: props.dbType === 'nebula',
+                      message: [intl.get('subscription.cannotNull')]
+                    }
+                    // {
+                    //   validator: async (rule, value) => {
+                    //     if (props.dbType === 'nebula' && !value) {
+                    //       throw new Error([intl.get('subscription.cannotNull')]);
+                    //     }
+                    //   }
+                    // }
+                  ]}
                 >
                   <Select
                     getPopupContainer={triggerNode => triggerNode.parentElement}
@@ -399,7 +425,7 @@ const ModalContent = memo(props => {
 
 // 弹窗
 const CreateModal = props => {
-  const { visible, closeModal, optionType, getData, initData, ...otherProps } = props;
+  const { visible, closeModal, optionType, getData, initData, dbType, ...otherProps } = props;
   const created = [intl.get('configSys.createdStorage')];
   const edit = [intl.get('configSys.editStorage')];
   const check = [intl.get('configSys.checkStorage')];
@@ -427,6 +453,7 @@ const CreateModal = props => {
         optionType={optionType}
         getData={getData}
         initData={initData}
+        dbType={dbType}
       />
     </Modal>
   );

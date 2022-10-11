@@ -803,6 +803,7 @@ class CreateEntity extends Component {
             quit={this.quit}
             onEditEntityModalRef={this.onEditEntityModalRef}
             selectedElement={selectedElement}
+            dbType={this.props.dbType}
           />
         </div>
 

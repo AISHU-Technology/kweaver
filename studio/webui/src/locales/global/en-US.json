@@ -51,6 +51,7 @@
     "failed": "Failed",
     "emptyTableCreate": "[create]",
     "check": "Check",
+    "refresh": "Refresh",
     "thesaurusManagement": "Thesaurus",
     "loadFail": "Failed to load",
     "thousand": "thousand",
@@ -58,6 +59,8 @@
     "tenMillion": "ten million",
     "100Million": "hundred million",
     "100Billion": "hundred billion",
-    "trillion": "trillion"
+    "trillion": "trillion",
+    "openSearchNull": "OpenSearch not bound, please configure it at System Configuration &gt; Storage Management.",
+    "goNow": "GO now"
   }
 }
