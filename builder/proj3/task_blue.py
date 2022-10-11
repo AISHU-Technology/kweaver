@@ -12,7 +12,7 @@ from utils.log_info import Logger as log
 task_app = Blueprint('task_app', __name__)
 
 
-@task_app.route('/<task_type>/task', methods=['POST'])
+@task_app.route('/task/<task_type>', methods=['POST'])
 def create_task(task_type):
     """
         create instant task
@@ -39,7 +39,7 @@ def create_task(task_type):
     return Gview.json_return(celery_task_id), 200
 
 
-@task_app.route('/<task_type>/task/cancel/<task_id>', methods=['POST'])
+@task_app.route('/task/<task_type>/cancel/<task_id>', methods=['POST'])
 def cancel_task(task_type, task_id):
     """
     停止任务，保留记录
@@ -48,7 +48,7 @@ def cancel_task(task_type, task_id):
     return Gview.json_return("OK")
 
 
-@task_app.route('/<task_type>/task/<task_id>', methods=['DELETE'])
+@task_app.route('/task/<task_type>/<task_id>', methods=['DELETE'])
 def delete_task(task_type, task_id):
     """
     停止任务，删除记录

@@ -84,8 +84,7 @@ class IntelligenceCalculateService(object):
         发送异步任务到celery, 参数未知
         """
 
-        url = "http://kw-builder:6488/task"
-        #url = "http://10.4.129.62:6488/intelligence/task"
+        url = "http://localhost:6488/task/intelligence"
         headers = {
             'Content-Type': 'application/json',
         }
