@@ -443,6 +443,40 @@ class Lexicon(Base):
     error_info = Column(LONGTEXT, nullable=True)
     UniqueConstraint(lexicon_name, knowledge_id, name="lexicon_name_kwn_id")
 
+
+class IntelligenceRecords(Base):
+    __tablename__ = "intelligence_records"
+    __table_args__ = {
+        'mysql_charset': 'utf8'
+    }
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    graph_id = Column(Integer, nullable=True)
+    entity = Column(String(200), nullable=True)
+    entity_type = Column(String(50), nullable=True)
+    entity_status = Column(SmallInteger, nullable=True)
+    prop_number = Column(SmallInteger, nullable=True)
+    data_length = Column(Integer, nullable=True)
+    empty_number = Column(Integer, nullable=True)
+    updated_time = Column(DateTime, nullable=True)
+
+
+class async_task_records(Base):
+    __tablename__ = "async_tasks"
+    __table_args__ = {
+        'mysql_charset': 'utf8'
+    }
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    task_type = Column(String(100), nullable=True)
+    task_status = Column(String(50), nullable=True)
+    task_name = Column(String(200), nullable=True)
+    celery_task_id = Column(String(200), nullable=True)
+    relation_id = Column(String(200), nullable=True)
+    task_params = Column(Text, nullable=True)
+    result = Column(Text, nullable=True)
+    created_time = Column(DateTime, nullable=True)
+    finished_time = Column(DateTime, nullable=True)
+
+
 # 初始化数据库表
 def init_datatable():
     from urllib import parse
