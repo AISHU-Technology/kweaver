@@ -106,6 +106,7 @@ def set_timezone():
 
 if __name__ == "__main__":
     from apscheduler.schedulers.background import BackgroundScheduler
+    import task
 
     ctx = app.app_context()
     ctx.push()
