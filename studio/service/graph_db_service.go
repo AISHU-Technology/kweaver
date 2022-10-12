@@ -173,7 +173,11 @@ func (*GraphDBService) GetGraphDBList(condition *vo.GraphListSearchCondition) *v
 		for i, item := range graphDBs {
 			vo := &vo.GraphDBItemVo{ID: item.ID, Name: item.Name, Type: item.Type, User: item.User, TimeVo: vo.TimeVo{Updated: item.Updated.Unix(), Created: item.Created.Unix()}}
 			kw_errors.Try(global.DB.Model(po.GraphConfigTableModel).Where("graph_db_id = ?", item.ID).Count(&vo.Count).Error).Throw(kw_errors.InternalServerError)
-			kw_errors.Try(global.DB.Model(po.FulltextEngineModel).Select("name").Where("id = ?", item.FulltextId).First(&vo.OsName).Error).Throw(kw_errors.InternalServerError)
+			if item.FulltextId != 0 {
+				kw_errors.Try(global.DB.Model(po.FulltextEngineModel).Select("name").Where("id = ?", item.FulltextId).First(&vo.OsName).Error).Throw(kw_errors.InternalServerError)
+			} else {
+				vo.OsName = ""
+			}
 			graphDBVos[i] = vo
 		}
 	}
