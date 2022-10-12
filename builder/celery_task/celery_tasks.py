@@ -15,6 +15,10 @@ from requests.auth import HTTPBasicAuth
 import requests
 # from utils.ConnectUtil import redisConnect
 from os import path
+
+from common.errorcode import codes
+from service.intelligence_service import intelligence_calculate_service
+
 sys.path.append(os.path.abspath("../"))
 from common.exception.base import ExceptLevel
 from common.exception.celerytask_exception import CeleryTaskException
@@ -1928,6 +1932,12 @@ def buildertask(self, graphid, flag):
                     if time_out < 0:
                         raise CeleryTaskException(
                             (ExceptLevel.ERROR, 'Builder.celeryTask.graphdb.nebulaTimeOutError', 'nebula job time out'))
+
+            print(f"start post intelligence task graph:{graphid}")
+            code, resp = intelligence_calculate_service.send_task(graphid)
+            if code != codes.successHttpCode:
+                print(f'post intelligence task graph:{graphid}, failed:{repr(resp)}')
+
         except Exception:
             pass  # 统计任务失败的异常忽略掉
 
