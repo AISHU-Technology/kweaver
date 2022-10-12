@@ -41,16 +41,16 @@ const LeftSpace = props => {
 
   const createGraph = async () => {
     try {
-      const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '' };
-      const { res = {} } = await serviceStorageManagement.openSearchGet(data);
+      const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '', type: 'all' };
+      const { res = {} } = await serviceStorageManagement.graphDBGetList(data);
       if (res?.data?.length > 0) {
         history.push('/home/workflow/create');
         return;
       }
-      message.warning({
+      message.error({
         content: (
           <div>
-            {intl.get('global.openSearchNull')}
+            {intl.get('global.databaseNull')}
             <span
               style={{ cursor: 'pointer' }}
               className="ad-c-primary"
@@ -59,10 +59,13 @@ const LeftSpace = props => {
               {intl.get('global.goNow')}
             </span>
           </div>
-        )
+        ),
+        onClick: () => {
+          message?.destroy();
+        }
       });
     } catch (error) {
-      //
+      message.error('出错啦');
     }
   };
 

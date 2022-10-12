@@ -44,7 +44,7 @@ class GraphDatabase extends Component {
     storageInfo: {}, // 保存编辑或查看的存储信息
     orderType: 'updated', // 排序的类型
     order: 'DESC', // 排序 ASC 升序 DESC 降序
-    dbType: 'OrientDB'
+    dbType: 'orientdb'
   };
 
   searchInput = React.createRef();
@@ -90,7 +90,9 @@ class GraphDatabase extends Component {
     try {
       const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '' };
       const { res = {} } = await serviceStorageManagement.openSearchGet(data);
-      if (res?.data?.length > 0) return this.setState({ visible: true, storageInfo: {}, optionType: 'create' });
+      if (res?.data?.length > 0 || type === 'orientdb') {
+        return this.setState({ visible: true, storageInfo: {}, optionType: 'create' });
+      }
       if (type === 'nebula') {
         message.warning(intl.get('configSys.indexConfigurationFirst'));
       }
@@ -240,7 +242,6 @@ class GraphDatabase extends Component {
       fixed: 'right',
       width: 160,
       render: (text, record) => {
-        // if (record.name === '内置OrientDB' || record.name === '内置Nebula') return '- -';
         return (
           <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => this.getStorage(record, 'edit')}>
@@ -293,11 +294,6 @@ class GraphDatabase extends Component {
               {intl.get('datamanagement.create')}
               <CaretDownOutlined style={{ fontSize: 12 }} />
             </Button>
-            {/* <Button type="primary" className={`new-button ${anyDataLang === 'en-US' ? 'new-button-en' : ''}`}>
-                <IconFont type="icon-Add" className="add-icon" />
-                {intl.get('userManagement.create')}
-                <CaretDownOutlined style={{ fontSize: 12 }} />
-              </Button> */}
           </Dropdown>
 
           <div className="ad-center">

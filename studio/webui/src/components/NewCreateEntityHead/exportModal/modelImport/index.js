@@ -126,6 +126,9 @@ class ModelImport extends Component {
     });
   };
 
+  /**
+   * 查询当前系统是否配置opensearch
+   */
   getOpensearchList = async () => {
     try {
       const data = { page: 1, size: 20, orderField: 'updated', order: 'DESC', name: '' };
@@ -134,7 +137,7 @@ class ModelImport extends Component {
       if (res?.total >= 1) {
         return true;
       }
-      message.warning({
+      message.error({
         content: (
           <div>
             {intl.get('global.openSearchNull')}
@@ -147,7 +150,10 @@ class ModelImport extends Component {
               {intl.get('global.goNow')}
             </span>
           </div>
-        )
+        ),
+        onClick: () => {
+          message?.destroy();
+        }
       });
       return false;
     } catch (error) {

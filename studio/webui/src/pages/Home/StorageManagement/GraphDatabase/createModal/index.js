@@ -47,7 +47,7 @@ const ModalContent = memo(props => {
 
       if (!_.isEmpty(result?.res)) {
         setList(result.res?.data);
-        if (optionType === 'create') {
+        if (optionType === 'create' && props.dbType === 'nebula') {
           const dt = result.res?.data?.[0];
 
           dt && form.setFieldsValue({ osId: dt.id });
@@ -113,7 +113,7 @@ const ModalContent = memo(props => {
             type,
             password,
             port,
-            osId: osId || ''
+            osId
           });
           if (result && result.res) {
             message.success(intl.get('configSys.saveSuccess'));
@@ -137,6 +137,7 @@ const ModalContent = memo(props => {
       }
     });
   };
+
   /**
    * 测试连接
    */
@@ -266,13 +267,6 @@ const ModalContent = memo(props => {
                       required: props.dbType === 'nebula',
                       message: [intl.get('subscription.cannotNull')]
                     }
-                    // {
-                    //   validator: async (rule, value) => {
-                    //     if (props.dbType === 'nebula' && !value) {
-                    //       throw new Error([intl.get('subscription.cannotNull')]);
-                    //     }
-                    //   }
-                    // }
                   ]}
                 >
                   <Select
