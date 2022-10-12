@@ -110,6 +110,10 @@ service.interceptors.response.use(
     }
 
     if (error.message.includes('timeout')) {
+      if (_.last(requestList).includes('engine/v1/explore/path')) {
+        message.error(intl.get('searchGraph.explorationTimeOut'));
+        return error;
+      }
       message.error([intl.get('createEntity.timeOut')]);
 
       return error;

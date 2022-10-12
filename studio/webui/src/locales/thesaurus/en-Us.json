@@ -67,7 +67,7 @@
     "ContentFormatError": "File format error",
     "EncodingError": "File encoding error",
     "DataExceeded": "The amount of data uploaded is too large",
-    "importing": "Words is being imported, please wait patiently...",
+    "importing": "Words is being imported...",
     "importError": "Words import failed",
     "importAgain": "Button import again",
     "editwordsError": "Data in thesaurus is being imported, please try again later",

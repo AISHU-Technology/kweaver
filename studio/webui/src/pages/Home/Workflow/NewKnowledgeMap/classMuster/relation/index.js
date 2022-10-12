@@ -1,7 +1,6 @@
 /**
  * 关系类别
  */
-
 import React, { Component } from 'react';
 import intl from 'react-intl-universal';
 import { Collapse, Tooltip } from 'antd';
@@ -67,13 +66,18 @@ class Relation extends Component {
     let selectInclude = true;
 
     // 若删除了选中的边
-    if (selectedElement.name && typeof selectedElement.edge_id === 'number') {
-      selectInclude = edges.some(item => {
-        return selectedElement?.relations?.join(',') === item?.relations?.join(',');
-      });
-    }
+    setTimeout(() => {
+      if (selectedElement.name && typeof selectedElement.edge_id === 'number') {
+        selectInclude = edges.some(item => {
+          if (selectedElement.edge_id === item.edge_id) {
+            this.props.setSelectedElement(item);
+          }
+          return selectedElement?.relations?.join(',') === item?.relations?.join(',');
+        });
+      }
 
-    this.getOpenPanel(manual, automatic, model, selectInclude);
+      this.getOpenPanel(manual, automatic, model, selectInclude);
+    }, 400);
   };
 
   /**

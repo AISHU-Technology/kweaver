@@ -156,7 +156,7 @@ const LeftSpace = props => {
                         placement="bottomRight"
                         getPopupContainer={triggerNode => triggerNode.parentElement}
                       >
-                        <IconFont type="icon-paixu1" className="order" />
+                        <IconFont type="icon-paixu11" className="order" />
                       </Dropdown>
                     </Tooltip>
                   </div>
