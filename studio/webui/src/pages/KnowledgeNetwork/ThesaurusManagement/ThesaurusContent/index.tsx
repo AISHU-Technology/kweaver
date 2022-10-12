@@ -1,10 +1,12 @@
 import React, { useEffect, useState, memo, useRef } from 'react'
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import { Table, message, Tooltip } from 'antd';
+import { Table, message, Tooltip, Spin } from 'antd';
+import { LoadingOutlined, } from '@ant-design/icons';
 
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
+import AdSpin from '@/components/AdSpin';
 import { numToThousand } from '@/utils/handleFunction';
 import SearchInput from '@/components/SearchInput';
 import serverThesaurus from '@/services/thesaurus';
@@ -270,29 +272,35 @@ const ThesaurusContent = (props: any) => {
                       <div className="noWords-text">{intl.get('memberManage.searchNull')}</div>
                     </div>
                   ) : <div className="noWords-box">
-                    <img src={kongImage} alt="nodata" className="nodata-img" />
-                    <div className="noWords-text">
-                      <p className="ad-c-text">{intl.get('ThesaurusManage.noWord')}</p>
-                      {selectedThesaurus?.status === 'success' ?
-                        <p>
-                          {intl.get('ThesaurusManage.emptyWord').split('|')[0]}
-                          <span className="ad-c-primary ad-mr-1 ad-ml-1 cursorStyle" onClick={() => setimportModalVisible(true)}>
-                            {intl.get('ThesaurusManage.emptyWord').split('|')[1]}
-                          </span>
-                          {intl.get('ThesaurusManage.emptyWord').split('|')[2]}
-                        </p> : <p className="ad-c-text">{intl.get('ThesaurusManage.importing')}</p>
-                      }
-                    </div>
+                    {selectedThesaurus?.status === 'success' ?
+                      <>
+                        <img src={kongImage} alt="nodata" className="nodata-img" />
+                        <div className="noWords-text">
+                          <p className="ad-c-text">{intl.get('ThesaurusManage.noWord')}</p>
+                          <p className="ad-c-text">
+                            {intl.get('ThesaurusManage.emptyWord').split('|')[0]}
+                            <span className="ad-c-primary ad-mr-1 ad-ml-1 cursorStyle" onClick={() => setimportModalVisible(true)}>
+                              {intl.get('ThesaurusManage.emptyWord').split('|')[1]}
+                            </span>
+                            {intl.get('ThesaurusManage.emptyWord').split('|')[2]}
+                          </p>
+                        </div>
+                      </> :
+                      <>
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+                        <p className="ad-c-text ad-mt-3">{intl.get('ThesaurusManage.importing')}</p>
+                      </>
+                    }
                   </div>
                 }}
                 scroll={{ y: 590 }}
               /> :
               selectedThesaurus?.status === 'running' ?
                 <div className="noWords-box">
-                  <img src={kongImage} alt="nodata" className="nodata-img"></img>
+                  <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+
                   <div className="noWords-text">
-                    <p>{intl.get('ThesaurusManage.noWord')}</p>
-                    <p>
+                    <p className="ad-mt-3">
                       {intl.get('ThesaurusManage.importing')}
                     </p>
                   </div>

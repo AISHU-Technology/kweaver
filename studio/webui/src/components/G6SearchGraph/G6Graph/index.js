@@ -164,14 +164,14 @@ class G6Graph extends Component {
               }
             },
             formatText: model => {
-              return model.data.name;
+              return model?.label;
             },
             offset: 20
           },
           {
             type: 'edge-tooltip',
             formatText: model => {
-              return model.name;
+              return model?.label;
             },
             offset: 20
           },

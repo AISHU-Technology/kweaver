@@ -790,7 +790,6 @@ class GraphService():
 
     def get_entity_property(self, ret_message, graph_step):
         '''通过graphid获取图谱所有信息，再从中提取出抽取规则中的点和点属性集合.
-        Flora 20201110
         check_graph_KMap和getgraphbystep使用到了'''
         entity_message = {"res": []}
         try:
