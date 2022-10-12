@@ -43,6 +43,12 @@ def updateDatabase(connection, cursor):
     Logger.log_info(sql)
     cursor.execute(sql)
 
+    sql = """
+        ALTER TABLE anydata.knowledge_network ADD intelligence_score FLOAT DEFAULT -1 NULL;
+        """
+    Logger.log_info(sql)
+    cursor.execute(sql)
+
 
 class Builder_2:
     def update(self):

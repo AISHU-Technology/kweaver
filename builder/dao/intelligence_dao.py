@@ -1,3 +1,6 @@
+import math
+from decimal import Decimal
+
 import pandas as pd
 
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
@@ -49,16 +52,18 @@ class IntelligenceDao:
 
     @connect_execute_commit_close_db
     def insert_records(self, params_json_list, cursor, connection):
-        # 删除
+        # delete previous intelligence calculate records
         graph_id_list = [params_json['graph_id'] for params_json in params_json_list]
         graph_id_list = list(set(graph_id_list))
         self.__delete_by_graph_id_list(graph_id_list, cursor)
-        # 插入
+        # insert new intelligence calculate records
         new_ids = []
         for params_json in params_json_list:
-            params_json['repeat_number'] = 0
             new_id = self.__insert_record(params_json, cursor, connection)
             new_ids.append(new_id)
+        # update network intelligence score
+        for graph_id in graph_id_list:
+            self.__update_network_score(graph_id, cursor)
         return new_ids
 
     @connect_execute_close_db
@@ -76,6 +81,33 @@ class IntelligenceDao:
         graph_id_list = [str(graph_id) for graph_id in graph_id_list]
         sql = """delete from intelligence_records where graph_id in (%s)"""
         cursor.execute(sql, ','.join(graph_id_list))
+
+    def __update_network_score(self, graph_id, cursor):
+        # query network intelligence
+        sql = f"""
+                SELECT  b.knw_id knw_id,
+                        sum(a.prop_number*a.data_number) total, 
+	                    sum(a.empty_number) empty_number, 
+	                    sum(a.repeat_number) repeat_number
+                FROM intelligence_records a 
+                join network_graph_relation b 
+                on a.graph_id =b.graph_id  
+                where b.graph_id={graph_id}
+            """
+        cursor.execute(sql)
+        item = cursor.fetchone()
+        # update network intelligence score
+        score = self.intelligence_score(item['total'], item['empty_number'], item['repeat_number'])
+        sql =f"""
+                update knowledge_network set intelligence_score={score} where id={item['knw_id']}
+            """
+        cursor.execute(sql)
+
+    def intelligence_score(self, total, empty_number, repeat_number):
+        B = Decimal(math.log(total, 10) * 10)
+        C1 = 1 - repeat_number / total
+        C2 = 1 - empty_number / total
+        return round(B * (C1 + C2) / 2, 2)
 
 
 intelligence_dao = IntelligenceDao()

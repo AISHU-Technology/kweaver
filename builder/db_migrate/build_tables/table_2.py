@@ -5,7 +5,7 @@ import base64
 import yaml
 from sqlalchemy.orm import sessionmaker, relationship, foreign, remote
 from sqlalchemy.pool import NullPool
-from sqlalchemy import Column, String, create_engine, Integer, Boolean, Text, DateTime, SmallInteger
+from sqlalchemy import Column, String, create_engine, Integer, Boolean, Text, DateTime, SmallInteger, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.sql.schema import UniqueConstraint
@@ -410,6 +410,7 @@ class KnowledgeNetwork(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     knw_name = Column(String(50), nullable=True)
     knw_description = Column(String(200), nullable=True)
+    intelligence_score = Column(Numeric, default=-1)
     color = Column(String(50), nullable=True)
     creation_time = Column(String(50), nullable=True)
     update_time = Column(String(50), nullable=True)

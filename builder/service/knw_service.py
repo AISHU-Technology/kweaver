@@ -67,8 +67,6 @@ class knwService:
 
             ret = knw_dao.get_knw_by_name(knw_name, page - 1, size, order, rule)
             rec_dict = ret.to_dict('records')
-            for rec in rec_dict:
-                rec['intelligence_score'] = intelligence_query_service.query_network_intelligence_score(rec['id'])
             res = {"count": count, "df": rec_dict}
             obj["res"] = res
 

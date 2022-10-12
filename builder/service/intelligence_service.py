@@ -47,6 +47,8 @@ class IntelligenceCalculateService(object):
             record['prop_number'] = quality_dict['prop_number']
             record['data_number'] = quality_dict['total']
             record['empty_number'] = quality_dict['empty']
+            # data has been merged
+            record['repeat_number'] = 0
             record['updated_time'] = datetime.datetime.now()
 
             quality_dict_list.append(record)
@@ -135,47 +137,6 @@ class IntelligenceQueryService(object):
         except Exception as e:
             log.error(repr(e))
             return codes.failCode, None
-
-    def query_network_intelligence_score(self, knw_id):
-        """
-        查询单个知识网络的领域智商
-        """
-        # 根据名称，模糊，分页查询图谱
-        query_params = dict()
-        query_params["knw_id"] = knw_id
-        query_params["size"] = -1
-        graph_info_list = self.query_graph_in_pages(query_params)
-        log.info(graph_info_list)
-
-        if not graph_info_list:
-            return -1
-
-        graph_info_dict = {info['graph_id']: info for info in graph_info_list}
-        graph_id_list = [graph_id for graph_id in graph_info_dict.keys()]
-
-        # 查询领域智商
-        records = intelligence_dao.query(graph_id_list)
-        if not records:
-            return -1
-
-        record_dict = dict()
-        for record in records:
-            entity_records = record_dict.get(record['graph_id'], list())
-            entity_records.append(record)
-            record_dict[record['graph_id']] = entity_records
-
-        total = 0
-        for graph_info in graph_info_list:
-            entity_records = record_dict.get(graph_info['graph_id'], [])
-            graph_quality = self.intelligence_stats(entity_records, graph_info)
-            # 没有数据就不用加入计算了
-            if graph_quality['total_knowledge'] <= 0:
-                continue
-            total += graph_quality['total_knowledge'] * (
-                    (2 - graph_quality['data_quality_C1'] - graph_quality['data_quality_C2']) / 2)
-        if total <= 0:
-            return -1
-        return round(math.log(total, 10) * 10, 2)
 
     def query_network_intelligence(self, query_params: dict):
         """

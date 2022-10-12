@@ -38,22 +38,27 @@ class knwDao:
     # 分页查询知识网络,knw_name为”“时查询全部
     @connect_execute_close_db
     def get_knw_by_name(self, knw_name, page, size, order, rule, connection, cursor):
-        if order == "desc":
-            sql = """
-                SELECT *
-                FROM knowledge_network
-                where knw_name like {0}
-                order by {1} desc
-                limit {2}, {3};"""
+        if order == 'desc':
+            order = 'desc'
         else:
+            order = 'asc'
+
+        sql = """
+            SELECT *
+            FROM knowledge_network
+            where knw_name like {0}
+            order by {1} {2}
+            limit {3}, {4};"""
+        if rule == 'intelligence_score':
             sql = """
                 SELECT *
                 FROM knowledge_network
                 where knw_name like {0}
-                order by {1} asc
-                limit {2}, {3};"""
+                order by {1} {2}, update_time desc 
+                limit {3}, {4};"""
+
         knw_name = "'%" + knw_name + "%'"
-        sql = sql.format(knw_name, rule, page * size, size)
+        sql = sql.format(knw_name, rule, order, page * size, size)
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df
