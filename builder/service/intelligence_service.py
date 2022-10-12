@@ -13,6 +13,7 @@ from dao.graph_dao import graph_dao
 from dao.graphdb_dao import GraphDB
 from dao.intelligence_dao import intelligence_dao
 from dao.otl_dao import otl_dao
+from service.graph_Service import graph_Service
 
 
 class IntelligenceCalculateService(object):
@@ -145,12 +146,21 @@ class IntelligenceQueryService(object):
         try:
             graph_info = graph_dao.get_graph_detail(graph_id)
 
-            # TODO 需要加上总数信息
+            code, data = graph_Service.get_graph_info_count(graph_id)
+            if code != codes.successCode:
+                return code, data
+            count_info = data.json.get('res')
+
             records = intelligence_dao.query([graph_info['graph_id']])
             if not records:
                 return codes.successCode, self.default_graph_response(graph_info)
             # 汇总计算
             graph_quality = self.graph_intelligence_info(records[0], graph_info)
+            # 需要加上总数信息
+            graph_quality['edge'] = count_info.get('edge', [])
+            graph_quality['edge_count'] = count_info.get('edge_count', 0)
+            graph_quality['entity'] = count_info.get('entity', [])
+            graph_quality['entity_count'] = count_info.get('entity_count', 0)
             # 添加最后一次任务信息
             task_info_list = async_task_dao.query_latest_task([graph_quality['graph_id']])
             self.add_task_info(graph_quality, task_info_list)
