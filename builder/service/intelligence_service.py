@@ -13,7 +13,9 @@ from dao.graph_dao import graph_dao
 from dao.graphdb_dao import GraphDB
 from dao.intelligence_dao import intelligence_dao
 from dao.otl_dao import otl_dao
+from dao.knw_dao import knw_dao
 from service.graph_Service import graph_Service
+from common.errorcode.gview import Gview
 
 
 class IntelligenceCalculateService(object):
@@ -23,17 +25,19 @@ class IntelligenceCalculateService(object):
         图谱的数据质量, 计算每个实体类的数据量
         """
         if not graph_id or graph_id < 0:
-            return "invalid params"
+            raise Exception("parameter graph_id invalid or missing")
 
         graph_info = graph_dao.get_graph_detail(graph_id)
 
         if not graph_info or not graph_info.get('KDB_name') or not graph_info.get('graph_db_id'):
-            return "invalid graph"
+            raise Exception(f"graph {graph_id} is empty")
 
         space_id = graph_info["KDB_name"]
         graph_db = GraphDB(graph_info['graph_db_id'])
 
         entity_onto_list = intelligence_query_service.query_real_entity_list(graph_db, graph_id, space_id)
+        if not entity_onto_list:
+            raise Exception(f"graph {graph_info.get('KDB_name')} ontology is empty")
 
         graph_quality = dict()
         graph_quality['graph_id'] = graph_id
@@ -42,10 +46,6 @@ class IntelligenceCalculateService(object):
 
         for entity_info in entity_onto_list:
             quality_dict = self.entity_quality(graph_db, entity_info)
-
-            if quality_dict is None:
-                return None
-
             self.add_graph_stats(graph_quality, quality_dict)
 
         """
@@ -67,7 +67,9 @@ class IntelligenceCalculateService(object):
         not_empty_total = 0
         for prop in properties.keys():
             code, res = graph_db.graph_entity_prop_empty(space_id, entity_name, otl_type, prop)
-            not_empty_total += total if code != 200 else res.column_values('not_empty').pop(0).as_int()
+            if code != 200:
+                raise Exception(repr(res))
+            not_empty_total += res.column_values('not_empty').pop(0).as_int()
 
         entity_info['total'] = entity_info['total']
         entity_info['empty'] = entity_info['total'] * len(properties) - not_empty_total
@@ -77,8 +79,26 @@ class IntelligenceCalculateService(object):
 
     def send_task(self, graph_id):
         """
-        发送异步任务到celery, 参数未知
+        send async task to celery
         """
+
+        # query graph status
+        ret_code, resp = graph_Service.get_graph_info_basic(graph_id, False, ['status'])
+        if ret_code != codes.successCode:
+            return ret_code, resp
+
+        # only normal and failed status could be calculated
+        graph_status = resp.json.get('res', {}).get('status', '')
+        if graph_status != "normal" and graph_status != "failed":
+            if graph_status == 'edit':
+                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphConfigStatusError
+            if graph_status == 'running':
+                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphRunStatusError
+            if graph_status == 'waiting':
+                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphWaitStatusError
+            if graph_status == 'stop':
+                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphFailStatusError
+            return code, Gview.error_return(code)
 
         url = "http://localhost:6488/task/intelligence"
         headers = {
@@ -96,12 +116,15 @@ class IntelligenceCalculateService(object):
         try:
             response = requests.request("POST", url, headers=headers, data=json.dumps(param_json))
             if response.status_code != 200:
-                return response.status_code, {}
+                code = codes.Builder_IntelligenceCalculateService_SendTask_AsyncTaskInternalError
+                return code, Gview.error_return(code, detail=str(response.text))
             res_json = response.json()
             return response.status_code, res_json
         except Exception as e:
-            log.error(repr(e))
-            return codes.failServerErrorCode, {}
+            err_msg = repr(e)
+            log.error(err_msg)
+            code = codes.Builder_IntelligenceCalculateService_SendTask_AsyncTaskInternalError
+            return code, Gview.error_return(code, detail=err_msg)
 
     def graph_calculate_task(self, param_json):
         """
@@ -141,7 +164,7 @@ class IntelligenceQueryService(object):
 
     def query_graph_intelligence(self, graph_id):
         """
-        查询图谱的智商
+        query graph intelligence info
         """
         try:
             graph_info = graph_dao.get_graph_detail(graph_id)
@@ -166,19 +189,33 @@ class IntelligenceQueryService(object):
             self.add_task_info(graph_quality, task_info_list)
             return codes.successCode, graph_quality
         except Exception as e:
-            log.error(repr(e))
-            return codes.failCode, None
+            err_msg = repr(e)
+            log.error(err_msg)
+            code = codes.Builder_IntelligenceQueryService_QueryGraphIntelligence_QueryError
+            return code, Gview.error_return(code, detail=err_msg)
 
     def query_network_intelligence(self, query_params: dict):
         """
-        计算知识网络的领域智商
+        query network intelligence
         """
-
         try:
+            knw_id = query_params.get('knw_id', 0)
+            graph_name = query_params.get('graph_name', '')
+
+            df = knw_dao.get_knw_by_id(knw_id)
+            knw_info_list = df.to_dict('records')
+            knw_info = knw_info_list[0]
+
+            ret = knw_dao.get_all_graph(knw_id, graph_name, False)
+            count = len(ret)
+
+            if count == 0:
+                return codes.successCode, Gview.json_return(self.default_network_response(knw_info, count))
+
             # 根据名称，模糊，分页查询图谱
             graph_score_list = self.query_graph_score_in_pages(query_params)
             if not graph_score_list:
-                return codes.successCode, self.default_network_response(query_params['knw_id'])
+                return codes.successCode, self.default_network_response(knw_info, count)
 
             graph_id_list = [info['graph_id'] for info in graph_score_list]
 
@@ -217,24 +254,27 @@ class IntelligenceQueryService(object):
 
                 has_value = True
 
-            knw_intelligence['knw_id'] = graph_detail_list[0]["knw_id"]
-            knw_intelligence['knw_name'] = graph_detail_list[0]["knw_name"]
-            knw_intelligence['knw_description'] = graph_detail_list[0]["knw_description"]
-            knw_intelligence['color'] = graph_detail_list[0]["color"]
-            knw_intelligence['creation_time'] = graph_detail_list[0]["creation_time"]
-            knw_intelligence['update_time'] = graph_detail_list[0]["update_time"]
+            knw_intelligence['knw_id'] = knw_id
+            knw_intelligence['knw_name'] = knw_info["knw_name"]
+            knw_intelligence['knw_description'] = knw_info["knw_description"]
+            knw_intelligence['color'] = knw_info["color"]
+            knw_intelligence['creation_time'] = knw_info["creation_time"]
+            knw_intelligence['update_time'] = knw_info["update_time"]
             knw_intelligence['recent_calculate_time'] = recent_calculate_time
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list
+            knw_intelligence['total_graph'] = count
             # calculate network intelligence
-            score = round(intelligence_dao.intelligence_score(total, empty, repeat), 2)
-            if not has_value:
-                score = -1
+            score = -1
+            if has_value:
+                score = round(intelligence_dao.intelligence_score(total, empty, repeat), 2)
             knw_intelligence['intelligence_score'] = score
 
             return codes.successCode, knw_intelligence
         except Exception as e:
-            log.error(repr(e))
-            return codes.failCode, None
+            err_msg = repr(e)
+            log.error(err_msg)
+            code = codes.Builder_IntelligenceQueryService_QueryNetworkIntelligence_QueryError
+            return code, Gview.error_return(code, detail=err_msg)
 
     @classmethod
     def query_graph_onto_info(cls, graph_id):
@@ -347,8 +387,12 @@ class IntelligenceQueryService(object):
 
         return
 
-    def default_network_response(self, knw_id):
-        return {"res": {"knw_id": knw_id, "graph_intelligence_list": []}}
+    def default_network_response(self, knw_info, total):
+        data = dict()
+        data.update(knw_info)
+        data['graph_intelligence_list'] = []
+        data['total_graph'] = total
+        return data
 
     def max_time(self, a: datetime.datetime, b: datetime.datetime):
         return a

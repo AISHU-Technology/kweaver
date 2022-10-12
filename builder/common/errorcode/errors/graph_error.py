@@ -112,15 +112,9 @@ errDict = {
     },
     'Builder.GraphController.IntelligenceCalculateTask.ParamError': {
         "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.ParamError",
-        "Description": "parameter [arg] error",
-        "ErrorDetails": _l("[arg] not exists or invalid"),
-        "Solution": _l("please ensure [arg] exists and valid")
-    },
-    'Builder.GraphController.IntelligenceCalculateTask.CreateTaskError': {
-        "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.CreateTaskError",
-        "Description": "[description]",
-        "ErrorDetails": _l("[cause]"),
-        "Solution": _l("Please contact the developers.")
+        "Description": _l("parameter [arg] error"),
+        "ErrorDetails": _l("parameter [arg] not exists or invalid"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
     },
     'Builder.GraphController.IntelligenceCalculateTask.GraphStatusQueryError': {
         "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.GraphStatusQueryError",
@@ -128,29 +122,17 @@ errDict = {
         "ErrorDetails": _l("[cause]"),
         "Solution": _l("Please contact the developers.")
     },
-    'Builder.GraphController.IntelligenceCalculateTask.GraphStatusError': {
-        "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.GraphStatusError",
-        "Description": _l("only normal and failed status allowed intelligence calculate"),
-        "ErrorDetails": _l("graph build status not matched"),
-        "Solution": _l("Please check graph status")
-    },
     "Builder.GraphController.IntelligenceStats.ParamError": {
         "ErrorCode": "Builder.GraphController.IntelligenceStats.ParamError",
-        "Description": "parameter [arg] error",
-        "ErrorDetails": _l("[arg] not exists or invalid"),
-        "Solution": _l("please ensure [arg] exists and valid")
-    },
-    'Builder.GraphController.IntelligenceStats.QueryError':{
-        "ErrorCode": "Builder.GraphController.IntelligenceStats.QueryError",
-        "Description": "[description]",
-        "ErrorDetails": _l("[cause]"),
-        "Solution": _l("Please contact the developers.")
+        "Description": _l("parameter [arg] error"),
+        "ErrorDetails": _l("parameter [arg] not exists or invalid"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
     },
     "Builder.KnowledgeNetworkController.IntelligenceStats.ParamError": {
         "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.ParamError",
-        "Description": "parameter [arg] error",
-        "ErrorDetails": _l("[arg] not exists or invalid"),
-        "Solution": _l("please ensure [arg] exists and valid")
+        "Description": _l("parameter [arg] error"),
+        "ErrorDetails": _l("parameter [arg] not exists or invalid"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
     },
     'Builder.KnowledgeNetworkController.IntelligenceStats.QueryError': {
         "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.QueryError",

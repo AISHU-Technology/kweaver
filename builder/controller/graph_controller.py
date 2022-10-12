@@ -1079,22 +1079,10 @@ def intelligence_calculate_task():
 
     graph_id = params_json['graph_id']
 
-    # query graph status
-    ret_code, resp = graph_Service.get_graph_info_basic(graph_id, False, ['status'])
-    if ret_code != codes.successCode:
-        return resp
-
-    # only normal and failed status could be calculated
-    graph_status = resp.json.get('res', {}).get('status', '')
-    if graph_status != "normal" and graph_status != "failed":
-        code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphStatusError
-        return Gview2.error_return(code)
-
     # send async task, because large graph will cause a very long time query
     code, resp = intelligence_calculate_service.send_task(graph_id)
     if code != codes.successHttpCode:
-        code = codes.Builder_GraphController_IntelligenceCalculateTask_CreateTaskError
-        return Gview2.error_return(code, description='提交计算任务失败', cause='未知错误'), 500
+        return resp, 500
     return Gview2.json_return(resp['res']), 200
 
 
@@ -1117,7 +1105,6 @@ def intelligence_stats(graph_id):
 
     res_code, result = intelligence_query_service.query_graph_intelligence(graph_id)
     if res_code != codes.successCode:
-        code = codes.Builder_GraphController_IntelligenceStat_QueryError
-        return Gview2.error_return(code, description='查询图谱智商错误', cause='未知错误')
+        return result, 500
 
     return Gview2.json_return(result), 200

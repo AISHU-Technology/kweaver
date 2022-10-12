@@ -5,6 +5,7 @@ from service.intelligence_service import intelligence_calculate_service
 from service.knw_service import knw_service
 from dao.knw_dao import knw_dao
 from utils.Gview import Gview
+from common.errorcode.gview import Gview as Gview2
 from utils.knw_check_params import knw_check_params
 from utils.log_info import Logger
 from utils.common_response_status import CommonResponseStatus
@@ -285,17 +286,21 @@ def intelligence_stats():
             description: knowledge network id
             type: integer
     '''
-    from common.errorcode.gview import Gview
+
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0 or 'knw_id' not in params_json:
         code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
-        return Gview.error_return(code, arg='knw_id'), 400
+        return Gview2.error_return(code, arg='knw_id'), 400
+
+    ret_code, ret_message = knw_service.check_knw_id(params_json)
+    if ret_code != 200:
+        return Gview.TErrorreturn(ret_message["code"], ret_message["des"], ret_message["solution"],
+                                  ret_message["detail"], ""), CommonResponseStatus.BAD_REQUEST.value
 
     res_code, result = intelligence_query_service.query_network_intelligence(params_json)
     if res_code != codes.successCode:
-        code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_QueryError
-        return Gview.error_return(code, description='查询知识网络智商错误', cause='原因未知')
-    return Gview.json_return(result), 200
+        return result, 500
+    return Gview2.json_return(result), 200
 
 
 # 添加网络与图谱关系
