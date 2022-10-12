@@ -17,7 +17,7 @@ const mockIQList = (() => {
       color: '#123456',
       knw_name: '知识网络的名称',
       knw_description: '知识网络的描述',
-      knw_intelligence_score: 66.66,
+      intelligence_score: 66.66,
       recent_calculate_time: '2022-01-01 00:00:00',
       creation_time: '2022-01-01 00:00:00',
       update_time: '2022-01-01 00:00:00',
@@ -27,8 +27,4 @@ const mockIQList = (() => {
   };
 })();
 
-const knwIQGet = ({ knw_id, graph_id, page, size, graph_name }: any) => {
-  return Promise.resolve(mockIQList);
-};
-
-export { mockIQList, knwIQGet };
+export { mockIQList };

@@ -7,7 +7,6 @@ import KnowledgeInfo from './KnowledgeInfo';
 import IQTable from './IQTable';
 import { KgInfo, ListItem, TableState } from './types';
 import './style.less';
-// import { knwIQGet } from './__tests__/mockData';
 
 interface DomainIQProps {
   kgData: Record<string, any>;
@@ -58,7 +57,6 @@ const DomainIQ: React.FC<DomainIQProps> = ({ kgData }) => {
     try {
       const knw_id = id || kgData.id;
       dispatchTableState({ query, page, order, rule, loading: !!needLoading });
-      // const res: any = await knwIQGet({ knw_id, graph_name: query, page, order, size: PAGE_SIZE, rule });
       const signId = ++requestId;
       const res = await servicesIntelligence.intelligenceGetByKnw({
         knw_id,

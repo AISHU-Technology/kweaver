@@ -6,7 +6,7 @@ import Format from '@/components/Format';
 import './style.less';
 
 type Color = { r: number; g: number; b: number };
-interface SourceCardProps {
+interface ScoreCardProps {
   className?: string;
   title: React.ReactNode;
   icon: React.ReactNode;
@@ -17,7 +17,7 @@ interface SourceCardProps {
 
 const formatColor = ({ r, g, b }: Color, alpha = 1) => `rgba(${r}, ${g}, ${b}, ${alpha})`;
 
-const SourceCard = ({ className, title, icon, color, source, children }: SourceCardProps) => {
+const ScoreCard = ({ className, title, icon, color, source, children }: ScoreCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -46,4 +46,4 @@ const SourceCard = ({ className, title, icon, color, source, children }: SourceC
   );
 };
 
-export default memo(SourceCard);
+export default memo(ScoreCard);

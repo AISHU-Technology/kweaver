@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { message } from 'antd';
 import { ExclamationCircleFilled, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -9,11 +10,9 @@ import IconFont from '@/components/IconFont';
 import ExplainTip from '@/components/ExplainTip';
 import { numToThousand } from '@/utils/handleFunction';
 import servicesIntelligence from '@/services/intelligence';
-import SourceCard from './SourceCard';
+import ScoreCard from './ScoreCard';
 import { StatisticsData } from './types';
-import { intelligenceCalculate, intelligenceGetByGraph } from './__tests__/mockData';
 import './style.less';
-import { message } from 'antd';
 
 interface StatisticsProps {
   isShow: boolean;
@@ -197,7 +196,7 @@ const Statistics = (props: StatisticsProps) => {
           </div>
         </div>
 
-        <SourceCard
+        <ScoreCard
           color={{ r: 18, g: 110, b: 227 }}
           title={
             <>
@@ -212,9 +211,9 @@ const Statistics = (props: StatisticsProps) => {
             const { field, tip } = KEY_INTL[key];
             return <DataRow key={key} field={field} value={counter[key]} tip={tip} />;
           })}
-        </SourceCard>
+        </ScoreCard>
 
-        <SourceCard
+        <ScoreCard
           className="ad-mt-6"
           color={{ r: 0, g: 147, b: 144 }}
           title={
@@ -230,7 +229,7 @@ const Statistics = (props: StatisticsProps) => {
             const { field, tip } = KEY_INTL[key];
             return <DataRow key={key} field={field} value={detail[key]} tip={tip} />;
           })}
-        </SourceCard>
+        </ScoreCard>
       </div>
     </div>
   );

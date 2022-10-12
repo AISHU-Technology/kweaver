@@ -1,12 +1,15 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { act } from '@/tests';
+import { act, sleep } from '@/tests';
 import IQTable from '../IQTable';
 import { mockIQList } from './mockData';
 
 const mockHistory = { push: jest.fn() };
 jest.mock('react-router-dom', () => ({
   useHistory: () => mockHistory
+}));
+jest.mock('@/services/knowledgeNetwork', () => ({
+  graphGetByKnw: () => Promise.resolve({ res: { df: [] } })
 }));
 
 const tableData = mockIQList.res.graph_intelligence_list;
@@ -15,7 +18,8 @@ const tableState = {
   query: '',
   page: 1,
   total: 0,
-  order: 'descend'
+  rule: 'last_task_time',
+  order: 'desc'
 };
 const defaultProps = {
   kid: 1,
@@ -41,21 +45,24 @@ describe('DomainIQ/IQTable', () => {
     expect(wrapper.find('.anticon-loading').exists()).toBe(true);
   });
 
-  it('test operation btn', () => {
+  it('test operation btn', async () => {
     const spyPush = jest.spyOn(mockHistory, 'push');
     const wrapper = init({ ...defaultProps, data: tableData });
     const btnList = wrapper.find('.op-column').at(0).find('Button');
     act(() => {
       btnList.at(0).simulate('click');
     });
+    await sleep();
     expect(spyPush.mock.calls[0][0].includes('/knowledge/network')).toBe(true);
     act(() => {
       btnList.at(1).simulate('click');
     });
-    expect(spyPush.mock.calls[1][0].includes('/home/workflow/edit')).toBe(true);
+    await sleep();
+    expect(spyPush.mock.calls[1][0].includes('/knowledge/network')).toBe(true);
     act(() => {
       btnList.at(2).simulate('click');
     });
+    await sleep();
     expect(spyPush.mock.calls[2][0].includes('/knowledge/engine/search')).toBe(true);
   });
 });
