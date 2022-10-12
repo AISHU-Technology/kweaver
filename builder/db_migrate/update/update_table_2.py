@@ -27,17 +27,18 @@ def updateDatabase(connection, cursor):
 
     """创建领域智商表"""
     sql = """
-            CREATE TABLE `intelligence_records` (
-              `id` int(11) NOT NULL AUTO_INCREMENT,
-              `graph_id` int(11) DEFAULT NULL,
-              `entity` varchar(200) DEFAULT NULL,
-              `entity_type` varchar(50) DEFAULT NULL,
-              `prop_number` smallint(6) DEFAULT NULL,
-              `data_number` int(11) DEFAULT NULL,
-              `empty_number` int(11) DEFAULT NULL,
-              `repeat_number` int(11) DEFAULT NULL,
-              `updated_time` datetime DEFAULT NULL,
-              PRIMARY KEY (`id`)
+           CREATE TABLE `intelligence_records` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `graph_id` int(11) DEFAULT NULL,
+                `entity_knowledge` int(11) DEFAULT NULL,
+                `edge_knowledge` int(11) DEFAULT NULL,
+                `data_number` int(11) DEFAULT NULL,
+                `total_knowledge` int(11) DEFAULT NULL,
+                `empty_number` int(11) DEFAULT NULL,
+                `repeat_number` int(11) DEFAULT NULL,
+                `data_quality_score` decimal(10,0) DEFAULT NULL,
+                `update_time` datetime DEFAULT NULL,
+                PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
          """
     Logger.log_info(sql)

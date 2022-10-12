@@ -452,13 +452,14 @@ class IntelligenceRecords(Base):
     }
     id = Column(Integer, autoincrement=True, primary_key=True)
     graph_id = Column(Integer, nullable=True)
-    entity = Column(String(200), nullable=True)
-    entity_type = Column(String(50), nullable=True)
-    prop_number = Column(SmallInteger, nullable=True)
+    entity_knowledge = Column(Integer, nullable=True)
+    edge_knowledge = Column(Integer, nullable=True)
     data_number = Column(Integer, nullable=True)
+    total_knowledge = Column(Integer, nullable=True)
     empty_number = Column(Integer, nullable=True)
     repeat_number = Column(Integer, nullable=True)
-    updated_time = Column(DateTime, nullable=True)
+    data_quality_score = Column(Numeric, default=-1)
+    update_time = Column(DateTime, nullable=True)
 
 
 class async_task_records(Base):
