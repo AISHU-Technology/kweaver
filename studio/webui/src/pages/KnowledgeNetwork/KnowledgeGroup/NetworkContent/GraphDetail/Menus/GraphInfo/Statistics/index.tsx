@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { message } from 'antd';
 import { ExclamationCircleFilled, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -9,16 +10,13 @@ import IconFont from '@/components/IconFont';
 import ExplainTip from '@/components/ExplainTip';
 import { numToThousand } from '@/utils/handleFunction';
 import servicesIntelligence from '@/services/intelligence';
-import SourceCard from './SourceCard';
+import ScoreCard from './ScoreCard';
 import { StatisticsData } from './types';
-import { intelligenceCalculate, intelligenceGetByGraph } from './__tests__/mockData';
 import './style.less';
-import { message } from 'antd';
 
 interface StatisticsProps {
   isShow: boolean;
   graphBasicData: Record<string, any>;
-  graphCount: Record<string, any>;
 }
 interface DataRowProps {
   field: React.ReactNode;
@@ -28,16 +26,14 @@ interface DataRowProps {
 
 const { NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION } = GRAPH_STATUS;
 const KEY_INTL: Record<string, { field: string; tip?: React.ReactNode }> = {
-  nodeCount: { field: intl.get('graphList.entityCount') },
-  nodeProCount: { field: intl.get('graphList.entityProCount') },
-  edgeCount: { field: intl.get('graphList.relationshipCount') },
-  edgeProCount: { field: intl.get('graphList.relationshipProCount') },
-  totalKnw: { field: intl.get('intelligence.totalKnw'), tip: <ExplainTip.KNW_TOTAL_SOURCE /> }, // 总计知识量
+  entity_count: { field: intl.get('graphList.entityCount') },
+  edge_count: { field: intl.get('graphList.relationshipCount') },
+  total_knowledge: { field: intl.get('intelligence.totalKnw'), tip: <ExplainTip.KNW_TOTAL_SOURCE /> }, // 总计知识量
   data_repeat_C1: { field: intl.get('intelligence.repeatRate'), tip: <ExplainTip.REPEAT_RATE /> }, // 重复率
-  data_missing_C2: { field: intl.get('intelligence.missRate'), tip: <ExplainTip.MISSING /> } // 缺失率
+  data_empty_C2: { field: intl.get('intelligence.missRate'), tip: <ExplainTip.MISSING /> } // 缺失率
 };
-const SOURCE_KEYS = ['nodeCount', 'nodeProCount', 'edgeCount', 'edgeProCount', 'totalKnw'];
-const QUALITY_KEYS = ['data_repeat_C1', 'data_missing_C2'];
+const SOURCE_KEYS = ['entity_count', 'edge_count', 'total_knowledge'];
+const QUALITY_KEYS = ['data_repeat_C1', 'data_empty_C2'];
 
 const DataRow = ({ field, tip, value }: DataRowProps) => {
   return (
@@ -52,7 +48,7 @@ const DataRow = ({ field, tip, value }: DataRowProps) => {
 };
 
 const Statistics = (props: StatisticsProps) => {
-  const { isShow, graphBasicData, graphCount } = props;
+  const { isShow, graphBasicData } = props;
   const timer = useRef<any>(null); // 轮询定时器
   const [errMsg, setErrMsg] = useState(''); // 错误信息
   const [loading, setLoading] = useState(false); // 计算loading
@@ -67,17 +63,6 @@ const Statistics = (props: StatisticsProps) => {
     const statusArr = [NORMAL, graphdb_type !== 'nebula' && FAIL].filter(Boolean);
     return statusArr.includes(status);
   }, [graphBasicData.status]);
-
-  /**
-   * 整合 实体、关系数量
-   */
-  const counter: Record<string, number> = useMemo(() => {
-    const { nodes = [], edges = [], nodeCount = 0, edgeCount = 0 } = graphCount;
-    const nodeProCount = nodes.reduce((res: number, item: any) => res + item.count, 0);
-    const edgeProCount = edges.reduce((res: number, item: any) => res + item.count, 0);
-    const totalKnw = nodeCount + edgeCount + nodeProCount + edgeProCount;
-    return { nodeProCount, edgeProCount, nodeCount, edgeCount, totalKnw };
-  }, [graphCount]);
 
   useEffect(() => {
     const { id } = graphBasicData;
@@ -197,7 +182,7 @@ const Statistics = (props: StatisticsProps) => {
           </div>
         </div>
 
-        <SourceCard
+        <ScoreCard
           color={{ r: 18, g: 110, b: 227 }}
           title={
             <>
@@ -205,16 +190,16 @@ const Statistics = (props: StatisticsProps) => {
               <ExplainTip.KNW_SOURCE />
             </>
           }
-          source={detail.data_quality_score}
+          score={detail.data_quality_score}
           icon={<IconFont type="icon-zhishiliang" style={{ color: 'rgb(18,110,227)', fontSize: 16 }} />}
         >
           {SOURCE_KEYS.map(key => {
             const { field, tip } = KEY_INTL[key];
-            return <DataRow key={key} field={field} value={counter[key]} tip={tip} />;
+            return <DataRow key={key} field={field} value={detail[key]} tip={tip} />;
           })}
-        </SourceCard>
+        </ScoreCard>
 
-        <SourceCard
+        <ScoreCard
           className="ad-mt-6"
           color={{ r: 0, g: 147, b: 144 }}
           title={
@@ -223,14 +208,14 @@ const Statistics = (props: StatisticsProps) => {
               <ExplainTip.QUALITY_SOURCE />
             </>
           }
-          source={detail.data_quality_B}
+          score={detail.data_quality_B}
           icon={<IconFont type="icon-shujuzhiliang" style={{ color: 'rgb(0,147,144)', fontSize: 16 }} />}
         >
           {QUALITY_KEYS.map(key => {
             const { field, tip } = KEY_INTL[key];
             return <DataRow key={key} field={field} value={detail[key]} tip={tip} />;
           })}
-        </SourceCard>
+        </ScoreCard>
       </div>
     </div>
   );

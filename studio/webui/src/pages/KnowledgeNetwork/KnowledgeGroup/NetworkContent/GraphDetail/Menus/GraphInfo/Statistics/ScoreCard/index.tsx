@@ -6,27 +6,27 @@ import Format from '@/components/Format';
 import './style.less';
 
 type Color = { r: number; g: number; b: number };
-interface SourceCardProps {
+interface ScoreCardProps {
   className?: string;
   title: React.ReactNode;
   icon: React.ReactNode;
   color: Color;
-  source?: number;
+  score?: number;
   children?: React.ReactNode;
 }
 
 const formatColor = ({ r, g, b }: Color, alpha = 1) => `rgba(${r}, ${g}, ${b}, ${alpha})`;
 
-const SourceCard = ({ className, title, icon, color, source, children }: SourceCardProps) => {
+const ScoreCard = ({ className, title, icon, color, score, children }: ScoreCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className={classNames('statistics-source-card', className)} style={{ background: formatColor(color, 0.04) }}>
+    <div className={classNames('statistics-score-card', className)} style={{ background: formatColor(color, 0.04) }}>
       <div className="ad-align-center card-header">
         <div className="h-info">
           <Format.Title className="ad-mb-2">{title}</Format.Title>
           <Format.Title style={{ display: 'block', fontSize: 20 }}>
-            {source || <div className="dashed-line" />}
+            {score || <div className="dashed-line" />}
           </Format.Title>
         </div>
 
@@ -46,4 +46,4 @@ const SourceCard = ({ className, title, icon, color, source, children }: SourceC
   );
 };
 
-export default memo(SourceCard);
+export default memo(ScoreCard);

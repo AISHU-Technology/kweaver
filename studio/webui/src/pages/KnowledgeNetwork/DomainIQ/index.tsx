@@ -7,10 +7,10 @@ import KnowledgeInfo from './KnowledgeInfo';
 import IQTable from './IQTable';
 import { KgInfo, ListItem, TableState } from './types';
 import './style.less';
-// import { knwIQGet } from './__tests__/mockData';
 
 interface DomainIQProps {
   kgData: Record<string, any>;
+  setKgData: Function;
 }
 
 let requestId = 0; // 标记网络请求
@@ -25,7 +25,7 @@ const initState: TableState = {
 };
 const reducer = (state: TableState, action: Partial<TableState>) => ({ ...state, ...action });
 
-const DomainIQ: React.FC<DomainIQProps> = ({ kgData }) => {
+const DomainIQ: React.FC<DomainIQProps> = ({ kgData, setKgData }) => {
   const [kgInfo, setKgInfo] = useState<KgInfo>({} as KgInfo); // 与 `kgData` 不同, 它需要保持更新
   const [tableState, dispatchTableState] = useReducer(reducer, initState); // 表格分页、loading、等状态变量
   const [tableData, setTableData] = useState<ListItem[]>([]); // 表格数据
@@ -58,7 +58,6 @@ const DomainIQ: React.FC<DomainIQProps> = ({ kgData }) => {
     try {
       const knw_id = id || kgData.id;
       dispatchTableState({ query, page, order, rule, loading: !!needLoading });
-      // const res: any = await knwIQGet({ knw_id, graph_name: query, page, order, size: PAGE_SIZE, rule });
       const signId = ++requestId;
       const res = await servicesIntelligence.intelligenceGetByKnw({
         knw_id,
@@ -71,10 +70,12 @@ const DomainIQ: React.FC<DomainIQProps> = ({ kgData }) => {
       if (signId < requestId) return;
       dispatchTableState({ loading: false });
       if (res?.res) {
-        const { total, graph_intelligence_list, ...info } = res.res;
-        dispatchTableState({ total: res.res.total });
-        setKgInfo(info);
+        const { knw_id, total_graph, graph_intelligence_list, ...info } = res.res;
+        const resetData = { ...info, id: parseInt(knw_id) };
+        dispatchTableState({ total: total_graph });
+        setKgInfo({ ...info, id: parseInt(knw_id) });
         setTableData(graph_intelligence_list);
+        kgData.intelligence_score !== resetData.intelligence_score && setKgData(resetData);
       }
       res?.Description && message.error(res?.Description);
     } catch {

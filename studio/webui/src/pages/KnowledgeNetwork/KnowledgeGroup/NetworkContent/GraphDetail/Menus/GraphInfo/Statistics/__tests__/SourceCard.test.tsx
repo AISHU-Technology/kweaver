@@ -1,18 +1,17 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { act, sleep } from '@/tests';
-import SourceCard from '../SourceCard';
+import { act } from '@/tests';
+import ScoreCard from '../ScoreCard';
 
 const defaultProps = { title: '知识量得分', icon: <div />, color: { r: 1, g: 2, b: 3 } };
-const init = (props = defaultProps) => mount(<SourceCard {...props} />);
+const init = (props = defaultProps) => mount(<ScoreCard {...props} />);
 
-describe('Statistics/SourceCard', () => {
+describe('Statistics/ScoreCard', () => {
   it('test render', () => {
     const wrapper = init();
     expect(wrapper.find('.h-info div').at(0).text()).toBe(defaultProps.title);
-    expect(wrapper.find('.h-info div').at(1).text()).toBe('--');
 
-    wrapper.setProps({ source: 66 });
+    wrapper.setProps({ score: 66 });
     expect(wrapper.find('.h-info div').at(1).text()).toBe('66');
 
     wrapper.setProps({ children: 'children' });

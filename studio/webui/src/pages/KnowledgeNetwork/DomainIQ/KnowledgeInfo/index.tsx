@@ -4,7 +4,7 @@ import AvatarName from '@/components/Avatar';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
 import KnowledgeModal from '@/components/KnowledgeModal';
-import RatePlate from './RatePlate';
+import ScorePanel from './ScorePanel';
 import { formatID } from '@/utils/handleFunction';
 import { KgInfo } from '../types';
 import './style.less';
@@ -15,7 +15,7 @@ interface KnowledgeInfoProps {
 }
 
 const KnowledgeInfo: React.FC<KnowledgeInfoProps> = ({ kgInfo, onEditSuccess }) => {
-  const { id, knw_name, knw_description, color, knw_intelligence_score, creation_time, update_time } = kgInfo;
+  const { id, knw_name, knw_description, color, intelligence_score, creation_time, update_time } = kgInfo;
   const [editVisible, setEditVisible] = useState(false); // 编辑知识图谱弹窗
 
   const onEdit = () => {
@@ -34,8 +34,8 @@ const KnowledgeInfo: React.FC<KnowledgeInfoProps> = ({ kgInfo, onEditSuccess }) 
           <IconFont type="icon-edit" />
         </div>
       </div>
-      <div className="source-icon">
-        <RatePlate source={knw_intelligence_score} />
+      <div className="score-icon">
+        <ScorePanel score={intelligence_score} />
       </div>
 
       <div className="ad-pt-4 ad-pb-6 info-box">

@@ -5,7 +5,7 @@ export type KgInfo = {
   color: string;
   knw_name: string;
   knw_description: string;
-  knw_intelligence_score: number;
+  intelligence_score: number;
   recent_calculate_time: string;
   creation_time: string;
   update_time: string;

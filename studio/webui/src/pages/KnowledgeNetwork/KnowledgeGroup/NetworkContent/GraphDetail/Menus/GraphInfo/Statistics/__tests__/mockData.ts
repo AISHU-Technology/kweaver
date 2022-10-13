@@ -10,24 +10,4 @@ const mockStatistics = {
   data_quality_score: 62.65
 };
 
-const intelligenceCalculate = ({ graph_id }: any) => {
-  const isSuccess = Math.random() > 0.5;
-  return Promise.resolve(
-    isSuccess
-      ? { res: 'success' }
-      : {
-          ErrorCode: 'bulder.controller.knowledgeNetwork_controller.intelligence_computer.celery_busy',
-          Description: 'intelligence is calculating or celery is busing',
-          ErrorDetails: 'celery max task reached',
-          Solution: 'Please wait a moment'
-        }
-  );
-};
-
-const intelligenceGetByGraph = ({ graph_id }: any) => {
-  return Promise.resolve({
-    res: mockStatistics
-  });
-};
-
-export { mockStatistics, intelligenceCalculate, intelligenceGetByGraph };
+export { mockStatistics };

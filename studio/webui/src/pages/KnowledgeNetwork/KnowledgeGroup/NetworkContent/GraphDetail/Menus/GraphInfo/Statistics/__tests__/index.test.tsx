@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { act, sleep } from '@/tests';
 import Statistics from '../index';
-import SourceCard from '../SourceCard';
+import ScoreCard from '../ScoreCard';
 import { mockStatistics } from './mockData';
 
 jest.mock('@/services/intelligence', () => ({
@@ -12,7 +12,7 @@ jest.mock('@/services/intelligence', () => ({
 
 import servicesIntelligence from '@/services/intelligence';
 
-SourceCard.displayName = 'SourceCard';
+ScoreCard.displayName = 'ScoreCard';
 const mockServiceResponse = (data: any) =>
   (servicesIntelligence.intelligenceGetByGraph as any).mockImplementationOnce(() => Promise.resolve(data));
 const graphBasicData = { id: 1, status: 'normal', graphdb_type: 'nebule' };
@@ -25,8 +25,8 @@ describe('Statistics', () => {
     const wrapper = init();
     await sleep();
     wrapper.update();
-    const { source } = wrapper.find('SourceCard').at(0).props() as any;
-    expect(source).toBe(mockStatistics.data_quality_score);
+    const { score } = wrapper.find('ScoreCard').at(0).props() as any;
+    expect(score).toBe(mockStatistics.data_quality_score);
   });
 
   it('test calculate failed', async () => {
