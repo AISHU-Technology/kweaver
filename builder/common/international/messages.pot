@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-13 19:12+0800\n"
+"POT-Creation-Date: 2022-10-13 21:39+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -258,7 +258,7 @@ msgstr ""
 #: common/errorcode/errors/intelligence_error.py:69
 #: common/errorcode/errors/intelligence_error.py:70
 msgid ""
-"knowledge graph status invalid, please calculate after building "
+"Knowledge graph status invalid, please calculate after building "
 "successfully"
 msgstr ""
 

@@ -66,8 +66,8 @@ errDict = {
     },
     'Builder.IntelligenceCalculateService.SendTask.GraphInvalidStatusError': {
         "ErrorCode": "Builder.IntelligenceCalculateService.SendTask.GraphInvalidStatusError",
-        "Description": _l("knowledge graph status invalid, please calculate after building successfully"),
-        "ErrorDetails": _l("knowledge graph status invalid, please calculate after building successfully"),
+        "Description": _l("Knowledge graph status invalid, please calculate after building successfully"),
+        "ErrorDetails": _l("Knowledge graph status invalid, please calculate after building successfully"),
         "Solution": _l("Please check graph status")
     },
     'Builder.IntelligenceQueryService.QueryNetworkIntelligence.KnwNotExist': {

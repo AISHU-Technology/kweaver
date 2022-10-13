@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-13 19:12+0800\n"
+"POT-Creation-Date: 2022-10-13 21:39+0800\n"
 "PO-Revision-Date: 2022-06-23 17:41+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -171,7 +171,7 @@ msgstr "参数 [arg] 不存在或者非法"
 #: common/errorcode/errors/graph_error.py:153
 #, fuzzy
 msgid "please ensure parameter [arg] exists and valid"
-msgstr "请检查传入的参数key"
+msgstr "请检查传入的参数 [arg] "
 
 #: common/errorcode/errors/graph_error.py:139
 #: common/errorcode/errors/graph_error.py:140
@@ -263,7 +263,7 @@ msgstr "知识网络智商信息查询错误"
 #: common/errorcode/errors/intelligence_error.py:70
 #, fuzzy
 msgid ""
-"knowledge graph status invalid, please calculate after building "
+"Knowledge graph status invalid, please calculate after building "
 "successfully"
 msgstr "知识图谱构建状态非法, 请构建后再计算"
 
