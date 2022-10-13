@@ -16,10 +16,9 @@ import requests
 # from utils.ConnectUtil import redisConnect
 from os import path
 
+sys.path.append(os.path.abspath("../"))
 from common.errorcode import codes
 from service.intelligence_service import intelligence_calculate_service
-
-sys.path.append(os.path.abspath("../"))
 from common.exception.base import ExceptLevel
 from common.exception.celerytask_exception import CeleryTaskException
 from utils.ConnectUtil import redisConnect, mongoConnect
