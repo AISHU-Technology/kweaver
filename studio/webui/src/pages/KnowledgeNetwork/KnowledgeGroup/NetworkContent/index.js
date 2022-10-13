@@ -76,6 +76,7 @@ const NetworkContents = props => {
     <div className="networkContentRoot">
       <Header
         graphBasicData={graphBasicData}
+        isNewGraph={!selectedGraph.kgconfid}
         selectedKnowledge={selectedKnowledge}
         onRefresh={onRefresh}
         onSelectedGraph={setSelectedGraph}

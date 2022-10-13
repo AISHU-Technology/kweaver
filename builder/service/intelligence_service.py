@@ -2,6 +2,7 @@ import datetime
 import json
 import math
 import time
+from decimal import Decimal
 
 import requests
 
@@ -12,6 +13,9 @@ from dao.graph_dao import graph_dao
 from dao.graphdb_dao import GraphDB
 from dao.intelligence_dao import intelligence_dao
 from dao.otl_dao import otl_dao
+from dao.knw_dao import knw_dao
+from service.graph_Service import graph_Service
+from common.errorcode.gview import Gview
 
 
 class IntelligenceCalculateService(object):
@@ -21,42 +25,34 @@ class IntelligenceCalculateService(object):
         图谱的数据质量, 计算每个实体类的数据量
         """
         if not graph_id or graph_id < 0:
-            return "invalid params"
+            raise Exception("parameter graph_id invalid or missing")
 
         graph_info = graph_dao.get_graph_detail(graph_id)
 
         if not graph_info or not graph_info.get('KDB_name') or not graph_info.get('graph_db_id'):
-            return "invalid graph"
+            raise Exception(f"graph {graph_id} is empty")
 
         space_id = graph_info["KDB_name"]
         graph_db = GraphDB(graph_info['graph_db_id'])
 
         entity_onto_list = intelligence_query_service.query_real_entity_list(graph_db, graph_id, space_id)
+        if not entity_onto_list:
+            raise Exception(f"graph {graph_info.get('KDB_name')} ontology is empty")
 
-        quality_dict_list = list()
+        graph_quality = dict()
+        graph_quality['graph_id'] = graph_id
+        graph_quality['knw_id'] = graph_info['knw_id']
+        graph_quality['update_time'] = datetime.datetime.now()
+
         for entity_info in entity_onto_list:
             quality_dict = self.entity_quality(graph_db, entity_info)
-
-            if quality_dict is None:
-                return None
-
-            record = dict()
-            record['graph_id'] = graph_id
-            record['entity'] = quality_dict['name']
-            record['entity_type'] = quality_dict['otl_type']
-            record['entity_status'] = 1
-            record['prop_number'] = quality_dict['prop_number']
-            record['data_length'] = quality_dict['total']
-            record['empty_number'] = quality_dict['empty']
-            record['updated_time'] = datetime.datetime.now()
-
-            quality_dict_list.append(record)
+            self.add_graph_stats(graph_quality, quality_dict)
 
         """
         写入到数据库
         """
-        if quality_dict_list:
-            intelligence_dao.insert_records(quality_dict_list)
+        if entity_onto_list:
+            intelligence_dao.insert_records([graph_quality])
 
     def entity_quality(self, graph_db: GraphDB, entity_info: dict):
         """
@@ -71,17 +67,38 @@ class IntelligenceCalculateService(object):
         not_empty_total = 0
         for prop in properties.keys():
             code, res = graph_db.graph_entity_prop_empty(space_id, entity_name, otl_type, prop)
-            not_empty_total += total if code != 200 else res.column_values('not_empty').pop(0).as_int()
+            if code != 200:
+                raise Exception(repr(res))
+            not_empty_total += res.column_values('not_empty').pop(0).as_int()
 
         entity_info['total'] = entity_info['total']
         entity_info['empty'] = entity_info['total'] * len(properties) - not_empty_total
+        entity_info['repeat'] = 0
         entity_info['prop_number'] = len(properties)
         return entity_info
 
     def send_task(self, graph_id):
         """
-        发送异步任务到celery, 参数未知
+        send async task to celery
         """
+
+        # query graph status
+        ret_code, resp = graph_Service.get_graph_info_basic(graph_id, False, ['status'])
+        if ret_code != codes.successCode:
+            return ret_code, resp
+
+        # only normal and failed status could be calculated
+        graph_status = resp.json.get('res', {}).get('status', '')
+        if graph_status != "normal" and graph_status != "failed":
+            if graph_status == 'edit':
+                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphConfigStatusError
+            if graph_status == 'running':
+                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphRunStatusError
+            if graph_status == 'waiting':
+                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphWaitStatusError
+            if graph_status == 'stop':
+                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphFailStatusError
+            return code, Gview.error_return(code)
 
         url = "http://localhost:6488/task/intelligence"
         headers = {
@@ -99,12 +116,15 @@ class IntelligenceCalculateService(object):
         try:
             response = requests.request("POST", url, headers=headers, data=json.dumps(param_json))
             if response.status_code != 200:
-                return response.status_code, {}
+                code = codes.Builder_IntelligenceCalculateService_SendTask_AsyncTaskInternalError
+                return code, Gview.error_return(code, detail=str(response.text))
             res_json = response.json()
             return response.status_code, res_json
         except Exception as e:
-            log.error(repr(e))
-            return codes.failServerErrorCode, {}
+            err_msg = repr(e)
+            log.error(err_msg)
+            code = codes.Builder_IntelligenceCalculateService_SendTask_AsyncTaskInternalError
+            return code, Gview.error_return(code, detail=err_msg)
 
     def graph_calculate_task(self, param_json):
         """
@@ -114,91 +134,94 @@ class IntelligenceCalculateService(object):
             raise Exception("invalid parameters")
         self.calculate_graph_intelligence(param_json['graph_id'])
 
+    def add_graph_stats(self, graph_record, quality_dict):
+        graph_record.setdefault('entity_knowledge', 0)
+        graph_record.setdefault('edge_knowledge', 0)
+        graph_record.setdefault('data_number', 0)
+        graph_record.setdefault('total_knowledge', 0)
+        graph_record.setdefault('empty_number', 0)
+        graph_record.setdefault('repeat_number', 0)
+        graph_record.setdefault('data_quality_score', 0)
+        # total statistics
+        knowledge = quality_dict['total'] * quality_dict['prop_number']
+
+        if quality_dict['otl_type'] == 'entity':
+            graph_record['entity_knowledge'] += knowledge
+        else:
+            graph_record['edge_knowledge'] += knowledge
+
+        graph_record['data_number'] += quality_dict['prop_number']
+        graph_record['total_knowledge'] += knowledge
+        graph_record['empty_number'] += quality_dict['empty']
+        graph_record['repeat_number'] += quality_dict['repeat']
+        # 计算总的智商分数
+        graph_record['data_quality_score'] = intelligence_dao.intelligence_score(graph_record['total_knowledge'],
+                                                                                 graph_record['empty_number'],
+                                                                                 graph_record['repeat_number'])
+
 
 class IntelligenceQueryService(object):
 
     def query_graph_intelligence(self, graph_id):
         """
-        查询图谱的智商
+        query graph intelligence info
         """
         try:
             graph_info = graph_dao.get_graph_detail(graph_id)
+
+            code, data = graph_Service.get_graph_info_count(graph_id)
+            if code != codes.successCode:
+                return code, data
+            count_info = data.json.get('res')
 
             records = intelligence_dao.query([graph_info['graph_id']])
             if not records:
                 return codes.successCode, self.default_graph_response(graph_info)
             # 汇总计算
-            graph_quality = self.intelligence_stats(records, graph_info)
+            graph_quality = self.graph_intelligence_info(records[0], graph_info)
+            # 需要加上总数信息
+            graph_quality['edge'] = count_info.get('edge', [])
+            graph_quality['edge_count'] = count_info.get('edge_count', 0)
+            graph_quality['entity'] = count_info.get('entity', [])
+            graph_quality['entity_count'] = count_info.get('entity_count', 0)
             # 添加最后一次任务信息
             task_info_list = async_task_dao.query_latest_task([graph_quality['graph_id']])
             self.add_task_info(graph_quality, task_info_list)
             return codes.successCode, graph_quality
         except Exception as e:
-            log.error(repr(e))
-            return codes.failCode, None
-
-    def query_network_intelligence_score(self, knw_id):
-        """
-        查询单个知识网络的领域智商
-        """
-        # 根据名称，模糊，分页查询图谱
-        query_params = dict()
-        query_params["knw_id"] = knw_id
-        query_params["size"] = -1
-        graph_info_list = self.query_graph_in_pages(query_params)
-        log.info(graph_info_list)
-
-        if not graph_info_list:
-            return -1
-
-        graph_info_dict = {info['graph_id']: info for info in graph_info_list}
-        graph_id_list = [graph_id for graph_id in graph_info_dict.keys()]
-
-        # 查询领域智商
-        records = intelligence_dao.query(graph_id_list)
-        if not records:
-            return -1
-
-        record_dict = dict()
-        for record in records:
-            entity_records = record_dict.get(record['graph_id'], list())
-            entity_records.append(record)
-            record_dict[record['graph_id']] = entity_records
-
-        total = 0
-        for graph_info in graph_info_list:
-            entity_records = record_dict.get(graph_info['graph_id'], [])
-            graph_quality = self.intelligence_stats(entity_records, graph_info)
-            # 没有数据就不用加入计算了
-            if graph_quality['total_knowledge'] <= 0:
-                continue
-            total += graph_quality['total_knowledge'] * (
-                    (2 - graph_quality['data_quality_C1'] - graph_quality['data_quality_C2']) / 2)
-        if total <= 0:
-            return -1
-        return round(math.log(total, 10) * 10, 2)
+            err_msg = repr(e)
+            log.error(err_msg)
+            code = codes.Builder_IntelligenceQueryService_QueryGraphIntelligence_QueryError
+            return code, Gview.error_return(code, detail=err_msg)
 
     def query_network_intelligence(self, query_params: dict):
         """
-        计算知识网络的领域智商
+        query network intelligence
         """
-
         try:
+            knw_id = query_params.get('knw_id', 0)
+            graph_name = query_params.get('graph_name', '')
+
+            df = knw_dao.get_knw_by_id(knw_id)
+            knw_info_list = df.to_dict('records')
+            knw_info = knw_info_list[0]
+
+            ret = knw_dao.get_all_graph(knw_id, graph_name, False)
+            count = len(ret)
+
+            if count == 0:
+                return codes.successCode, Gview.json_return(self.default_network_response(knw_info, count))
+
             # 根据名称，模糊，分页查询图谱
-            graph_info_list = self.query_graph_in_pages(query_params)
-            if not graph_info_list:
-                return codes.successCode, self.default_network_response(query_params['knw_id'])
+            graph_score_list = self.query_graph_score_in_pages(query_params)
+            if not graph_score_list:
+                return codes.successCode, self.default_network_response(knw_info, count)
 
-            graph_info_dict = {info['graph_id']: info for info in graph_info_list}
-            graph_id_list = [graph_id for graph_id in graph_info_dict.keys()]
+            graph_id_list = [info['graph_id'] for info in graph_score_list]
 
-            # 查询领域智商
-            records = intelligence_dao.query(graph_id_list)
-            record_dict = dict()
-            for record in records:
-                entity_records = record_dict.get(record['graph_id'], list())
-                entity_records.append(record)
-                record_dict[record['graph_id']] = entity_records
+            # 查询graph详细信息
+            graph_detail_list = graph_dao.get_graph_detail(graph_id_list)
+            graph_detail_dict = {graph_detail['graph_id']: graph_detail for graph_detail in graph_detail_list}
 
             # 查询任务记录
             knw_intelligence = dict()
@@ -208,12 +231,14 @@ class IntelligenceQueryService(object):
             # 统计智商数据
             recent_calculate_time = ''
             total = 0
+            repeat = 0
+            empty = 0
             has_value = False
             graph_intelligence_list = list()
-            for graph_info in graph_info_list:
-                entity_records = record_dict.get(graph_info['graph_id'], [])
+            for graph_score in graph_score_list:
+                graph_info = graph_detail_dict.get(graph_score['graph_id'])
                 # 添加领域智商
-                graph_quality = self.intelligence_stats(entity_records, graph_info)
+                graph_quality = self.graph_intelligence_info(graph_score, graph_info)
                 # 添加任务状态
                 self.add_task_info(graph_quality, task_info_dict.get(graph_info['graph_id']))
                 graph_intelligence_list.append(graph_quality)
@@ -223,23 +248,33 @@ class IntelligenceQueryService(object):
                 # 更新最大时间
                 recent_calculate_time = self.max_time(graph_quality['last_task_time'], recent_calculate_time)
                 # 总得分
-                total += graph_quality['total_knowledge'] * (1 - graph_quality['data_quality_C2'] / 2)
+                total += graph_quality['total_knowledge']
+                repeat += graph_quality['data_repeat_C1']
+                empty += graph_quality['data_empty_C2']
+
                 has_value = True
 
-            knw_intelligence['knw_id'] = graph_info_list[0]["knw_id"]
-            knw_intelligence['knw_name'] = graph_info_list[0]["knw_name"]
-            knw_intelligence['knw_description'] = graph_info_list[0]["knw_description"]
-            knw_intelligence['color'] = graph_info_list[0]["color"]
-            knw_intelligence['creation_time'] = graph_info_list[0]["creation_time"]
-            knw_intelligence['update_time'] = graph_info_list[0]["update_time"]
-            knw_intelligence['total'] = round(math.log(total, 10) * 10, 2) if has_value else -1
+            knw_intelligence['knw_id'] = knw_id
+            knw_intelligence['knw_name'] = knw_info["knw_name"]
+            knw_intelligence['knw_description'] = knw_info["knw_description"]
+            knw_intelligence['color'] = knw_info["color"]
+            knw_intelligence['creation_time'] = knw_info["creation_time"]
+            knw_intelligence['update_time'] = knw_info["update_time"]
             knw_intelligence['recent_calculate_time'] = recent_calculate_time
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list
+            knw_intelligence['total_graph'] = count
+            # calculate network intelligence
+            score = -1
+            if has_value:
+                score = round(intelligence_dao.intelligence_score(total, empty, repeat), 2)
+            knw_intelligence['intelligence_score'] = score
 
             return codes.successCode, knw_intelligence
         except Exception as e:
-            log.error(repr(e))
-            return codes.failCode, None
+            err_msg = repr(e)
+            log.error(err_msg)
+            code = codes.Builder_IntelligenceQueryService_QueryNetworkIntelligence_QueryError
+            return code, Gview.error_return(code, detail=err_msg)
 
     @classmethod
     def query_graph_onto_info(cls, graph_id):
@@ -336,24 +371,33 @@ class IntelligenceQueryService(object):
         res['graph_config_id'] = graph_info['graph_config_id']
         res['graph_name'] = graph_info['graph_name']
         res['calculate_status'] = 'NOT_CALCULATE'
+        res['edge_knowledge'] = 0
+        res['entity_knowledge'] = 0
+        res['data_quality_B'] = -1
+        res['total_knowledge'] = 0
         res['last_task_message'] = ''
         res['last_task_time'] = ''
         res['data_repeat_C1'] = -1
-        res['data_missing_C2'] = -1
+        res['data_empty_C2'] = -1
         res['data_quality_B'] = -1
         res['data_quality_score'] = -1
+        return res
 
     def default_intelligence_list(self, graph_info_list):
 
         return
 
-    def default_network_response(self, knw_id):
-        return {"res": {"knw_id": knw_id, "graph_intelligence_list": []}}
+    def default_network_response(self, knw_info, total):
+        data = dict()
+        data.update(knw_info)
+        data['graph_intelligence_list'] = []
+        data['total_graph'] = total
+        return data
 
     def max_time(self, a: datetime.datetime, b: datetime.datetime):
         return a
 
-    def query_graph_in_pages(self, query_params):
+    def query_graph_score_in_pages(self, query_params):
         """
         分页查询图谱信息
         """
@@ -369,43 +413,28 @@ class IntelligenceQueryService(object):
             query_params['rule'] = query_params['rule'].split(',')
         if isinstance(query_params.get('order'), str):
             query_params['order'] = query_params['order'].split(',')
-        graph_info_list = graph_dao.query_graph_otl_in_page(query_params)
-        return graph_info_list
 
-    def intelligence_stats(self, records, graph_info):
+        graph_score_list = intelligence_dao.query_in_page(query_params)
+        return graph_score_list
+
+    def graph_intelligence_info(self, record, graph_info):
+        """
+        根据图谱信息，给出合适的智商信息
+        """
+        if not record or not record['id']:
+            return self.default_graph_response(graph_info)
+        total_knowledge = record.get('total_knowledge', 0)
         graph_quality = dict()
         graph_quality['graph_id'] = graph_info['graph_id']
         graph_quality['graph_name'] = graph_info['graph_name']
         graph_quality['graph_config_id'] = graph_info['graph_config_id']
-        if not records:
-            graph_quality['data_quality_C1'] = -1
-            graph_quality['data_quality_C2'] = -1
-            graph_quality['data_quality_B'] = -1
-            graph_quality['total_knowledge'] = -1
-            graph_quality['intelligence_score'] = -1
-            return graph_quality
-
-        total = 0
-        not_empty = 0
-        updated_time = None
-        for record in records:
-            # 计算总数
-            entity_total = record['prop_number'] * record['data_length']
-            total += entity_total
-            # 计算缺失总数
-            not_empty += (entity_total - record['empty_number'])
-            # 计算时间，所有的时间应该是一致的，取一条即可
-            updated_time = record['updated_time']
-
-        graph_quality['data_quality_C1'] = 0
-        graph_quality['data_quality_C2'] = round(1 - not_empty / total, 2)
-        graph_quality['data_quality_B'] = round(math.log(total, 10) * 10, 2)
-        graph_quality['total_knowledge'] = total
-        graph_quality['intelligence_score'] = graph_quality['data_quality_B'] * \
-                                              (1 - graph_quality['data_quality_C1'] +
-                                               1 - graph_quality['data_quality_C2']) / 2
-        graph_quality['intelligence_score'] = round(graph_quality['intelligence_score'], 2)
-
+        graph_quality['entity_knowledge'] = record.get('entity_knowledge', 0)
+        graph_quality['edge_knowledge'] = record.get('edge_knowledge', 0)
+        graph_quality['data_repeat_C1'] = round(record.get('repeat_number', 0) / total_knowledge, 2)
+        graph_quality['data_empty_C2'] = round(record.get('empty_number', 0) / total_knowledge, 2)
+        graph_quality['data_quality_B'] = round(math.log(record.get('total_knowledge', 0), 10) * 10, 2)
+        graph_quality['total_knowledge'] = total_knowledge
+        graph_quality['data_quality_score'] = round(record['data_quality_score'], 2)
         return graph_quality
 
     def add_task_info(self, graph_quality, task_info_list):

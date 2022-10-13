@@ -2,6 +2,7 @@ import yaml
 import sys
 import os
 import time
+import datetime
 
 sys.path.append(os.path.abspath("../"))
 
@@ -237,13 +238,13 @@ def intelligence_calculate(self, params_json, task_id):
         update_json = dict()
         intelligence_calculate_service.graph_calculate_task(params_json)
         update_json['task_status'] = 'finished'
-        async_task_service.update(task_id, update_json)
         return {'current': 100, 'total': 100}
-    except Exception as e:
+    except BaseException as e:
         update_json['result'] = repr(e)
+        update_json['task_status'] = 'failed'
         log.error(update_json['result'])
-        self.update_state(state='FAILURE', meta={'result': update_json['result']})
     finally:
         # 此处只需要更新下错误原因即可，状态由外部调用更新
+        update_json['finished_time'] = datetime.datetime.now()
         async_task_service.update(task_id, update_json)
         return {'current': 100, 'total': 100}

@@ -903,44 +903,14 @@ class GraphDao():
         # 查询本体信息
 
     @connect_execute_close_db
-    def query_graph_otl_in_page(self, query_param, connection, cursor):
-        sql = f"""SELECT b.knw_id, a.knw_name, a.knw_description, a.color, a.creation_time, a.update_time,
-                         b.graph_id, c.KG_config_id as graph_config_id, c.KG_name as graph_name
-                    from (select * from knowledge_network where id={query_param['knw_id']}) as a 
-                    join network_graph_relation as b on a.id = b.knw_id
-                    join knowledge_graph as c on b.graph_id = c.id 
-                    """
-        # 根据图谱名称模糊查询
-        if 'graph_name' in query_param:
-            sql += f""" and graph_name like "%{query_param['graph_name']}%" """
-        # 根据传入的多个字段排序
-        if 'rule' in query_param:
-            rule_list = query_param['rule']
-            order_list = query_param['order']
-
-            po_list = list()
-            for index, prop in enumerate(rule_list):
-                # 如果两者不对齐，rule长度超了，跳过该rule
-                if index + 1 > len(order_list):
-                    continue
-                order = order_list[index]
-                po_list.append(f" order by {prop} {order}")
-            if len(po_list) > 0:
-                sql += ", ".join(po_list)
-        # 分页
-        if 'size' in query_param and 'page' in query_param:
-            page = int(query_param['page'])
-            size = int(query_param['size'])
-            sql += f""" limit {(page - 1) * size}, {size}"""
-
-        cursor.execute(sql)
-        return cursor.fetchall()
-
-    @connect_execute_close_db
-    def get_graph_detail(self, graph_id, connection, cursor):
+    def get_graph_detail(self, graph_id_list, connection, cursor):
         """
         查询图谱的所有详细
         """
+        graph_id_str = str(graph_id_list)
+        if isinstance(graph_id_list, list):
+            graph_id_str = ','.join([str(graph_id) for graph_id in graph_id_list])
+
         sql = f"""SELECT  b.knw_id, a.knw_name, a.knw_description, a.color, a.creation_time, a.update_time,
                           b.graph_id, c.KG_config_id as graph_config_id, c.KG_name as graph_name, c.KDB_name as KDB_name,
                           d.graph_db_id as graph_db_id, d.graph_otl as graph_otl
@@ -948,9 +918,11 @@ class GraphDao():
                         join network_graph_relation as b on a.id = b.knw_id
                         join knowledge_graph as c on b.graph_id = c.id 
                         join graph_config_table as d on c.KG_config_id = d.id 
-                        where c.id={graph_id}
+                        where c.id in ({graph_id_str})
                         """
         cursor.execute(sql)
+        if isinstance(graph_id_list, list):
+            return cursor.fetchall()
         return cursor.fetchone()
 
     # 查询本体实体信息

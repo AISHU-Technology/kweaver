@@ -5,7 +5,7 @@ import base64
 import yaml
 from sqlalchemy.orm import sessionmaker, relationship, foreign, remote
 from sqlalchemy.pool import NullPool
-from sqlalchemy import Column, String, create_engine, Integer, Boolean, Text, DateTime, SmallInteger
+from sqlalchemy import Column, String, create_engine, Integer, Boolean, Text, DateTime, SmallInteger, Numeric
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.sql.schema import UniqueConstraint
@@ -410,6 +410,7 @@ class KnowledgeNetwork(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     knw_name = Column(String(50), nullable=True)
     knw_description = Column(String(200), nullable=True)
+    intelligence_score = Column(Numeric, default=-1)
     color = Column(String(50), nullable=True)
     creation_time = Column(String(50), nullable=True)
     update_time = Column(String(50), nullable=True)
@@ -442,6 +443,41 @@ class Lexicon(Base):
     status = Column(String(50), nullable=True)
     error_info = Column(LONGTEXT, nullable=True)
     UniqueConstraint(lexicon_name, knowledge_id, name="lexicon_name_kwn_id")
+
+
+class IntelligenceRecords(Base):
+    __tablename__ = "intelligence_records"
+    __table_args__ = {
+        'mysql_charset': 'utf8'
+    }
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    graph_id = Column(Integer, nullable=True)
+    entity_knowledge = Column(Integer, nullable=True)
+    edge_knowledge = Column(Integer, nullable=True)
+    data_number = Column(Integer, nullable=True)
+    total_knowledge = Column(Integer, nullable=True)
+    empty_number = Column(Integer, nullable=True)
+    repeat_number = Column(Integer, nullable=True)
+    data_quality_score = Column(Numeric, default=-1)
+    update_time = Column(DateTime, nullable=True)
+
+
+class async_task_records(Base):
+    __tablename__ = "async_tasks"
+    __table_args__ = {
+        'mysql_charset': 'utf8'
+    }
+    id = Column(Integer, autoincrement=True, primary_key=True)
+    task_type = Column(String(100), nullable=True)
+    task_status = Column(String(50), nullable=True)
+    task_name = Column(String(200), nullable=True)
+    celery_task_id = Column(String(200), nullable=True)
+    relation_id = Column(String(200), nullable=True)
+    task_params = Column(Text, nullable=True)
+    result = Column(Text, nullable=True)
+    created_time = Column(DateTime, nullable=True)
+    finished_time = Column(DateTime, nullable=True)
+
 
 # 初始化数据库表
 def init_datatable():

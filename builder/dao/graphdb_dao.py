@@ -50,34 +50,40 @@ def type_transform(db_type, value, type, sql_format=True):
                 value = ' datetime("{}") '.format(value)
             elif db_type == 'orientdb':
                 value = "'" + str(value) + "'"
+        if type == 'boolean':
+            if value.lower() not in ['true', 'false']:
+                try:
+                    value = str(bool(eval(value)))
+                except Exception:
+                    value = 'NULL'
     return str(value)
 
 
-def gen_doc_vid(merge_otls, otl_name, one_data, en_pro_dict, gtype='nebula'):
+def gen_doc_vid(merge_entity_list, entity_name, one_data, en_pro_dict, gtype='nebula'):
     """
     计算图数据库点的vid, 兼容nebula和orientdb
 
     参数
-        merge_otls: 融合属性字典
+        merge_entity_list: 融合属性字典
             demo: {"t_stock_percent_wide": {"name": "equality"}}
                 t_stock_percent_wide： 实体名
-                name: 是融合属性
-                equality: 是融合的方法
-        otl_name: 实体名
+                name: 融合属性
+                equality: 融合的方法
+        entity_name: 抽取实体名
         one_data: 一个实体数据
         en_pro_dict: 属性字典
         gtype: 图数据库的名称，默认nabule
 
     """
     tab_val_index = []  # 属性列表
-    for k, v in merge_otls[otl_name].items():
-        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[otl_name][k])
+    for k, v in merge_entity_list[entity_name].items():
+        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[entity_name]['pro_map'][k])
         if gtype == "orientdb":
             value = "  `{}` = '{}' ".format(k, one_data[k])
         tab_val_index.append(value)
 
     if gtype == "orientdb":
-        return 'SELECT FROM `{}` WHERE {}'.format(otl_name, ','.join(tab_val_index))
+        return 'SELECT FROM `{}` WHERE {}'.format(en_pro_dict[entity_name]['otl_name'], ','.join(tab_val_index))
 
     props_str = ''
     for m in tab_val_index:
@@ -98,6 +104,11 @@ def default_value(sql_format=True):
         return "NULL"
     else:
         return ""
+
+def value_transfer(value, db_type, type):
+    if not value:
+        return default_value()
+    return type_transform(db_type, normalize_text(str(value)), type)
 
 
 def normalize_text(text):
@@ -1070,9 +1081,9 @@ class GraphDB(object):
         properties = []
         for p in props:
             if pro_dict[p] == 'string':
-                properties.append(p + '(' + str(index_len) + ')')
+                properties.append('`' + p + '`' + '(' + str(index_len) + ')')
             else:
-                properties.append(p)
+                properties.append('`' + p + '`')
         edge_index = 'CREATE EDGE INDEX IF NOT EXISTS`{}` ON `{}` ({})' \
             .format(index_name, edge_name, ','.join(properties))
         self._nebula_exec(edge_index, db)
@@ -1267,7 +1278,7 @@ class GraphDB(object):
         create_edge = 'CREATE EDGE IF NOT EXISTS `{}`'.format(edge_class)
         props = []
         for o_p in edge_otl_pro:
-            prop = '`' + o_p + '` ' + edge_pro_dict[edge_class][o_p]
+            prop = '`' + o_p + '` ' + data_type_transform(edge_pro_dict[edge_class][o_p])
             props.append(prop)
         props.append('`timestamp` double')
         create_edge += '(' + ','.join(props) + ')'
@@ -1821,7 +1832,7 @@ class SQLProcessor:
             batch_sql = 'INSERT VERTEX `{}` ({}) VALUES {}' \
                 .format(otl_name,
                         ','.join(pros),
-                        ','.join(batch_sql))
+                        ',\n'.join(batch_sql))
         # pool.close()
         # pool.join()
         return batch_sql
@@ -2037,7 +2048,7 @@ class SQLProcessor:
         return json.dumps(body_index) + '\n' + json.dumps(body_field)
 
     def prop_value_sql(self, entity_data=None, edge_otl_tab_pro=None, onedata=None, prop=None, value=None,
-                       edge_class=None):
+                       edge_class=None, edge_pro_dict=None):
         '''获取赋值sql
         如果onedata存在,将MongoDB数据中的需要的实体属性值dict转换为字符串list
         否则通过prop和value构造
@@ -2049,6 +2060,7 @@ class SQLProcessor:
             prop: 属性列表
             value: 值列表
             edge_class: 边名, 没有name属性值时则将属性name赋值为边名
+            edge_pro_dict: {边名: {属性名: 属性类型}}
 
         Returns:
             orientdb只有返回值第一项有意义,为给属性赋值的字符串列表
@@ -2064,11 +2076,15 @@ class SQLProcessor:
                         if otl_pro == 'name':
                             name_exists = True
                         if self.type == 'orientdb':
-                            prop_val_sql[0].append(
-                                str(otl_pro) + "=" + "'" + normalize_text(str(onedata[tab_pro])) + "'")
+                            prop_val_sql[0].append(str(otl_pro) + "=" +
+                                                   value_transfer(onedata[tab_pro],
+                                                                  self.type,
+                                                                  edge_pro_dict[edge_class][otl_pro]))
                         elif self.type == 'nebula':
                             prop_val_sql[0].append(str(otl_pro))
-                            prop_val_sql[1].append("'" + normalize_text(str(onedata[tab_pro])) + "'")
+                            prop_val_sql[1].append(value_transfer(onedata[tab_pro],
+                                                                  self.type,
+                                                                  edge_pro_dict[edge_class][otl_pro]))
             if not name_exists:
                 if self.type == 'orientdb':
                     prop_val_sql[0].append("`name`=" + "'" + str(edge_class) + "'")
