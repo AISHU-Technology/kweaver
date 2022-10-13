@@ -83,21 +83,25 @@ class IntelligenceCalculateService(object):
         """
 
         # query graph status
-        ret_code, resp = graph_Service.get_graph_info_basic(graph_id, False, ['status'])
+        ret_code, resp = graph_Service.get_graph_info_basic(graph_id, False, ['status', 'graphdb_type'])
         if ret_code != codes.successCode:
             return ret_code, resp
 
         # only normal and failed status could be calculated
-        graph_status = resp.json.get('res', {}).get('status', '')
+        graph_info = resp.json.get('res', {})
+        graph_status = graph_info.get('status', '')
+        graph_db_type = graph_info.get('graphdb_type', '')
+
         if graph_status != "normal" and graph_status != "failed":
             if graph_status == 'edit':
-                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphConfigStatusError
+                code = codes.Builder_IntelligenceCalculateService_SendTask_GraphConfigStatusError
             if graph_status == 'running':
-                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphRunStatusError
+                code = codes.Builder_IntelligenceCalculateService_SendTask_GraphRunStatusError
             if graph_status == 'waiting':
-                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphWaitStatusError
-            if graph_status == 'stop':
-                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphFailStatusError
+                code = codes.Builder_IntelligenceCalculateService_SendTask_GraphWaitStatusError
+            return code, Gview.error_return(code)
+        if graph_status == 'failed' and graph_db_type == 'nebula':
+            code = codes.Builder_IntelligenceCalculateService_SendTask_GraphFailStatusError
             return code, Gview.error_return(code)
 
         url = "http://localhost:6488/task/intelligence"
