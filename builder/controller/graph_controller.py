@@ -34,7 +34,8 @@ import yaml
 
 graph_controller_app = Blueprint('graph_controller_app', __name__)
 
-GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH',
+                               os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
     swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r') as f:
@@ -1099,7 +1100,7 @@ def intelligence_stats(graph_id):
             description: graph id
             type: integer
     '''
-    if not graph_id:
+    if not intelligence_query_service.check_uint(graph_id):
         code = codes.Builder_GraphController_IntelligenceStats_ParamError
         return Gview2.error_return(code, arg='graph_id'), 400
 

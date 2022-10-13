@@ -174,9 +174,11 @@ class IntelligenceQueryService(object):
         try:
             graph_info = graph_dao.get_graph_detail(graph_id)
 
+            # query graph detail in GraphDB, if this graph is empty, return default response
             code, data = graph_Service.get_graph_info_count(graph_id)
             if code != codes.successCode:
-                return code, data
+                log.info(repr(data.json))
+                return codes.successCode, self.default_graph_response(graph_info)
             count_info = data.json.get('res')
 
             records = intelligence_dao.query([graph_info['graph_id']])
@@ -472,6 +474,78 @@ class IntelligenceQueryService(object):
         graph_quality['calculate_status'] = calculate_status
         graph_quality['last_task_message'] = task_info.get('result') if task_info.get('result') else ""
         graph_quality['last_task_time'] = (task_info['created_time']).strftime('%Y-%m-%d %H:%M:%S')
+
+    def check_uint(self, graph_id):
+        if not graph_id:
+            return False
+        try:
+            graph_id = int(graph_id)
+            if graph_id <= 0:
+                return False
+            return True
+        except:
+            return False
+
+    def query_network_param_check(self, params_json):
+        result = dict()
+        knw_id = params_json.get("knw_id")
+
+        if not self.check_uint(knw_id):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'knw_id'
+            return code, result
+
+        df = knw_dao.check_knw_id(knw_id)
+        res = df.to_dict('records')
+        if len(res) == 0:
+            code = codes.Builder_IntelligenceQueryService_QueryNetworkIntelligence_KnwNotExist
+            result['knw_id'] = int(knw_id)
+            return code, result
+
+        size = params_json.get('size')
+        page = params_json.get('page')
+        rule = params_json.get('rule')
+        order = params_json.get('order')
+
+        if not self.check_uint(size):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'size'
+            return code, result
+
+        if int(size) > 100:
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamTooBigError
+            result['arg'] = 'size'
+            result['max'] = 100
+            return code, result
+
+        if not self.check_uint(page):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'page'
+            return code, result
+
+        if not rule or not isinstance(rule, str):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'rule'
+            return code, result
+
+        rule_allowed = ('data_quality_B', 'update_time', 'data_quality_score')
+        if rule not in rule_allowed:
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_NotAllowedParamError
+            result['arg'] = 'rule'
+            result['allowed'] = ','.join(rule_allowed)
+            return code, result
+
+        if not order or not isinstance(order, str):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'order'
+            return code, result
+        order_allowed = ('desc', 'asc')
+        if order not in order_allowed:
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_NotAllowedParamError
+            result['arg'] = 'order'
+            result['allowed'] = ','.join(order_allowed)
+            return code, result
+        return codes.successCode, result
 
 
 intelligence_query_service = IntelligenceQueryService()
