@@ -3,6 +3,7 @@ name: kw-builder CI
 
 # push tag 时触发执行 
 on:
+  workflow_dispatch:
   push:
     tags:
       - v*
