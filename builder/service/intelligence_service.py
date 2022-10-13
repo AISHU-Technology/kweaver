@@ -203,7 +203,7 @@ class IntelligenceQueryService(object):
         query network intelligence
         """
         try:
-            knw_id = query_params.get('knw_id', 0)
+            knw_id = int(query_params.get('knw_id', 0))
             graph_name = query_params.get('graph_name', '')
 
             df = knw_dao.get_knw_by_id(knw_id)
@@ -258,7 +258,7 @@ class IntelligenceQueryService(object):
 
                 has_value = True
 
-            knw_intelligence['knw_id'] = knw_id
+            knw_intelligence['knw_id'] = int(knw_id)
             knw_intelligence['knw_name'] = knw_info["knw_name"]
             knw_intelligence['knw_description'] = knw_info["knw_description"]
             knw_intelligence['color'] = knw_info["color"]
@@ -273,7 +273,7 @@ class IntelligenceQueryService(object):
                 score = round(intelligence_dao.intelligence_score(total, empty, repeat), 2)
             knw_intelligence['intelligence_score'] = score
 
-            return codes.successCode, knw_intelligence
+            return codes.successCode, Gview.json_return(knw_intelligence)
         except Exception as e:
             err_msg = repr(e)
             log.error(err_msg)

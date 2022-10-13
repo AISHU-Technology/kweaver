@@ -300,7 +300,7 @@ def intelligence_stats():
     res_code, result = intelligence_query_service.query_network_intelligence(params_json)
     if res_code != codes.successCode:
         return result, 500
-    return Gview2.json_return(result), 200
+    return result, 200
 
 
 # 添加网络与图谱关系
