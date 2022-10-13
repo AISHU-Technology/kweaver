@@ -93,13 +93,14 @@ def getAllKnw():
     check_res, message = knw_check_params.getKnwParams(params_json)
     if check_res != 0:
         Logger.log_error("parameters:%s invalid" % params_json)
-        return Gview.TErrorreturn("Builder.controller.knowledgeNetwork_controller.getAllKnw.ParamsError"
-                                  , "parameters Error!", "Please check your parameters", message,
-                                  ""), CommonResponseStatus.BAD_REQUEST.value
+        code = codes.Builder_KnowledgeNetworkController_GetAllKnw_ParamsError
+        return Gview2.error_return(code, detail=message), CommonResponseStatus.BAD_REQUEST.value
+
     ret_code, ret_message = knw_service.getKnw(params_json)
     if ret_code != 200:
-        return Gview.TErrorreturn(ret_message["code"], ret_message["cause"], ret_message["solution"],
-                                  ret_message["message"], ""), CommonResponseStatus.BAD_REQUEST.value
+        code = codes.Builder_Service_KnwService_KnwService_GetKnw_RequestError
+        return Gview2.error_return(code, detail=ret_message["cause"],
+                                   description=ret_message["message"]), CommonResponseStatus.BAD_REQUEST.value
 
     return jsonify(ret_message), CommonResponseStatus.SUCCESS.value
 

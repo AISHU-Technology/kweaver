@@ -112,7 +112,7 @@ errDict = {
     },
     'Builder.GraphController.IntelligenceCalculateTask.ParamError': {
         "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.ParamError",
-        "Description": _l("parameter [arg] error"),
+        "Description": _l("Parameter [arg] Error."),
         "ErrorDetails": _l("parameter [arg] not exists or invalid"),
         "Solution": _l("please ensure parameter [arg] exists and valid")
     },
@@ -124,13 +124,13 @@ errDict = {
     },
     "Builder.GraphController.IntelligenceStats.ParamError": {
         "ErrorCode": "Builder.GraphController.IntelligenceStats.ParamError",
-        "Description": _l("parameter [arg] error"),
+        "Description": _l("Parameter [arg] Error."),
         "ErrorDetails": _l("parameter [arg] not exists or invalid"),
         "Solution": _l("please ensure parameter [arg] exists and valid")
     },
     "Builder.KnowledgeNetworkController.IntelligenceStats.ParamError": {
         "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.ParamError",
-        "Description": _l("parameter [arg] error"),
+        "Description": _l("Parameter [arg] Error."),
         "ErrorDetails": _l("parameter [arg] not exists or invalid"),
         "Solution": _l("please ensure parameter [arg] exists and valid")
     },
