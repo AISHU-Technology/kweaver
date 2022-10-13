@@ -62,5 +62,11 @@ errDict = {
         "Description": _l("network intelligence info query error"),
         "ErrorDetails": _l("[detail]"),
         "Solution": _l("Please contact the developers.")
-    }
+    },
+    'Builder.IntelligenceCalculateService.SendTask.GraphInvalidStatusError': {
+        "ErrorCode": "Builder.IntelligenceCalculateService.SendTask.GraphInvalidStatusError",
+        "Description": _l("knowledge graph status invalid, please calculate after building successfully"),
+        "ErrorDetails": _l("knowledge graph status invalid, please calculate after building successfully"),
+        "Solution": _l("Please check graph status")
+    },
 }

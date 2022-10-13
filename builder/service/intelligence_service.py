@@ -93,6 +93,7 @@ class IntelligenceCalculateService(object):
         graph_db_type = graph_info.get('graphdb_type', '')
 
         if graph_status != "normal" and graph_status != "failed":
+            code = codes.Builder_IntelligenceCalculateService_SendTask_GraphInvalidStatusError
             if graph_status == 'edit':
                 code = codes.Builder_IntelligenceCalculateService_SendTask_GraphConfigStatusError
             if graph_status == 'running':
