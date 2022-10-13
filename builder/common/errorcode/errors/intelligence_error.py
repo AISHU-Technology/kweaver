@@ -70,4 +70,10 @@ errDict = {
         "ErrorDetails": _l("knowledge graph status invalid, please calculate after building successfully"),
         "Solution": _l("Please check graph status")
     },
+    'Builder.IntelligenceQueryService.QueryNetworkIntelligence.KnwNotExist': {
+        "ErrorCode": "Builder.IntelligenceQueryService.QueryNetworkIntelligence.KnwNotExist",
+        "Description": _l('knowledge network [knw_id] not exists'),
+        "ErrorDetails": _l('knowledge network [knw_id] not exists'),
+        "Solution": _l('please config your knowledge network again.')
+    }
 }

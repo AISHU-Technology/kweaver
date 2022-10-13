@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-13 16:52+0800\n"
+"POT-Creation-Date: 2022-10-13 19:12+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgstr ""
 #: common/errorcode/errors/graph_error.py:80
 #: common/errorcode/errors/graph_error.py:98
 #: common/errorcode/errors/graph_error.py:122
-#: common/errorcode/errors/graph_error.py:140
+#: common/errorcode/errors/graph_error.py:146
 msgid "[cause]"
 msgstr ""
 
@@ -84,13 +84,13 @@ msgstr ""
 #: common/errorcode/errors/graph_error.py:81
 #: common/errorcode/errors/graph_error.py:99
 #: common/errorcode/errors/graph_error.py:123
-#: common/errorcode/errors/graph_error.py:141
+#: common/errorcode/errors/graph_error.py:147
 #: common/errorcode/errors/intelligence_error.py:9
 #: common/errorcode/errors/intelligence_error.py:15
-#: common/errorcode/errors/intelligence_error.py:45
-#: common/errorcode/errors/intelligence_error.py:51
-#: common/errorcode/errors/intelligence_error.py:57
-#: common/errorcode/errors/intelligence_error.py:63
+#: common/errorcode/errors/intelligence_error.py:47
+#: common/errorcode/errors/intelligence_error.py:53
+#: common/errorcode/errors/intelligence_error.py:59
+#: common/errorcode/errors/intelligence_error.py:65
 msgid "Please contact the developers."
 msgstr ""
 
@@ -166,7 +166,19 @@ msgstr ""
 #: common/errorcode/errors/graph_error.py:117
 #: common/errorcode/errors/graph_error.py:129
 #: common/errorcode/errors/graph_error.py:135
+#: common/errorcode/errors/graph_error.py:141
+#: common/errorcode/errors/graph_error.py:153
 msgid "please ensure parameter [arg] exists and valid"
+msgstr ""
+
+#: common/errorcode/errors/graph_error.py:139
+#: common/errorcode/errors/graph_error.py:140
+msgid "Parameter [arg] too big please lower than [max]"
+msgstr ""
+
+#: common/errorcode/errors/graph_error.py:151
+#: common/errorcode/errors/graph_error.py:152
+msgid "Parameter [arg] not allow, please choose [allowed]"
 msgstr ""
 
 #: common/errorcode/errors/graphdb_error.py:9
@@ -196,8 +208,8 @@ msgstr ""
 #: common/errorcode/errors/intelligence_error.py:21
 #: common/errorcode/errors/intelligence_error.py:27
 #: common/errorcode/errors/intelligence_error.py:33
-#: common/errorcode/errors/intelligence_error.py:39
-#: common/errorcode/errors/intelligence_error.py:69
+#: common/errorcode/errors/intelligence_error.py:41
+#: common/errorcode/errors/intelligence_error.py:71
 msgid "Please check graph status"
 msgstr ""
 
@@ -212,42 +224,51 @@ msgid "knowledge graph is configuring build, please calculate after building"
 msgstr ""
 
 #: common/errorcode/errors/intelligence_error.py:37
-#: common/errorcode/errors/intelligence_error.py:38
+#: common/errorcode/errors/intelligence_error.py:39
 msgid ""
 "knowledge graph store in NebulaGraph, if you need intelligence score, "
 "please calculate after building successfully"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:43
+#: common/errorcode/errors/intelligence_error.py:45
 msgid "call async task service error"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:44
-#: common/errorcode/errors/intelligence_error.py:50
-#: common/errorcode/errors/intelligence_error.py:56
-#: common/errorcode/errors/intelligence_error.py:62
+#: common/errorcode/errors/intelligence_error.py:46
+#: common/errorcode/errors/intelligence_error.py:52
+#: common/errorcode/errors/intelligence_error.py:58
+#: common/errorcode/errors/intelligence_error.py:64
 #: common/errorcode/errors/network_error.py:8
 #: common/errorcode/errors/network_error.py:14
 msgid "[detail]"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:49
+#: common/errorcode/errors/intelligence_error.py:51
 msgid "async task service internal error"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:55
+#: common/errorcode/errors/intelligence_error.py:57
 msgid "graph intelligence info query error"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:61
+#: common/errorcode/errors/intelligence_error.py:63
 msgid "network intelligence info query error"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:67
-#: common/errorcode/errors/intelligence_error.py:68
+#: common/errorcode/errors/intelligence_error.py:69
+#: common/errorcode/errors/intelligence_error.py:70
 msgid ""
 "knowledge graph status invalid, please calculate after building "
 "successfully"
+msgstr ""
+
+#: common/errorcode/errors/intelligence_error.py:75
+#: common/errorcode/errors/intelligence_error.py:76
+msgid "knowledge network [knw_id] not exists"
+msgstr ""
+
+#: common/errorcode/errors/intelligence_error.py:77
+msgid "please config your knowledge network again."
 msgstr ""
 
 #: common/errorcode/errors/lexicon_error.py:9

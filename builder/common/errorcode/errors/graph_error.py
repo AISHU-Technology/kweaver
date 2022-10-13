@@ -134,10 +134,23 @@ errDict = {
         "ErrorDetails": _l("parameter [arg] not exists or invalid"),
         "Solution": _l("please ensure parameter [arg] exists and valid")
     },
+    'Builder.KnowledgeNetworkController.IntelligenceStats.ParamTooBigError': {
+        "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.ParamTooBigError",
+        "Description": _l("Parameter [arg] too big please lower than [max]"),
+        "ErrorDetails": _l("Parameter [arg] too big please lower than [max]"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
+    },
     'Builder.KnowledgeNetworkController.IntelligenceStats.QueryError': {
         "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.QueryError",
         "Description": "[description]",
         "ErrorDetails": _l("[cause]"),
         "Solution": _l("Please contact the developers.")
+    },
+    "Builder.KnowledgeNetworkController.IntelligenceStats.NotAllowedParamError": {
+        "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.NotAllowedParamError",
+        "Description": _l("Parameter [arg] not allow, please choose [allowed]"),
+        "ErrorDetails": _l("Parameter [arg] not allow, please choose [allowed]"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
+
     }
 }

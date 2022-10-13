@@ -19,7 +19,8 @@ from service.intelligence_service import intelligence_query_service
 
 knowledgeNetwork_controller_app = Blueprint('knowledgeNetwork_controller_app', __name__)
 
-GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH',
+                               os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
     swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
@@ -293,10 +294,9 @@ def intelligence_stats():
         code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
         return Gview2.error_return(code, arg='knw_id'), 400
 
-    ret_code, ret_message = knw_service.check_knw_id(params_json)
-    if ret_code != 200:
-        return Gview.TErrorreturn(ret_message["code"], ret_message["des"], ret_message["solution"],
-                                  ret_message["detail"], ""), CommonResponseStatus.BAD_REQUEST.value
+    ret_code, ret_message = intelligence_query_service.query_network_param_check(params_json)
+    if ret_code != codes.successCode:
+        return Gview2.error_return(ret_code, **ret_message), 400
 
     res_code, result = intelligence_query_service.query_network_intelligence(params_json)
     if res_code != codes.successCode:
