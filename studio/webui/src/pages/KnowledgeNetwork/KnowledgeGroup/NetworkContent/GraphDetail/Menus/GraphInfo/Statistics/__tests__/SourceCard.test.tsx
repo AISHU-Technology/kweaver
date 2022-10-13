@@ -11,7 +11,7 @@ describe('Statistics/ScoreCard', () => {
     const wrapper = init();
     expect(wrapper.find('.h-info div').at(0).text()).toBe(defaultProps.title);
 
-    wrapper.setProps({ source: 66 });
+    wrapper.setProps({ score: 66 });
     expect(wrapper.find('.h-info div').at(1).text()).toBe('66');
 
     wrapper.setProps({ children: 'children' });

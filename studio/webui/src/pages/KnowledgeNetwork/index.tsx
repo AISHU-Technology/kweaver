@@ -140,7 +140,10 @@ const KnowledgeNetwork = () => {
     <div className="knowledgeNetwork">
       <Layout header={header} sidebar={sidebar} mainStyle={{ padding: 0, background: '#fff' }}>
         <Switch>
-          <Route path="/knowledge/iq" render={() => <DomainIQ kgData={selectedKnowledge} />} />
+          <Route
+            path="/knowledge/iq"
+            render={() => <DomainIQ kgData={selectedKnowledge} setKgData={setSelectedKnowledge} />}
+          />
           <Route path="/knowledge/network" render={() => <KnowledgeGroup kgData={selectedKnowledge} />} />
           <Route path="/knowledge/engine/search" render={() => <CognitiveEngine kgData={selectedKnowledge} />} />
           <Route path="/knowledge/source" render={() => <DataSource selectedKnowledge={selectedKnowledge} />} />

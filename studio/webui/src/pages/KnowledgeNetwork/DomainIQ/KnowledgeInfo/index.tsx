@@ -34,8 +34,8 @@ const KnowledgeInfo: React.FC<KnowledgeInfoProps> = ({ kgInfo, onEditSuccess }) 
           <IconFont type="icon-edit" />
         </div>
       </div>
-      <div className="source-icon">
-        <ScorePanel source={intelligence_score} />
+      <div className="score-icon">
+        <ScorePanel score={intelligence_score} />
       </div>
 
       <div className="ad-pt-4 ad-pb-6 info-box">

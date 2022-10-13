@@ -37,10 +37,10 @@ const SCALE_POINTS = [
  * 中上（聪明）：110 ~ 119
  * 优秀：120 ~ 129
  * 超优：> 130
- * @param source 领域智商评分
+ * @param score 领域智商评分
  * @return { Object } angle: 指针旋转角度; (x, y)坐标
  */
-const sourceToAngle = (source?: number) => {
+const scoreToAngle = (score?: number) => {
   let angle = 0;
   let x = -9999;
   let y = -9999;
@@ -51,20 +51,20 @@ const sourceToAngle = (source?: number) => {
   const xOffset = 6;
   const yOffset = 3;
 
-  if (typeof source === 'undefined' || source < 0) return { angle, x, y };
+  if (typeof score === 'undefined' || score < 0) return { angle, x, y };
 
   switch (true) {
-    case source < 90:
-      angle = (source / 90) * rangeDeg - starDeg;
+    case score < 90:
+      angle = (score / 90) * rangeDeg - starDeg;
       break;
-    case source < 110:
-      angle = ((source - 90) / (110 - 90) + 1) * rangeDeg - starDeg;
+    case score < 110:
+      angle = ((score - 90) / (110 - 90) + 1) * rangeDeg - starDeg;
       break;
-    case source < 120:
-      angle = ((source - 110) / (120 - 110) + 2) * rangeDeg - starDeg;
+    case score < 120:
+      angle = ((score - 110) / (120 - 110) + 2) * rangeDeg - starDeg;
       break;
-    case source <= 130:
-      angle = ((source - 120) / (130 - 120) + 3) * rangeDeg - starDeg;
+    case score <= 130:
+      angle = ((score - 120) / (130 - 120) + 3) * rangeDeg - starDeg;
       break;
     default:
       angle = 15;
@@ -78,4 +78,4 @@ const sourceToAngle = (source?: number) => {
   return { angle, x: x - xOffset, y: y - yOffset };
 };
 
-export { sourceToAngle, RANGE_POINTS, SCALE_POINTS };
+export { scoreToAngle, RANGE_POINTS, SCALE_POINTS };

@@ -1,12 +1,12 @@
 import React, { memo } from 'react';
 import intl from 'react-intl-universal';
 import ExplainTip from '@/components/ExplainTip';
-import { sourceToAngle, RANGE_POINTS, SCALE_POINTS } from './assistFunction';
+import { scoreToAngle, RANGE_POINTS, SCALE_POINTS } from './assistFunction';
 import './style.less';
 
-const ScorePanel = (props: { source?: number }) => {
-  const { source } = props;
-  const { angle, x, y } = sourceToAngle(source);
+const ScorePanel = (props: { score?: number }) => {
+  const { score } = props;
+  const { angle, x, y } = scoreToAngle(score);
   return (
     <div className="iq-rate-plate">
       <svg viewBox="0 0 100 65">
@@ -37,7 +37,7 @@ const ScorePanel = (props: { source?: number }) => {
         <path
           d={`M ${SCALE_POINTS[0].x},${SCALE_POINTS[0].y} A 40,40 0 0 1 ${SCALE_POINTS[1].x},${SCALE_POINTS[1].y}`}
           stroke="#d9d9d9"
-          strokeWidth="6"
+          strokeWidth="5"
           fill="none"
           strokeDasharray="1 28"
         />
@@ -51,7 +51,7 @@ const ScorePanel = (props: { source?: number }) => {
         <path
           d={`M ${SCALE_POINTS[2].x},${SCALE_POINTS[2].y} A 40,40 0 0 0 ${SCALE_POINTS[1].x},${SCALE_POINTS[1].y}`}
           stroke="#d9d9d9"
-          strokeWidth="6"
+          strokeWidth="5"
           fill="none"
           strokeDasharray="1 28"
         />
@@ -60,8 +60,8 @@ const ScorePanel = (props: { source?: number }) => {
         <polygon points="0,0 0,6 6,3" fill="#126ee3" transform={`translate(${x}, ${y}) rotate(${angle}, 6, 3)`} />
       </svg>
 
-      <div className="source-format">
-        <p className="s-text">{typeof source === 'undefined' || source < 0 ? '--' : source}</p>
+      <div className="score-format">
+        <p className="s-text">{typeof score === 'undefined' || score < 0 ? '--' : score}</p>
         <p className="ad-mt-1 tip-text">
           {intl.get('global.domainIQ')}
           <ExplainTip.DOMAIN_IQ />

@@ -98,7 +98,7 @@ const IQTable: React.FC<QTableProps> = ({ kid, data, tableState, onChange }) => 
   const onTableChange: TableProps<ListItem>['onChange'] = (_, __, sorter, extra) => {
     if (extra.action !== 'sort') return;
     const { order, field } = sorter as any;
-    onChange({ page: 1, order, rule: field });
+    onChange({ page: 1, order: order2order(order), rule: field });
   };
 
   /**

@@ -104,7 +104,7 @@ const Menus = (props: any) => {
           selectedData={selectedData}
           graphid={graphid}
         />
-        <Statistics isShow={activeKey === 'statistics'} graphBasicData={graphBasicData} graphCount={graphCount} />
+        <Statistics isShow={activeKey === 'statistics'} graphBasicData={graphBasicData} />
       </div>
     </div>
   );

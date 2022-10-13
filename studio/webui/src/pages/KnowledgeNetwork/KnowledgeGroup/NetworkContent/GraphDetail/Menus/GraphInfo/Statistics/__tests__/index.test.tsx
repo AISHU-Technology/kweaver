@@ -25,8 +25,8 @@ describe('Statistics', () => {
     const wrapper = init();
     await sleep();
     wrapper.update();
-    const { source } = wrapper.find('ScoreCard').at(0).props() as any;
-    expect(source).toBe(mockStatistics.data_quality_score);
+    const { score } = wrapper.find('ScoreCard').at(0).props() as any;
+    expect(score).toBe(mockStatistics.data_quality_score);
   });
 
   it('test calculate failed', async () => {
