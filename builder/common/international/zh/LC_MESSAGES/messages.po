@@ -271,7 +271,7 @@ msgstr "知识图谱构建状态非法, 请构建后再计算"
 #: common/errorcode/errors/intelligence_error.py:76
 #, fuzzy
 msgid "knowledge network [knw_id] not exists"
-msgstr "本体id [otl_id] 不存在"
+msgstr "知识网络 [knw_id] 不存在"
 
 #: common/errorcode/errors/intelligence_error.py:77
 #, fuzzy
@@ -280,7 +280,7 @@ msgstr "请重新配置图数据库"
 
 #: common/errorcode/errors/lexicon_error.py:9
 msgid "Please check the database connection."
-msgstr "抢检查数据库连接情况"
+msgstr "请检查数据库连接情况"
 
 #: common/errorcode/errors/lexicon_error.py:21
 msgid ""
