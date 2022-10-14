@@ -86,36 +86,31 @@ class IntelligenceDao:
     @connect_execute_close_db
     def query_in_page(self, query_param, cursor, connection):
         # 查询记录，按照图谱查询，按照网络查询
+        #
         sql = f"""
-          select kg.id graph_id, kg.KG_name graph_name, ir.id, ir.total_knowledge, ir.repeat_number,
-			     ir.entity_knowledge, ir.edge_knowledge,ir.empty_number, ir.data_quality_score, kg.update_time
+                select kg.id graph_id, kg.KG_name graph_name, ir.id, ir.total_knowledge, ir.repeat_number,
+			     ir.entity_knowledge, ir.edge_knowledge,ir.empty_number, ir.data_quality_score, kg.update_time,
+			     unix_timestamp(kg.update_time) update_time_timestamp, ISNULL(ir.data_quality_score) null_score
 			     from ((select ngr2.knw_id knw_id, kg2.* from knowledge_graph kg2 join 
-			        network_graph_relation ngr2 on kg2.id=ngr2.graph_id where ngr2.knw_id={query_param['knw_id']})) kg 
-			      left join intelligence_records ir on kg.id=ir.graph_id"""
-
+			        network_graph_relation ngr2 on kg2.id=ngr2.graph_id where ngr2.knw_id=3)) kg 
+			      left join intelligence_records ir on kg.id=ir.graph_id 
+            """
         # 根据图谱名称模糊查询
         if 'graph_name' in query_param and query_param['graph_name']:
             sql += f""" where kg.KG_name like "%{query_param['graph_name']}%" """
 
-        if 'rule' in query_param:
-            rule_list = query_param['rule']
-            order_list = query_param['order']
+        rule = query_param.get('rule')
+        order = query_param.get('order')
+        if rule:
+            if rule == "data_quality_score":
+                sql += f" order by null_score asc , ir.data_quality_score {order}, update_time_timestamp desc"
+            if rule == "update_time":
+                sql += f"  order by null_score asc, update_time_timestamp {order}"
+            if rule == "data_quality_B":
+                sql += f"  order by null_score asc, ir.data_quality_B {order}, update_time_timestamp desc"
+        else:
+            sql += " order by null_score asc, update_time_timestamp desc"
 
-            po_list = list()
-            for index, prop in enumerate(rule_list):
-                # 如果两者不对齐，rule长度超了，跳过该rule
-                if index + 1 > len(order_list):
-                    continue
-                order = order_list[index]
-                if prop == "update_time":
-                    po_list.append(f" order by kg.update_time {order}")
-                if prop == 'data_quality_score':
-                    po_list.append(f" order by ir.data_quality_score {order}")
-                if prop == 'data_quality_B':
-                    po_list.append(f" order by ir.total_knowledge {order}")
-
-            if len(po_list) > 0:
-                sql += ", ".join(po_list)
         # 分页
         if 'size' in query_param and 'page' in query_param:
             page = int(query_param['page'])

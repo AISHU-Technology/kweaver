@@ -14,6 +14,7 @@ from dao.graphdb_dao import GraphDB
 from dao.intelligence_dao import intelligence_dao
 from dao.otl_dao import otl_dao
 from dao.knw_dao import knw_dao
+from service.async_task_service import async_task_service
 from service.graph_Service import graph_Service
 from common.errorcode.gview import Gview
 
@@ -416,10 +417,14 @@ class IntelligenceQueryService(object):
         if int(query_params.get('size')) < 0:
             query_params.pop('size', 0)
             query_params.pop('page', 0)
-        if isinstance(query_params.get('rule'), str):
-            query_params['rule'] = query_params['rule'].split(',')
-        if isinstance(query_params.get('order'), str):
-            query_params['order'] = query_params['order'].split(',')
+
+        rule = query_params.get('rule', '')
+        if rule and rule not in ('data_quality_B', 'update_time', 'data_quality_score'):
+            rule == ''
+
+        order = query_params.get('order', '')
+        if order and order not in ('desc', 'asc'):
+            order == ''
 
         graph_score_list = intelligence_dao.query_in_page(query_params)
         return graph_score_list
@@ -442,6 +447,7 @@ class IntelligenceQueryService(object):
         graph_quality['data_quality_B'] = round(math.log(record.get('total_knowledge', 0), 10) * 10, 2)
         graph_quality['total_knowledge'] = total_knowledge
         graph_quality['data_quality_score'] = round(record['data_quality_score'], 2)
+        graph_quality['update_time'] = graph_info['update_time']
         return graph_quality
 
     def add_task_info(self, graph_quality, task_info_list):
@@ -546,6 +552,29 @@ class IntelligenceQueryService(object):
             result['allowed'] = ','.join(order_allowed)
             return code, result
         return codes.successCode, result
+
+    def intelligence_calculate_test(self, params_json, task_id):
+        """
+            execute intelligence computer task
+        """
+        if not task_id:
+            # 没有关键参数 task_id， 直接退出
+            log.error("missing important argument [task_id] please check your argument list")
+            return
+        try:
+            update_json = dict()
+            intelligence_calculate_service.graph_calculate_task(params_json)
+            update_json['task_status'] = 'finished'
+            return {'current': 100, 'total': 100}
+        except BaseException as e:
+            update_json['result'] = str(e)
+            update_json['task_status'] = 'failed'
+            log.error(update_json['result'])
+        finally:
+            # 此处只需要更新下错误原因即可，状态由外部调用更新
+            update_json['finished_time'] = datetime.datetime.now()
+            async_task_service.update(task_id, update_json)
+            return {'current': 100, 'total': 100}
 
 
 intelligence_query_service = IntelligenceQueryService()
