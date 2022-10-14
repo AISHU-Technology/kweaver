@@ -79,7 +79,7 @@ class IntelligenceDao:
         if not graph_id_list:
             # TODO 返回值处理
             return None
-        sql = "select * from intelligence_records where graph_id in ({}) ".format(','.join(graph_id_list))
+        sql = f"select * from intelligence_records where graph_id in ({','.join(graph_id_list)}) "
         cursor.execute(sql)
         return cursor.fetchall()
 
