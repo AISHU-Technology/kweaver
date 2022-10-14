@@ -49,6 +49,10 @@ class IntelligenceCalculateService(object):
             quality_dict = self.entity_quality(graph_db, entity_info)
             self.add_graph_stats(graph_quality, quality_dict)
 
+        # 计算总的智商分数
+        graph_quality['data_quality_score'] = intelligence_dao.data_quality_score(graph_quality['total_knowledge'],
+                                                                                  graph_quality['empty_number'],
+                                                                                  graph_quality['repeat_number'])
         """
         写入到数据库
         """
@@ -160,10 +164,6 @@ class IntelligenceCalculateService(object):
         graph_record['total_knowledge'] += knowledge
         graph_record['empty_number'] += quality_dict['empty']
         graph_record['repeat_number'] += quality_dict['repeat']
-        # 计算总的智商分数
-        graph_record['data_quality_score'] = intelligence_dao.intelligence_score(graph_record['total_knowledge'],
-                                                                                 graph_record['empty_number'],
-                                                                                 graph_record['repeat_number'])
 
 
 class IntelligenceQueryService(object):
@@ -262,7 +262,7 @@ class IntelligenceQueryService(object):
 
                 has_value = True
 
-            knw_intelligence['knw_id'] = int(knw_id)
+            knw_intelligence['id'] = int(knw_id)
             knw_intelligence['knw_name'] = knw_info["knw_name"]
             knw_intelligence['knw_description'] = knw_info["knw_description"]
             knw_intelligence['color'] = knw_info["color"]

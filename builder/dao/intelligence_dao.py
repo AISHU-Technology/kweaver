@@ -151,5 +151,9 @@ class IntelligenceDao:
         C2 = float(1 - empty_number / total)
         return round(B * (C1 + C2) / 2, 2)
 
+    def data_quality_score(self, total, empty_number, repeat_number):
+        C1 = float(1 - repeat_number / total)
+        C2 = float(1 - empty_number / total)
+        return round((C1 + C2) / 2, 2)
 
 intelligence_dao = IntelligenceDao()

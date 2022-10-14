@@ -458,7 +458,7 @@ class IntelligenceRecords(Base):
     total_knowledge = Column(Integer, nullable=True)
     empty_number = Column(Integer, nullable=True)
     repeat_number = Column(Integer, nullable=True)
-    data_quality_score = Column(Numeric, default=-1)
+    data_quality_score = Column(Numeric(10, 2), default=-1)
     update_time = Column(DateTime, nullable=True)
 
 
