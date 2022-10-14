@@ -36,7 +36,7 @@ const LeftSpace = props => {
 
   useEffect(() => {
     getGraphList({ page, order, rule });
-  }, []);
+  }, [page, order, rule]);
 
   const createGraph = () => history.push('/home/workflow/create');
 
