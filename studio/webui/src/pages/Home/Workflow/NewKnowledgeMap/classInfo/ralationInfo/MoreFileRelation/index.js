@@ -187,7 +187,7 @@ class MoreFileRelation extends Component {
 
     return (
       <div>
-        {moreFileData && moreFileData.begin_class_prop && (
+        {moreFileData?.begin_class_prop && (
           <div>
             <div className="title-relation">
               <span>{[intl.get('workflow.knowledge.RelationMap')]}</span>
@@ -206,7 +206,7 @@ class MoreFileRelation extends Component {
             </div>
 
             <div className="Relational-mapping">
-              {entityName && entityName.value ? (
+              {entityName?.value ? (
                 <div className="more-file">
                   <div className="select-title">
                     <div className="start">{intl.get('workflow.knowledge.begin')}</div>

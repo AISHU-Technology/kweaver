@@ -43,6 +43,7 @@ interface HeaderInterface {
     kg_conf_id: number;
     is_upload: boolean;
   };
+  isNewGraph: boolean;
   selectedKnowledge: { id: number };
   onRefresh: () => void;
   onSelectedGraph: (graph: string) => void;
@@ -52,7 +53,7 @@ interface HeaderInterface {
 const Header = (props: HeaderInterface) => {
   const history = useHistory();
   const { ad_graphStatus = 'NORMAL' } = props;
-  const { graphBasicData, selectedKnowledge } = props;
+  const { graphBasicData, isNewGraph, selectedKnowledge } = props;
   const { onRefresh, onSelectedGraph, onRefreshLeftSpace } = props;
   const [taskTimedId, setTaskTimedId] = useState<number | null>(null); // 定时任务图谱 id
   const [isVisibleModalDelete, setIsVisibleModalDelete] = useState(false); // 删除弹窗 visible
@@ -142,28 +143,30 @@ const Header = (props: HeaderInterface) => {
           </div>
         )}
       </div>
-      <div className="right">
-        <Format.Button className="button" type="primary" onClick={editGraph}>
-          <IconFont type="icon-edit" />
-          {intl.get('graphList.edit')}
-        </Format.Button>
-        <Format.Button className="button" onClick={onRefresh}>
-          <IconFont type="icon-tongyishuaxin" />
-          {intl.get('graphDetail.refresh')}
-        </Format.Button>
-        <Dropdown
-          overlay={menu}
-          trigger={['click']}
-          placement="bottomRight"
-          getPopupContainer={triggerNode => triggerNode?.parentElement?.parentElement || document.body}
-        >
-          <Tooltip title={intl.get('graphList.more')} placement="top">
-            <Format.Button className="operate">
-              <EllipsisOutlined style={{ color: 'rgba(0, 0, 0, 0.85)' }} />
-            </Format.Button>
-          </Tooltip>
-        </Dropdown>
-      </div>
+      {!isNewGraph && (
+        <div className="right">
+          <Format.Button className="button" type="primary" onClick={editGraph}>
+            <IconFont type="icon-edit" />
+            {intl.get('graphList.edit')}
+          </Format.Button>
+          <Format.Button className="button" onClick={onRefresh}>
+            <IconFont type="icon-tongyishuaxin" />
+            {intl.get('graphDetail.refresh')}
+          </Format.Button>
+          <Dropdown
+            overlay={menu}
+            trigger={['click']}
+            placement="bottomRight"
+            getPopupContainer={triggerNode => triggerNode?.parentElement?.parentElement || document.body}
+          >
+            <Tooltip title={intl.get('graphList.more')} placement="top">
+              <Format.Button className="operate">
+                <EllipsisOutlined style={{ color: 'rgba(0, 0, 0, 0.85)' }} />
+              </Format.Button>
+            </Tooltip>
+          </Dropdown>
+        </div>
+      )}
       <TimedTask visible={isVisibleTask} graphId={taskTimedId} onCancel={onCloseModalTask} onOk={onCloseModalTask} />
       <ModalDelete visible={isVisibleModalDelete} onOk={deleteGraph} onCancel={onCloseModalDelete} />
     </Format.Container>

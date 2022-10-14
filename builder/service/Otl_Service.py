@@ -927,7 +927,6 @@ class OtlService(object):
         return reslists
 
 
-    # lzg add
     def getall(self, args):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
