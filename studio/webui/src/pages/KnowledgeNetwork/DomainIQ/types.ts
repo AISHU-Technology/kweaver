@@ -26,7 +26,7 @@ export type ListItem = {
   graph_name: string;
   calculate_status: keyof typeof CALCULATE_STATUS | string;
   last_task_message: string;
-  last_task_time: string;
+  update_time: string;
   data_repeat_C1: number;
   data_missing_C2: number;
   data_quality_B: number;

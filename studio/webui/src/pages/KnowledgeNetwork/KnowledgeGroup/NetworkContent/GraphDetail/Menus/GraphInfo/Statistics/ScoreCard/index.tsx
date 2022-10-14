@@ -26,7 +26,7 @@ const ScoreCard = ({ className, title, icon, color, score, children }: ScoreCard
         <div className="h-info">
           <Format.Title className="ad-mb-2">{title}</Format.Title>
           <Format.Title style={{ display: 'block', fontSize: 20 }}>
-            {score || <div className="dashed-line" />}
+            {typeof score === 'undefined' || score < 0 ? <div className="dashed-line" /> : score}
           </Format.Title>
         </div>
 

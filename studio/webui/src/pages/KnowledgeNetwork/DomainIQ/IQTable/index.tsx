@@ -24,7 +24,7 @@ const URL_ANALYSIS = 'analysis';
 const URL_GRAPH = 'graph';
 const URL_ENGINE = 'search';
 const SORTER_MENU = [
-  { key: 'last_task_time', text: intl.get('knowledge.byUpdate') },
+  { key: 'update_time', text: intl.get('knowledge.byUpdate') },
   { key: 'data_quality_score', text: intl.get('intelligence.byKnwSource') },
   { key: 'data_quality_B', text: intl.get('intelligence.byQualitySource') }
 ];
@@ -185,10 +185,10 @@ const IQTable: React.FC<QTableProps> = ({ kid, data, tableState, onChange }) => 
     },
     {
       title: intl.get('global.finalOperatorTime'),
-      dataIndex: 'last_task_time',
+      dataIndex: 'update_time',
       width: 170,
       sorter: true,
-      sortOrder: tableState.rule === 'last_task_time' && (order2order(tableState.order) as any),
+      sortOrder: tableState.rule === 'update_time' && (order2order(tableState.order) as any),
       sortDirections: [ASC, DESC, ASC]
     },
     {

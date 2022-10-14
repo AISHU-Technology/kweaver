@@ -20,7 +20,7 @@ import servicesIntelligence from '@/services/intelligence';
 
 const mockResponse = (data: any) =>
   (servicesIntelligence.intelligenceGetByKnw as any).mockImplementationOnce(() => Promise.resolve(data));
-const defaultProps = { kgData: { id: 1 } };
+const defaultProps = { kgData: { id: 1 }, setKgData: jest.fn() };
 const init = (props = defaultProps) => mount(<DomainIQ {...props} />);
 
 describe('DomainIQ', () => {

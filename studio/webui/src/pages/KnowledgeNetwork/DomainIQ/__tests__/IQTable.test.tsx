@@ -18,7 +18,7 @@ const tableState = {
   query: '',
   page: 1,
   total: 0,
-  rule: 'last_task_time',
+  rule: 'update_time',
   order: 'desc'
 };
 const defaultProps = {
