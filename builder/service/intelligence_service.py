@@ -449,7 +449,7 @@ class IntelligenceQueryService(object):
         graph_quality['data_empty_C2'] = round(record.get('empty_number', 0) / total_knowledge, 2)
         graph_quality['data_quality_B'] = round(math.log(record.get('total_knowledge', 0), 10) * 10, 2)
         graph_quality['total_knowledge'] = total_knowledge
-        graph_quality['data_quality_score'] = round(record['data_quality_score'], 2)
+        graph_quality['data_quality_score'] = round(float(record.get('data_quality_score', 0)), 2)
         graph_quality['update_time'] = graph_info['update_time']
         return graph_quality
 

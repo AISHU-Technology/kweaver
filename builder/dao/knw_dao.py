@@ -59,9 +59,12 @@ class knwDao:
             sql += f""" where knw_name like {knw_name} """
 
         if rule:
-            sql += f""" order by group_column asc, {rule} {order}"""
+            if rule == 'intelligence_score':
+                sql += f""" order by group_column asc, {rule} {order}"""
+            else:
+                sql += f""" order by {rule} {order}"""
         else:
-            sql += f""" order by group_column asc, update_time desc """
+            sql += f""" update_time desc """
 
         sql += f""" limit {page * size},{size}"""
         Logger.log_info(sql)
