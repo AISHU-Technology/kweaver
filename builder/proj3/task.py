@@ -240,7 +240,7 @@ def intelligence_calculate(self, params_json, task_id):
         update_json['task_status'] = 'finished'
         return {'current': 100, 'total': 100}
     except BaseException as e:
-        update_json['result'] = repr(e)
+        update_json['result'] = str(e)
         update_json['task_status'] = 'failed'
         log.error(update_json['result'])
     finally:

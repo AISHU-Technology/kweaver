@@ -79,12 +79,21 @@ class AsyncTaskDao(object):
 
     @connect_execute_commit_close_db
     def update(self, task_id, param_json, cursor, connection):
+        # check last task_status
+        sql = f""" select id from async_tasks where id={task_id} and task_status in ("failed","finished","canceled")"""
+        cursor.execute(sql)
+        data = cursor.fetchone()
+        if data:
+            log.info(f"task {task_id} status not allowed change")
+            return
+
         condition = self.parse_condition(param_json)
         if len(condition) <= 0:
             log.info("empty condition:{}".format(repr(param_json)))
             return
         sql = "update async_tasks set {} where id={}".format(",".join(condition), task_id)
-        cursor.execute(sql)
+        result = cursor.execute(sql)
+        log.info(repr(result))
 
     @classmethod
     def parse_condition(cls, query_json):
@@ -109,7 +118,7 @@ class AsyncTaskDao(object):
         if query_json.get('finished_time'):
             condition.append(' finished_time="{}"'.format(query_json.get('finished_time')))
         if query_json.get('result'):
-            condition.append(' result="{}"'.format(query_json.get('result')))
+            condition.append(' result="{}" '.format(query_json.get('result')))
         return condition
 
 

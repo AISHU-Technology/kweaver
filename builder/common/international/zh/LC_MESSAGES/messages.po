@@ -466,7 +466,7 @@ msgstr "running状态的词库[lexicon_id]，无法导入词汇"
 #: common/errorcode/errors/network_error.py:7
 #, fuzzy
 msgid "Parameters Error!"
-msgstr "参数[arg]错误"
+msgstr "参数错误"
 
 #: common/errorcode/errors/network_error.py:9
 #: common/errorcode/errors/network_error.py:15

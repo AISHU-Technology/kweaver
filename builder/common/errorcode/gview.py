@@ -16,14 +16,18 @@ class Gview(object):
 
     @staticmethod
     def replaceArgs(content, ds):
-        content = _l(content)
-        p = re.compile('\[(\w+)\]')
-        args = p.findall(content)
-        if len(args) <= 0:
+        try:
+            content = _l(content)
+            p = re.compile('\[(\w+)\]')
+            args = p.findall(content)
+            if len(args) <= 0:
+                return content
+            for arg in args:
+                sub_str = "[{}]".format(arg)
+                content = str(content).replace(sub_str, str(ds[arg]))
             return content
-        for arg in args:
-            subStr = "[{}]".format(arg)
-            content = str(content).replace(subStr, str(ds[arg]))
+        except Exception as e:
+            print(f"international translation error:{repr(e)}")
         return content
 
     @classmethod

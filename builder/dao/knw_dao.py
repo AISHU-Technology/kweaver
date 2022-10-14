@@ -38,27 +38,32 @@ class knwDao:
     # 分页查询知识网络,knw_name为”“时查询全部
     @connect_execute_close_db
     def get_knw_by_name(self, knw_name, page, size, order, rule, connection, cursor):
-        if order == 'desc':
-            order = 'desc'
-        else:
-            order = 'asc'
-
         sql = """
-            SELECT *
-            FROM knowledge_network
-            where knw_name like {0}
-            order by {1} {2}
-            limit {3}, {4};"""
-        if rule == 'intelligence_score':
-            sql = """
-                SELECT *
-                FROM knowledge_network
-                where knw_name like {0}
-                order by {1} {2}, update_time desc 
-                limit {3}, {4};"""
+            select  id, knw_name, knw_description, color, creation_time, update_time, identify_id,
+                case 
+                    when intelligence_score>0 then round(intelligence_score, 2)
+                    else IFNULL(intelligence_score, -1)
+                end intelligence_score,
+		        case   
+			        when intelligence_score<0 then 1
+			        when isnull(intelligence_score)=1 then 1
+			        else 0
+		        end  group_column 
+	        from knowledge_network
+        """
 
-        knw_name = "'%" + knw_name + "%'"
-        sql = sql.format(knw_name, rule, order, page * size, size)
+        order = 'desc' if order == 'desc' else 'asc'
+
+        if knw_name:
+            knw_name = "'%" + knw_name + "%'"
+            sql += f""" where knw_name like {knw_name} """
+
+        if rule:
+            sql += f""" order by group_column asc, {rule} {order}"""
+        else:
+            sql += f""" order by group_column asc, update_time desc """
+
+        sql += f""" limit {page * size},{size}"""
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df
