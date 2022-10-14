@@ -1954,11 +1954,14 @@ class SQLProcessor:
                             otlvalue = type_transform(self.type, normalize_text_es(str(row_val_t)),
                                                       en_pro_dict[otl_name][ot_tb],
                                                       sql_format=False)
-                            vals.append(otlvalue)
+                            otlindexvalue = type_transform(self.type, normalize_text(str(row_val_t)),
+                                                           en_pro_dict[otl_name][ot_tb],
+                                                           sql_format=False)
+                            vals.append(otlindexvalue)
                             if otl_name in merge_otls:
                                 merge_pros = merge_otls[otl_name]
                                 if ot_tb in merge_pros:
-                                    tab_val_index.append(otlvalue)
+                                    tab_val_index.append(otlindexvalue)
                             if ot_tb in index_props:
                                 body_field[ot_tb] = otlvalue
                         # todo 非浮点数处理方式
