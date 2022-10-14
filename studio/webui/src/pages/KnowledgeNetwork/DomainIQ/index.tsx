@@ -70,10 +70,11 @@ const DomainIQ: React.FC<DomainIQProps> = ({ kgData, setKgData }) => {
       if (signId < requestId) return;
       dispatchTableState({ loading: false });
       if (res?.res) {
-        const { knw_id, total_graph, graph_intelligence_list, ...info } = res.res;
-        const resetData = { ...info, id: parseInt(knw_id) };
+        // TODO 不确定id、knw_id
+        const { id, knw_id, total_graph, graph_intelligence_list, ...info } = res.res;
+        const resetData = { ...info, id: id || knw_id };
         dispatchTableState({ total: total_graph });
-        setKgInfo({ ...info, id: parseInt(knw_id) });
+        setKgInfo(resetData);
         setTableData(graph_intelligence_list);
         kgData.intelligence_score !== resetData.intelligence_score && setKgData(resetData);
       }
