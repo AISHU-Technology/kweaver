@@ -942,9 +942,10 @@ class GraphService():
             page = args.get("page")
             size = args.get("size")
             order = args.get("order")
-            count = dsm_dao.getCount()
+            graph_id = args.get("graph_id")
+            count = dsm_dao.getCount(graph_id)
             res = {}
-            ret = dsm_dao.getall(int(page) - 1, int(size), order, None)
+            ret = dsm_dao.getall(int(page) - 1, int(size), order, graph_id, "graph")
             ret = ret.where(ret.notnull(), None)
             rec_dict = ret.to_dict('records')
 

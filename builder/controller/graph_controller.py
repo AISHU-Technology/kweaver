@@ -667,6 +667,12 @@ def graphDsList(graphid):
         message = "The parameter graph id type must be int!"
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message=message), CommonResponseStatus.BAD_REQUEST.value
+    # graph_id不存在
+    code, ret = graph_Service.checkById(graphid)
+    if code != 0:
+        return {"cause": ret["cause"],
+                "code": ret["code"],
+                "message": ret["message"]}, CommonResponseStatus.BAD_REQUEST.value
     # 获取参数
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
@@ -678,7 +684,7 @@ def graphDsList(graphid):
         Logger.log_error("parameters:%s invalid" % params_json)
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-
+    params_json["graph_id"] = graphid
     ret_code, ret_message = graph_Service.getDsAll(params_json)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
