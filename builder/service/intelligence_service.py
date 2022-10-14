@@ -83,21 +83,26 @@ class IntelligenceCalculateService(object):
         """
 
         # query graph status
-        ret_code, resp = graph_Service.get_graph_info_basic(graph_id, False, ['status'])
+        ret_code, resp = graph_Service.get_graph_info_basic(graph_id, False, ['status', 'graphdb_type'])
         if ret_code != codes.successCode:
             return ret_code, resp
 
         # only normal and failed status could be calculated
-        graph_status = resp.json.get('res', {}).get('status', '')
+        graph_info = resp.json.get('res', {})
+        graph_status = graph_info.get('status', '')
+        graph_db_type = graph_info.get('graphdb_type', '')
+
         if graph_status != "normal" and graph_status != "failed":
+            code = codes.Builder_IntelligenceCalculateService_SendTask_GraphInvalidStatusError
             if graph_status == 'edit':
-                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphConfigStatusError
+                code = codes.Builder_IntelligenceCalculateService_SendTask_GraphConfigStatusError
             if graph_status == 'running':
-                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphRunStatusError
+                code = codes.Builder_IntelligenceCalculateService_SendTask_GraphRunStatusError
             if graph_status == 'waiting':
-                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphWaitStatusError
-            if graph_status == 'stop':
-                code = codes.Builder_GraphController_IntelligenceCalculateTask_GraphFailStatusError
+                code = codes.Builder_IntelligenceCalculateService_SendTask_GraphWaitStatusError
+            return code, Gview.error_return(code)
+        if graph_status == 'failed' and graph_db_type == 'nebula':
+            code = codes.Builder_IntelligenceCalculateService_SendTask_GraphFailStatusError
             return code, Gview.error_return(code)
 
         url = "http://localhost:6488/task/intelligence"
@@ -169,9 +174,11 @@ class IntelligenceQueryService(object):
         try:
             graph_info = graph_dao.get_graph_detail(graph_id)
 
+            # query graph detail in GraphDB, if this graph is empty, return default response
             code, data = graph_Service.get_graph_info_count(graph_id)
             if code != codes.successCode:
-                return code, data
+                log.info(repr(data.json))
+                return codes.successCode, self.default_graph_response(graph_info)
             count_info = data.json.get('res')
 
             records = intelligence_dao.query([graph_info['graph_id']])
@@ -199,7 +206,7 @@ class IntelligenceQueryService(object):
         query network intelligence
         """
         try:
-            knw_id = query_params.get('knw_id', 0)
+            knw_id = int(query_params.get('knw_id', 0))
             graph_name = query_params.get('graph_name', '')
 
             df = knw_dao.get_knw_by_id(knw_id)
@@ -254,7 +261,7 @@ class IntelligenceQueryService(object):
 
                 has_value = True
 
-            knw_intelligence['knw_id'] = knw_id
+            knw_intelligence['knw_id'] = int(knw_id)
             knw_intelligence['knw_name'] = knw_info["knw_name"]
             knw_intelligence['knw_description'] = knw_info["knw_description"]
             knw_intelligence['color'] = knw_info["color"]
@@ -269,7 +276,7 @@ class IntelligenceQueryService(object):
                 score = round(intelligence_dao.intelligence_score(total, empty, repeat), 2)
             knw_intelligence['intelligence_score'] = score
 
-            return codes.successCode, knw_intelligence
+            return codes.successCode, Gview.json_return(knw_intelligence)
         except Exception as e:
             err_msg = repr(e)
             log.error(err_msg)
@@ -467,6 +474,78 @@ class IntelligenceQueryService(object):
         graph_quality['calculate_status'] = calculate_status
         graph_quality['last_task_message'] = task_info.get('result') if task_info.get('result') else ""
         graph_quality['last_task_time'] = (task_info['created_time']).strftime('%Y-%m-%d %H:%M:%S')
+
+    def check_uint(self, graph_id):
+        if not graph_id:
+            return False
+        try:
+            graph_id = int(graph_id)
+            if graph_id <= 0:
+                return False
+            return True
+        except:
+            return False
+
+    def query_network_param_check(self, params_json):
+        result = dict()
+        knw_id = params_json.get("knw_id")
+
+        if not self.check_uint(knw_id):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'knw_id'
+            return code, result
+
+        df = knw_dao.check_knw_id(knw_id)
+        res = df.to_dict('records')
+        if len(res) == 0:
+            code = codes.Builder_IntelligenceQueryService_QueryNetworkIntelligence_KnwNotExist
+            result['knw_id'] = int(knw_id)
+            return code, result
+
+        size = params_json.get('size')
+        page = params_json.get('page')
+        rule = params_json.get('rule')
+        order = params_json.get('order')
+
+        if not self.check_uint(size):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'size'
+            return code, result
+
+        if int(size) > 100:
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamTooBigError
+            result['arg'] = 'size'
+            result['max'] = 100
+            return code, result
+
+        if not self.check_uint(page):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'page'
+            return code, result
+
+        if not rule or not isinstance(rule, str):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'rule'
+            return code, result
+
+        rule_allowed = ('data_quality_B', 'update_time', 'data_quality_score')
+        if rule not in rule_allowed:
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_NotAllowedParamError
+            result['arg'] = 'rule'
+            result['allowed'] = ','.join(rule_allowed)
+            return code, result
+
+        if not order or not isinstance(order, str):
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
+            result['arg'] = 'order'
+            return code, result
+        order_allowed = ('desc', 'asc')
+        if order not in order_allowed:
+            code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_NotAllowedParamError
+            result['arg'] = 'order'
+            result['allowed'] = ','.join(order_allowed)
+            return code, result
+        return codes.successCode, result
 
 
 intelligence_query_service = IntelligenceQueryService()

@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from __future__ import (absolute_import, unicode_literals)
 from flask_babel import gettext as _l
 
 errDict = {
@@ -19,7 +18,7 @@ errDict = {
         "ErrorCode": "Builder.IntelligenceCalculateService.SendTask.GraphWaitStatusError",
         "Description": _l("knowledge graph is waiting build, please calculate after building"),
         "ErrorDetails": _l("knowledge graph is waiting build, please calculate after building"),
-        "Solution": _l("Please check graph build status")
+        "Solution": _l("Please check graph status")
     },
     'Builder.IntelligenceCalculateService.SendTask.GraphRunStatusError': {
         "ErrorCode": "Builder.IntelligenceCalculateService.SendTask.GraphRunStatusError",
@@ -35,8 +34,10 @@ errDict = {
     },
     'Builder.IntelligenceCalculateService.SendTask.GraphFailStatusError': {
         "ErrorCode": "Builder.IntelligenceCalculateService.SendTask.GraphFailStatusError",
-        "Description": _l("knowledge graph not build yet, please calculate after building successfully"),
-        "ErrorDetails": _l("knowledge graph not build yet, please calculate after  building successfully"),
+        "Description": _l(
+            "knowledge graph store in NebulaGraph, if you need intelligence score, please calculate after building successfully"),
+        "ErrorDetails": _l(
+            "knowledge graph store in NebulaGraph, if you need intelligence score, please calculate after building successfully"),
         "Solution": _l("Please check graph status")
     },
     'Builder.IntelligenceCalculateService.SendTask.CallAsyncTaskError': {
@@ -62,5 +63,17 @@ errDict = {
         "Description": _l("network intelligence info query error"),
         "ErrorDetails": _l("[detail]"),
         "Solution": _l("Please contact the developers.")
+    },
+    'Builder.IntelligenceCalculateService.SendTask.GraphInvalidStatusError': {
+        "ErrorCode": "Builder.IntelligenceCalculateService.SendTask.GraphInvalidStatusError",
+        "Description": _l("Knowledge graph status invalid, please calculate after building successfully"),
+        "ErrorDetails": _l("Knowledge graph status invalid, please calculate after building successfully"),
+        "Solution": _l("Please check graph status")
+    },
+    'Builder.IntelligenceQueryService.QueryNetworkIntelligence.KnwNotExist': {
+        "ErrorCode": "Builder.IntelligenceQueryService.QueryNetworkIntelligence.KnwNotExist",
+        "Description": _l('knowledge network [knw_id] not exists'),
+        "ErrorDetails": _l('knowledge network [knw_id] not exists'),
+        "Solution": _l('please config your knowledge network again.')
     }
 }

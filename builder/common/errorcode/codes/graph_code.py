@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from __future__ import (absolute_import, unicode_literals)
 
 '''
     {
@@ -188,4 +187,6 @@ Builder_GraphController_IntelligenceStats_ParamError = 'Builder.GraphController.
 Builder_GraphController_IntelligenceStats_QueryError = 'Builder.GraphController.IntelligenceStats.QueryError'
 
 Builder_KnowledgeNetworkController_IntelligenceStats_ParamError = 'Builder.KnowledgeNetworkController.IntelligenceStats.ParamError'
+Builder_KnowledgeNetworkController_IntelligenceStats_ParamTooBigError = 'Builder.KnowledgeNetworkController.IntelligenceStats.ParamTooBigError'
 
+Builder_KnowledgeNetworkController_IntelligenceStats_NotAllowedParamError = 'Builder.KnowledgeNetworkController.IntelligenceStats.NotAllowedParamError'

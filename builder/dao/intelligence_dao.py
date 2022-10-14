@@ -86,11 +86,12 @@ class IntelligenceDao:
     @connect_execute_close_db
     def query_in_page(self, query_param, cursor, connection):
         # 查询记录，按照图谱查询，按照网络查询
-        sql = """
+        sql = f"""
           select kg.id graph_id, kg.KG_name graph_name, ir.id, ir.total_knowledge, ir.repeat_number,
 			     ir.entity_knowledge, ir.edge_knowledge,ir.empty_number, ir.data_quality_score, kg.update_time
-			     from knowledge_graph kg left join intelligence_records ir 
-			     on kg.id=ir.graph_id """
+			     from ((select ngr2.knw_id knw_id, kg2.* from knowledge_graph kg2 join 
+			        network_graph_relation ngr2 on kg2.id=ngr2.graph_id where ngr2.knw_id={query_param['knw_id']})) kg 
+			      left join intelligence_records ir on kg.id=ir.graph_id"""
 
         # 根据图谱名称模糊查询
         if 'graph_name' in query_param and query_param['graph_name']:
