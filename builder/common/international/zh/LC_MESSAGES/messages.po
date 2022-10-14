@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-13 21:39+0800\n"
+"POT-Creation-Date: 2022-10-14 15:27+0800\n"
 "PO-Revision-Date: 2022-06-23 17:41+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -274,9 +274,16 @@ msgid "knowledge network [knw_id] not exists"
 msgstr "知识网络 [knw_id] 不存在"
 
 #: common/errorcode/errors/intelligence_error.py:77
+#: common/errorcode/errors/intelligence_error.py:83
 #, fuzzy
 msgid "please config your knowledge network again."
 msgstr "请重新配置图数据库"
+
+#: common/errorcode/errors/intelligence_error.py:81
+#: common/errorcode/errors/intelligence_error.py:82
+#, fuzzy
+msgid "knowledge graph [graph_id] not exists"
+msgstr "知识图谱 [graph_id] 不存在"
 
 #: common/errorcode/errors/lexicon_error.py:9
 msgid "Please check the database connection."

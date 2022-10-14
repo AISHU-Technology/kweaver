@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-13 21:39+0800\n"
+"POT-Creation-Date: 2022-10-14 15:27+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -268,7 +268,13 @@ msgid "knowledge network [knw_id] not exists"
 msgstr ""
 
 #: common/errorcode/errors/intelligence_error.py:77
+#: common/errorcode/errors/intelligence_error.py:83
 msgid "please config your knowledge network again."
+msgstr ""
+
+#: common/errorcode/errors/intelligence_error.py:81
+#: common/errorcode/errors/intelligence_error.py:82
+msgid "knowledge graph [graph_id] not exists"
 msgstr ""
 
 #: common/errorcode/errors/lexicon_error.py:9

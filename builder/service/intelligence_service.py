@@ -174,6 +174,9 @@ class IntelligenceQueryService(object):
         """
         try:
             graph_info = graph_dao.get_graph_detail(graph_id)
+            if not graph_info:
+                code = codes.Builder_IntelligenceQueryService_QueryGraphIntelligence_GraphNotExistsError
+                return code, Gview.error_return(code, graph_id=graph_id)
 
             # query graph detail in GraphDB, if this graph is empty, return default response
             code, data = graph_Service.get_graph_info_count(graph_id)

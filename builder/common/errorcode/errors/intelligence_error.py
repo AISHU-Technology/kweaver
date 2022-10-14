@@ -75,5 +75,11 @@ errDict = {
         "Description": _l('knowledge network [knw_id] not exists'),
         "ErrorDetails": _l('knowledge network [knw_id] not exists'),
         "Solution": _l('please config your knowledge network again.')
+    },
+    'Builder.IntelligenceQueryService.QueryGraphIntelligence.GraphNotExistsError': {
+        "ErrorCode": "Builder.IntelligenceQueryService.QueryGraphIntelligence.GraphNotExistsError",
+        "Description": _l('knowledge graph [graph_id] not exists'),
+        "ErrorDetails": _l('knowledge graph [graph_id] not exists'),
+        "Solution": _l('please config your knowledge network again.')
     }
 }
