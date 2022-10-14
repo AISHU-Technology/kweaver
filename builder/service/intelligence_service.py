@@ -217,7 +217,7 @@ class IntelligenceQueryService(object):
             knw_info_list = df.to_dict('records')
             knw_info = knw_info_list[0]
 
-            ret = knw_dao.get_all_graph(knw_id, graph_name, False)
+            ret = knw_dao.get_graph_count(knw_id, graph_name)
             count = len(ret)
 
             if count == 0:

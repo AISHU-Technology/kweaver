@@ -386,6 +386,19 @@ class knwDao:
         return df
 
     @connect_execute_close_db
+    def get_graph_count(self, knw_id, knw_name, connection, cursor):
+        knw_name = "'%" + knw_name + "%'"
+        sql = f"""
+                SELECT kg.id FROM knowledge_graph kg left 
+                    join network_graph_relation ngr 
+                    on kg.id=ngr.graph_id 
+                    where kg.KG_name like {knw_name} and ngr.knw_id={knw_id}
+            """
+        Logger.log_info(sql)
+        df = pd.read_sql(sql, connection)
+        return df
+
+    @connect_execute_close_db
     def get_graph_by_knw_id(self, knw_id, connection, cursor):
         sql = """
         SELECT graph_id FROM network_graph_relation WHERE knw_id={0}

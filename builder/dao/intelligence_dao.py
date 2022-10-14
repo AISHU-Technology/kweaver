@@ -92,7 +92,7 @@ class IntelligenceDao:
 			     ir.entity_knowledge, ir.edge_knowledge,ir.empty_number, ir.data_quality_score, kg.update_time,
 			     unix_timestamp(kg.update_time) update_time_timestamp, ISNULL(ir.data_quality_score) null_score
 			     from ((select ngr2.knw_id knw_id, kg2.* from knowledge_graph kg2 join 
-			        network_graph_relation ngr2 on kg2.id=ngr2.graph_id where ngr2.knw_id=3)) kg 
+			        network_graph_relation ngr2 on kg2.id=ngr2.graph_id where ngr2.knw_id={query_param.get('knw_id')})) kg 
 			      left join intelligence_records ir on kg.id=ir.graph_id 
             """
         # 根据图谱名称模糊查询
