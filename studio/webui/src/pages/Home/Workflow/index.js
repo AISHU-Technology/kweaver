@@ -173,7 +173,6 @@ const Workflow = props => {
 
     // 删除新增的任务
     deleteTaskList();
-    // history.push(`/knowledhandleSavege/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}`);
     history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}`);
   };
 
