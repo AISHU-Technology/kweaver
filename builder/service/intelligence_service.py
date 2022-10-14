@@ -198,7 +198,7 @@ class IntelligenceQueryService(object):
 
             # add last task info
             task_info_list = async_task_dao.query_latest_task([graph_quality['graph_id']])
-            self.add_task_info(graph_quality, task_info_list)
+            self.add_task_info(graph_quality, list(task_info_list))
 
             # add calculate info
             records = intelligence_dao.query([graph_info['graph_id']])
@@ -479,7 +479,7 @@ class IntelligenceQueryService(object):
         添加最后一次任务信息
         """
 
-        if task_info_list is None:
+        if not task_info_list:
             graph_quality['calculate_status'] = "NOT_CALCULATE"
             graph_quality['last_task_message'] = ""
             graph_quality['last_task_time'] = ""
