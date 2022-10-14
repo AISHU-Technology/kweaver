@@ -64,7 +64,7 @@ class knwDao:
             else:
                 sql += f""" order by {rule} {order}"""
         else:
-            sql += f""" update_time desc """
+            sql += f"""  order by update_time desc """
 
         sql += f""" limit {page * size},{size}"""
         Logger.log_info(sql)

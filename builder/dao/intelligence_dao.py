@@ -105,7 +105,7 @@ class IntelligenceDao:
             if rule == "data_quality_score":
                 sql += f" order by null_score asc , ir.data_quality_score {order}, update_time_timestamp desc"
             if rule == "update_time":
-                sql += f" update_time_timestamp {order}"
+                sql += f" order by update_time_timestamp {order}"
             if rule == "data_quality_B":
                 sql += f"  order by null_score asc, ir.total_knowledge {order}, update_time_timestamp desc"
         else:
