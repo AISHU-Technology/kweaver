@@ -21,7 +21,7 @@ const initState: TableState = {
   page: 1, // 当前页码
   total: 0, // 总数
   order: 'desc', // 时间排序方式
-  rule: 'last_task_time' // 排序规则
+  rule: 'update_time' // 排序规则
 };
 const reducer = (state: TableState, action: Partial<TableState>) => ({ ...state, ...action });
 
@@ -51,7 +51,7 @@ const DomainIQ: React.FC<DomainIQProps> = ({ kgData, setKgData }) => {
    * @param needLoading 是否需要loading
    */
   const getData = async (
-    { page = 1, query = '', order = 'desc', rule = 'last_task_time' }: Partial<TableState>,
+    { page = 1, query = '', order = 'desc', rule = 'update_time' }: Partial<TableState>,
     id?: number,
     needLoading = true
   ) => {

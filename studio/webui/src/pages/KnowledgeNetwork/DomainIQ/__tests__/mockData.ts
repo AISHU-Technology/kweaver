@@ -5,7 +5,7 @@ const mockIQList = (() => {
     graph_name: `图谱${i + 1}`,
     calculate_status: i ? 'CALCULATED' : 'CALCULATED',
     last_task_message: '',
-    last_task_time: '2022-01-01 00:00:00',
+    update_time: '2022-01-01 00:00:00',
     data_repeat_C1: i - 1,
     data_missing_C2: i - 1,
     data_quality_B: i - 1,

@@ -54,10 +54,11 @@ const KnowledgeGroup = (props: any) => {
         return;
       }
 
+      let isInit = false;
       if (window.location.search.split('&').length > 1) {
-        return initFromOtherRouter(res.res.df);
+        isInit = initFromOtherRouter(res.res.df);
       }
-      setSelectedGraph(res.res.df[0] || '');
+      !isInit && setSelectedGraph(res.res.df[0] || '');
     } catch (error) {
       setLoading(false);
     }
@@ -68,11 +69,12 @@ const KnowledgeGroup = (props: any) => {
    */
   const initFromOtherRouter = (graphs: any[]) => {
     const { gid, cid } = getParam(['gid', 'cid']);
-    if (!gid && !cid) return;
+    if (!gid && !cid) return false;
 
     const graphId = parseInt(gid || cid) || 0;
     const item = graphs.find((item: any) => item[gid ? 'id' : 'kgconfid'] === graphId);
     item && _setSelectedGraph(item);
+    return !!item;
   };
 
   const _setSelectedGraph = (data: any) => {

@@ -18,6 +18,7 @@ const TARGET_URL = 'http://10.4.129.24';
 // const TARGET_URL = 'http://10.2.174.230:6800';
 // const TARGET_URL = 'http://10.4.69.51';
 // const TARGET_URL = 'http://10.4.131.17';
+// const TARGET_URL = 'http://10.4.130.54';
 
 /**
  * 拦截的服务
