@@ -274,6 +274,7 @@ const ModalContent = memo(props => {
                     autoComplete="off"
                     disabled={optionType !== 'create'}
                     placeholder={intl.get('configSys.osIdPlaceholder')}
+                    allowClear
                   >
                     {_.map(list, item => {
                       return (
