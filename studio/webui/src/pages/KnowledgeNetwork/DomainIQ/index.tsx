@@ -70,13 +70,13 @@ const DomainIQ: React.FC<DomainIQProps> = ({ kgData, setKgData }) => {
       if (signId < requestId) return;
       dispatchTableState({ loading: false });
       if (res?.res) {
-        // TODO 不确定id、knw_id
-        const { id, knw_id, total_graph, graph_intelligence_list, ...info } = res.res;
-        const resetData = { ...info, id: id || knw_id };
+        const { total_graph, graph_intelligence_list, ...info } = res.res;
         dispatchTableState({ total: total_graph });
-        setKgInfo(resetData);
+        setKgInfo(info);
         setTableData(graph_intelligence_list);
-        kgData.intelligence_score !== resetData.intelligence_score && setKgData(resetData);
+        if (kgData.intelligence_score !== info.intelligence_score || kgData.knw_name !== info.knw_name) {
+          setKgData({ ...kgData, ...info });
+        }
       }
       res?.Description && message.error(res?.Description);
     } catch {

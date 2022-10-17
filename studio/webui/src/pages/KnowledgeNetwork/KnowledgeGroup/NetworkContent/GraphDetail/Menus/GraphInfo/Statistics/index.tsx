@@ -24,7 +24,7 @@ interface DataRowProps {
   value?: number;
 }
 
-const { NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION } = GRAPH_STATUS;
+const { NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION, STOP } = GRAPH_STATUS;
 const KEY_INTL: Record<string, { field: string; tip?: React.ReactNode }> = {
   entity_count: { field: intl.get('graphList.entityCount') },
   edge_count: { field: intl.get('graphList.relationshipCount') },
@@ -82,8 +82,10 @@ const Statistics = (props: StatisticsProps) => {
       needLoading && setLoading(true);
       const { res, Description }: any = (await servicesIntelligence.intelligenceGetByGraph({ graph_id: id })) || {};
       if (res) {
+        const { calculate_status, last_task_message } = res;
         setDetail(res);
-        const isFinish = res.calculate_status !== CALCULATE_STATUS.IN_CALCULATING;
+        calculate_status === CALCULATE_STATUS.CALCULATE_FAIL && setErrMsg(last_task_message);
+        const isFinish = calculate_status !== CALCULATE_STATUS.IN_CALCULATING;
         setLoading(!isFinish);
         return isFinish;
       }
@@ -120,7 +122,7 @@ const Statistics = (props: StatisticsProps) => {
         return message.error(intl.get('intelligence.waitErr'));
       case status === RUNNING:
         return message.error(intl.get('intelligence.runErr'));
-      case status === CONFIGURATION:
+      case status === CONFIGURATION || status === STOP:
         return message.error(intl.get('intelligence.configErr'));
       case status === FAIL && graphdb_type === 'nebula':
         return message.error(intl.get('intelligence.failErr'));
