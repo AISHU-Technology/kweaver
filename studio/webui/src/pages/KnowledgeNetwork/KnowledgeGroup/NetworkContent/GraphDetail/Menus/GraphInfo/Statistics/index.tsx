@@ -82,8 +82,10 @@ const Statistics = (props: StatisticsProps) => {
       needLoading && setLoading(true);
       const { res, Description }: any = (await servicesIntelligence.intelligenceGetByGraph({ graph_id: id })) || {};
       if (res) {
+        const { calculate_status, last_task_message } = res;
         setDetail(res);
-        const isFinish = res.calculate_status !== CALCULATE_STATUS.IN_CALCULATING;
+        calculate_status === CALCULATE_STATUS.CALCULATE_FAIL && setErrMsg(last_task_message);
+        const isFinish = calculate_status !== CALCULATE_STATUS.IN_CALCULATING;
         setLoading(!isFinish);
         return isFinish;
       }
