@@ -943,7 +943,7 @@ class GraphService():
             size = args.get("size")
             order = args.get("order")
             graph_id = args.get("graph_id")
-            count = dsm_dao.getCount(graph_id)
+            count = dsm_dao.getCount()
             res = {}
             ret = dsm_dao.getall(int(page) - 1, int(size), order, graph_id, "graph")
             ret = ret.where(ret.notnull(), None)

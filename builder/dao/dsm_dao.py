@@ -216,15 +216,8 @@ class DsmDao(object):
         return len(df)
 
     @connect_execute_close_db
-    def getCount(self, graph_id, connection, cursor, ):
-        sql = f"select graph_ds from graph_config_table where id={graph_id}"
-        ds_df = pd.read_sql(sql, connection)
-        ds_list = eval(ds_df.to_dict("list")["graph_ds"][0])
-        if not ds_list:
-            return 0
-        ds_list = ','.join("{0}".format(x) for x in ds_list)
-        limit_sql = f"where id in ({ds_list})"
-        sql = f"""SELECT id FROM data_source_table {limit_sql}; """
+    def getCount(self, connection, cursor, ):
+        sql = f"""SELECT id FROM data_source_table;"""
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return len(df)
@@ -345,13 +338,7 @@ class DsmDao(object):
             if limit_type == "knw":
                 limit_sql = f"where knw_id={limit_id}"
             else:
-                sql = f"select graph_ds from graph_config_table where id={limit_id}"
-                ds_df = pd.read_sql(sql, connection)
-                ds_list = eval(ds_df.to_dict("list")["graph_ds"][0])
-                if not ds_list:
-                    return pd.DataFrame()
-                ds_list = ','.join("{0}".format(x) for x in ds_list)
-                limit_sql = f"where id in ({ds_list})"
+                limit_sql = ""
             if order == "descend":
                 sql = f"""
                     SELECT *
