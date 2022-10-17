@@ -59,9 +59,12 @@ class knwDao:
             sql += f""" where knw_name like {knw_name} """
 
         if rule:
-            sql += f""" order by group_column asc, {rule} {order}"""
+            if rule == 'intelligence_score':
+                sql += f""" order by group_column asc, {rule} {order}"""
+            else:
+                sql += f""" order by {rule} {order}"""
         else:
-            sql += f""" order by group_column asc, update_time desc """
+            sql += f"""  order by update_time desc """
 
         sql += f""" limit {page * size},{size}"""
         Logger.log_info(sql)
@@ -378,6 +381,19 @@ class knwDao:
         knw_name = "'%" + knw_name + "%'"
         sql = sql.format(knw_name)
         print(sql)
+        Logger.log_info(sql)
+        df = pd.read_sql(sql, connection)
+        return df
+
+    @connect_execute_close_db
+    def get_graph_count(self, knw_id, knw_name, connection, cursor):
+        knw_name = "'%" + knw_name + "%'"
+        sql = f"""
+                SELECT kg.id FROM knowledge_graph kg left 
+                    join network_graph_relation ngr 
+                    on kg.id=ngr.graph_id 
+                    where kg.KG_name like {knw_name} and ngr.knw_id={knw_id}
+            """
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df

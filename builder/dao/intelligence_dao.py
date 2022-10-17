@@ -79,7 +79,7 @@ class IntelligenceDao:
         if not graph_id_list:
             # TODO 返回值处理
             return None
-        sql = "select * from intelligence_records where graph_id in ({}) ".format(','.join(graph_id_list))
+        sql = f"select * from intelligence_records where graph_id in ({','.join(graph_id_list)}) "
         cursor.execute(sql)
         return cursor.fetchall()
 
@@ -92,7 +92,7 @@ class IntelligenceDao:
 			     ir.entity_knowledge, ir.edge_knowledge,ir.empty_number, ir.data_quality_score, kg.update_time,
 			     unix_timestamp(kg.update_time) update_time_timestamp, ISNULL(ir.data_quality_score) null_score
 			     from ((select ngr2.knw_id knw_id, kg2.* from knowledge_graph kg2 join 
-			        network_graph_relation ngr2 on kg2.id=ngr2.graph_id where ngr2.knw_id=3)) kg 
+			        network_graph_relation ngr2 on kg2.id=ngr2.graph_id where ngr2.knw_id={query_param.get('knw_id')})) kg 
 			      left join intelligence_records ir on kg.id=ir.graph_id 
             """
         # 根据图谱名称模糊查询
@@ -105,9 +105,9 @@ class IntelligenceDao:
             if rule == "data_quality_score":
                 sql += f" order by null_score asc , ir.data_quality_score {order}, update_time_timestamp desc"
             if rule == "update_time":
-                sql += f"  order by null_score asc, update_time_timestamp {order}"
+                sql += f" order by update_time_timestamp {order}"
             if rule == "data_quality_B":
-                sql += f"  order by null_score asc, ir.data_quality_B {order}, update_time_timestamp desc"
+                sql += f"  order by null_score asc, ir.total_knowledge {order}, update_time_timestamp desc"
         else:
             sql += " order by null_score asc, update_time_timestamp desc"
 
@@ -151,5 +151,9 @@ class IntelligenceDao:
         C2 = float(1 - empty_number / total)
         return round(B * (C1 + C2) / 2, 2)
 
+    def data_quality_score(self, total, empty_number, repeat_number):
+        C1 = float(1 - repeat_number / total)
+        C2 = float(1 - empty_number / total)
+        return round((C1 + C2) / 2, 2)
 
 intelligence_dao = IntelligenceDao()
