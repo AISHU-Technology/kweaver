@@ -115,7 +115,7 @@ jobs:
           configMode: 'manual'
           cliProjectKey: 'sonar.kw-builder'
           cliProjectName: 'kw-builder'
-          cliSources: '.'
+          cliSources: 'builder'
       - task: SonarQubeAnalyze@4
         displayName: Run SonarQube Code Analysis task
 

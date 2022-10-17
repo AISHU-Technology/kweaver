@@ -414,7 +414,7 @@ class TestGetModelOtl(TestCase):
 class TestGetAll(TestCase):
     def setUp(self) -> None:
         self.url = "/api/builder/v1/onto/getotl"
-        self.params = {"page": 1, "size": 5, "order": "ascend"}
+        self.params = {"page": 1, "size": 5, "order": "ascend", "knw_id": 1}
 
     def test_get_all_success1(self):
         """ data source list not empty success"""
