@@ -86,7 +86,7 @@ func TestUpdateGraphDB(t *testing.T) {
 	lockMock.EXPECT().Unlock(gomock.Any()).Return(true)
 	global.LockOperator = lockMock
 
-	r := DoRequest(http.MethodPost, "/api/studio/v1/graphdb/update", &vo.GraphDBUpdateVo{ID: 2, Name: "哈哈哈", Type: constant.Nebula, User: "root", Password: "123322", Ip: []string{"10.4.32.45", "aaa.si.com"}, Port: []string{"2232", "3223"}})
+	r := DoRequest(http.MethodPost, "/api/studio/v1/graphdb/update", &vo.GraphDBUpdateVo{ID: 2, Name: "哈哈哈", Type: constant.Nebula, User: "root", Password: "123322", Ip: []string{"10.4.32.45", "aaa.si.com"}, Port: []string{"2232", "3223"}, OsId: 1})
 	assert.Equal(t, http.StatusOK, r.Code)
 
 	////case 2
