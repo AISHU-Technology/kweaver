@@ -24,7 +24,7 @@ interface DataRowProps {
   value?: number;
 }
 
-const { NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION } = GRAPH_STATUS;
+const { NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION, STOP } = GRAPH_STATUS;
 const KEY_INTL: Record<string, { field: string; tip?: React.ReactNode }> = {
   entity_count: { field: intl.get('graphList.entityCount') },
   edge_count: { field: intl.get('graphList.relationshipCount') },
@@ -120,7 +120,7 @@ const Statistics = (props: StatisticsProps) => {
         return message.error(intl.get('intelligence.waitErr'));
       case status === RUNNING:
         return message.error(intl.get('intelligence.runErr'));
-      case status === CONFIGURATION:
+      case status === CONFIGURATION || status === STOP:
         return message.error(intl.get('intelligence.configErr'));
       case status === FAIL && graphdb_type === 'nebula':
         return message.error(intl.get('intelligence.failErr'));
