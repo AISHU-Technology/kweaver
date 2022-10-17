@@ -33,6 +33,7 @@ type GraphDBUpdateVo struct {
 	Password string   `json:"password" binding:"required,lte=150"`
 	Ip       []string `json:"ip" binding:"ipList"`
 	Port     []string `json:"port" binding:"portList"`
+	OsId     int      `json:"osId" binding:"required_unless=Type orientdb,omitempty,gte=1"`
 }
 
 // ConnTestVo 测试配置是否正确时的请求
