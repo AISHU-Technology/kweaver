@@ -74,7 +74,9 @@ const DomainIQ: React.FC<DomainIQProps> = ({ kgData, setKgData }) => {
         dispatchTableState({ total: total_graph });
         setKgInfo(info);
         setTableData(graph_intelligence_list);
-        kgData.intelligence_score !== info.intelligence_score && setKgData({ ...kgData, ...info });
+        if (kgData.intelligence_score !== info.intelligence_score || kgData.knw_name !== info.knw_name) {
+          setKgData({ ...kgData, ...info });
+        }
       }
       res?.Description && message.error(res?.Description);
     } catch {
