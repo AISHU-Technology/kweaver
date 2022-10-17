@@ -1931,14 +1931,13 @@ def buildertask(self, graphid, flag):
                     if time_out < 0:
                         raise CeleryTaskException(
                             (ExceptLevel.ERROR, 'Builder.celeryTask.graphdb.nebulaTimeOutError', 'nebula job time out'))
-
+        except Exception:
+            pass  # 统计任务失败的异常忽略掉
+        finally:
             print(f"start post intelligence task graph:{graphid}")
             code, resp = intelligence_calculate_service.send_task(graphid)
             if code != codes.successHttpCode:
                 print(f'post intelligence task graph:{graphid}, failed:{repr(resp)}')
-
-        except Exception:
-            pass  # 统计任务失败的异常忽略掉
 
 
 @cel.task

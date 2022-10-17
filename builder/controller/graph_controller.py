@@ -6,6 +6,7 @@ from flask import Blueprint, request, jsonify, send_file, send_from_directory, m
 
 from werkzeug.utils import secure_filename
 from dao.graph_dao import graph_dao
+from dao.intelligence_dao import intelligence_dao
 from dao.otl_dao import otl_dao
 from dao.task_dao import task_dao
 from dao.other_dao import other_dao
@@ -626,6 +627,9 @@ def graphDeleteByIds():
         # 删除知识网络与图谱关系
         knw_id = params_json["knw_id"]
         deleteRelation(knw_id, normal)
+
+        # 更新知识网络的智商数据
+        intelligence_calculate_service.update_intelligence_info(normal)
 
     if len(noExist) != 0:
         mess += "%s 不存在; " % ",".join(map(str, noExist))

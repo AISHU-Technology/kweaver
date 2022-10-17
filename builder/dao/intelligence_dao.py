@@ -3,6 +3,7 @@ from decimal import Decimal
 
 import pandas as pd
 
+from dao.graph_dao import graph_dao
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
 from celery.utils import log
 
@@ -144,6 +145,13 @@ class IntelligenceDao:
                 update knowledge_network set intelligence_score={score} where id={item['knw_id']}
             """
         cursor.execute(sql)
+
+    @connect_execute_commit_close_db
+    def delete_intelligence_info(self, graph_id_list, cursor, connection):
+        self.__delete_by_graph_id_list(graph_id_list, cursor)
+        graph_info_list = graph_dao.get_graph_detail(graph_id_list)
+        for graph_info in graph_info_list:
+            self.__update_network_score(graph_info['knw_id'])
 
     def intelligence_score(self, total, empty_number, repeat_number):
         B = float(math.log(total, 10) * 10)

@@ -82,6 +82,13 @@ class IntelligenceCalculateService(object):
         entity_info['prop_number'] = len(properties)
         return entity_info
 
+    def update_intelligence_info(self, graph_id_list):
+        try:
+            intelligence_dao.delete_intelligence_info(graph_id_list)
+        except Exception as e:
+            err_msg = repr(e)
+            log.error(f"delete_graph:{graph_id_list} records failed: {err_msg}")
+
     def send_task(self, graph_id):
         """
         send async task to celery
@@ -99,7 +106,7 @@ class IntelligenceCalculateService(object):
 
         if graph_status != "normal" and graph_status != "failed":
             code = codes.Builder_IntelligenceCalculateService_SendTask_GraphInvalidStatusError
-            if graph_status == 'edit':
+            if graph_status == 'edit' or graph_status == 'stop':
                 code = codes.Builder_IntelligenceCalculateService_SendTask_GraphConfigStatusError
             if graph_status == 'running':
                 code = codes.Builder_IntelligenceCalculateService_SendTask_GraphRunStatusError
@@ -183,7 +190,7 @@ class IntelligenceQueryService(object):
             graph_quality['graph_id'] = graph_info['graph_id']
             graph_quality['graph_name'] = graph_info['graph_name']
             graph_quality['graph_config_id'] = graph_info['graph_config_id']
-            graph_quality['update_time'] = graph_info['update_time']
+            graph_quality['update_time'] = graph_info['last_update_time']
 
             # query graph detail in GraphDB, if this graph is empty, return default response
             code, data = graph_Service.get_graph_info_count(graph_id)
@@ -191,10 +198,19 @@ class IntelligenceQueryService(object):
                 log.info(repr(data.json))
                 return codes.successCode, self.default_graph_response(graph_info)
             count_info = data.json.get('res')
+            # sum edge count
             graph_quality['edge'] = count_info.get('edge', [])
-            graph_quality['edge_count'] = count_info.get('edge_count', 0)
+            edge_count = 0
+            for edge_info in graph_quality['edge']:
+                edge_count += edge_info['count']
+            graph_quality['edge_count'] = edge_count
+
+            # sum  entity
             graph_quality['entity'] = count_info.get('entity', [])
-            graph_quality['entity_count'] = count_info.get('entity_count', 0)
+            entity_count = 0
+            for entity_info in graph_quality['entity']:
+                entity_count += entity_info['count']
+            graph_quality['entity_count'] = entity_count
 
             # add last task info
             task_info_list = async_task_dao.query_latest_task([graph_quality['graph_id']])
@@ -260,7 +276,7 @@ class IntelligenceQueryService(object):
                 graph_quality['graph_id'] = graph_info['graph_id']
                 graph_quality['graph_name'] = graph_info['graph_name']
                 graph_quality['graph_config_id'] = graph_info['graph_config_id']
-                graph_quality['update_time'] = graph_info['update_time']
+                graph_quality['update_time'] = graph_info['last_update_time']
 
                 # add task status
                 self.add_task_info(graph_quality, task_info_dict.get(graph_info['graph_id']))
@@ -271,16 +287,14 @@ class IntelligenceQueryService(object):
                 graph_intelligence_list.append(graph_quality)
 
                 # 没有数据就不用加入计算了
-                if 'total_knowledge' not in graph_quality:
-                    print('xx')
                 if graph_quality['total_knowledge'] <= 0:
                     continue
                 # 更新最大时间
                 recent_calculate_time = self.max_time(graph_quality['last_task_time'], recent_calculate_time)
                 # 总得分
                 total += graph_quality['total_knowledge']
-                repeat += graph_quality['data_repeat_C1']
-                empty += graph_quality['data_empty_C2']
+                repeat += int(graph_score.get('repeat_number', 0))
+                empty += int(graph_score.get('empty_number', 0))
 
                 has_value = True
 
@@ -296,8 +310,8 @@ class IntelligenceQueryService(object):
             # calculate network intelligence
             score = -1
             if has_value:
-                score = round(intelligence_dao.intelligence_score(total, empty, repeat), 2)
-            knw_intelligence['intelligence_score'] = score
+                score = intelligence_dao.intelligence_score(total, empty, repeat)
+            knw_intelligence['intelligence_score'] = "{:.2f}".format(score)
 
             return codes.successCode, Gview.json_return(knw_intelligence)
         except Exception as e:
@@ -403,6 +417,10 @@ class IntelligenceQueryService(object):
         res['calculate_status'] = 'NOT_CALCULATE'
         res['edge_knowledge'] = 0
         res['entity_knowledge'] = 0
+        res['edge'] = []
+        res['edge_count'] = -1
+        res['entity'] = []
+        res['entity_count'] = -1
         res['data_quality_B'] = -1
         res['total_knowledge'] = 0
         res['last_task_message'] = ''
@@ -420,6 +438,7 @@ class IntelligenceQueryService(object):
     def default_network_response(self, knw_info, total):
         data = dict()
         data.update(knw_info)
+        data['intelligence_score'] = '{:.2f}'.format(knw_info.get('intelligence_score', -1))
         data['graph_intelligence_list'] = []
         data['total_graph'] = total
         return data
@@ -456,10 +475,10 @@ class IntelligenceQueryService(object):
         根据图谱信息，给出合适的智商信息
         """
         if not record or not record['id']:
-            graph_quality['edge_knowledge'] = 0
-            graph_quality['entity_knowledge'] = 0
+            graph_quality['edge_knowledge'] = -1
+            graph_quality['entity_knowledge'] = -1
             graph_quality['data_quality_B'] = -1
-            graph_quality['total_knowledge'] = 0
+            graph_quality['total_knowledge'] = -1
             graph_quality['data_repeat_C1'] = -1
             graph_quality['data_empty_C2'] = -1
             graph_quality['data_quality_B'] = -1
@@ -468,11 +487,11 @@ class IntelligenceQueryService(object):
         total_knowledge = record.get('total_knowledge', 0)
         graph_quality['entity_knowledge'] = record.get('entity_knowledge', 0)
         graph_quality['edge_knowledge'] = record.get('edge_knowledge', 0)
-        graph_quality['data_repeat_C1'] = round(record.get('repeat_number', 0) / total_knowledge, 2)
-        graph_quality['data_empty_C2'] = round(record.get('empty_number', 0) / total_knowledge, 2)
-        graph_quality['data_quality_B'] = round(math.log(record.get('total_knowledge', 0), 10) * 10, 2)
+        graph_quality['data_repeat_C1'] = "{:.2f}".format(record.get('repeat_number', 0) / total_knowledge)
+        graph_quality['data_empty_C2'] = "{:.2f}".format(record.get('empty_number', 0) / total_knowledge)
+        graph_quality['data_quality_B'] = "{:.2f}".format(math.log(record.get('total_knowledge', 0), 10) * 10)
         graph_quality['total_knowledge'] = total_knowledge
-        graph_quality['data_quality_score'] = round(float(record.get('data_quality_score', 0)), 2)
+        graph_quality['data_quality_score'] = "{:.2f}".format(float(record.get('data_quality_score', 0)))
 
     def add_task_info(self, graph_quality, task_info_list):
         """
@@ -579,13 +598,16 @@ class IntelligenceQueryService(object):
 
     def intelligence_calculate_test(self, params_json, task_id):
         """
-            execute intelligence computer task
+        execute intelligence computer task
         """
         if not task_id:
             # 没有关键参数 task_id， 直接退出
             log.error("missing important argument [task_id] please check your argument list")
             return
         try:
+            # 停止之前运行中的任务
+            if params_json.get('cancel_pre'):
+                async_task_service.delete_pre_running_task(params_json['task_type'], params_json['graph_id'])
             update_json = dict()
             intelligence_calculate_service.graph_calculate_task(params_json)
             update_json['task_status'] = 'finished'

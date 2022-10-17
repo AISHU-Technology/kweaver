@@ -911,9 +911,9 @@ class GraphDao():
         if isinstance(graph_id_list, list):
             graph_id_str = ','.join([str(graph_id) for graph_id in graph_id_list])
 
-        sql = f"""SELECT  b.knw_id, a.knw_name, a.knw_description, a.color, a.creation_time, a.update_time,
+        sql = f"""SELECT  b.knw_id, a.knw_name, a.knw_description, a.color, a.creation_time, a.update_time update_time,
                           b.graph_id, c.KG_config_id as graph_config_id, c.KG_name as graph_name, c.KDB_name as KDB_name,
-                          d.graph_db_id as graph_db_id, d.graph_otl as graph_otl
+                          d.graph_db_id as graph_db_id, d.graph_otl as graph_otl, c.update_time last_update_time
                         from knowledge_network as a 
                         join network_graph_relation as b on a.id = b.knw_id
                         join knowledge_graph as c on b.graph_id = c.id 

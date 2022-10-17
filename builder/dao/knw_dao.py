@@ -60,7 +60,7 @@ class knwDao:
 
         if rule:
             if rule == 'intelligence_score':
-                sql += f""" order by group_column asc, {rule} {order}"""
+                sql += f""" order by group_column asc, intelligence_score {order}, update_time desc """
             else:
                 sql += f""" order by {rule} {order}"""
         else:

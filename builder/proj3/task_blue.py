@@ -29,7 +29,7 @@ def create_task(task_type):
         return Gview.error_return(codes.Builder_GraphController_GetGraphInfoBasic_ParamError, args=param_message)
 
     params_json['task_type'] = task_type
-    params_json['task_status'] = "WAITING"
+    params_json['task_status'] = "waiting"
     params_json['created_time'] = datetime.datetime.now()
 
     code, celery_task_id = async_task_service.post(params_json)
