@@ -135,7 +135,7 @@
     "editSuccess": "Success",
     "repeatError": "Ip address cannot be duplicate",
     "createIndex": "Created OpenSearch",
-    "indexConfigurationFirst": "Please create an index configuration first",
+    "indexConfigurationFirst": "Please create an OpenSearch first",
     "editIndex": "Edit OpenSearch",
     "delIndex": "Delete OpenSearch",
     "placeIpInput": "Please enter address",

@@ -135,7 +135,7 @@
     "editSuccess": "编辑成功！",
     "repeatError": "ip地址不能重复",
     "createIndex": "新建OpenSearch",
-    "indexConfigurationFirst": "请先创建索引配置",
+    "indexConfigurationFirst": "请先创建OpenSearch",
     "editIndex": "编辑OpenSearch",
     "delIndex": "删除OpenSearch",
     "placeIpInput": "请输入地址",

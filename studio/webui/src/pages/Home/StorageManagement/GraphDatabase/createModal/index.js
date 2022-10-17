@@ -124,7 +124,7 @@ const ModalContent = memo(props => {
 
         if (optionType === 'edit') {
           const { id } = initData;
-          const res = await serviceStorageManagement.graphDBUpdate({ name, ip, id, user, type, password, port });
+          const res = await serviceStorageManagement.graphDBUpdate({ name, ip, id, user, type, password, port, osId });
           if (res && res.res) {
             message.success(intl.get('configSys.editSuccess'));
             closeModal();
@@ -272,7 +272,7 @@ const ModalContent = memo(props => {
                   <Select
                     getPopupContainer={triggerNode => triggerNode.parentElement}
                     autoComplete="off"
-                    disabled={optionType !== 'create'}
+                    disabled={optionType !== 'create' && initData.osName}
                     placeholder={intl.get('configSys.osIdPlaceholder')}
                     allowClear
                   >
