@@ -1780,12 +1780,20 @@ class GraphDB(object):
         查询某个实体类的非空值数量,该查询可能非常耗时
         """
         if self.type == 'orientdb':
-            return self._orientdb_prop_empty(db, entity_name, otl_type, prop)
-        return self._nebula_prop_empty(db, entity_name, otl_type, prop)
+            code, res = self._orientdb_prop_empty(db, entity_name, otl_type, prop)
+            if res != 200:
+                count = res.get('result', list())[0].get('not_empty')
+                return code, count
+            return code, res
+        code, res = self._nebula_prop_empty(db, entity_name, otl_type, prop)
+        if res != 200:
+            count = res.column_values('not_empty').pop(0).as_int()
+            return code, count
+        return code, res
 
     def _orientdb_prop_empty(self, db, entity_name, otl_type, prop):
-        empty_value_list = """ [NULL,"","()","[]","{}"] """
-        sql = f"""select count(*) from {entity_name} where {prop} not in {empty_value_list}"""
+        empty_value_list = """ ["","()","[]","{}"] """
+        sql = f"""select count(*) as `not_empty` from {entity_name} where `{prop}` not in {empty_value_list} and `{prop}` is not null"""
         code, res = self._orientdb_http(sql, db)
         return code, res
 

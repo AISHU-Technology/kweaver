@@ -36,7 +36,7 @@ def updateDatabase(connection, cursor):
                 `total_knowledge` int(11) DEFAULT NULL,
                 `empty_number` int(11) DEFAULT NULL,
                 `repeat_number` int(11) DEFAULT NULL,
-                `data_quality_score` decimal(10,0) DEFAULT NULL,
+                `data_quality_score` decimal(10, 2) DEFAULT NULL,
                 `update_time` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -74,7 +74,7 @@ class IntelligenceCalculateService(object):
             code, res = graph_db.graph_entity_prop_empty(space_id, entity_name, otl_type, prop)
             if code != 200:
                 raise Exception(repr(res))
-            not_empty_total += res.column_values('not_empty').pop(0).as_int()
+            not_empty_total += res
 
         entity_info['total'] = entity_info['total']
         entity_info['empty'] = entity_info['total'] * len(properties) - not_empty_total
