@@ -410,8 +410,8 @@ func PathDetail(conf *utils.KGConf, pathsInfo []map[string][]string) (interface{
 	//	Mode: "command",
 	//}
 
-	var vSql = "select * from V where @rid in [%s]"
-	var eSql = "select * from E where @rid in [%s]"
+	var vSql = "select * from [%s]"
+	var eSql = "select * from [%s]"
 
 	var vids []string
 	var eids []string

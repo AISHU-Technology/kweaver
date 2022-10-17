@@ -206,10 +206,10 @@
     },
 
     "conflation": {
-      "conflation": "Conflation",
-      "isMix": "Conflation or not",
-      "noMixRule": "No conflation rules",
-      "pleaseOpen": "No conflation rules click 【open conflation】 and fill in to merge the same entity",
+      "conflation": "Fusion",
+      "isMix": "Fusion or not",
+      "noMixRule": "No fusion rules",
+      "pleaseOpen": "No fusion rules click 【open fusion and fill in to merge the same entity",
       "performTask": "Perform task",
       "RunNow": "Run",
       "vertexsTitle": "【Entity class】summary",

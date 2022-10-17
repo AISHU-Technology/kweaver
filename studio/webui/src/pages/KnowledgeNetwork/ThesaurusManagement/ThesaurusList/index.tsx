@@ -48,6 +48,11 @@ const ThesaurusList = (props: any) => {
   }, [order, rule]);
 
   useEffect(() => {
+    if (_.isEmpty(thesaurusList)) {
+      setSelectedIds([]);
+      return;
+    }
+
     pageListIsSelected(selectedIds);
     if (page !== listPage) setPage(listPage);
     const errorList = _.map(thesaurusList, item => {
@@ -129,12 +134,17 @@ const ThesaurusList = (props: any) => {
 
   // 判断是否选择
   const indeterminate = () => {
-    if (_.isEmpty(thesaurusList)) return
+    if (_.isEmpty(thesaurusList)) return;
     const list = thesaurusList.filter((item: any) => {
-      return (!_.isEmpty(item?.columns) && item?.status !== 'running')
+      return (!_.isEmpty(item?.columns) && item?.status !== 'running');
     });
 
-    return !!selectedIds.length && selectedIds.length < list.length;
+    // 当前页选择
+    const currPageSelect = _.filter(list, item => {
+      return selectedIds.includes(item.id);
+    })
+
+    return !!currPageSelect.length && currPageSelect.length < list.length;
   }
 
   // 当前页已选

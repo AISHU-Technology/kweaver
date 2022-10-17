@@ -1,0 +1,84 @@
+# Starter pipeline
+#
+
+trigger:
+  branches:
+    include:
+      - release
+      - develop
+      - DATA-*
+  paths:
+    include:
+      - /studio/*
+
+pool:
+  name: common
+
+resources:
+  containers:
+    - container: dotnet
+      endpoint: acr.aishu.cn
+      image: wing-biz/euop/dotnet-runtime:3.1
+    - container: scanner
+      endpoint: acr.aishu.cn
+      image: ad/openjdk:11.0.13-jre
+
+jobs:
+  - job: webui_ut
+    displayName: webui_ut
+    workspace:
+      clean: all
+    steps:
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: |
+            cd ./studio/webui
+            npm i
+            jest --coverage --coverageReporters=cobertura || echo
+
+  - job: webui_coverage
+    displayName: webui_coverage
+    container: dotnet
+    dependsOn: webui_ut
+    steps:
+      - checkout: none
+      - task: PublishCodeCoverageResults@1
+        displayName: Publish ALL Code Coverage Report
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: '$(Build.SourcesDirectory)/studio/webui/coverage/cobertura-coverage.xml'
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFormat: "JUnit"
+          testResultsFiles: '$(Build.SourcesDirectory)/studio/webui/coverage/cobertura-coverage.xml'
+          testRunTitle: 'UT Result'
+          failTaskOnFailedTests: true
+        displayName: 'Publish linting and unit test results'
+
+  - job: scan
+    displayName: 静态扫描
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    container: scanner
+    dependsOn: webui_coverage
+    workspace:
+      clean: all
+    steps:
+      - task: SonarQubePrepare@4
+        displayName: Prepare SonarQube
+        inputs:
+          SonarQube: 'adS'
+          scannerMode: 'CLI'
+          configMode: 'manual'
+          cliProjectKey: 'sonar.kw-studio-webui'
+          cliProjectName: 'kw-studio-webui'
+          cliSources: '.'
+
+      - task: SonarQubeAnalyze@4
+        displayName: Run SonarQube Code Analysis task
+
+      - task: SonarQubePublish@4
+        displayName: Publish Quality Gate Result task
+        inputs:
+          pollingTimeoutSec: '300'
