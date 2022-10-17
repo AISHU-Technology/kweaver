@@ -13,7 +13,7 @@ import pandas as pd
 from os import path
 
 # 当前程序版本
-progressVersion = 'builder-1.1.1'
+progressVersion = 'builder-1.1.2'
 Logger.log_info("progressVersion: %s" % progressVersion)
 
 # 连接数据库
