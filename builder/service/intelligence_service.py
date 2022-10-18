@@ -257,7 +257,6 @@ class IntelligenceQueryService(object):
             graph_score_list = self.query_graph_score_in_pages(query_params)
             if not graph_score_list:
                 return codes.successCode, self.default_network_response(knw_info, count)
-
             graph_id_list = [info['graph_id'] for info in graph_score_list]
 
             # 查询graph详细信息
@@ -271,9 +270,6 @@ class IntelligenceQueryService(object):
 
             # 统计智商数据
             recent_calculate_time = ''
-            total = 0
-            repeat = 0
-            empty = 0
             has_value = False
             graph_intelligence_list = list()
             for graph_score in graph_score_list:
@@ -287,23 +283,13 @@ class IntelligenceQueryService(object):
 
                 # add task status
                 self.add_task_info(graph_quality, task_info_dict.get(graph_info['graph_id']))
+                # 更新最大时间
+                recent_calculate_time = self.max_time(graph_quality['last_task_time'], recent_calculate_time)
 
                 # add record info
                 self.add_graph_intelligence_info(graph_quality, graph_score)
-
                 graph_intelligence_list.append(graph_quality)
 
-                # 没有数据就不用加入计算了
-                if float(graph_quality['total_knowledge']) <= 0:
-                    continue
-                # 更新最大时间
-                recent_calculate_time = self.max_time(graph_quality['last_task_time'], recent_calculate_time)
-                # 总得分
-                total += graph_quality['total_knowledge']
-                repeat += int(graph_score.get('repeat_number', 0))
-                empty += int(graph_score.get('empty_number', 0))
-
-                has_value = True
 
             knw_intelligence['id'] = int(knw_id)
             knw_intelligence['knw_name'] = knw_info["knw_name"]
@@ -314,11 +300,7 @@ class IntelligenceQueryService(object):
             knw_intelligence['recent_calculate_time'] = recent_calculate_time
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list
             knw_intelligence['total_graph'] = count
-            # calculate network intelligence
-            score = -1
-            if has_value:
-                score = intelligence_dao.intelligence_score(total, empty, repeat)
-            knw_intelligence['intelligence_score'] = "{:.2f}".format(score)
+            knw_intelligence['intelligence_score'] = "{:.2f}".format(knw_info['intelligence_score'])
 
             return codes.successCode, Gview.json_return(knw_intelligence)
         except Exception as e:
@@ -448,8 +430,21 @@ class IntelligenceQueryService(object):
         data['total_graph'] = total
         return data
 
-    def max_time(self, a: datetime.datetime, b: datetime.datetime):
-        return a
+    def max_time(self, max_record, compare_record):
+        if not compare_record:
+            return max_record
+        if not max_record and compare_record:
+            return compare_record
+        try:
+            record_time = time.strptime(max_record, "%Y-%m-%d %H:%M:%S")
+            compare_time = time.strptime(compare_record, "%Y-%m-%d %H:%M:%S")
+        except Exception as e:
+            log.error(repr(e))
+            return max_record
+
+        if record_time > compare_time:
+            return max_record
+        return compare_record
 
     def query_graph_score_in_pages(self, query_params):
         """

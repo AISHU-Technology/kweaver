@@ -18,7 +18,6 @@ from os import path
 
 sys.path.append(os.path.abspath("../"))
 from common.errorcode import codes
-from service.intelligence_service import intelligence_calculate_service
 from common.exception.base import ExceptLevel
 from common.exception.celerytask_exception import CeleryTaskException
 from utils.ConnectUtil import redisConnect, mongoConnect
@@ -1935,7 +1934,7 @@ def buildertask(self, graphid, flag):
             pass  # 统计任务失败的异常忽略掉
         finally:
             print(f"start post intelligence task graph:{graphid}")
-            intelligence_calculate_service.send_task(graphid)
+            send_intelligence_task(graphid)
 
 @cel.task
 def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
