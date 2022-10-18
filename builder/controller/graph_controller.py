@@ -512,10 +512,9 @@ def graphDeleteByIds():
             schema:
                 $ref: '#/definitions/builder/graph/graphDeleteByIds'
     '''
-    runs, noAuthority, noExist, normal = [], [], [], []
     mess = ""
     obj, obj_code = {}, 200
-    # 获取参数
+    # get parameters
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
         error_link = ''
@@ -525,7 +524,7 @@ def graphDeleteByIds():
         solution = 'Please check your parameter format'
         return Gview.TErrorreturn(code, desc, solution, detail,
                                   error_link), CommonResponseStatus.BAD_REQUEST.value
-    # 参数校验
+    # parameter verification
     check_res, message = graphCheckParameters.graphDelPar(params_json)
     if check_res != 0:
         Logger.log_error("parameters:%s invalid" % params_json)
@@ -545,86 +544,61 @@ def graphDeleteByIds():
         return Gview.BuFailVreturn(cause=ret_message["des"], code=code,
                                    message=ret_message["detail"]), CommonResponseStatus.SERVER_ERROR.value
     graphids = params_json["graphids"]
-    # 统计运行状态的
+    # get the graphs whose task status is running
     res_mess, res_code = graph_Service.getStatusByIds(graphids)
     if res_code != 0:
         return Gview.TErrorreturn(res_mess["code"], res_mess["message"], res_mess["solution"], res_mess["cause"],
                                   ""), CommonResponseStatus.SERVER_ERROR.value
-    # 运行状态的graphId列表
+    # the list of graph ids whose task status is running
     runs = res_mess["runs"]
 
-    # 统计不存在的id
+    # get the graph ids that not exist in the database
     res, code = graph_Service.getNoExistIds(graphids)
     if code != 0:
         return Gview.TErrorreturn(res["code"], res["message"], res["solution"], res["cause"],
                                   ""), CommonResponseStatus.SERVER_ERROR.value
     noExist = res["noExist"]
     normal = list(set(graphids) - set(noExist) - set(runs))
-    # 单一删除
+    # delete one
     if len(graphids) == 1:
-        # 正常
+        # normal
         if len(normal) == 1:
             mess += "删除成功：%s; " % ",".join(map(str, normal))
-            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
-        # 不存在
+            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
+        # not exist
         if len(noExist) != 0:
             mess += "%s 不存在; " % ",".join(map(str, noExist))
             mess += "删除成功：%s; " % ",".join(map(str, normal))
-            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
+            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
         if len(runs) == 1:
             obj, obj_code = {"Cause": "当前知识网络正在运行任务不可删除，请先停止或删除任务！",
                              "Code": CommonResponseStatus.SINGLE_RUNNING.value,
                              "message": "正在运行的网络不可以删除"}, CommonResponseStatus.SERVER_ERROR.value
-        if len(noAuthority) == 1:
-            obj, obj_code = {"Cause": "当前您的身份暂无该图谱相关权限！",
-                             "Code": CommonResponseStatus.SINGLE_PERMISSION.value,
-                             "message": "权限不足"}, CommonResponseStatus.SERVER_ERROR.value
-    # 批量删除
+    # batch delete
     else:
-        # 全部不存在
+        # all not exist
         if len(noExist) == len(graphids):
-            # mess += "%s 不存在; " % ",".join(map(str, noExist))
-            obj, obj_code = {"state": "sucess"}, CommonResponseStatus.SUCCESS.value
-        # 全部运行
-        if len(runs) > 0 and len(noAuthority) == 0 and len(normal) == 0:
+            obj, obj_code = {"state": "success"}, CommonResponseStatus.SUCCESS.value
+        # all running
+        if len(runs) > 0 and len(normal) == 0:
             obj, obj_code = {"Cause": "知识网络正在运行任务不可删除，请先停止或删除任务！！",
                              "Code": CommonResponseStatus.ALL_RUNNING.value,
                              "message": "正在运行的网络不可以删除"}, CommonResponseStatus.SERVER_ERROR.value
-        # 运行 + 正常
-        if len(runs) > 0 and len(noAuthority) == 0 and len(normal) > 0:
+        # some are running and some are normal
+        if len(runs) > 0 and len(normal) > 0:
             obj, obj_code = {"Cause": "部分知识网络正在运行任务不可删除，请先停止或删除任务！",
                              "Code": CommonResponseStatus.RUNNING_AND_NORMAL.value,
                              "message": "正在运行的网络不可以删除"}, CommonResponseStatus.SERVER_ERROR.value
-        # 运行 + 权限
-        if len(runs) > 0 and len(noAuthority) > 0 and len(normal) == 0:
-            obj, obj_code = {"Cause": "当前知识网络存在异常。删除失败，请重试！！",
-                             "Code": CommonResponseStatus.RUNNING_AND_PERMISSION.value,
-                             "message": "正在运行的网络不可以删除, 权限不足无法删除"}, CommonResponseStatus.SERVER_ERROR.value
-        # 权限 + 正常
-        if len(runs) == 0 and len(noAuthority) > 0 and len(normal) > 0:
-            obj, obj_code = {"Cause": "部分知识网络相关权限，删除失败！",
-                             "Code": CommonResponseStatus.PERMISSION_AND_NORMAL.value,
-                             "message": "权限不足无法删除"}, CommonResponseStatus.SERVER_ERROR.value
-        # 全部无权限
-        if len(runs) == 0 and len(noAuthority) > 0 and len(normal) == 0:
-            obj, obj_code = {"Cause": "无知识网络相关权限，删除失败！",
-                             "Code": CommonResponseStatus.ALL_PERMISSION.value,
-                             "message": "权限不足无法删除"}, CommonResponseStatus.SERVER_ERROR.value
-        # 正常 + 运行 + 权限
-        if len(runs) > 0 and len(noAuthority) > 0 and len(normal) > 0:
-            obj, obj_code = {"Cause": "当前知识网络存在异常。删除失败，请重试！",
-                             "Code": CommonResponseStatus.RUNNING_AND_PERMISSION_AND_NORMAL.value,
-                             "message": "正在运行的网络不可以删除, 权限不足无法删除"}, CommonResponseStatus.SERVER_ERROR.value
-        # 正常
-        if len(runs) == 0 and len(noAuthority) == 0 and len(normal) > 0:
-            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
+        # all normal
+        if len(runs) == 0 and len(normal) > 0:
+            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
     if len(normal) > 0:
-        # 删除可以删除的
+        # delete normal graphs
         res, code = graph_Service.deleteGraphByIds(normal)
         if code != 0:
             return Gview.TErrorreturn(res["code"], res["message"], res["solution"], res["cause"],
                                       ""), CommonResponseStatus.SERVER_ERROR.value
-        # 删除知识网络与图谱关系
+        # delete the relationship between the knowledge network and the knowledge graphs
         knw_id = params_json["knw_id"]
         deleteRelation(knw_id, normal)
 

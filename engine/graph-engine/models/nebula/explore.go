@@ -114,7 +114,7 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 	if queryAll {
 		var gqlCount string
 		if _, ok := filterStrMap["vids"]; ok {
-			gqlCount = "match (%s:%s) where %s %s return %s;"
+			gqlCount = "match (%s:%s) where %s %s return %s limit 1000;"
 			if _, ok := filterStrMap["filter"]; ok {
 				// nebula 3.0.0 版本开始，为了区别不同 Tag 的属性，match语句返回属性时必须额外指定 Tag 名称
 				filterlist := []string{}
@@ -127,7 +127,7 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				gqlCount = fmt.Sprintf(gqlCount, class, class, filterStrMap["vids"], "", class)
 			}
 		} else {
-			gqlCount = "LOOKUP ON %s %s YIELD properties(vertex);"
+			gqlCount = "LOOKUP ON %s %s YIELD properties(vertex) | limit 0,1000;"
 			if _, ok := filterStrMap["filter"]; ok {
 				filterStr := strings.Join(filterStrMap["filter"].([]string), " and ")
 				gqlCount = fmt.Sprintf(gqlCount, class, "WHERE "+filterStr)
