@@ -305,7 +305,7 @@ const GraphList = () => {
                 ) : (
                   <div className="nodata-box">
                     <img src={NoResult} alt="nodata" />
-                    <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
+                    <div className="nodata-text">{intl.get('global.noResult')}</div>
                   </div>
                 )
               }}

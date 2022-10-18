@@ -5,7 +5,6 @@
     "editTitle": "Edit",
     "configName": "Policy Name",
     "configType": "Policy Type",
-    "graphName": "Knowledge graph",
     "configDesc": "Description",
     "pleaseName": "Enter policy name",
     "pleaseGraph": "Please select / input knowledge graph",

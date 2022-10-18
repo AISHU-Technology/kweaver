@@ -149,7 +149,6 @@
     "nameExist": "Name already exists,please modify",
     "inputName": "Enter knowledge network name",
     "inputDes": "enter a description",
-    "foundSorry": "Sorry, no results were found. Please try again!",
     "sureDelNetwork": "Are you sure you want to delete the knowledge network?",
     "delNetworkDes": "Once the knowledge network is deleted, it cannot be retrieved. Please operate with caution!",
     "noKnow": "No knowledge representation",

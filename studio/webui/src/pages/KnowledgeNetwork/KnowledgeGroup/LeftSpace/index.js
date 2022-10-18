@@ -198,7 +198,7 @@ const LeftSpace = props => {
         ) : name ? (
           <div className="search-none">
             <img src={noResult} alt="noResult" />
-            <div className="word">{intl.get('memberManage.searchNull')}</div>
+            <div className="word">{intl.get('global.noResult')}</div>
           </div>
         ) : (
           <div className="knowledge-list-table">

@@ -719,7 +719,7 @@ const TaskList = props => {
               ) : (
                 <div className="nodata-box">
                   <img src={noResult} alt="nodata" className="nodata-img"></img>
-                  <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
+                  <div className="nodata-text">{intl.get('global.noResult')}</div>
                 </div>
               )
           }}
