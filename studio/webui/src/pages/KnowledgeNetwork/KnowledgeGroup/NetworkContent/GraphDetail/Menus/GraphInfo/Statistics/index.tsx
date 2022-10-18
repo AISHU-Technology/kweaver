@@ -67,7 +67,7 @@ const Statistics = (props: StatisticsProps) => {
   useEffect(() => {
     const { id } = graphBasicData;
     if (!id || !shouldCalculate) return;
-    getDetail(id);
+    pollingDetail(false);
     return () => clearTimeout(timer.current);
   }, [graphBasicData.id]);
 
@@ -102,8 +102,8 @@ const Statistics = (props: StatisticsProps) => {
   /**
    * 轮询智商统计量
    */
-  const pollingDetail = async () => {
-    const isFinish = await getDetail(graphBasicData.id, true);
+  const pollingDetail = async (needLoading = true) => {
+    const isFinish = await getDetail(graphBasicData.id, needLoading);
     if (isFinish) return;
     timer.current = setTimeout(() => {
       clearTimeout(timer.current);
