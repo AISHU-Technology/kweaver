@@ -77,7 +77,7 @@ func TestUpdateGraphDB(t *testing.T) {
 	//case 1
 	var nebulaTestHandler = service.ConnTestHandlers[constant.Nebula]
 	service.ConnTestHandlers[constant.Nebula] = func(config *vo.ConnTestVo) {}
-	global.DB = NewDBMockCreator().Logger(Logger).Count(1).Count(0).Count(0).Update(1, 1).Create()
+	global.DB = NewDBMockCreator().Logger(Logger).Count(1).Count(0).Count(0).Count(0).Update(1, 1).Create()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
