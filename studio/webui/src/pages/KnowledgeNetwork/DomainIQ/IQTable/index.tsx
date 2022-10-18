@@ -272,7 +272,7 @@ const IQTable: React.FC<QTableProps> = ({ kid, data, tableState, onChange }) => 
             emptyText: (
               <div className="ad-mt-9 ad-mb-9">
                 <img src={tableState.query ? noResImg : emptyImg} alt="nodata" className="ad-tip-img" />
-                <p className="ad-c-text">{intl.get(`global.${tableState.query ? 'noResult1' : 'noContent'}`)}</p>
+                <p className="ad-c-text">{intl.get(`global.${tableState.query ? 'noResult' : 'noContent'}`)}</p>
               </div>
             )
           }}
