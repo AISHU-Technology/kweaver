@@ -81,7 +81,7 @@ class OntologyTable(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     create_time = Column(String(50))
     update_time = Column(String(50))
-    ontology_name = Column(String(length=50, collation='utf8_bin'), unique=True, )
+    ontology_name = Column(String(length=50, collation='utf8_bin'))
     ontology_des = Column(String(150), nullable=True)
     otl_status = Column(String(50), nullable=True)
     entity = Column(LONGTEXT)

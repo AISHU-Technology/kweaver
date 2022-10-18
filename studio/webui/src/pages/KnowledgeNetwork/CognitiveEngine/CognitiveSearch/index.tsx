@@ -577,7 +577,7 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ kgData }) => {
               <div className="empty-content" style={{ paddingTop: 140 }}>
                 <img src={resData.res ? noResult : configSearchTip} alt="empty" />
                 {resData.res ? (
-                  <p className="tip">{intl.get('global.noResult')}</p>
+                  <p className="tip">{intl.get('global.noResult1')}</p>
                 ) : (
                   <>
                     <p className="tip">{intl.get('searchConfig.searchTip1')}</p>

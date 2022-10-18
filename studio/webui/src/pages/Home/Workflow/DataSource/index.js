@@ -3,12 +3,14 @@ import intl from 'react-intl-universal';
 import { Button, message, Tooltip } from 'antd';
 
 import serviceWorkFlow from '@/services/workflow';
+import servicesCreateEntity from '@/services/createEntity';
 import DataSource from '@/components/DataSource';
 
 import './style.less';
 
 const DataSourceBox = props => {
-  const { next, prev, dataSourceData, setDataSourceData, graphId, useDs, dataSourceRef } = props;
+  const { next, prev, dataSourceData, setDataSourceData, graphId, useDs, dataSourceRef, setOntologyId, ontoData } =
+    props;
   const [disabled, setDisabled] = useState(false);
   const [getNewData, setGetNewData] = useState(false);
 
@@ -34,6 +36,8 @@ const DataSourceBox = props => {
       const res = await serviceWorkFlow.graphEdit(graphId, body);
 
       if (res?.res) {
+        const buildOntology = await createOntology();
+        if (!buildOntology) return;
         next();
       }
 
@@ -52,6 +56,38 @@ const DataSourceBox = props => {
     }
 
     setDisabled(false);
+  };
+
+  /**
+   * 创建本体
+   */
+  const createOntology = async () => {
+    try {
+      if (ontoData.length === 0) {
+        const data = {
+          ontology_name: '',
+          ontology_des: ''
+        };
+        const requestData = {
+          graph_step: 'graph_otl',
+          updateoradd: 'add',
+          graph_process: [data]
+        };
+        const mess = await servicesCreateEntity.changeFlowData(graphId, requestData);
+        if (mess && mess.res) {
+          setOntologyId(mess.res.ontology_id);
+          return true;
+        }
+
+        if (mess?.Code === 500002 || mess?.Code === 500001) {
+          message.error(mess.Cause);
+          return false;
+        }
+      }
+      return true;
+    } catch (error) {
+      message.error(error);
+    }
   };
 
   return (

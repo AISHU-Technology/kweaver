@@ -229,7 +229,7 @@ const GraphList = () => {
 
   return (
     <div id="netWork" className="netWork">
-      <div className="ad-p-6 ad-bg-white" style={{ height: '100%' }}>
+      <div className="ad-p-6 ad-bg-white">
         <Format.Title className="ad-mb-5">{intl.get('graphList.mygraph')}</Format.Title>
         <div className="netWork-list">
           <div className="netWork-list-top">
@@ -305,7 +305,7 @@ const GraphList = () => {
                 ) : (
                   <div className="nodata-box">
                     <img src={NoResult} alt="nodata" />
-                    <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
+                    <div className="nodata-text">{intl.get('global.noResult')}</div>
                   </div>
                 )
               }}

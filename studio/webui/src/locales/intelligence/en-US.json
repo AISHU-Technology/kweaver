@@ -9,7 +9,7 @@
     "missRate": "Missing rate",
     "opEdit": "Edit",
     "opAnalysis": "Analysis",
-    "domainDetail": "Domain IQ details",
+    "domainDetail": "Domain IQ Details",
     "statisticsTip": "When building the knowledge graph again, the system will recalculate the statistics",
     "checkDetail": "Check details",
     "collapseDetails": "Collapse details",
@@ -30,6 +30,6 @@
     "configErr": "The knowledge graph is being configured and can be calculated after the construction is completed",
     "failErr": "Since the knowledge graph is stored in the nebula database, if you need to calculate, please build the graph successfully",
     "byKnwSource": "By knowledge score",
-    "byQualitySource": "By Quality score"
+    "byQualitySource": "By quality score"
   }
 }

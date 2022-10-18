@@ -7,8 +7,9 @@ import { Button, Modal, ConfigProvider, Radio } from 'antd';
 import { CheckCircleFilled, LoadingOutlined } from '@ant-design/icons';
 
 import serviceWorkflow from '@/services/workflow';
+import servicesCreateEntity from '@/services/createEntity';
 import TimedTask from '@/components/timedTask';
-import { updateUrl } from '@/utils/handleFunction';
+import { updateUrl, getParam } from '@/utils/handleFunction';
 
 import SetAttr from './SetAttr';
 import NodeInfo from './NodeInfo';
@@ -43,36 +44,52 @@ class Mix extends Component {
   runSignal = false;
 
   componentDidUpdate(preProps) {
-    const { current, ontoData, infoExtrData, conflation, dataSourceData } = this.props;
+    this.graphMix(preProps);
+  }
+
+  /**
+   * 融合
+   */
+  graphMix = async preProps => {
+    const { current, infoExtrData, conflation, dataSourceData } = this.props;
 
     if (current === 3) this.isPassStep4.current = true; // 经过第四步才会重新更新点类信息
     if (preProps.current !== current && current === 5 && this.isPassStep4.current) {
-      const { entity } = ontoData[0]; // 第三步的点信息
-      const extr = [...infoExtrData]; // 第四步的点信息
-      const isDocModel = isDocument(entity, extr); // 判断是否包含文档知识模型
+      try {
+        const id = parseInt(getParam('id'));
+        const mes = await serviceWorkflow.graphGet(id);
+        const ontologyId = mes.res.graph_otl[0].id;
+        const res = await servicesCreateEntity.getEntityInfo(decodeURI(ontologyId));
+        const { entity } = res.res.df[0]; // 第三步的点信息
+        const extr = [...infoExtrData]; // 第四步的点信息
+        const isDocModel = isDocument(entity, extr); // 判断是否包含文档知识模型
+        if (conflation.length === 0) {
+          // 初次进入, 直接取第三步的点
+          const newEntity = initConfig(entity, isDocModel);
+          this.setState({ entity: newEntity, showIndex: 0 });
+        } else {
+          // 已经配置了属性, 需要和第三步的点比较, 是否有更新
+          const newEntity = updateConfig(conflation, entity, isDocModel);
+          const { status } = conflation[0];
 
-      if (conflation.length === 0) {
-        // 初次进入, 直接取第三步的点
-        const newEntity = initConfig(entity, isDocModel);
-        this.setState({ entity: newEntity, showIndex: 0 });
-      } else {
-        // 已经配置了属性, 需要和第三步的点比较, 是否有更新
-        const newEntity = updateConfig(conflation, entity, isDocModel);
-
-        this.setState({
-          entity: newEntity,
-          showIndex: 0,
-          isError: false,
-          errIndex: -1,
-          errMsg: ''
-        });
+          this.setState({
+            check: status,
+            entity: newEntity,
+            showIndex: 0,
+            isError: false,
+            errIndex: -1,
+            errMsg: ''
+          });
+        }
+      } catch (error) {
+        //
       }
     }
 
     if (preProps.dataSourceData !== dataSourceData) {
       this.setState({ isImmediately: dataSourceData[0]?.data_source === 'rabbitmq' });
     }
-  }
+  };
 
   /**
    * 生成保存的数据让父组件调用
