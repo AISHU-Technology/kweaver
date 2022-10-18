@@ -1503,7 +1503,7 @@ class GraphService():
         code, count_res = graphdb.count(db)
         if code != codes.successCode:
             return code, count_res
-        edge_count, entity_count, _, entitys_count, edges_count, _, _ = count_res
+        edge_count, entity_count, _, entitys_count, edges_count, edge_prop_info, entity_prop_info = count_res
         res = {}
         res['entity_count'] = entity_count
         res['edge_count'] = edge_count
@@ -1513,11 +1513,13 @@ class GraphService():
             entity = {}
             entity['name'] = k
             entity['count'] = v
+            entity['prop_number'] = entity_prop_info.get(k, 0)
             res['entity'].append(entity)
         for k, v in edges_count.items():
             edge = {}
             edge['name'] = k
             edge['count'] = v
+            edge['prop_number'] = edge_prop_info.get(k, 0)
             res['edge'].append(edge)
         return codes.successCode, Gview2.json_return(res)
 

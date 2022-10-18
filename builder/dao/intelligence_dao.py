@@ -122,8 +122,8 @@ class IntelligenceDao:
 
     def __delete_by_graph_id_list(self, graph_id_list, cursor):
         graph_id_list = [str(graph_id) for graph_id in graph_id_list]
-        sql = """delete from intelligence_records where graph_id in (%s)"""
-        cursor.execute(sql, ','.join(graph_id_list))
+        sql = f"""delete from intelligence_records where graph_id in ({','.join(graph_id_list)})"""
+        cursor.execute(sql)
 
     def __update_network_score(self, knw_id, cursor):
         # query network intelligence
@@ -140,9 +140,12 @@ class IntelligenceDao:
         cursor.execute(sql)
         item = cursor.fetchone()
         # update network intelligence score
-        score = self.intelligence_score(item['total'], item['empty_number'], item['repeat_number'])
+        if item['total'] is None or item['empty_number'] is None or item['repeat_number'] is None:
+            score = -1
+        else:
+            score = self.intelligence_score(item['total'], item['empty_number'], item['repeat_number'])
         sql = f"""
-                update knowledge_network set intelligence_score={score} where id={item['knw_id']}
+                update knowledge_network set intelligence_score={score} where id={knw_id}
             """
         cursor.execute(sql)
 
@@ -150,8 +153,11 @@ class IntelligenceDao:
     def delete_intelligence_info(self, graph_id_list, cursor, connection):
         self.__delete_by_graph_id_list(graph_id_list, cursor)
         graph_info_list = graph_dao.get_graph_detail(graph_id_list)
-        for graph_info in graph_info_list:
-            self.__update_network_score(graph_info['knw_id'])
+
+        knw_id_list = [graph_info['knw_id'] for graph_info in graph_info_list]
+        knw_id_list = list(set(knw_id_list))
+        for knw_id in knw_id_list:
+            self.__update_network_score(knw_id, cursor)
 
     def intelligence_score(self, total, empty_number, repeat_number):
         B = float(math.log(total, 10) * 10)

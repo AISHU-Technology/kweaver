@@ -199,17 +199,21 @@ class IntelligenceQueryService(object):
                 return codes.successCode, self.default_graph_response(graph_info)
             count_info = data.json.get('res')
             # sum edge count
-            graph_quality['edge'] = count_info.get('edge', [])
+            edge_info_detail = count_info.get('edge', [])
             edge_count = 0
-            for edge_info in graph_quality['edge']:
+            edge_knowledge = 0
+            for edge_info in edge_info_detail:
                 edge_count += edge_info['count']
+                edge_knowledge += edge_info['count'] * edge_info['prop_number']
             graph_quality['edge_count'] = edge_count
 
             # sum  entity
-            graph_quality['entity'] = count_info.get('entity', [])
+            entity_info_detail = count_info.get('entity', [])
             entity_count = 0
-            for entity_info in graph_quality['entity']:
+            entity_knowledge = 0
+            for entity_info in entity_info_detail:
                 entity_count += entity_info['count']
+                entity_knowledge += entity_info['count'] * entity_info['prop_number']
             graph_quality['entity_count'] = entity_count
 
             # add last task info
@@ -220,6 +224,9 @@ class IntelligenceQueryService(object):
             records = intelligence_dao.query([graph_info['graph_id']])
             record = records[0] if records else None
             self.add_graph_intelligence_info(graph_quality, record)
+
+            total_knowledge = entity_knowledge + edge_knowledge
+            graph_quality['total_knowledge'] = total_knowledge
 
             return codes.successCode, graph_quality
         except Exception as e:
@@ -287,7 +294,7 @@ class IntelligenceQueryService(object):
                 graph_intelligence_list.append(graph_quality)
 
                 # 没有数据就不用加入计算了
-                if graph_quality['total_knowledge'] <= 0:
+                if float(graph_quality['total_knowledge']) <= 0:
                     continue
                 # 更新最大时间
                 recent_calculate_time = self.max_time(graph_quality['last_task_time'], recent_calculate_time)
@@ -415,20 +422,18 @@ class IntelligenceQueryService(object):
         res['graph_config_id'] = graph_info['graph_config_id']
         res['graph_name'] = graph_info['graph_name']
         res['calculate_status'] = 'NOT_CALCULATE'
-        res['edge_knowledge'] = 0
-        res['entity_knowledge'] = 0
-        res['edge'] = []
-        res['edge_count'] = -1
-        res['entity'] = []
-        res['entity_count'] = -1
-        res['data_quality_B'] = -1
-        res['total_knowledge'] = 0
-        res['last_task_message'] = ''
-        res['last_task_time'] = ''
-        res['data_repeat_C1'] = -1
-        res['data_empty_C2'] = -1
-        res['data_quality_B'] = -1
-        res['data_quality_score'] = -1
+        res['edge_knowledge'] = '-1.00'
+        res['entity_knowledge'] = '-1.00'
+        res['edge_count'] = '-1.00'
+        res['entity_count'] = '-1.00'
+        res['data_quality_B'] = '-1.00'
+        res['total_knowledge'] = '-1.00'
+        res['last_task_message'] = '-1.00'
+        res['last_task_time'] = '-1.00'
+        res['data_repeat_C1'] = '-1.00'
+        res['data_empty_C2'] = '-1.00'
+        res['data_quality_B'] = '-1.00'
+        res['data_quality_score'] = '-1.00'
         return res
 
     def default_intelligence_list(self, graph_info_list):
@@ -475,18 +480,14 @@ class IntelligenceQueryService(object):
         根据图谱信息，给出合适的智商信息
         """
         if not record or not record['id']:
-            graph_quality['edge_knowledge'] = -1
-            graph_quality['entity_knowledge'] = -1
-            graph_quality['data_quality_B'] = -1
-            graph_quality['total_knowledge'] = -1
-            graph_quality['data_repeat_C1'] = -1
-            graph_quality['data_empty_C2'] = -1
-            graph_quality['data_quality_B'] = -1
-            graph_quality['data_quality_score'] = -1
+            graph_quality['data_quality_B'] = '-1.00'
+            graph_quality['total_knowledge'] = '-1.00'
+            graph_quality['data_repeat_C1'] = '-1.00'
+            graph_quality['data_empty_C2'] = '-1.00'
+            graph_quality['data_quality_B'] = '-1.00'
+            graph_quality['data_quality_score'] = '-1.00'
             return
         total_knowledge = record.get('total_knowledge', 0)
-        graph_quality['entity_knowledge'] = record.get('entity_knowledge', 0)
-        graph_quality['edge_knowledge'] = record.get('edge_knowledge', 0)
         graph_quality['data_repeat_C1'] = "{:.2f}".format(record.get('repeat_number', 0) / total_knowledge)
         graph_quality['data_empty_C2'] = "{:.2f}".format(record.get('empty_number', 0) / total_knowledge)
         graph_quality['data_quality_B'] = "{:.2f}".format(math.log(record.get('total_knowledge', 0), 10) * 10)
