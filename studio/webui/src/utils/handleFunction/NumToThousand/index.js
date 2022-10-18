@@ -4,8 +4,8 @@
  * @returns 1234 --> 1,234 | 1234.5555 --> 1,234.555
  */
 const numToThousand = num => {
-  if (typeof num === 'string' && !/^\d+$/.test(numStr)) {
-    return;
+  if (typeof num === 'string' && !/^\d+$/.test(numStr) && !/^\d+\.\d+$/.test(numStr)) {
+    return num;
   }
 
   const numStr = `${num}`;
