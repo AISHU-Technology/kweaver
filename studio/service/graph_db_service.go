@@ -316,7 +316,7 @@ func (*GraphDBService) UpdateGraphDB(vo *vo.GraphDBUpdateVo) {
 			panic(kw_errors.DuplicateGraphDBRecordNameError)
 		}
 		var fulltextId int
-		kw_errors.Try(global.DB.Model(po.GraphDBModel).Select("fulltext_id").Where("name = ? and id != ?", vo.Name, vo.ID).Find(&fulltextId).Error).Throw(kw_errors.InternalServerError)
+		kw_errors.Try(global.DB.Model(po.GraphDBModel).Select("fulltext_id").Where("id = ?", vo.ID).Find(&fulltextId).Error).Throw(kw_errors.InternalServerError)
 		if fulltextId != vo.OsId && fulltextId != 0 {
 			panic(kw_errors.InternalServerError)
 		}
