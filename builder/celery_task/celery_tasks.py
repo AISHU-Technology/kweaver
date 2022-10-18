@@ -1935,10 +1935,7 @@ def buildertask(self, graphid, flag):
             pass  # 统计任务失败的异常忽略掉
         finally:
             print(f"start post intelligence task graph:{graphid}")
-            code, resp = intelligence_calculate_service.send_task(graphid)
-            if code != codes.successHttpCode:
-                print(f'post intelligence task graph:{graphid}, failed:{repr(resp)}')
-
+            intelligence_calculate_service.send_task(graphid)
 
 @cel.task
 def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
@@ -3140,3 +3137,27 @@ class ASTransfer(Transfer):
             print("error : {}".format(self.file_name))
 
         return ret_code, 'standard_extract success'
+
+
+def send_intelligence_task(graph_id):
+    url = "http://localhost:6488/task/intelligence"
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    param_json = dict()
+    param_json['task_type'] = 'intelligence'
+    param_json['relation_id'] = graph_id
+    param_json['task_name'] = 'intelligence-{}'.format(graph_id)
+    param_json['async_task_name'] = "cel.intelligence_calculate"
+    # 设置是否取消正在运行的同图谱任务
+    param_json['cancel_pre'] = True
+    param_json['task_params'] = json.dumps({"graph_id": graph_id})
+
+    try:
+        response = requests.request("POST", url, headers=headers, data=json.dumps(param_json))
+        if response.status_code != 200:
+            print(f"post task {graph_id} failed:{str(response.text)}")
+            return
+        print(f"post task {graph_id} success:{repr(response.json())}")
+    except Exception as e:
+        print(f"post task {graph_id} failed:{repr(e)}")
