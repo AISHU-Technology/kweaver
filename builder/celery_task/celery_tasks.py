@@ -1815,6 +1815,10 @@ def buildertask(self, graphid, flag):
                                       meta={'cause': graphdb.state['meta']['cause'],
                                             'message': graphdb.state['meta']['message']})
                     return {'current': 100, 'total': 100}
+
+                # cancel intelligence task
+                cancel_intelligence_task(graphid)
+
                 # 获取图谱使用的数据源配置信息
                 code, args = get_rabbitinfo(graphid)
                 if code == 0:
@@ -3160,3 +3164,21 @@ def send_intelligence_task(graph_id):
         print(f"post task {graph_id} success:{repr(response.json())}")
     except Exception as e:
         print(f"post task {graph_id} failed:{repr(e)}")
+
+
+def cancel_intelligence_task(graph_id):
+    url = "http://localhost:6488/task/intelligence/cancel_by_relation_id"
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    graph_id = int(graph_id)
+    param_json = dict()
+    param_json['relation_id_list'] = [graph_id]
+
+    try:
+        response = requests.request("POST", url, headers=headers, data=json.dumps(param_json))
+        if response.status_code != 200:
+            raise Exception(str(response.text))
+        return response.status_code, response.json()
+    except Exception as e:
+        print(f"cancel task {graph_id} failed:{repr(e)}")

@@ -17,6 +17,7 @@ from dao.knw_dao import knw_dao
 from service.async_task_service import async_task_service
 from service.graph_Service import graph_Service
 from common.errorcode.gview import Gview
+from utils.util import async_call
 
 
 class IntelligenceCalculateService(object):
@@ -85,13 +86,38 @@ class IntelligenceCalculateService(object):
         entity_info['prop_number'] = len(properties)
         return entity_info
 
+    @async_call
     def update_intelligence_info(self, graph_id_list):
         try:
+            self.cancel_task_list(graph_id_list)
             # delete intelligence info
             intelligence_dao.delete_intelligence_info(graph_id_list)
         except Exception as e:
             err_msg = repr(e)
             log.error(f"delete_graph:{graph_id_list} records failed: {err_msg}")
+
+    @async_call
+    def cancel_task_list(self, graph_id_list):
+        """
+        send async task to celery
+        """
+        url = "http://localhost:6488/task/intelligence/cancel_by_relation_id"
+        headers = {
+            'Content-Type': 'application/json',
+        }
+        param_json = dict()
+        param_json['relation_id_list'] = graph_id_list
+
+        try:
+            response = requests.request("POST", url, headers=headers, data=json.dumps(param_json))
+            if response.status_code != 200:
+                raise Exception(str(response.text))
+            return response.status_code, response.json()
+        except Exception as e:
+            err_msg = repr(e)
+            log.error(err_msg)
+            code = codes.Builder_IntelligenceCalculateService_CancelTaskList_AsyncTaskInternalError
+            return code, Gview.error_return(code, detail=err_msg)
 
     def send_task(self, graph_id):
         """

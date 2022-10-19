@@ -52,6 +52,12 @@ errDict = {
         "ErrorDetails": _l("[detail]"),
         "Solution": _l("Please contact the developers.")
     },
+    'Builder.IntelligenceCalculateService.CancelTaskList.AsyncTaskInternalError': {
+        "ErrorCode": "Builder.IntelligenceCalculateService.CancelTaskList.AsyncTaskInternalError",
+        "Description": _l("cancel async task service internal error"),
+        "ErrorDetails": _l("[detail]"),
+        "Solution": _l("Please contact the developers.")
+    },
     'Builder.IntelligenceQueryService.QueryGraphIntelligence.QueryError': {
         "ErrorCode": "Builder.IntelligenceQueryService.QueryGraphIntelligence.QueryError",
         "Description": _l("graph intelligence info query error"),
