@@ -120,7 +120,7 @@ class AsyncTaskService(object):
 
     @retry(wait=wait_fixed(2), stop=stop_after_attempt(3))
     @timeout_decorator.timeout(5)
-    def delete_pre_running_task(self, task_type, relation_id, delete_record=False):
+    def delete_pre_running_task(self, task_type, current_task_id, relation_id, delete_record=False):
         """
             停止正在运行的相同任务
         """
@@ -131,6 +131,9 @@ class AsyncTaskService(object):
 
         task_list = self.query(parameter)
         for task_info in task_list:
+            if task_info['id'] == current_task_id:
+                continue
+
             celery_task_id = task_info.get('celery_task_id')
             if not celery_task_id:
                 continue
@@ -152,5 +155,6 @@ class AsyncTaskService(object):
                 code, res = self.update(task_id, update_param)
                 if code != codes.successCode:
                     log.error(f"update task {task_id} error {repr(res)}")
+
 
 async_task_service = AsyncTaskService()

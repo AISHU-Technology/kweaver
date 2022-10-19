@@ -240,7 +240,7 @@ def intelligence_calculate(self, params_json, task_id):
         update_json = dict()
         # 停止之前运行中的任务
         if params_json.get('cancel_pre'):
-            async_task_service.delete_pre_running_task(params_json['task_type'], params_json['relation_id'])
+            async_task_service.delete_pre_running_task(params_json['task_type'], task_id, params_json['relation_id'])
         # 获取执行参数
         task_params = json.loads(params_json.get('task_params', '{}'))
         intelligence_calculate_service.graph_calculate_task(task_params)

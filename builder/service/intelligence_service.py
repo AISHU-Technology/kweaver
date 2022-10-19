@@ -609,7 +609,7 @@ class IntelligenceQueryService(object):
         try:
             # 停止之前运行中的任务
             if params_json.get('cancel_pre'):
-                async_task_service.delete_pre_running_task(params_json['task_type'], params_json['graph_id'])
+                async_task_service.delete_pre_running_task(params_json['task_type'], task_id, params_json['graph_id'])
             update_json = dict()
             intelligence_calculate_service.graph_calculate_task(params_json)
             update_json['task_status'] = 'finished'
