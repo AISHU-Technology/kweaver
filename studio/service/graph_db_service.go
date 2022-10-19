@@ -269,7 +269,7 @@ func (*GraphDBService) AddGraphDB(vo *vo.GraphDBVo) (id int) {
 			defer global.LockOperator.Unlock("delete_os_lock")
 			//查询opensearch配置是否存在
 			if kw_errors.Try(global.DB.Model(po.FulltextEngineModel).Where("id = ?", vo.OsId).Count(&count).Error).Throw(kw_errors.InternalServerError); count <= 0 {
-				if vo.Type != constant.OrientDB {
+				if vo.Type != constant.OrientDB && vo.OsId != 0 {
 					panic(kw_errors.OsRecordNotFoundError)
 				}
 			}
