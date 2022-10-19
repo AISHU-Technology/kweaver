@@ -162,10 +162,10 @@ const IQTable: React.FC<QTableProps> = ({ kid, data, tableState, onChange }) => 
           <ExplainTip.KNW_SOURCE />
         </>
       ),
-      dataIndex: 'data_quality_score',
+      dataIndex: 'data_quality_B',
       width: 170,
       sorter: true,
-      sortOrder: tableState.rule === 'data_quality_score' && (order2order(tableState.order) as any),
+      sortOrder: tableState.rule === 'data_quality_B' && (order2order(tableState.order) as any),
       sortDirections: [ASC, DESC, ASC],
       render: (source, record) => renderSource(source, record.calculate_status)
     },
@@ -176,10 +176,10 @@ const IQTable: React.FC<QTableProps> = ({ kid, data, tableState, onChange }) => 
           <ExplainTip.QUALITY_SOURCE />
         </>
       ),
-      dataIndex: 'data_quality_B',
+      dataIndex: 'data_quality_score',
       width: 170,
       sorter: true,
-      sortOrder: tableState.rule === 'data_quality_B' && (order2order(tableState.order) as any),
+      sortOrder: tableState.rule === 'data_quality_score' && (order2order(tableState.order) as any),
       sortDirections: [ASC, DESC, ASC],
       render: (source, record) => renderSource(source, record.calculate_status)
     },

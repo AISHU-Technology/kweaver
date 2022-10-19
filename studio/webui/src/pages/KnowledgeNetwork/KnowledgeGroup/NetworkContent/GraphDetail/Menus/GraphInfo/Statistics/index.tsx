@@ -192,7 +192,7 @@ const Statistics = (props: StatisticsProps) => {
               <ExplainTip.KNW_SOURCE />
             </>
           }
-          score={detail.data_quality_score}
+          score={detail.data_quality_B}
           icon={<IconFont type="icon-zhishiliang" style={{ color: 'rgb(18,110,227)', fontSize: 16 }} />}
         >
           {SOURCE_KEYS.map(key => {
@@ -210,7 +210,7 @@ const Statistics = (props: StatisticsProps) => {
               <ExplainTip.QUALITY_SOURCE />
             </>
           }
-          score={detail.data_quality_B}
+          score={detail.data_quality_score}
           icon={<IconFont type="icon-shujuzhiliang" style={{ color: 'rgb(0,147,144)', fontSize: 16 }} />}
         >
           {QUALITY_KEYS.map(key => {
