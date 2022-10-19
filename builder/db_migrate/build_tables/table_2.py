@@ -8,7 +8,7 @@ from sqlalchemy.pool import NullPool
 from sqlalchemy import Column, String, create_engine, Integer, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mysql import LONGTEXT
-
+from sqlalchemy.sql.schema import UniqueConstraint
 from config.config import db_config_path
 from utils.log_info import Logger
 import sqlalchemy as sa
@@ -432,7 +432,7 @@ class Lexicon(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(Integer, autoincrement=True, primary_key=True)
-    lexicon_name = Column(String(50), nullable=True, unique=True)
+    lexicon_name = Column(String(50), nullable=True)
     description = Column(String(150), nullable=True)
     labels = Column(LONGTEXT, nullable=True)
     columns = Column(LONGTEXT, nullable=True)
@@ -441,7 +441,7 @@ class Lexicon(Base):
     update_time = Column(String(50), nullable=True)
     status = Column(String(50), nullable=True)
     error_info = Column(LONGTEXT, nullable=True)
-
+    UniqueConstraint(lexicon_name, knowledge_id, name="lexicon_name_kwn_id")
 
 # 初始化数据库表
 def init_datatable():

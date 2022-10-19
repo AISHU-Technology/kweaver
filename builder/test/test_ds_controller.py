@@ -27,7 +27,7 @@ class TestAuth(TestCase):
              "2022-08-25 08:48:17"]]
         self.data_column = ["ds_auth", "redirect_uri", "client_id", "client_secret", "refresh_token", "access_token",
                             "ds_address", "ds_port", "ds_code", "update_time"]
-
+        commonutil.getHostUrl = mock.Mock(return_value="localhost")
     def test_auth_success(self):
         """ success """
         requests.post = mock.Mock(return_value=MockResponse(201, {"client_id": "f8920c94-7c8c-46da-87db-8757aab4b488",
