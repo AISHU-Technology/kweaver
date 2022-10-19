@@ -59,7 +59,12 @@ class ExportModal extends Component {
 
     if (type === 'model') {
       return (
-        <ModelImport saveData={this.props.saveData} setSaveData={this.props.setSaveData} dbType={this.props.dbType} />
+        <ModelImport
+          saveData={this.props.saveData}
+          setSaveData={this.props.setSaveData}
+          dbType={this.props.dbType}
+          osId={this.props.osId}
+        />
       );
     }
   };

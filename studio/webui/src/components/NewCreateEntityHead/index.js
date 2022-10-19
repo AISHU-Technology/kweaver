@@ -805,6 +805,7 @@ class NewCreateEntityHead extends Component {
             setTouch={this.props.setTouch}
             graphId={this.props.graphId}
             dbType={this.props.dbType}
+            osId={this.props.osId}
           />
         </Modal>
       </div>

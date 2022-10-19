@@ -131,10 +131,10 @@ class ModelImport extends Component {
    */
   getOpensearchList = async () => {
     try {
-      const data = { page: 1, size: 20, orderField: 'updated', order: 'DESC', name: '' };
-      const { res = {} } = await serviceStorageManagement.openSearchGet(data);
+      const id = this.props.osId;
+      const res = await serviceStorageManagement.graphDBGetById(id);
 
-      if (res?.total >= 1) {
+      if (res?.result?.osId > 0) {
         return true;
       }
       message.error({
