@@ -135,7 +135,7 @@ class ModelImport extends Component {
       const id = this.props.osId;
       const res = await serviceStorageManagement.graphDBGetById(id);
 
-      if (res?.result?.osId > 0) {
+      if (res?.res?.osId > 0) {
         return true;
       }
       message.error({
