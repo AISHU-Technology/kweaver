@@ -210,7 +210,7 @@ func (*GraphDBService) GetGraphDBInfoById(id int) *vo.GraphDBVo {
 	}
 	bytes, err := base64.StdEncoding.DecodeString(graphDb.Password)
 	kw_errors.Try(err).Throw(kw_errors.InternalServerError)
-	return &vo.GraphDBVo{ID: graphDb.ID, Name: graphDb.Name, Type: graphDb.Type, Ip: strings.Split(graphDb.Ip, IpPortSplitChar), Port: strings.Split(graphDb.Port, IpPortSplitChar), User: graphDb.User, Password: string(bytes)}
+	return &vo.GraphDBVo{ID: graphDb.ID, Name: graphDb.Name, Type: graphDb.Type, Ip: strings.Split(graphDb.Ip, IpPortSplitChar), Port: strings.Split(graphDb.Port, IpPortSplitChar), User: graphDb.User, Password: string(bytes), OsId: graphDb.FulltextId}
 }
 
 func (*GraphDBService) GetGraphDBNameById(id int) (name string) {
