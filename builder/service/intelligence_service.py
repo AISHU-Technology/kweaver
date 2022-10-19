@@ -299,8 +299,6 @@ class IntelligenceQueryService(object):
             task_info_dict = {int(task_info['relation_id']): task_info for task_info in task_info_list}
 
             # 统计智商数据
-            recent_calculate_time = ''
-            has_value = False
             graph_intelligence_list = list()
             for graph_score in graph_score_list:
                 # add graph basic info
@@ -313,8 +311,6 @@ class IntelligenceQueryService(object):
 
                 # add task status
                 self.add_task_info(graph_quality, task_info_dict.get(graph_info['graph_id']))
-                # 更新最大时间
-                recent_calculate_time = self.max_time(graph_quality['last_task_time'], recent_calculate_time)
 
                 # add record info
                 self.add_graph_intelligence_info(graph_quality, graph_score)
@@ -326,7 +322,6 @@ class IntelligenceQueryService(object):
             knw_intelligence['color'] = knw_info["color"]
             knw_intelligence['creation_time'] = knw_info["creation_time"]
             knw_intelligence['update_time'] = knw_info["update_time"]
-            knw_intelligence['recent_calculate_time'] = recent_calculate_time
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list
             knw_intelligence['total_graph'] = count
             if not knw_info['intelligence_score']:
@@ -461,22 +456,6 @@ class IntelligenceQueryService(object):
         data['graph_intelligence_list'] = []
         data['total_graph'] = total
         return data
-
-    def max_time(self, max_record, compare_record):
-        if not compare_record:
-            return max_record
-        if not max_record and compare_record:
-            return compare_record
-        try:
-            record_time = time.strptime(max_record, "%Y-%m-%d %H:%M:%S")
-            compare_time = time.strptime(compare_record, "%Y-%m-%d %H:%M:%S")
-        except Exception as e:
-            log.error(repr(e))
-            return max_record
-
-        if record_time > compare_time:
-            return max_record
-        return compare_record
 
     def query_graph_score_in_pages(self, query_params):
         """
