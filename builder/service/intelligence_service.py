@@ -25,8 +25,11 @@ class IntelligenceCalculateService(object):
         """
         图谱的数据质量, 计算每个实体类的数据量
         """
-        if not graph_id or graph_id < 0:
+        if not graph_id:
             raise Exception("parameter graph_id invalid or missing")
+        graph_id = int(graph_id)
+        if graph_id <= 0:
+            raise Exception("parameter graph_id invalid")
 
         graph_info = graph_dao.get_graph_detail(graph_id)
 
@@ -76,14 +79,15 @@ class IntelligenceCalculateService(object):
                 raise Exception(repr(res))
             not_empty_total += res
 
-        entity_info['total'] = entity_info['total']
-        entity_info['empty'] = entity_info['total'] * len(properties) - not_empty_total
+        entity_info['total'] = total
+        entity_info['empty'] = total * len(properties) - not_empty_total
         entity_info['repeat'] = 0
         entity_info['prop_number'] = len(properties)
         return entity_info
 
     def update_intelligence_info(self, graph_id_list):
         try:
+            # delete intelligence info
             intelligence_dao.delete_intelligence_info(graph_id_list)
         except Exception as e:
             err_msg = repr(e)
@@ -290,7 +294,6 @@ class IntelligenceQueryService(object):
                 self.add_graph_intelligence_info(graph_quality, graph_score)
                 graph_intelligence_list.append(graph_quality)
 
-
             knw_intelligence['id'] = int(knw_id)
             knw_intelligence['knw_name'] = knw_info["knw_name"]
             knw_intelligence['knw_description'] = knw_info["knw_description"]
@@ -300,7 +303,10 @@ class IntelligenceQueryService(object):
             knw_intelligence['recent_calculate_time'] = recent_calculate_time
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list
             knw_intelligence['total_graph'] = count
-            knw_intelligence['intelligence_score'] = "{:.2f}".format(knw_info['intelligence_score'])
+            if not knw_info['intelligence_score']:
+                knw_intelligence['intelligence_score'] = "-1.00"
+            else:
+                knw_intelligence['intelligence_score'] = "{:.2f}".format(knw_info['intelligence_score'])
 
             return codes.successCode, Gview.json_return(knw_intelligence)
         except Exception as e:
@@ -410,8 +416,8 @@ class IntelligenceQueryService(object):
         res['entity_count'] = '-1.00'
         res['data_quality_B'] = '-1.00'
         res['total_knowledge'] = '-1.00'
-        res['last_task_message'] = '-1.00'
-        res['last_task_time'] = '-1.00'
+        res['last_task_message'] = ''
+        res['last_task_time'] = ''
         res['data_repeat_C1'] = '-1.00'
         res['data_empty_C2'] = '-1.00'
         res['data_quality_B'] = '-1.00'
@@ -603,7 +609,7 @@ class IntelligenceQueryService(object):
         try:
             # 停止之前运行中的任务
             if params_json.get('cancel_pre'):
-                async_task_service.delete_pre_running_task(params_json['task_type'], params_json['graph_id'])
+                async_task_service.delete_pre_running_task(params_json['task_type'], task_id, params_json['graph_id'])
             update_json = dict()
             intelligence_calculate_service.graph_calculate_task(params_json)
             update_json['task_status'] = 'finished'

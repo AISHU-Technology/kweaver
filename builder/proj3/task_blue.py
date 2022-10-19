@@ -39,12 +39,31 @@ def create_task(task_type):
     return Gview.json_return(celery_task_id), 200
 
 
-@task_app.route('/task/<task_type>/cancel/<task_id>', methods=['POST'])
-def cancel_task(task_type, task_id):
+@task_app.route('/task/<task_type>/cancel_by_id', methods=['POST'])
+def cancel_task(task_type):
     """
     停止任务，保留记录
     """
-    async_task_service.cancel(task_type, task_id)
+    param_code, params_json, param_message = commonutil.getMethodParam()
+    if param_code != 0 or 'task_id' not in params_json:
+        return Gview.error_return(codes.Builder_GraphController_GetGraphInfoBasic_ParamError, args=param_message)
+
+    task_id = params_json['task_id']
+    async_task_service.cancel_by_id(task_type, task_id)
+    return Gview.json_return("OK")
+
+
+@task_app.route('/task/<task_type>/cancel_by_relation_id', methods=['POST'])
+def cancel_batch_task(task_type):
+    """
+    停止任务，保留记录
+    """
+    param_code, params_json, param_message = commonutil.getMethodParam()
+    if param_code != 0 or 'relation_id' not in params_json:
+        return Gview.error_return(codes.Builder_GraphController_GetGraphInfoBasic_ParamError, args=param_message)
+
+    relation_id = params_json['relation_id']
+    async_task_service.cancel_by_relation_id(task_type, relation_id)
     return Gview.json_return("OK")
 
 
@@ -53,6 +72,6 @@ def delete_task(task_type, task_id):
     """
     停止任务，删除记录
     """
-    async_task_service.cancel(task_type, task_id, delete_record=True)
+    async_task_service.cancel_by_id(task_type, task_id, delete_record=True)
     return Gview.json_return("OK")
 

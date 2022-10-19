@@ -18,6 +18,7 @@ class AsyncTaskService(object):
         # 调用celery执行任务
         async_task_name = param_json.get('async_task_name')
         func = current_app.signature(async_task_name)
+        log.info(f"celery config:{repr(current_app.conf)}")
         task = func.apply_async(args=[param_json, task_id])
         # 获取结果
         task_state = task.status
@@ -46,22 +47,39 @@ class AsyncTaskService(object):
         ret_code, obj = self.update(task_id, update_params)
         return ret_code, celery_task_id
 
-    def cancel(self, task_type, task_id, delete_record=False):
-        """
-        取消任务
-        """
+    def cancel_by_relation_id(self, task_type, relation_id, delete_record=False):
+        parameter = dict()
+        parameter['relation_id'] = relation_id
+        parameter['task_type'] = task_type
+        parameter['task_status'] = ['waiting', 'running']
+
+        task_list = self.query(parameter)
+        self.cancel(task_list, delete_record)
+
+    def cancel_by_id(self, task_type, task_id, delete_record=False):
         parameter = dict()
         parameter['id'] = task_id
         parameter['task_type'] = task_type
+        parameter['task_status'] = ['waiting', 'running']
 
         task_list = self.query(parameter)
+        self.cancel(task_list, delete_record)
+
+    def cancel(self, task_list, delete_record=False):
+        """
+        取消任务
+        """
+        if not task_list:
+            log.info("empty task list")
+            return
         for task_info in task_list:
             celery_task_id = task_info.get('celery_task_id')
             if not celery_task_id:
                 continue
             task_result = AsyncResult(celery_task_id)
             # 如果没有status 状态值，那么表示该任务没找到，或者没有执行
-            if 'status' not in task_result:
+            task_status = task_result.status
+            if task_status == 'PENDING':
                 continue
             # 终止该任务
             current_app.control.terminate(celery_task_id)
@@ -102,7 +120,7 @@ class AsyncTaskService(object):
 
     @retry(wait=wait_fixed(2), stop=stop_after_attempt(3))
     @timeout_decorator.timeout(5)
-    def delete_pre_running_task(self, task_type, relation_id, delete_record=False):
+    def delete_pre_running_task(self, task_type, current_task_id, relation_id, delete_record=False):
         """
             停止正在运行的相同任务
         """
@@ -113,6 +131,9 @@ class AsyncTaskService(object):
 
         task_list = self.query(parameter)
         for task_info in task_list:
+            if task_info['id'] == current_task_id:
+                continue
+
             celery_task_id = task_info.get('celery_task_id')
             if not celery_task_id:
                 continue
@@ -134,5 +155,6 @@ class AsyncTaskService(object):
                 code, res = self.update(task_id, update_param)
                 if code != codes.successCode:
                     log.error(f"update task {task_id} error {repr(res)}")
+
 
 async_task_service = AsyncTaskService()
