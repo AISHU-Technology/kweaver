@@ -40,28 +40,21 @@ class IntelligenceCalculateService(object):
         space_id = graph_info["KDB_name"]
         graph_db = GraphDB(graph_info['graph_db_id'])
 
+        graph_quality = self.gen_default_quality_record(graph_info)
         entity_onto_list = intelligence_query_service.query_real_entity_list(graph_db, graph_id, space_id)
-        if not entity_onto_list:
-            raise Exception(f"graph {graph_info.get('KDB_name')} ontology is empty")
+        if entity_onto_list:
+            for entity_info in entity_onto_list:
+                quality_dict = self.entity_quality(graph_db, entity_info)
+                self.add_graph_stats(graph_quality, quality_dict)
 
-        graph_quality = dict()
-        graph_quality['graph_id'] = graph_id
-        graph_quality['knw_id'] = graph_info['knw_id']
-        graph_quality['update_time'] = datetime.datetime.now()
-
-        for entity_info in entity_onto_list:
-            quality_dict = self.entity_quality(graph_db, entity_info)
-            self.add_graph_stats(graph_quality, quality_dict)
-
-        # 计算总的智商分数
-        graph_quality['data_quality_score'] = intelligence_dao.data_quality_score(graph_quality['total_knowledge'],
-                                                                                  graph_quality['empty_number'],
-                                                                                  graph_quality['repeat_number'])
+            # 计算总的智商分数
+            graph_quality['data_quality_score'] = intelligence_dao.data_quality_score(graph_quality['total_knowledge'],
+                                                                                      graph_quality['empty_number'],
+                                                                                      graph_quality['repeat_number'])
         """
         写入到数据库
         """
-        if entity_onto_list:
-            intelligence_dao.insert_records([graph_quality])
+        intelligence_dao.insert_records([graph_quality])
 
     def entity_quality(self, graph_db: GraphDB, entity_info: dict):
         """
@@ -85,6 +78,20 @@ class IntelligenceCalculateService(object):
         entity_info['repeat'] = 0
         entity_info['prop_number'] = len(properties)
         return entity_info
+
+    def gen_default_quality_record(self, graph_info):
+        graph_quality = dict()
+        graph_quality['graph_id'] = graph_info['graph_id']
+        graph_quality['knw_id'] = graph_info['knw_id']
+        graph_quality['update_time'] = datetime.datetime.now()
+        graph_quality.setdefault('entity_knowledge', 0)
+        graph_quality.setdefault('edge_knowledge', 0)
+        graph_quality.setdefault('data_number', 0)
+        graph_quality.setdefault('total_knowledge', 0)
+        graph_quality.setdefault('empty_number', 0)
+        graph_quality.setdefault('repeat_number', 0)
+        graph_quality.setdefault('data_quality_score', 0)
+        return graph_quality
 
     @async_call
     def update_intelligence_info(self, graph_id_list):
@@ -182,13 +189,6 @@ class IntelligenceCalculateService(object):
         self.calculate_graph_intelligence(param_json['graph_id'])
 
     def add_graph_stats(self, graph_record, quality_dict):
-        graph_record.setdefault('entity_knowledge', 0)
-        graph_record.setdefault('edge_knowledge', 0)
-        graph_record.setdefault('data_number', 0)
-        graph_record.setdefault('total_knowledge', 0)
-        graph_record.setdefault('empty_number', 0)
-        graph_record.setdefault('repeat_number', 0)
-        graph_record.setdefault('data_quality_score', 0)
         # total statistics
         knowledge = quality_dict['total'] * quality_dict['prop_number']
 
@@ -612,10 +612,10 @@ class IntelligenceQueryService(object):
             log.error("missing important argument [task_id] please check your argument list")
             return
         try:
+            update_json = dict()
             # 停止之前运行中的任务
             if params_json.get('cancel_pre'):
                 async_task_service.delete_pre_running_task(params_json['task_type'], task_id, params_json['graph_id'])
-            update_json = dict()
             intelligence_calculate_service.graph_calculate_task(params_json)
             update_json['task_status'] = 'finished'
             return {'current': 100, 'total': 100}

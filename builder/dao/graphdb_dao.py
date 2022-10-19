@@ -1782,7 +1782,7 @@ class GraphDB(object):
         """
         if self.type == 'orientdb':
             code, res = self._orientdb_prop_empty(db, entity_name, otl_type, prop)
-            if res != 200:
+            if code != 200:
                 return code, res
             count = res.get('result', list())[0].get('not_empty')
             return code, count
