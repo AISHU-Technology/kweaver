@@ -20,7 +20,7 @@
     "knwSourceTip3": "Nx10(N=知识量)",
     "totalKnwTip": "实体数量*实体属性数量+关系数量*关系属性数量",
     "qualitySourceTip1": "评估知识图谱数据重复率和缺失值的综合指标",
-    "qualitySourceTip2": "数据质量得分=(1-重复率)+(1-缺失值比例)/2",
+    "qualitySourceTip2": "数据质量得分=(1-重复率+1-缺失值比例)/2",
     "repeatTip1": "表示知识量的重复情况",
     "repeatTip2": "重复率=(去重前知识量-去重后知识量)/去重前知识量",
     "missingTip1": "表示知识量的缺失情况",
