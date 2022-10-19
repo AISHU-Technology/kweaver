@@ -142,9 +142,9 @@
     "searchTip": "请输入名称",
     "bindIndex": "绑定OpenSearch",
     "delUseing": "该索引配置已被绑定，暂不能删除",
-    "delIndexPlace": "请输入该opensearch名称",
+    "delIndexPlace": "请输入该OpenSearch名称",
     "duplicateOsConfigError": "有相同用户名密码，ip和port的索引配置",
-    "notexist": "Opensearch 记录不存在",
+    "notexist": "OpenSearch 记录不存在",
     "graphDatabase": "图数据库",
     "indexConfig": "OpenSearch",
     "addIndex": "按钮添加索引配置"

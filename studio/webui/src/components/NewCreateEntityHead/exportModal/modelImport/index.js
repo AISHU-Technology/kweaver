@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import { Select, ConfigProvider, Empty, message } from 'antd';
 
@@ -145,7 +146,7 @@ class ModelImport extends Component {
             <span
               style={{ cursor: 'pointer' }}
               className="ad-c-primary"
-              onClick={() => history.push('/home/system-config')}
+              onClick={() => this.props.history.push('/home/system-config')}
             >
               {intl.get('global.goNow')}
             </span>
@@ -265,4 +266,4 @@ ModelImport.defaultProps = {
   setSaveData: () => {}
 };
 
-export default connect(mapStateToProps, null)(ModelImport);
+export default connect(mapStateToProps, null)(withRouter(ModelImport));
