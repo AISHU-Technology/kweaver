@@ -452,6 +452,7 @@ class IntelligenceRecords(Base):
     }
     id = Column(Integer, autoincrement=True, primary_key=True)
     graph_id = Column(Integer, nullable=True)
+    knw_id = Column(Integer, nullable=True)
     entity_knowledge = Column(Integer, nullable=True)
     edge_knowledge = Column(Integer, nullable=True)
     data_number = Column(Integer, nullable=True)

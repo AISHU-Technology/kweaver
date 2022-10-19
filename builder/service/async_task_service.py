@@ -137,6 +137,7 @@ class AsyncTaskService(object):
         current_app.control.terminate(celery_task_id)
         if delete_record:
             async_task_dao.delete({"id": task_id})
+            return
         # 保存取消状态
         if task_result.status == 'REVOKED':
             update_param = dict()
