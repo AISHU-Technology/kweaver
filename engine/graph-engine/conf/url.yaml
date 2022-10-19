@@ -12,7 +12,6 @@ builderUrl:
   getAcctoken: http://%s/api/builder/v1/ds/acctoken/%s
 anyShareUrl:
   esAPI: https://%s:%s/anyshare/file/%s?pretty
-#  esAPI: http://%s:%s/company/file/%s?pretty
   getConfig: https://%s:%s/api/eacp/v1/auth1/getconfig
   deployManager: https://%s:%s/api/deployweb/deploy-manager/v1/containerized/information/anyshare
   getIndex: https://%s:%s/api/ecoindex/v1/index/%s/%s
