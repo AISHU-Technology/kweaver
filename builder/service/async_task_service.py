@@ -139,14 +139,13 @@ class AsyncTaskService(object):
             async_task_dao.delete({"id": task_id})
             return
         # 保存取消状态
-        if task_result.status == 'REVOKED':
-            update_param = dict()
-            update_param['task_status'] = 'canceled'
-            update_param['finished_time'] = datetime.datetime.now()
-            update_param['result'] = '已取消'
-            code, res = self.update(task_id, update_param)
-            if code != codes.successCode:
-                log.error(f"update task {task_id} error {repr(res)}")
+        update_param = dict()
+        update_param['task_status'] = 'canceled'
+        update_param['finished_time'] = datetime.datetime.now()
+        update_param['result'] = '已取消'
+        code, res = self.update(task_id, update_param)
+        if code != codes.successCode:
+            log.error(f"update task {task_id} error {repr(res)}")
 
 
 async_task_service = AsyncTaskService()

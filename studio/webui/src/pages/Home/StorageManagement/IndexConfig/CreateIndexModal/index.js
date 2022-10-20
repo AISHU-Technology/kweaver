@@ -107,26 +107,93 @@ const ModalContent = props => {
           {/* 索引名 */}
           <Form.Item
             name="name"
-            label={intl.get('configSys.storageName')}
-            rules={[
-              { required: true, message: intl.get('subscription.cannotNull') },
-              { max: 50, message: [intl.get('configSys.max50')] },
-              { pattern: nameTest, message: [intl.get('searchConfig.support')] }
-            ]}
-          >
-            <Input autoComplete="off" placeholder={[intl.get('configSys.searchTip')]} className="name-input"></Input>
-          </Form.Item>
-          <div className="form-row">
-            {/* 访问账户名称 */}
-            <Form.Item
-              name="user"
-              label={[intl.get('configSys.username')]}
-              rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
-            >
-              <Input
-                className="user-input"
-                autoComplete="off"
-                placeholder={intl.get('configSys.userPlaceholder')}
+    label = {intl.get('configSys.storageName')}
+    rules = {
+        [
+            {required: true, message: intl.get('subscription.cannotNull')},
+    {
+        max: 50, message
+    :
+        [intl.get('configSys.max50')]
+    }
+,
+    {
+        pattern: nameTest, message
+    :
+        [intl.get('searchConfig.support')]
+    }
+]
+}
+>
+<
+    Input
+    autoComplete = "off"
+    placeholder = {[intl.get('configSys.searchTip')]}
+    className = "name-input" > < /Input>
+        < /Form.Item>
+        < div
+    className = "form-row" >
+        {/* ip */}
+        < Form.Item
+    name = "ip"
+    label = {intl.get('datamanagement.address')}
+    rules = {
+        [
+            {required: true, message: intl.get('subscription.cannotNull')},
+    {
+        pattern: ipTest, message
+    :
+        intl.get('datamanagement.correctAddress')
+    }
+]
+}
+>
+<
+    Input
+    className = "ip-input"
+    autoComplete = "off"
+    placeholder = {intl.get('configSys.placeIpInput')}
+    disabled = {optionType === 'check'
+}
+><
+    /Input>
+    < /Form.Item>
+    {/* 端口 */
+    }
+<
+    Form.Item
+    name = "port"
+    label = {intl.get('configSys.port')}
+    rules = {
+        [
+            {required: true, message: intl.get('subscription.cannotNull')},
+    {
+        pattern: portTest, message
+    :
+        intl.get('datamanagement.correctPort')
+    }
+]
+}
+>
+<
+    Input
+    autoComplete = "off"
+    placeholder = {intl.get('configSys.inputPort')}
+    className = "port-input" > < /Input>
+        < /Form.Item>
+        < /div>
+        < div
+    className = "form-row" >
+        {/* 访问账户名称 */}
+        < Form.Item
+    name = "user"
+    label = {[intl.get('configSys.username')]}
+    rules = {[{required: true, message: intl.get('subscription.cannotNull')}]}
+        >
+        < Input
+    className = "user-input"
+    autoComplete = "off"
+    placeholder = {intl.get('configSys.userPlaceholder')}
               ></Input>
             </Form.Item>
             {/* 访问密码 */}
@@ -142,35 +209,6 @@ const ModalContent = props => {
                 disabled={optionType === 'check'}
                 className="pass-input"
               ></Input.Password>
-            </Form.Item>
-          </div>
-          <div className="form-row">
-            {/* ip */}
-            <Form.Item
-              name="ip"
-              label={intl.get('datamanagement.address')}
-              rules={[
-                { required: true, message: intl.get('subscription.cannotNull') },
-                { pattern: ipTest, message: intl.get('datamanagement.correctAddress') }
-              ]}
-            >
-              <Input
-                className="ip-input"
-                autoComplete="off"
-                placeholder={intl.get('configSys.placeIpInput')}
-                disabled={optionType === 'check'}
-              ></Input>
-            </Form.Item>
-            {/* 端口 */}
-            <Form.Item
-              name="port"
-              label={intl.get('configSys.port')}
-              rules={[
-                { required: true, message: intl.get('subscription.cannotNull') },
-                { pattern: portTest, message: intl.get('datamanagement.correctPort') }
-              ]}
-            >
-              <Input autoComplete="off" placeholder={intl.get('configSys.inputPort')} className="port-input"></Input>
             </Form.Item>
           </div>
         </Form>
