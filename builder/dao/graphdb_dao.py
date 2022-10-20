@@ -55,7 +55,7 @@ def type_transform(db_type, value, type, sql_format=True):
                 try:
                     value = str(bool(eval(value)))
                 except Exception:
-                    value = 'NULL'
+                    value = default_value(db_type, type)
     return str(value)
 
 
@@ -99,20 +99,35 @@ def data_type_transform(data_type: str):
     return mapping[data_type.lower()]
 
 
-def default_value(sql_format=True):
-    if sql_format:
-        return "NULL"
-    else:
+def default_value(db_type='nebula', type='other', sql_format=True):
+    '''
+    当数据为空时插入图数据库或者opensearch的默认值
+    Args:
+        db_type: 图数据库类型 nebula or orientdb
+        type: 数据类型
+        sql_format: False: opensearch使用
+    '''
+    if not sql_format:
         return ""
+    if db_type == 'orientdb' and type == 'string':
+        return '""'  # 如果为NULL，engine搜索会报错
+    return "NULL"
 
 def value_transfer(value, db_type, type):
     if not value:
-        return default_value()
+        return default_value(db_type, type)
     return type_transform(db_type, normalize_text(str(value)), type)
 
 
 def normalize_text(text):
-    text = re.sub(r"[\n\t\'\"]", " ", text)
+    text = re.sub(r"[\n\t]", " ", text)
+    text = text.replace("\\", "\\\\")
+    text = re.sub(r"[\"]", "\\\"", text)
+    text = re.sub(r"[\']", "\\\'", text).strip()
+    return text
+
+def normalize_text_es(text):
+    text = re.sub(r"[\n\t]", " ", text)
     text = text.replace("\\", "\\\\").strip()
     return text
 
@@ -1837,14 +1852,14 @@ class SQLProcessor:
             if not valueExist:
                 tab_val.append("%(otlpro)s=%(otlvalue)s" \
                                % {"otlpro": "`" + ot_tb + "`",
-                                  "otlvalue": default_value()})
-                vals.append(default_value())
+                                  "otlvalue": default_value(self.type, en_pro_dict[otl_name][ot_tb])})
+                vals.append(default_value(self.type, en_pro_dict[otl_name][ot_tb]))
         if tab_val:
             if "ds_id" in row.keys():
                 tab_val.append('`ds_id`=\'' + str(row["ds_id"]) + '\'')
                 vals.append('\'' + str(row["ds_id"]) + '\'')
             else:
-                vals.append(default_value())
+                vals.append(default_value(self.type, 'string'))
             ts = time.time()
             tab_val.append(" `timestamp` = " + str(ts))
             vals.append(str(ts))
@@ -1862,16 +1877,16 @@ class SQLProcessor:
                     vid = get_md5(idval)
                     sql = '"{}":({})'.format(vid, ','.join(vals))
             else:
-                if self.type == 'orientdb':
-                    sql = "UPDATE `{}` SET {} UPSERT WHERE {}" \
-                        .format(otl_name,
-                                ",".join(m for m in tab_val),
-                                " and ".join(m for m in tab_val))
-                elif self.type == 'nebula':
-                    # 报错
-                    print(
-                        'missing merge properties, can\'t get nebula vid. otl_name: {}. batch_iter: {}'.format(otl_name,
-                                                                                                               batch_iter))
+                # if self.type == 'orientdb':
+                #     sql = "UPDATE `{}` SET {} UPSERT WHERE {}" \
+                #         .format(otl_name,
+                #                 ",".join(m for m in tab_val),
+                #                 " and ".join(m for m in tab_val))
+                # elif self.type == 'nebula':
+                # 报错
+                print(
+                    'missing merge properties, can\'t get nebula vid. otl_name: {}. batch_iter: {}'.format(otl_name,
+                                                                                                           batch_iter))
                     # idval = ''
                     # for m in vals:
                     #     idval += f'{m}_'
@@ -1936,14 +1951,17 @@ class SQLProcessor:
                         if not (isinstance(row_val_t, float) and math.isnan(row_val_t)):
                             if ot_tb == 'name':
                                 name_exists = True
-                            otlvalue = type_transform(self.type, normalize_text(str(row_val_t)),
+                            otlvalue = type_transform(self.type, normalize_text_es(str(row_val_t)),
                                                       en_pro_dict[otl_name][ot_tb],
                                                       sql_format=False)
-                            vals.append(otlvalue)
+                            otlindexvalue = type_transform(self.type, normalize_text(str(row_val_t)),
+                                                           en_pro_dict[otl_name][ot_tb],
+                                                           sql_format=False)
+                            vals.append(otlindexvalue)
                             if otl_name in merge_otls:
                                 merge_pros = merge_otls[otl_name]
                                 if ot_tb in merge_pros:
-                                    tab_val_index.append(otlvalue)
+                                    tab_val_index.append(otlindexvalue)
                             if ot_tb in index_props:
                                 body_field[ot_tb] = otlvalue
                         # todo 非浮点数处理方式
@@ -1992,7 +2010,7 @@ class SQLProcessor:
         body_field = {}
         for pro in index_props:
             if pro in p_pro:
-                body_field[pro] = normalize_text(str(p_pro[pro]))
+                body_field[pro] = normalize_text_es(str(p_pro[pro]))
             else:
                 body_field[pro] = ''
         return json.dumps(body_index) + '\n' + json.dumps(body_field)
@@ -2207,7 +2225,7 @@ class SQLProcessor:
                                                edge_pro_dict[edge_class][pro])
                     vals.append(pro_value)
                 else:
-                    vals.append(default_value())
+                    vals.append(default_value(self.type, edge_pro_dict[edge_class][pro]))
             ngql = '"{}" -> "{}" : ({})' \
                 .format(s_sql, o_sql, ','.join(vals))
             return ngql
