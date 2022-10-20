@@ -331,10 +331,10 @@ class IntelligenceQueryService(object):
             knw_intelligence['update_time'] = knw_info["update_time"]
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list
             knw_intelligence['total_graph'] = count
-            if not knw_info['intelligence_score']:
-                knw_intelligence['intelligence_score'] = "-1.00"
-            else:
-                knw_intelligence['intelligence_score'] = "{:.2f}".format(knw_info['intelligence_score'])
+            score = knw_info.get('intelligence_score')
+            if not score:
+                score = 0
+            knw_intelligence['intelligence_score'] = "{:.2f}".format(score)
 
             return codes.successCode, Gview.json_return(knw_intelligence)
         except Exception as e:
