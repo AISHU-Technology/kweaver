@@ -3,6 +3,7 @@ import { DownOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import Format from '@/components/Format';
+import { formatIQNumber } from '@/utils/handleFunction';
 import './style.less';
 
 type Color = { r: number; g: number; b: number };
@@ -26,7 +27,7 @@ const ScoreCard = ({ className, title, icon, color, score, children }: ScoreCard
         <div className="h-info">
           <Format.Title className="ad-mb-2">{title}</Format.Title>
           <Format.Title style={{ display: 'block', fontSize: 20 }}>
-            {typeof score === 'undefined' || score < 0 ? <div className="dashed-line" /> : score}
+            {typeof score === 'undefined' || score < 0 ? <div className="dashed-line" /> : formatIQNumber(score)}
           </Format.Title>
         </div>
 

@@ -19,3 +19,4 @@ export { getScrollWidth } from './GetScrollWidth';
 export { formatModel } from './FormatModel';
 export { updateUrl } from './UpdateUrl';
 export { formatID } from './FormatID';
+export { formatIQNumber } from './FormatIQNumber';
