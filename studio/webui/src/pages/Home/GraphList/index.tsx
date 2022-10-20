@@ -12,6 +12,7 @@ import AvatarName from '@/components/Avatar';
 import IconFont from '@/components/IconFont';
 import SearchInput from '@/components/SearchInput';
 import KnowledgeModal from '@/components/KnowledgeModal';
+import { formatIQNumber } from '@/utils/handleFunction';
 
 import DeleteModal from './deleteModal';
 
@@ -189,7 +190,7 @@ const GraphList = () => {
       sorter: true,
       sortOrder: sorter.rule === 'intelligence_score' && sorter2sorter(sorter.order),
       sortDirections: ['ascend', 'descend', 'ascend'],
-      render: (source: number) => (source < 0 ? '--' : source)
+      render: (score: number) => formatIQNumber(score)
     },
     {
       title: intl.get('global.creationTime'),

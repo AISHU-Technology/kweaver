@@ -8,7 +8,7 @@ import { GRAPH_STATUS, CALCULATE_STATUS } from '@/enums';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
 import ExplainTip from '@/components/ExplainTip';
-import { numToThousand } from '@/utils/handleFunction';
+import { formatIQNumber } from '@/utils/handleFunction';
 import servicesIntelligence from '@/services/intelligence';
 import ScoreCard from './ScoreCard';
 import { StatisticsData } from './types';
@@ -42,7 +42,7 @@ const DataRow = ({ field, tip, value }: DataRowProps) => {
         {field}
         {tip}
       </div>
-      <div>{value !== undefined && value >= 0 ? numToThousand(value) : '--'}</div>
+      <div>{formatIQNumber(value)}</div>
     </div>
   );
 };
@@ -69,7 +69,7 @@ const Statistics = (props: StatisticsProps) => {
     if (!id || !shouldCalculate) return;
     pollingDetail(false);
     return () => clearTimeout(timer.current);
-  }, [graphBasicData.id]);
+  }, [graphBasicData]); // 监听整个对象，确保响应 `刷新` 按钮触发的交互
 
   /**
    * 获取智商详情

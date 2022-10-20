@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import intl from 'react-intl-universal';
 import ExplainTip from '@/components/ExplainTip';
+import { formatIQNumber } from '@/utils/handleFunction';
 import { scoreToAngle, RANGE_POINTS, SCALE_POINTS } from './assistFunction';
 import './style.less';
 
@@ -61,7 +62,7 @@ const ScorePanel = (props: { score?: number }) => {
       </svg>
 
       <div className="score-format">
-        <p className="s-text">{typeof score === 'undefined' || score < 0 ? '--' : score}</p>
+        <p className="s-text">{formatIQNumber(score)}</p>
         <p className="ad-mt-1 tip-text">
           {intl.get('global.domainIQ')}
           <ExplainTip.DOMAIN_IQ />

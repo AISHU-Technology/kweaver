@@ -9,7 +9,7 @@ import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
 import SearchInput from '@/components/SearchInput';
 import ExplainTip from '@/components/ExplainTip';
-import { formatID } from '@/utils/handleFunction';
+import { formatID, formatIQNumber } from '@/utils/handleFunction';
 import { CALCULATE_STATUS } from '@/enums';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 import { ListItem, TableState } from '../types';
@@ -127,10 +127,8 @@ const IQTable: React.FC<QTableProps> = ({ kid, data, tableState, onChange }) => 
         <LoadingOutlined className="ad-c-primary ad-mr-1" />
         {intl.get('intelligence.calculating')}
       </>
-    ) : typeof source === 'undefined' || source < 0 ? (
-      '--'
     ) : (
-      source
+      formatIQNumber(source)
     );
   };
 
