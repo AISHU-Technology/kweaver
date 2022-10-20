@@ -64,15 +64,24 @@ class IntelligenceCalculateService(object):
         total = entity_info['total']
 
         code, properties = graph_db.get_properties(space_id, otl_type, entity_name)
+        if code != codes.successCode:
+            raise Exception(repr(properties))
+
         not_empty_total = 0
         for prop in properties.keys():
             code, res = graph_db.graph_entity_prop_empty(space_id, entity_name, otl_type, prop)
             if code != 200:
+                if total == 0:
+                    continue
                 raise Exception(repr(res))
             not_empty_total += res
 
+        if total <= 0:
+            entity_info['empty'] = 0
+        else:
+            entity_info['empty'] = total * len(properties) - not_empty_total
+
         entity_info['total'] = total
-        entity_info['empty'] = total * len(properties) - not_empty_total
         entity_info['repeat'] = 0
         entity_info['prop_number'] = len(properties)
         return entity_info
@@ -593,6 +602,35 @@ class IntelligenceQueryService(object):
             result['allowed'] = ','.join(order_allowed)
             return code, result
         return codes.successCode, result
+
+    def intelligence_calculate_test(self, params_json, task_id):
+        if not task_id:
+            # 没有关键参数 task_id， 直接退出
+            log.error("missing important argument [task_id] please check your argument list")
+            return
+        try:
+            update_json = dict()
+            # 停止之前运行中的任务
+            if params_json.get('cancel_pre'):
+                async_task_service.delete_pre_running_task(params_json['task_type'], task_id,
+                                                           params_json['relation_id'])
+            # 获取执行参数
+            task_params = json.loads(params_json.get('task_params', '{}'))
+            intelligence_calculate_service.graph_calculate_task(task_params)
+
+            update_json['task_status'] = 'finished'
+            return {'current': 100, 'total': 100}
+        except BaseException as e:
+            import traceback
+            traceback.print_exc()
+            update_json['result'] = str(e)
+            update_json['task_status'] = 'failed'
+            log.error(update_json['result'])
+        finally:
+            # 此处只需要更新下错误原因即可，状态由外部调用更新
+            update_json['finished_time'] = datetime.datetime.now()
+            async_task_service.update(task_id, update_json)
+            return {'current': 100, 'total': 100}
 
 
 intelligence_query_service = IntelligenceQueryService()

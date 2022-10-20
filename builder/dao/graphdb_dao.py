@@ -1788,9 +1788,6 @@ class GraphDB(object):
             return code, count
         code, res = self._nebula_prop_empty(db, entity_name, otl_type, prop)
         if code != 200:
-            res_str = repr(res)
-            if 'ResultSet(None)' in res_str:
-                return 200, 0
             return code, res
         count = res.column_values('not_empty').pop(0).as_int()
         return code, count
