@@ -59,11 +59,14 @@ def cancel_batch_task(task_type):
     停止任务，保留记录
     """
     param_code, params_json, param_message = commonutil.getMethodParam()
-    if param_code != 0 or 'relation_id' not in params_json:
+    if param_code != 0 or 'relation_id_list' not in params_json:
         return Gview.error_return(codes.Builder_GraphController_GetGraphInfoBasic_ParamError, args=param_message)
 
-    relation_id = params_json['relation_id']
-    async_task_service.cancel_by_relation_id(task_type, relation_id)
+    relation_id_list = params_json['relation_id_list']
+    if not relation_id_list:
+        return Gview.error_return(codes.Builder_GraphController_GetGraphInfoBasic_ParamError, args=param_message)
+
+    async_task_service.cancel_by_relation_id_list(task_type, relation_id_list)
     return Gview.json_return("OK")
 
 
@@ -74,4 +77,3 @@ def delete_task(task_type, task_id):
     """
     async_task_service.cancel_by_id(task_type, task_id, delete_record=True)
     return Gview.json_return("OK")
-

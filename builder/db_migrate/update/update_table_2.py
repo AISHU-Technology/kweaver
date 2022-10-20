@@ -30,6 +30,7 @@ def updateDatabase(connection, cursor):
            CREATE TABLE `intelligence_records` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
                 `graph_id` int(11) DEFAULT NULL,
+                `knw_id` int(11) DEFAULT NULL,
                 `entity_knowledge` int(11) DEFAULT NULL,
                 `edge_knowledge` int(11) DEFAULT NULL,
                 `data_number` int(11) DEFAULT NULL,

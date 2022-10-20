@@ -9,6 +9,8 @@ from celery.result import AsyncResult
 from tenacity import retry, stop_after_attempt, wait_fixed, stop_after_delay
 import timeout_decorator
 
+from utils.util import async_call
+
 
 class AsyncTaskService(object):
 
@@ -47,6 +49,11 @@ class AsyncTaskService(object):
         ret_code, obj = self.update(task_id, update_params)
         return ret_code, celery_task_id
 
+    @async_call
+    def cancel_by_relation_id_list(self, task_type, relation_id_list, delete_record=False):
+        for relation_id in relation_id_list:
+            self.cancel_by_relation_id(task_type, relation_id, delete_record)
+
     def cancel_by_relation_id(self, task_type, relation_id, delete_record=False):
         parameter = dict()
         parameter['relation_id'] = relation_id
@@ -54,7 +61,8 @@ class AsyncTaskService(object):
         parameter['task_status'] = ['waiting', 'running']
 
         task_list = self.query(parameter)
-        self.cancel(task_list, delete_record)
+        for task_info in task_list:
+            self.cancel_task(task_info['id'], task_info.get('celery_task_id'), delete_record)
 
     def cancel_by_id(self, task_type, task_id, delete_record=False):
         parameter = dict()
@@ -63,28 +71,8 @@ class AsyncTaskService(object):
         parameter['task_status'] = ['waiting', 'running']
 
         task_list = self.query(parameter)
-        self.cancel(task_list, delete_record)
-
-    def cancel(self, task_list, delete_record=False):
-        """
-        取消任务
-        """
-        if not task_list:
-            log.info("empty task list")
-            return
         for task_info in task_list:
-            celery_task_id = task_info.get('celery_task_id')
-            if not celery_task_id:
-                continue
-            task_result = AsyncResult(celery_task_id)
-            # 如果没有status 状态值，那么表示该任务没找到，或者没有执行
-            task_status = task_result.status
-            if task_status == 'PENDING':
-                continue
-            # 终止该任务
-            current_app.control.terminate(celery_task_id)
-            if delete_record:
-                async_task_dao.delete({"id": task_info['id']})
+            self.cancel_task(task_info['id'], task_info.get('celery_task_id'), delete_record)
 
     def query(self, task_params):
         args = {
@@ -133,28 +121,32 @@ class AsyncTaskService(object):
         for task_info in task_list:
             if task_info['id'] == current_task_id:
                 continue
+            self.cancel_task(task_info['id'], task_info.get('celery_task_id'))
 
-            celery_task_id = task_info.get('celery_task_id')
-            if not celery_task_id:
-                continue
-            task_result = AsyncResult(celery_task_id)
-            # 如果没有status 状态值，那么表示该任务没找到，或者没有执行
-            status = task_result.status
-            if not status:
-                continue
-            # 终止该任务
-            current_app.control.terminate(celery_task_id)
-            if delete_record:
-                async_task_dao.delete({"id": task_info['id']})
-            if task_result.status == 'REVOKED':
-                update_param = dict()
-                task_id = task_info['id']
-                update_param['task_status'] = 'canceled'
-                update_param['finished_time'] = datetime.datetime.now()
-                update_param['result'] = '已取消'
-                code, res = self.update(task_id, update_param)
-                if code != codes.successCode:
-                    log.error(f"update task {task_id} error {repr(res)}")
+    def cancel_task(self, task_id, celery_task_id, delete_record=False):
+        if not celery_task_id:
+            log.error(f"invalid celery task id {celery_task_id}")
+            return
+        task_result = AsyncResult(celery_task_id)
+        # 如果没有status 状态值，那么表示该任务没找到，或者没有执行
+        status = task_result.status
+        if not status:
+            log.error(f"celery task status {celery_task_id} missing")
+            return
+        # 终止该任务
+        current_app.control.terminate(celery_task_id)
+        if delete_record:
+            async_task_dao.delete({"id": task_id})
+            return
+        # 保存取消状态
+        if task_result.status == 'REVOKED':
+            update_param = dict()
+            update_param['task_status'] = 'canceled'
+            update_param['finished_time'] = datetime.datetime.now()
+            update_param['result'] = '已取消'
+            code, res = self.update(task_id, update_param)
+            if code != codes.successCode:
+                log.error(f"update task {task_id} error {repr(res)}")
 
 
 async_task_service = AsyncTaskService()

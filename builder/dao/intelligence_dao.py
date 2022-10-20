@@ -33,6 +33,7 @@ class IntelligenceDao:
 
         value_list = list()
         value_list.append(params_json['graph_id'])
+        value_list.append(params_json['knw_id'])
         value_list.append(params_json['entity_knowledge'])
         value_list.append(params_json['edge_knowledge'])
         value_list.append(params_json['data_number'])
@@ -44,10 +45,10 @@ class IntelligenceDao:
 
         sql = """
         INSERT INTO intelligence_records 
-            (graph_id, entity_knowledge, edge_knowledge, data_number, total_knowledge, empty_number, 
+            (graph_id, knw_id, entity_knowledge, edge_knowledge, data_number, total_knowledge, empty_number, 
                 repeat_number, data_quality_score, update_time) 
         VALUES
-            (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
               """
         cursor.execute(sql, value_list)
         new_id = cursor.lastrowid
@@ -89,11 +90,14 @@ class IntelligenceDao:
         # 查询记录，按照图谱查询，按照网络查询
         #
         sql = f"""
-                select kg.id graph_id, kg.KG_name graph_name, ir.id, ir.total_knowledge, ir.repeat_number,
-			     ir.entity_knowledge, ir.edge_knowledge,ir.empty_number, ir.data_quality_score, kg.update_time,
-			     unix_timestamp(kg.update_time) update_time_timestamp, ISNULL(ir.data_quality_score) null_score
-			     from ((select ngr2.knw_id knw_id, kg2.* from knowledge_graph kg2 join 
-			        network_graph_relation ngr2 on kg2.id=ngr2.graph_id where ngr2.knw_id={query_param.get('knw_id')})) kg 
+            select kg.id graph_id, kg.KG_name graph_name, ir.id, ir.total_knowledge, ir.repeat_number,
+			     ir.entity_knowledge, ir.edge_knowledge,ir.empty_number, ir.data_quality_score, kg.last_update_time,
+			     unix_timestamp(kg.last_update_time) update_time_timestamp, ISNULL(ir.data_quality_score) null_score
+			     from (select ngr2.knw_id knw_id,gct.update_time last_update_time, kg2.* 
+							from knowledge_graph kg2 
+							join network_graph_relation ngr2 on kg2.id=ngr2.graph_id 
+							join graph_config_table gct on gct.id = kg2.KG_config_id 
+						where ngr2.knw_id={query_param.get('knw_id')}) kg 
 			      left join intelligence_records ir on kg.id=ir.graph_id 
             """
         # 根据图谱名称模糊查询
@@ -125,7 +129,7 @@ class IntelligenceDao:
         sql = f"""delete from intelligence_records where graph_id in ({','.join(graph_id_list)})"""
         cursor.execute(sql)
 
-    def __update_network_score(self, knw_id, cursor):
+    def __update_network_score(self, knw_id, cursor, exclude=None):
         # query network intelligence
         sql = f"""
                 SELECT  b.knw_id knw_id,
@@ -137,6 +141,8 @@ class IntelligenceDao:
                 on a.graph_id =b.graph_id  
                 where b.knw_id={knw_id}
             """
+        if exclude:
+            sql += f" and a.graph_id not in ({','.join(exclude)})"
         cursor.execute(sql)
         item = cursor.fetchone()
         # update network intelligence score
@@ -151,13 +157,23 @@ class IntelligenceDao:
 
     @connect_execute_commit_close_db
     def delete_intelligence_info(self, graph_id_list, cursor, connection):
+        intelligence_record_list = self.query(graph_id_list)
         self.__delete_by_graph_id_list(graph_id_list, cursor)
-        graph_info_list = graph_dao.get_graph_detail(graph_id_list)
 
-        knw_id_list = [graph_info['knw_id'] for graph_info in graph_info_list]
+        knw_id_list = (record['knw_id'] for record in intelligence_record_list)
+        knw_id_dict = {}
+        for record in intelligence_record_list:
+            knw_id = record.get('knw_id')
+            if not knw_id:
+                continue
+            id_list = knw_id_dict.get(knw_id, list())
+            id_list.append(str(record['graph_id']))
+            knw_id_dict[knw_id] = id_list
+
         knw_id_list = list(set(knw_id_list))
         for knw_id in knw_id_list:
-            self.__update_network_score(knw_id, cursor)
+            id_list = knw_id_dict.get(knw_id, list())
+            self.__update_network_score(knw_id, cursor, id_list)
 
     def intelligence_score(self, total, empty_number, repeat_number):
         B = float(math.log(total, 10) * 10)

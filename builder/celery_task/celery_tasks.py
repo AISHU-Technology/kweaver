@@ -31,8 +31,8 @@ import itertools
 
 sys.path.append(os.path.abspath("../"))
 from utils.util import get_timezone, redislock
-from spo.ie_flora import Extract_SPO #,SubjectModel,ObjectModel
-from spo.train_flora import SubjectModel,ObjectModel
+from spo.ie_flora import Extract_SPO  # ,SubjectModel,ObjectModel
+from spo.train_flora import SubjectModel, ObjectModel
 
 from contracrt_extract.extractor.multi_process_extract import MultiExtract
 from ARModel.operation_maintenance_model import OperationMaintenanceModel
@@ -91,7 +91,7 @@ ip = mariadb_config.get('host')
 port = mariadb_config.get('port')
 user = mariadb_config.get('user')
 passwd = mariadb_config.get('password')
-passwd=parse.quote_plus(passwd)
+passwd = parse.quote_plus(passwd)
 database = mariadb_config.get('database')
 beat_dburi = f'mysql+mysqlconnector://{user}:{passwd}@{ip}:{port}/{database}'
 beat_config = dict(
@@ -176,7 +176,6 @@ from bson.objectid import ObjectId
 import redis
 
 
-
 class GeneralVariable(object):
     """
     存储全部通用的变量
@@ -217,6 +216,7 @@ class Configure(object):
 
 general_variable = GeneralVariable()
 
+
 def buildACTree(data, prop):
     '''构造AC自动机
     将data中的数据prop属性的值加入到trie树中
@@ -236,6 +236,7 @@ def buildACTree(data, prop):
     ACtree.make_automaton()
     return ACtree
 
+
 def conndb():
     """
     连接mongodb数据库
@@ -246,6 +247,7 @@ def conndb():
     db = mongoConnect.connect_mongo()
     # db = conn[mongo_db]
     return db
+
 
 def account_verify(address, port, username, password, graph_db_id):
     """
@@ -278,7 +280,6 @@ def account_verify(address, port, username, password, graph_db_id):
         if not code:
             return False
         return True
-
 
 
 def decrypt_base64(password):
@@ -515,6 +516,7 @@ def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_i
 
     return ret_code, 'standard_extract success'
 
+
 def normalize_text(text):
     text = re.sub(r"[\n\t\'\"]", " ", text)
     text = text.replace("\\", "\\\\").strip()
@@ -670,7 +672,7 @@ def labelExtraction(graph_KMerge, graph_used_ds, data_source, ds_id, file_name, 
                                     pro_v = '`' + k + '`' + "=" + '"' + normalize_text(v) + '"'
                                     begainpro_value_index.append(pro_v)
                             graphdb.create_vertex(graph_name, otl_name=begin_entity, props=props, values=values,
-                                                values_index=values, pro_value=begainpro_value, 
+                                                  values_index=values, pro_value=begainpro_value,
                                                   pro_value_index=begainpro_value_index)
                             if begin_entity != "document":
                                 start_sql = sqlProcessor.select_sql(begin_entity, property_dict=begin_property,
@@ -701,7 +703,7 @@ def labelExtraction(graph_KMerge, graph_used_ds, data_source, ds_id, file_name, 
                                     pro_v = '`' + k + '`' + "=" + '"' + normalize_text(v) + '"'
                                     endpro_value_index.append(pro_v)
                             graphdb.create_vertex(graph_name, otl_name=end_entity, props=props, values=values,
-                                                values_index=values, pro_value=endpro_value, 
+                                                  values_index=values, pro_value=endpro_value,
                                                   pro_value_index=endpro_value_index)
                             if end_entity != "document":
                                 start_sql = sqlProcessor.select_sql(end_entity, property_dict=end_property,
@@ -715,7 +717,8 @@ def labelExtraction(graph_KMerge, graph_used_ds, data_source, ds_id, file_name, 
                                     for end_sql_i in end_sql:
                                         graphdb.create_edge(end_entity + "2document", start_sql, end_sql_i, prop_val_sql, graph_name)
                                 else:
-                                    graphdb.create_edge(end_entity + "2document", start_sql, end_sql, prop_val_sql, graph_name)
+                                    graphdb.create_edge(end_entity + "2document", start_sql, end_sql, prop_val_sql,
+                                                        graph_name)
                     if "relation_entity" in one["relation"]:
                         relation = one["relation"]["relation_entity"]
                         if "relation_property" in one["relation"]:
@@ -730,6 +733,7 @@ def labelExtraction(graph_KMerge, graph_used_ds, data_source, ds_id, file_name, 
                                                               merge_pro=list(merge_otls[end_entity].keys()))
                             prop_val_sql = sqlProcessor.prop_value_sql(prop=list(relation_property.keys()), value=list(relation_property.values()))
                             graphdb.create_edge(relation, start_sql, end_sql, prop_val_sql, graph_name)
+
 
 def contract_model_extract(conn_db, graph_mongo_Name, ds_id, file_source, configYaml, model, stopwords_file,
                            process_num, schema_file, files_type):
@@ -773,8 +777,6 @@ def operation_maintenance_model_extract(conn_db, graph_mongo_Name, ds_id, file_s
         # 写入mongodb
         ar_model.write2mongodb(conn_db, graph_mongo_Name, spos)
     Logger.log_info("operation maintenance model extract finished!")
-    
-    
 
 
 
@@ -1262,6 +1264,7 @@ def get_pro_type(graph_otl):
             edge_pro_dict[name][pro[0]] = pro[1]
     return entity_pro_dict, edge_pro_dict
 
+
 def get_graph_config_info(graphid):
     """
     读取graph_config_table内容， 获取图谱配置信息
@@ -1374,6 +1377,7 @@ def get_Kmerge_dict(g_merge):
                 merge_pro[ft_pro] = ft
             merge_otls[otl_n] = merge_pro
     return merge_otls, merge_flag
+
 
 def get_map_info(otls_map):
     """获取实体映射信息
@@ -1531,7 +1535,7 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
                 for k, v in merge_otls[otl_name].items():
                     merge_pro.append(k)
                 graphdb.create_uni_index(otl_name, merge_pro, present_index_name_unique, mongo_db,
-                                        en_pro_dict[otl_name])
+                                         en_pro_dict[otl_name])
         print('创建点类结束，耗时{}s'.format(time.time() - tag_class_start))
         # 创建边类
         edge_class_start = time.time()
@@ -1609,7 +1613,6 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
     except Exception as e:
         print(repr(e))
         return 500, repr(e)
-
 
 
 def mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMerge,
@@ -1728,9 +1731,9 @@ def rabbitmq_task(json_data, args):
         standard_extract_rabbitmq(json_data, graph_mongo_Name, conn_db, ds_id, rules, entity_type)
         # mongodb写入orientdb
         ret_obj = mongodb2graphdb(args.get("pro_index"), args.get("en_pro_dict"), args.get("edge_pro_dict"),
-                                   args.get("graph_KMap"), args.get("graph_KMerge"),
-                                   args.get("graphid"), args.get("graph_db_id"), args.get("mongo_db"),
-                                   args.get("graph_mongo_Name"))
+                                  args.get("graph_KMap"), args.get("graph_KMerge"),
+                                  args.get("graphid"), args.get("graph_db_id"), args.get("mongo_db"),
+                                  args.get("graph_mongo_Name"))
         obj = {"state": ret_obj["state"], "meta": ret_obj["meta"]}
     return obj
 
@@ -1768,6 +1771,9 @@ def buildertask(self, graphid, flag):
         flag: 是否是增量，增量：increment； 全量：full
     """
     try:
+        # 构建状态默认值，领域智商计算用
+        build_success_flag = False
+
         general_variable.updategraph = False
         # 读取配置
         configure = Configure(aspi_config_path="./../config/asapi.conf", config_ini_path="./../config/config.ini")
@@ -1815,6 +1821,10 @@ def buildertask(self, graphid, flag):
                                       meta={'cause': graphdb.state['meta']['cause'],
                                             'message': graphdb.state['meta']['message']})
                     return {'current': 100, 'total': 100}
+
+                # cancel intelligence task
+                cancel_intelligence_task(graphid)
+
                 # 获取图谱使用的数据源配置信息
                 code, args = get_rabbitinfo(graphid)
                 if code == 0:
@@ -1842,7 +1852,7 @@ def buildertask(self, graphid, flag):
                     args["username"] = username
                     args["password"] = password
                     args["graph_DBPort"] = graph_DBPort
-    
+
                     # 启动监听
                     Logger.log_info("图谱{}，RabbitMQ启动监听...".format(graphid))
                     rabbit_start_listening(args)
@@ -1911,6 +1921,8 @@ def buildertask(self, graphid, flag):
             ret_obj = mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMerge,
                                       graphid, graph_db_id, mongo_db, graph_mongo_Name)
             self.update_state(state=ret_obj["state"], meta=ret_obj["meta"])
+            # 构建成功标记
+            build_success_flag = True
             return {'current': 100, 'total': 100}
     except Exception as e:
         self.update_state(state='FAILURE', meta={'cause': repr(e), 'message': "buildertask failed"})
@@ -1933,8 +1945,10 @@ def buildertask(self, graphid, flag):
         except Exception:
             pass  # 统计任务失败的异常忽略掉
         finally:
-            print(f"start post intelligence task graph:{graphid}")
-            send_intelligence_task(graphid)
+            if graphdb.type != 'nebula' or build_success_flag:
+                print(f"start post intelligence task graph:{graphid}")
+                send_intelligence_task(graphid)
+
 
 @cel.task
 def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
@@ -1962,7 +1976,6 @@ def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
             print(f"send timer success,task_id:{task_id}")
     except Exception as e:
         print(f'send timer exception:{str(e)}')
-
 
 
 def create_mongo_index(graph_mongo_Name, entity_type, g_merge):
@@ -2055,7 +2068,6 @@ class RelationBuildBase(object):
                 "pro_map": en_prop_dict
             }
         return entity_prop_dict
-
 
     def gen_vid(self, entity_name, one_data):
         """
@@ -3160,3 +3172,21 @@ def send_intelligence_task(graph_id):
         print(f"post task {graph_id} success:{repr(response.json())}")
     except Exception as e:
         print(f"post task {graph_id} failed:{repr(e)}")
+
+
+def cancel_intelligence_task(graph_id):
+    url = "http://localhost:6488/task/intelligence/cancel_by_relation_id"
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    graph_id = int(graph_id)
+    param_json = dict()
+    param_json['relation_id_list'] = [graph_id]
+
+    try:
+        response = requests.request("POST", url, headers=headers, data=json.dumps(param_json))
+        if response.status_code != 200:
+            raise Exception(str(response.text))
+        return response.status_code, response.json()
+    except Exception as e:
+        print(f"cancel task {graph_id} failed:{repr(e)}")

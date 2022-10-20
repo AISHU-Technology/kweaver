@@ -105,6 +105,7 @@ def default_value(sql_format=True):
     else:
         return ""
 
+
 def value_transfer(value, db_type, type):
     if not value:
         return default_value()
@@ -1781,15 +1782,18 @@ class GraphDB(object):
         """
         if self.type == 'orientdb':
             code, res = self._orientdb_prop_empty(db, entity_name, otl_type, prop)
-            if res != 200:
-                count = res.get('result', list())[0].get('not_empty')
-                return code, count
-            return code, res
-        code, res = self._nebula_prop_empty(db, entity_name, otl_type, prop)
-        if res != 200:
-            count = res.column_values('not_empty').pop(0).as_int()
+            if code != 200:
+                return code, res
+            count = res.get('result', list())[0].get('not_empty')
             return code, count
-        return code, res
+        code, res = self._nebula_prop_empty(db, entity_name, otl_type, prop)
+        if code != 200:
+            res_str = repr(res)
+            if 'ResultSet(None)' in res_str:
+                return 200, 0
+            return code, res
+        count = res.column_values('not_empty').pop(0).as_int()
+        return code, count
 
     def _orientdb_prop_empty(self, db, entity_name, otl_type, prop):
         empty_value_list = """ ["","()","[]","{}"] """
