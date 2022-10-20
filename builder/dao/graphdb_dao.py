@@ -1794,7 +1794,7 @@ class GraphDB(object):
 
     def _orientdb_prop_empty(self, db, entity_name, otl_type, prop):
         empty_value_list = """ ["","()","[]","{}"] """
-        sql = f"""select count(*) as `not_empty` from {entity_name} where `{prop}` not in {empty_value_list} and `{prop}` is not null"""
+        sql = f"""select count(*) as `not_empty` from `{entity_name}` where `{prop}` not in {empty_value_list} and `{prop}` is not null"""
         code, res = self._orientdb_http(sql, db)
         return code, res
 
@@ -1802,7 +1802,7 @@ class GraphDB(object):
         if otl_type != "edge":
             otl_type = "vertex"
         empty_value_list = """ ["","()","[]","{}"] """
-        sql = f"""lookup on {entity_name} where {entity_name}.`{prop}` not in {empty_value_list} 
+        sql = f"""lookup on `{entity_name}` where `{entity_name}`.`{prop}` not in {empty_value_list} 
                 yield properties({otl_type}).`{prop}` as props | yield count(*) as not_empty"""
         code, res = self._nebula_session_exec_(sql, db)
         return code, res
