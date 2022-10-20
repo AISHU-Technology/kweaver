@@ -202,7 +202,6 @@ class GraphCheckParameters(object):
         return ret_status, message
 
     def checkparam_getinfoext(self, params_json):
-        '''Flora 20201101'''
         ret_status = self.VALID
         message = ""
         graphid = params_json.get("graphid", None)
@@ -242,8 +241,7 @@ class GraphCheckParameters(object):
             return ret_status, message
 
     def graph_InfoExt(self, graph_process):
-        '''Flora
-        graph_InfoExt保存更新update接口参数校验方法'''
+        '''graph_InfoExt保存更新update接口参数校验方法'''
         message = ""
         ret_status = self.VALID
         if len(graph_process) == 0:
@@ -324,8 +322,7 @@ class GraphCheckParameters(object):
         return ret_status, message
 
     def graph_KMap(self, graph_process):
-        '''Flora
-        graph_KMap保存更新update接口参数校验方法'''
+        '''graph_KMap保存更新update接口参数校验方法'''
         message = ""
         ret_status = self.VALID
         if not isinstance(graph_process, list):

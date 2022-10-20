@@ -2197,7 +2197,8 @@ class RelationManualBuilder(object):
         """
         sql_processor: SQLProcessor = self.buildInfo.sqlProcessor
         return sql_processor.prop_value_sql(
-            self.entity_data, self.edge_otl_tab_pro, one_data, edge_class=self.edge_class)
+            self.entity_data, self.edge_otl_tab_pro, one_data, edge_class=self.edge_class,
+            edge_pro_dict=self.buildInfo.edge_pro_dict)
 
     def find_contain_relations(self, collection, len_dict, collection_prop, find_value):
         """
@@ -2396,7 +2397,7 @@ class RelationIn2Class(RelationManualBuilder):
             边构建的前期准备，主要是准备一些属性
         """
         self.start_entity_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
-        self.start_collection_ame = self.buildInfo.graph_mongo_Name + "_" + self.start_entity_class
+        self.start_collection_name = self.buildInfo.graph_mongo_Name + "_" + self.start_entity_class
 
         self.end_entity_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
         self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + self.end_entity_class

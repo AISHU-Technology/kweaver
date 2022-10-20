@@ -36,7 +36,7 @@ const LeftSpace = props => {
 
   useEffect(() => {
     getGraphList({ page, order, rule });
-  }, []);
+  }, [page, order, rule]);
 
   const createGraph = () => history.push('/home/workflow/create');
 
@@ -160,7 +160,7 @@ const LeftSpace = props => {
                         placement="bottomRight"
                         getPopupContainer={triggerNode => triggerNode.parentElement}
                       >
-                        <IconFont type="icon-paixu1" className="order" />
+                        <IconFont type="icon-paixu11" className="order" />
                       </Dropdown>
                     </Tooltip>
                   </div>

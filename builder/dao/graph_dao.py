@@ -813,19 +813,37 @@ class GraphDao():
         df = pd.read_sql(sql, connection)
         return df
 
-    # 批量删除图谱
     @connect_execute_commit_close_db
-    def deleteGraphByIds(self, graphids, connection, cursor):
-        sql1 = """DELETE FROM graph_config_table WHERE id in ({});""".format(",".join(map(str, graphids)))
-        sql2 = """DELETE FROM search_config WHERE kg_id IN (SELECT id FROM knowledge_graph WHERE KG_config_id IN ({}));""".format(
-            ",".join(map(str, graphids)))
-        sql3 = """DELETE FROM knowledge_graph WHERE KG_config_id in ({});""".format(",".join(map(str, graphids)))
-        sql4 = """DELETE FROM graph_task_history_table WHERE graph_id in ({});""".format(",".join(map(str, graphids)))
-        sql5 = """DELETE FROM graph_task_table WHERE graph_id in ({});""".format(",".join(map(str, graphids)))
-        # 删除图谱所属的定时任务
+    def deleteGraphByIds(self, graph_ids, connection, cursor):
+        '''
+        batch delete the graphs
+        Args:
+            graph_ids: the graph ids to be deleted
+        '''
+        # delete ontology data
+        sql_get_oyl_id = 'SELECT graph_otl FROM graph_config_table WHERE id IN ({});'\
+            .format(",".join(map(str, graph_ids)))
+        otl_id = []
+        for record in pd.read_sql(sql_get_oyl_id, connection).to_dict('records'):
+            otl_id.extend(eval(record['graph_otl']))
+        if otl_id:
+            sql = """DELETE FROM ontology_table WHERE id IN ({});"""\
+                .format(",".join(map(str, otl_id)))
+            cursor.execute(sql)
+            sql = """DELETE FROM ontology_task_table WHERE ontology_id IN ({});""" \
+                .format(",".join(map(str, otl_id)))
+            cursor.execute(sql)
+        # delete graph data
+        sql1 = """DELETE FROM graph_config_table WHERE id in ({});""".format(",".join(map(str, graph_ids)))
+        sql2 = """DELETE FROM search_config WHERE kg_id IN (SELECT id FROM knowledge_graph WHERE KG_config_id IN ({}));"""\
+            .format(",".join(map(str, graph_ids)))
+        sql3 = """DELETE FROM knowledge_graph WHERE KG_config_id in ({});""".format(",".join(map(str, graph_ids)))
+        sql4 = """DELETE FROM graph_task_history_table WHERE graph_id in ({});""".format(",".join(map(str, graph_ids)))
+        sql5 = """DELETE FROM graph_task_table WHERE graph_id in ({});""".format(",".join(map(str, graph_ids)))
+        # delete the timed task to which the graph belongs
         delete_crontab = """DELETE from timer_crontab where id in (select crontab_id from timer_task where
-                             graph_id in ({}));""".format(",".join(map(str, graphids)))
-        delete_task = """DELETE from timer_task where graph_id in ({});""".format(",".join(map(str, graphids)))
+                             graph_id in ({}));""".format(",".join(map(str, graph_ids)))
+        delete_task = """DELETE from timer_task where graph_id in ({});""".format(",".join(map(str, graph_ids)))
         update_run_sql = "UPDATE timer_task SET last_run_at=NULL where id>1"
         next_minute = (datetime.now() + timedelta(seconds=1)).strftime("%Y-%m-%d %H:%M:%S")
         update_task_sql = f"UPDATE timer_update SET last_update='{next_minute}' where id>=1"
@@ -1148,6 +1166,13 @@ class GraphDao():
     @connect_execute_close_db
     def get_configid_by_kgid(self, kgid, connection, cursor):
         sql = f"select KG_config_id from knowledge_graph where id={kgid}"
+        df = pd.read_sql(sql, connection)
+        return df
+
+    @connect_execute_close_db
+    def get_name_and_otl_by_id(self, graph_id, connection, cursor):
+        sql = 'SELECT graph_name, graph_otl FROM `graph_config_table` WHERE id IN ({})'\
+            .format(",".join(map(str, graph_id)))
         df = pd.read_sql(sql, connection)
         return df
 
