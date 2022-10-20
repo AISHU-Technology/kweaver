@@ -37,7 +37,7 @@ const LeftSpace = props => {
 
   useEffect(() => {
     getGraphList({ page, order, rule });
-  }, []);
+  }, [page, order, rule]);
 
   const createGraph = async () => {
     try {

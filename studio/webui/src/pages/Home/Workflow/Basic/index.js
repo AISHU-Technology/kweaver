@@ -5,7 +5,9 @@ import { Form, Button, Input, message, ConfigProvider, Select } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
 import serviceStorageManagement from '@/services/storageManagement';
+import servicesCreateEntity from '@/services/createEntity';
 import serviceWorkflow from '@/services/workflow';
+import { handleTaskId } from '../FlowCreateEntity/CreateEntity/assistFunction';
 
 import './style.less';
 
@@ -20,7 +22,16 @@ const graphNameTest = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/;
 const graphDesTest = /^[!-~a-zA-Z0-9_\u4e00-\u9fa5 ！￥……（）——“”：；，。？、‘’《》｛｝【】·\s]+$/;
 
 const Basic = (props, ref) => {
-  const { next, setBasicData, graphId, setGraphId, graphStatus, dataLoading, basicData, setDbType } = props;
+  const {
+    next,
+    setBasicData,
+    graphId,
+    setGraphId,
+    graphStatus,
+    dataLoading,
+    basicData,
+    setDbType,
+  } = props;
   const [form] = Form.useForm();
   const formSnapshot = useRef({}); // 保存时生成表单数据快照, 用于判断表单是否被修改
   const [disabled, setDisabled] = useState(false);
@@ -43,7 +54,6 @@ const Basic = (props, ref) => {
   useEffect(() => {
     getStorage();
     didMount();
-
     /* eslint-disable-next-line */
   }, [graphId]);
 
@@ -111,7 +121,8 @@ const Basic = (props, ref) => {
         const res = await serviceWorkflow.graphCreate(body);
 
         if (res && res.res) {
-          setGraphId(parseInt(res.res.split(' ')[0]));
+          const newGraphId = parseInt(res.res.split(' ')[0]);
+          setGraphId(newGraphId);
           window.history.replaceState({}, 0, `/home/workflow/create?id=${res.res.split(' ')[0]}&status=edit`);
           setBasicData(body.graph_process[0]);
           isNext && next();
@@ -169,9 +180,13 @@ const Basic = (props, ref) => {
     setNextLoad(false);
   };
 
-  const basicNext = e => saveData(e, true);
+  const basicNext = e => {
+    saveData(e, true);
+  };
 
-  const onSave = e => saveData(e);
+  const onSave = e => {
+    saveData(e);
+  };
 
   return (
     <div className="graph-basic-wrapper">

@@ -696,17 +696,22 @@ class DataInfo extends Component {
    */
   checkName = value => {
     const { nodes, edges, selectedElement } = this.props;
-
     let tem = false;
 
     if (typeof selectedElement.entity_id === 'number') {
-      nodes.forEach((item, index) => {
-        if (
-          item.name &&
-          value &&
-          item.name.toLowerCase() === value.toLowerCase() &&
-          item.entity_id !== selectedElement.entity_id
-        ) {
+      nodes.forEach(item => {
+        if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
+          tem = true;
+        }
+      });
+      edges.forEach(item => {
+        if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
+          tem = true;
+        }
+      });
+    } else {
+      nodes.forEach(item => {
+        if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
           tem = true;
         }
       });

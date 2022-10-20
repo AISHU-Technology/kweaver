@@ -718,7 +718,7 @@ class OtlDao(object):
                 {"docid": params_json["file_list"][0]["docid"]})
             headers = {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer {}'.format(tokenid)
+                'Authorization': 'Bearer {}'.format(token_id)
             }
             response = requests.request("POST", url, headers=headers, data=payload, timeout=10, verify=False)
             resp_json = response.json()
@@ -829,8 +829,8 @@ class OtlDao(object):
         ds_auth = params_json['ds_auth']
         print('开始获取AS token', __file__, 'asdatashow2')
         ret_code, obj_token = asToken.get_token(ds_auth)
-        if ret_token != CommonResponseStatus.SUCCESS.value:
-            return ret_token, obj_token
+        if ret_code != CommonResponseStatus.SUCCESS.value:
+            return ret_code, obj_token
         tokenid = obj_token
         docid = params_json["name"]
         port = str(params_json["ds_port"])
