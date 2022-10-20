@@ -440,7 +440,8 @@ class OtlDao(object):
         try:
             modeldir = Config.modeldir
             print(modeldir)
-            files = os.listdir(modeldir)
+            # files = os.listdir(modeldir)
+            files = next(os.walk(modeldir))[1]
             files.sort()
             if "basemodel" in files:
                 files.remove("basemodel")
@@ -717,7 +718,7 @@ class OtlDao(object):
                 {"docid": params_json["file_list"][0]["docid"]})
             headers = {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer {}'.format(tokenid)
+                'Authorization': 'Bearer {}'.format(token_id)
             }
             response = requests.request("POST", url, headers=headers, data=payload, timeout=10, verify=False)
             resp_json = response.json()
@@ -828,8 +829,8 @@ class OtlDao(object):
         ds_auth = params_json['ds_auth']
         print('开始获取AS token', __file__, 'asdatashow2')
         ret_code, obj_token = asToken.get_token(ds_auth)
-        if ret_token != CommonResponseStatus.SUCCESS.value:
-            return ret_token, obj_token
+        if ret_code != CommonResponseStatus.SUCCESS.value:
+            return ret_code, obj_token
         tokenid = obj_token
         docid = params_json["name"]
         port = str(params_json["ds_port"])
@@ -1069,7 +1070,7 @@ class OtlDao(object):
                             return ret_code, info
 
 
-                    elif fileresponse.status_code == 206  or fileresponse.status_code == 200:
+                    elif fileresponse.status_code == 206 or fileresponse.status_code == 200:
                         file_type = name.split(".")[-1]
                         # encode=chardet.detect(fileresponse.content[0:1024])["encoding"]
 
@@ -1847,6 +1848,14 @@ class OtlDao(object):
         return new_id
 
     @connect_execute_close_db
+    def getbyname(self, name, connection, cursor, ):
+        sql = """SELECT * FROM ontology_table where ontology_name = %s""" % ('"' + name + '"')
+        Logger.log_info(sql)
+        # sql = sql.format()
+        df = pd.read_sql(sql, connection)
+        return df
+
+    @connect_execute_close_db
     def getbyids(self, ids, connection, cursor, ):
 
         sql = """SELECT * FROM ontology_table where id in (%s) """ % (",".join([str(id) for id in ids]))
@@ -2055,7 +2064,6 @@ class OtlDao(object):
         sql = sql.format('"' + state + '"', page * size, size)
         df = pd.read_sql(sql, connection)
         return df
-
 
     @connect_execute_close_db
     def getallbynameandstate(self, name, page, size, order, state, connection, cursor):

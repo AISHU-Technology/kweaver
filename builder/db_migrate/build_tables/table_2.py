@@ -433,7 +433,7 @@ class Lexicon(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(Integer, autoincrement=True, primary_key=True)
-    lexicon_name = Column(String(50), nullable=True, unique=True)
+    lexicon_name = Column(String(50), nullable=True)
     description = Column(String(150), nullable=True)
     labels = Column(LONGTEXT, nullable=True)
     columns = Column(LONGTEXT, nullable=True)
