@@ -1,8 +1,6 @@
 import datetime
 import json
 import math
-import time
-from decimal import Decimal
 
 import requests
 
@@ -415,16 +413,6 @@ class IntelligenceQueryService(object):
             entity_onto_list.append(item)
         return entity_onto_list
 
-    def network_list_intelligence(self, knw_id_list: list):
-        """
-        查询一批知识网络的智商
-        """
-        results = list()
-        for knw_id in knw_id_list:
-            r = self.query_network_intelligence(knw_id)
-            results.append(r)
-        return results
-
     def default_graph_response(self, graph_info):
         res = dict()
         res['graph_id'] = graph_info['graph_id']
@@ -444,10 +432,6 @@ class IntelligenceQueryService(object):
         res['data_quality_B'] = '-1.00'
         res['data_quality_score'] = '-1.00'
         return res
-
-    def default_intelligence_list(self, graph_info_list):
-
-        return
 
     def default_network_response(self, knw_info, total):
         data = dict()
@@ -494,11 +478,18 @@ class IntelligenceQueryService(object):
             graph_quality['data_quality_score'] = '-1.00'
             return
         total_knowledge = record.get('total_knowledge', 0)
-        graph_quality['data_repeat_C1'] = "{:.2f}".format(record.get('repeat_number', 0) / total_knowledge)
-        graph_quality['data_empty_C2'] = "{:.2f}".format(record.get('empty_number', 0) / total_knowledge)
-        graph_quality['data_quality_B'] = "{:.2f}".format(math.log(record.get('total_knowledge', 0), 10) * 10)
-        graph_quality['total_knowledge'] = total_knowledge
-        graph_quality['data_quality_score'] = "{:.2f}".format(float(record.get('data_quality_score', 0)))
+        if int(total_knowledge) == 0:
+            graph_quality['data_repeat_C1'] = "0.00"
+            graph_quality['data_empty_C2'] = "0.00"
+            graph_quality['data_quality_B'] = "0.00"
+            graph_quality['total_knowledge'] = '0.00'
+            graph_quality['data_quality_score'] = "0.00"
+        else:
+            graph_quality['data_repeat_C1'] = "{:.2f}".format(record.get('repeat_number', 0) / total_knowledge)
+            graph_quality['data_empty_C2'] = "{:.2f}".format(record.get('empty_number', 0) / total_knowledge)
+            graph_quality['data_quality_B'] = "{:.2f}".format(math.log(record.get('total_knowledge', 0), 10) * 10)
+            graph_quality['total_knowledge'] = total_knowledge
+            graph_quality['data_quality_score'] = "{:.2f}".format(float(record.get('data_quality_score', 0)))
 
     def add_task_info(self, graph_quality, task_info_list):
         """
@@ -602,32 +593,6 @@ class IntelligenceQueryService(object):
             result['allowed'] = ','.join(order_allowed)
             return code, result
         return codes.successCode, result
-
-    def intelligence_calculate_test(self, params_json, task_id):
-        """
-        execute intelligence computer task
-        """
-        if not task_id:
-            # 没有关键参数 task_id， 直接退出
-            log.error("missing important argument [task_id] please check your argument list")
-            return
-        try:
-            update_json = dict()
-            # 停止之前运行中的任务
-            if params_json.get('cancel_pre'):
-                async_task_service.delete_pre_running_task(params_json['task_type'], task_id, params_json['graph_id'])
-            intelligence_calculate_service.graph_calculate_task(params_json)
-            update_json['task_status'] = 'finished'
-            return {'current': 100, 'total': 100}
-        except BaseException as e:
-            update_json['result'] = str(e)
-            update_json['task_status'] = 'failed'
-            log.error(update_json['result'])
-        finally:
-            # 此处只需要更新下错误原因即可，状态由外部调用更新
-            update_json['finished_time'] = datetime.datetime.now()
-            async_task_service.update(task_id, update_json)
-            return {'current': 100, 'total': 100}
 
 
 intelligence_query_service = IntelligenceQueryService()

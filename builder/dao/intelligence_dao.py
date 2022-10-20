@@ -10,21 +10,6 @@ from celery.utils import log
 logger = log.get_logger(__name__)
 
 
-class EntityType(object):
-    VERTEX = 1
-    EDGE = 2
-
-
-class EntityStatus(object):
-    ENABLE = 1
-    DISABLE = 0
-
-
-class CommonStatic(object):
-    default_iter_size = 10
-    empty_value_list = ['NULL', '""', """''""", "()", '', '{}']
-
-
 class IntelligenceDao:
 
     # 新增知识网络
@@ -176,14 +161,19 @@ class IntelligenceDao:
             self.__update_network_score(knw_id, cursor, id_list)
 
     def intelligence_score(self, total, empty_number, repeat_number):
+        if total == 0:
+            return 0
         B = float(math.log(total, 10) * 10)
         C1 = float(1 - repeat_number / total)
         C2 = float(1 - empty_number / total)
         return round(B * (C1 + C2) / 2, 2)
 
     def data_quality_score(self, total, empty_number, repeat_number):
+        if total == 0:
+            return 0
         C1 = float(1 - repeat_number / total)
         C2 = float(1 - empty_number / total)
         return round((C1 + C2) / 2, 2)
+
 
 intelligence_dao = IntelligenceDao()
