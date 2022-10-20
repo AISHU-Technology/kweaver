@@ -300,7 +300,7 @@ class LexiconDao:
         """ 获取mongodb中指定词库的所有词汇信息 """
         words = []
         count = db[mongodb_name].count()
-        word_infos = db[mongodb_name].find().sort([("_id", -1)]).limit(size).skip((page - 1) * size)
+        word_infos = db[mongodb_name].find().sort([("_id", 1)]).limit(size).skip((page - 1) * size)
         for word in word_infos:
             word.pop("_id")
             words.append(word)
@@ -309,7 +309,7 @@ class LexiconDao:
     def get_all_words_from_mongo(self, db, mongodb_name):
         """ 获取mongodb中指定词库的所有词汇 """
         words = []
-        word_infos = db[mongodb_name].find().sort([("_id", -1)])
+        word_infos = db[mongodb_name].find().sort([("_id", 1)])
         for word in word_infos:
             word.pop("_id")
             words.append(word)
