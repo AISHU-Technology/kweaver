@@ -22,8 +22,8 @@ func GetProperties(conf *utils.KGConf, class string) ([]Property, error) {
 		rowValueSplit := strings.Split(rowValue.String(), ", ")
 
 		properties = append(properties, Property{
-			Name:        strings.Trim(rowValueSplit[0], "\""),
-			Type:        strings.Trim(rowValueSplit[1], "\""),
+			Name:        rowValueSplit[0][1 : len(rowValueSplit[0])-1],
+			Type:        rowValueSplit[1][1 : len(rowValueSplit[1])-1],
 			LinkedClass: "",
 			Mandatory:   false,
 		})
