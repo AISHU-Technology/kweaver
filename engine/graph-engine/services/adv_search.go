@@ -74,6 +74,33 @@ func AdvSearchTestHandler(c *gin.Context) {
 	c.JSON(httpcode, res)
 }
 
+// 智能搜索(文档)
+type ReqAdvSearchDefault struct {
+	KGID   string `form:"kg_id"`
+	KNetID int    `form:"knet_id"`
+	Query  string `form:"query"`
+	Page   int    `form:"page" binding:"required,gt=0"`
+	Size   int    `form:"size" binding:"required,gt=0"`
+	Limit  int    `form:"limit"`
+}
+
+func AdvSearchDocumentHandler(c *gin.Context) {
+	var body ReqAdvSearchDefault
+	err := c.ShouldBind(&body)
+	if err != nil {
+		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
+		return
+	}
+	// 国际化
+	header := c.Request.Header
+
+	eventid := c.Request.Header.Get("Event-Id")
+	httpcode, res := controllers.AdvSearchDocument(eventid, body.KGID, body.Query, body.Page, body.Size, body.Limit, header)
+
+	c.JSON(httpcode, res)
+
+}
+
 //not used, just for swagger
 
 type Vertexes struct {

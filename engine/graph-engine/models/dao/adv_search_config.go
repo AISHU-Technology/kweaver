@@ -789,3 +789,27 @@ func GetKGInfo(kgid int) (kginfo *KGInfo, err error) {
 
 	return kginfo, nil
 }
+
+// 获取有高级搜索配置的图谱id
+func GetConfKGID() (kgids []int, err error) {
+	engine := utils.GetConnect()
+	sql := "select distinct knowledge_graph.KG_config_id as kg_id from knowledge_graph " +
+		"inner join search_config on knowledge_graph.KG_config_id = search_config.kg_id"
+
+	kgID, err := engine.Query(sql)
+	if err != nil {
+		return nil, utils.ErrInfo(utils.ErrInternalErr, err)
+	}
+
+	defer kgID.Close()
+
+	for kgID.Next() {
+		var kgid int
+		err = kgID.Scan(&kgid)
+		if err != nil {
+			return nil, utils.ErrInfo(utils.ErrInternalErr, err)
+		}
+		kgids = append(kgids, kgid)
+	}
+	return kgids, nil
+}
