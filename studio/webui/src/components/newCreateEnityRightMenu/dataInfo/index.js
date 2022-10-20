@@ -699,22 +699,22 @@ class DataInfo extends Component {
     let tem = false;
 
     if (typeof selectedElement.entity_id === 'number') {
-        nodes.forEach(item => {
-            if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
-                tem = true;
-            }
-        });
-        edges.forEach(item => {
-            if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
-                tem = true;
-            }
-        });
+      nodes.forEach(item => {
+        if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
+          tem = true;
+        }
+      });
+      edges.forEach(item => {
+        if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
+          tem = true;
+        }
+      });
     } else {
-        nodes.forEach(item => {
-            if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
-                tem = true;
-            }
-        });
+      nodes.forEach(item => {
+        if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
+          tem = true;
+        }
+      });
     }
 
     return tem;
