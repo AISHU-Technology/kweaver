@@ -4,7 +4,7 @@ import { ExclamationCircleFilled, CloseOutlined, LoadingOutlined } from '@ant-de
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import _ from 'lodash';
-import { GRAPH_STATUS, CALCULATE_STATUS } from '@/enums';
+import { CALCULATE_STATUS } from '@/enums';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
 import ExplainTip from '@/components/ExplainTip';
@@ -24,7 +24,6 @@ interface DataRowProps {
   value?: number;
 }
 
-const { NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION, STOP } = GRAPH_STATUS;
 const KEY_INTL: Record<string, { field: string; tip?: React.ReactNode }> = {
   entity_count: { field: intl.get('graphList.entityCount') },
   edge_count: { field: intl.get('graphList.relationshipCount') },
@@ -54,19 +53,9 @@ const Statistics = (props: StatisticsProps) => {
   const [loading, setLoading] = useState(false); // 计算loading
   const [detail, setDetail] = useState<StatisticsData>({} as StatisticsData); // 图谱智商详情
 
-  /**
-   * `正常` | `失败` 状态的图谱可计算
-   * WARNING `失败` 的nebule图谱无法计算出点和边数量
-   */
-  const shouldCalculate = useMemo(() => {
-    const { status, graphdb_type } = graphBasicData;
-    const statusArr = [NORMAL, graphdb_type !== 'nebula' && FAIL].filter(Boolean);
-    return statusArr.includes(status);
-  }, [graphBasicData.status]);
-
   useEffect(() => {
     const { id } = graphBasicData;
-    if (!id || !shouldCalculate) return;
+    if (!id) return;
     pollingDetail(false);
     return () => clearTimeout(timer.current);
   }, [graphBasicData]); // 监听整个对象，确保响应 `刷新` 按钮触发的交互
@@ -91,7 +80,7 @@ const Statistics = (props: StatisticsProps) => {
       }
 
       setLoading(false);
-      Description && setErrMsg(Description);
+      Description && message.error(Description);
     } catch {
       setLoading(false);
     }
@@ -113,30 +102,10 @@ const Statistics = (props: StatisticsProps) => {
   };
 
   /**
-   * 无法计算时报错提示
-   */
-  const alertErr = () => {
-    const { status, graphdb_type } = graphBasicData;
-    switch (true) {
-      case status === WAITING:
-        return message.error(intl.get('intelligence.waitErr'));
-      case status === RUNNING:
-        return message.error(intl.get('intelligence.runErr'));
-      case status === CONFIGURATION || status === STOP:
-        return message.error(intl.get('intelligence.configErr'));
-      case status === FAIL && graphdb_type === 'nebula':
-        return message.error(intl.get('intelligence.failErr'));
-      default:
-        break;
-    }
-  };
-
-  /**
    * 点击计算
    */
   const onCalculateClick = async () => {
     if (loading) return;
-    if (!shouldCalculate) return alertErr();
     setErrMsg('');
 
     try {
@@ -144,7 +113,7 @@ const Statistics = (props: StatisticsProps) => {
       const { res, Description } =
         (await servicesIntelligence.intelligenceCalculate({ graph_id: graphBasicData.id })) || {};
       if (res) return pollingDetail();
-      Description && setErrMsg(Description);
+      Description && message.error(Description);
       setLoading(false);
     } catch {
       setLoading(false);
