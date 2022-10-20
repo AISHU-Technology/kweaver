@@ -331,86 +331,55 @@ const ModalContent = memo(props => {
                             {intl.get('configSys.repeatError')}
                           </p>
                         </React.Fragment>
-                        )
-                            ;
-                        })
-                    }
-    {
-        optionType !== 'check' ? (
-            < div className = "add-address-btn"
-        onClick = {()
-    =>
-        add()
-    }>
-        {
-            intl.get('configSys.addIP')
-        }
-    <
-        /div>
-    ) :
-        null
-    }
-<
-    />
-)
-}
-<
-    /Form.List>
-    < div
-    className = "form-row" >
-        {/* 访问账户名称 */}
-        < Form.Item
-    name = "user"
-    label = {[intl.get('configSys.username')]}
-    rules = {[{required: true, message: intl.get('subscription.cannotNull')}]}
-        >
-        < Input
-    className = "user-input"
-    autoComplete = "off"
-    placeholder = {intl.get('configSys.userPlaceholder')}
-    disabled = {optionType === 'check'
-}
-><
-    /Input>
-    < /Form.Item>
-    {/* 访问存储密码 */
-    }
-<
-    Form.Item
-    name = "password"
-    label = {[intl.get('configSys.password')]}
-    rules = {[{required: true, message: intl.get('subscription.cannotNull')}]}
-        >
-        < Input.Password
-    autoComplete = "off"
-    visibilityToggle = {false}
-    placeholder = {intl.get('configSys.passPlaceholder')}
-    disabled = {optionType === 'check'
-}
-    className = "pass-input"
-        > < /Input.Password>
-        < /Form.Item>
-        < /div>
-        < /Form>
-        < /div>
-        < /ScrollBar>
+                      );
+                    })}
+                    {optionType !== 'check' ? (
+                      <div className="add-address-btn" onClick={() => add()}>
+                        {intl.get('configSys.addIP')}
+                      </div>
+                    ) : null}
+                  </>
+                )}
+              </Form.List>
+              <div className="form-row">
+                {/* 访问账户名称 */}
+                <Form.Item
+                  name="user"
+                  label={[intl.get('configSys.username')]}
+                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
+                >
+                  <Input
+                    className="user-input"
+                    autoComplete="off"
+                    placeholder={intl.get('configSys.userPlaceholder')}
+                    disabled={optionType === 'check'}
+                  ></Input>
+                </Form.Item>
+                {/* 访问存储密码 */}
+                <Form.Item
+                  name="password"
+                  label={[intl.get('configSys.password')]}
+                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
+                >
+                  <Input.Password
+                    autoComplete="off"
+                    visibilityToggle={false}
+                    placeholder={intl.get('configSys.passPlaceholder')}
+                    disabled={optionType === 'check'}
+                    className="pass-input"
+                  ></Input.Password>
+                </Form.Item>
+              </div>
+            </Form>
+          </div>
+        </ScrollBar>
 
-        < div
-    className = "m-footer" >
-    {optionType === 'check' ? (
-        < Button type = "primary"
-    className = "btn primary"
-    onClick = {()
-=>
-    closeModal()
-}>
-    {
-        intl.get('configSys.close')
-    }
-<
-    /Button>
-) :
-    (
+        <div className="m-footer">
+          {optionType === 'check' ? (
+            <Button type="primary" className="btn primary" onClick={() => closeModal()}>
+              {intl.get('configSys.close')}
+            </Button>
+          ) : (
             <ConfigProvider autoInsertSpaceInButton={false}>
               <Button className="ant-btn-default btn-cancel" onClick={testConnection}>
                 {testLoading ? <LoadingOutlined /> : ''}
