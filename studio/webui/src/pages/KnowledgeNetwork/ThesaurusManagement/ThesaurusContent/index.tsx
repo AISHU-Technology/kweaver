@@ -111,7 +111,7 @@ const ThesaurusContent = (props: any) => {
         );
       }
     }
-    let col: any[] = [op];
+    let col: any[] = [];
     arr.forEach((item: any) => {
       const obj = {
         title: `${item}`,
@@ -119,9 +119,9 @@ const ThesaurusContent = (props: any) => {
         key: `${item}`,
         ellipsis: true
       }
-      col = [obj as any, ...col]
+      col = [...col, obj as any]
     });
-
+    col = [...col, op]
     setTotal(selectedThesaurus?.count);
     setShowData(selectedThesaurus?.word_info);
     setColumns(col);
