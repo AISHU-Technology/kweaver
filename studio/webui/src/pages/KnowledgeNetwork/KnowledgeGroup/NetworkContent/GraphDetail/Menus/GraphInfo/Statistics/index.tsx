@@ -69,7 +69,7 @@ const Statistics = (props: StatisticsProps) => {
     if (!id || !shouldCalculate) return;
     pollingDetail(false);
     return () => clearTimeout(timer.current);
-  }, [graphBasicData.id]);
+  }, [graphBasicData]); // 监听整个对象，确保响应 `刷新` 按钮触发的交互
 
   /**
    * 获取智商详情
