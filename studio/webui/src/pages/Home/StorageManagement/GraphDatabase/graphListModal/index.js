@@ -24,8 +24,8 @@ const GraphListModal = props => {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
-    if (!id || !visible) return;
-    getData();
+      if (!id || !visible) return;
+      getData();
   }, [id, visible]);
 
   const getData = async page => {

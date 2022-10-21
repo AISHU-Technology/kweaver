@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import servicesSearchConfig from '@/services/searchConfig';
 import { knowModalFunc, tipModalFunc } from '@/components/TipModal';
 import ScrollBar from '@/components/ScrollBar';
+import ExplainTip from '@/components/ExplainTip';
 import { getParam } from '@/utils/handleFunction';
 import { CN_NUMBER, EN_NUMBER, convertData, initConfig, generateConfig } from '../assistFunction';
 import SaveModal from './SaveModal';
@@ -533,9 +534,7 @@ const StrategyConfig: React.ForwardRefRenderFunction<unknown, StrategyConfigProp
             <div className="config-row">
               <p className="row-title">
                 {intl.get('searchConfig.searchScope')}
-                <Tooltip placement="right" title={intl.get('searchConfig.scopeTip')}>
-                  <QuestionCircleOutlined className="q-icon" />
-                </Tooltip>
+                <ExplainTip placement="right" title={intl.get('searchConfig.scopeTip')} />
               </p>
 
               <div className="rule-box">
@@ -584,9 +583,7 @@ const StrategyConfig: React.ForwardRefRenderFunction<unknown, StrategyConfigProp
             <div className="config-row">
               <p className="row-title" style={{ marginTop: 24 }}>
                 {intl.get('searchConfig.searchRes')}
-                <Tooltip placement="right" title={intl.get('searchConfig.resTip')}>
-                  <QuestionCircleOutlined className="q-icon" />
-                </Tooltip>
+                <ExplainTip placement="right" title={intl.get('searchConfig.resTip')} />
               </p>
 
               <div className="rule-box">

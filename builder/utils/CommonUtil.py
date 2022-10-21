@@ -243,7 +243,7 @@ class Commonutil(object):
         return hostUrl
 
     def updatemongo(self, db, collection, filter, source):
-        find_dict = {"name":filter["name"]}
+        find_dict = {"name": filter["name"]}
         if source == "type_sa":
             find_dict["type_nw"] = "true"
         ss = db[collection].find_one(find_dict)

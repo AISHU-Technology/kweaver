@@ -3,7 +3,7 @@
  */
 import React, { Component, createRef } from 'react';
 import intl from 'react-intl-universal';
-import { Switch, Button, Modal, ConfigProvider, Radio, message } from 'antd';
+import { Button, Modal, ConfigProvider, Radio } from 'antd';
 import { CheckCircleFilled, LoadingOutlined } from '@ant-design/icons';
 
 import serviceWorkflow from '@/services/workflow';
@@ -15,7 +15,6 @@ import SetAttr from './SetAttr';
 import NodeInfo from './NodeInfo';
 import { isDocument, initConfig, updateConfig } from './assistFunction';
 
-import emptyImg from '@/assets/images/empty.svg';
 import full from '@/assets/images/quanliang.svg';
 import increment from '@/assets/images/zengliang.svg';
 import './style.less';
@@ -24,7 +23,11 @@ class Mix extends Component {
   isPassStep4 = createRef(false);
 
   state = {
-    check: true, // 融合开关
+    /**
+     * TODO 融合开关, [183804]UI上删除融合按钮, 默认选择融合, 关闭融合会对领域智商计算产生影响
+     */
+    check: true,
+
     modalVisible: false, // 执行任务成功弹窗
     entity: [], // 点类信息
     showIndex: -1, // 当前展开的点类
@@ -163,15 +166,6 @@ class Mix extends Component {
   };
 
   /**
-   * 是否融合开关
-   * @param {boolean} value
-   */
-  onChange = value => {
-    const index = this.state.showIndex === -1 ? 0 : this.state.showIndex;
-    this.setState({ check: value, showIndex: index });
-  };
-
-  /**
    * 展开的点的索引
    * @param {number} index
    */
@@ -231,13 +225,12 @@ class Mix extends Component {
     const knw_id =
       window.sessionStorage.getItem('selectedKnowledgeId') &&
       parseInt(window.sessionStorage.getItem('selectedKnowledgeId'));
-    this.props.history.push(`/knowledge/network?id=${knw_id}&tabsKey=${this.props.graphId}`);
+    this.props.history.push(`/knowledge/network?id=${knw_id}&cid=${this.props.graphId}&tab=3`);
   };
 
   render() {
     const { graphId } = this.props;
     const {
-      check,
       entity,
       showIndex,
       isError,
@@ -253,17 +246,8 @@ class Mix extends Component {
 
     return (
       <div className="mix">
-        <div className="head">
-          <span className="word">{intl.get('workflow.conflation.isMix')}</span>
-          <Switch checked={this.state.check} onChange={this.onChange} />
-        </div>
-
         <div className="content">
-          <div className={check ? 'hidden' : 'none-box'}>
-            <img className="none-img" src={emptyImg} alt="nodata" />
-            <p className="none-info-sub-title">{intl.get('workflow.conflation.pleaseOpen')}</p>
-          </div>
-          <div className={check ? 'info' : 'hidden'}>
+          <div className="info">
             <div className="node-info">
               <NodeInfo
                 entity={entity}

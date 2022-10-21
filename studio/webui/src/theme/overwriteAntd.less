@@ -245,12 +245,7 @@ button.ant-btn-lg {
 }
 
 .ant-table-thead>tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan]):before {
-  width: 0;
-}
-
-.ant-empty-image {
-  height: 64px;
-  margin: 0 auto;
+  display: none;
 }
 
 .ant-table-thead>tr>th {
@@ -258,7 +253,37 @@ button.ant-btn-lg {
   border-top: 1px solid var(--ad-line-color);
 }
 
+.ant-table-empty .ant-table-tbody>tr>td {
+  border-bottom: none;
+}
+
+td.ant-table-column-sort {
+  background-color: #fff;
+}
+
+.ant-table-thead th.ant-table-column-sort {
+  background: #fafafa;
+}
+
+.ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: #fafafa;
+}
+
+/****************************** empty ******************************/
+.ant-empty-image {
+  height: 64px;
+  margin: 0 auto;
+}
+
 .ant-empty-description {
   font-size: 14px;
   color: var(--ad-text-color);
+}
+
+/****************************** Dropdown ******************************/
+.ant-dropdown-menu {
+  .ant-dropdown-menu-item-selected, .ant-dropdown-menu-submenu-title-selected {
+    color: var(--ad-head-color);
+    background-color: var(--ad-select-bg-color);
+  }
 }

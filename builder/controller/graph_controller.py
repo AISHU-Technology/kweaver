@@ -1,9 +1,12 @@
 # -*-coding:utf-8-*-
+import time
+
 import requests
 from flask import Blueprint, request, jsonify, send_file, send_from_directory, make_response
 
 from werkzeug.utils import secure_filename
 from dao.graph_dao import graph_dao
+from dao.intelligence_dao import intelligence_dao
 from dao.otl_dao import otl_dao
 from dao.task_dao import task_dao
 from dao.other_dao import other_dao
@@ -20,15 +23,20 @@ import json
 import os
 from utils.log_info import Logger
 from service.task_Service import task_service
+from service.intelligence_service import intelligence_query_service
+from service.intelligence_service import intelligence_calculate_service
+
 from controller.knowledgeNetwork_controller import saveRelation, deleteRelation, updateKnw
 from common.errorcode.gview import Gview as Gview2
 from common.errorcode import codes
 import uuid
 from flasgger import swag_from
 import yaml
+
 graph_controller_app = Blueprint('graph_controller_app', __name__)
 
-GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH',
+                               os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
     swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r') as f:
@@ -37,6 +45,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
     swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
     swagger_new_response.update(swagger_definitions)
+
 
 @graph_controller_app.route('', methods=["post"], strict_slashes=False)
 @swag_from(swagger_old_response)
@@ -593,6 +602,9 @@ def graphDeleteByIds():
         knw_id = params_json["knw_id"]
         deleteRelation(knw_id, normal)
 
+        # 更新知识网络的智商数据
+        intelligence_calculate_service.update_intelligence_info(normal)
+
     if len(noExist) != 0:
         mess += "%s 不存在; " % ",".join(map(str, noExist))
     if len(runs) != 0:
@@ -872,8 +884,8 @@ def get_graph_info_basic():
         if not graph_id or not graph_id.isdigit():
             code = codes.Builder_GraphController_GetGraphInfoBasic_ParamError
             return Gview2.TErrorreturn(code,
-                                      arg='graph_id',
-                                      description='请确保graph_id存在，且graph_id应为数字'), 400
+                                       arg='graph_id',
+                                       description='请确保graph_id存在，且graph_id应为数字'), 400
         # is_all
         if is_all.lower() == 'true':
             is_all = True
@@ -882,8 +894,8 @@ def get_graph_info_basic():
         else:
             code = codes.Builder_GraphController_GetGraphInfoBasic_ParamError
             return Gview2.TErrorreturn(code,
-                                      arg='is_all',
-                                      description='is_all应为“True”或“False”'), 400
+                                       arg='is_all',
+                                       description='is_all应为“True”或“False”'), 400
         # key参数校验
         if key:
             try:
@@ -906,6 +918,7 @@ def get_graph_info_basic():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
+
 
 @graph_controller_app.route('/info/onto', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
@@ -938,6 +951,7 @@ def get_graph_info_onto():
                                    cause=str(e),
                                    description=str(e)), 400
 
+
 @graph_controller_app.route('/info/count', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def get_graph_info_count():
@@ -968,6 +982,7 @@ def get_graph_info_count():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
+
 
 @graph_controller_app.route('/info/detail', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
@@ -1026,3 +1041,56 @@ def get_graph_info_detail():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
+
+
+@graph_controller_app.route('/intelligence/task', methods=['post'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def intelligence_calculate_task():
+    '''
+    post knowledge graph intelligence calculate task
+    ---
+    parameters:
+        -   name: graph_id
+            in: body
+            description: graph id
+            required: true
+            type: integer
+            example: 13
+    '''
+
+    param_code, params_json, param_message = commonutil.getMethodParam()
+    if param_code < 0 or 'graph_id' not in params_json:
+        code = codes.Builder_GraphController_IntelligenceCalculateTask_ParamError
+        return Gview2.error_return(code, arg='graph_id'), 400
+
+    graph_id = params_json['graph_id']
+
+    # send async task, because large graph will cause a very long time query
+    code, resp = intelligence_calculate_service.send_task(graph_id)
+    if code != codes.successHttpCode:
+        return resp, 500
+    return Gview2.json_return(resp['res']), 200
+
+
+@graph_controller_app.route('/intelligence/<graph_id>', methods=['get'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def intelligence_stats(graph_id):
+    '''
+    query knowledge graph intelligence calculate result
+    ---
+    parameters:
+        -   name: graph_id
+            in: path
+            required: true
+            description: graph id
+            type: integer
+    '''
+    if not intelligence_query_service.check_uint(graph_id):
+        code = codes.Builder_GraphController_IntelligenceStats_ParamError
+        return Gview2.error_return(code, arg='graph_id'), 400
+
+    res_code, result = intelligence_query_service.query_graph_intelligence(graph_id)
+    if res_code != codes.successCode:
+        return result, 500
+
+    return Gview2.json_return(result), 200

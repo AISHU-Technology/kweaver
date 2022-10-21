@@ -35,10 +35,6 @@ const LeftSpace = props => {
   const [page, setPage] = useState(1); // 页码
   const [name, setName] = useState(''); // 搜索名称
 
-  useEffect(() => {
-    getGraphList({ page, order, rule });
-  }, [page, order, rule]);
-
   const createGraph = async () => {
     try {
       const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '', type: 'all' };
@@ -231,7 +227,7 @@ const LeftSpace = props => {
         ) : name ? (
           <div className="search-none">
             <img src={noResult} alt="noResult" />
-            <div className="word">{intl.get('memberManage.searchNull')}</div>
+            <div className="word">{intl.get('global.noResult')}</div>
           </div>
         ) : (
           <div className="knowledge-list-table">

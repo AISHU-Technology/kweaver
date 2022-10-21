@@ -395,7 +395,7 @@ const SavedConfig: React.ForwardRefRenderFunction<unknown, SavedConfigProps> = (
 
             <div className={`no-config-box ${configList.length && 'hide'}`}>
               <img src={noResult} alt="no data" />
-              <p className="desc">{intl.get('global.noResult1')}</p>
+              <p className="desc">{intl.get('global.noResult')}</p>
             </div>
           </div>
         </ScrollBar>

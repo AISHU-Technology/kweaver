@@ -469,7 +469,7 @@ class DsmService():
                 obj['message'] = "select fail"
                 return ret_code, obj
 
-            ret = dsm_dao.getall(int(page)-1, int(size), order, knw_id,"knw")
+            ret = dsm_dao.getall(int(page) - 1, int(size), order, knw_id, "knw")
             rec_dict = ret.to_dict('records')
 
             if page == "-1":

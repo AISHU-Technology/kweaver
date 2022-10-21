@@ -2,7 +2,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { sleep } from '@/tests';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
-import Created from '../createModal/index';
+import KnowledgeModal from './index';
 
 const defaultProps = {
   visible: true,
@@ -10,8 +10,8 @@ const defaultProps = {
     type: 'add',
     data: {}
   },
-  onRefreshList: jest.fn(),
-  onCloseCreateOrEdit: jest.fn()
+  onSuccess: jest.fn(),
+  onCancel: jest.fn()
 };
 
 servicesKnowledgeNetwork.knowledgeNetEdit = jest.fn(() => Promise.resolve({ res: 'success' }));
@@ -21,7 +21,7 @@ jest.mock('react-router-dom', () => ({
   useHistory: () => ({ push: jest.fn(), location: { pathname: '' }, listen: jest.fn() })
 }));
 
-const init = (props = defaultProps) => mount(<Created {...props} />);
+const init = (props = defaultProps) => mount(<KnowledgeModal {...props} />);
 
 describe('Function test', () => {
   it('ok btn click', async () => {

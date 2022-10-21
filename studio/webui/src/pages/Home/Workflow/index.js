@@ -146,13 +146,13 @@ const Workflow = props => {
    */
   const onExit = () => {
     if (current === 0 && !step1Ref.current.isModify()) {
+      let graphIdFix = '';
       if (window.location.pathname.includes('edit')) {
-        const id = parseInt(getParam('id'));
-        history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}&editId=${id}`);
-        return;
+        const id = getParam('id');
+        graphIdFix = `&cid=${id}`;
       }
 
-      history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}`);
+      history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId') + graphIdFix}`);
       return;
     }
 
