@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"graph-engine/utils"
-	"strings"
 )
 
 type AnalysisRes struct {
@@ -84,15 +83,15 @@ func (a *AnalysisRes) Analysis(conf *utils.KGConf, rid string) error {
 		node2, _ := v2.AsNode()
 
 		nodePro, _ := node.Properties(node.GetTags()[0])
-		vInfo.Name = strings.Trim(nodePro["name"].String(), "\"")
+		vInfo.Name = nodePro["name"].String()[1 : len(nodePro["name"].String())-1]
 		vInfo.Class = node.GetTags()[0]
-		vInfo.Gns = strings.Trim(nodePro["gns"].String(), "\"")
-		vInfo.DsID = strings.Trim(nodePro["ds_id"].String(), "\"")
+		vInfo.Gns = nodePro["gns"].String()[1 : len(nodePro["gns"].String())-1]
+		vInfo.DsID = nodePro["ds_id"].String()[1 : len(nodePro["ds_id"].String())-1]
 
 		node2Pro, _ := node2.Properties(node2.GetTags()[0])
 		newNode2Pro := make(map[string]interface{}, len(node2Pro))
 		for k, value := range node2Pro {
-			newNode2Pro[k] = strings.Trim(value.String(), "\"")
+			newNode2Pro[k] = value.String()[1 : len(value.String())-1]
 		}
 		newNode2Pro["@class"] = node2.GetTags()[0]
 
