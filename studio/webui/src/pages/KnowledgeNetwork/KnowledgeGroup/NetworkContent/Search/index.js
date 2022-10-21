@@ -49,8 +49,8 @@ class Search extends Component {
       x: this.state.G6GraphRef?.ref?.current.scrollWidth / 2 + Math.random() * 100,
       y: this.state.G6GraphRef?.ref?.current.scrollHeight / 2 + Math.random() * 100,
       style: {
-        fill: item.expand ? item.color || '#126ee3' : '',
-        stroke: 'white'
+        fill: item.expand ? item.color || '#126ee3' : 'rgba(0, 0, 0, 0)',
+        stroke: item.expand ? 'white' : item.color
       }
     }));
 

@@ -997,6 +997,11 @@ class G6Graph extends Component {
         name: ''
       });
 
+      if (res?.res === null) {
+        message.warning(intl.get('searchGraph.expandFalse'));
+        return;
+      }
+
       if (res && res.res) {
         const { newNodes, openEdges } = getExpandHandleData(res.res, node, nodes, edges);
         this.addNodes(newNodes, openEdges);
