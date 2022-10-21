@@ -282,11 +282,40 @@ def intelligence_stats():
     query knowledge network intelligence calculate result
     ---
     parameters:
-        -   name: know_id
+        -   name: size
+            in: query
+            required: true
+            description: knowledge network intelligence list page size
+            type: integer
+            example: 10
+        -   name: page
+            in: query
+            required: true
+            description: knowledge network intelligence list page index
+            type: integer
+            example: 1
+        -   name: rule
+            in: query
+            required: true
+            description: knowledge network intelligence info sort properties
+            type: string
+            example : [data_quality_B, update_time, data_quality_score]
+        -   name: order
+            in: query
+            required: true
+            description: knowledge network intelligence info sort type, desc or asc
+            type: string
+        -   name: knw_id
             in: query
             required: true
             description: knowledge network id
             type: integer
+            example: 13
+        -   name: graph_name
+            in: query
+            required: false
+            description: graph name
+            type: string
     '''
 
     param_code, params_json, param_message = commonutil.getMethodParam()

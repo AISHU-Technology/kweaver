@@ -170,7 +170,7 @@ class IntelligenceCalculateService(object):
         param_json['relation_id'] = graph_id
         param_json['task_name'] = 'intelligence-{}'.format(graph_id)
         param_json['async_task_name'] = "cel.intelligence_calculate"
-        # 设置是否取消正在运行的同图谱任务
+        # set cancel the previous task
         param_json['cancel_pre'] = True
         param_json['task_params'] = json.dumps({"graph_id": graph_id})
 
@@ -189,7 +189,7 @@ class IntelligenceCalculateService(object):
 
     def graph_calculate_task(self, param_json):
         """
-        方便异步任务调用的方法
+        for async service
         """
         if 'graph_id' not in param_json:
             raise Exception("invalid parameters")
@@ -290,22 +290,22 @@ class IntelligenceQueryService(object):
             if count == 0:
                 return codes.successCode, Gview.json_return(self.default_network_response(knw_info, count))
 
-            # 根据名称，模糊，分页查询图谱
+            # query graph by name in page
             graph_score_list = self.query_graph_score_in_pages(query_params)
             if not graph_score_list:
                 return codes.successCode, self.default_network_response(knw_info, count)
             graph_id_list = [info['graph_id'] for info in graph_score_list]
 
-            # 查询graph详细信息
+            # query graph detail info
             graph_detail_list = graph_dao.get_graph_detail(graph_id_list)
             graph_detail_dict = {graph_detail['graph_id']: graph_detail for graph_detail in graph_detail_list}
 
-            # 查询任务记录
+            # query graph intelligence task calculate record
             knw_intelligence = dict()
             task_info_list = async_task_dao.query_latest_task(graph_id_list)
             task_info_dict = {int(task_info['relation_id']): task_info for task_info in task_info_list}
 
-            # 统计智商数据
+            # start intelligence info statistic
             graph_intelligence_list = list()
             for graph_score in graph_score_list:
                 # add graph basic info
@@ -346,7 +346,7 @@ class IntelligenceQueryService(object):
     @classmethod
     def query_graph_onto_info(cls, graph_id):
         """
-        查询本体表，获取用户设计的本体详细信息
+        query Ontology info,
         """
         graph_detail = graph_dao.get_graph_detail(graph_id)
         if not graph_detail:
@@ -366,7 +366,7 @@ class IntelligenceQueryService(object):
         entity_list = list()
         edge_list = list()
         for onto_info in onto_info_list:
-            # 合并实体类
+            # merge edge and entity
             item_entity_list = eval(onto_info['entity'])
             entity_list.extend(item_entity_list)
 
