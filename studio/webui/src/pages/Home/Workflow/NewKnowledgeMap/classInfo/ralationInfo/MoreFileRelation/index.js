@@ -184,7 +184,7 @@ class MoreFileRelation extends Component {
     const { startNode, endNode, moreFileData, attrSelect, entityName } = this.props;
     const { equation_end, equation_begin, modalVisible, equation } = this.state;
     const { anyDataLang } = this.props;
-
+    console.log(111, endNode);
     return (
       <div>
         {moreFileData?.begin_class_prop && (
@@ -461,16 +461,13 @@ class MoreFileRelation extends Component {
                           title={(moreFileData.begin_class_prop && moreFileData.begin_class_prop.value) || undefined}
                           suffixIcon={<CaretRightOutlined className="ant-select-suffix" rotate={90} />}
                         >
-                          {startNode &&
-                            startNode.nodeInfo &&
-                            startNode.nodeInfo.attrSelect &&
-                            startNode.nodeInfo.attrSelect.map(item => {
-                              return (
-                                <Option key={item} title={item}>
-                                  {item}
-                                </Option>
-                              );
-                            })}
+                          {startNode?.properties?.map(item => {
+                            return (
+                              <Option key={item[0]} title={item}>
+                                {item[0]}
+                              </Option>
+                            );
+                          })}
                         </Select>
 
                         <Select
@@ -517,16 +514,13 @@ class MoreFileRelation extends Component {
                           title={(moreFileData.end_class_prop && moreFileData.end_class_prop.value) || undefined}
                           suffixIcon={<CaretRightOutlined className="ant-select-suffix" rotate={90} />}
                         >
-                          {endNode &&
-                            endNode.nodeInfo &&
-                            endNode.nodeInfo.attrSelect &&
-                            endNode.nodeInfo.attrSelect.map(item => {
-                              return (
-                                <Option key={item} title={item}>
-                                  {item}
-                                </Option>
-                              );
-                            })}
+                          {endNode?.properties?.map(item => {
+                            return (
+                              <Option key={item[0]} title={item}>
+                                {item[0]}
+                              </Option>
+                            );
+                          })}
                         </Select>
                       </ConfigProvider>
                     </Input.Group>
