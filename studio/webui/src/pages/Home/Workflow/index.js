@@ -34,6 +34,7 @@ const Workflow = props => {
   const step6Ref = useRef(); // 绑定流程六组件实例
   const [current, setCurrent] = useState(0); // 步骤
   const [dbType, setDbType] = useState('');
+  const [osId, setOsId] = useState(0); // 图数据库绑定的openserch id
   const [basicData, setBasicData] = useState({}); // 基本信息
   const [dataSourceData, setDataSourceData] = useState([]); // 数据源
   const [useDs, setUseDs] = useState([]); // 被使用的数据源
@@ -84,6 +85,7 @@ const Workflow = props => {
       res.res.graph_KMerge && setConflation(res.res.graph_KMerge);
       res.res.graph_status && setGraphStatus(res.res.graph_status);
       setGraphId(id);
+      setOsId(res?.res?.graph_db_id);
     }
 
     if (res?.Code) {
@@ -293,6 +295,7 @@ const Workflow = props => {
             prev={prev}
             useDs={useDs}
             dbType={dbType}
+            osId={osId}
             setUseDs={setUseDs}
             ontoData={ontoData}
             current={current}

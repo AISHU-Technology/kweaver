@@ -9,6 +9,7 @@ import { wrapperTitle } from '@/utils/handleFunction';
 
 import IconFont from '@/components/IconFont';
 import ScrollBar from '@/components/ScrollBar';
+import serviceStorageManagement from '@/services/storageManagement';
 
 import noResult from '@/assets/images/noResult.svg';
 import './index.less';
@@ -38,7 +39,35 @@ const LeftSpace = props => {
     getGraphList({ page, order, rule });
   }, [page, order, rule]);
 
-  const createGraph = () => history.push('/home/workflow/create');
+  const createGraph = async () => {
+    try {
+      const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '', type: 'all' };
+      const { res = {} } = await serviceStorageManagement.graphDBGetList(data);
+      if (res?.data?.length > 0) {
+        history.push('/home/workflow/create');
+        return;
+      }
+      message.error({
+        content: (
+          <div>
+            {intl.get('global.databaseNull')}
+            <span
+              style={{ cursor: 'pointer' }}
+              className="ad-c-primary"
+              onClick={() => history.push('/home/system-config')}
+            >
+              {intl.get('global.goNow')}
+            </span>
+          </div>
+        ),
+        onClick: () => {
+          message?.destroy();
+        }
+      });
+    } catch (error) {
+      message.error('出错啦');
+    }
+  };
 
   const searchGraph = e => {
     const { value } = e.target;

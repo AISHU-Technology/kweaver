@@ -393,7 +393,6 @@ class NewCreateEntityHead extends Component {
           <div className="entity-name" title={graphName}>
             {graphName}
           </div>
-
         </div>
 
         <div className="tool tool-center">
@@ -766,6 +765,8 @@ class NewCreateEntityHead extends Component {
             setSaveData={this.setSaveData}
             setTouch={this.props.setTouch}
             graphId={this.props.graphId}
+            dbType={this.props.dbType}
+            osId={this.props.osId}
             ontology_id={this.props.ontology_id}
             ontologyId={this.props.ontologyId}
           />

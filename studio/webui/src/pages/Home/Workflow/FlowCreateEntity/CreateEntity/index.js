@@ -737,6 +737,8 @@ class CreateEntity extends Component {
             quit={this.quit}
             onEditEntityModalRef={this.onEditEntityModalRef}
             selectedElement={selectedElement}
+            dbType={this.props.dbType}
+            osId={this.props.osId}
             graphName={this.props.graphName}
           />
         </div>
