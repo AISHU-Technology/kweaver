@@ -1134,7 +1134,7 @@ class GraphDB(object):
                     print(url)
                     print(es_bulk_index)
                     print(self.state)
-        else:
+        elif pro_value and pro_value_index:
             if self.type == 'orientdb':
                 vertexsql = "UPDATE  `{}` SET {} UPSERT WHERE {}" \
                     .format(otl_name, ",".join(pro_value), " and ".join(pro_value_index))
