@@ -79,6 +79,7 @@ const Basic = (props, ref) => {
       if (!_.isEmpty(res)) {
         if (basicData?.graph_db_id) {
           const currentDb = _.filter(res?.data, item => item.id === basicData.graph_db_id)[0];
+
           setDbType(currentDb.type);
         }
         setStorageList(res?.data);

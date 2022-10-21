@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import intl from 'react-intl-universal';
-import { Select, ConfigProvider, Empty } from 'antd';
+import { Select, ConfigProvider, Empty, message } from 'antd';
 
 import servicesCreateEntity from '@/services/createEntity';
+import serviceStorageManagement from '@/services/storageManagement';
 
 import GraphShow from '../graphShow';
 import { handleUnStructDataSourceData, setSourceAndTarget, showError } from './assistFunction';
@@ -51,6 +53,13 @@ class ModelImport extends Component {
    * @description 选择模型
    */
   selectModel = async selectTypeValue => {
+    // 图谱绑定orientdb，选择文档知识模型，在没有配置opensearch的情况选择无效并提示
+    if (selectTypeValue === 'Anysharedocumentmodel' && this.props.dbType === 'orientdb') {
+      const a = await this.getOpensearchList();
+
+      if (!a) return;
+    }
+
     const res = await servicesCreateEntity.getModelPreview(selectTypeValue);
 
     if (res && res.res && res.res.modelspo) {
@@ -116,6 +125,41 @@ class ModelImport extends Component {
       },
       type: 'model'
     });
+  };
+
+  /**
+   * 查询当前系统是否配置opensearch
+   */
+  getOpensearchList = async () => {
+    try {
+      const id = this.props.osId;
+      const res = await serviceStorageManagement.graphDBGetById(id);
+
+      if (res?.res?.osId > 0) {
+        return true;
+      }
+      message.error({
+        content: (
+          <div>
+            {intl.get('global.openSearchNull')}
+
+            <span
+              style={{ cursor: 'pointer' }}
+              className="ad-c-primary"
+              onClick={() => this.props.history.push('/home/system-config')}
+            >
+              {intl.get('global.goNow')}
+            </span>
+          </div>
+        ),
+        onClick: () => {
+          message?.destroy();
+        }
+      });
+      return false;
+    } catch (error) {
+      return false;
+    }
   };
 
   /**
@@ -222,4 +266,4 @@ ModelImport.defaultProps = {
   setSaveData: () => {}
 };
 
-export default connect(mapStateToProps, null)(ModelImport);
+export default connect(mapStateToProps, null)(withRouter(ModelImport));

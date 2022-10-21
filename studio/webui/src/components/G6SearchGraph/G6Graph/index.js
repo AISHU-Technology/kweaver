@@ -584,8 +584,8 @@ class G6Graph extends Component {
    * 点击点或边打开侧边栏
    */
   openSideBar = () => {
-    const { lefSelect, autoOpen, setTabSelect, setSideBarVisible } = this.props;
-    if (lefSelect !== 3) {
+    const { autoOpen, setTabSelect, setSideBarVisible, addE } = this.props;
+    if (!addE) {
       setTabSelect(2); // 非用户选中侧边路径板块，选中点和边自动选中基本信息板块
     }
     if (autoOpen) {
