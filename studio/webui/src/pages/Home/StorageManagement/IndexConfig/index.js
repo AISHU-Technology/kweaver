@@ -190,9 +190,7 @@ class IndexConfig extends Component {
       fixed: 'right',
       width: 160,
       render: (text, record) => {
-        return record.name === '内置opensearch' ? (
-          <span className="icon-sub">- -</span>
-        ) : (
+        return (
           <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => this.getIndex(record, 'edit')}>
               {intl.get('configSys.Edit')}
