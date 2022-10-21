@@ -1051,10 +1051,11 @@ def intelligence_calculate_task():
     ---
     parameters:
         -   name: graph_id
-            in: query
-            required: true
+            in: body
             description: graph id
+            required: true
             type: integer
+            example: 13
     '''
 
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -1079,7 +1080,7 @@ def intelligence_stats(graph_id):
     ---
     parameters:
         -   name: graph_id
-            in: query
+            in: path
             required: true
             description: graph id
             type: integer
