@@ -6,6 +6,7 @@ import Created from '../createModal/index';
 
 const props = {
   visible: true,
+  dbType: 'nebula',
   closeModal: jest.fn(),
   optionType: 'create',
   optionStorage: Object,

@@ -56,6 +56,7 @@
     "failed": "Failed",
     "emptyTableCreate": "[create]",
     "check": "Check",
+    "refresh": "Refresh",
     "loadFail": "Failed to load",
     "thousand": "thousand",
     "tenThousand": "ten thousand",
@@ -63,6 +64,9 @@
     "100Million": "hundred million",
     "100Billion": "hundred billion",
     "trillion": "trillion",
-    "graphID": "knowledge graph ID"
+    "graphID": "knowledge graph ID",
+    "openSearchNull": "OpenSearch not bound, please configure it at System Configuration &gt; Storage Management.",
+    "databaseNull": "Graph database not bound, please configure it at System Configuration &gt; Storage Management.",
+    "goNow": "GO now"
   }
 }

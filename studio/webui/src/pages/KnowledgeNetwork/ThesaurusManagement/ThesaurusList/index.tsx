@@ -248,11 +248,7 @@ const ThesaurusList = (props: any) => {
                 <IconFont type="icon-Add" />
                 {intl.get('knowledge.create')}
               </Button>
-              <Button
-                className="operate-btn"
-                disabled={_.isEmpty(selectedIds) || _.isEmpty(thesaurusList)}
-                onClick={() => exportData()}
-              >
+              <Button className="operate-btn" disabled={!indeterminate() && !checkAll} onClick={() => exportData()}>
                 <IconFont type="icon-daochu" />
                 {intl.get('ThesaurusManage.export')}
               </Button>

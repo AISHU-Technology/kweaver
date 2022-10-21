@@ -1,8 +1,8 @@
 /* eslint-disable */
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import intl from 'react-intl-universal';
-import {Button, Select, Table, Tooltip, message, Modal, ConfigProvider, Radio} from 'antd';
-import {LoadingOutlined, ExclamationCircleFilled} from '@ant-design/icons';
+import { Button, Select, Table, Tooltip, message, Modal, ConfigProvider, Radio } from 'antd';
+import { LoadingOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 
 import HOOKS from '@/hooks';
 import serviceTaskManagement from '@/services/taskManagement';
@@ -558,112 +558,62 @@ const TaskList = props => {
     },
     {
       title: intl.get('task.startTime'),
-        width: 206,
-        key: 'start_time',
-        dataIndex: 'start_time'
+      width: 206,
+      key: 'start_time',
+      dataIndex: 'start_time'
     },
-      {
-          title: intl.get('task.endTime'),
-          width: 206,
-          key: 'end_time',
-          dataIndex: 'end_time',
-          render: text => text || '--'
-      },
-      {
-          title: intl.get('task.operation'),
-          dataIndex: 'op',
-          fixed: 'right',
-          width: 160,
-          render: (text, record, index) => {
-              if (index === 0) {
-                  return (
-                      < div
-                  className = "ad-center columnOp"
-                  style = {
-                  {
-                      justifyContent: 'flex-start'
-                  }
-              }>
-                  {
-                      (record.task_status === 'running' || record.task_status === 'waiting') && (
-                      < Button
-                      type = "link"
-                      onClick = {()
-                  =>
-                      handleStop(record.graph_id)
-                  }>
-                      {
-                          intl.get('task.termination')
-                      }
-                  <
-                      /Button>
-                  )
-                  }
-                  {
-                      (record.task_status === 'stop' ||
-                          record.task_status === 'failed' ||
-                          record.task_status === 'normal') && (
-                      < Button
-                      type = "link"
-                      onClick = {()
-                  =>
-                      {
-                          setSelectUpdateId(record.graph_id);
-                          if (record.trigger_type === 2) return handleRun(record.graph_id, 'full');
-                          if (!record.effective_storage) return message.error(intl.get('task.runError'));
-                          setUpdateVisible(true);
-                      }
-                  }
-                  >
-                      {
-                          intl.get('task.run')
-                      }
-                  <
-                      /Button>
-                  )
-                  }
-              <
-                  Button
-                  type = "link"
-                  onClick = {()
-              =>
-                  handleDelete(record)
-              }>
-                  {
-                      intl.get('graphList.delete')
-                  }
-              <
-                  /Button>
-                  < /div>
-              )
-                  ;
-              } else {
-                  return (
-                      < div
-                  className = "ad-center columnOp"
-                  style = {
-                  {
-                      justifyContent: 'flex-start'
-                  }
-              }>
-              <
-                  Button
-                  type = "link"
-                  onClick = {()
-              =>
-                  handleDelete(record)
-              }>
-                  {
-                      intl.get('graphList.delete')
-                  }
-              <
-                  /Button>
-                  < /div>
-              )
-                  ;
-              }
-          }
+    {
+      title: intl.get('task.endTime'),
+      width: 206,
+      key: 'end_time',
+      dataIndex: 'end_time',
+      render: text => text || '--'
+    },
+    {
+      title: intl.get('task.operation'),
+      dataIndex: 'op',
+      fixed: 'right',
+      width: 160,
+      render: (text, record, index) => {
+        if (index === 0) {
+          return (
+            <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
+              {(record.task_status === 'running' || record.task_status === 'waiting') && (
+                <Button type="link" onClick={() => handleStop(record.graph_id)}>
+                  {intl.get('task.termination')}
+                </Button>
+              )}
+              {(record.task_status === 'stop' ||
+                record.task_status === 'failed' ||
+                record.task_status === 'normal') && (
+                <Button
+                  type="link"
+                  onClick={() => {
+                    setSelectUpdateId(record.graph_id);
+                    if (record.trigger_type === 2) return handleRun(record.graph_id, 'full');
+                    if (!record.effective_storage) return message.error(intl.get('task.runError'));
+                    setUpdateVisible(true);
+                  }}
+                >
+                  {intl.get('task.run')}
+                </Button>
+              )}
+              <Button type="link" onClick={() => handleDelete(record)}>
+                {intl.get('graphList.delete')}
+              </Button>
+            </div>
+          );
+        } else {
+          return (
+            <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
+              <Button type="link" onClick={() => handleDelete(record)}>
+                {intl.get('graphList.delete')}
+              </Button>
+            </div>
+          );
+        }
       }
+    }
   ];
 
   return (

@@ -56,6 +56,7 @@
     "failed": "失败",
     "emptyTableCreate": "【新建】",
     "check": "查看",
+    "refresh": "刷新",
     "loadFail": "加载失败",
     "thousand": "千",
     "tenThousand": "万",
@@ -63,6 +64,9 @@
     "100Million": "亿",
     "100Billion": "千亿",
     "trillion": "兆",
-    "graphID": "知识图谱ID"
+    "graphID": "知识图谱ID",
+    "openSearchNull": "未绑定OpenSearch，您可前往【系统配置-存储管理】进行配置。",
+    "databaseNull": "未配置图数据库，您可前往【系统配置-存储管理】进行配置。",
+    "goNow": "立即前往"
   }
 }

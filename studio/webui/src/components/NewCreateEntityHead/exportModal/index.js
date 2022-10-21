@@ -58,7 +58,14 @@ class ExportModal extends Component {
     }
 
     if (type === 'model') {
-      return <ModelImport saveData={this.props.saveData} setSaveData={this.props.setSaveData} />;
+      return (
+        <ModelImport
+          saveData={this.props.saveData}
+          setSaveData={this.props.setSaveData}
+          dbType={this.props.dbType}
+          osId={this.props.osId}
+        />
+      );
     }
   };
 
@@ -108,39 +115,27 @@ class ExportModal extends Component {
             {[intl.get('createEntity.dataSourceImport')]}
           </div>
 
-            < div
-                className = {selectedTag === 'model' ? 'tag tag-selected' : 'tag'}
+          <div
+            className={selectedTag === 'model' ? 'tag tag-selected' : 'tag'}
             onClick={() => {
               this.setState({
                 selectedTag: 'model'
               });
             }}
           >
-                {
-                    selectedTag === 'model' ?
-                <
-                    div
-                    className = "left-mark" > < /div> : null}
-                    {
-                        [intl.get('createEntity.modelImport')]
-                    }
-                <
-                    /div>
-                    < /div>
+            {selectedTag === 'model' ? <div className="left-mark"></div> : null}
+            {[intl.get('createEntity.modelImport')]}
+          </div>
+        </div>
 
-                    < div
-                    className = "content" >
-                        < div
-                    className = "title" > {this.setTitle()} < /div>
-                        < div
-                    className = "srcoll-box" > {this.getTabContent(selectedTag)} < /div>
-                        < /div>
+        <div className="content">
+          <div className="title">{this.setTitle()}</div>
+          <div className="srcoll-box">{this.getTabContent(selectedTag)}</div>
+        </div>
 
-                    {
-                        selectLoadingTop ? (
-                            < div className = "loading-4qwaqq" >
-                            < LoadingOutlined
-                        className = "icon" / >
+        {selectLoadingTop ? (
+          <div className="loading-4qwaqq">
+            <LoadingOutlined className="icon" />
           </div>
         ) : null}
       </div>
