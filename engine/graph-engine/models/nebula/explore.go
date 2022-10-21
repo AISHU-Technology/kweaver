@@ -962,11 +962,16 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 	if len(vidList) <= 0 {
 		return nil
 	}
-	gql = fmt.Sprintf("match (v)-[e]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", vrid, strings.Join(vidList, ","))
+	if eclass == "" {
+		gql = fmt.Sprintf("match (v)-[e]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", vrid, strings.Join(vidList, ","))
+	} else {
+		gql = fmt.Sprintf("match (v)-[e:%s]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", eclass, vrid, strings.Join(vidList, ","))
+	}
 	resultSet, err = nebula.Client(conf, gql)
 	if err != nil {
 		return err
 	}
+
 	for i := 0; i < resultSet.GetRowSize(); i++ {
 		row, _ := resultSet.GetRowValuesByIndex(i)
 
