@@ -1,0 +1,20 @@
+replicaCount: 1
+
+namespace: kweaver
+
+image:
+  registry: 
+  repository: bitnami/nginx-ingress-controller
+  tag: latest
+  pullPolicy: IfNotPresent
+  name: kw-ingress-nginx
+
+service:
+  type: ClusterIP
+  portHttps: 443
+  hostPortHttps: 443
+  targetPortHttps: 443
+  https: https
+  
+volumes:  
+  hostPath: /kweaver/deploy/kw-k8s/conf/nginx/error.log
