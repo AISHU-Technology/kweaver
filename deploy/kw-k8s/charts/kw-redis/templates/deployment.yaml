@@ -1,0 +1,46 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata: 
+  name: {{ .Values.image.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.image.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.image.name }}
+    spec:
+      containers: 
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.registry }}{{ .Values.image.repository }}:{{ .Values.image.tag }}
+          command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - protocol: TCP
+              name: {{ .Values.image.name }}
+              containerPort: {{ .Values.service.port }}
+          volumeMounts:
+            - mountPath: /usr/local/etc/redis/redis.conf
+              name: redis-conf
+            - mountPath: /usr/local/redis/data
+              name: redis-datadir
+            - mountPath: /usr/local/redis/redis.log
+              name: redis-log
+            - name: host-time
+              mountPath: /etc/localtime
+      volumes:
+        - name: redis-conf
+          hostPath:
+            path: {{ .Values.volumes.conf.hostPath }}
+        - name: redis-datadir
+          persistentVolumeClaim:
+            claimName: {{ .Values.image.name }}
+        - name: redis-log
+          hostPath:
+            path: {{ .Values.volumes.log.hostPath }}
+        - name: host-time
+          hostPath:
+            path: /etc/localtime

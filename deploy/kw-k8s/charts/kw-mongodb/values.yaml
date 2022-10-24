@@ -1,0 +1,21 @@
+replicaCount: 1
+
+namespace: kweaver
+
+image:
+  registry: 
+  repository: mongo
+  tag: 4.2.0
+  pullPolicy: IfNotPresent
+  name: kw-mongodb
+
+service:
+  type: ClusterIP
+  port: 27017
+  targetPort: 27017
+  
+storage:
+  local:
+    host: molen
+    path: "/kweaver/deploy/kw-k8s/data/mongodb"
+  capacity: 10Gi
