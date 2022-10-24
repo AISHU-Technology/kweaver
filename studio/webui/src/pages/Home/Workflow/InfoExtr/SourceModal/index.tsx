@@ -259,9 +259,9 @@ const ModalContent: React.FC<SourceModalProps> = props => {
       const value = JSON.stringify({ docid, name, file_path, type });
       tree.push({
         title: (
-          <div className="file-tree-row">
+          <div className="file-tree-row ad-flex">
             <div className="file-tree-type">{switchIcon(type, name, 16)}</div>
-            <div className="file-name">
+            <div className="file-name ad-ml-2">
               <span title={wrapperTitle(name)}>{name}</span>
             </div>
           </div>
@@ -656,8 +656,8 @@ const ModalContent: React.FC<SourceModalProps> = props => {
                       selectSource.extract_type === ExtractType.MODEL
                         ? intl.get('workflow.information.modelExtraction')
                         : selectSource.extract_type === ExtractType.STANDARD
-                        ? intl.get('workflow.information.standardExtraction')
-                        : intl.get('workflow.information.labelExtraction')
+                          ? intl.get('workflow.information.standardExtraction')
+                          : intl.get('workflow.information.labelExtraction')
                     }
                   />
                 </div>
@@ -703,8 +703,8 @@ const ModalContent: React.FC<SourceModalProps> = props => {
                 {selectSource.extract_type === ExtractType.MODEL
                   ? intl.get('workflow.information.showModel')
                   : selectSource.data_source === MQ
-                  ? intl.get('workflow.information.showSchema')
-                  : intl.get('workflow.information.previewSome')}
+                    ? intl.get('workflow.information.showSchema')
+                    : intl.get('workflow.information.previewSome')}
               </span>
             </h3>
             <div
