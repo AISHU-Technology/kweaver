@@ -9,6 +9,7 @@ import IconFont from '@/components/IconFont';
 import BasicInfo from './GraphInfo/BasicInfo';
 import SummaryInfo from './GraphInfo/SummaryInfo';
 import ConfigurationDetails from './GraphInfo/ConfigurationDetails';
+import Statistics from './GraphInfo/Statistics';
 
 import './style.less';
 
@@ -34,6 +35,11 @@ const INFO_LIST_INFO = [
     id: 'configurationDetails',
     icon: <IconFont type="icon-jibenxinxi" style={{ fontSize: 16 }} />,
     intl: intl.get('graphDetail.categoryInformation')
+  },
+  {
+    id: 'statistics',
+    icon: <IconFont type="icon-shujutongji" style={{ fontSize: 16 }} />,
+    intl: intl.get('graphList.statistics')
   }
 ];
 
@@ -91,13 +97,14 @@ const Menus = (props: any) => {
           { infoDrawerClose: !isVisibleDrawer && !isInit }
         )}
       >
-        <BasicInfo isShow={activeKey === 'basicInfo'} graphCount={graphCount} graphBasicData={graphBasicData} />
+        <BasicInfo isShow={activeKey === 'basicInfo'} graphBasicData={graphBasicData} />
         <SummaryInfo isShow={activeKey === 'summaryInfo'} graphData={graphData} graphCount={graphCount} />
         <ConfigurationDetails
           isShow={activeKey === 'configurationDetails'}
           selectedData={selectedData}
           graphid={graphid}
         />
+        <Statistics isShow={activeKey === 'statistics'} graphBasicData={graphBasicData} />
       </div>
     </div>
   );

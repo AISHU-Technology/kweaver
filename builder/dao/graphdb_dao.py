@@ -113,6 +113,7 @@ def default_value(db_type='nebula', type='other', sql_format=True):
         return '""'  # 如果为NULL，engine搜索会报错
     return "NULL"
 
+
 def value_transfer(value, db_type, type):
     if not value:
         return default_value(db_type, type)
@@ -125,6 +126,7 @@ def normalize_text(text):
     text = re.sub(r"[\"]", "\\\"", text)
     text = re.sub(r"[\']", "\\\'", text).strip()
     return text
+
 
 def normalize_text_es(text):
     text = re.sub(r"[\n\t]", " ", text)
@@ -203,7 +205,7 @@ class GraphDB(object):
                 print(res.error_msg())
                 state_code = 500
         if ngql:
-            ngql = re.sub('[\r|\n]*', "", ngql)
+            ngql = re.sub('[\r\n]*', "", ngql)
             res = session.execute(ngql)
             if not res.is_succeeded():
                 print(ngql)
@@ -1134,7 +1136,7 @@ class GraphDB(object):
                     print(url)
                     print(es_bulk_index)
                     print(self.state)
-        else:
+        elif pro_value and pro_value_index:
             if self.type == 'orientdb':
                 vertexsql = "UPDATE  `{}` SET {} UPSERT WHERE {}" \
                     .format(otl_name, ",".join(pro_value), " and ".join(pro_value_index))
@@ -1490,6 +1492,33 @@ class GraphDB(object):
             print(es_bulk_index_body)
             print(self.state)
 
+    def stats(self, db):
+        '''
+        统计数据量
+
+        Returns:
+            code: 返回码
+            res: 正确则返回以下字段
+                edges: 边的总数
+                entities: 点的总数
+                name2count: {点/边的名字: 个数}
+                entity_count: {点的名字: 个数}
+                edge_count: {边的名字: 个数}
+                edge2pros: {边名: 属性个数}
+                entity2pros: {实体名: 属性个数}
+        '''
+        databaselist = self.get_list()
+        if databaselist == -1:
+            code = codes.Builder_GraphdbDao_Count_GraphDBConnectionError
+            return code, None
+        if db not in databaselist:
+            return codes.Builder_GraphdbDao_Count_DBNameNotExitsError, None
+
+        if self.type == 'orientdb':
+            return self._count_orientdb(db)
+        elif self.type == 'nebula':
+            return self._count_nebula(db)
+
     def count(self, db):
         '''
         统计数据量
@@ -1763,6 +1792,37 @@ class GraphDB(object):
                 if code != 200:
                     print(r_json)
 
+    def graph_entity_prop_empty(self, db, entity_name, otl_type, prop):
+        """
+        查询某个实体类的非空值数量,该查询可能非常耗时
+        """
+        if self.type == 'orientdb':
+            code, res = self._orientdb_prop_empty(db, entity_name, otl_type, prop)
+            if code != 200:
+                return code, res
+            count = res.get('result', list())[0].get('not_empty')
+            return code, count
+        code, res = self._nebula_prop_empty(db, entity_name, otl_type, prop)
+        if code != 200:
+            return code, res
+        count = res.column_values('not_empty').pop(0).as_int()
+        return code, count
+
+    def _orientdb_prop_empty(self, db, entity_name, otl_type, prop):
+        empty_value_list = """ ["","()","[]","{}"] """
+        sql = f"""select count(*) as `not_empty` from `{entity_name}` where `{prop}` not in {empty_value_list} and `{prop}` is not null"""
+        code, res = self._orientdb_http(sql, db)
+        return code, res
+
+    def _nebula_prop_empty(self, db, entity_name, otl_type, prop):
+        if otl_type != "edge":
+            otl_type = "vertex"
+        empty_value_list = """ ["","()","[]","{}"] """
+        sql = f"""lookup on `{entity_name}` where `{entity_name}`.`{prop}` not in {empty_value_list} 
+                yield properties({otl_type}).`{prop}` as props | yield count(*) as not_empty"""
+        code, res = self._nebula_session_exec_(sql, db)
+        return code, res
+
 
 class SQLProcessor:
     def __init__(self, dbtype) -> None:
@@ -1887,11 +1947,11 @@ class SQLProcessor:
                 print(
                     'missing merge properties, can\'t get nebula vid. otl_name: {}. batch_iter: {}'.format(otl_name,
                                                                                                            batch_iter))
-                    # idval = ''
-                    # for m in vals:
-                    #     idval += f'{m}_'
-                    # vid = get_md5(idval)
-                    # sql = '"{}":({})'.format(vid, ','.join(vals))
+                # idval = ''
+                # for m in vals:
+                #     idval += f'{m}_'
+                # vid = get_md5(idval)
+                # sql = '"{}":({})'.format(vid, ','.join(vals))
             process_class_sql = sql
         process_class_sql = re.sub('[\r|\n]*', "", process_class_sql)
         return process_class_sql

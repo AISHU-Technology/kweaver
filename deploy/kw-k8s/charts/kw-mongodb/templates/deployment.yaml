@@ -1,0 +1,41 @@
+apiVersion: apps/v1 
+kind: Deployment
+#kind: StatefulSet
+metadata: 
+  name: {{ .Values.image.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.image.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.image.name }}
+    spec:
+      containers: 
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.registry }}{{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: "root"
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: "KWeaver"
+          ports:
+            - protocol: TCP
+              name: {{ .Values.image.name }}
+              containerPort: {{ .Values.service.port }}
+          volumeMounts:   
+            - mountPath: /data/db
+              name: mongodb-datadir
+            - name: host-time
+              mountPath: /etc/localtime
+      volumes:
+        - name: mongodb-datadir
+          persistentVolumeClaim:
+            claimName: {{ .Values.image.name }}
+        - name: host-time
+          hostPath:
+            path: /etc/localtime

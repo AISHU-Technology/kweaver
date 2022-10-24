@@ -3,8 +3,6 @@ import classnames from 'classnames';
 import intl from 'react-intl-universal';
 import { Divider } from 'antd';
 
-import HELPER from '@/utils/helper';
-
 import Format from '@/components/Format';
 
 import './style.less';
@@ -29,10 +27,6 @@ const Line = (props: any) => {
 };
 
 interface BasicInfoInterface {
-  graphCount: {
-    nodeCount: number;
-    edgeCount: number;
-  };
   graphBasicData: {
     name: string;
     status: string;
@@ -46,23 +40,8 @@ interface BasicInfoInterface {
 }
 
 const BasicInfo = (props: BasicInfoInterface) => {
-  const { graphCount, graphBasicData } = props;
-  const { nodeCount, edgeCount } = graphCount;
+  const { graphBasicData } = props;
   const { graph_des, is_import, create_time, update_time, graphdb_name, graphdb_address } = graphBasicData;
-
-  const formatNode =
-    nodeCount < HELPER.formatNumberWithSuffix.limit
-      ? nodeCount
-      : `${intl.get('graphDetail.about')}${HELPER.formatNumberWithSuffix(nodeCount)} (${HELPER.formatNumberWithComma(
-          nodeCount
-        )})`;
-
-  const formatEdge =
-    edgeCount < HELPER.formatNumberWithSuffix.limit
-      ? edgeCount
-      : `${intl.get('graphDetail.about')}${HELPER.formatNumberWithSuffix(edgeCount)} (${HELPER.formatNumberWithComma(
-          edgeCount
-        )})`;
 
   return (
     <div className="basicInfoRoot">
@@ -77,9 +56,6 @@ const BasicInfo = (props: BasicInfoInterface) => {
         />
         <Line label={intl.get('graphDetail.storageLocation')} value={graphdb_address} />
         <Line label={intl.get('graphDetail.description')} isEllipsis={false} value={graph_des} />
-        <Divider className="divider" />
-        <Line label={intl.get('graphDetail.numberOfEntity')} value={formatNode} />
-        <Line label={intl.get('graphDetail.numberOfRelation')} value={formatEdge} />
         <Divider className="divider" />
         <Line label={intl.get('graphDetail.creationTime')} value={create_time} />
         <Line label={intl.get('graphDetail.finalModificationTime')} value={update_time || '--'} />

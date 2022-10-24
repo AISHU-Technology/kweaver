@@ -104,7 +104,6 @@
     "namePlace": "请输入存储位置名称",
     "click": "点击",
     "addStorage": "按钮添加存储管理",
-    "searchEmpty": "抱歉，没有搜到符合条件的结果，请尝试一下别的条件",
     "clear": "清空",
     "addIP": "添加存储地址",
     "accountPlace": "请输入访问账户名称",

@@ -1,6 +1,6 @@
 import React, { memo, useState, useRef } from 'react';
 import intl from 'react-intl-universal';
-import { Modal, Button, message, Input } from 'antd';
+import {Modal, Button, message, Input} from 'antd';
 
 import serviceStorageManagement from '@/services/storageManagement';
 
@@ -40,30 +40,30 @@ const DeleteModal = (props: DeleteModalType) => {
         setVisible();
       }
     } catch (error) {
-      const { type = '', response = {} } = error || {};
-      if (type === 'message') {
-        const { ErrorCode } = response;
+        const {type = '', response = {}} = error || {};
+        if (type === 'message') {
+            const {ErrorCode} = response;
 
-        if (ERROR_CODE[ErrorCode]) return message.error(intl.get(ERROR_CODE[ErrorCode]));
-        message.error(response?.Description);
-      }
+            if (ERROR_CODE[ErrorCode]) return message.error(intl.get(ERROR_CODE[ErrorCode]));
+            message.error(response?.Description);
+        }
     }
   };
 
-  const sureToDelete =
-    delType === 'graph'
-      ? intl.get('configSys.deletedStorage', { name: deleteItem?.name })
-      : intl.get('configSys.deletedIndex', { name: deleteItem?.name });
-  const title = delType === 'graph' ? intl.get('configSys.delStorage') : intl.get('configSys.delIndex');
-  const inputPlaceholder =
-    delType === 'graph' ? intl.get('configSys.delGraphPlace') : intl.get('configSys.delIndexPlace');
+    const sureToDelete =
+        delType === 'graph'
+            ? intl.get('configSys.deletedStorage', {name: deleteItem?.name})
+            : intl.get('configSys.deletedIndex', {name: deleteItem?.name});
+    const title = delType === 'graph' ? intl.get('configSys.delStorage') : intl.get('configSys.delIndex');
+    const inputPlaceholder =
+        delType === 'graph' ? intl.get('configSys.delGraphPlace') : intl.get('configSys.delIndexPlace');
 
-  return (
-    <Modal
-      visible={visible}
-      width={480}
-      title={title}
-      footer={null}
+    return (
+        <Modal
+            visible={visible}
+            width={480}
+            title={title}
+            footer={null}
       maskClosable={false}
       destroyOnClose={true}
       focusTriggerAfterClose={false}
@@ -74,13 +74,13 @@ const DeleteModal = (props: DeleteModalType) => {
       }}
       afterClose={() => setIsError(false)}
     >
-      <div className="delete-modal-body">
-        <p className="input-label">
-          {sureToDelete} {intl.get('configSys.deldes')}
-        </p>
-        <Input className="input" ref={inputRef} placeholder={inputPlaceholder} />
-        {isError ? <p className="error">{intl.get('configSys.delNameInconsistent')}</p> : null}
-      </div>
+            <div className="delete-modal-body">
+                <p className="input-label">
+                    {sureToDelete} {intl.get('configSys.deldes')}
+                </p>
+                <Input className="input" ref={inputRef} placeholder={inputPlaceholder}/>
+                {isError ? <p className="error">{intl.get('configSys.delNameInconsistent')}</p> : null}
+            </div>
 
       <div className="delete-modal-footer">
         <Button className="ant-btn-default delete-cancel" onClick={() => setVisible()}>

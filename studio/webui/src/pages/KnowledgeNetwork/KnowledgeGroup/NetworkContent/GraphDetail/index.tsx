@@ -45,8 +45,8 @@ const GraphDetail = (props: GraphDetailType) => {
       if (isConfiguration) return setIsLoading(false);
 
       let resultCount: any = { res: { entity: [], edge: [], entity_count: 0, edge_count: 0 } };
-      // 运行中和运行失败不查询数量信息
-      if (graphBasicData.status !== GRAPH_STATUS.RUNNING && graphBasicData.status !== GRAPH_STATUS.FAIL) {
+      // WARNING 运行中不查询数量信息, nebula运行失败查询会报错
+      if (graphBasicData.status !== GRAPH_STATUS.RUNNING) {
         try {
           resultCount = await serviceGraphDetail.graphGetInfoCount({ graph_id: graphid });
         } catch (error) {

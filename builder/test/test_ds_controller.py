@@ -395,10 +395,12 @@ class TestDsopt(TestCase):
 
     def test_dsopt_get_all_success2(self):
         """ data_source empty success """
-        response = client.get(self.url,
-                              headers={'uuid': '851ba1db-4e37-11eb-a57d-0242ac190002'},
-                              query_string=self.getAllParams
-                              )
+        my_mock = mock.Mock(return_value=(200, {}))
+        with mock.patch('service.dsm_Service.dsm_service.getall', my_mock):
+            response = client.get(self.url,
+                                  headers={'uuid': '851ba1db-4e37-11eb-a57d-0242ac190002'},
+                                  query_string=self.getAllParams
+                                  )
         self.assertEqual(response.status_code, 200)
 
     def test_dsopt_get_all_failed1(self):
@@ -513,9 +515,11 @@ class TestGetByDsName(TestCase):
 
     def test_getbydsname_success2(self):
         """ data_source empty success """
-        response = client.get(self.url,
-                              headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
-                              query_string=self.getByDsNameParams)
+        my_mock = mock.Mock(return_value=(200, {}))
+        with mock.patch('service.dsm_Service.dsm_service.getbydsname', my_mock):
+            response = client.get(self.url,
+                                  headers={'uuid': '853ba1db-4e37-11eb-a57d-0242ac190002'},
+                                  query_string=self.getByDsNameParams)
         self.assertEqual(response.status_code, 200)
 
     def test_getbydsname_failed1(self):
