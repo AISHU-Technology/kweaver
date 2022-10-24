@@ -184,7 +184,6 @@ class MoreFileRelation extends Component {
     const { startNode, endNode, moreFileData, attrSelect, entityName } = this.props;
     const { equation_end, equation_begin, modalVisible, equation } = this.state;
     const { anyDataLang } = this.props;
-    console.log(111, endNode);
     return (
       <div>
         {moreFileData?.begin_class_prop && (
