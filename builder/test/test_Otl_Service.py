@@ -306,6 +306,9 @@ class Test_getall(TestCase):
     def test_getall_success(self):
         # 查询第一页
         # mock otl_dao.getall
+        graph_otl = ["graph_name"]
+        graph_dao.getdatabyotlid = mock.Mock(return_value=graph_otl)
+
         otl_dao.getall = mock.Mock(return_value=self.ret_firstpage)
         args = {'page': '1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390', 'knw_id': '1'}
         args["res_list"] = []
@@ -485,6 +488,10 @@ class Test_getbyotlname(TestCase):
 
         args = {'otlname': '', 'otl_status': 'all', 'page': '1', 'size': '10', 'order': 'ascend',
                 'timestamp': '1637201113677'}
+
+        graph_otl = ["graph_name"]
+        graph_dao.getdatabyotlid = mock.Mock(return_value=graph_otl)
+
         res = otl_service.getbyotlname(otlid, args, num)
         self.assertEqual(res[0], 200)
 

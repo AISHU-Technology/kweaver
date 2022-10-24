@@ -384,5 +384,6 @@ class TestIntelligenceQueryService(unittest.TestCase):
         query_params['rule'] = 'data_quality_score'
         query_params['order'] = 'desc'
 
+        knw_dao.check_knw_id = mock.Mock(return_value=pd.DataFrame([[0, 3]]))
         code, resp = intelligence_query_service.query_network_param_check(query_params)
         self.assertEqual(code, self.successCode)
