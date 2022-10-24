@@ -66,13 +66,13 @@ def gen_doc_vid(merge_entity_list, entity_name, one_data, en_pro_dict, gtype='ne
     参数
         merge_entity_list: 融合属性字典
             demo: {"t_stock_percent_wide": {"name": "equality"}}
-                t_stock_percent_wide： 实体名
+                t_stock_percent_wide： 抽取对象实体名
                 name: 融合属性
                 equality: 融合的方法
         entity_name: 抽取实体名
         one_data: 一个实体数据
         en_pro_dict: 属性字典
-        gtype: 图数据库的名称，默认nabule
+        gtype: 图数据库的名称，默认nebula
 
     """
     tab_val_index = []  # 属性列表
