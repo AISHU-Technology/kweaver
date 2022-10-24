@@ -259,9 +259,9 @@ const ModalContent: React.FC<SourceModalProps> = props => {
       const value = JSON.stringify({ docid, name, file_path, type });
       tree.push({
         title: (
-          <div className="file-tree-row ad-flex ad-ml-2">
+          <div className="file-tree-row ad-flex">
             <div className="file-tree-type">{switchIcon(type, name, 16)}</div>
-            <div className="file-name">
+            <div className="file-name ad-ml-2">
               <span title={wrapperTitle(name)}>{name}</span>
             </div>
           </div>
