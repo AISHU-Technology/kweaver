@@ -52,7 +52,7 @@ class HiveClient:
 class RedisClinet():
     def __init__(self):
         with open(db_config_path, 'r') as f:
-            yaml_config = yaml.load(f)
+            yaml_config = yaml.load(f, Loader=yaml.FullLoader)
         redis_config = yaml_config['redis']
         self.redis_cluster_mode = redis_config['mode']
         self.redis_account = redis_config.get('user', None)
@@ -112,7 +112,7 @@ import urllib.parse
 class mongoClient(object):
     def connect_mongo(self):
         with open(db_config_path, 'r') as f:
-            yaml_config = yaml.load(f)
+            yaml_config = yaml.load(f, Loader=yaml.FullLoader)
         mongodb_config = yaml_config['mongodb']
         user = mongodb_config['user']
         password = urllib.parse.quote_plus(mongodb_config['password'])

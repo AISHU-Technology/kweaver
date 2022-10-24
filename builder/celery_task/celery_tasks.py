@@ -85,7 +85,7 @@ beat_scheduler = 'celery_task.celery_beat:DatabaseScheduler'
 # default: 0
 beat_max_loop_interval = 10
 with open(db_config_path, 'r') as f:
-    yaml_config = yaml.load(f)
+    yaml_config = yaml.load(f, Loader=yaml.FullLoader)
 mariadb_config = yaml_config['mariadb']
 ip = mariadb_config.get('host')
 port = mariadb_config.get('port')
@@ -2304,8 +2304,12 @@ class RelationManualBuilder(object):
                         total += 5000
                         # nebula插入必须单线程，这里加锁
                         self.lock.acquire()
-                        graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
-                        self.lock.release()
+                        try:
+                            graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
+                        except Exception as e:
+                            raise e
+                        finally:
+                            self.lock.release()
 
                         # 循环重置
                         starts = []
@@ -2316,8 +2320,12 @@ class RelationManualBuilder(object):
             total += len(starts)
 
             self.lock.acquire()
-            graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
-            self.lock.release()
+            try:
+                graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
+            except Exception as e:
+                raise e
+            finally:
+                self.lock.release()
 
             # print("write {} edge".format(total))
 
@@ -2480,15 +2488,25 @@ class RelationIn2Class(RelationManualBuilder):
             return
 
         pool = ThreadPool(10)
+        error_report = []
+
+        def error_callback(error):
+            print(error)
+            error_report.append(error)
+
         iter_size = 1000
         current = 0
         while current < self.all_data_count:
-            pool.apply_async(self.process, (self.all_data_collection, current, iter_size))
-            # f(c, current, iter_size)
+            pool.apply_async(self.process, (self.all_data_collection, current, iter_size),
+                             error_callback=error_callback)
             current += iter_size
         pool.close()
         pool.join()
-        print("edge_class:{}=>{}->{} total: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, self.all_data_count))
+        if len(error_report) == 0:
+            print("edge_class:{}=>{}->{} success. total: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, self.all_data_count))
+        else:
+            print("edge_class:{}=>{}->{} error. total: {}".format(self.edge_class, self.begin_vertex_class,
+                                                                    self.end_vertex_class, self.all_data_count))
 
 
     def process(self, collection, current, iter_size):
@@ -2591,15 +2609,26 @@ class RelationIn3Class(RelationManualBuilder):
                 self.load_collection_prop_len(self.end_vertex_class, self.end_class_prop)
 
         pool = ThreadPool(10)
+        error_report = []
+
+        def error_callback(error):
+            print(error)
+            error_report.append(error)
+
         iter_size = 1000
         current = 0
         while current < total:
-            pool.apply_async(self.process, (edge_collection, current, iter_size))
-            # self.write_process(edge_collection, current, iter_size)
+            pool.apply_async(self.process, (edge_collection, current, iter_size),
+                             error_callback=error_callback)
             current += iter_size
         pool.close()
         pool.join()
-        print("edge_class:{}=>{}->{} total: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, total))
+        if len(error_report) == 0:
+            print("edge_class:{}=>{}->{} success. total: {}".format(self.edge_class, self.begin_vertex_class,
+                                                                    self.end_vertex_class, total))
+        else:
+            print("edge_class:{}=>{}->{} error. total: {}".format(self.edge_class, self.begin_vertex_class,
+                                                                  self.end_vertex_class, total))
 
     def process(self, collection, current, iter_size):
         """
@@ -2689,6 +2718,12 @@ class EdgeWriter(object):
             alldata = table2.find()
             # 关系改为批量执行
             pool = ThreadPool(20)
+            error_report = []
+
+            def error_callback(error):
+                print(error)
+                error_report.append(error)
+
             # pool = multiprocessing.Pool(10)
             if alldata.count() > 0:
                 table = conn_db[graph_mongo_Name + "_" + edge_class]
@@ -2719,7 +2754,7 @@ class EdgeWriter(object):
                         graphdb._check_schema_nebula(
                             mongo_db, edge_class, props_check, 'edge')
                     pool.apply_async(
-                        graphdb.exec_batch, (sql_list, mongo_db))
+                        graphdb.exec_batch, (sql_list, mongo_db), error_callback=error_callback)
                     if graphdb.type == 'nebula':
                         if (batch_id):
                             batch = table.find().limit(iter_size).skip(current)
@@ -2745,7 +2780,10 @@ class EdgeWriter(object):
                         print(f'{edge_class}已插入数据：{current}条')
             pool.close()
             pool.join()
-            print(f'{edge_class}共插入(更新)数据{alldata.count()}条')
+            if len(error_report) == 0:
+                print(f'{edge_class}共插入(更新)数据{alldata.count()}条')
+            else:
+                print(f'{edge_class}在插入(更新)数据{alldata.count()}条的过程中失败')
 
 
 class VertexWriter(object):
@@ -2781,47 +2819,58 @@ class VertexWriter(object):
 
             index = 0
             batch_size = 200000
+            error_report = []
+
+            def error_callback(error):
+                print(error)
+                error_report.append(error)
+
             while index < total:
                 # 多线程插入
                 pool = ThreadPool(10)
                 current = 0
+
                 while current < batch_size and (current + index) <= total:
-                    pool.apply_async(self.process, (collection, current + index, iter_size, otl_tab, otl_name))
-                    # self.process(collection, current+ index, iter_size, otl_tab, otl_name)
+                    pool.apply_async(self.process, (collection, current + index, iter_size, otl_tab, otl_name),
+                                     error_callback=error_callback)
                     current += iter_size
                 pool.close()
                 pool.join()
-
                 index += batch_size
-            print(f'创建顶点{otl_name}, total:{total} 成功,耗时:{time.time() - vertex_time1}s')
+            if len(error_report) == 0:
+                print(f'创建顶点{otl_name}, total:{total} 成功,耗时:{time.time() - vertex_time1}s')
+            else:
+                print(f'创建顶点{otl_name}, total:{total} 过程中失败,耗时:{time.time() - vertex_time1}s')
 
     def process(self, collection, current, iter_size, otl_tab, otl_name):
+        batch = collection.find({}).skip(current).limit(iter_size)
+        batch_copy = copy.deepcopy(batch)
+
+        # 生成ES索引
+        es_bulk_index = ''
+        if self.graphdb.type == 'nebula':
+            es_bulk_index = self.sqlProcessor.es_bulk_multi(self.mongo_db, otl_name, otl_tab,
+                                                            self.en_pro_dict, self.merge_otls,
+                                                            batch, self.graph_db_id)
+
+        # 生成nebula插入语句
+        batch_sql = self.sqlProcessor.vertex_sql_multi(batch_copy, otl_tab, self.en_pro_dict,
+                                                       self.merge_otls, otl_name)
+
+        # 插入nebula点， 单线程
+        self.lock.acquire()
         try:
-            batch = collection.find({}).skip(current).limit(iter_size)
-            batch_copy = copy.deepcopy(batch)
-
-            # 生成ES索引
-            es_bulk_index = ''
-            if self.graphdb.type == 'nebula':
-                es_bulk_index = self.sqlProcessor.es_bulk_multi(self.mongo_db, otl_name, otl_tab,
-                                                                self.en_pro_dict, self.merge_otls,
-                                                                batch, self.graph_db_id)
-
-            # 生成nebula插入语句
-            batch_sql = self.sqlProcessor.vertex_sql_multi(batch_copy, otl_tab, self.en_pro_dict,
-                                                           self.merge_otls, otl_name)
-
-            # 插入nebula点， 单线程
-            self.lock.acquire()
             self.graphdb.create_vertex(self.mongo_db, batch_sql=batch_sql, es_bulk_index=es_bulk_index,
-                                       otl_name=otl_name, props=list(otl_tab.keys()))
+                                   otl_name=otl_name, props=list(otl_tab.keys()))
+        except Exception as e:
+            print("插入顶点{}失败，当前current={} iter_size={}".format(otl_name, current, iter_size))
+            raise e
+        finally:
             self.lock.release()
 
-            # 打个日志
-            if (current + iter_size) % 100000 == 0:
-                print("当前插入顶点{}， {}个".format(otl_name, current + iter_size))
-        except Exception as e:
-            traceback.print_exc()
+        # 打个日志
+        if (current + iter_size) % 100000 == 0:
+            print("当前插入顶点{}， {}个".format(otl_name, current + iter_size))
 
 
 
@@ -2917,12 +2966,21 @@ class HiveTransfer(Transfer):
                 rows = [list(data) for data in ret]
 
                 pool = ThreadPool(10)
+                error_report = []
+
+                def error_callback(error):
+                    print(error)
+                    error_report.append(error)
+
                 current = 0
                 while current < total:
-                    pool.apply_async(self.extract, (rows[current:current + self.parser_batch_number], columns))
+                    pool.apply_async(self.extract, (rows[current:current + self.parser_batch_number], columns),
+                                     error_callback=error_callback)
                     current += self.parser_batch_number
                 pool.close()
                 pool.join()
+                if len(error_callback) != 0:
+                    print("extract data error.")
         except BaseException as e:
             print("extract data error:{}".format(repr(e)))
 
@@ -2981,13 +3039,21 @@ class MysqlTransfer(Transfer):
 
                 current = 0
                 pool = ThreadPool(10)
+                error_report = []
+
+                def error_callback(error):
+                    print(error)
+                    error_report.append(error)
+
                 while current < total:
-                    pool.apply_async(self.extract, (data[current:current + iter_size], df2))
+                    pool.apply_async(self.extract, (data[current:current + iter_size], df2),
+                                     error_callback=error_callback)
                     current += iter_size
 
                 pool.close()
                 pool.join()
-
+                if len(error_report) != 0:
+                    print('standard_extract fail')
                 skip += batch_size
         except BaseException:
             traceback.print_exc()
