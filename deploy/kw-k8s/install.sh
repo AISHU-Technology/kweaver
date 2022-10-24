@@ -11,6 +11,7 @@ Exit() {
   fi
 }
 
+
 CheckEnvironment(){
 	echo -en "\033[32;1mPrepare the environment before installation...\n\033[0m"
 	#Check whether k8s is available
