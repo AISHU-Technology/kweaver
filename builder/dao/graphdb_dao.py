@@ -85,7 +85,7 @@ def gen_doc_vid(merge_entity_list, entity_name, one_data, en_pro_dict, gtype='ne
     if gtype == "orientdb":
         return 'SELECT FROM `{}` WHERE {}'.format(en_pro_dict[entity_name]['otl_name'], ','.join(tab_val_index))
 
-    props_str = ''
+    props_str = en_pro_dict[entity_name]['otl_name'] + '_'
     for m in tab_val_index:
         props_str += f'{m}_'
     return get_md5(props_str)
@@ -1142,7 +1142,7 @@ class GraphDB(object):
                     .format(otl_name, ",".join(pro_value), " and ".join(pro_value_index))
                 self._orientdb_http(vertexsql, db)
             elif self.type == 'nebula':
-                vid = ''
+                vid = otl_name + '_'
                 for v in values_index:
                     vid += f"'{v}'_"
                 vid = get_md5(vid)
@@ -1931,7 +1931,7 @@ class SQLProcessor:
                                 ",".join(m for m in tab_val),
                                 " and ".join(m for m in tab_val_index))
                 elif self.type == 'nebula':
-                    idval = ''
+                    idval = otl_name + '_'
                     for m in tab_val_index:
                         idval += f'{m}_'
                     vid = get_md5(idval)
@@ -2029,7 +2029,7 @@ class SQLProcessor:
             body_field['name'] = default_value(sql_format=False)
         vid = ''
         if vals and tab_val_index:
-            idval = ''
+            idval = otl_name + '_'
             for m in tab_val_index:
                 idval += f"'{m}'_"
             vid = get_md5(idval)
@@ -2174,7 +2174,7 @@ class SQLProcessor:
                     vals.append("`{}`='{}'".format(pro, property_value))
                 sql += ' and '.join(vals)
             elif self.type == 'nebula':
-                val = ''
+                val = class_name + '_'
                 for pro in merge_pro:
                     if pro not in property_dict:
                         state = {'state': 'FAILURE',
