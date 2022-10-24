@@ -1,22 +1,25 @@
-from __future__ import absolute_import
+import json
 
 import yaml
-from flask_app import app
-from celery import Celery
-import sys, os
-
-from config.config import db_config_path
+import sys
+import os
+import time
+import datetime
 
 sys.path.append(os.path.abspath("../"))
+
+from common.log import log
+from celery import Celery
+from service.async_task_service import async_task_service
+from service.intelligence_service import intelligence_calculate_service
 from service.Otl_Service import otl_service
 from service.task_Service import task_service
 from config import config
-from dao.dsm_dao import dsm_dao
-from method.knowledge_graph import Ontology
 from method.database import DataBase
-from os import path
-import time
 from utils.common_response_status import CommonResponseStatus
+from config.config import db_config_path
+from flask_app import app
+
 with open(db_config_path, 'r') as f:
     yaml_config = yaml.load(f)
 redis_config = yaml_config['redis']
@@ -51,6 +54,8 @@ else:
 
     # 将Flask中的配置直接传递给Celery
     cel.conf.update(app.config)
+
+cel.set_default()
 
 
 @cel.task(name='cel.predict_ontology', bind=True)
@@ -219,4 +224,37 @@ def predict_ontology(self, new_params_json, task_id):
         obj["message"] = "predict ontology failed"
         obj["code"] = 500
         self.update_state(state="FAILURE", meta=obj)
+        return {'current': 100, 'total': 100}
+
+
+@cel.task(name='cel.intelligence_calculate', bind=True)
+def intelligence_calculate(self, params_json, task_id):
+    """
+        execute intelligence computer task
+    """
+    if not task_id:
+        # 没有关键参数 task_id， 直接退出
+        log.error("missing important argument [task_id] please check your argument list")
+        return
+    try:
+        update_json = dict()
+        # 停止之前运行中的任务
+        if params_json.get('cancel_pre'):
+            async_task_service.delete_pre_running_task(params_json['task_type'], task_id, params_json['relation_id'])
+        # 获取执行参数
+        task_params = json.loads(params_json.get('task_params', '{}'))
+        intelligence_calculate_service.graph_calculate_task(task_params)
+
+        update_json['task_status'] = 'finished'
+        return {'current': 100, 'total': 100}
+    except BaseException as e:
+        import traceback
+        traceback.print_exc()
+        update_json['result'] = str(e)
+        update_json['task_status'] = 'failed'
+        log.error(update_json['result'])
+    finally:
+        # 此处只需要更新下错误原因即可，状态由外部调用更新
+        update_json['finished_time'] = datetime.datetime.now()
+        async_task_service.update(task_id, update_json)
         return {'current': 100, 'total': 100}

@@ -326,6 +326,86 @@ definitions:
     type: object
   gql.DataQuery:
     type: object
+  orient.EdgeSimpleInfo:
+    properties:
+      id:
+        type: string
+      in:
+        type: string
+      out:
+        type: string
+    type: object
+  orient.ExplorePathEdgeRes:
+    properties:
+      alias:
+        type: string
+      class:
+        type: string
+      color:
+        type: string
+      id:
+        type: string
+      in:
+        type: string
+      name:
+        type: string
+      out:
+        type: string
+      properties:
+        items:
+          $ref: '#/definitions/orient.ExplorePathProperty'
+        type: array
+    type: object
+  orient.ExplorePathProperty:
+    properties:
+      "n":
+        type: string
+      v:
+        type: string
+    type: object
+  orient.ExplorePathVertexRes:
+    properties:
+      alias:
+        type: string
+      analysis:
+        type: boolean
+      class:
+        type: string
+      color:
+        type: string
+      expand:
+        type: boolean
+      id:
+        type: string
+      name:
+        type: string
+      properties:
+        items:
+          $ref: '#/definitions/orient.ExplorePathProperty'
+        type: array
+    type: object
+  orient.PathDetailInfo:
+    properties:
+      edges:
+        items:
+          $ref: '#/definitions/orient.ExplorePathEdgeRes'
+        type: array
+      vertices:
+        items:
+          $ref: '#/definitions/orient.ExplorePathVertexRes'
+        type: array
+    type: object
+  orient.PathInfo:
+    properties:
+      edges:
+        items:
+          $ref: '#/definitions/orient.EdgeSimpleInfo'
+        type: array
+      vertices:
+        items:
+          type: string
+        type: array
+    type: object
   services.AddAdvSearchConf:
     properties:
       conf_content:
@@ -391,6 +471,30 @@ definitions:
           type: string
         type: array
     type: object
+  services.ExplorePathBody:
+    properties:
+      direction:
+        enum:
+        - positive
+        - reverse
+        - bidirect
+        type: string
+      endRid:
+        type: string
+      id:
+        type: string
+      shortest:
+        enum:
+        - 0
+        - 1
+        type: integer
+      startRid:
+        type: string
+    required:
+    - endRid
+    - id
+    - startRid
+    type: object
   services.Path:
     properties:
       edges:
@@ -406,6 +510,29 @@ definitions:
           $ref: '#/definitions/services.Vertex'
         type: array
     type: object
+  services.PathBody:
+    properties:
+      id:
+        type: string
+      paths:
+        items:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+        type: array
+    required:
+    - id
+    - paths
+    type: object
+  services.PathDetailRes:
+    properties:
+      res:
+        items:
+          $ref: '#/definitions/orient.PathDetailInfo'
+        type: array
+    type: object
   services.PathMetaData:
     properties:
       depth:
@@ -414,6 +541,13 @@ definitions:
         type: number
       weight:
         type: number
+    type: object
+  services.PathRes:
+    properties:
+      res:
+        items:
+          $ref: '#/definitions/orient.PathInfo'
+        type: array
     type: object
   services.ReqBody:
     properties:
@@ -1005,6 +1139,67 @@ paths:
           schema:
             $ref: '#/definitions/utils.Error'
       summary: expand vertexes
+      tags:
+      - CEngine
+  /api/engine/v1/explore/path:
+    post:
+      consumes:
+      - application/json
+      description: explore the path between two vertices
+      parameters:
+      - description: explore path body, direction[positive, reverse, bidirect], shortest[0(all),
+          1(shortest)]
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.ExplorePathBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: result string
+          schema:
+            $ref: '#/definitions/services.PathRes'
+        "400":
+          description: 'EngineServer.ErrArgsErr: Parameter exception'
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "500":
+          description: 'EngineServer.ErrInternalErr: internal error'
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: explore the path
+      tags:
+      - CEngine
+  /api/engine/v1/explore/pathDetail:
+    post:
+      consumes:
+      - application/json
+      description: query path details by paths list
+      parameters:
+      - description: knowledge graph id and paths list
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.PathBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: result string
+          schema:
+            $ref: '#/definitions/services.PathDetailRes'
+        "400":
+          description: 'EngineServer.ErrArgsErr: Parameter exception'
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "500":
+          description: 'EngineServer.ErrInternalErr: internal error'
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: query path details
       tags:
       - CEngine
   /api/engine/v1/explore/relation:

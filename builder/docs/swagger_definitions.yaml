@@ -985,11 +985,13 @@ definitions:
             format: string
             description: knowledge network name
             example: knowledge_network_name
+            maxLength: 50
           knw_des:
             type: string
             format: string
             description: knowledge network description
             example: knowledge network description
+            maxLength: 150
           knw_color:
             type: string
             format: string
@@ -1012,11 +1014,13 @@ definitions:
             format: string
             description: knowledge network name
             example: knw_name
+            maxLength: 50
           knw_des:
             type: string
             format: string
             description: knowledge network description
             example: knw_des
+            maxLength: 150
           knw_color:
             type: string
             format: string

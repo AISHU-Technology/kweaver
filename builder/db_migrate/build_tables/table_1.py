@@ -5,10 +5,10 @@ import base64
 import yaml
 from sqlalchemy.orm import sessionmaker, relationship, foreign, remote
 from sqlalchemy.pool import NullPool
-from sqlalchemy import Column, String, create_engine, Integer, Boolean
+from sqlalchemy import Column, String, create_engine, Integer, Boolean, Text, DateTime, SmallInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.mysql import LONGTEXT
-
+from sqlalchemy.sql.schema import UniqueConstraint
 from config.config import db_config_path
 from utils.log_info import Logger
 import sqlalchemy as sa
@@ -424,8 +424,8 @@ class NetworkGraphRelation(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     knw_id = Column(Integer, nullable=True)
     graph_id = Column(Integer, nullable=True)
-    
-    
+
+
 class Lexicon(Base):
     __tablename__ = "lexicon"
     __table_args__ = {
@@ -441,7 +441,7 @@ class Lexicon(Base):
     update_time = Column(String(50), nullable=True)
     status = Column(String(50), nullable=True)
     error_info = Column(LONGTEXT, nullable=True)
-
+    UniqueConstraint(lexicon_name, knowledge_id, name="lexicon_name_kwn_id")
 
 # 初始化数据库表
 def init_datatable():

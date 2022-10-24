@@ -58,7 +58,14 @@ class ExportModal extends Component {
     }
 
     if (type === 'model') {
-      return <ModelImport saveData={this.props.saveData} setSaveData={this.props.setSaveData} />;
+      return (
+        <ModelImport
+          saveData={this.props.saveData}
+          setSaveData={this.props.setSaveData}
+          dbType={this.props.dbType}
+          osId={this.props.osId}
+        />
+      );
     }
   };
 
@@ -108,7 +115,7 @@ class ExportModal extends Component {
             {[intl.get('createEntity.dataSourceImport')]}
           </div>
 
-          {/* <div
+          <div
             className={selectedTag === 'model' ? 'tag tag-selected' : 'tag'}
             onClick={() => {
               this.setState({
@@ -118,7 +125,7 @@ class ExportModal extends Component {
           >
             {selectedTag === 'model' ? <div className="left-mark"></div> : null}
             {[intl.get('createEntity.modelImport')]}
-          </div> */}
+          </div>
         </div>
 
         <div className="content">

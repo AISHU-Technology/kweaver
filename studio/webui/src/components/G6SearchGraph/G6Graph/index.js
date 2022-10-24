@@ -164,14 +164,14 @@ class G6Graph extends Component {
               }
             },
             formatText: model => {
-              return model.data.name;
+              return model?.label;
             },
             offset: 20
           },
           {
             type: 'edge-tooltip',
             formatText: model => {
-              return model.name;
+              return model?.label;
             },
             offset: 20
           },
@@ -584,8 +584,8 @@ class G6Graph extends Component {
    * 点击点或边打开侧边栏
    */
   openSideBar = () => {
-    const { lefSelect, autoOpen, setTabSelect, setSideBarVisible } = this.props;
-    if (lefSelect !== 3) {
+    const { autoOpen, setTabSelect, setSideBarVisible, addE } = this.props;
+    if (!addE) {
       setTabSelect(2); // 非用户选中侧边路径板块，选中点和边自动选中基本信息板块
     }
     if (autoOpen) {
@@ -996,6 +996,11 @@ class G6Graph extends Component {
         size: count || 100,
         name: ''
       });
+
+      if (res?.res === null) {
+        message.warning(intl.get('searchGraph.expandFalse'));
+        return;
+      }
 
       if (res && res.res) {
         const { newNodes, openEdges } = getExpandHandleData(res.res, node, nodes, edges);

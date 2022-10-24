@@ -10,7 +10,7 @@ import servicesCreateEntity from '@/services/createEntity';
 import FreeGraph from '@/components/freeGraph';
 import NewCreateEntityHead from '@/components/NewCreateEntityHead';
 import NewCreateEnityRightMenu from '@/components/newCreateEnityRightMenu';
-import { setSaveData, analyUrl, isFlow, handleTaskId } from './assistFunction';
+import { setSaveData, isFlow, handleTaskId } from './assistFunction';
 
 import './style.less';
 
@@ -47,7 +47,6 @@ class CreateEntity extends Component {
         document.title = `${intl.get('createEntity.title')}_KWeaver`;
       }, 0);
     }
-    this.getEditData();
     this.props.childRef && (this.props.childRef.current = this);
   }
 
@@ -58,51 +57,17 @@ class CreateEntity extends Component {
   }
 
   /**
-   * @description 获取初始数据（编辑进入）
-   */
-  getEditData = async () => {
-    if (isFlow()) {
-      return;
-    }
-
-    const { name, type } = analyUrl(window.location.search);
-
-    if (name && (type === 'edit' || type === 'view')) {
-      const res = await servicesCreateEntity.getEntityInfo(decodeURI(name));
-
-      if (res && res.res && res.res.df[0]) {
-        this.setState({
-          ontology_name: res.res.df[0].ontology_name,
-          ontology_des: res.res.df[0].ontology_des,
-          used_task: res.res.df[0].used_task,
-          ontology_id: res.res.df[0].id
-        });
-
-        const { Hentity, Hedge } = handleTaskId(res.res.df[0].entity, res.res.df[0].edge);
-
-        this.state.freeGraphRef.externalImport({ entity: Hentity, edge: Hedge });
-      }
-    }
-  };
-
-  /**
    * @description 处理流程数据
    */
   handleFlowData = () => {
+    const { ontoData } = this.props;
     if (isFlow()) {
-      // 流程第三步新增处理
-      if (this.props.ontoData.length === 0) return this.openEditEntityModal();
-      if (!this.props.ontoData[0].ontology_name || typeof this.props.ontoData[0].id !== 'number') {
-        this.openEditEntityModal();
-        return;
-      }
       if (!this.isFistLoading) return;
       this.isFistLoading = false;
 
-      // 流程第三步编辑处理
-      if (this.props.ontoData && this.props.ontoData[0]) {
-        const { used_task, entity, edge, id, ontology_name, ontology_des } = this.props.ontoData[0];
-
+      // 流程第三步 编辑状态获得本体信息
+      if (ontoData && ontoData.length !== 0) {
+        const { used_task, entity, edge, id, ontology_name, ontology_des } = ontoData[0];
         this.setState({
           ontology_id: id,
           used_task,
@@ -120,23 +85,11 @@ class CreateEntity extends Component {
    * @description 打开编辑弹窗
    */
   openEditEntityModal = () => {
-    setTimeout(() => {
-      this.state.newCreateEntityHeadRefRef.setEditEntityModal(true);
-    }, 0);
-  };
-
-  /**
-   * @description 设置本体名称
-   */
-  setName = ontology_name => {
-    this.setState({ ontology_name });
-  };
-
-  /**
-   * @description 设置本体描述
-   */
-  setDes = ontology_des => {
-    this.setState({ ontology_des });
+    if (this.props.ontologyError !== '') {
+      setTimeout(() => {
+        this.state.newCreateEntityHeadRefRef.setEditEntityModal(true);
+      }, 0);
+    }
   };
 
   /**
@@ -255,19 +208,19 @@ class CreateEntity extends Component {
    * @description 保存并关闭
    */
   getFlowData = () => {
-    const { nodes, edges, ontology_id, used_task, ontology_name, ontology_des } = this.state;
+    const { nodes, edges, ontology_id, used_task, ontology_name } = this.state;
 
-    if (!ontology_name) return [];
+    // if (!ontology_name) return [];
 
     const { entity, edge } = setSaveData(nodes, edges);
     const data = {
       entity,
       edge,
       used_task,
-      id: ontology_id,
-      ontology_id: ontology_id.toString(),
+      id: ontology_id !== '' ? ontology_id : this.props.ontologyId,
+      ontology_id: ontology_id !== '' ? ontology_id.toString() : this.props.ontologyId.toString(),
       ontology_name,
-      ontology_des
+      ontology_des: this.props.ontology_des
     };
 
     return [data];
@@ -451,7 +404,6 @@ class CreateEntity extends Component {
 
     const { nodes, edges, ontology_id, used_task, dataInfoRef } = this.state;
     const { entity, edge } = setSaveData(nodes, edges);
-
     const data = { entity, edge, used_task, flag: 'save' };
 
     // 如果输入栏有错误，则取消操作
@@ -508,14 +460,6 @@ class CreateEntity extends Component {
       }, 1000);
     }
   };
-
-  /**
-   * @description 设置本体id
-   */
-  setOntologyId = ontology_id => {
-    this.setState({ ontology_id });
-  };
-
   /**
    * @description 取消关联的数据源
    */
@@ -647,15 +591,16 @@ class CreateEntity extends Component {
   saveFlowData = async type => {
     if (this.checkSaveData() || this.signalNext) return;
 
-    const { nodes, edges, ontology_id, used_task, dataInfoRef, ontology_name, ontology_des } = this.state;
-    const { entity, edge } = setSaveData(nodes, edges);
+    const { nodes, edges, used_task, dataInfoRef, ontology_name, ontology_des, ontology_id } = this.state;
 
+    // ontology_id为编辑状态时获取到的本体id ontologyId为创建本体时拿到的id
+    const { entity, edge } = setSaveData(nodes, edges);
     const data = {
       entity,
       edge,
       used_task,
-      id: ontology_id,
-      ontology_id: ontology_id.toString(),
+      id: ontology_id !== '' ? ontology_id : this.props.ontologyId,
+      ontology_id: ontology_id !== '' ? ontology_id.toString() : this.props.ontologyId.toString(),
       flag: type === 'check' ? 'save' : 'nextstep'
     };
 
@@ -687,7 +632,7 @@ class CreateEntity extends Component {
             if (resData && resData.res) {
               data.ontology_name = ontology_name;
               data.ontology_des = ontology_des;
-              this.props.setOntoData([data]);
+              // this.props.setOntoData([data]);
               if (type === 'check') {
                 message.success([intl.get('createEntity.vc')]);
               }
@@ -706,7 +651,7 @@ class CreateEntity extends Component {
               this.props.next(resData);
             }
           })
-          .catch(() => {
+          .catch(e => {
             message.error([intl.get('createEntity.de')]);
             this.state.dataInfoRef.setActiveKey(['1', '2']);
           });
@@ -716,14 +661,13 @@ class CreateEntity extends Component {
     }
 
     const resData = await servicesCreateEntity.changeFlowData(this.props.graphId, requestData);
-
     this.signalNext = false;
 
     if (resData && resData.res) {
       data.ontology_name = ontology_name;
       data.ontology_des = ontology_des;
 
-      this.props.setOntoData([data]);
+      // this.props.setOntoData([data]);
 
       if (type === 'check') {
         message.success([intl.get('createEntity.vc')]);
@@ -759,16 +703,12 @@ class CreateEntity extends Component {
       rightSelect,
       selectedElement,
       dataInfoRef,
-      ontology_id,
       used_task,
-      ontology_name,
-      ontology_des,
+      ontology_id,
       taskListRef,
       modalVisible,
       isTouch
     } = this.state;
-
-    const TYPE = window?.location?.pathname?.includes('knowledge') ? 'view' : analyUrl(window.location.search).type; // 进入图谱的类型 // 进入图谱的类型
 
     return (
       <div className="new-create-entity">
@@ -782,27 +722,24 @@ class CreateEntity extends Component {
             selectRightTool={this.selectRightTool}
             nodes={nodes}
             edges={edges}
-            setOntologyId={this.setOntologyId}
             checkSaveData={this.checkSaveData}
+            ontologyId={this.props.ontologyId}
             ontology_id={ontology_id}
             used_task={used_task}
             setUsedTask={this.setUsedTask}
-            ontology_name={ontology_name}
-            setName={this.setName}
-            ontology_des={ontology_des}
-            setDes={this.setDes}
             taskListRef={taskListRef}
             graphId={this.props.graphId}
-            ontoData={this.props.ontoData}
             setModalVisible={this.setModalVisible}
             prev={this.props.prev}
             setQuitVisible={this.props.setQuitVisible}
             setTouch={this.setTouch}
-            setOntoData={this.props.setOntoData}
             isTouch={isTouch}
             quit={this.quit}
             onEditEntityModalRef={this.onEditEntityModalRef}
             selectedElement={selectedElement}
+            dbType={this.props.dbType}
+            osId={this.props.osId}
+            graphName={this.props.graphName}
           />
         </div>
 
@@ -846,6 +783,7 @@ class CreateEntity extends Component {
               onEdgeFamilyRef={this.onEdgeFamilyRef}
               onGatherListRef={this.onGatherListRef}
               ontology_id={ontology_id}
+              ontologyId={this.props.ontologyId}
               setEdges={this.setEdges}
               cancelSource={this.cancelSource}
               onTaskListRef={this.onTaskListRef}
@@ -856,69 +794,36 @@ class CreateEntity extends Component {
           </div>
         ) : null}
 
-        {!ontology_id || TYPE === 'view' ? null : isFlow() ? (
-          <div className="bottom-box bottom-flow">
-            <ConfigProvider autoInsertSpaceInButton={false}>
-              <Button className="ant-btn-default cancel" onClick={this.props.prev}>
-                {[intl.get('createEntity.previous')]}
-              </Button>
-            </ConfigProvider>
+        <div className="bottom-box bottom-flow">
+          <ConfigProvider autoInsertSpaceInButton={false}>
+            <Button className="ant-btn-default cancel" onClick={this.props.prev}>
+              {[intl.get('createEntity.previous')]}
+            </Button>
+          </ConfigProvider>
 
-            <ConfigProvider autoInsertSpaceInButton={false}>
-              <Button
-                type="primary"
-                className="check"
-                onClick={() => {
-                  this.saveFlowData('check');
-                }}
-              >
-                {[intl.get('createEntity.check')]}
-              </Button>
-            </ConfigProvider>
+          <ConfigProvider autoInsertSpaceInButton={false}>
+            <Button
+              type="primary"
+              className="check"
+              onClick={() => {
+                this.saveFlowData('check');
+              }}
+            >
+              {[intl.get('createEntity.check')]}
+            </Button>
+          </ConfigProvider>
 
-            <ConfigProvider autoInsertSpaceInButton={false}>
-              <Button
-                className="ant-btn-default cancel"
-                onClick={() => {
-                  this.saveFlowData('next');
-                }}
-              >
-                {[intl.get('createEntity.next')]}
-              </Button>
-            </ConfigProvider>
-          </div>
-        ) : (
-          <div className="bottom-box bottom-create">
-            <ConfigProvider autoInsertSpaceInButton={false}>
-              <Button
-                className="ant-btn-default cancel"
-                onClick={() => {
-                  if (!isTouch) {
-                    this.quit();
-
-                    return;
-                  }
-
-                  this.setModalVisible(true);
-                }}
-              >
-                {[intl.get('createEntity.signout')]}
-              </Button>
-            </ConfigProvider>
-
-            <ConfigProvider autoInsertSpaceInButton={false}>
-              <Button
-                type="primary"
-                className="save"
-                onClick={() => {
-                  this.saveData(true);
-                }}
-              >
-                {[intl.get('createEntity.save')]}
-              </Button>
-            </ConfigProvider>
-          </div>
-        )}
+          <ConfigProvider autoInsertSpaceInButton={false}>
+            <Button
+              className="ant-btn-default cancel"
+              onClick={() => {
+                this.saveFlowData('next');
+              }}
+            >
+              {[intl.get('createEntity.next')]}
+            </Button>
+          </ConfigProvider>
+        </div>
 
         <Modal
           className="delete-create-info-4567911-cne"

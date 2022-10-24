@@ -7,6 +7,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 import serviceGraphDetail from '@/services/graphDetail';
 import { ad_onChangeGraphStatus } from '@/reduxConfig/action/knowledgeGraph';
+import { getParam } from '@/utils/handleFunction';
 
 import Header from './Header';
 import GraphDetail from './GraphDetail';
@@ -16,15 +17,18 @@ import TaskList from './taskList';
 import knowledgeEmpty from '@/assets/images/kgEmpty.svg';
 import './index.less';
 
+const initTab = () => {
+  const tab = getParam('tab');
+  return ['1', '2', '3'].includes(tab) ? tab : '1';
+};
+
 let TIMER = null;
 const NetworkContents = props => {
   const history = useHistory();
   const { ad_onChangeGraphStatus } = props;
   const { loading, selectedGraph, selectedKnowledge, setSelectedGraph } = props;
   const { onRefreshLeftSpace, openModalImport } = props;
-
-  const tabsKey3 = window.location.search.includes('&tabsKey');
-  const [tabsKey, setTabsKey] = useState(tabsKey3 ? '3' : '1');
+  const [tabsKey, setTabsKey] = useState(() => initTab());
   const [graphBasicData, setGraphBasicData] = useState({});
   const [isFetching, setIsFetching] = useState(false);
 
@@ -40,9 +44,12 @@ const NetworkContents = props => {
       const result = await serviceGraphDetail.graphGetInfoBasic(getData);
       const data = result?.res || {};
       setGraphBasicData(data);
+
+      if (data.step_num < 6 && tabsKey !== '1') setTabsKey('1');
     } catch (error) {
       const { type = '', response = {} } = error || {};
       if (type === 'message') message.error(response?.Description || '');
+      setTabsKey('1');
     }
   };
 
@@ -69,6 +76,7 @@ const NetworkContents = props => {
     <div className="networkContentRoot">
       <Header
         graphBasicData={graphBasicData}
+        isNewGraph={!selectedGraph.kgconfid}
         selectedKnowledge={selectedKnowledge}
         onRefresh={onRefresh}
         onSelectedGraph={setSelectedGraph}

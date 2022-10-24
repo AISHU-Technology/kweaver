@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { Input, Tooltip, Dropdown, Menu, Button, Pagination, Checkbox, message, Spin } from 'antd';
+import { Input, Tooltip, Dropdown, Menu, Button, Pagination, Checkbox, Spin } from 'antd';
 import { LoadingOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 
@@ -9,14 +9,12 @@ import serverThesaurus from '@/services/thesaurus';
 import IconFont from '@/components/IconFont';
 import ScrollBar from '@/components/ScrollBar';
 import { wrapperTitle } from '@/utils/handleFunction';
-import HOOKS from '@/hooks';
 
 import ModalCreate from './CreateThesaurusModal';
 
 import noResult from '@/assets/images/noResult.svg';
-// import error from '@/assets/images/noResult.svg';
 
-import './style.less'
+import './style.less';
 
 const PAGESIZE = 20;
 const ORDER_MENU = [
@@ -28,12 +26,9 @@ const ORDER_MENU = [
 const ERROR_CODE: Record<string, string> = {
   'Builder.LexiconController.ExportLexicon.LexiconIdNotExist': 'ThesaurusManage.nullThesaurusId',
   'Builder.LexiconController.ExportLexicon.EmptyLexicon': 'ThesaurusManage.emptyWords'
-}
+};
 const ThesaurusList = (props: any) => {
-  const {
-    thesaurusList, selectedThesaurus, thesaurusListCount, knowledge, createModalVisible,
-    listPage
-  } = props;
+  const { thesaurusList, selectedThesaurus, thesaurusListCount, knowledge, createModalVisible, listPage } = props;
   const { setCreateModalVisible, getThesaurusById, getThesaurusList } = props;
   const [name, setName] = useState<string>(''); // 搜索词库名
   const [order, setOrder] = useState<string>('desc'); // 新旧排序
@@ -48,6 +43,11 @@ const ThesaurusList = (props: any) => {
   }, [order, rule]);
 
   useEffect(() => {
+    if (_.isEmpty(thesaurusList)) {
+      setSelectedIds([]);
+      return;
+    }
+
     pageListIsSelected(selectedIds);
     if (page !== listPage) setPage(listPage);
     const errorList = _.map(thesaurusList, item => {
@@ -67,14 +67,7 @@ const ThesaurusList = (props: any) => {
       getThesaurusList({ page: 1, word: value });
       setPage(1);
     }, 300)(value);
-  }
-
-  // const searchThesaurus = HOOKS.useDebounce((e: any) => {
-  //   const { value } = e.target;
-  //   setName(value);
-  //   getThesaurusList({ page: 1, word: value });
-  //   setPage(1);
-  // }, 300, true);
+  };
 
   /**
    * 排序
@@ -98,14 +91,14 @@ const ThesaurusList = (props: any) => {
   const onChange = (e: any, item: any) => {
     let ids = _.cloneDeep(selectedIds);
     if (e?.target?.checked) {
-      ids = [...ids, item?.id]
+      ids = [...ids, item?.id];
     }
     if (!e?.target?.checked) {
       ids = selectedIds.filter(id => id !== item?.id);
     }
-    setSelectedIds(ids)
+    setSelectedIds(ids);
 
-    pageListIsSelected(ids)
+    pageListIsSelected(ids);
   };
 
   // 全选
@@ -115,7 +108,7 @@ const ThesaurusList = (props: any) => {
     if (e?.target?.checked) {
       _.forEach(thesaurusList, item => {
         if (!_.isEmpty(item.columns) && !selectedIds.includes(item?.id) && item?.status !== 'running') {
-          ids = [...ids, item?.id]
+          ids = [...ids, item?.id];
         }
       });
       setSelectedIds(ids);
@@ -125,23 +118,28 @@ const ThesaurusList = (props: any) => {
       setSelectedIds(ids);
     }
     setCheckAll(e?.target?.checked);
-  }
+  };
 
   // 判断是否选择
   const indeterminate = () => {
-    if (_.isEmpty(thesaurusList)) return
+    if (_.isEmpty(thesaurusList)) return;
     const list = thesaurusList.filter((item: any) => {
-      return (!_.isEmpty(item?.columns) && item?.status !== 'running')
+      return !_.isEmpty(item?.columns) && item?.status !== 'running';
     });
 
-    return !!selectedIds.length && selectedIds.length < list.length;
-  }
+    // 当前页选择
+    const currPageSelect = _.filter(list, item => {
+      return selectedIds.includes(item.id);
+    });
+
+    return !!currPageSelect.length && currPageSelect.length < list.length;
+  };
 
   // 当前页已选
   const pageListIsSelected = (ids: any) => {
-    if (_.isEmpty(thesaurusList)) return
+    if (_.isEmpty(thesaurusList)) return;
     const list = thesaurusList?.filter((item: any) => {
-      return (!_.isEmpty(item?.columns) && item?.status !== 'running');
+      return !_.isEmpty(item?.columns) && item?.status !== 'running';
     });
 
     if (list.length === 0) {
@@ -152,7 +150,7 @@ const ThesaurusList = (props: any) => {
     const selected = list.every((item: any) => ids.includes(item?.id));
 
     setCheckAll(selected);
-  }
+  };
 
   // 导出词库
   const exportData = async () => {
@@ -163,21 +161,21 @@ const ThesaurusList = (props: any) => {
     try {
       const data = {
         id_list: ids
-      }
+      };
 
       const response = await serverThesaurus.thesaurusExport(data);
 
       if (response) {
         const exportedIds = _.filter(selectedIds, item => {
           return !ids.includes(item);
-        })
+        });
         setSelectedIds(exportedIds);
         setCheckAll(false);
       }
     } catch (err) {
       //
     }
-  }
+  };
 
   // 关闭新建弹窗
   const closeModal = () => setCreateModalVisible(false);
@@ -186,7 +184,7 @@ const ThesaurusList = (props: any) => {
     const arr = _.cloneDeep(errorInfoList);
     arr[index] = false;
     setErrorInfoList(arr);
-  }
+  };
 
   const menuRule = (
     <Menu className="menu-select" onClick={selectMenu}>
@@ -233,7 +231,6 @@ const ThesaurusList = (props: any) => {
                     placement="bottomRight"
                     disabled={_.isEmpty(thesaurusList)}
                     getPopupContainer={triggerNode => triggerNode?.parentElement?.parentElement || document.body}
-
                   >
                     <IconFont type="icon-paixu11" className={_.isEmpty(thesaurusList) ? 'disabled' : 'order'} />
                   </Dropdown>
@@ -241,18 +238,24 @@ const ThesaurusList = (props: any) => {
               </div>
             </div>
             <div className="list-btn-wrap">
-              <Button className="operate-btn" type="primary" onClick={() => { setCreateModalVisible(true) }}>
+              <Button
+                className="operate-btn"
+                type="primary"
+                onClick={() => {
+                  setCreateModalVisible(true);
+                }}
+              >
                 <IconFont type="icon-Add" />
                 {intl.get('knowledge.create')}
               </Button>
-              <Button className="operate-btn" disabled={_.isEmpty(selectedIds) || _.isEmpty(thesaurusList)} onClick={() => exportData()}>
+              <Button className="operate-btn" disabled={!indeterminate() && !checkAll} onClick={() => exportData()}>
                 <IconFont type="icon-daochu" />
                 {intl.get('ThesaurusManage.export')}
               </Button>
             </div>
           </React.Fragment>
         )}
-        {!_.isEmpty(thesaurusList) ?
+        {!_.isEmpty(thesaurusList) ? (
           <React.Fragment>
             {/* 全选 */}
             <div className="select-all">
@@ -261,40 +264,46 @@ const ThesaurusList = (props: any) => {
                 disabled={thesaurusList.every((e: any) => _.isEmpty(e?.columns))}
                 indeterminate={indeterminate()}
                 checked={checkAll}
-              >{intl.get('ThesaurusManage.allThesaurus')}</Checkbox>
+              >
+                {intl.get('ThesaurusManage.allThesaurus')}
+              </Checkbox>
             </div>
             <ScrollBar autoHeight autoHeightMax={680} isshowx="false" color="rgb(184,184,184)">
               <div className="lists-wrap">
                 {_.map(thesaurusList, (item: any, index: number) => {
                   return (
-                    <div key={item.id} className={selectedThesaurus?.id === item.id ? 'line-selected  list-item' : 'list-item'}>
+                    <div
+                      key={item.id}
+                      className={selectedThesaurus?.id === item.id ? 'line-selected  list-item' : 'list-item'}
+                    >
                       <Checkbox
                         disabled={_.isEmpty(item?.columns) || item?.status === 'running'}
                         onChange={e => onChange(e, item)}
-                        checked={selectedIds.includes(item.id)} />
-                      <div
-                        className={'line ad-align-center'}
-                        onClick={() => getThesaurusById(item)}
-                      >
+                        checked={selectedIds.includes(item.id)}
+                      />
+                      <div className={'line ad-align-center'} onClick={() => getThesaurusById(item)}>
                         <div className="img">
                           <IconFont type="icon-ciku1" className="icon"></IconFont>
                         </div>
                         <div className="name ad-ellipsis" title={wrapperTitle(item.name)}>
                           {item.name}
                         </div>
-                        {(item?.status === 'failed' && errorInfoList[index]) ?
-                          <span className="ad-c-error" onClick={() => {
-                            _.debounce(() => {
-                              changeErrorList(index);
-                            }, 4000)();
-                          }}>
+                        {item?.status === 'failed' && errorInfoList[index] ? (
+                          <span
+                            className="ad-c-error"
+                            onClick={() => {
+                              _.debounce(() => {
+                                changeErrorList(index);
+                              }, 4000)();
+                            }}
+                          >
                             <Tooltip placement="right" title={item?.error_info} trigger="click">
                               <ExclamationCircleOutlined />
                             </Tooltip>
-                          </span> :
-                          item?.status === 'running' ?
-                            <Spin indicator={<LoadingOutlined style={{ fontSize: 14 }} spin />} /> : null
-                        }
+                          </span>
+                        ) : item?.status === 'running' ? (
+                          <Spin indicator={<LoadingOutlined style={{ fontSize: 14 }} spin />} />
+                        ) : null}
                       </div>
                     </div>
                   );
@@ -312,11 +321,12 @@ const ThesaurusList = (props: any) => {
               showSizeChanger={false}
             />
           </React.Fragment>
-          : name ? (
-            <div className="search-none">
-              <img src={noResult} alt="noResult" />
-              <div className="word">{intl.get('memberManage.searchNull')}</div>
-            </div>) : null}
+        ) : name ? (
+          <div className="search-none">
+            <img src={noResult} alt="noResult" />
+            <div className="word">{intl.get('global.noResult')}</div>
+          </div>
+        ) : null}
       </div>
 
       <ModalCreate
@@ -324,8 +334,9 @@ const ThesaurusList = (props: any) => {
         closeModal={closeModal}
         knowledge={knowledge}
         setPage={setPage}
-        getThesaurusList={getThesaurusList} />
-    </div >
-  )
-}
+        getThesaurusList={getThesaurusList}
+      />
+    </div>
+  );
+};
 export default ThesaurusList;

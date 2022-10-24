@@ -110,4 +110,47 @@ errDict = {
         "ErrorDetails": _l('[class_type] [name] not exists'),
         "Solution": _l("Please check your parameter again.")  # "请重新检查输入参数"
     },
+    'Builder.GraphController.IntelligenceCalculateTask.ParamError': {
+        "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.ParamError",
+        "Description": _l("Parameter [arg] Error."),
+        "ErrorDetails": _l("parameter [arg] not exists or invalid"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
+    },
+    'Builder.GraphController.IntelligenceCalculateTask.GraphStatusQueryError': {
+        "ErrorCode": "Builder.GraphController.IntelligenceCalculateTask.GraphStatusQueryError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
+    },
+    "Builder.GraphController.IntelligenceStats.ParamError": {
+        "ErrorCode": "Builder.GraphController.IntelligenceStats.ParamError",
+        "Description": _l("Parameter [arg] Error."),
+        "ErrorDetails": _l("parameter [arg] not exists or invalid"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
+    },
+    "Builder.KnowledgeNetworkController.IntelligenceStats.ParamError": {
+        "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.ParamError",
+        "Description": _l("Parameter [arg] Error."),
+        "ErrorDetails": _l("parameter [arg] not exists or invalid"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
+    },
+    'Builder.KnowledgeNetworkController.IntelligenceStats.ParamTooBigError': {
+        "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.ParamTooBigError",
+        "Description": _l("Parameter [arg] too big please lower than [max]"),
+        "ErrorDetails": _l("Parameter [arg] too big please lower than [max]"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
+    },
+    'Builder.KnowledgeNetworkController.IntelligenceStats.QueryError': {
+        "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.QueryError",
+        "Description": "[description]",
+        "ErrorDetails": _l("[cause]"),
+        "Solution": _l("Please contact the developers.")
+    },
+    "Builder.KnowledgeNetworkController.IntelligenceStats.NotAllowedParamError": {
+        "ErrorCode": "Builder.KnowledgeNetworkController.IntelligenceStats.NotAllowedParamError",
+        "Description": _l("Parameter [arg] not allow, please choose [allowed]"),
+        "ErrorDetails": _l("Parameter [arg] not allow, please choose [allowed]"),
+        "Solution": _l("please ensure parameter [arg] exists and valid")
+
+    }
 }
