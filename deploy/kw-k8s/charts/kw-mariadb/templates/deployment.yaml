@@ -1,0 +1,46 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata: 
+  name: {{ .Values.image.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.image.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.image.name }}
+    spec:
+      containers: 
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.registry }}{{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MARIADB_DATABASE
+              value: "anydata"
+            - name: MARIADB_USER
+              value: "root"
+            - name: MARIADB_PASSWORD
+              value: "KWeaver"
+            - name: MARIADB_ROOT_PASSWORD
+              value: "KWeaver"
+            - name: MARIADB_ALLOW_EMPTY_PASSWORD
+              value: "false"
+          ports:
+            - protocol: TCP
+              name: {{ .Values.image.name }}
+              containerPort: {{ .Values.service.port }}
+          volumeMounts:   
+            - mountPath: /var/lib/mysql
+              name: mariadb-datadir
+            - name: host-time
+              mountPath: /etc/localtime
+      volumes:
+        - name: mariadb-datadir
+          persistentVolumeClaim:
+            claimName: {{ .Values.image.name }}
+        - name: host-time
+          hostPath:
+            path: /etc/localtime

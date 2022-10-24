@@ -1,0 +1,27 @@
+replicaCount: 1
+
+namespace: kweaver
+
+image:
+  registry: 
+  repository: redis
+  tag: alpine
+  pullPolicy: IfNotPresent
+  name: kw-redis
+
+service:
+  type: ClusterIP
+  port: 6379
+  targetPort: 6379
+  
+storage:
+  local:
+    host: molen
+    path: "/kweaver/deploy/kw-k8s/data/redis"
+  capacity: 10Gi
+
+volumes:  
+  conf:
+    hostPath: /kweaver/deploy/kw-k8s/conf/redis/redis.conf
+  log:
+    hostPath: /kweaver/deploy/kw-k8s/conf/redis/redis.log
