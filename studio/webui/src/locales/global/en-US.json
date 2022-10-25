@@ -54,7 +54,7 @@
     "waiting": "Waiting",
     "success": "Success",
     "failed": "Failed",
-    "emptyTableCreate": "[ create ]",
+    "emptyTableCreate": "[create]",
     "check": "Check",
     "refresh": "Refresh",
     "loadFail": "Failed to load",
