@@ -128,6 +128,7 @@ class IntelligenceDao:
             """
         if exclude:
             sql += f" and a.graph_id not in ({','.join(exclude)})"
+        sql += " group by knw_id  "
         cursor.execute(sql)
         item = cursor.fetchone()
         # update network intelligence score
