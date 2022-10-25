@@ -1385,7 +1385,8 @@ class GraphService():
                 "kmap": 映射规则信息
                 "kmerge": 融合规则信息
                 "mongo_name": MongoDB表名
-                "graphdb_name": 图数据库DB名
+                "graphdb_name": 图数据库名
+                "graphdb_dbname": 图数据库DB名
                 "graphdb_type": 图数据库类型
                 "graphdb_address": 图数据库地址
                 "graphdb_id": 图数据库id 
@@ -1421,7 +1422,7 @@ class GraphService():
         res_info['graphdb_id'] = graph_baseInfo['graph_db_id']
         res_info['graphdb_address'] = graph_baseInfo['graphDBAddress']
         res_info['mongo_name'] = graph_baseInfo['graph_mongo_Name']
-        res_info['graphdb_name'] = graph_baseInfo['graph_DBName']
+        res_info['graphdb_dbname'] = graph_baseInfo['graph_DBName']
         res_info['create_time'] = config_info['create_time']
         res_info['update_time'] = config_info['update_time']
         res_info['step_num'] = int(config_info['step_num'])
@@ -1433,6 +1434,7 @@ class GraphService():
         is_upload = config_info['is_upload']  # 表示图谱是否是上传而来
         res_info['is_import'] = True if is_upload else False
         res_info['display_task'] = False if is_upload and task_status == None else True
+        res_info['graphdb_name'] = graph_dao.getGraphDBNew(graph_baseInfo['graph_db_id']).to_dict('records')[0]['name']
         if is_all or ('graphdb_type' in key or 'export' in key):
             graphdb_info = graph_dao.getGraphDBNew(res_info['graphdb_id'])
             if len(graphdb_info) == 0:
