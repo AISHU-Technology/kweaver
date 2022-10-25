@@ -2438,8 +2438,8 @@ class RelationIn2Class(RelationManualBuilder):
         """
         self.all_data_collection = self.start_collection
         self.all_data_count = self.start_data_count
-        self.find_class = self.begin_vertex_class
-        self.relation_class = self.end_vertex_class
+        self.find_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
+        self.relation_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
         self.find_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
         self.relation_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
         self.reverse = False
@@ -2450,8 +2450,8 @@ class RelationIn2Class(RelationManualBuilder):
         """
         self.all_data_collection = self.end_collection
         self.all_data_count = self.end_data_count
-        self.find_class = self.end_vertex_class
-        self.relation_class = self.begin_vertex_class
+        self.find_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.relation_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
         self.find_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
         self.relation_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
         self.reverse = True
