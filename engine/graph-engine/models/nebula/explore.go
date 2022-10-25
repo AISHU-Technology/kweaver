@@ -990,9 +990,10 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 		}
 
 		var vrec ExpandVRecord
-		for _, re := range e.Res {
+		for i, re := range e.Res {
 			if re.Rid == v2.GetID().String()[1:len(v2.GetID().String())-1] {
 				vrec = *re
+				e.Res[i] = &vrec
 				break
 			}
 		}
