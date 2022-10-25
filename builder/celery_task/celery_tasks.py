@@ -2815,8 +2815,8 @@ class VertexWriter(object):
             total = collection.count_documents({})
             if total <= 0:
                 continue
-            iter_size = MongoBuildDao.step_size(collection_name, 4194304)
-
+            # iter_size = MongoBuildDao.step_size(collection_name, 4194304)
+            iter_size = 1000
             index = 0
             batch_size = 200000
             error_report = []
