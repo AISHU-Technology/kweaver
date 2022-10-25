@@ -410,7 +410,7 @@ class KnowledgeNetwork(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     knw_name = Column(String(50), nullable=True)
     knw_description = Column(String(200), nullable=True)
-    intelligence_score = Column(Numeric, default=-1)
+    intelligence_score = Column(Numeric(10, 2), default='-1', server_default='-1', nullable=False)
     color = Column(String(50), nullable=True)
     creation_time = Column(String(50), nullable=True)
     update_time = Column(String(50), nullable=True)
@@ -451,15 +451,15 @@ class IntelligenceRecords(Base):
         'mysql_charset': 'utf8'
     }
     id = Column(Integer, autoincrement=True, primary_key=True)
-    graph_id = Column(Integer, nullable=True)
-    knw_id = Column(Integer, nullable=True)
+    graph_id = Column(Integer, nullable=True, index=True)
+    knw_id = Column(Integer, nullable=True, index=True)
     entity_knowledge = Column(Integer, nullable=True)
     edge_knowledge = Column(Integer, nullable=True)
     data_number = Column(Integer, nullable=True)
     total_knowledge = Column(Integer, nullable=True)
     empty_number = Column(Integer, nullable=True)
     repeat_number = Column(Integer, nullable=True)
-    data_quality_score = Column(Numeric(10, 2), default=-1)
+    data_quality_score = Column(Numeric(10, 2), default='-1', server_default='-1', nullable=False)
     update_time = Column(DateTime, nullable=True)
 
 
@@ -472,8 +472,8 @@ class async_task_records(Base):
     task_type = Column(String(100), nullable=True)
     task_status = Column(String(50), nullable=True)
     task_name = Column(String(200), nullable=True)
-    celery_task_id = Column(String(200), nullable=True)
-    relation_id = Column(String(200), nullable=True)
+    celery_task_id = Column(String(200), nullable=True, index=True)
+    relation_id = Column(String(200), nullable=True, index=True)
     task_params = Column(Text, nullable=True)
     result = Column(Text, nullable=True)
     created_time = Column(DateTime, nullable=True)
