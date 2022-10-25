@@ -4,8 +4,8 @@
  */
 
 import React, { useState, useEffect, useRef, useReducer, forwardRef, useImperativeHandle, useCallback } from 'react';
-import { Button, Empty, Select, Tooltip, ConfigProvider, message, Input } from 'antd';
-import { QuestionCircleOutlined, LoadingOutlined } from '@ant-design/icons';
+import { Button, Empty, Select, ConfigProvider, message, Input } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import localStore from 'store';
 import { connect } from 'react-redux';
@@ -430,6 +430,7 @@ const StrategyConfig: React.ForwardRefRenderFunction<unknown, StrategyConfigProp
         onOk: () => {
           reset();
           getGraphList(kgData?.id);
+          ErrorCode === 'EngineServer.ErrKGIDErr' && notGraphCallback?.(false, true);
         }
       });
 

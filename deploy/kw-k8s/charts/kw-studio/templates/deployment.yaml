@@ -1,0 +1,36 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata: 
+  name: {{ .Values.image.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.image.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.image.name }}
+    spec:
+      containers: 
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.registry }}{{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - protocol: TCP
+              name: {{ .Values.image.name }}
+              containerPort: {{ .Values.service.port }}
+          volumeMounts:
+            - mountPath: /etc/studio/
+              name: conf
+              readOnly: true
+            - name: host-time
+              mountPath: /etc/localtime
+      volumes:
+        - name: conf
+          hostPath:
+            path: {{ .Values.volumes.hostPath }}
+        - name: host-time
+          hostPath:
+            path: /etc/localtime
