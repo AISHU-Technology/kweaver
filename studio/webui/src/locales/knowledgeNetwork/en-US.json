@@ -72,6 +72,6 @@
     "insufficientSpace": "Insufficient Nebula storage space, unable to perform import operation. Please check and try again",
     "noAuth": "No permission to create knowledge network!",
     "member": "Member",
-    "emptyDesImport": "[ import ]"
+    "emptyDesImport": "[import]"
   }
 }

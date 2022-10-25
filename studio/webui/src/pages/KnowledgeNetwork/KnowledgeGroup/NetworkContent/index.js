@@ -133,12 +133,12 @@ const NetworkContents = props => {
           <div className="text-des">
             <div className="">
               {intl.get('knowledge.click')}
-              <span className="create-span" onClick={() => history.push('/home/workflow/create')}>
+              <span className="create-span ad-ml-1 ad-mr-1" onClick={() => history.push('/home/workflow/create')}>
                 {intl.get('global.emptyTableCreate')}
               </span>
               {intl.get('knowledge.build')}
               {intl.get('knowledge.orClick')}
-              <span onClick={openModalImport} className="create-span">
+              <span onClick={openModalImport} className="create-span ad-ml-1 ad-mr-1">
                 {intl.get('knowledge.emptyDesImport')}
               </span>
               {intl.get('knowledge.toUpload')}
