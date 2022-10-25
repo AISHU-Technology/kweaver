@@ -17,8 +17,7 @@ module.exports = function (app) {
       // target: 'https://10.2.196.57',
       // target: 'https://10.4.71.138',
       // target: 'http://10.2.174.230:6475',
-      // target: 'http://10.4.131.17',
-      target: 'https://10.4.130.54',
+      target: 'http://10.4.131.17',
       changeOrigin: true,
       secure: false
     })
@@ -38,8 +37,7 @@ module.exports = function (app) {
       // target: 'https://10.2.196.57',
       // target: 'https://10.4.71.138',
       // target: 'http://10.2.174.230:6800',
-      // target: 'http://10.4.131.17',
-      target: 'https://10.4.130.54',
+      target: 'http://10.4.131.17',
       changeOrigin: true,
       secure: false
     })
@@ -47,6 +45,7 @@ module.exports = function (app) {
   app.use(
     createProxyMiddleware('/api/engine', {
       // target: 'https://10.4.68.144',
+      target: 'http://10.4.131.17',
       // target: 'https://10.2.174.228',
       // target: 'https://10.4.107.186',
       // target: 'https://10.4.106.255',
@@ -58,8 +57,6 @@ module.exports = function (app) {
       // target: 'https://10.2.196.57',
       // target: 'https://10.4.71.138',
       // target: 'http://10.2.174.230:6474',
-      // target: 'http://10.4.131.17',
-      target: 'https://10.4.130.54',
       changeOrigin: true,
       secure: false
     })
