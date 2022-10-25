@@ -375,7 +375,17 @@ function dockerComposeInit() {
   sed -i '/.*server_name*./c\server_name  '"$tempInput"';' ./nginx/nginx.conf
   # edit compose yaml
   yq -i '.services.kw-builder.extra_hosts = ["kwhost : '"$tempInput"'"]' "$1"
+  varvolume=$(docker volume ls | grep aishu)
+  volumestatus=0
+  if [[ $varvolume != "" ]]; then
+    volumestatus=0
+  else
+    volumestatus=1
+  fi
   $DOCKER_COMPOSE -p $SERVICE_NAME -f "$1" up -d
+  if [[ $volumestatus == 1 ]];then
+    $DOCKER_COMPOSE -p $SERVICE_NAME -f "$1" up -d --force-recreate --build --no-deps kw-nginx
+  fi
 }
 
 function checkEditPorts() {
