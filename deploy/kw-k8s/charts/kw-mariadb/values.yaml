@@ -1,0 +1,21 @@
+replicaCount: 1
+
+namespace: kweaver
+
+image:
+  registry: 
+  repository: mariadb
+  tag: 10.5
+  pullPolicy: IfNotPresent
+  name: kw-mariadb
+
+service:
+  type: ClusterIP
+  port: 3306
+  targetPort: 3306
+
+storage:
+  local:
+    host: molen
+    path: "/kweaver/deploy/kw-k8s/data/mariadb"
+  capacity: 10Gi
