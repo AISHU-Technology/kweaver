@@ -1434,14 +1434,14 @@ class GraphService():
         is_upload = config_info['is_upload']  # 表示图谱是否是上传而来
         res_info['is_import'] = True if is_upload else False
         res_info['display_task'] = False if is_upload and task_status == None else True
-        res_info['graphdb_name'] = graph_dao.getGraphDBNew(graph_baseInfo['graph_db_id']).to_dict('records')[0]['name']
-        if is_all or ('graphdb_type' in key or 'export' in key):
+        if is_all or ('graphdb_type' in key or 'export' in key or 'graphdb_name' in key):
             graphdb_info = graph_dao.getGraphDBNew(res_info['graphdb_id'])
             if len(graphdb_info) == 0:
                 code = codes.Builder_GraphService_GetGraphInfoBasic_GraphDBIdNotExist
                 data = Gview2.TErrorreturn(code,
                                            graphdb_id = res_info['graphdb_id'])
                 return code, data
+            res_info['graphdb_name'] = graphdb_info.iloc[0]['name']
             res_info['graphdb_type'] = graphdb_info.iloc[0]['type']
             if is_all or 'export' in key:
                 if task_status == 'normal' and res_info['graphdb_type'] == 'nebula':
