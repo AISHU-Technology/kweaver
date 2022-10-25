@@ -427,7 +427,6 @@ const DataSource = props => {
     }
   ];
 
-  console.log('selectedRowKeys selectedRowKeys', selectedRowKeys);
   // 表格复选框配置
   const rowSelection = {
     fixed: true,
