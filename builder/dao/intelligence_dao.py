@@ -132,7 +132,9 @@ class IntelligenceDao:
         cursor.execute(sql)
         item = cursor.fetchone()
         # update network intelligence score
-        if item['total'] is None or item['empty_number'] is None or item['repeat_number'] is None:
+
+        if item is None or (
+                item.get('total') is None or item.get('empty_number') is None or item.get('repeat_number') is None):
             score = -1
         else:
             score = self.intelligence_score(item['total'], item['empty_number'], item['repeat_number'])
