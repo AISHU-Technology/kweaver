@@ -109,7 +109,7 @@ def default_value(db_type='nebula', type='other', sql_format=True):
     '''
     if not sql_format:
         return ""
-    if db_type == 'orientdb' and type == 'string':
+    if type == 'string':
         return '""'  # 如果为NULL，engine搜索会报错
     return "NULL"
 
