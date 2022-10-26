@@ -128,6 +128,11 @@ def graph(grapid):
             if paramscode != 0:
                 return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                            message=message), CommonResponseStatus.BAD_REQUEST.value
+            # 如果已有本体，则报错
+            otl_id = eval(graph_dao.getbyid(grapid).iloc[0]['graph_otl'])
+            if len(otl_id) != 0:
+                return Gview.BuFailVreturn(cause='ontology already exists', code=CommonResponseStatus.SERVER_ERROR.value,
+                                           message='ontology already exists'), CommonResponseStatus.SERVER_ERROR.value
             #  流程中本体的部分 如果是新增本体 直接调用新增本体
             ret_code, ret_message, otl_id = otl_service.ontology_save(graph_process_dict)
             if ret_code == 200:  # 本体添加成功才更新图谱配置
