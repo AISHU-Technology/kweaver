@@ -9,8 +9,18 @@ import DataSource from '@/components/DataSource';
 import './style.less';
 
 const DataSourceBox = props => {
-  const { next, prev, dataSourceData, setDataSourceData, graphId, useDs, dataSourceRef, setOntologyId, ontoData } =
-    props;
+  const {
+    next,
+    prev,
+    dataSourceData,
+    setDataSourceData,
+    graphId,
+    useDs,
+    dataSourceRef,
+    setOntologyId,
+    ontoData,
+    ontologyId
+  } = props;
   const [disabled, setDisabled] = useState(false);
   const [getNewData, setGetNewData] = useState(false);
 
@@ -62,6 +72,7 @@ const DataSourceBox = props => {
    * 创建本体
    */
   const createOntology = async () => {
+    if (ontologyId !== 0) return true;
     try {
       if (ontoData.length === 0) {
         const data = {

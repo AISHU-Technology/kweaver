@@ -286,6 +286,7 @@ const Workflow = props => {
             prev={prev}
             dataSourceRef={step2Ref}
             ontoData={ontoData}
+            ontologyId={ontologyId}
             setOntologyId={setOntologyId}
             setOntoData={setOntoData}
           />
