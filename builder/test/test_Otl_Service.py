@@ -9,6 +9,7 @@ from dao.task_onto_dao import task_dao_onto
 from service.Otl_Service import otl_service
 from dao.otl_dao import otl_dao
 from dao.graph_dao import graph_dao
+from dao.knw_dao import knw_dao
 import pandas as pd
 
 
@@ -44,7 +45,7 @@ class Test_ontology_save(TestCase):
         otl_dao.get_ontology = mock.Mock(return_value=ontology_name)
 
         res = otl_service.ontology_save(self.params_json)
-        self.assertEqual(res[0], 500)
+        self.assertEqual(res[0], 200)
 
     # 异常
     def test_ontology_save_exception(self):
@@ -274,8 +275,29 @@ class Test_getall(TestCase):
        'result', 'file_list', 'ds_id', 'postfix']
         self.task_in_table = pd.DataFrame(task_in_table_row, columns=column)
 
-        # mock graph_dao.getdatabyotlid
-        graph_dao.getdatabyotlid = mock.Mock(return_value=[])
+        # mock knw_dao.get_graph_by_knw_id
+        column = ['graph_id']
+        row = [[4], [37], [38]]
+        ret_knw_dao_get_graph_by_knw_id = pd.DataFrame(row, columns=column)
+        knw_dao.get_graph_by_knw_id = mock.Mock(return_value=ret_knw_dao_get_graph_by_knw_id)
+
+        # mock graph_dao.get_name_and_otl_by_id
+        column = ['graph_name', 'graph_otl']
+        row = [['dddd', '[39]'], ['合同', '[32]'], ['文档_nebula', '[33]']]
+        ret_graph_dao_get_name_and_otl_by_id = pd.DataFrame(row, columns=column)
+        graph_dao.get_name_and_otl_by_id = mock.Mock(return_value=ret_graph_dao_get_name_and_otl_by_id)
+
+        # mock otl_dao.getbyids
+        column = ['id', 'create_user', 'create_time', 'update_user', 'update_time',
+       'ontology_name', 'ontology_des', 'otl_status', 'entity', 'edge',
+       'used_task', 'all_task']
+        row = [[39, '853ba1db-4e37-11eb-a57d-0242ac190002',
+        '2022-09-22 10:32:25', '853ba1db-4e37-11eb-a57d-0242ac190002',
+        '2022-09-22 10:32:33', 'dddd', '', 'available',
+        "[{'entity_id': 1, 'colour': '#2A908F', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'e1', 'source_table': [], 'source_type': 'manual', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': '', 'ds_address': '', 'alias': 'e1'}]",
+        '[]', '[]', '[]']]
+        ret_otl_dao_getbyids = pd.DataFrame(row, columns=column)
+        otl_dao.getbyids = mock.Mock(return_value=ret_otl_dao_getbyids)
 
         # mock task_dao_onto.get_all_by_otlid
         task_dao_onto.get_all_by_otlid = mock.Mock(return_value=self.task_in_table)
@@ -284,8 +306,11 @@ class Test_getall(TestCase):
     def test_getall_success(self):
         # 查询第一页
         # mock otl_dao.getall
+        graph_otl = ["graph_name"]
+        graph_dao.getdatabyotlid = mock.Mock(return_value=graph_otl)
+
         otl_dao.getall = mock.Mock(return_value=self.ret_firstpage)
-        args = {'page': '1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
+        args = {'page': '1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390', 'knw_id': '1'}
         args["res_list"] = []
         res = otl_service.getall(args)
         self.assertEqual(res[0], 200)
@@ -293,7 +318,7 @@ class Test_getall(TestCase):
         # 查询全部
         # mock otl_dao.getall
         otl_dao.getall = mock.Mock(return_value=self.ret_all)
-        args = {'page': '-1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
+        args = {'page': '-1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390', 'knw_id': '1'}
         args["res_list"] = []
         res = otl_service.getall(args)
         self.assertEqual(res[0], 200)
@@ -302,7 +327,7 @@ class Test_getall(TestCase):
     def test_getall_exception(self):
         # mock otl_dao.getall
         otl_dao.getall = mock.Mock(return_value=[], side_effect=Exception('database Unusable!'))
-        args = {'page': '-1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
+        args = {'page': '1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390', 'knw_id': '1'}
         res = otl_service.getall(args)
         self.assertEqual(res[0], 500)
 
@@ -463,6 +488,10 @@ class Test_getbyotlname(TestCase):
 
         args = {'otlname': '', 'otl_status': 'all', 'page': '1', 'size': '10', 'order': 'ascend',
                 'timestamp': '1637201113677'}
+
+        graph_otl = ["graph_name"]
+        graph_dao.getdatabyotlid = mock.Mock(return_value=graph_otl)
+
         res = otl_service.getbyotlname(otlid, args, num)
         self.assertEqual(res[0], 200)
 

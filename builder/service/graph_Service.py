@@ -838,8 +838,15 @@ class GraphService():
 
         return entity_message
 
-    # graphIds运行状态统计
     def getStatusByIds(self, graphids):
+        '''
+        return the graphs whose task status is running
+        Args:
+            graphids:
+        Returns:
+            obj: return object
+            code: 0: success; -1: failure
+        '''
         obj = {}
         # 运行状态的
         runs = []
@@ -864,14 +871,20 @@ class GraphService():
             obj['solution'] = 'Please check mariadb or sql'
             return obj, -1
 
-    # 统计不存在的graphids
     def getNoExistIds(self, graphids):
-        noExist = []
+        '''
+        get the graph ids that not exist in the database
+        Args:
+            graphids: graph ids to be checked
+        Returns:
+            obj: return obj
+            code: 0: success; -1: failure
+        '''
         obj = {}
         try:
             df = graph_dao.get_graph_id_list()
             allGraphIds = df["id"].tolist()
-            # 数据库中不存在的id
+            # the ids that not exist in the database
             noExist = [i for i in graphids if i not in allGraphIds]
             obj["noExist"] = noExist
             return obj, 0
@@ -884,24 +897,25 @@ class GraphService():
                    "solution": "Please check mariadb"}
             return obj, -1
 
-    # 图谱批量删除
-    def deleteGraphByIds(self, graphids):
-        mess = ""
+    def deleteGraphByIds(self, graph_ids):
+        '''
+        batch delete graphs
+        Args:
+            graph_ids: graph ids to be deleted
+        '''
         try:
-            # 删除mongodb数据，先判断是否存在，不存在则跳过，存在则删除
+            # delete mongodb data
             client_mon = mongoConnect.connect_mongo()
             collection_names = client_mon.collection_names()
-            # dbnames = graph_dao.getKDBnameByIds(graphids)
-            # dbnames = dbnames["KDB_name"].tolist()
-            for graphid in graphids:
+            for graph_id in graph_ids:
                 for collection_name in collection_names:
-                    if collection_name.startswith("mongodb-" + str(graphid)):
-                        db_collection = client_mon["mongo-" + str(graphid)]
+                    if collection_name.startswith("mongodb-" + str(graph_id)):
+                        db_collection = client_mon["mongo-" + str(graph_id)]
                         db_collection.drop()
-            # 删除mysql数据库记录
-            ret = graph_dao.deleteGraphByIds(graphids)
+            # delete mysql data
+            ret = graph_dao.deleteGraphByIds(graph_ids)
             if ret == 0:
-                mess = "success delete graphids: %s ;" % ", ".join(map(str, graphids))
+                mess = "success delete graphids: %s ;" % ", ".join(map(str, graph_ids))
                 return mess, 0
         except Exception as e:
             err = repr(e)
@@ -942,9 +956,10 @@ class GraphService():
             page = args.get("page")
             size = args.get("size")
             order = args.get("order")
+            graph_id = args.get("graph_id")
             count = dsm_dao.getCount()
             res = {}
-            ret = dsm_dao.getall(int(page) - 1, int(size), order, None)
+            ret = dsm_dao.getall(int(page) - 1, int(size), order, graph_id, "graph")
             ret = ret.where(ret.notnull(), None)
             rec_dict = ret.to_dict('records')
 
@@ -1503,7 +1518,7 @@ class GraphService():
         code, count_res = graphdb.count(db)
         if code != codes.successCode:
             return code, count_res
-        edge_count, entity_count, _, entitys_count, edges_count, _, _ = count_res
+        edge_count, entity_count, _, entitys_count, edges_count, edge_prop_info, entity_prop_info = count_res
         res = {}
         res['entity_count'] = entity_count
         res['edge_count'] = edge_count
@@ -1513,11 +1528,13 @@ class GraphService():
             entity = {}
             entity['name'] = k
             entity['count'] = v
+            entity['prop_number'] = entity_prop_info.get(k, 0)
             res['entity'].append(entity)
         for k, v in edges_count.items():
             edge = {}
             edge['name'] = k
             edge['count'] = v
+            edge['prop_number'] = edge_prop_info.get(k, 0)
             res['edge'].append(edge)
         return codes.successCode, Gview2.json_return(res)
 

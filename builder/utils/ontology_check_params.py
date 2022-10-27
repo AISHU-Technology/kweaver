@@ -859,10 +859,11 @@ class Otl_check_params(object):
                             illegual.append(param)
                             ret_status = self.INVALID
                         else:
-                            if not value == ''.join(value.split()) or value == "":  # 所有参数值 校验是否包含空格或为空
-                                empty.append(param)
-                                ret_status = self.INVALID
-                            else:
+                            # 允许本体名称为空，所有本体默认没有名字
+                            # if not value == ''.join(value.split()) or value == "":  # 所有参数值 校验是否包含空格或为空
+                            #     empty.append(param)
+                            #     ret_status = self.INVALID
+                            if value != '':
                                 if len(value) > 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', value):
                                     message += param + " must <= 50 ; and it is must be consisted of letter ,number and underline "
                                     illegual.append(param)
@@ -991,7 +992,7 @@ class Otl_check_params(object):
     def getAllParOnto(self, params_json):
         ret_status = 0
         message = ""
-        onto_getall_params = ["page", "size", "order"]
+        onto_getall_params = ["page", "size", "order", "knw_id"]
         message_dict = {"request_error": [], "no_request": [], "request_illegal": [], "no_rule": []}
         for pa in onto_getall_params:
             if pa not in params_json.keys():

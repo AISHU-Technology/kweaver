@@ -114,7 +114,7 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 	if queryAll {
 		var gqlCount string
 		if _, ok := filterStrMap["vids"]; ok {
-			gqlCount = "match (%s:%s) where %s %s return %s;"
+			gqlCount = "match (%s:%s) where %s %s return %s limit 1000;"
 			if _, ok := filterStrMap["filter"]; ok {
 				// nebula 3.0.0 版本开始，为了区别不同 Tag 的属性，match语句返回属性时必须额外指定 Tag 名称
 				filterlist := []string{}
@@ -127,7 +127,7 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				gqlCount = fmt.Sprintf(gqlCount, class, class, filterStrMap["vids"], "", class)
 			}
 		} else {
-			gqlCount = "LOOKUP ON %s %s YIELD properties(vertex);"
+			gqlCount = "LOOKUP ON %s %s YIELD properties(vertex) | limit 0,1000;"
 			if _, ok := filterStrMap["filter"]; ok {
 				filterStr := strings.Join(filterStrMap["filter"].([]string), " and ")
 				gqlCount = fmt.Sprintf(gqlCount, class, "WHERE "+filterStr)
@@ -179,8 +179,8 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 
 				rec := VRecord{
 					Class:    node.GetTags()[0],
-					Name:     strings.Trim(properties["name"].String(), "\""),
-					Rid:      strings.Trim(node.GetID().String(), "\""),
+					Name:     properties["name"].String()[1 : len(properties["name"].String())-1],
+					Rid:      node.GetID().String()[1 : len(node.GetID().String())-1],
 					Expand:   false,
 					Analysis: false,
 				}
@@ -193,9 +193,9 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				for _, k := range keys {
 					prop := PropValue{
 						Name:     k,
-						Value:    strings.Trim(properties[k].String(), "\""),
+						Value:    properties[k].String()[1 : len(properties[k].String())-1],
 						DataType: properties[k].GetType(),
-						HL:       strings.Trim(properties[k].String(), "\""),
+						HL:       properties[k].String()[1 : len(properties[k].String())-1],
 					}
 					rec.Properties = append(rec.Properties, prop)
 				}
@@ -263,8 +263,8 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 
 				rec := VRecord{
 					Class:    strings.Trim(class, "`"),
-					Name:     strings.Trim(properties["name"].String(), "\""),
-					Rid:      strings.Trim(vid.String(), "\""),
+					Name:     properties["name"].String()[1 : len(properties["name"].String())-1],
+					Rid:      vid.String()[1 : len(vid.String())-1],
 					Expand:   false,
 					Analysis: false,
 				}
@@ -277,9 +277,9 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				for _, k := range keys {
 					prop := PropValue{
 						Name:     k,
-						Value:    strings.Trim(properties[k].String(), "\""),
+						Value:    properties[k].String()[1 : len(properties[k].String())-1],
 						DataType: properties[k].GetType(),
-						HL:       strings.Trim(properties[k].String(), "\""),
+						HL:       properties[k].String()[1 : len(properties[k].String())-1],
 					}
 					rec.Properties = append(rec.Properties, prop)
 				}
@@ -450,8 +450,8 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 
 				rec := VRecord{
 					Class:    node.GetTags()[0],
-					Name:     strings.Trim(properties["name"].String(), "\""),
-					Rid:      strings.Trim(node.GetID().String(), "\""),
+					Name:     properties["name"].String()[1 : len(properties["name"].String())-1],
+					Rid:      node.GetID().String()[1 : len(node.GetID().String())-1],
 					Expand:   false,
 					Analysis: false,
 				}
@@ -464,9 +464,9 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				for _, k := range keys {
 					prop := PropValue{
 						Name:     k,
-						Value:    strings.Trim(properties[k].String(), "\""),
+						Value:    properties[k].String()[1 : len(properties[k].String())-1],
 						DataType: properties[k].GetType(),
-						HL:       strings.Trim(properties[k].String(), "\""),
+						HL:       properties[k].String()[1 : len(properties[k].String())-1],
 					}
 
 					if _, ok := highlight[rec.Rid].(map[string]interface{})[k]; ok {
@@ -765,7 +765,7 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 		eRecord := ERecord{
 			Rid:   edge.GetEdgeName() + ":" + edge.GetSrcVertexID().String() + "->" + edge.GetDstVertexID().String(),
 			Class: edge.GetEdgeName(),
-			Name:  strings.Trim(edgePro["name"].String(), "\""),
+			Name:  edgePro["name"].String()[1 : len(edgePro["name"].String())-1],
 		}
 		for _, s := range schema.E {
 			if s.Name == eRecord.Class {
@@ -784,7 +784,7 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 		for _, key := range proKeys {
 			eRecord.Properties = append(eRecord.Properties, PropValue{
 				Name:     key,
-				Value:    strings.Trim(edgePro[key].String(), "\""),
+				Value:    edgePro[key].String()[1 : len(edgePro[key].String())-1],
 				DataType: edgePro[key].GetType(),
 			})
 		}
@@ -794,9 +794,9 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			v2Pro, _ := v2.Properties(v2.GetTags()[0])
 
 			eRecord.Out = VRecord{
-				Rid:        strings.Trim(v2.GetID().String(), "\""),
+				Rid:        v2.GetID().String()[1 : len(v2.GetID().String())-1],
 				Class:      v2.GetTags()[0],
-				Name:       strings.Trim(v2Pro["name"].String(), "\""),
+				Name:       v2Pro["name"].String()[1 : len(v2Pro["name"].String())-1],
 				Expand:     false,
 				Properties: nil,
 				Analysis:   false,
@@ -810,7 +810,7 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			for _, key := range proKeys {
 				eRecord.Out.Properties = append(eRecord.Out.Properties, PropValue{
 					Name:     key,
-					Value:    strings.Trim(v2Pro[key].String(), "\""),
+					Value:    v2Pro[key].String()[1 : len(v2Pro[key].String())-1],
 					DataType: v2Pro[key].GetType(),
 				})
 			}
@@ -850,9 +850,9 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			v2Pro, _ := v2.Properties(v2.GetTags()[0])
 
 			eRecord.In = VRecord{
-				Rid:        strings.Trim(v2.GetID().String(), "\""),
+				Rid:        v2.GetID().String()[1 : len(v2.GetID().String())-1],
 				Class:      v2.GetTags()[0],
-				Name:       strings.Trim(v2Pro["name"].String(), "\""),
+				Name:       v2Pro["name"].String()[1 : len(v2Pro["name"].String())-1],
 				Expand:     false,
 				Properties: nil,
 				Analysis:   false,
@@ -866,7 +866,7 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			for _, key := range proKeys {
 				eRecord.In.Properties = append(eRecord.In.Properties, PropValue{
 					Name:     key,
-					Value:    strings.Trim(v2Pro[key].String(), "\""),
+					Value:    v2Pro[key].String()[1 : len(v2Pro[key].String())-1],
 					DataType: v2Pro[key].GetType(),
 				})
 			}
@@ -962,11 +962,16 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 	if len(vidList) <= 0 {
 		return nil
 	}
-	gql = fmt.Sprintf("match (v)-[e]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", vrid, strings.Join(vidList, ","))
+	if eclass == "" {
+		gql = fmt.Sprintf("match (v)-[e]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", vrid, strings.Join(vidList, ","))
+	} else {
+		gql = fmt.Sprintf("match (v)-[e:%s]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", eclass, vrid, strings.Join(vidList, ","))
+	}
 	resultSet, err = nebula.Client(conf, gql)
 	if err != nil {
 		return err
 	}
+
 	for i := 0; i < resultSet.GetRowSize(); i++ {
 		row, _ := resultSet.GetRowValuesByIndex(i)
 
@@ -979,23 +984,25 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 		v2, _ := v2ValWarp.AsNode()
 		v2Pro, _ := v2.Properties(v2.GetTags()[0])
 
-		if inout == "in" && strings.Trim(edge.GetDstVertexID().String(), "\"") != vrid || inout == "out" && strings.Trim(edge.GetSrcVertexID().String(), "\"") != vrid {
+		if inout == "in" && edge.GetDstVertexID().String()[1:len(edge.GetDstVertexID().String())-1] != vrid ||
+			inout == "out" && edge.GetSrcVertexID().String()[1:len(edge.GetSrcVertexID().String())-1] != vrid {
 			continue
 		}
 
 		var vrec ExpandVRecord
-		for _, re := range e.Res {
-			if re.Rid == strings.Trim(v2.GetID().String(), "\"") {
+		for i, re := range e.Res {
+			if re.Rid == v2.GetID().String()[1:len(v2.GetID().String())-1] {
 				vrec = *re
+				e.Res[i] = &vrec
 				break
 			}
 		}
 
 		if vrec.Rid == "" {
 			vrec = ExpandVRecord{
-				Rid:        strings.Trim(v2.GetID().String(), "\""),
+				Rid:        v2.GetID().String()[1 : len(v2.GetID().String())-1],
 				Class:      v2.GetTags()[0],
-				Name:       strings.Trim(v2Pro["name"].String(), "\""),
+				Name:       v2Pro["name"].String()[1 : len(v2Pro["name"].String())-1],
 				Expand:     false,
 				Properties: nil,
 				Analysis:   false,
@@ -1008,7 +1015,7 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 			for _, key := range proKeys {
 				vrec.Properties = append(vrec.Properties, PropValue{
 					Name:     key,
-					Value:    strings.Trim(v2Pro[key].String(), "\""),
+					Value:    v2Pro[key].String()[1 : len(v2Pro[key].String())-1],
 					DataType: v2Pro[key].GetType(),
 				})
 			}
@@ -1047,7 +1054,7 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 		eRecord := ERecord{
 			Rid:   edge.GetEdgeName() + ":" + edge.GetSrcVertexID().String() + "->" + edge.GetDstVertexID().String(),
 			Class: edge.GetEdgeName(),
-			Name:  strings.Trim(edgePro["name"].String(), "\""),
+			Name:  edgePro["name"].String()[1 : len(edgePro["name"].String())-1],
 		}
 		for _, s := range schema.E {
 			if s.Name == eRecord.Class {
@@ -1066,23 +1073,23 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 		for _, key := range proKeys {
 			eRecord.Properties = append(eRecord.Properties, PropValue{
 				Name:     key,
-				Value:    strings.Trim(edgePro[key].String(), "\""),
+				Value:    edgePro[key].String()[1 : len(edgePro[key].String())-1],
 				DataType: edgePro[key].GetType(),
 			})
 		}
-		if inout == "out" && strings.Trim(edge.GetSrcVertexID().String(), "\"") == vrid {
+		if inout == "out" && edge.GetSrcVertexID().String()[1:len(edge.GetSrcVertexID().String())-1] == vrid {
 			vrec.InE = append(vrec.InE, eRecord)
 			continue
 		}
-		if inout == "in" && strings.Trim(edge.GetDstVertexID().String(), "\"") == vrid {
+		if inout == "in" && edge.GetDstVertexID().String()[1:len(edge.GetDstVertexID().String())-1] == vrid {
 			vrec.OutE = append(vrec.OutE, eRecord)
 			continue
 		}
 		if inout == "inout" {
-			if strings.Trim(edge.GetDstVertexID().String(), "\"") == vrid {
+			if edge.GetDstVertexID().String()[1:len(edge.GetDstVertexID().String())-1] == vrid {
 				vrec.OutE = append(vrec.OutE, eRecord)
 			}
-			if strings.Trim(edge.GetSrcVertexID().String(), "\"") == vrid {
+			if edge.GetSrcVertexID().String()[1:len(edge.GetSrcVertexID().String())-1] == vrid {
 				vrec.InE = append(vrec.InE, eRecord)
 			}
 		}

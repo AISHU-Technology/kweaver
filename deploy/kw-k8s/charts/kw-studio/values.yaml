@@ -1,0 +1,18 @@
+replicaCount: 1
+
+namespace: kweaver
+
+image:
+  registry: acr.aishu.cn
+  repository: /ad/kw-studio
+  tag: latest
+  pullPolicy: IfNotPresent
+  name: kw-studio
+
+service:
+  type: ClusterIP
+  port: 6800
+  targetPort: 6800
+  
+volumes:  
+  hostPath: /kweaver/deploy/kw-k8s/conf/kwconfig/

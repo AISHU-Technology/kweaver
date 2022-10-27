@@ -1,7 +1,6 @@
 {
   "memberManage": {
     "know": "OK",
-    "delSuccess": "Successfully removed!",
-    "searchNull": "Sorry, no results found"
+    "delSuccess": "Successfully removed!"
   }
 }

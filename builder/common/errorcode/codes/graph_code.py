@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from __future__ import (absolute_import, unicode_literals)
 
 '''
     {
@@ -50,7 +49,6 @@ Builder_GraphController_GetGraphInfoBasic_KeyTypeError = 'Builder.GraphControlle
     }
 '''
 Builder_GraphService_GetGraphInfoBasic_GraphDBIdNotExist = 'Builder.GraphService.GetGraphInfoBasic.GraphDBIdNotExist'
-
 
 '''
     {
@@ -181,3 +179,14 @@ Builder_GraphService_GetGraphInfoDetail_GraphidNotExist = 'Builder.GraphService.
     }
 '''
 Builder_GraphService_GetGraphInfoDetail_NameNotExist = 'Builder.GraphService.GetGraphInfoDetail.NameNotExist'
+
+# 领域智商相关接口错误码
+Builder_GraphController_IntelligenceCalculateTask_ParamError = 'Builder.GraphController.IntelligenceCalculateTask.ParamError'
+
+Builder_GraphController_IntelligenceStats_ParamError = 'Builder.GraphController.IntelligenceStats.ParamError'
+Builder_GraphController_IntelligenceStats_QueryError = 'Builder.GraphController.IntelligenceStats.QueryError'
+
+Builder_KnowledgeNetworkController_IntelligenceStats_ParamError = 'Builder.KnowledgeNetworkController.IntelligenceStats.ParamError'
+Builder_KnowledgeNetworkController_IntelligenceStats_ParamTooBigError = 'Builder.KnowledgeNetworkController.IntelligenceStats.ParamTooBigError'
+
+Builder_KnowledgeNetworkController_IntelligenceStats_NotAllowedParamError = 'Builder.KnowledgeNetworkController.IntelligenceStats.NotAllowedParamError'

@@ -58,7 +58,7 @@ def update_command():
 将所有语言的翻译编译下，编译后的文件查找更快
 """
 def compile_command():
-    return 'pybabel  compile -d {}'.format(BABEL_TRANSLATION_DIRECTORIES)
+    return f'pybabel  compile -d {BABEL_TRANSLATION_DIRECTORIES} -f'
 
 
 # 翻译字典数据
