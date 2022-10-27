@@ -5,7 +5,6 @@ import intl from 'react-intl-universal';
 import { Spin, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
-import HELPER from '@/utils/helper';
 import serviceGraphDetail from '@/services/graphDetail';
 
 import Format from '@/components/Format';
@@ -83,7 +82,6 @@ const ConfigurationDetails = (props: any) => {
                     <Format.Title className="ad-ellipsis" tip={name}>
                       {name}
                     </Format.Title>
-                    <Format.Text className="ad-c-subtext">（{HELPER.formatNumberWithComma(count)}）</Format.Text>
                   </div>
                 </div>
               </div>

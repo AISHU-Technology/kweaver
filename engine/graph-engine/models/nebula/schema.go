@@ -85,7 +85,7 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 		rowValue, _ := tags.GetRowValuesByIndex(i)
 		rowValueSplit := strings.Split(rowValue.String(), ", ")
 
-		vclass.Name = strings.Trim(rowValueSplit[0], "\"")
+		vclass.Name = rowValueSplit[0][1 : len(rowValueSplit[0])-1]
 
 		// 获取节点抽取模型
 		if model != nil {
@@ -123,8 +123,8 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 			rowValueSplit := strings.Split(rowValue.String(), ", ")
 
 			vclass.Properties = append(vclass.Properties, Property{
-				Name:        strings.Trim(rowValueSplit[0], "\""),
-				Type:        strings.Trim(rowValueSplit[1], "\""),
+				Name:        rowValueSplit[0][1 : len(rowValueSplit[0])-1],
+				Type:        rowValueSplit[1][1 : len(rowValueSplit[1])-1],
 				LinkedClass: "",
 				Mandatory:   false,
 			})
@@ -174,7 +174,7 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 		rowValue, _ := edges.GetRowValuesByIndex(i)
 		rowValueSplit := strings.Split(rowValue.String(), ", ")
 
-		eclass.Name = strings.Trim(rowValueSplit[0], "\"")
+		eclass.Name = rowValueSplit[0][1 : len(rowValueSplit[0])-1]
 
 		if model != nil {
 			for _, edge := range model.Edge {
@@ -212,7 +212,7 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 			field, _ := row.GetValueByColName("Field")
 			_type, _ := row.GetValueByColName("Type")
 
-			switch strings.Trim(field.String(), "\"") {
+			switch field.String()[1 : len(field.String())-1] {
 			//case "name":
 			//	// parse in/out
 			//	comment, _ := row.GetValueByColName("Comment")
@@ -232,15 +232,15 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 			//	})
 			case "in":
 				eclass.Properties = append(eclass.Properties, Property{
-					Name:        strings.Trim(field.String(), "\""),
-					Type:        strings.Trim(_type.String(), "\""),
+					Name:        field.String()[1 : len(field.String())-1],
+					Type:        _type.String()[1 : len(_type.String())-1],
 					LinkedClass: in,
 					Mandatory:   false,
 				})
 			case "out":
 				eclass.Properties = append(eclass.Properties, Property{
-					Name:        strings.Trim(field.String(), "\""),
-					Type:        strings.Trim(_type.String(), "\""),
+					Name:        field.String()[1 : len(field.String())-1],
+					Type:        _type.String()[1 : len(_type.String())-1],
 					LinkedClass: out,
 					Mandatory:   false,
 				})
@@ -313,8 +313,8 @@ func (s Schema) GetRecordsCount(conf *utils.KGConf) ([]Stat, error) {
 		rowValueSplit := strings.Split(rowValue.String(), ", ")
 
 		stats = append(stats, Stat{
-			Type:  strings.Trim(rowValueSplit[0], "\""),
-			Name:  strings.Trim(rowValueSplit[1], "\""),
+			Type:  rowValueSplit[0][1 : len(rowValueSplit[0])-1],
+			Name:  rowValueSplit[1][1 : len(rowValueSplit[1])-1],
 			Count: rowValueSplit[2],
 		})
 	}
@@ -360,20 +360,20 @@ func (s Schema) GetIndexes(conf *utils.KGConf) (*Indexes, error) {
 
 		var fields []string
 		for _, field := range columnsList {
-			fields = append(fields, strings.Trim(field, "\""))
+			fields = append(fields, field[1:len(field)-1])
 		}
 
-		if tagIndex.Tag == strings.Trim(indexTag.String(), "\"") {
+		if tagIndex.Tag == indexTag.String()[1:len(indexTag.String())-1] {
 			tagIndex.Indexes = append(tagIndex.Indexes, Index{
-				Name:   strings.Trim(indexName.String(), "\""),
+				Name:   indexName.String()[1 : len(indexName.String())-1],
 				Type:   "",
 				Fields: fields,
 			})
 		} else {
-			tagIndex.Tag = strings.Trim(indexTag.String(), "\"")
+			tagIndex.Tag = indexTag.String()[1 : len(indexTag.String())-1]
 
 			tagIndex.Indexes = append(tagIndex.Indexes, Index{
-				Name:   strings.Trim(indexName.String(), "\""),
+				Name:   indexName.String()[1 : len(indexName.String())-1],
 				Type:   "",
 				Fields: fields,
 			})
@@ -403,19 +403,19 @@ func (s Schema) GetIndexes(conf *utils.KGConf) (*Indexes, error) {
 
 		var fields []string
 		for _, field := range columnsList {
-			fields = append(fields, strings.Trim(field, "\""))
+			fields = append(fields, field[1:len(field)-1])
 		}
 
-		if edgeIndex.Tag == strings.Trim(indexEdge.String(), "\"") {
+		if edgeIndex.Tag == indexEdge.String()[1:len(indexEdge.String())-1] {
 			edgeIndex.Indexes = append(edgeIndex.Indexes, Index{
-				Name:   strings.Trim(indexName.String(), "\""),
+				Name:   indexName.String()[1 : len(indexName.String())-1],
 				Type:   "",
 				Fields: fields,
 			})
 		} else {
-			edgeIndex.Tag = strings.Trim(indexEdge.String(), "\"")
+			edgeIndex.Tag = indexEdge.String()[1 : len(indexEdge.String())-1]
 			edgeIndex.Indexes = append(edgeIndex.Indexes, Index{
-				Name:   strings.Trim(indexName.String(), "\""),
+				Name:   indexName.String()[1 : len(indexName.String())-1],
 				Type:   "",
 				Fields: fields,
 			})

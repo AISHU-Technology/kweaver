@@ -694,24 +694,29 @@ class DataInfo extends Component {
   /**
    * @description 检测名称是否重复
    */
-  checkName = value => {
+  checkNameNode = value => {
     const { nodes, edges, selectedElement } = this.props;
-
     let tem = false;
-
-    if (typeof selectedElement.entity_id === 'number') {
-      nodes.forEach((item, index) => {
-        if (
-          item.name &&
-          value &&
-          item.name.toLowerCase() === value.toLowerCase() &&
-          item.entity_id !== selectedElement.entity_id
-        ) {
-          tem = true;
-        }
-      });
-    }
-
+    nodes.forEach(item => {
+      if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
+        tem = true;
+      }
+    });
+    edges.forEach(item => {
+      if (value && item?.name.toLowerCase() === value.toLowerCase()) {
+        tem = true;
+      }
+    });
+    return tem;
+  };
+  checkNameEdge = value => {
+    const { nodes, edges, selectedElement } = this.props;
+    let tem = false;
+    nodes.forEach(item => {
+      if (value && item?.name.toLowerCase() === value.toLowerCase() && item.entity_id !== selectedElement.entity_id) {
+        tem = true;
+      }
+    });
     return tem;
   };
 
@@ -831,46 +836,44 @@ class DataInfo extends Component {
                   ref={this.formNameRef}
                   initialValues={{ dataInfoName: '', nickName: '' }}
                 >
-                  <Form.Item
-                    label={isNode ? [intl.get('createEntity.ecn')] : [intl.get('createEntity.reN')]}
-                    name="dataInfoName"
-                    className="entity-describe"
-                    colon={false}
-                    rules={[
-                      { required: true, message: [intl.get('createEntity.inputNotEmpty')] },
-                      ({ getFieldValue }) => {
-                        const checkName = this.checkName(getFieldValue('dataInfoName'));
+                  {isNode && (
+                    <Form.Item
+                      label={intl.get('createEntity.ecn')}
+                      name="dataInfoName"
+                      className="entity-describe"
+                      colon={false}
+                      rules={[
+                        { required: true, message: [intl.get('createEntity.inputNotEmpty')] },
+                        ({ getFieldValue }) => {
+                          const checkName = this.checkNameNode(getFieldValue('dataInfoName'));
 
-                        return {
-                          validator(rule, value) {
-                            if (!value) return Promise.resolve();
-                            const reg = /^\w+$/g;
+                          return {
+                            validator(rule, value) {
+                              if (!value) return Promise.resolve();
+                              const reg = /^\w+$/g;
 
-                            if (value && !reg.test(getFieldValue('dataInfoName'))) {
-                              return Promise.reject([intl.get('createEntity.onlyType')]);
+                              if (value && !reg.test(getFieldValue('dataInfoName'))) {
+                                return Promise.reject([intl.get('createEntity.onlyType')]);
+                              }
+
+                              if (value.length > 50) {
+                                return Promise.reject([intl.get('createEntity.noMoreThan50')]);
+                              }
+
+                              if (value && checkName) {
+                                return Promise.reject([intl.get('createEntity.classRepeat')]);
+                              }
+
+                              return Promise.resolve();
                             }
-
-                            if (value.length > 50) {
-                              return Promise.reject([intl.get('createEntity.noMoreThan50')]);
-                            }
-
-                            if (value && checkName) {
-                              return Promise.reject([intl.get('createEntity.classRepeat')]);
-                            }
-
-                            return Promise.resolve();
-                          }
-                        };
-                      }
-                    ]}
-                  >
-                    {isNode ? (
+                          };
+                        }
+                      ]}
+                    >
                       <Input
                         autoComplete="off"
                         disabled={TYPE === 'view' || (selectedElement && selectedElement.model)}
-                        placeholder={
-                          isNode ? [intl.get('workflow.information.nameHolder')] : [intl.get('createEntity.rp')]
-                        }
+                        placeholder={intl.get('workflow.information.nameHolder')}
                         onChange={e => {
                           this.initAlias({ value: e.target.value, type: 'node' });
                         }}
@@ -883,7 +886,42 @@ class DataInfo extends Component {
                             .catch(() => {});
                         }}
                       />
-                    ) : (
+                    </Form.Item>
+                  )}
+                  {!isNode && (
+                    <Form.Item
+                      label={intl.get('createEntity.reN')}
+                      name="dataInfoName"
+                      className="entity-describe"
+                      colon={false}
+                      rules={[
+                        { required: true, message: [intl.get('createEntity.inputNotEmpty')] },
+                        ({ getFieldValue }) => {
+                          const checkName = this.checkNameEdge(getFieldValue('dataInfoName'));
+
+                          return {
+                            validator(rule, value) {
+                              if (!value) return Promise.resolve();
+                              const reg = /^\w+$/g;
+
+                              if (value && !reg.test(getFieldValue('dataInfoName'))) {
+                                return Promise.reject([intl.get('createEntity.onlyType')]);
+                              }
+
+                              if (value.length > 50) {
+                                return Promise.reject([intl.get('createEntity.noMoreThan50')]);
+                              }
+
+                              if (value && checkName) {
+                                return Promise.reject([intl.get('createEntity.classRepeat')]);
+                              }
+
+                              return Promise.resolve();
+                            }
+                          };
+                        }
+                      ]}
+                    >
                       <AutoComplete
                         className="input-relation"
                         allowClear
@@ -902,8 +940,8 @@ class DataInfo extends Component {
                             .catch(() => {});
                         }}
                       />
-                    )}
-                  </Form.Item>
+                    </Form.Item>
+                  )}
 
                   <Form.Item
                     label={

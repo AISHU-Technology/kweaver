@@ -1,0 +1,10 @@
+/**
+ * 领域智商计算状态
+ */
+export enum CALCULATE_STATUS {
+  NOT_CALCULATE = 'NOT_CALCULATE', // 未计算
+  IN_CALCULATING = 'IN_CALCULATING', // 计算中
+  CALCULATED = 'CALCULATED', // 已计算
+  CALCULATE_FAIL = 'CALCULATE_FAIL', // 计算失败
+  CALCULATE_CANCEL = 'CALCULATE_CANCEL' // 计算被取消
+}
