@@ -59,9 +59,9 @@ func (er *ExRelation) ExploreRelation(conf *utils.KGConf, rids []string) error {
 		re := Relation{
 			Rid:   edge.GetEdgeName() + ":" + edge.GetSrcVertexID().String() + "->" + edge.GetDstVertexID().String(),
 			Class: edge.GetEdgeName(),
-			Name:  ePro["name"].String()[1 : len(ePro["name"].String())-1],
-			In:    edge.GetDstVertexID().String()[1 : len(edge.GetDstVertexID().String())-1],
-			Out:   edge.GetSrcVertexID().String()[1 : len(edge.GetSrcVertexID().String())-1],
+			Name:  utils.TrimQuotationMarks(ePro["name"].String()),
+			In:    utils.TrimQuotationMarks(edge.GetDstVertexID().String()),
+			Out:   utils.TrimQuotationMarks(edge.GetSrcVertexID().String()),
 		}
 
 		var proKeys []string
@@ -72,7 +72,7 @@ func (er *ExRelation) ExploreRelation(conf *utils.KGConf, rids []string) error {
 		for _, key := range proKeys {
 			re.Properties = append(re.Properties, PropValue{
 				Name:     key,
-				Value:    ePro[key].String()[1 : len(ePro[key].String())-1],
+				Value:    utils.TrimQuotationMarks(ePro[key].String()),
 				DataType: ePro[key].GetType(),
 			})
 		}
