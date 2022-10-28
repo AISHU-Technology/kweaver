@@ -343,7 +343,6 @@ class GraphService():
                 graph_otl = rec_dict["graph_otl"]
                 graph_kMap = rec_dict["graph_KMap"]
                 graph_kMerge = rec_dict["graph_KMerge"]
-                is_upload = rec_dict["is_upload"]
                 used_ds = []  # 使用的数据源
                 # 流程中数据源选择的数据源
                 if ds_ids is not None and len(eval(ds_ids)) > 0:
@@ -414,7 +413,7 @@ class GraphService():
                     rec_dict["graph_InfoExt"] = eval(graph_InfoExt)
 
                 # 流程中  本体和抽取已经使用的数据源
-                if not is_upload and len(used_ds) > 0:
+                if len(used_ds) > 0:
                     if not slient:
                         print(used_ds)
                     ds_byname = dsm_dao.getdsbynames(list(set(used_ds)))
