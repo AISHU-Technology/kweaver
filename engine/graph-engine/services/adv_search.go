@@ -30,7 +30,6 @@ type ReqAdvSearch struct {
 // @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 // @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
 // @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
-// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func AdvSearchHandler(c *gin.Context) {
 	var body ReqAdvSearch
 	err := c.ShouldBind(&body)
@@ -59,7 +58,6 @@ func AdvSearchHandler(c *gin.Context) {
 // @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 // @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
 // @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
-// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func AdvSearchTestHandler(c *gin.Context) {
 	var body controllers.AdvSearchTestBody
 	err := c.ShouldBindJSON(&body)
@@ -76,14 +74,28 @@ func AdvSearchTestHandler(c *gin.Context) {
 
 // 智能搜索(文档)
 type ReqAdvSearchDefault struct {
-	KGID   string `form:"kg_id"`
-	KNetID int    `form:"knet_id"`
-	Query  string `form:"query"`
-	Page   int    `form:"page" binding:"required,gt=0"`
-	Size   int    `form:"size" binding:"required,gt=0"`
-	Limit  int    `form:"limit"`
+	KGID string `form:"kg_id"`
+	//KNetID int    `form:"knet_id"`
+	Query string `form:"query"`
+	Page  int    `form:"page" binding:"required,gt=0"`
+	Size  int    `form:"size" binding:"required,gt=0"`
+	Limit int    `form:"limit"`
 }
 
+// 认知搜索(文档)
+// AdvSearchDocumentHandler
+// @Summary advanced search document
+// @Description only return documents
+// @Tags CEngine
+// @Param body body ReqAdvSearchDefault true "adv-search query"
+// @Router /api/engine/v1/adv-search [get]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} ResponseDocument "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
 func AdvSearchDocumentHandler(c *gin.Context) {
 	var body ReqAdvSearchDefault
 	err := c.ShouldBind(&body)
@@ -182,4 +194,22 @@ type Response struct {
 }
 
 type Dict struct {
+}
+
+type TargetVertexDocument struct {
+	Explain string
+	Gns     string
+	Kg_id   int
+	Labels  string
+	Score   int
+}
+
+type SearchResultDocument struct {
+	Search []TargetVertexDocument
+}
+
+type ResponseDocument struct {
+	Number int
+	Res    SearchResultDocument
+	Time   float32
 }

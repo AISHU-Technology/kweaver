@@ -17,7 +17,21 @@ type ReqSearchVArgs struct {
 	SearchFilterArgs *utils.SearchFilterArgs `json:"filter" binding:"required"`
 }
 
-// searchV
+// KGSearchVHandler
+// @Summary search vertexes
+// @Description search vertexes by query
+// @Tags CEngine
+// @Param conf_content body ReqSearchVArgs true "request body"
+// @Param id path string true "knowledge_graph id"
+// @Router /api/engine/v1/explore/{id}/searchv [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.SearchVRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func KGSearchVHandler(c *gin.Context) {
 	var body ReqSearchVArgs
 
@@ -42,7 +56,21 @@ type ReqSearchEArgs struct {
 	Rid string `form:"rid" binding:"required"`
 }
 
-//searchE
+// KGSearchEHandler
+// @Summary search edges
+// @Description search edges by id
+// @Tags CEngine
+// @Param conf_content body ReqSearchEArgs true "request body"
+// @Param id path string true "knowledge_graph id"
+// @Router /api/engine/v1/explore/{id}/searche [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.SearchVRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func KGSearchEHandler(c *gin.Context) {
 	var body ReqSearchEArgs
 	err := c.ShouldBind(&body)
@@ -69,7 +97,21 @@ type ReqExpandEArgs struct {
 	Size  int32  `form:"size" binding:"required,gt=0"`
 }
 
-// expandE
+// KGSearchEHandler
+// @Summary expand edges
+// @Description expand edges by id
+// @Tags CEngine
+// @Param conf_content body ReqExpandEArgs true "request body"
+// @Param id path string true "knowledge_graph id"
+// @Router /api/engine/v1/explore/{id}/expande [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} nebula.ESearchRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
 func KGExpandEHandler(c *gin.Context) {
 	var body ReqExpandEArgs
 
