@@ -51,13 +51,13 @@ var GroupGQLKGRouters = map[string][]leo.Router{
 		// 分析详情
 		leo.NewRouter("get", "/analysis", services.AnalysisHandler),
 
-		// 智能搜索采纳日志
+		// 认知搜索采纳日志
 		leo.NewRouter("post", "/adv-search/feedback", services.AdvSearchFeedBackLog),
-		// 智能搜索接口
+		// 认知搜索接口
 		leo.NewRouter("get", "/adv-search/:confid", services.AdvSearchHandler),
 		leo.NewRouter("post", "/adv-search/test", services.AdvSearchTestHandler),
 		leo.NewRouter("get", "/adv-search", services.AdvSearchDocumentHandler),
-		// 高级搜索配置
+		// 认知搜索配置
 		leo.NewRouter("get", "/adv-search-config", services.GetAdvSearchConfigHandler),
 		leo.NewRouter("delete", "/adv-search-config", services.DelAdvSearchConfigHandler),
 		leo.NewRouter("post", "/adv-search-config", services.AddAdvSearchConfigHandler),
