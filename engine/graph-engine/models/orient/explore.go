@@ -1292,7 +1292,13 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 	if eclass != "" {
 		eClassSql = "'" + eclass + "'"
 	}
-	sqlPro := fmt.Sprintf(`select * from (select expand(%s(%s)) as res from %s) where name like '%s' %s`, io, eClassSql, vrid, "%"+name+"%", pageSql)
+
+	var sqlPro string
+	if name == "" {
+		sqlPro = fmt.Sprintf(`select * from (select expand(%s(%s)) as res from V where @rid='%s') %s`, io, eClassSql, vrid, pageSql)
+	} else {
+		sqlPro = fmt.Sprintf(`select * from (select expand(%s(%s)) as res from V where @rid='%s') where name like '%s' %s`, io, eClassSql, vrid, "%"+name+"%", pageSql)
+	}
 
 	//logger.Info(sqlPro)
 	responsePro, errPro := GetGraphData(&operator, sqlPro)
