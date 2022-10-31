@@ -179,8 +179,8 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 
 				rec := VRecord{
 					Class:    node.GetTags()[0],
-					Name:     properties["name"].String()[1 : len(properties["name"].String())-1],
-					Rid:      node.GetID().String()[1 : len(node.GetID().String())-1],
+					Name:     utils.TrimQuotationMarks(properties["name"].String()),
+					Rid:      utils.TrimQuotationMarks(node.GetID().String()),
 					Expand:   false,
 					Analysis: false,
 				}
@@ -193,9 +193,9 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				for _, k := range keys {
 					prop := PropValue{
 						Name:     k,
-						Value:    properties[k].String()[1 : len(properties[k].String())-1],
+						Value:    utils.TrimQuotationMarks(properties[k].String()),
 						DataType: properties[k].GetType(),
-						HL:       properties[k].String()[1 : len(properties[k].String())-1],
+						HL:       utils.TrimQuotationMarks(properties[k].String()),
 					}
 					rec.Properties = append(rec.Properties, prop)
 				}
@@ -263,8 +263,8 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 
 				rec := VRecord{
 					Class:    strings.Trim(class, "`"),
-					Name:     properties["name"].String()[1 : len(properties["name"].String())-1],
-					Rid:      vid.String()[1 : len(vid.String())-1],
+					Name:     utils.TrimQuotationMarks(properties["name"].String()),
+					Rid:      utils.TrimQuotationMarks(vid.String()),
 					Expand:   false,
 					Analysis: false,
 				}
@@ -277,9 +277,9 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				for _, k := range keys {
 					prop := PropValue{
 						Name:     k,
-						Value:    properties[k].String()[1 : len(properties[k].String())-1],
+						Value:    utils.TrimQuotationMarks(properties[k].String()),
 						DataType: properties[k].GetType(),
-						HL:       properties[k].String()[1 : len(properties[k].String())-1],
+						HL:       utils.TrimQuotationMarks(properties[k].String()),
 					}
 					rec.Properties = append(rec.Properties, prop)
 				}
@@ -450,8 +450,8 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 
 				rec := VRecord{
 					Class:    node.GetTags()[0],
-					Name:     properties["name"].String()[1 : len(properties["name"].String())-1],
-					Rid:      node.GetID().String()[1 : len(node.GetID().String())-1],
+					Name:     utils.TrimQuotationMarks(properties["name"].String()),
+					Rid:      utils.TrimQuotationMarks(node.GetID().String()),
 					Expand:   false,
 					Analysis: false,
 				}
@@ -464,9 +464,9 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				for _, k := range keys {
 					prop := PropValue{
 						Name:     k,
-						Value:    properties[k].String()[1 : len(properties[k].String())-1],
+						Value:    utils.TrimQuotationMarks(properties[k].String()),
 						DataType: properties[k].GetType(),
-						HL:       properties[k].String()[1 : len(properties[k].String())-1],
+						HL:       utils.TrimQuotationMarks(properties[k].String()),
 					}
 
 					if _, ok := highlight[rec.Rid].(map[string]interface{})[k]; ok {
@@ -765,7 +765,7 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 		eRecord := ERecord{
 			Rid:   edge.GetEdgeName() + ":" + edge.GetSrcVertexID().String() + "->" + edge.GetDstVertexID().String(),
 			Class: edge.GetEdgeName(),
-			Name:  edgePro["name"].String()[1 : len(edgePro["name"].String())-1],
+			Name:  utils.TrimQuotationMarks(edgePro["name"].String()),
 		}
 		for _, s := range schema.E {
 			if s.Name == eRecord.Class {
@@ -784,7 +784,7 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 		for _, key := range proKeys {
 			eRecord.Properties = append(eRecord.Properties, PropValue{
 				Name:     key,
-				Value:    edgePro[key].String()[1 : len(edgePro[key].String())-1],
+				Value:    utils.TrimQuotationMarks(edgePro[key].String()),
 				DataType: edgePro[key].GetType(),
 			})
 		}
@@ -794,9 +794,9 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			v2Pro, _ := v2.Properties(v2.GetTags()[0])
 
 			eRecord.Out = VRecord{
-				Rid:        v2.GetID().String()[1 : len(v2.GetID().String())-1],
+				Rid:        utils.TrimQuotationMarks(v2.GetID().String()),
 				Class:      v2.GetTags()[0],
-				Name:       v2Pro["name"].String()[1 : len(v2Pro["name"].String())-1],
+				Name:       utils.TrimQuotationMarks(v2Pro["name"].String()),
 				Expand:     false,
 				Properties: nil,
 				Analysis:   false,
@@ -810,7 +810,7 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			for _, key := range proKeys {
 				eRecord.Out.Properties = append(eRecord.Out.Properties, PropValue{
 					Name:     key,
-					Value:    v2Pro[key].String()[1 : len(v2Pro[key].String())-1],
+					Value:    utils.TrimQuotationMarks(v2Pro[key].String()),
 					DataType: v2Pro[key].GetType(),
 				})
 			}
@@ -850,9 +850,9 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			v2Pro, _ := v2.Properties(v2.GetTags()[0])
 
 			eRecord.In = VRecord{
-				Rid:        v2.GetID().String()[1 : len(v2.GetID().String())-1],
+				Rid:        utils.TrimQuotationMarks(v2.GetID().String()),
 				Class:      v2.GetTags()[0],
-				Name:       v2Pro["name"].String()[1 : len(v2Pro["name"].String())-1],
+				Name:       utils.TrimQuotationMarks(v2Pro["name"].String()),
 				Expand:     false,
 				Properties: nil,
 				Analysis:   false,
@@ -866,7 +866,7 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			for _, key := range proKeys {
 				eRecord.In.Properties = append(eRecord.In.Properties, PropValue{
 					Name:     key,
-					Value:    v2Pro[key].String()[1 : len(v2Pro[key].String())-1],
+					Value:    utils.TrimQuotationMarks(v2Pro[key].String()),
 					DataType: v2Pro[key].GetType(),
 				})
 			}
@@ -962,11 +962,16 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 	if len(vidList) <= 0 {
 		return nil
 	}
-	gql = fmt.Sprintf("match (v)-[e]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", vrid, strings.Join(vidList, ","))
+	if eclass == "" {
+		gql = fmt.Sprintf("match (v)-[e]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", vrid, strings.Join(vidList, ","))
+	} else {
+		gql = fmt.Sprintf("match (v)-[e:%s]-(v2) where id(v) in ['%s'] and id(v2) in [%s] return e, v2", eclass, vrid, strings.Join(vidList, ","))
+	}
 	resultSet, err = nebula.Client(conf, gql)
 	if err != nil {
 		return err
 	}
+
 	for i := 0; i < resultSet.GetRowSize(); i++ {
 		row, _ := resultSet.GetRowValuesByIndex(i)
 
@@ -979,24 +984,25 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 		v2, _ := v2ValWarp.AsNode()
 		v2Pro, _ := v2.Properties(v2.GetTags()[0])
 
-		if inout == "in" && edge.GetDstVertexID().String()[1:len(edge.GetDstVertexID().String())-1] != vrid ||
-			inout == "out" && edge.GetSrcVertexID().String()[1:len(edge.GetSrcVertexID().String())-1] != vrid {
+		if inout == "in" && utils.TrimQuotationMarks(edge.GetDstVertexID().String()) != vrid ||
+			inout == "out" && utils.TrimQuotationMarks(edge.GetSrcVertexID().String()) != vrid {
 			continue
 		}
 
 		var vrec ExpandVRecord
-		for _, re := range e.Res {
-			if re.Rid == v2.GetID().String()[1:len(v2.GetID().String())-1] {
+		for i, re := range e.Res {
+			if re.Rid == utils.TrimQuotationMarks(v2.GetID().String()) {
 				vrec = *re
+				e.Res[i] = &vrec
 				break
 			}
 		}
 
 		if vrec.Rid == "" {
 			vrec = ExpandVRecord{
-				Rid:        v2.GetID().String()[1 : len(v2.GetID().String())-1],
+				Rid:        utils.TrimQuotationMarks(v2.GetID().String()),
 				Class:      v2.GetTags()[0],
-				Name:       v2Pro["name"].String()[1 : len(v2Pro["name"].String())-1],
+				Name:       utils.TrimQuotationMarks(v2Pro["name"].String()),
 				Expand:     false,
 				Properties: nil,
 				Analysis:   false,
@@ -1009,7 +1015,7 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 			for _, key := range proKeys {
 				vrec.Properties = append(vrec.Properties, PropValue{
 					Name:     key,
-					Value:    v2Pro[key].String()[1 : len(v2Pro[key].String())-1],
+					Value:    utils.TrimQuotationMarks(v2Pro[key].String()),
 					DataType: v2Pro[key].GetType(),
 				})
 			}
@@ -1048,7 +1054,7 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 		eRecord := ERecord{
 			Rid:   edge.GetEdgeName() + ":" + edge.GetSrcVertexID().String() + "->" + edge.GetDstVertexID().String(),
 			Class: edge.GetEdgeName(),
-			Name:  edgePro["name"].String()[1 : len(edgePro["name"].String())-1],
+			Name:  utils.TrimQuotationMarks(edgePro["name"].String()),
 		}
 		for _, s := range schema.E {
 			if s.Name == eRecord.Class {
@@ -1067,23 +1073,23 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 		for _, key := range proKeys {
 			eRecord.Properties = append(eRecord.Properties, PropValue{
 				Name:     key,
-				Value:    edgePro[key].String()[1 : len(edgePro[key].String())-1],
+				Value:    utils.TrimQuotationMarks(edgePro[key].String()),
 				DataType: edgePro[key].GetType(),
 			})
 		}
-		if inout == "out" && edge.GetSrcVertexID().String()[1:len(edge.GetSrcVertexID().String())-1] == vrid {
+		if inout == "out" && utils.TrimQuotationMarks(edge.GetSrcVertexID().String()) == vrid {
 			vrec.InE = append(vrec.InE, eRecord)
 			continue
 		}
-		if inout == "in" && edge.GetDstVertexID().String()[1:len(edge.GetDstVertexID().String())-1] == vrid {
+		if inout == "in" && utils.TrimQuotationMarks(edge.GetDstVertexID().String()) == vrid {
 			vrec.OutE = append(vrec.OutE, eRecord)
 			continue
 		}
 		if inout == "inout" {
-			if edge.GetDstVertexID().String()[1:len(edge.GetDstVertexID().String())-1] == vrid {
+			if utils.TrimQuotationMarks(edge.GetDstVertexID().String()) == vrid {
 				vrec.OutE = append(vrec.OutE, eRecord)
 			}
-			if edge.GetSrcVertexID().String()[1:len(edge.GetSrcVertexID().String())-1] == vrid {
+			if utils.TrimQuotationMarks(edge.GetSrcVertexID().String()) == vrid {
 				vrec.InE = append(vrec.InE, eRecord)
 			}
 		}

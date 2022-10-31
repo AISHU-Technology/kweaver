@@ -201,7 +201,7 @@ func UpdateAdvSearchConfigHandler(c *gin.Context) {
 // @Router /api/engine/v1/adv-search-config/info/{confid} [get]
 // @Accept  x-www-form-urlencoded
 // @Produce json
-// @Success 200 {object} controllers.InfoSearchConfRes "result string"
+// @Success 200 {object} nebula.EdgeRes "result string"
 // @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
 // @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 // @Failure 500 {object} utils.Error "EngineServer.ErrAdvSearchConfIDErr: config ID does not exist"

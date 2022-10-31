@@ -19,6 +19,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/engine/v1/adv-search": {
+            "get": {
+                "description": "only return documents",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "advanced search document",
+                "parameters": [
+                    {
+                        "description": "adv-search query",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ReqAdvSearchDefault"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/services.ResponseDocument"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrVClassErr: Entity does not exist",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/api/engine/v1/adv-search-config": {
             "get": {
                 "description": "get adv-search configs",
@@ -255,7 +301,7 @@ const docTemplate = `{
                     "200": {
                         "description": "result string",
                         "schema": {
-                            "$ref": "#/definitions/controllers.InfoSearchConfRes"
+                            "$ref": "#/definitions/nebula.EdgeRes"
                         }
                     },
                     "400": {
@@ -401,7 +447,7 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "description": "EngineServer.ErrVClassErr: Entity does not exist",
                         "schema": {
                             "$ref": "#/definitions/utils.Error"
                         }
@@ -473,7 +519,7 @@ const docTemplate = `{
                         }
                     },
                     "500": {
-                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "description": "EngineServer.ErrVClassErr: Entity does not exist",
                         "schema": {
                             "$ref": "#/definitions/utils.Error"
                         }
@@ -790,6 +836,165 @@ const docTemplate = `{
                         "description": "result string",
                         "schema": {
                             "$ref": "#/definitions/controllers.Relation"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/explore/{id}/expande": {
+            "post": {
+                "description": "expand edges by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "expand edges",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "conf_content",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ReqExpandEArgs"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "knowledge_graph id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/nebula.ESearchRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/explore/{id}/searche": {
+            "post": {
+                "description": "search edges by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "search edges",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "conf_content",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ReqSearchEArgs"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "knowledge_graph id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.SearchVRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrOrientDBErr: OrientDB error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/explore/{id}/searchv": {
+            "post": {
+                "description": "search vertexes by query",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "search vertexes",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "conf_content",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.ReqSearchVArgs"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "knowledge_graph id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.SearchVRes"
                         }
                     },
                     "400": {
@@ -1229,14 +1434,6 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.InfoSearchConfRes": {
-            "type": "object",
-            "properties": {
-                "res": {
-                    "$ref": "#/definitions/dao.InfoSearchConf"
-                }
-            }
-        },
         "controllers.Properties": {
             "type": "object",
             "properties": {
@@ -1244,6 +1441,21 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "p_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.PropertyField": {
+            "type": "object",
+            "properties": {
+                "hl": {
+                    "description": "DataType string",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "value": {
                     "type": "string"
                 }
             }
@@ -1300,6 +1512,23 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.SearchVRes": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "vertexes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.VertexRes"
+                    }
+                }
+            }
+        },
         "controllers.UpdateSearchConfRes": {
             "type": "object",
             "properties": {
@@ -1347,6 +1576,35 @@ const docTemplate = `{
                 },
                 "word_name": {
                     "type": "string"
+                }
+            }
+        },
+        "controllers.VertexRes": {
+            "type": "object",
+            "properties": {
+                "analysis": {
+                    "type": "boolean"
+                },
+                "class": {
+                    "type": "string"
+                },
+                "expand": {
+                    "type": "boolean"
+                },
+                "hl": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.PropertyField"
+                    }
                 }
             }
         },
@@ -1399,32 +1657,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dao.InfoSearchConf": {
-            "type": "object",
-            "properties": {
-                "conf_content": {
-                    "$ref": "#/definitions/dao.ConfContent"
-                },
-                "conf_desc": {
-                    "type": "string"
-                },
-                "conf_id": {
-                    "type": "integer"
-                },
-                "conf_name": {
-                    "type": "string"
-                },
-                "kg_id": {
-                    "type": "integer"
-                },
-                "kg_name": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
         "dao.RangeEdges": {
             "type": "object",
             "properties": {
@@ -1464,6 +1696,132 @@ const docTemplate = `{
         },
         "gql.DataQuery": {
             "type": "object"
+        },
+        "nebula.ERecord": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "class": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "in": {
+                    "$ref": "#/definitions/nebula.VRecord"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "out": {
+                    "$ref": "#/definitions/nebula.VRecord"
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/nebula.PropValue"
+                    }
+                },
+                "rid": {
+                    "type": "string"
+                }
+            }
+        },
+        "nebula.ESearchRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/nebula.ERecord"
+                    }
+                }
+            }
+        },
+        "nebula.Edge": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "class": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "count": {
+                    "type": "number"
+                }
+            }
+        },
+        "nebula.EdgeRes": {
+            "type": "object",
+            "properties": {
+                "inE": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/nebula.Edge"
+                    }
+                },
+                "outE": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/nebula.Edge"
+                    }
+                }
+            }
+        },
+        "nebula.PropValue": {
+            "type": "object",
+            "properties": {
+                "dataType": {
+                    "type": "string"
+                },
+                "hl": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "nebula.VRecord": {
+            "type": "object",
+            "properties": {
+                "alias": {
+                    "type": "string"
+                },
+                "analysis": {
+                    "type": "boolean"
+                },
+                "class": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "expand": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/nebula.PropValue"
+                    }
+                },
+                "rid": {
+                    "type": "string"
+                }
+            }
         },
         "orient.EdgeSimpleInfo": {
             "type": "object",
@@ -1803,6 +2161,31 @@ const docTemplate = `{
                 }
             }
         },
+        "services.ReqAdvSearchDefault": {
+            "type": "object",
+            "required": [
+                "page",
+                "size"
+            ],
+            "properties": {
+                "kgid": {
+                    "type": "string"
+                },
+                "limit": {
+                    "type": "integer"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "query": {
+                    "description": "KNetID int    ` + "`" + `form:\"knet_id\"` + "`" + `",
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                }
+            }
+        },
         "services.ReqBody": {
             "type": "object",
             "required": [
@@ -1828,6 +2211,36 @@ const docTemplate = `{
                 "transaction": {
                     "description": "是否执行事务",
                     "type": "boolean"
+                }
+            }
+        },
+        "services.ReqExpandEArgs": {
+            "type": "object",
+            "required": [
+                "class",
+                "io",
+                "page",
+                "rid",
+                "size"
+            ],
+            "properties": {
+                "class": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "io": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "rid": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
                 }
             }
         },
@@ -1860,6 +2273,52 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "services.ReqSearchEArgs": {
+            "type": "object",
+            "required": [
+                "rid"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "rid": {
+                    "type": "string"
+                }
+            }
+        },
+        "services.ReqSearchVArgs": {
+            "type": "object",
+            "required": [
+                "class",
+                "filter",
+                "page",
+                "size"
+            ],
+            "properties": {
+                "class": {
+                    "type": "string"
+                },
+                "filter": {
+                    "$ref": "#/definitions/utils.SearchFilterArgs"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "page": {
+                    "type": "integer"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "query_all": {
+                    "type": "boolean"
+                },
+                "size": {
                     "type": "integer"
                 }
             }
@@ -1898,6 +2357,20 @@ const docTemplate = `{
                 }
             }
         },
+        "services.ResponseDocument": {
+            "type": "object",
+            "properties": {
+                "number": {
+                    "type": "integer"
+                },
+                "res": {
+                    "$ref": "#/definitions/services.SearchResultDocument"
+                },
+                "time": {
+                    "type": "number"
+                }
+            }
+        },
         "services.SearchRange": {
             "type": "object",
             "properties": {
@@ -1916,6 +2389,17 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/services.TargetVertex"
+                    }
+                }
+            }
+        },
+        "services.SearchResultDocument": {
+            "type": "object",
+            "properties": {
+                "search": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.TargetVertexDocument"
                     }
                 }
             }
@@ -1946,6 +2430,26 @@ const docTemplate = `{
                 },
                 "tag": {
                     "type": "string"
+                }
+            }
+        },
+        "services.TargetVertexDocument": {
+            "type": "object",
+            "properties": {
+                "explain": {
+                    "type": "string"
+                },
+                "gns": {
+                    "type": "string"
+                },
+                "kg_id": {
+                    "type": "integer"
+                },
+                "labels": {
+                    "type": "string"
+                },
+                "score": {
+                    "type": "integer"
                 }
             }
         },
@@ -2025,6 +2529,46 @@ const docTemplate = `{
                 },
                 "solution": {
                     "type": "string"
+                }
+            }
+        },
+        "utils.SearchFilter": {
+            "type": "object",
+            "properties": {
+                "condition": {
+                    "type": "string"
+                },
+                "property": {
+                    "type": "string"
+                },
+                "pt": {
+                    "type": "string"
+                },
+                "range": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "utils.SearchFilterArgs": {
+            "type": "object",
+            "properties": {
+                "filter": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/utils.SearchFilter"
+                    }
+                },
+                "selected": {
+                    "type": "string"
+                },
+                "selectedRids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         }
