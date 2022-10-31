@@ -19,7 +19,9 @@ def updateDatabase(connection, cursor):
                 `result` text DEFAULT NULL,
                 `created_time` datetime DEFAULT NULL,
                 `finished_time` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                KEY `ix_async_tasks_celery_task_id` (`celery_task_id`),
+                KEY `ix_async_tasks_relation_id` (`relation_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
            """
     Logger.log_info(sql)
@@ -37,16 +39,18 @@ def updateDatabase(connection, cursor):
                 `total_knowledge` int(11) DEFAULT NULL,
                 `empty_number` int(11) DEFAULT NULL,
                 `repeat_number` int(11) DEFAULT NULL,
-                `data_quality_score` decimal(10, 2) DEFAULT NULL,
+                `data_quality_score` decimal(10, 2) NOT NULL DEFAULT -1.00,
                 `update_time` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                KEY `ix_intelligence_records_knw_id` (`knw_id`),
+                KEY `ix_intelligence_records_graph_id` (`graph_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
          """
     Logger.log_info(sql)
     cursor.execute(sql)
 
     sql = """
-        ALTER TABLE anydata.knowledge_network ADD intelligence_score FLOAT DEFAULT -1 NULL;
+        ALTER TABLE knowledge_network ADD intelligence_score decimal(10,2) NOT NULL DEFAULT -1.00;
         """
     Logger.log_info(sql)
     cursor.execute(sql)

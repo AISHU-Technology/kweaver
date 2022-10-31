@@ -35,6 +35,10 @@ const LeftSpace = props => {
   const [page, setPage] = useState(1); // 页码
   const [name, setName] = useState(''); // 搜索名称
 
+  useEffect(() => {
+    getGraphList({ page, order, rule });
+  }, [page, order, rule]);
+
   const createGraph = async () => {
     try {
       const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '', type: 'all' };

@@ -22,16 +22,7 @@ const graphNameTest = /^[a-zA-Z0-9_\u4e00-\u9fa5]+$/;
 const graphDesTest = /^[!-~a-zA-Z0-9_\u4e00-\u9fa5 ！￥……（）——“”：；，。？、‘’《》｛｝【】·\s]+$/;
 
 const Basic = (props, ref) => {
-  const {
-    next,
-    setBasicData,
-    graphId,
-    setGraphId,
-    graphStatus,
-    dataLoading,
-    basicData,
-    setDbType,
-  } = props;
+  const { next, setBasicData, graphId, setGraphId, graphStatus, dataLoading, basicData, setDbType, setOsId } = props;
   const [form] = Form.useForm();
   const formSnapshot = useRef({}); // 保存时生成表单数据快照, 用于判断表单是否被修改
   const [disabled, setDisabled] = useState(false);
@@ -228,7 +219,8 @@ const Basic = (props, ref) => {
               placeholder={intl.get('workflow.basic.storagePlace')}
               disabled={graphStatus === 'finish'}
               onChange={(value, option) => {
-                setDbType(option.type);
+                setDbType(option?.data?.type);
+                setOsId(value);
               }}
             >
               {_.map(storageList || [], item => {

@@ -79,7 +79,7 @@ def gen_doc_vid(merge_entity_list, entity_name, one_data, en_pro_dict, gtype='ne
     for k, v in merge_entity_list[entity_name].items():
         value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[entity_name]['pro_map'][k])
         if gtype == "orientdb":
-            value = "  `{}` = '{}' ".format(k, one_data[k])
+            value = "  `{}` = '{}' ".format(k, normalize_text(str(one_data[k])))
         tab_val_index.append(value)
 
     if gtype == "orientdb":
@@ -109,7 +109,7 @@ def default_value(db_type='nebula', type='other', sql_format=True):
     '''
     if not sql_format:
         return ""
-    if db_type == 'orientdb' and type == 'string':
+    if type == 'string':
         return '""'  # 如果为NULL，engine搜索会报错
     return "NULL"
 
