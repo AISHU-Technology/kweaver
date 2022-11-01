@@ -43,15 +43,17 @@ const KnowledgeInfo: React.FC<KnowledgeInfoProps> = ({ kgInfo, onEditSuccess }) 
         <Format.Title className="one-text" strong={4}>
           {formatID(id) || '--'}
         </Format.Title>
-        <div className="ad-space-between ad-mt-2 ad-mb-3 ad-c-subtext">
-          <span>{intl.get('global.desc')}</span>
-          <div className="icon-click-mask" onClick={onEdit}>
-            <IconFont type="icon-edit" />
+        <div className="hover-bg">
+          <div className="ad-space-between ad-mt-2 ad-mb-3 ad-c-subtext">
+            <span>{intl.get('global.desc')}</span>
+            <div className="icon-click-mask" onClick={onEdit}>
+              <IconFont type="icon-edit" />
+            </div>
           </div>
+          <Format.Title className="desc-text" strong={4}>
+            {knw_description || '--'}
+          </Format.Title>
         </div>
-        <Format.Title className="desc-text" strong={4}>
-          {knw_description || '--'}
-        </Format.Title>
       </div>
 
       <div className="ad-pt-4 ad-pb-4 info-box">
