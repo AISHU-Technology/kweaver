@@ -65,8 +65,8 @@
     "100Billion": "hundred billion",
     "trillion": "trillion",
     "graphID": "knowledge graph ID",
-    "openSearchNull": "OpenSearch not bound, please configure it at System Configuration &gt; Storage Management.",
-    "databaseNull": "Graph database not bound, please configure it at System Configuration &gt; Storage Management.",
+    "openSearchNull": "OpenSearch not bound, please configure it at System Configuration, Storage Management.",
+    "databaseNull": "Graph database not bound, please configure it at System Configuration, Storage Management.",
     "goNow": "GO now"
   }
 }

@@ -49,7 +49,7 @@ const KnowledgeGroup = (props: any) => {
       setGraphListCount(res.res.count);
 
       if (selectedGraph) {
-        const graph = graphList.find((item: any) => item.kgconfid === selectedGraph?.kgconfid);
+        const graph = graphList.find((item: any) => item?.kgconfid === selectedGraph?.kgconfid);
         graph && _setSelectedGraph(graph[0]);
         return;
       }
