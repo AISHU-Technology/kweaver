@@ -299,7 +299,7 @@ func DelAdvSearchConf(engine *sql2.DB, confIDs []int) error {
 	return nil
 }
 
-// 新增搜索配置
+// 新增和修改搜索配置
 type ConfContent struct {
 	MaxDepth     int          `json:"max_depth"`
 	SearchRange  SearchRange  `json:"search_range" binding:"required,dive"`
@@ -313,10 +313,10 @@ type DisplayRange struct {
 	Vertexes RangeVertexes `json:"vertexes" binding:"required,dive"`
 }
 type RangeVertexes struct {
-	Open []string `json:"open" binding:"omitempty"`
+	Open []string `json:"open" binding:"required"`
 }
 type RangeEdges struct {
-	Open []string `json:"open" binding:"omitempty"`
+	Open []string `json:"open" binding:"required"`
 }
 
 func AddAdvSearchConf(confName, _type, confDesc string, kgid int, confContent ConfContent) (confID int, err error) {
