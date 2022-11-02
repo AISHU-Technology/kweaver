@@ -277,11 +277,11 @@ class GraphDatabase extends Component {
           <Dropdown
             overlay={
               <Menu>
-                <Menu.Item key="email" onClick={() => this.onCreate('orientdb')}>
+                <Menu.Item key="orientdb" onClick={() => this.onCreate('orientdb')}>
                   <span>OrientDB</span>
                 </Menu.Item>
 
-                <Menu.Item key="pw" onClick={() => this.onCreate('nebula')}>
+                <Menu.Item key="nebula" onClick={() => this.onCreate('nebula')}>
                   <span>Nebula Graph</span>
                 </Menu.Item>
               </Menu>
