@@ -16,9 +16,8 @@ import (
 
 func AdvSearch(id, query string, page, size, limit int, header map[string][]string) (httpcode int, response interface{}) {
 
-	confidSplit := strings.Split(id, ",")
 	host := utils.CONFIG.AlgConf.IP + ":" + utils.CONFIG.AlgConf.Port
-	urlStr := fmt.Sprintf(utils.UrlCONF.AdvSearch, host, strings.Join(confidSplit, ","))
+	urlStr := fmt.Sprintf(utils.UrlCONF.AdvSearch, host, id)
 
 	req, _ := http.NewRequest("GET", urlStr, nil)
 	params := req.URL.Query()
