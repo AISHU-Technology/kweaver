@@ -10,11 +10,22 @@
     padding: 0 12px;
   }
 
+  .hover-bg {
+    .icon-click-mask {
+      visibility: hidden;
+    }
+
+    &:hover .icon-click-mask {
+      visibility: visible;
+    }
+  }
+
   .icon-click-mask {
     width: 24px;
     height: 24px;
     line-height: 24px;
     text-align: center;
+    color: var(--ad-text-color);
     cursor: pointer;
   }
 
