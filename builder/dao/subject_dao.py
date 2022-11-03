@@ -1539,7 +1539,7 @@ def insert_subject_nebula(graphdb, graph_db_name, **kwargs):
         document_vid = str(props_res.row_values(0)[0])[1:-1]
         score = document.get("score", 0.0)
         graphdb.create_edge("subject2document", vid, document_vid,
-                            [["name", "score"], ["'label2subject'", str(score)]], graph_db_name)
+                            [["name", "score"], ["'subject2document'", str(score)]], graph_db_name)
     return 200, "message"
 
 
