@@ -1151,7 +1151,10 @@ class GraphDB(object):
                     propsstr.append('`' + p + '`')
                 valuesstr = []
                 for v in values:
-                    valuesstr.append("'" + v + "'")
+                    if isinstance(v, int):
+                        valuesstr.append(str(v))
+                    else:
+                        valuesstr.append("'" + v + "'")
                 ngql = 'INSERT VERTEX `{}` ({}) VALUES "{}" : ({})' \
                     .format(otl_name, ','.join(propsstr), vid, ','.join(valuesstr))
                 self._nebula_session_exec_(ngql, db)

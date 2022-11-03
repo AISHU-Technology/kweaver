@@ -683,6 +683,128 @@ def graphDsList(graphid):
     return ret_message, CommonResponseStatus.SUCCESS.value
 
 
+@graph_controller_app.route('/getgraphbygns', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_new_response)
+def get_graph_by_gns():
+    """
+    get knowledge graph information by gns
+    get knowledge graph information by gns
+    ---
+    parameters:
+            -   in: 'body'
+                name: 'body'
+                description: 'request body'
+                required: true
+                schema:
+                    $ref: '#/definitions/builder/graph/getGraphByGns'
+    """
+    # default parameters
+    arg_extract_model = "Anysharedocumentmodel"
+    arg_data_source = "as7"
+    try:
+        # get parameters
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        # get parameters error
+        if param_code != 0:
+            res = {
+                "ErrorCode": "Builder.GraphController.GetGraphByGns.ParamsError",
+                "Description": param_message,
+                "Solution": "parameter error, please check the input parameters carefully",
+                "ErrorDetails": "get parameter error",
+                "ErrorLink": ""
+            }
+            return jsonify(res), 400
+        # check parameters
+        ret_status, message = graphCheckParameters.getidbygns_params(params_json)
+        if ret_status != 0:
+            res = {
+                "ErrorCode": "Builder.GraphController.GetGraphByGns.ParamsError",
+                "Description": "params error",
+                "Solution": "Please check the input parameters carefully",
+                "ErrorDetails": message,
+                "ErrorLink": ""
+            }
+            return jsonify(res), 400
+        arg_gns_list = params_json.get("gns")
+
+        # all graph information
+        ret_code, ret_obj = graph_Service.getallgraph()
+        if ret_code != 200:
+            res = {
+                "ErrorCode": "Builder.GraphController.GetGraphByGns.GetGraphError",
+                "Description": ret_obj["cause"],
+                "Solution": "",
+                "ErrorDetails": ret_obj["message"],
+                "ErrorLink": ""
+            }
+            return jsonify(res), ret_code
+        graphs = ret_obj.get("res", {}).get("df", {})
+        if len(graphs) == 0:
+            res = {
+                "ErrorCode": "Builder.GraphController.GetGraphByGns.GraphListEmpty",
+                "Description": "graph list is empty",
+                "Solution": "No graphs now, please create the graph first",
+                "ErrorDetails": "graph list is empty",
+                "ErrorLink": ""
+            }
+            return jsonify(res), 500
+
+        results = {}
+        for arg_gns in arg_gns_list:
+            result = getgraph_onegns(arg_gns, graphs, arg_extract_model, arg_data_source)
+            if arg_gns not in results:
+                results[arg_gns] = result
+        res = {"res": results}
+        return jsonify(res), 200
+    except Exception as e:
+        res = {
+            "ErrorCode": "Builder.GraphController.GetGraphByGns.InternalError",
+            "Description": "internal error",
+            "Solution": "Please contact the administrator",
+            "ErrorDetails": repr(e),
+            "ErrorLink": ""
+        }
+        return jsonify(res), 500
+
+
+def getgraph_onegns(arg_gns, graph_ids, arg_extract_model, arg_data_source):
+    result = []
+    for graph in graph_ids:
+        graph_id = graph.get("id")
+        graph_name = graph.get("graph_name")
+        graph_InfoExts = graph.get("graph_InfoExt", [])
+        for graph_InfoExt in eval(graph_InfoExts):
+            extract_model = graph_InfoExt.get("extract_model", "")
+            data_source = graph_InfoExt.get("data_source", "")
+            if extract_model != arg_extract_model or data_source != arg_data_source:
+                continue
+            gns = graph_InfoExt.get("file_source", "")
+            if is_match(arg_gns, gns):
+                result.append({"id": graph_id, "name": graph_name})
+                break
+    return result
+
+
+def is_match(gns1, gns2):
+    """
+    gns1：input gns
+    gns2：match gns
+    matching success：
+    1. gns1 == gns2
+    2. gns 1 is a subdirectory of gns 2
+    3. gns 1 is the parent directory of gns 2
+    """
+    gns_list1 = gns1.replace("gns://", "").split("/")
+    gns_list2 = gns2.replace("gns://", "").split("/")
+    len_gns1 = len(gns_list1)
+    len_gns2 = len(gns_list2)
+    if ((gns1 == gns2) or
+            (len_gns1 > len_gns2 and gns_list1[:len_gns2] == gns_list2) or
+            (len_gns1 < len_gns2 and gns_list2[:len_gns1] == gns_list1)):
+        return True
+    return False
+
+
 @graph_controller_app.route("/adv-search-config/kglist-conf/<net_id>", methods=["GET"], strict_slashes=False)
 @swag_from(swagger_old_response)
 def get_adv_search(net_id):

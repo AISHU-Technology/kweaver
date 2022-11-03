@@ -1653,14 +1653,13 @@ def mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMe
         rec_dict = ret.to_dict('records')
         rec_dict = rec_dict[0]
         db_type = rec_dict['type']
-        if db_type == 'orientdb':
-            if "subject" in en_pro_dict:
-                print("build document vector start")
-                start_time = time.time()
-                from dao.subject_dao import TextMatchTask
-                subject_match_task = TextMatchTask("test", graphid)
-                subject_match_task.build_document_embed()
-                print("build document vector end, cost {}".format(time.time() - start_time))
+        if "subject" in en_pro_dict:
+            print("build document vector start")
+            start_time = time.time()
+            from dao.subject_dao import TextMatchTask
+            subject_match_task = TextMatchTask("test", graphid, document_source=db_type)
+            subject_match_task.build_document_embed()
+            print("build document vector end, cost {}".format(time.time() - start_time))
 
         obj = {"state": 'graph_KMerge', "meta": {'current': "graph_KMerge", 'total': "100"}}
         # time.sleep(30)
@@ -1871,8 +1870,9 @@ def buildertask(self, graphid, flag):
                         files_type = infoext["file_type"]
                         # 标准抽取
                         if extract_type == "standardExtraction":
-                            ret_code, obj = standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_id, file_name,
-                                             file_source, rules, graph_KMerge, entity_type)
+                            ret_code, obj = standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source,
+                                                             ds_id, file_name,
+                                                             file_source, rules, graph_KMerge, entity_type)
                             if ret_code != CommonResponseStatus.SUCCESS.value:
                                 self.update_state(state='FAILURE', meta=obj)
                                 return {'current': 100, 'total': 100}
@@ -1885,17 +1885,20 @@ def buildertask(self, graphid, flag):
                             extract_model = infoext["extract_model"]
                             # 合同模型
                             if extract_model == "Contractmodel":
-                                contract_model_extract(conn_db, graph_mongo_Name, ds_id, file_source, configure.configYaml,
+                                contract_model_extract(conn_db, graph_mongo_Name, ds_id, file_source,
+                                                       configure.configYaml,
                                                        configure.model, configure.stopwords_file, configure.process_num,
                                                        configure.schema_file, files_type)
                             elif extract_model == "OperationMaintenanceModel":
                                 try:
-                                    operation_maintenance_model_extract(conn_db, graph_mongo_Name, ds_id, file_source, configure.aspi_config_path, files_type)
+                                    operation_maintenance_model_extract(conn_db, graph_mongo_Name, ds_id, file_source,
+                                                                        configure.aspi_config_path, files_type)
                                 except Exception as e:
                                     Logger.log_error("OperationMaintenanceModel error： {}".format(repr(e)))
                             # AI模型和通用模型
                             elif extract_model != "Anysharedocumentmodel":
-                                obj = ai_common_model_extract(Config.modeldir, extract_model, conn_db, ds_id, file_source, files_type,
+                                obj = ai_common_model_extract(Config.modeldir, extract_model, conn_db, ds_id,
+                                                              file_source, files_type,
                                                               extract_rules, graph_mongo_Name)
                                 if obj:
                                     self.update_state(state=obj["state"],

@@ -1765,6 +1765,24 @@ class GraphCheckParameters(object):
             message = "unknown error!"
         return ret_status, message
 
+    def getidbygns_params(self, params_json):
+        ret_status = 0
+        message = ""
+        if not isinstance(params_json, dict):
+            message += "parameter type must be json; "
+            ret_status = -1
+        else:
+            if list(params_json.keys()) != ["gns"]:
+                message += "parameter must be 'gns'; "
+                ret_status = -1
+            if not isinstance(params_json.get("gns"), list):
+                message += "parameter gns must be list; "
+                ret_status = -1
+            else:
+                if len(params_json.get("gns")) == 0:
+                    message += "parameter gns can not be empty list; "
+                    ret_status = -1
+        return ret_status, message
 
     def output(self, params_json):
         pass #empty
