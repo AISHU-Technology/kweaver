@@ -63,13 +63,14 @@ const Header = (props: HeaderInterface) => {
   // 编辑图谱
   const editGraph = async () => {
     const { kg_conf_id, status, is_upload } = graphBasicData;
+    const graphStatus = ad_graphStatus || status;
 
-    if (status === GRAPH_STATUS.RUNNING) return message.warning(intl.get('graphList.needRun'));
-    if (status === GRAPH_STATUS.WAITING) return message.warning(intl.get('graphList.needWait'));
+    if (graphStatus === GRAPH_STATUS.RUNNING) return message.warning(intl.get('graphList.needRun'));
+    if (graphStatus === GRAPH_STATUS.WAITING) return message.warning(intl.get('graphList.needWait'));
     if (is_upload) return message.warning(intl.get('graphList.uploadErr'));
 
     try {
-      if (status === GRAPH_STATUS.CONFIGURATION) {
+      if (graphStatus === GRAPH_STATUS.CONFIGURATION) {
         history.push(`/home/workflow/edit?id=${kg_conf_id}&status=${GRAPH_STATUS.CONFIGURATION}`);
       } else {
         history.push(`/home/workflow/edit?id=${kg_conf_id}&status=${GRAPH_STATUS.NORMAL}`);

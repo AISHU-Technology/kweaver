@@ -23,7 +23,7 @@ const ipsTest =
   /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
 
 const ModalContent = memo(props => {
-  const { optionType, getData, closeModal, initData } = props;
+  const { optionType, getData, closeModal, initData, dbType } = props;
   const [form] = Form.useForm();
   const [list, setList] = useState([]);
   const [configRepeat, setConfigRepeat] = useState(false);
@@ -34,6 +34,12 @@ const ModalContent = memo(props => {
 
   useEffect(() => {
     getIndexList();
+
+    if (dbType === 'nebula') {
+      setPlaceholder(intl.get('configSys.nebulaIpPlace'));
+    } else {
+      setPlaceholder(intl.get('configSys.ipPlace'));
+    }
   }, []);
 
   /**
