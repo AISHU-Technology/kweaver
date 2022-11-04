@@ -422,7 +422,7 @@ const ModalContent = forwardRef(
                             <div className="no-data">
                               <img src={selfState.nodeKw ? noResult : emptyImg} alt="no data" />
                               <p className="no-des">
-                                {selfState.nodeKw ? intl.get('global.noResult') : intl.get('global.noData')}
+                                {selfState.nodeKw ? intl.get('global.noResult1') : intl.get('global.noData')}
                               </p>
                             </div>
                           )}
@@ -512,7 +512,7 @@ const ModalContent = forwardRef(
                             <div className="no-data">
                               <img src={selfState.edgeKw ? noResult : emptyImg} alt="no data" />
                               <p className="no-des">
-                                {selfState.edgeKw ? intl.get('global.noResult') : intl.get('global.noData')}
+                                {selfState.edgeKw ? intl.get('global.noResult1') : intl.get('global.noData')}
                               </p>
                             </div>
                           )}

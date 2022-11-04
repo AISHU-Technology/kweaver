@@ -33,7 +33,7 @@ class PymysqlPool(object):
         DB_MAXCONNECTIONS = 3
         DB_BLOCKING = True
         with open(db_config_path, 'r') as f:
-            yaml_config = yaml.load(f, Loader=yaml.FullLoader)
+            yaml_config = yaml.load(f)
         mariadb_config = yaml_config['mariadb']
         host = mariadb_config.get('host')
         port = mariadb_config.get('port')

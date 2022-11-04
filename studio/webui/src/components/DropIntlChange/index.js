@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Cookie from 'js-cookie';
+import { connect } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
@@ -80,4 +81,8 @@ class DropIntlChange extends Component {
   }
 }
 
-export default DropIntlChange;
+const mapStateToProps = state => ({
+  anyDataLang: state.getIn(['changeAnyDataLang', 'anyDataLang'])
+});
+
+export default connect(mapStateToProps)(DropIntlChange);

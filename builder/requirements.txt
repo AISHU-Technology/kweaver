@@ -59,5 +59,3 @@ nebula3-python==3.1.0
 kombu==4.6.10
 Flask-Babel==2.0.0
 flasgger==0.9.5
-tenacity
-timeout_decorator

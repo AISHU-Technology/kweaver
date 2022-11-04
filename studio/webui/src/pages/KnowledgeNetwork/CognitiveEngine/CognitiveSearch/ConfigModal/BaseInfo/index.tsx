@@ -7,7 +7,6 @@ import { Tooltip, Input } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import { connect } from 'react-redux';
-import ExplainTip from '@/components/ExplainTip';
 import { CN_NUMBER, EN_NUMBER } from '../../assistFunction';
 import './style.less';
 
@@ -46,7 +45,9 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ anyDataLang, data, graphData, confi
       <div className="config-row">
         <p className="row-title">
           {intl.get('searchConfig.searchScope')}
-          <ExplainTip placement="right" title={intl.get('searchConfig.scopeTip')} />
+          <Tooltip placement="right" title={intl.get('searchConfig.scopeTip')}>
+            <QuestionCircleOutlined className="q-icon" />
+          </Tooltip>
         </p>
 
         <div className="rule-box">
@@ -85,7 +86,9 @@ const BaseInfo: React.FC<BaseInfoProps> = ({ anyDataLang, data, graphData, confi
       <div className="config-row">
         <p className="row-title" style={{ marginTop: 24 }}>
           {intl.get('searchConfig.searchRes')}
-          <ExplainTip placement="right" title={intl.get('searchConfig.resTip')} />
+          <Tooltip placement="right" title={intl.get('searchConfig.resTip')}>
+            <QuestionCircleOutlined className="q-icon" />
+          </Tooltip>
         </p>
 
         <div className="rule-box">

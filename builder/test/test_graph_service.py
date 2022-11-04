@@ -181,7 +181,7 @@ class TestGetGraphInfoCount(unittest.TestCase):
             entity_count = 266
             entitys_count = {'industry_info': 29, 'sub_industry_info': 237}
             edges_count = {'industry_info_2_sub_industry_info': 476}
-            count_return = codes.successCode, (edge_count, entity_count, None, entitys_count, edges_count, {}, {})
+            count_return = codes.successCode, (edge_count, entity_count, None, entitys_count, edges_count, None, None)
             origin_GraphDB_count = GraphDB.count
             GraphDB.count = mock.Mock(return_value=count_return)
             code, res = graph_Service.get_graph_info_count(self.graphid)

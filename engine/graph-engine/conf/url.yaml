@@ -5,14 +5,17 @@ algUrl:
   advSearchTest: http://%s/api/engine/v2/adv_search/test
   advSearch2AS:  http://%s/api/engine/v2/adv_search
   topicSubgraph: http://%s/api/engine/v2/kc/topic/subgraph
+managerUrl:
+  kgListInfo: http://%s/api/manager/v1/engine
+  resourceOperate: http://%s/api/manager/v1/resource/operate
 builderUrl:
   getAcctoken: http://%s/api/builder/v1/ds/acctoken/%s
-openSearchUrl:
-  fullTextList: http://%s/*
-  search: http://%s/%s/_search
 anyShareUrl:
   esAPI: https://%s:%s/anyshare/file/%s?pretty
+#  esAPI: http://%s:%s/company/file/%s?pretty
   getConfig: https://%s:%s/api/eacp/v1/auth1/getconfig
   deployManager: https://%s:%s/api/deployweb/deploy-manager/v1/containerized/information/anyshare
   getIndex: https://%s:%s/api/ecoindex/v1/index/%s/%s
-
+openSearchUrl:
+  fullTextList: http://%s/*
+  search: http://%s/%s/_search

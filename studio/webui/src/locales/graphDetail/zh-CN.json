@@ -18,6 +18,8 @@
     "storageLocation": "存储位置",
     "_import": "数据导入",
     "manually": "人工创建",
+    "numberOfEntity": "实体数量",
+    "numberOfRelation": "关系数量",
     "creationTime": "创建时间",
     "creationPerson": "创建人",
     "finalModifier": "最终操作人",

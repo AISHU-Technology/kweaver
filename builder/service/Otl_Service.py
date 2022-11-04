@@ -6,7 +6,6 @@ from utils.Gview import Gview
 from utils.common_response_status import CommonResponseStatus
 from dao.dsm_dao import dsm_dao
 from dao.otl_dao import otl_dao
-from dao.knw_dao import knw_dao
 # from dao.dsm_dao import dsm_dao
 from utils.Otl_Util import otl_util
 import arrow
@@ -425,15 +424,14 @@ class OtlService(object):
         obj = {}
         onto_id = -1
         try:
-            # 本体名称默认为空，允许重名
-            # # 本体名称是否存在
-            # ontology_name = params_json.get("ontology_name")
-            # res = otl_dao.get_ontology(ontology_name)
-            # if len(res) > 0:
-            #     obj['cause'] = "Ontology name already existed "
-            #     obj['code'] = CommonResponseStatus.USRPASS_ERROR.value
-            #     obj['message'] = "insert fail"
-            #     return 500, obj, -1
+            # 本体名称是否存在
+            ontology_name = params_json.get("ontology_name")
+            res = otl_dao.get_ontology(ontology_name)
+            if len(res) > 0:
+                obj['cause'] = "Ontology name already existed "
+                obj['code'] = CommonResponseStatus.USRPASS_ERROR.value
+                obj['message'] = "insert fail"
+                return 500, obj, -1
 
             ontology_id = otl_dao.insert_Ontology(params_json)
             res = {}
@@ -456,12 +454,12 @@ class OtlService(object):
             obj['cause'] = err
             obj['code'] = CommonResponseStatus.REQUEST_ERROR.value
             obj['message'] = "insert fail"
-            # if "Duplicate entry" in err:
-            #     obj['cause'] = "database already have the same name"
-            #     obj['code'] = CommonResponseStatus.USRPASS_ERROR.value
-            #     obj['message'] = "insert fail"
-            # else:
-            obj['cause'] = " You have error in Mysql"
+            if "Duplicate entry" in err:
+                obj['cause'] = "database already have the same name"
+                obj['code'] = CommonResponseStatus.USRPASS_ERROR.value
+                obj['message'] = "insert fail"
+            else:
+                obj['cause'] = " You have error in Mysql"
         return ret_code, obj, onto_id
 
     # def ontology_save(self,params_json):
@@ -929,6 +927,7 @@ class OtlService(object):
         return reslists
 
 
+    # lzg add
     def getall(self, args):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
@@ -937,38 +936,36 @@ class OtlService(object):
             page = args.get("page")
             size = args.get("size")
             order = args.get("order")
-            knw_id = args.get("knw_id")
             count = otl_dao.getCount()
             res = {}
             res["count"] = count
-            # import ontology.
-            # return the knowledge graph name and ontology ID corresponding to the ontology available in the knowledge network
-            # available: entity_value is not null and no running tasks and used_task is equal to task table information
+            ret = otl_dao.getall(int(page)-1, int(size), order, kgIds)
+            rec_dict = ret.to_dict('records')
+            # rec_dict["entity"] = eval(rec_dict["entity"])
+            # print(rec_dict)
+            ##### 本体导入
             if page == "-1":
                 list_all = []
-                graph_id = knw_dao.get_graph_by_knw_id(knw_id)["graph_id"].to_list()
-                if graph_id:
-                    rec_dict = graph_dao.get_name_and_otl_by_id(graph_id).to_dict('records')
-                    for reslist in rec_dict:
-                        otl_id = eval(reslist['graph_otl'])
-                        if not otl_id:
-                            continue
-                        otl_info = otl_dao.getbyids(otl_id).to_dict('records')[0]
-                        entity = otl_info["entity"]
-                        entity_value = eval(entity)
-                        used_task = eval(otl_info["used_task"])
-                        if len(entity_value) != 0 :
-                            task_in_table = task_dao_onto.get_all_by_otlid(otl_id)
-                            alltask = task_in_table["task_id"].tolist()
-                            running_task = task_in_table["task_status"].tolist()
-                            difference = [i for i in alltask if i not in used_task]
-                            if "running" not in running_task and len(difference) == 0:
-                                list_all.append(reslist)
+                for reslist in rec_dict:
+                    dict_all = {}
+                    otl_id = reslist["id"]
+                    entity = reslist["entity"]
+                    entity_value = eval(entity)
+                    used_task = eval(reslist["used_task"])
+                    if len(entity_value) != 0 :
+                        task_in_table = task_dao_onto.get_all_by_otlid(otl_id)
+                        alltask = task_in_table["task_id"].tolist()
+                        running_task = task_in_table["task_status"].tolist()
+                        difference = [i for i in alltask if i not in used_task]
+                        if "running" not in running_task and len(difference) == 0:
+                            dict_all["ontology_name"] = reslist["ontology_name"]
+                            list_all.append(dict_all)
+
                 res["df"] = list_all
-            # paging get ontology list. return detailed information
+
             else:
-                ret = otl_dao.getall(int(page) - 1, int(size), order, kgIds)
-                rec_dict = ret.to_dict('records')
+                # print(rec_dict)
+                ###### 本题库
                 res["df"] = self.optotl(rec_dict)
 
             obj["res"] = res

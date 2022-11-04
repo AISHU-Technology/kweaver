@@ -8,7 +8,7 @@ import (
 
 const (
 	domainExp      = "^[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\\.?$" //域名
-	graphdbnameExp = "^[\u4e00-\u9fa5_a-zA-Z0-9=~!@#\\${<0>}%^&*()_+`'\"{}[\\];:,.?<>|/~！@#￥%…&*·（）—+-。={}|【】：；‘’“”、《》？，。/\n\\\\]+$"
+	graphdbnameExp = "^[\u4e00-\u9fa5_a-zA-Z0-9=~!@#{<0>}%^&*()_+`'\"{}[\\];:,.?<>|/~！@#￥%…&*·（）—+-。={}|【】：；‘’“”、《》？，。/\n\\\\]+$"
 )
 
 var domaincompile = regexp.MustCompile(domainExp)

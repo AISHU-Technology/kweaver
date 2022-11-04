@@ -1,27 +1,12 @@
 import React from 'react';
+
 import './style.less';
 
-export interface AvatarNameProps {
-  str: string;
-  style?: React.CSSProperties;
-  color?: string;
-  size?: number;
-}
-
-const AvatarName: React.FC<AvatarNameProps> = ({ str = '', color, size = 40, style = {} }) => {
-  const propsToStyles: React.CSSProperties = { width: size, height: size };
-
-  if (color) {
-    Object.assign(propsToStyles, {
-      color: `${color}`,
-      background: `${`${color}15`}`,
-      border: `1px solid ${`${color}10`}`
-    });
-  }
-
+const AvatarName = (props: { str: string; style?: any }) => {
+  const { str, style } = props;
   return (
-    <div className="avatarNameRoot" style={{ ...propsToStyles, ...style }}>
-      {str.slice(0, 1)}
+    <div className="avatarNameRoot" style={style}>
+      {str.substring(0, 1)}
     </div>
   );
 };

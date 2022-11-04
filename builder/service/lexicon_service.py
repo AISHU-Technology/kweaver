@@ -468,7 +468,7 @@ class LexiconService:
                 file_name = "{}.txt".format(lexicon_name)
                 flags += 1
                 keys = list(word_infos[0].keys())
-                with open(os.path.join(txt_dir, file_name), "w", encoding="utf_8_sig") as f:
+                with open(os.path.join(txt_dir, file_name), "w", encoding="utf-8") as f:
                     f.write("\t".join(keys) + "\n")
                     for word_info in word_infos:
                         line = [word_info.get(key) for key in keys]

@@ -18,6 +18,8 @@
     "storageLocation": "Storage Location",
     "_import": "import",
     "manually": "manually",
+    "numberOfEntity": "Number of entity",
+    "numberOfRelation": "Number of relation",
     "creationTime": "Creation time",
     "creationPerson": "Creation person",
     "finalModifier": "Final modifier",

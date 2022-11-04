@@ -50,42 +50,36 @@ def type_transform(db_type, value, type, sql_format=True):
                 value = ' datetime("{}") '.format(value)
             elif db_type == 'orientdb':
                 value = "'" + str(value) + "'"
-        if type == 'boolean':
-            if value.lower() not in ['true', 'false']:
-                try:
-                    value = str(bool(eval(value)))
-                except Exception:
-                    value = default_value(db_type, type)
     return str(value)
 
 
-def gen_doc_vid(merge_entity_list, entity_name, one_data, en_pro_dict, gtype='nebula'):
+def gen_doc_vid(merge_otls, otl_name, one_data, en_pro_dict, gtype='nebula'):
     """
     计算图数据库点的vid, 兼容nebula和orientdb
 
     参数
-        merge_entity_list: 融合属性字典
+        merge_otls: 融合属性字典
             demo: {"t_stock_percent_wide": {"name": "equality"}}
-                t_stock_percent_wide： 抽取对象实体名
-                name: 融合属性
-                equality: 融合的方法
-        entity_name: 抽取实体名
+                t_stock_percent_wide： 实体名
+                name: 是融合属性
+                equality: 是融合的方法
+        otl_name: 实体名
         one_data: 一个实体数据
         en_pro_dict: 属性字典
-        gtype: 图数据库的名称，默认nebula
+        gtype: 图数据库的名称，默认nabule
 
     """
     tab_val_index = []  # 属性列表
-    for k, v in merge_entity_list[entity_name].items():
-        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[entity_name]['pro_map'][k])
+    for k, v in merge_otls[otl_name].items():
+        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[otl_name][k])
         if gtype == "orientdb":
-            value = "  `{}` = '{}' ".format(k, normalize_text(str(one_data[k])))
+            value = "  `{}` = '{}' ".format(k, one_data[k])
         tab_val_index.append(value)
 
     if gtype == "orientdb":
-        return 'SELECT FROM `{}` WHERE {}'.format(en_pro_dict[entity_name]['otl_name'], ','.join(tab_val_index))
+        return 'SELECT FROM `{}` WHERE {}'.format(otl_name, ','.join(tab_val_index))
 
-    props_str = en_pro_dict[entity_name]['otl_name'] + '_'
+    props_str = ''
     for m in tab_val_index:
         props_str += f'{m}_'
     return get_md5(props_str)
@@ -99,37 +93,15 @@ def data_type_transform(data_type: str):
     return mapping[data_type.lower()]
 
 
-def default_value(db_type='nebula', type='other', sql_format=True):
-    '''
-    当数据为空时插入图数据库或者opensearch的默认值
-    Args:
-        db_type: 图数据库类型 nebula or orientdb
-        type: 数据类型
-        sql_format: False: opensearch使用
-    '''
-    if not sql_format:
+def default_value(sql_format=True):
+    if sql_format:
+        return "NULL"
+    else:
         return ""
-    if type == 'string':
-        return '""'  # 如果为NULL，engine搜索会报错
-    return "NULL"
-
-
-def value_transfer(value, db_type, type):
-    if not value:
-        return default_value(db_type, type)
-    return type_transform(db_type, normalize_text(str(value)), type)
 
 
 def normalize_text(text):
-    text = re.sub(r"[\n\t]", " ", text)
-    text = text.replace("\\", "\\\\")
-    text = re.sub(r"[\"]", "\\\"", text)
-    text = re.sub(r"[\']", "\\\'", text).strip()
-    return text
-
-
-def normalize_text_es(text):
-    text = re.sub(r"[\n\t]", " ", text)
+    text = re.sub(r"[\n\t\'\"]", " ", text)
     text = text.replace("\\", "\\\\").strip()
     return text
 
@@ -205,7 +177,7 @@ class GraphDB(object):
                 print(res.error_msg())
                 state_code = 500
         if ngql:
-            ngql = re.sub('[\r\n]*', "", ngql)
+            ngql = re.sub('[\r|\n]*', "", ngql)
             res = session.execute(ngql)
             if not res.is_succeeded():
                 print(ngql)
@@ -1098,9 +1070,9 @@ class GraphDB(object):
         properties = []
         for p in props:
             if pro_dict[p] == 'string':
-                properties.append('`' + p + '`' + '(' + str(index_len) + ')')
+                properties.append(p + '(' + str(index_len) + ')')
             else:
-                properties.append('`' + p + '`')
+                properties.append(p)
         edge_index = 'CREATE EDGE INDEX IF NOT EXISTS`{}` ON `{}` ({})' \
             .format(index_name, edge_name, ','.join(properties))
         self._nebula_exec(edge_index, db)
@@ -1136,13 +1108,13 @@ class GraphDB(object):
                     print(url)
                     print(es_bulk_index)
                     print(self.state)
-        elif pro_value and pro_value_index:
+        else:
             if self.type == 'orientdb':
                 vertexsql = "UPDATE  `{}` SET {} UPSERT WHERE {}" \
                     .format(otl_name, ",".join(pro_value), " and ".join(pro_value_index))
                 self._orientdb_http(vertexsql, db)
             elif self.type == 'nebula':
-                vid = otl_name + '_'
+                vid = ''
                 for v in values_index:
                     vid += f"'{v}'_"
                 vid = get_md5(vid)
@@ -1151,10 +1123,7 @@ class GraphDB(object):
                     propsstr.append('`' + p + '`')
                 valuesstr = []
                 for v in values:
-                    if isinstance(v, int):
-                        valuesstr.append(str(v))
-                    else:
-                        valuesstr.append("'" + v + "'")
+                    valuesstr.append("'" + v + "'")
                 ngql = 'INSERT VERTEX `{}` ({}) VALUES "{}" : ({})' \
                     .format(otl_name, ','.join(propsstr), vid, ','.join(valuesstr))
                 self._nebula_session_exec_(ngql, db)
@@ -1298,7 +1267,7 @@ class GraphDB(object):
         create_edge = 'CREATE EDGE IF NOT EXISTS `{}`'.format(edge_class)
         props = []
         for o_p in edge_otl_pro:
-            prop = '`' + o_p + '` ' + data_type_transform(edge_pro_dict[edge_class][o_p])
+            prop = '`' + o_p + '` ' + edge_pro_dict[edge_class][o_p]
             props.append(prop)
         props.append('`timestamp` double')
         create_edge += '(' + ','.join(props) + ')'
@@ -1494,33 +1463,6 @@ class GraphDB(object):
             print(url)
             print(es_bulk_index_body)
             print(self.state)
-
-    def stats(self, db):
-        '''
-        统计数据量
-
-        Returns:
-            code: 返回码
-            res: 正确则返回以下字段
-                edges: 边的总数
-                entities: 点的总数
-                name2count: {点/边的名字: 个数}
-                entity_count: {点的名字: 个数}
-                edge_count: {边的名字: 个数}
-                edge2pros: {边名: 属性个数}
-                entity2pros: {实体名: 属性个数}
-        '''
-        databaselist = self.get_list()
-        if databaselist == -1:
-            code = codes.Builder_GraphdbDao_Count_GraphDBConnectionError
-            return code, None
-        if db not in databaselist:
-            return codes.Builder_GraphdbDao_Count_DBNameNotExitsError, None
-
-        if self.type == 'orientdb':
-            return self._count_orientdb(db)
-        elif self.type == 'nebula':
-            return self._count_nebula(db)
 
     def count(self, db):
         '''
@@ -1795,37 +1737,6 @@ class GraphDB(object):
                 if code != 200:
                     print(r_json)
 
-    def graph_entity_prop_empty(self, db, entity_name, otl_type, prop):
-        """
-        查询某个实体类的非空值数量,该查询可能非常耗时
-        """
-        if self.type == 'orientdb':
-            code, res = self._orientdb_prop_empty(db, entity_name, otl_type, prop)
-            if code != 200:
-                return code, res
-            count = res.get('result', list())[0].get('not_empty')
-            return code, count
-        code, res = self._nebula_prop_empty(db, entity_name, otl_type, prop)
-        if code != 200:
-            return code, res
-        count = res.column_values('not_empty').pop(0).as_int()
-        return code, count
-
-    def _orientdb_prop_empty(self, db, entity_name, otl_type, prop):
-        empty_value_list = """ ["","()","[]","{}"] """
-        sql = f"""select count(*) as `not_empty` from `{entity_name}` where `{prop}` not in {empty_value_list} and `{prop}` is not null"""
-        code, res = self._orientdb_http(sql, db)
-        return code, res
-
-    def _nebula_prop_empty(self, db, entity_name, otl_type, prop):
-        if otl_type != "edge":
-            otl_type = "vertex"
-        empty_value_list = """ ["","()","[]","{}"] """
-        sql = f"""lookup on `{entity_name}` where `{entity_name}`.`{prop}` not in {empty_value_list} 
-                yield properties({otl_type}).`{prop}` as props | yield count(*) as not_empty"""
-        code, res = self._nebula_session_exec_(sql, db)
-        return code, res
-
 
 class SQLProcessor:
     def __init__(self, dbtype) -> None:
@@ -1860,7 +1771,7 @@ class SQLProcessor:
             batch_sql = 'INSERT VERTEX `{}` ({}) VALUES {}' \
                 .format(otl_name,
                         ','.join(pros),
-                        ',\n'.join(batch_sql))
+                        ','.join(batch_sql))
         # pool.close()
         # pool.join()
         return batch_sql
@@ -1915,14 +1826,14 @@ class SQLProcessor:
             if not valueExist:
                 tab_val.append("%(otlpro)s=%(otlvalue)s" \
                                % {"otlpro": "`" + ot_tb + "`",
-                                  "otlvalue": default_value(self.type, en_pro_dict[otl_name][ot_tb])})
-                vals.append(default_value(self.type, en_pro_dict[otl_name][ot_tb]))
+                                  "otlvalue": default_value()})
+                vals.append(default_value())
         if tab_val:
             if "ds_id" in row.keys():
                 tab_val.append('`ds_id`=\'' + str(row["ds_id"]) + '\'')
                 vals.append('\'' + str(row["ds_id"]) + '\'')
             else:
-                vals.append(default_value(self.type, 'string'))
+                vals.append(default_value())
             ts = time.time()
             tab_val.append(" `timestamp` = " + str(ts))
             vals.append(str(ts))
@@ -1934,27 +1845,27 @@ class SQLProcessor:
                                 ",".join(m for m in tab_val),
                                 " and ".join(m for m in tab_val_index))
                 elif self.type == 'nebula':
-                    idval = otl_name + '_'
+                    idval = ''
                     for m in tab_val_index:
                         idval += f'{m}_'
                     vid = get_md5(idval)
                     sql = '"{}":({})'.format(vid, ','.join(vals))
             else:
-                # if self.type == 'orientdb':
-                #     sql = "UPDATE `{}` SET {} UPSERT WHERE {}" \
-                #         .format(otl_name,
-                #                 ",".join(m for m in tab_val),
-                #                 " and ".join(m for m in tab_val))
-                # elif self.type == 'nebula':
-                # 报错
-                print(
-                    'missing merge properties, can\'t get nebula vid. otl_name: {}. batch_iter: {}'.format(otl_name,
-                                                                                                           batch_iter))
-                # idval = ''
-                # for m in vals:
-                #     idval += f'{m}_'
-                # vid = get_md5(idval)
-                # sql = '"{}":({})'.format(vid, ','.join(vals))
+                if self.type == 'orientdb':
+                    sql = "UPDATE `{}` SET {} UPSERT WHERE {}" \
+                        .format(otl_name,
+                                ",".join(m for m in tab_val),
+                                " and ".join(m for m in tab_val))
+                elif self.type == 'nebula':
+                    # 报错
+                    print(
+                        'missing merge properties, can\'t get nebula vid. otl_name: {}. batch_iter: {}'.format(otl_name,
+                                                                                                               batch_iter))
+                    # idval = ''
+                    # for m in vals:
+                    #     idval += f'{m}_'
+                    # vid = get_md5(idval)
+                    # sql = '"{}":({})'.format(vid, ','.join(vals))
             process_class_sql = sql
         process_class_sql = re.sub('[\r|\n]*', "", process_class_sql)
         return process_class_sql
@@ -2014,17 +1925,14 @@ class SQLProcessor:
                         if not (isinstance(row_val_t, float) and math.isnan(row_val_t)):
                             if ot_tb == 'name':
                                 name_exists = True
-                            otlvalue = type_transform(self.type, normalize_text_es(str(row_val_t)),
+                            otlvalue = type_transform(self.type, normalize_text(str(row_val_t)),
                                                       en_pro_dict[otl_name][ot_tb],
                                                       sql_format=False)
-                            otlindexvalue = type_transform(self.type, normalize_text(str(row_val_t)),
-                                                           en_pro_dict[otl_name][ot_tb],
-                                                           sql_format=False)
-                            vals.append(otlindexvalue)
+                            vals.append(otlvalue)
                             if otl_name in merge_otls:
                                 merge_pros = merge_otls[otl_name]
                                 if ot_tb in merge_pros:
-                                    tab_val_index.append(otlindexvalue)
+                                    tab_val_index.append(otlvalue)
                             if ot_tb in index_props:
                                 body_field[ot_tb] = otlvalue
                         # todo 非浮点数处理方式
@@ -2032,7 +1940,7 @@ class SQLProcessor:
             body_field['name'] = default_value(sql_format=False)
         vid = ''
         if vals and tab_val_index:
-            idval = otl_name + '_'
+            idval = ''
             for m in tab_val_index:
                 idval += f"'{m}'_"
             vid = get_md5(idval)
@@ -2073,13 +1981,13 @@ class SQLProcessor:
         body_field = {}
         for pro in index_props:
             if pro in p_pro:
-                body_field[pro] = normalize_text_es(str(p_pro[pro]))
+                body_field[pro] = normalize_text(str(p_pro[pro]))
             else:
                 body_field[pro] = ''
         return json.dumps(body_index) + '\n' + json.dumps(body_field)
 
     def prop_value_sql(self, entity_data=None, edge_otl_tab_pro=None, onedata=None, prop=None, value=None,
-                       edge_class=None, edge_pro_dict=None):
+                       edge_class=None):
         '''获取赋值sql
         如果onedata存在,将MongoDB数据中的需要的实体属性值dict转换为字符串list
         否则通过prop和value构造
@@ -2091,7 +1999,6 @@ class SQLProcessor:
             prop: 属性列表
             value: 值列表
             edge_class: 边名, 没有name属性值时则将属性name赋值为边名
-            edge_pro_dict: {边名: {属性名: 属性类型}}
 
         Returns:
             orientdb只有返回值第一项有意义,为给属性赋值的字符串列表
@@ -2107,15 +2014,11 @@ class SQLProcessor:
                         if otl_pro == 'name':
                             name_exists = True
                         if self.type == 'orientdb':
-                            prop_val_sql[0].append(str(otl_pro) + "=" +
-                                                   value_transfer(onedata[tab_pro],
-                                                                  self.type,
-                                                                  edge_pro_dict[edge_class][otl_pro]))
+                            prop_val_sql[0].append(
+                                str(otl_pro) + "=" + "'" + normalize_text(str(onedata[tab_pro])) + "'")
                         elif self.type == 'nebula':
                             prop_val_sql[0].append(str(otl_pro))
-                            prop_val_sql[1].append(value_transfer(onedata[tab_pro],
-                                                                  self.type,
-                                                                  edge_pro_dict[edge_class][otl_pro]))
+                            prop_val_sql[1].append("'" + normalize_text(str(onedata[tab_pro])) + "'")
             if not name_exists:
                 if self.type == 'orientdb':
                     prop_val_sql[0].append("`name`=" + "'" + str(edge_class) + "'")
@@ -2177,7 +2080,7 @@ class SQLProcessor:
                     vals.append("`{}`='{}'".format(pro, property_value))
                 sql += ' and '.join(vals)
             elif self.type == 'nebula':
-                val = class_name + '_'
+                val = ''
                 for pro in merge_pro:
                     if pro not in property_dict:
                         state = {'state': 'FAILURE',
@@ -2288,7 +2191,7 @@ class SQLProcessor:
                                                edge_pro_dict[edge_class][pro])
                     vals.append(pro_value)
                 else:
-                    vals.append(default_value(self.type, edge_pro_dict[edge_class][pro]))
+                    vals.append(default_value())
             ngql = '"{}" -> "{}" : ({})' \
                 .format(s_sql, o_sql, ','.join(vals))
             return ngql

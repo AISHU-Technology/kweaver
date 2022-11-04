@@ -2,8 +2,6 @@
 import json
 import time
 from datetime import datetime, date
-from threading import Thread
-
 from croniter import croniter
 
 from dao.graph_dao import graph_dao
@@ -81,12 +79,4 @@ class DateEncoder(json.JSONEncoder):
         else:
             return json.JSONEncoder.default(self, obj)
 
-
 redislock = RedisLock()
-
-
-def async_call(fn):
-    def wrapper(*args, **kwargs):
-        Thread(target=fn, args=args, kwargs=kwargs).start()
-
-    return wrapper

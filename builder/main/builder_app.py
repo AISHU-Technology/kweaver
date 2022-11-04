@@ -77,8 +77,8 @@ def before_request():
     # 图谱编辑
     elif "/api/builder/v1/graph" in path and method == "POST":
         graphid = path.split("/")[-1]
-        if graphid not in ["check_kmapinfo", "getgraphbygns", "delbyids", "graph_info",
-                           "query", "savenocheck", "task", "infoext_list"]:
+        if graphid not in ["check_kmapinfo", "getgraphbygns", "delbyids", "graph_info", "query", "savenocheck",
+                           "infoext_list"]:
             res_message, res_code = permission.graphEdit(graphid=graphid)
             if res_code != 0:
                 return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],

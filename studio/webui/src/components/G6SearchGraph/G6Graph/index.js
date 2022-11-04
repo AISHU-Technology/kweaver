@@ -21,8 +21,7 @@ import {
   getEdgesByNode,
   setPathExplorePosition,
   drawMark,
-  duplicateRemoval,
-  hoverEdgeConfig
+  duplicateRemoval
 } from './assistFunction';
 import Information from './Information';
 import InAndOut from './InAndOut';
@@ -31,6 +30,7 @@ import AnalysisModal from './Analysis';
 import ZoomTool from './LeftZoomTool';
 import PathExplore from './PathExplore';
 import { DELETE, IN, OUT, EXPLORE, ANALYSIS } from './operationType';
+import deleteImage from '@/assets/images/delete-edge.svg';
 import gridBg from '@/assets/images/net.png';
 import './style.less';
 
@@ -119,11 +119,30 @@ class G6Graph extends Component {
   init = () => {
     const { nodes, edges } = this.props;
 
-    // 给边上添加删除图标 直线
-    G6.registerEdge('extra-shape-edge-line', hoverEdgeConfig(), 'line');
+    // 给边上添加删除图标
+    G6.registerEdge(
+      'extra-shape-edge',
+      {
+        afterDraw(cfg, group) {
+          const shape = group.get('children')[0];
+          const midPoint = shape.getPoint(0.42);
+          group.addShape('image', {
+            attrs: {
+              x: midPoint.x - 18,
+              y: midPoint.y - 18,
+              width: 36,
+              height: 36,
+              img: deleteImage,
+              cursor: 'pointer'
+            },
+            name: 'delete-edge'
+          });
+        },
+        update: undefined
+      },
+      'line'
+    );
 
-    // 给边上添加删除图标 曲线
-    G6.registerEdge('extra-shape-edge', hoverEdgeConfig(), 'quadratic');
     // 图谱实例化
     this.graph = new G6.Graph({
       container: this.ref.current,
@@ -145,14 +164,14 @@ class G6Graph extends Component {
               }
             },
             formatText: model => {
-              return model?.label;
+              return model.data.name;
             },
             offset: 20
           },
           {
             type: 'edge-tooltip',
             formatText: model => {
-              return model?.label;
+              return model.name;
             },
             offset: 20
           },
@@ -267,19 +286,16 @@ class G6Graph extends Component {
       const edge = evt.item;
       const model = edge.getModel();
       model.oriLabel = model.label;
-      const edgeType = model?.type === 'line' ? 'extra-shape-edge-line' : 'extra-shape-edge';
-      edge.update({
-        type: edgeType
+      this.graph.updateItem(edge, {
+        type: 'extra-shape-edge'
       });
     });
-
     // 鼠标移出边
     this.graph.on('edge:mouseleave', evt => {
       const edge = evt.item;
-      const model = edge.getModel();
-      const edgeType = model?.type === 'extra-shape-edge-line' ? 'line' : 'quadratic';
-      edge.update({
-        type: edgeType
+      this.graph.setItemState(edge, 'hover', false);
+      this.graph.updateItem(edge, {
+        type: 'create-edge'
       });
     });
 
@@ -510,7 +526,7 @@ class G6Graph extends Component {
           message.warning([intl.get('searchGraph.exploreNone')]);
         }
         // 报错
-        if (res?.res?.ErrorCode) {
+        if (res?.ErrorCode) {
           message.error(res.Description);
         }
         this.props.setPathLoading(false);
@@ -568,8 +584,8 @@ class G6Graph extends Component {
    * 点击点或边打开侧边栏
    */
   openSideBar = () => {
-    const { autoOpen, setTabSelect, setSideBarVisible, addE } = this.props;
-    if (!addE) {
+    const { lefSelect, autoOpen, setTabSelect, setSideBarVisible } = this.props;
+    if (lefSelect !== 3) {
       setTabSelect(2); // 非用户选中侧边路径板块，选中点和边自动选中基本信息板块
     }
     if (autoOpen) {
@@ -644,12 +660,6 @@ class G6Graph extends Component {
     setTimeout(() => {
       this.changeGraphSize();
     }, 10);
-    // 两节点多条边的处理
-    const offsetDiff = 40;
-    const multiEdgeType = 'quadratic';
-    const singleEdgeType = 'line';
-    const loopEdgeType = 'loop';
-    G6.Util.processParallelEdges(newEdges, offsetDiff, multiEdgeType, singleEdgeType, loopEdgeType);
   };
 
   /**
@@ -987,28 +997,20 @@ class G6Graph extends Component {
         name: ''
       });
 
-      if (res?.res === null) {
-        message.warning(intl.get('searchGraph.expandFalse'));
-        return;
-      }
-
-      //报错
-      if (res?.res?.ErrorCode) {
-        EXPAND_ERROR.forEach(item => {
-          if (item.ErrorCode === res?.ErrorCode) {
-            return message.error([intl.get(item.intl)]);
-          }
-        });
-        return message.error(res?.res?.Description);
-      }
-
       if (res && res.res) {
         const { newNodes, openEdges } = getExpandHandleData(res.res, node, nodes, edges);
         this.addNodes(newNodes, openEdges);
       }
-    } catch (error) {
-      console.log(error);
-    }
+
+      //报错
+      if (res?.ErrorCode) {
+        EXPAND_ERROR.forEach(item => {
+          if (item.ErrorCode === res?.ErrorCode) {
+            message.error([intl.get(item.intl)]);
+          }
+        });
+      }
+    } catch (error) {}
   };
 
   // 关闭分析报告弹窗
@@ -1205,10 +1207,10 @@ class G6Graph extends Component {
         ) : null}
 
         {/* {loadingFull ? (
-           <div className="loading-full">
-             <LoadingOutlined className="icon" />
-           </div>
-         ) : null} */}
+          <div className="loading-full">
+            <LoadingOutlined className="icon" />
+          </div>
+        ) : null} */}
 
         <AnalysisModal
           visible={visible}

@@ -5,7 +5,7 @@ go.sum
 /.idea/*.xml
 .idea
 *.pyc
-hooks
-hooks/*
+/builder/hooks
+/builder/hooks/*
 lfs
 lfs/*

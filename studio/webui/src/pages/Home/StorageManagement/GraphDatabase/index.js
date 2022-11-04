@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { Table, Button, Select, message, Dropdown, Menu } from 'antd';
-import { LoadingOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { Table, Button, Select, message } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 
 import timeFormat from '@/utils/timeFormat/index.js';
@@ -43,8 +43,7 @@ class GraphDatabase extends Component {
     graphListId: 0, // 点击存储的id
     storageInfo: {}, // 保存编辑或查看的存储信息
     orderType: 'updated', // 排序的类型
-    order: 'DESC', // 排序 ASC 升序 DESC 降序
-    dbType: 'orientdb'
+    order: 'DESC' // 排序 ASC 升序 DESC 降序
   };
 
   searchInput = React.createRef();
@@ -84,18 +83,12 @@ class GraphDatabase extends Component {
   /**
    * 新建
    */
-  onCreate = async type => {
-    this.setDbType(type);
-
+  onCreate = async () => {
     try {
       const data = { page: 1, size: 10, orderField: 'updated', order: 'DESC', name: '' };
       const { res = {} } = await serviceStorageManagement.openSearchGet(data);
-      if (res?.data?.length > 0 || type === 'orientdb') {
-        return this.setState({ visible: true, storageInfo: {}, optionType: 'create' });
-      }
-      if (type === 'nebula') {
-        message.warning(intl.get('configSys.indexConfigurationFirst'));
-      }
+      if (res?.data?.length > 0) return this.setState({ visible: true, storageInfo: {}, optionType: 'create' });
+      message.warning(intl.get('configSys.indexConfigurationFirst'));
     } catch (error) {
       message.warning(intl.get('configSys.indexConfigurationFirst'));
     }
@@ -242,6 +235,7 @@ class GraphDatabase extends Component {
       fixed: 'right',
       width: 160,
       render: (text, record) => {
+        if (record.name === '内置OrientDB' || record.name === '内置Nebula') return '- -';
         return (
           <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => this.getStorage(record, 'edit')}>
@@ -256,12 +250,6 @@ class GraphDatabase extends Component {
     }
   ];
 
-  setDbType = type => {
-    this.setState({
-      dbType: type
-    });
-  };
-
   render() {
     const { checked, current, pageSize, total, selectedRowsList, tableData, loading, searchType, searchValue } =
       this.state;
@@ -269,33 +257,10 @@ class GraphDatabase extends Component {
     return (
       <div className="graph-database-management">
         <div className="ad-space-between">
-          {/* <Button type="primary" onClick={this.onCreate}>
+          <Button type="primary" onClick={this.onCreate}>
             <IconFont type="icon-Add" />
             {intl.get('datamanagement.create')}
-          </Button> */}
-
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item key="orientdb" onClick={() => this.onCreate('orientdb')}>
-                  <span>OrientDB</span>
-                </Menu.Item>
-
-                <Menu.Item key="nebula" onClick={() => this.onCreate('nebula')}>
-                  <span>Nebula Graph</span>
-                </Menu.Item>
-              </Menu>
-            }
-            trigger={['click']}
-            overlayClassName="user-table-overlay"
-          >
-            <Button type="primary">
-              <IconFont type="icon-Add" />
-              {intl.get('datamanagement.create')}
-              <CaretDownOutlined style={{ fontSize: 12 }} />
-            </Button>
-          </Dropdown>
-
+          </Button>
           <div className="ad-center">
             <span className="typeText">{intl.get('configSys.storageType')}</span>
             <Select className="storageSelect" defaultValue={'all'} onSelect={this.typeChange} title="">
@@ -347,7 +312,7 @@ class GraphDatabase extends Component {
                 ) : (
                   <div className="nodata-box">
                     <img src={noResult} alt="nodata" className="nodata-img"></img>
-                    <div className="nodata-text">{intl.get('global.noResult')}</div>
+                    <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
                   </div>
                 )
             }}
@@ -361,7 +326,6 @@ class GraphDatabase extends Component {
           closeModal={this.closeModal}
           getData={this.initData}
           initData={this.state.storageInfo}
-          dbType={this.state.dbType}
         />
         {/* 删除弹窗 */}
         <DeleteModal

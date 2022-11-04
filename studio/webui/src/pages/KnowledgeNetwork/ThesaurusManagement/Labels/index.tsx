@@ -1,6 +1,6 @@
-import React, { useEffect, memo, useRef, useState, useMemo } from 'react'
+import React, { useEffect, memo, useRef, useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons';
-import { Tag, Dropdown, message, Input } from 'antd';
+import { Tag, Dropdown, Menu, message, Input } from 'antd';
 import intl from 'react-intl-universal';
 
 import './style.less';
@@ -21,23 +21,31 @@ const Labels = (props: LabelsProps) => {
   const [error, setError] = useState(false);
   const [errortext, setErrorText] = useState('');
   const inputRef = useRef<any>(null);
+  const [filteredOptions, setfilteredOptions] = useState<any>([]);
   const [dropVisible, setDropVisible] = useState(false);
-  // 过滤下拉选项
-  const filteredOptions = useMemo(() => {
-    if (inputValue) {
-      const options = selectOption.filter(o => !tags?.includes(o)).filter((o: string) => {
-        return o.includes(inputValue)
-      });
-      return options;
-    }
-    return selectOption.filter(o => !tags?.includes(o));
-  }, [inputValue, selectOption, tags])
+  // let filteredOptions = selectOption.filter(o => !tags?.includes(o));
 
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
     }
   }, [inputVisible]);
+
+  useEffect(() => {
+    if (inputValue) {
+      const options = selectOption.filter(o => !tags?.includes(o)).filter((o: string) => {
+        return o.includes(inputValue)
+      });
+      setfilteredOptions(options);
+    } else {
+      setfilteredOptions(selectOption.filter(o => !tags?.includes(o)));
+    }
+  }, [inputValue])
+
+  useEffect(() => {
+    const options = selectOption.filter(o => !tags?.includes(o));
+    setfilteredOptions(options);
+  }, [selectOption, tags])
 
   /**
    * 删除标签
@@ -64,6 +72,7 @@ const Labels = (props: LabelsProps) => {
     if (!e) {
       setInputValue(undefined);
       setInputVisible(false);
+      setfilteredOptions(selectOption.filter(o => !tags?.includes(o)));
       return;
     }
 
@@ -98,6 +107,7 @@ const Labels = (props: LabelsProps) => {
   const changeInputValue = (e: any) => {
     setError(false);
     setDropVisible(true);
+    // if (!e) return;
     setInputValue(e.target.value);
   }
 
@@ -106,9 +116,8 @@ const Labels = (props: LabelsProps) => {
       {
         filteredOptions.map((item: string) => (
           <div
-            className="ad-pl-3 ad-pr-3 select-item ad-ellipsis"
+            className="ad-pl-3 ad-pr-3 select-item"
             key={item}
-            title={item}
             onClick={() => {
               inputRef.current?.focus();
               setInputValue(item);
@@ -189,7 +198,7 @@ const Labels = (props: LabelsProps) => {
       {
         (!inputVisible && tags?.length < 10) && (
           <Tag className="site-tag-plus" onClick={showInput}>
-            <PlusOutlined />{intl.get('ThesaurusManage.addlabel')}({tags?.length}/10)
+            <PlusOutlined /> {intl.get('ThesaurusManage.addlabel')}({tags?.length}/10)
           </Tag>
         )
       }

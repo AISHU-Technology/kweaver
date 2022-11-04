@@ -38,35 +38,22 @@ class knwDao:
     # 分页查询知识网络,knw_name为”“时查询全部
     @connect_execute_close_db
     def get_knw_by_name(self, knw_name, page, size, order, rule, connection, cursor):
-        sql = """
-            select  id, knw_name, knw_description, color, creation_time, update_time, identify_id,
-                case 
-                    when intelligence_score>0 then round(intelligence_score, 2)
-                    else IFNULL(intelligence_score, -1)
-                end intelligence_score,
-		        case   
-			        when intelligence_score<0 then 1
-			        when isnull(intelligence_score)=1 then 1
-			        else 0
-		        end  group_column 
-	        from knowledge_network
-        """
-
-        order = 'desc' if order == 'desc' else 'asc'
-
-        if knw_name:
-            knw_name = "'%" + knw_name + "%'"
-            sql += f""" where knw_name like {knw_name} """
-
-        if rule:
-            if rule == 'intelligence_score':
-                sql += f""" order by group_column asc, intelligence_score {order}, update_time desc """
-            else:
-                sql += f""" order by {rule} {order}"""
+        if order == "desc":
+            sql = """
+                SELECT *
+                FROM knowledge_network
+                where knw_name like {0}
+                order by {1} desc
+                limit {2}, {3};"""
         else:
-            sql += f"""  order by update_time desc """
-
-        sql += f""" limit {page * size},{size}"""
+            sql = """
+                SELECT *
+                FROM knowledge_network
+                where knw_name like {0}
+                order by {1} asc
+                limit {2}, {3};"""
+        knw_name = "'%" + knw_name + "%'"
+        sql = sql.format(knw_name, rule, page * size, size)
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df
@@ -381,19 +368,6 @@ class knwDao:
         knw_name = "'%" + knw_name + "%'"
         sql = sql.format(knw_name)
         print(sql)
-        Logger.log_info(sql)
-        df = pd.read_sql(sql, connection)
-        return df
-
-    @connect_execute_close_db
-    def get_graph_count(self, knw_id, knw_name, connection, cursor):
-        knw_name = "'%" + knw_name + "%'"
-        sql = f"""
-                SELECT kg.id FROM knowledge_graph kg left 
-                    join network_graph_relation ngr 
-                    on kg.id=ngr.graph_id 
-                    where kg.KG_name like {knw_name} and ngr.knw_id={knw_id}
-            """
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return df

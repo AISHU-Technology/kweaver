@@ -7,6 +7,7 @@ import (
 	"graph-engine/utils"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 type ExRelation struct {
@@ -59,9 +60,9 @@ func (er *ExRelation) ExploreRelation(conf *utils.KGConf, rids []string) error {
 		re := Relation{
 			Rid:   edge.GetEdgeName() + ":" + edge.GetSrcVertexID().String() + "->" + edge.GetDstVertexID().String(),
 			Class: edge.GetEdgeName(),
-			Name:  utils.TrimQuotationMarks(ePro["name"].String()),
-			In:    utils.TrimQuotationMarks(edge.GetDstVertexID().String()),
-			Out:   utils.TrimQuotationMarks(edge.GetSrcVertexID().String()),
+			Name:  strings.Trim(ePro["name"].String(), "\""),
+			In:    strings.Trim(edge.GetDstVertexID().String(), "\""),
+			Out:   strings.Trim(edge.GetSrcVertexID().String(), "\""),
 		}
 
 		var proKeys []string
@@ -72,7 +73,7 @@ func (er *ExRelation) ExploreRelation(conf *utils.KGConf, rids []string) error {
 		for _, key := range proKeys {
 			re.Properties = append(re.Properties, PropValue{
 				Name:     key,
-				Value:    utils.TrimQuotationMarks(ePro[key].String()),
+				Value:    strings.Trim(ePro[key].String(), "\""),
 				DataType: ePro[key].GetType(),
 			})
 		}

@@ -27,7 +27,7 @@ const NoDataBox = (props: { isShowEmpty: boolean }) => {
       ) : (
         <div className="noDataBox">
           <img src={knowledgeNoResult} alt="nodata" />
-          <span className="emptyText">{intl.get('global.noResult')}</span>
+          <span className="emptyText">{intl.get('memberManage.searchNull')}</span>
         </div>
       )}
     </React.Fragment>

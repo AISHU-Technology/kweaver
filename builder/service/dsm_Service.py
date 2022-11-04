@@ -80,7 +80,7 @@ class DsmService():
                 obj["res"]="Anyshare7 test connection success"
                 return ret_code, obj
             else:
-                if "JSONDecodeError" in obj_test["cause"]:
+                if "JSONDecodeError" in obj["cause"]:
                     obj_test["cause"] = "Please check parameter ds_address and ds_port, May not match!"
                 return ret_code, obj_test
 
@@ -469,7 +469,7 @@ class DsmService():
                 obj['message'] = "select fail"
                 return ret_code, obj
 
-            ret = dsm_dao.getall(int(page) - 1, int(size), order, knw_id, "knw")
+            ret = dsm_dao.getall(int(page)-1, int(size), order, knw_id)
             rec_dict = ret.to_dict('records')
 
             if page == "-1":

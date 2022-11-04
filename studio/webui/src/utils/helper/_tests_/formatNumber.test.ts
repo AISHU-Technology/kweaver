@@ -23,9 +23,9 @@ describe('formatNumber', () => {
 
   test('formatNumberWithSuffix', () => {
     expect(formatNumberWithSuffix(128)).toBe('128');
-    expect(formatNumberWithSuffix(8211)).toBe('8 千');
-    expect(formatNumberWithSuffix(128128)).toBe('13 万');
-    expect(formatNumberWithSuffix(28128128)).toBe('3 千万');
-    expect(formatNumberWithSuffix(128128128)).toBe('1 亿');
+    expect(formatNumberWithSuffix(8211)).toBe('8千');
+    expect(formatNumberWithSuffix(128128)).toBe('13万');
+    expect(formatNumberWithSuffix(28128128)).toBe('3千万');
+    expect(formatNumberWithSuffix(128128128)).toBe('1亿');
   });
 });

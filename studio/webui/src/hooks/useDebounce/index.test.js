@@ -4,6 +4,10 @@ import { useDebounce } from './index';
 describe('useDebounce', () => {
   jest.useFakeTimers();
 
+  it('should be defined', () => {
+    expect(useDebounce).toBeDefined();
+  });
+
   it('should debounce', () => {
     const test = jest.fn();
     const immediateTest = jest.fn();

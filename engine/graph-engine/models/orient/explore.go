@@ -1144,10 +1144,10 @@ func (e *ESearchRes) GetE(conf *utils.KGConf, eclass string, vrid string, inout 
 	// inout:查询进边或出边
 	var sql string
 	if conf.Version == 2 {
-		sql = `select expand(@this.exclude("in_*", "out_*")) from (select *, out().size() as out, in().size() as in from (select * from [%s]))`
+		sql = `select expand(@this.exclude("in_*", "out_*")) from (select *, out().size() as out, in().size() as in from (select * from V where @rid in [%s]))`
 		sql = fmt.Sprintf(sql, strings.Join(relatedVIDList, ","))
 	} else {
-		sql = `select expand(res) from (select @this:{!out_*, !in_*} as res from (select *, out().size() as out, in().size() as in from (select * from [%s])))`
+		sql = `select expand(res) from (select @this:{!out_*, !in_*} as res from (select *, out().size() as out, in().size() as in from (select * from V where @rid in [%s])))`
 		sql = fmt.Sprintf(sql, strings.Join(relatedVIDList, ","))
 	}
 
@@ -1292,13 +1292,7 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 	if eclass != "" {
 		eClassSql = "'" + eclass + "'"
 	}
-
-	var sqlPro string
-	if name == "" {
-		sqlPro = fmt.Sprintf(`select * from (select expand(%s(%s)) as res from V where @rid='%s') %s`, io, eClassSql, vrid, pageSql)
-	} else {
-		sqlPro = fmt.Sprintf(`select * from (select expand(%s(%s)) as res from V where @rid='%s') where name like '%s' %s`, io, eClassSql, vrid, "%"+name+"%", pageSql)
-	}
+	sqlPro := fmt.Sprintf(`select * from (select expand(%s(%s)) as res from V where @rid='%s') where name like '%s' %s`, io, eClassSql, vrid, "%"+name+"%", pageSql)
 
 	//logger.Info(sqlPro)
 	responsePro, errPro := GetGraphData(&operator, sqlPro)

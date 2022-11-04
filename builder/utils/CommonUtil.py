@@ -1,7 +1,5 @@
 # -*-coding:utf-8-*-
 import base64
-import socket
-
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_pkcsl_v1_5
 from configparser import ConfigParser
@@ -237,13 +235,12 @@ class Commonutil(object):
             obj['message'] = "test connection fail"
             return ret_code, obj
 
-    def getHostUrl(self):
-        studio_ip = socket.gethostbyname("kwhost")
-        hostUrl = f"http://{studio_ip}/"
+    def getHostUrl (self ):
+        hostUrl = request.host_url
         return hostUrl
 
     def updatemongo(self, db, collection, filter, source):
-        find_dict = {"name": filter["name"]}
+        find_dict = {"name":filter["name"]}
         if source == "type_sa":
             find_dict["type_nw"] = "true"
         ss = db[collection].find_one(find_dict)

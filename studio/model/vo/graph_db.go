@@ -21,7 +21,7 @@ type GraphDBVo struct {
 	Password string   `json:"password" binding:"required,lte=150"`
 	Ip       []string `json:"ip" binding:"ipList"`
 	Port     []string `json:"port" binding:"portList"`
-	OsId     int      `json:"osId" binding:"required_unless=Type orientdb,omitempty,gte=1"`
+	OsId     int      `json:"osId" binding:"required,gte=1"`
 }
 
 // GraphDBUpdateVo 根据id更新存储记录时的请求
@@ -33,12 +33,11 @@ type GraphDBUpdateVo struct {
 	Password string   `json:"password" binding:"required,lte=150"`
 	Ip       []string `json:"ip" binding:"ipList"`
 	Port     []string `json:"port" binding:"portList"`
-	OsId     int      `json:"osId" binding:"omitempty,gte=0"`
 }
 
 // ConnTestVo 测试配置是否正确时的请求
 type ConnTestVo struct {
-	Type     string   `json:"type" binding:"oneof=orientdb nebula"`
+	Type     string   `json:"type" binding:"oneof=orientdb nebula opensearch"`
 	User     string   `json:"user" binding:"required,lte=50"`
 	Password string   `json:"password" binding:"required,lte=150"`
 	Ip       []string `json:"ip" binding:"ipList"`
@@ -47,6 +46,6 @@ type ConnTestVo struct {
 
 type GraphListSearchCondition struct {
 	SearchCondition
-	Type string `form:"type"  json:"type" binding:"required,oneof=orientdb nebula all"`
+	Type string `form:"type"  json:"type" binding:"required,oneof=orientdb nebula opensearch all"`
 	Name string `form:"name" json:"name"`
 }

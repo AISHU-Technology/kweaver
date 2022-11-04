@@ -12,9 +12,9 @@ import 'moment/locale/zh-cn';
 import zhCN from 'antd/lib/locale/zh_CN';
 import enUS from 'antd/lib/locale/en_US';
 
+import '@/global.less';
 import 'antd/dist/antd.variable.min.css';
 import '@/assets/style/common.less';
-import '@/global.less';
 import '@/theme/overwriteAntd.less';
 
 Object.setPrototypeOf = setPrototypeOf;

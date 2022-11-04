@@ -137,13 +137,7 @@ class Log:
     def log_info(self, body):
         self.logger.info(str(body))
 
-    def info(self, body):
-        self.logger.info(str(body))
-
     def log_error(self, err):
-        self.logger.error(str(err))
-
-    def error(self, err):
         self.logger.error(str(err))
 
     def set_log_model(self, body, span_id="", trace_id="", attributes={}) -> LogModel:

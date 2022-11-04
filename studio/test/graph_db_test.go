@@ -58,7 +58,7 @@ func TestAddGraphDB(t *testing.T) {
 	lockMock.EXPECT().Unlock(gomock.Any()).Return(true)
 	global.LockOperator = lockMock
 
-	r := DoRequest(http.MethodPost, "/api/studio/v1/graphdb/add", &vo.GraphDBVo{Name: "`9348里分解hiifeh&---*(*(*()><》$", OsId: 1, Type: constant.Nebula, User: "root", Password: "nebula", Ip: []string{"10.4.32.45", "10.4.32.45", "10.4.32.45"}, Port: []string{"2232", "3223", "2232"}})
+	r := DoRequest(http.MethodPost, "/api/studio/v1/graphdb/add", &vo.GraphDBVo{Name: "`9348里分解hiifeh&---*(*(*()><》", OsId: 1, Type: constant.Nebula, User: "root", Password: "nebula", Ip: []string{"10.4.32.45", "10.4.32.45", "10.4.32.45"}, Port: []string{"2232", "3223", "2232"}})
 	assert.Equal(t, http.StatusOK, r.Code)
 	service.ConnTestHandlers[constant.Nebula] = nebulaTestHandler
 }
@@ -77,7 +77,7 @@ func TestUpdateGraphDB(t *testing.T) {
 	//case 1
 	var nebulaTestHandler = service.ConnTestHandlers[constant.Nebula]
 	service.ConnTestHandlers[constant.Nebula] = func(config *vo.ConnTestVo) {}
-	global.DB = NewDBMockCreator().Logger(Logger).Count(1).Count(0).Count(0).Count(0).Update(1, 1).Create()
+	global.DB = NewDBMockCreator().Logger(Logger).Count(1).Count(0).Count(0).Update(1, 1).Create()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -109,5 +109,5 @@ func TestTestGraphDBConfig(t *testing.T) {
 
 	r = DoRequest(http.MethodPost, "/api/studio/v1/graphdb/test", &vo.ConnTestVo{Type: constant.OpenSearch, User: "root", Password: "nebulad", Ip: []string{"10.4.68.144"}, Port: []string{"9669"}})
 	t.Log(r)
-	assert.Equal(t, http.StatusBadRequest, r.Code)
+	assert.Equal(t, http.StatusInternalServerError, r.Code)
 }

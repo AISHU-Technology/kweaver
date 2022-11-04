@@ -2,6 +2,7 @@
 import os
 import time
 from flask import Flask
+from blue import add_app
 from flask_apscheduler import APScheduler
 import sys
 import os
@@ -10,8 +11,6 @@ sys.path.append(os.path.abspath("../"))
 print("工作路基2:{}".format(os.getcwd()))
 from config import config
 from utils.ConnectUtil import redisConnect
-from onto_blue import add_app
-from task_blue import task_app
 
 
 class ConfigOtl(object):  # 创建配置，用类
@@ -106,10 +105,6 @@ def set_timezone():
 
 if __name__ == "__main__":
     from apscheduler.schedulers.background import BackgroundScheduler
-    import task
-
-    ctx = app.app_context()
-    ctx.push()
 
     # 设置时区
     set_timezone()
@@ -119,6 +114,5 @@ if __name__ == "__main__":
     scheduler.init_app(app)
     scheduler.start()
     app.register_blueprint(add_app)
-    app.register_blueprint(task_app)
     host_str = '0.0.0.0'
     app.run(host=host_str, port=6488, debug=True)

@@ -1,5 +1,4 @@
-import React from 'react';
-import type { ButtonProps, InputProps, SelectProps } from 'antd';
+import { ButtonProps, InputProps, SelectProps } from 'antd';
 
 type TooltipPlacement =
   | 'top'
@@ -15,18 +14,16 @@ type TooltipPlacement =
   | 'rightTop'
   | 'rightBottom';
 export type TextInterface = {
-  tip?: React.ReactNode;
+  tip?: string;
   intl?: string;
   level?: number;
+  style?: object;
   align?: string;
   strong?: number;
   noHeight?: boolean;
   tipPosition?: TooltipPlacement;
-  children?: React.ReactNode;
-  ellipsis?: boolean;
-  title?: string;
-  style?: React.CSSProperties;
   className?: string;
+  children?: string | object;
 };
 
 type SizeTypes = 'small' | 'middle' | 'large' | 'smallest' | undefined;

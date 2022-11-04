@@ -4,15 +4,12 @@ import { Button, message } from 'antd';
 
 import serviceWorkflow from '@/services/workflow';
 
-import { getParam } from '@/utils/handleFunction';
-
 import RuleList from './ruleList';
 import ClassInfo from './classInfo';
 import ClassMuster from './classMuster';
 import { updateProperty, newFirstHandleData, newHanleCheckData, newHandleDataToNext } from './assistFunction';
 
 import './style.less';
-import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 class NewKnowledgeMap extends Component {
   musterRef = createRef();
@@ -24,14 +21,13 @@ class NewKnowledgeMap extends Component {
     mapEntity: [],
     isLoadingNext: true, // 是否在加载数据
     fromRelation: false, // 用来定义nodeInfo是否显示返回按钮
-    relationInfo: {}, // 保存当前信息
-    ontoData: []
+    relationInfo: {} // 保存当前信息
   };
 
   componentDidUpdate(preProps) {
     if (preProps.current !== this.props.current && this.props.current === 4) {
       this.getDataForStepThree();
-      // this.getNodeGather();
+      this.getNodeGather();
     }
   }
 
@@ -75,21 +71,8 @@ class NewKnowledgeMap extends Component {
   /**
    * @description 从第三步后去点边数据
    */
-  getDataForStepThree = async () => {
-    const id = parseInt(getParam('id'));
-    try {
-      const mes = await serviceWorkflow.graphGet(id);
-      if (mes && mes.res.graph_otl.length !== 0) {
-        this.setState({
-          nodes: mes.res?.graph_otl[0]?.entity,
-          edges: mes.res?.graph_otl[0]?.edge,
-          ontoData: mes.res?.graph_otl
-        });
-        this.getNodeGather();
-      }
-    } catch (error) {
-      //
-    }
+  getDataForStepThree = () => {
+    this.setState({ nodes: this.props.ontoData[0].entity, edges: this.props.ontoData[0].edge });
   };
 
   /**
@@ -105,6 +88,7 @@ class NewKnowledgeMap extends Component {
   getNodeGather = async () => {
     const { graphId } = this.props;
     const res = await serviceWorkflow.graphGetInfoExt(graphId);
+
     if (res && res.res) {
       this.setState({ mapEntity: res.res }, () => {
         const { nodes, edges, mapEntity } = this.state;
@@ -163,7 +147,7 @@ class NewKnowledgeMap extends Component {
     };
 
     // 第三步修改属性更新,如果属性不存在了，就在校验参数里去掉
-    const { otls_map, relations_map } = updateProperty(this.state.ontoData, data);
+    const { otls_map, relations_map } = updateProperty(this.props.ontoData, data);
     data.graph_KMap[0].otls_map = otls_map;
     data.graph_KMap[0].relations_map = relations_map;
     const saveRelationMap = relations_map;
@@ -210,7 +194,6 @@ class NewKnowledgeMap extends Component {
 
     if (resData && resData.res && resData.res.includes('success')) {
       this.props.setKnowMapData(data.graph_process);
-
       this.props.next();
     }
   };

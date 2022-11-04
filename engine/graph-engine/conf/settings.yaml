@@ -14,11 +14,5 @@ algServer:
 builderServer:
   ip: kw-builder
   port: 6475
-mariadb:
-  host: rds-proton-rds-mariadb-cluster
-  port: 3320
-  user: user
-  password: password
-  database: database
 
 

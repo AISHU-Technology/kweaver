@@ -13,7 +13,7 @@ const ICON_ARRAY = [
   {
     id: 1,
     icon: <IconFont type="icon-graph" style={{ fontSize: 16, color: 'rgba(0, 0, 0, 0.85)' }} />,
-    intlText: 'global.domainGraph',
+    intlText: 'global.graph',
     url: '/knowledge/network'
   },
   {
@@ -33,7 +33,7 @@ const ICON_ARRAY = [
     icon: <IconFont type="icon-ciku" style={{ fontSize: 16, color: 'rgba(0, 0, 0, 0.85)' }} />,
     intlText: 'global.thesaurusManagement',
     url: '/knowledge/thesaurus'
-  }
+  },
 ];
 
 type SidebarType = {

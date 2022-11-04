@@ -1,12 +1,9 @@
 # -*-coding:utf-8-*-
-import time
-
 import requests
 from flask import Blueprint, request, jsonify, send_file, send_from_directory, make_response
 
 from werkzeug.utils import secure_filename
 from dao.graph_dao import graph_dao
-from dao.intelligence_dao import intelligence_dao
 from dao.otl_dao import otl_dao
 from dao.task_dao import task_dao
 from dao.other_dao import other_dao
@@ -23,20 +20,15 @@ import json
 import os
 from utils.log_info import Logger
 from service.task_Service import task_service
-from service.intelligence_service import intelligence_query_service
-from service.intelligence_service import intelligence_calculate_service
-
 from controller.knowledgeNetwork_controller import saveRelation, deleteRelation, updateKnw
 from common.errorcode.gview import Gview as Gview2
 from common.errorcode import codes
 import uuid
 from flasgger import swag_from
 import yaml
-
 graph_controller_app = Blueprint('graph_controller_app', __name__)
 
-GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH',
-                               os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
     swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r') as f:
@@ -45,7 +37,6 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_old_response.yaml'), 'r
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
     swagger_new_response = yaml.load(f, Loader=yaml.FullLoader)
     swagger_new_response.update(swagger_definitions)
-
 
 @graph_controller_app.route('', methods=["post"], strict_slashes=False)
 @swag_from(swagger_old_response)
@@ -128,11 +119,6 @@ def graph(grapid):
             if paramscode != 0:
                 return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                            message=message), CommonResponseStatus.BAD_REQUEST.value
-            # 如果已有本体，则报错
-            otl_id = eval(graph_dao.getbyid(grapid).iloc[0]['graph_otl'])
-            if len(otl_id) != 0:
-                return Gview.BuFailVreturn(cause='ontology already exists', code=CommonResponseStatus.SERVER_ERROR.value,
-                                           message='ontology already exists'), CommonResponseStatus.SERVER_ERROR.value
             #  流程中本体的部分 如果是新增本体 直接调用新增本体
             ret_code, ret_message, otl_id = otl_service.ontology_save(graph_process_dict)
             if ret_code == 200:  # 本体添加成功才更新图谱配置
@@ -517,9 +503,10 @@ def graphDeleteByIds():
             schema:
                 $ref: '#/definitions/builder/graph/graphDeleteByIds'
     '''
+    runs, noAuthority, noExist, normal = [], [], [], []
     mess = ""
     obj, obj_code = {}, 200
-    # get parameters
+    # 获取参数
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
         error_link = ''
@@ -529,7 +516,7 @@ def graphDeleteByIds():
         solution = 'Please check your parameter format'
         return Gview.TErrorreturn(code, desc, solution, detail,
                                   error_link), CommonResponseStatus.BAD_REQUEST.value
-    # parameter verification
+    # 参数校验
     check_res, message = graphCheckParameters.graphDelPar(params_json)
     if check_res != 0:
         Logger.log_error("parameters:%s invalid" % params_json)
@@ -549,66 +536,88 @@ def graphDeleteByIds():
         return Gview.BuFailVreturn(cause=ret_message["des"], code=code,
                                    message=ret_message["detail"]), CommonResponseStatus.SERVER_ERROR.value
     graphids = params_json["graphids"]
-    # get the graphs whose task status is running
+    # 统计运行状态的
     res_mess, res_code = graph_Service.getStatusByIds(graphids)
     if res_code != 0:
         return Gview.TErrorreturn(res_mess["code"], res_mess["message"], res_mess["solution"], res_mess["cause"],
                                   ""), CommonResponseStatus.SERVER_ERROR.value
-    # the list of graph ids whose task status is running
+    # 运行状态的graphId列表
     runs = res_mess["runs"]
 
-    # get the graph ids that not exist in the database
+    # 统计不存在的id
     res, code = graph_Service.getNoExistIds(graphids)
     if code != 0:
         return Gview.TErrorreturn(res["code"], res["message"], res["solution"], res["cause"],
                                   ""), CommonResponseStatus.SERVER_ERROR.value
     noExist = res["noExist"]
     normal = list(set(graphids) - set(noExist) - set(runs))
-    # delete one
+    # 单一删除
     if len(graphids) == 1:
-        # normal
+        # 正常
         if len(normal) == 1:
             mess += "删除成功：%s; " % ",".join(map(str, normal))
-            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
-        # not exist
+            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
+        # 不存在
         if len(noExist) != 0:
             mess += "%s 不存在; " % ",".join(map(str, noExist))
             mess += "删除成功：%s; " % ",".join(map(str, normal))
-            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
+            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
         if len(runs) == 1:
             obj, obj_code = {"Cause": "当前知识网络正在运行任务不可删除，请先停止或删除任务！",
                              "Code": CommonResponseStatus.SINGLE_RUNNING.value,
                              "message": "正在运行的网络不可以删除"}, CommonResponseStatus.SERVER_ERROR.value
-    # batch delete
+        if len(noAuthority) == 1:
+            obj, obj_code = {"Cause": "当前您的身份暂无该图谱相关权限！",
+                             "Code": CommonResponseStatus.SINGLE_PERMISSION.value,
+                             "message": "权限不足"}, CommonResponseStatus.SERVER_ERROR.value
+    # 批量删除
     else:
-        # all not exist
+        # 全部不存在
         if len(noExist) == len(graphids):
-            obj, obj_code = {"state": "success"}, CommonResponseStatus.SUCCESS.value
-        # all running
-        if len(runs) > 0 and len(normal) == 0:
+            # mess += "%s 不存在; " % ",".join(map(str, noExist))
+            obj, obj_code = {"state": "sucess"}, CommonResponseStatus.SUCCESS.value
+        # 全部运行
+        if len(runs) > 0 and len(noAuthority) == 0 and len(normal) == 0:
             obj, obj_code = {"Cause": "知识网络正在运行任务不可删除，请先停止或删除任务！！",
                              "Code": CommonResponseStatus.ALL_RUNNING.value,
                              "message": "正在运行的网络不可以删除"}, CommonResponseStatus.SERVER_ERROR.value
-        # some are running and some are normal
-        if len(runs) > 0 and len(normal) > 0:
+        # 运行 + 正常
+        if len(runs) > 0 and len(noAuthority) == 0 and len(normal) > 0:
             obj, obj_code = {"Cause": "部分知识网络正在运行任务不可删除，请先停止或删除任务！",
                              "Code": CommonResponseStatus.RUNNING_AND_NORMAL.value,
                              "message": "正在运行的网络不可以删除"}, CommonResponseStatus.SERVER_ERROR.value
-        # all normal
-        if len(runs) == 0 and len(normal) > 0:
-            obj, obj_code = json.dumps({"state": "success"}), CommonResponseStatus.SUCCESS.value
+        # 运行 + 权限
+        if len(runs) > 0 and len(noAuthority) > 0 and len(normal) == 0:
+            obj, obj_code = {"Cause": "当前知识网络存在异常。删除失败，请重试！！",
+                             "Code": CommonResponseStatus.RUNNING_AND_PERMISSION.value,
+                             "message": "正在运行的网络不可以删除, 权限不足无法删除"}, CommonResponseStatus.SERVER_ERROR.value
+        # 权限 + 正常
+        if len(runs) == 0 and len(noAuthority) > 0 and len(normal) > 0:
+            obj, obj_code = {"Cause": "部分知识网络相关权限，删除失败！",
+                             "Code": CommonResponseStatus.PERMISSION_AND_NORMAL.value,
+                             "message": "权限不足无法删除"}, CommonResponseStatus.SERVER_ERROR.value
+        # 全部无权限
+        if len(runs) == 0 and len(noAuthority) > 0 and len(normal) == 0:
+            obj, obj_code = {"Cause": "无知识网络相关权限，删除失败！",
+                             "Code": CommonResponseStatus.ALL_PERMISSION.value,
+                             "message": "权限不足无法删除"}, CommonResponseStatus.SERVER_ERROR.value
+        # 正常 + 运行 + 权限
+        if len(runs) > 0 and len(noAuthority) > 0 and len(normal) > 0:
+            obj, obj_code = {"Cause": "当前知识网络存在异常。删除失败，请重试！",
+                             "Code": CommonResponseStatus.RUNNING_AND_PERMISSION_AND_NORMAL.value,
+                             "message": "正在运行的网络不可以删除, 权限不足无法删除"}, CommonResponseStatus.SERVER_ERROR.value
+        # 正常
+        if len(runs) == 0 and len(noAuthority) == 0 and len(normal) > 0:
+            obj, obj_code = json.dumps({"state": "sucess"}), CommonResponseStatus.SUCCESS.value
     if len(normal) > 0:
-        # delete normal graphs
+        # 删除可以删除的
         res, code = graph_Service.deleteGraphByIds(normal)
         if code != 0:
             return Gview.TErrorreturn(res["code"], res["message"], res["solution"], res["cause"],
                                       ""), CommonResponseStatus.SERVER_ERROR.value
-        # delete the relationship between the knowledge network and the knowledge graphs
+        # 删除知识网络与图谱关系
         knw_id = params_json["knw_id"]
         deleteRelation(knw_id, normal)
-
-        # 更新知识网络的智商数据
-        intelligence_calculate_service.update_intelligence_info(normal)
 
     if len(noExist) != 0:
         mess += "%s 不存在; " % ",".join(map(str, noExist))
@@ -658,12 +667,6 @@ def graphDsList(graphid):
         message = "The parameter graph id type must be int!"
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-    # graph_id不存在
-    code, ret = graph_Service.checkById(graphid)
-    if code != 0:
-        return {"cause": ret["cause"],
-                "code": ret["code"],
-                "message": ret["message"]}, CommonResponseStatus.BAD_REQUEST.value
     # 获取参数
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
@@ -675,134 +678,12 @@ def graphDsList(graphid):
         Logger.log_error("parameters:%s invalid" % params_json)
         return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                    message=message), CommonResponseStatus.BAD_REQUEST.value
-    params_json["graph_id"] = graphid
+
     ret_code, ret_message = graph_Service.getDsAll(params_json)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     return ret_message, CommonResponseStatus.SUCCESS.value
-
-
-@graph_controller_app.route('/getgraphbygns', methods=["POST"], strict_slashes=False)
-@swag_from(swagger_new_response)
-def get_graph_by_gns():
-    """
-    get knowledge graph information by gns
-    get knowledge graph information by gns
-    ---
-    parameters:
-            -   in: 'body'
-                name: 'body'
-                description: 'request body'
-                required: true
-                schema:
-                    $ref: '#/definitions/builder/graph/getGraphByGns'
-    """
-    # default parameters
-    arg_extract_model = "Anysharedocumentmodel"
-    arg_data_source = "as7"
-    try:
-        # get parameters
-        param_code, params_json, param_message = commonutil.getMethodParam()
-        # get parameters error
-        if param_code != 0:
-            res = {
-                "ErrorCode": "Builder.GraphController.GetGraphByGns.ParamsError",
-                "Description": param_message,
-                "Solution": "parameter error, please check the input parameters carefully",
-                "ErrorDetails": "get parameter error",
-                "ErrorLink": ""
-            }
-            return jsonify(res), 400
-        # check parameters
-        ret_status, message = graphCheckParameters.getidbygns_params(params_json)
-        if ret_status != 0:
-            res = {
-                "ErrorCode": "Builder.GraphController.GetGraphByGns.ParamsError",
-                "Description": "params error",
-                "Solution": "Please check the input parameters carefully",
-                "ErrorDetails": message,
-                "ErrorLink": ""
-            }
-            return jsonify(res), 400
-        arg_gns_list = params_json.get("gns")
-
-        # all graph information
-        ret_code, ret_obj = graph_Service.getallgraph()
-        if ret_code != 200:
-            res = {
-                "ErrorCode": "Builder.GraphController.GetGraphByGns.GetGraphError",
-                "Description": ret_obj["cause"],
-                "Solution": "",
-                "ErrorDetails": ret_obj["message"],
-                "ErrorLink": ""
-            }
-            return jsonify(res), ret_code
-        graphs = ret_obj.get("res", {}).get("df", {})
-        if len(graphs) == 0:
-            res = {
-                "ErrorCode": "Builder.GraphController.GetGraphByGns.GraphListEmpty",
-                "Description": "graph list is empty",
-                "Solution": "No graphs now, please create the graph first",
-                "ErrorDetails": "graph list is empty",
-                "ErrorLink": ""
-            }
-            return jsonify(res), 500
-
-        results = {}
-        for arg_gns in arg_gns_list:
-            result = getgraph_onegns(arg_gns, graphs, arg_extract_model, arg_data_source)
-            if arg_gns not in results:
-                results[arg_gns] = result
-        res = {"res": results}
-        return jsonify(res), 200
-    except Exception as e:
-        res = {
-            "ErrorCode": "Builder.GraphController.GetGraphByGns.InternalError",
-            "Description": "internal error",
-            "Solution": "Please contact the administrator",
-            "ErrorDetails": repr(e),
-            "ErrorLink": ""
-        }
-        return jsonify(res), 500
-
-
-def getgraph_onegns(arg_gns, graph_ids, arg_extract_model, arg_data_source):
-    result = []
-    for graph in graph_ids:
-        graph_id = graph.get("id")
-        graph_name = graph.get("graph_name")
-        graph_InfoExts = graph.get("graph_InfoExt", [])
-        for graph_InfoExt in eval(graph_InfoExts):
-            extract_model = graph_InfoExt.get("extract_model", "")
-            data_source = graph_InfoExt.get("data_source", "")
-            if extract_model != arg_extract_model or data_source != arg_data_source:
-                continue
-            gns = graph_InfoExt.get("file_source", "")
-            if is_match(arg_gns, gns):
-                result.append({"id": graph_id, "name": graph_name})
-                break
-    return result
-
-
-def is_match(gns1, gns2):
-    """
-    gns1：input gns
-    gns2：match gns
-    matching success：
-    1. gns1 == gns2
-    2. gns 1 is a subdirectory of gns 2
-    3. gns 1 is the parent directory of gns 2
-    """
-    gns_list1 = gns1.replace("gns://", "").split("/")
-    gns_list2 = gns2.replace("gns://", "").split("/")
-    len_gns1 = len(gns_list1)
-    len_gns2 = len(gns_list2)
-    if ((gns1 == gns2) or
-            (len_gns1 > len_gns2 and gns_list1[:len_gns2] == gns_list2) or
-            (len_gns1 < len_gns2 and gns_list2[:len_gns1] == gns_list1)):
-        return True
-    return False
 
 
 @graph_controller_app.route("/adv-search-config/kglist-conf/<net_id>", methods=["GET"], strict_slashes=False)
@@ -1011,8 +892,8 @@ def get_graph_info_basic():
         if not graph_id or not graph_id.isdigit():
             code = codes.Builder_GraphController_GetGraphInfoBasic_ParamError
             return Gview2.TErrorreturn(code,
-                                       arg='graph_id',
-                                       description='请确保graph_id存在，且graph_id应为数字'), 400
+                                      arg='graph_id',
+                                      description='请确保graph_id存在，且graph_id应为数字'), 400
         # is_all
         if is_all.lower() == 'true':
             is_all = True
@@ -1021,8 +902,8 @@ def get_graph_info_basic():
         else:
             code = codes.Builder_GraphController_GetGraphInfoBasic_ParamError
             return Gview2.TErrorreturn(code,
-                                       arg='is_all',
-                                       description='is_all应为“True”或“False”'), 400
+                                      arg='is_all',
+                                      description='is_all应为“True”或“False”'), 400
         # key参数校验
         if key:
             try:
@@ -1045,7 +926,6 @@ def get_graph_info_basic():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
-
 
 @graph_controller_app.route('/info/onto', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
@@ -1078,7 +958,6 @@ def get_graph_info_onto():
                                    cause=str(e),
                                    description=str(e)), 400
 
-
 @graph_controller_app.route('/info/count', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def get_graph_info_count():
@@ -1109,7 +988,6 @@ def get_graph_info_count():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
-
 
 @graph_controller_app.route('/info/detail', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
@@ -1168,56 +1046,3 @@ def get_graph_info_detail():
         return Gview2.TErrorreturn(code,
                                    cause=str(e),
                                    description=str(e)), 400
-
-
-@graph_controller_app.route('/intelligence/task', methods=['post'], strict_slashes=False)
-@swag_from(swagger_new_response)
-def intelligence_calculate_task():
-    '''
-    post knowledge graph intelligence calculate task
-    ---
-    parameters:
-        -   name: graph_id
-            in: body
-            description: graph id
-            required: true
-            type: integer
-            example: 13
-    '''
-
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    if param_code < 0 or 'graph_id' not in params_json:
-        code = codes.Builder_GraphController_IntelligenceCalculateTask_ParamError
-        return Gview2.error_return(code, arg='graph_id'), 400
-
-    graph_id = params_json['graph_id']
-
-    # send async task, because large graph will cause a very long time query
-    code, resp = intelligence_calculate_service.send_task(graph_id)
-    if code != codes.successHttpCode:
-        return resp, 500
-    return Gview2.json_return(resp['res']), 200
-
-
-@graph_controller_app.route('/intelligence/<graph_id>', methods=['get'], strict_slashes=False)
-@swag_from(swagger_new_response)
-def intelligence_stats(graph_id):
-    '''
-    query knowledge graph intelligence calculate result
-    ---
-    parameters:
-        -   name: graph_id
-            in: path
-            required: true
-            description: graph id
-            type: integer
-    '''
-    if not intelligence_query_service.check_uint(graph_id):
-        code = codes.Builder_GraphController_IntelligenceStats_ParamError
-        return Gview2.error_return(code, arg='graph_id'), 400
-
-    res_code, result = intelligence_query_service.query_graph_intelligence(graph_id)
-    if res_code != codes.successCode:
-        return result, 500
-
-    return Gview2.json_return(result), 200

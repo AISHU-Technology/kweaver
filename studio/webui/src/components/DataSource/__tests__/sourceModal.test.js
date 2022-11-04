@@ -18,14 +18,14 @@ const formInfo = {
   data_source: 'rabbitmq',
   ds_address: '10.4.109.191',
   ds_auth: '11',
-  ds_password: '123456',
+  ds_password: 'anydata123',
   ds_path: 'test',
   ds_port: 5672,
   ds_user: 'admin',
   dsname: 'test001111',
   extract_type: 'standardExtraction',
   id: 1,
-  json_schema: '{"name": "user"}',
+  json_schema: '{"name": "xiaoming"}',
   queue: 'test1',
   update_time: '2021-12-27 09:38:22',
   update_user: '853ba1db-4e37-11eb-a57d-0242ac190002',
@@ -43,7 +43,7 @@ describe('UI is render', () => {
     expect(wrapper.find('.modal-title').text()).toBe('新建数据源');
     expect(wrapper.find('.form-row').at(1).find('.ant-select-selection-item').text()).toBe('MySQL');
 
-    // change RabbitMQ
+    // 切换as
     act(() => {
       wrapper.find('.form-row').at(1).find('.ant-select-selector').simulate('mousedown');
     });
@@ -53,7 +53,7 @@ describe('UI is render', () => {
       wrapper.find('.form-row').at(1).find('.ant-select-item-option').at(2).simulate('click');
     });
     await sleep();
-    expect(wrapper.find('.form-row').at(1).find('.ant-select-selection-item').text()).toBe('RabbitMQ');
+    expect(wrapper.find('.form-row').at(1).find('.ant-select-selection-item').text()).toBe('AnyShare 7-结构化');
   });
 
   // 编辑

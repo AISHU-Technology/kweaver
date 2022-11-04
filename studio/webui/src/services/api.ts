@@ -36,7 +36,6 @@ const API = {
   dataSourceDelete: `${baseBuilder}/ds/delbydsids`,
   getDsByName: `${baseBuilder}/ds/searchbyname`,
   asAuthGet: `${baseBuilder}/ds/Auth`,
-  asAuthPost: `${baseBuilder}/ds/gettoken`,
 
   // explore
   analysisReportGet: `${baseEngine}/analysis`,
@@ -132,12 +131,7 @@ const API = {
   thesaurusDeleteWords: `${baseBuilder}/lexicon/delete_words`,
   downloadTemplate: `${baseBuilder}/lexicon/template`,
   wordCloud: `${baseBuilder}/lexicon/word_cloud`,
-  searchWordCloud: `${baseBuilder}/lexicon/word_cloud_search`,
-
-  // intelligence
-  intelligenceCalculate: `${baseBuilder}/graph/intelligence/task`,
-  intelligenceGetByKnw: `${baseBuilder}/knw/intelligence`,
-  intelligenceGetByGraph: `${baseBuilder}/graph/intelligence`
+  searchWordCloud: `${baseBuilder}/lexicon/word_cloud_search`
 };
 
 export { API };

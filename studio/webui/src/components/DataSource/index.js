@@ -98,10 +98,11 @@ const DataSource = props => {
   }, [graphId]);
 
   useEffect(() => {
-    if ((dataSourceData && dataSourceData.length > 0) || usedID?.length > 0) {
-      const mqSource = dataSourceData?.find(d => d.data_source === MQ);
-      const keys = dataSourceData?.map(d => d.id);
+    if (dataSourceData && dataSourceData.length > 0) {
+      const mqSource = dataSourceData.find(d => d.data_source === MQ);
+      const keys = dataSourceData.map(d => d.id);
       const mergeKeys = [...new Set([...keys, ...usedID])];
+
       setLockMqId(mqSource ? mqSource.id : -1);
       setSelectedRowsList(dataSourceData);
       setSelectedRowKeys(mergeKeys);
@@ -559,7 +560,7 @@ const DataSource = props => {
             ) : (
               <div className="no-data-box">
                 <img src={noResult} alt="nodata" className="nodata-img"></img>
-                <div className="nodata-text">{intl.get('global.noResult')}</div>
+                <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
               </div>
             )
         }}

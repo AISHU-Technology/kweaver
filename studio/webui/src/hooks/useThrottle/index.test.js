@@ -4,6 +4,10 @@ import { useThrottle } from './index';
 describe('useThrottle', () => {
   jest.useFakeTimers();
 
+  it('should be defined', () => {
+    expect(useThrottle).toBeDefined();
+  });
+
   it('should throttle', () => {
     const test = jest.fn();
     const arg1 = '第一次调用';

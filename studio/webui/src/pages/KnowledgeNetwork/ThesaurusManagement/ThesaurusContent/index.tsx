@@ -1,12 +1,10 @@
-import React, { useEffect, useState, memo, useRef } from 'react';
+import React, { useEffect, useState, memo, useRef } from 'react'
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import { Table, message, Tooltip, Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Table, message, Tooltip } from 'antd';
 
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
-import AdSpin from '@/components/AdSpin';
 import { numToThousand } from '@/utils/handleFunction';
 import SearchInput from '@/components/SearchInput';
 import serverThesaurus from '@/services/thesaurus';
@@ -21,7 +19,7 @@ import kongImage from '@/assets/images/kong.svg';
 import noResultImg from '@/assets/images/noResult.svg';
 import ErrorImage from '@/assets/images/ImportError.svg';
 
-import './style.less';
+import './style.less'
 
 export interface ThesaurusContentProps {
   selectedThesaurus: any;
@@ -31,7 +29,7 @@ export interface ThesaurusContentProps {
 const SIZE = 50;
 const ERROR_CODE: Record<string, string> = {
   'Builder.LexiconController.SearchLexiconWord.LexiconIdNotExist': 'ThesaurusManage.nullThesaurusId'
-};
+}
 const ThesaurusContent = (props: any) => {
   const { selectedThesaurus, getThesaurusById, knowledge, getThesaurusList } = props;
   const searchInput = useRef<any>(); // 绑定搜索框
@@ -43,7 +41,7 @@ const ThesaurusContent = (props: any) => {
   const [addWordsVisible, setAddWordsVisible] = useState<boolean>(false); // 编辑新加词汇弹窗
   const [delWordsVisible, setDelWordsVisible] = useState<boolean>(false); // 删除词汇弹窗
   const [opWordsType, setOpWordsType] = useState<string>('add');
-  const [searchWordsValue, setSearchWordsValue] = useState<string>(''); // 控制搜索的值
+  const [searchWordsValue, setSearchWordsValue] = useState<string>('');// 控制搜索的值
   const [deleteType, setDeleteType] = useState<string>('one'); // 删除单个或多个
   const [deleteValue, setDeleteValue] = useState<Array<any>>([]); // 删除内容
   const [importModalVisible, setimportModalVisible] = useState<boolean>(false); // 导入弹窗
@@ -73,7 +71,7 @@ const ThesaurusContent = (props: any) => {
     setEditRecord(record);
     setOpWordsType('edit');
     setAddWordsVisible(true);
-  };
+  }
 
   /**
    * 初始化表头和数据
@@ -82,7 +80,7 @@ const ThesaurusContent = (props: any) => {
     if (_.isEmpty(selectedThesaurus?.columns)) {
       setShowData([]);
       setTotal(0);
-      setColumns([]);
+      setColumns([])
       return;
     }
     const arr = selectedThesaurus?.columns;
@@ -93,18 +91,16 @@ const ThesaurusContent = (props: any) => {
       width: 135,
       render: (_: any, record: { key: React.Key }) => {
         return (
-          <div>
-            <span onClick={() => editWords(record)} className="edit-words-text">
-              {intl.get('datamanagement.edit')}
-            </span>
-            <span
-              onClick={() => {
-                if (selectedThesaurus?.status === 'running') {
-                  message.warning(intl.get('ThesaurusManage.editwordsError'));
-                  return;
-                }
-                openDeleteModal(record, 'one');
-              }}
+          <div >
+            <span onClick={() => editWords(record)} className="edit-words-text">{intl.get('datamanagement.edit')}</span>
+            <span onClick={() => {
+              if (selectedThesaurus?.status === 'running') {
+                message.warning(intl.get('ThesaurusManage.editwordsError'));
+                return;
+              }
+              openDeleteModal(record, 'one')
+            }
+            }
               className="delete-words-text"
             >
               {intl.get('datamanagement.delete')}
@@ -112,31 +108,30 @@ const ThesaurusContent = (props: any) => {
           </div>
         );
       }
-    };
-    let col: any[] = [];
+    }
+    let col: any[] = [op];
     arr.forEach((item: any) => {
       const obj = {
         title: `${item}`,
         dataIndex: `${item}`,
         key: `${item}`,
         ellipsis: true
-      };
-      col = [...col, obj as any];
+      }
+      col = [obj as any, ...col]
     });
-    col = [...col, op];
 
     setTotal(selectedThesaurus?.count);
     setShowData(selectedThesaurus?.word_info);
     setColumns(col);
-    return col;
-  };
+    return col
+  }
 
   /**
    * 表格选择
    */
   const rowSelection = {
     selectedRowKeys,
-    onChange: onSelectChange
+    onChange: onSelectChange,
   };
 
   /**
@@ -151,13 +146,13 @@ const ThesaurusContent = (props: any) => {
       selectedRowKeys.forEach(item => {
         const obj = JSON.parse(item as string);
 
-        value = [...value, obj];
-      });
-      setDeleteValue(value);
+        value = [...value, obj]
+      })
+      setDeleteValue(value)
     }
     setDeleteType(type);
     setDelWordsVisible(true);
-  };
+  }
 
   /**
    * 搜索词汇
@@ -185,7 +180,7 @@ const ThesaurusContent = (props: any) => {
     setSearchWordsValue(value);
     setTotal(res?.count);
     setShowData(res?.df);
-  };
+  }
 
   /**
    * 换页
@@ -198,7 +193,7 @@ const ThesaurusContent = (props: any) => {
     setpage(page);
 
     getThesaurusById(selectedThesaurus, page);
-  };
+  }
 
   // 关闭删除词汇弹窗
   const closeDelModal = () => setDelWordsVisible(false);
@@ -220,27 +215,14 @@ const ThesaurusContent = (props: any) => {
           getThesaurusList={getThesaurusList}
         />
         <div className="ad-space-between wordsList-op" id="wordsList-op">
-          {_.isEmpty(selectedThesaurus?.columns) ? (
-            <div></div>
-          ) : (
-            <div className="ad-align-center">
-              {selectedRowKeys.length > 0 && (
-                <Format.Button className="ad-mr-4 delete-btn" onClick={() => openDeleteModal('', 'more')}>
-                  <IconFont type="icon-lajitong" />
-                  {intl.get('datamanagement.delete')}
-                </Format.Button>
-              )}
-              <div className="ad-c-primary ad-mr-1">{numToThousand(total)}</div>
-              {intl.get('ThesaurusManage.selectedWords').split('|')[0]}
-              {selectedRowKeys.length > 0 && (
-                <div>
-                  {intl.get('ThesaurusManage.selectedWords').split('|')[1]}
-                  <span className="ad-ml-1 ad-mr-1 ad-c-primary">{selectedRowKeys.length}</span>
-                  {intl.get('ThesaurusManage.selectedWords').split('|')[2]}
-                </div>
-              )}
-            </div>
-          )}
+          {_.isEmpty(selectedThesaurus?.columns) ? <div></div> : <div className="ad-align-center">
+            {selectedRowKeys.length > 0 && <Format.Button className="ad-mr-4 delete-btn" onClick={() => openDeleteModal('', 'more')}>
+              <IconFont type="icon-lajitong" />
+              {intl.get('datamanagement.delete')}
+            </Format.Button>}
+            <div className="ad-c-primary ad-mr-1">{numToThousand(total)}</div>{intl.get('ThesaurusManage.selectedWords').split('|')[0]}
+            {selectedRowKeys.length > 0 && <div>{intl.get('ThesaurusManage.selectedWords').split('|')[1]}<span className="ad-ml-1 ad-mr-1 ad-c-primary">{selectedRowKeys.length}</span>{intl.get('ThesaurusManage.selectedWords').split('|')[2]}</div>}
+          </div>}
           <div className="ad-align-center">
             <SearchInput
               placeholder={intl.get('ThesaurusManage.searchWord')}
@@ -250,23 +232,16 @@ const ThesaurusContent = (props: any) => {
               onClear={(e: any) => searchWords(e, true)}
             />
             <Tooltip title={intl.get('ThesaurusManage.infomation')} placement="bottomLeft" trigger={['hover']}>
-              <div
-                className={showInfo ? 'selected btn-height' : 'btn-height'}
-                onClick={() => {
-                  setShowInfo(!showInfo);
-                }}
-              >
+              <div className={showInfo ? 'selected btn-height' : 'btn-height'} onClick={() => { setShowInfo(!showInfo) }}>
                 <IconFont type="icon-cebianlan" />
               </div>
             </Tooltip>
             <Tooltip title={intl.get('global.refresh')} placement="bottomLeft" trigger={['hover']}>
-              <div
-                className="btn-height ad-ml-4"
+              <div className="btn-height ad-ml-4"
                 onClick={() => {
                   setpage(1);
                   getThesaurusById(selectedThesaurus, 1, true);
-                }}
-              >
+                }}>
                 <IconFont type="icon-tongyishuaxin" />
               </div>
             </Tooltip>
@@ -274,7 +249,7 @@ const ThesaurusContent = (props: any) => {
         </div>
         <div className={showInfo ? 'ad-flex' : ''}>
           <div className={showInfo ? 'wordsList-table small-table' : 'wordsList-table'}>
-            {!_.isEmpty(selectedThesaurus?.columns) ? (
+            {!_.isEmpty(selectedThesaurus?.columns) ?
               <Table
                 rowSelection={rowSelection}
                 pagination={{
@@ -292,80 +267,62 @@ const ThesaurusContent = (props: any) => {
                   emptyText: searchWordsValue ? (
                     <div className="noWords-box">
                       <img src={noResultImg} alt="nodata" className="nodata-img"></img>
-                      <div className="noWords-text">{intl.get('global.noResult')}</div>
+                      <div className="noWords-text">{intl.get('memberManage.searchNull')}</div>
                     </div>
-                  ) : (
-                    <div className="noWords-box">
-                      {selectedThesaurus?.status === 'success' ? (
-                        <>
-                          <img src={kongImage} alt="nodata" className="nodata-img" />
-                          <div className="noWords-text">
-                            <p className="ad-c-text">{intl.get('ThesaurusManage.noWord')}</p>
-                            <p className="ad-c-text">
-                              {intl.get('ThesaurusManage.emptyWord').split('|')[0]}
-                              <span
-                                className="ad-c-primary ad-mr-1 ad-ml-1 cursorStyle"
-                                onClick={() => setimportModalVisible(true)}
-                              >
-                                {intl.get('ThesaurusManage.emptyWord').split('|')[1]}
-                              </span>
-                              {intl.get('ThesaurusManage.emptyWord').split('|')[2]}
-                            </p>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-                          <p className="ad-c-text ad-mt-3">{intl.get('ThesaurusManage.importing')}</p>
-                        </>
-                      )}
+                  ) : <div className="noWords-box">
+                    <img src={kongImage} alt="nodata" className="nodata-img" />
+                    <div className="noWords-text">
+                      <p className="ad-c-text">{intl.get('ThesaurusManage.noWord')}</p>
+                      {selectedThesaurus?.status === 'success' ?
+                        <p>
+                          {intl.get('ThesaurusManage.emptyWord').split('|')[0]}
+                          <span className="ad-c-primary ad-mr-1 ad-ml-1 cursorStyle" onClick={() => setimportModalVisible(true)}>
+                            {intl.get('ThesaurusManage.emptyWord').split('|')[1]}
+                          </span>
+                          {intl.get('ThesaurusManage.emptyWord').split('|')[2]}
+                        </p> : <p className="ad-c-text">{intl.get('ThesaurusManage.importing')}</p>
+                      }
                     </div>
-                  )
+                  </div>
                 }}
                 scroll={{ y: 590 }}
-              />
-            ) : selectedThesaurus?.status === 'running' ? (
-              <div className="noWords-box">
-                <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
-
-                <div className="noWords-text">
-                  <p className="ad-mt-3">{intl.get('ThesaurusManage.importing')}</p>
+              /> :
+              selectedThesaurus?.status === 'running' ?
+                <div className="noWords-box">
+                  <img src={kongImage} alt="nodata" className="nodata-img"></img>
+                  <div className="noWords-text">
+                    <p>{intl.get('ThesaurusManage.noWord')}</p>
+                    <p>
+                      {intl.get('ThesaurusManage.importing')}
+                    </p>
+                  </div>
+                </div> :
+                <div className="noWords-box">
+                  <img src={selectedThesaurus?.status === 'success' ? kongImage : ErrorImage} alt="nodata" className="nodata-img"></img>
+                  <div className="noWords-text">
+                    <p>
+                      {selectedThesaurus?.status === 'success' ?
+                        intl.get('ThesaurusManage.noWord') : intl.get('ThesaurusManage.importError')
+                      }
+                    </p>
+                    <p>
+                      {intl.get('ThesaurusManage.emptyWord').split('|')[0]}
+                      <span className="ad-c-primary ad-mr-1 ad-ml-1 cursorStyle" onClick={() => setimportModalVisible(true)}>
+                        {intl.get('ThesaurusManage.emptyWord').split('|')[1]}
+                      </span>
+                      {selectedThesaurus?.status === 'success' ?
+                        intl.get('ThesaurusManage.emptyWord').split('|')[2] : intl.get('ThesaurusManage.importAgain')
+                      }
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="noWords-box">
-                <img
-                  src={selectedThesaurus?.status === 'success' ? kongImage : ErrorImage}
-                  alt="nodata"
-                  className="nodata-img"
-                ></img>
-                <div className="noWords-text">
-                  <p>
-                    {selectedThesaurus?.status === 'success'
-                      ? intl.get('ThesaurusManage.noWord')
-                      : intl.get('ThesaurusManage.importError')}
-                  </p>
-                  <p>
-                    {intl.get('ThesaurusManage.emptyWord').split('|')[0]}
-                    <span
-                      className="ad-c-primary ad-mr-1 ad-ml-1 cursorStyle"
-                      onClick={() => setimportModalVisible(true)}
-                    >
-                      {intl.get('ThesaurusManage.emptyWord').split('|')[1]}
-                    </span>
-                    {selectedThesaurus?.status === 'success'
-                      ? intl.get('ThesaurusManage.emptyWord').split('|')[2]
-                      : intl.get('ThesaurusManage.importAgain')}
-                  </p>
-                </div>
-              </div>
-            )}
+            }
           </div>
-          {showInfo ? (
+          {showInfo ?
             <div className="thesaurus-info-box">
               <ThesaurusInfo columns={columns} selectedThesaurus={selectedThesaurus} />
-            </div>
-          ) : null}
+            </div> : null
+          }
         </div>
       </div>
 
@@ -400,7 +357,7 @@ const ThesaurusContent = (props: any) => {
         selectedThesaurus={selectedThesaurus}
         getThesaurusById={getThesaurusById}
       />
-    </div>
-  );
-};
-export default memo(ThesaurusContent);
+    </div >
+  )
+}
+export default (memo)(ThesaurusContent);

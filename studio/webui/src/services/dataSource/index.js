@@ -77,11 +77,6 @@ const asAuthGet = async (ip, port, key) =>
     ds_auth: key
   });
 
-/**
- * 将授权信息保存到后端
- */
-const asAuthPost = async body => await apiService.axiosPost(API.asAuthPost, body);
-
 export default {
   sourceConnectTest,
   dataSourcePost,
@@ -91,6 +86,5 @@ export default {
   dataSourcePut,
   dataSourceDelete,
   getDsByName,
-  asAuthGet,
-  asAuthPost
+  asAuthGet
 };

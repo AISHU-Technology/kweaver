@@ -277,10 +277,9 @@ button[ant-click-animating-without-extra-node]:after {
 
 // 大数据量的受控分页器
 .controlled-pagination {
-
   // 搜索时隐藏最后页码
   &.infinite {
-    .ant-pagination-jump-next+.ant-pagination-item {
+    .ant-pagination-jump-next + .ant-pagination-item {
       display: none;
     }
   }
@@ -424,8 +423,4 @@ button[ant-click-animating-without-extra-node]:after {
 .ant-modal-title {
   color: var(--ad-heading-color);
   font-weight: 600;
-}
-
-.ant-message .ant-message-notice .ant-message-notice-content {
-  max-width: 800px !important;
 }

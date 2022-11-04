@@ -299,7 +299,7 @@ func DelAdvSearchConf(engine *sql2.DB, confIDs []int) error {
 	return nil
 }
 
-// 新增和修改搜索配置
+// 新增搜索配置
 type ConfContent struct {
 	MaxDepth     int          `json:"max_depth"`
 	SearchRange  SearchRange  `json:"search_range" binding:"required,dive"`
@@ -313,10 +313,10 @@ type DisplayRange struct {
 	Vertexes RangeVertexes `json:"vertexes" binding:"required,dive"`
 }
 type RangeVertexes struct {
-	Open []string `json:"open" binding:"required"`
+	Open []string `json:"open" binding:"omitempty"`
 }
 type RangeEdges struct {
-	Open []string `json:"open" binding:"required"`
+	Open []string `json:"open" binding:"omitempty"`
 }
 
 func AddAdvSearchConf(confName, _type, confDesc string, kgid int, confContent ConfContent) (confID int, err error) {
@@ -788,28 +788,4 @@ func GetKGInfo(kgid int) (kginfo *KGInfo, err error) {
 	}
 
 	return kginfo, nil
-}
-
-// 获取有高级搜索配置的图谱id
-func GetConfKGID() (kgids []int, err error) {
-	engine := utils.GetConnect()
-	sql := "select distinct knowledge_graph.KG_config_id as kg_id from knowledge_graph " +
-		"inner join search_config on knowledge_graph.KG_config_id = search_config.kg_id"
-
-	kgID, err := engine.Query(sql)
-	if err != nil {
-		return nil, utils.ErrInfo(utils.ErrInternalErr, err)
-	}
-
-	defer kgID.Close()
-
-	for kgID.Next() {
-		var kgid int
-		err = kgID.Scan(&kgid)
-		if err != nil {
-			return nil, utils.ErrInfo(utils.ErrInternalErr, err)
-		}
-		kgids = append(kgids, kgid)
-	}
-	return kgids, nil
 }

@@ -1,17 +1,16 @@
 /**
  * 数字千分位展示
  * @param {Number | String} num 数字
- * @returns 1234 --> 1,234 | 1234.5555 --> 1,234.555
+ * @returns 1234 --> 1,234
  */
 const numToThousand = num => {
-  if (typeof num === 'string' && !/^\d+$/.test(numStr) && !/^\d+\.\d+$/.test(numStr)) {
-    return num;
+  const numStr = `${num}`;
+
+  if (!/^\d+$/.test(numStr)) {
+    return;
   }
 
-  const numStr = `${num}`;
-  const [integer, decimal] = numStr.split('.'); // 小数位不转化
-  const postfix = decimal ? `.${decimal}` : '';
-  const number = `${String(integer).replace(/\d{1,3}(?=(\d{3})+$)/g, s => `${s},`)}${postfix}`;
+  const number = numStr.toString().replace(/\d{1,3}(?=(\d{3})+$)/g, s => `${s},`);
 
   return number;
 };

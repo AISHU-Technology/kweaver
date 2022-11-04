@@ -1,22 +1,15 @@
 # -*- coding:utf-8 -*-
 from unittest import TestCase, mock
 
-import requests
-
 from dao.dsm_dao import dsm_dao
-from dao.task_dao import task_dao
 from dao.task_onto_dao import task_dao_onto
 from service.Otl_Service import otl_service
 from dao.otl_dao import otl_dao
 from dao.graph_dao import graph_dao
-from dao.knw_dao import knw_dao
 import pandas as pd
 
 
 # test新增本体
-from test import MockResponse
-
-
 class Test_ontology_save(TestCase):
     def setUp(self) -> None:
         self.params_json = {'ontology_name': 'name', 'ontology_des': 'description'}
@@ -45,7 +38,7 @@ class Test_ontology_save(TestCase):
         otl_dao.get_ontology = mock.Mock(return_value=ontology_name)
 
         res = otl_service.ontology_save(self.params_json)
-        self.assertEqual(res[0], 200)
+        self.assertEqual(res[0], 500)
 
     # 异常
     def test_ontology_save_exception(self):
@@ -275,29 +268,8 @@ class Test_getall(TestCase):
        'result', 'file_list', 'ds_id', 'postfix']
         self.task_in_table = pd.DataFrame(task_in_table_row, columns=column)
 
-        # mock knw_dao.get_graph_by_knw_id
-        column = ['graph_id']
-        row = [[4], [37], [38]]
-        ret_knw_dao_get_graph_by_knw_id = pd.DataFrame(row, columns=column)
-        knw_dao.get_graph_by_knw_id = mock.Mock(return_value=ret_knw_dao_get_graph_by_knw_id)
-
-        # mock graph_dao.get_name_and_otl_by_id
-        column = ['graph_name', 'graph_otl']
-        row = [['dddd', '[39]'], ['合同', '[32]'], ['文档_nebula', '[33]']]
-        ret_graph_dao_get_name_and_otl_by_id = pd.DataFrame(row, columns=column)
-        graph_dao.get_name_and_otl_by_id = mock.Mock(return_value=ret_graph_dao_get_name_and_otl_by_id)
-
-        # mock otl_dao.getbyids
-        column = ['id', 'create_user', 'create_time', 'update_user', 'update_time',
-       'ontology_name', 'ontology_des', 'otl_status', 'entity', 'edge',
-       'used_task', 'all_task']
-        row = [[39, '853ba1db-4e37-11eb-a57d-0242ac190002',
-        '2022-09-22 10:32:25', '853ba1db-4e37-11eb-a57d-0242ac190002',
-        '2022-09-22 10:32:33', 'dddd', '', 'available',
-        "[{'entity_id': 1, 'colour': '#2A908F', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'e1', 'source_table': [], 'source_type': 'manual', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': '', 'ds_address': '', 'alias': 'e1'}]",
-        '[]', '[]', '[]']]
-        ret_otl_dao_getbyids = pd.DataFrame(row, columns=column)
-        otl_dao.getbyids = mock.Mock(return_value=ret_otl_dao_getbyids)
+        # mock graph_dao.getdatabyotlid
+        graph_dao.getdatabyotlid = mock.Mock(return_value=[])
 
         # mock task_dao_onto.get_all_by_otlid
         task_dao_onto.get_all_by_otlid = mock.Mock(return_value=self.task_in_table)
@@ -306,11 +278,8 @@ class Test_getall(TestCase):
     def test_getall_success(self):
         # 查询第一页
         # mock otl_dao.getall
-        graph_otl = ["graph_name"]
-        graph_dao.getdatabyotlid = mock.Mock(return_value=graph_otl)
-
         otl_dao.getall = mock.Mock(return_value=self.ret_firstpage)
-        args = {'page': '1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390', 'knw_id': '1'}
+        args = {'page': '1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
         args["res_list"] = []
         res = otl_service.getall(args)
         self.assertEqual(res[0], 200)
@@ -318,7 +287,7 @@ class Test_getall(TestCase):
         # 查询全部
         # mock otl_dao.getall
         otl_dao.getall = mock.Mock(return_value=self.ret_all)
-        args = {'page': '-1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390', 'knw_id': '1'}
+        args = {'page': '-1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
         args["res_list"] = []
         res = otl_service.getall(args)
         self.assertEqual(res[0], 200)
@@ -327,7 +296,7 @@ class Test_getall(TestCase):
     def test_getall_exception(self):
         # mock otl_dao.getall
         otl_dao.getall = mock.Mock(return_value=[], side_effect=Exception('database Unusable!'))
-        args = {'page': '1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390', 'knw_id': '1'}
+        args = {'page': '-1', 'size': '10', 'order': 'descend', 'timestamp': '1637053016390'}
         res = otl_service.getall(args)
         self.assertEqual(res[0], 500)
 
@@ -488,10 +457,6 @@ class Test_getbyotlname(TestCase):
 
         args = {'otlname': '', 'otl_status': 'all', 'page': '1', 'size': '10', 'order': 'ascend',
                 'timestamp': '1637201113677'}
-
-        graph_otl = ["graph_name"]
-        graph_dao.getdatabyotlid = mock.Mock(return_value=graph_otl)
-
         res = otl_service.getbyotlname(otlid, args, num)
         self.assertEqual(res[0], 200)
 
@@ -793,189 +758,4 @@ class Test_saveCopyOtl(TestCase):
         otl_dao.get_ontology = mock.Mock(return_value=self.res_name_exists)
         res = otl_service.saveCopyOtl(self.args, self.params_json)
         self.assertEqual(res[0], 500)
-
-
-class TestPreviewOntology(TestCase):
-    def setUp(self) -> None:
-        self.params = {"ds_id": 1, "ontologyname": "name"}
-        self.row = [["UXdlMTIzIUAj", "mysql", "anydata", "10.4.1.1", 3306, "anydata"]]
-        self.column = ["ds_password", "data_source", "ds_user", "ds_address", "ds_port", "ds_path"]
-
-    def test_preview_ontology_success(self):
-        """ success """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        otl_dao.get_ontology = mock.Mock(return_value=pd.DataFrame([["", ""]], ["entity", "edge"]))
-        res = otl_service.preview_ontology(self.params)
-        self.assertEqual(res[0], 200)
-
-    def test_preview_ontology_failed1(self):
-        """ data_source_table dont have this id """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame([], columns=self.column))
-        res = otl_service.preview_ontology(self.params)
-        self.assertEqual(res[0], 500)
-
-    def test_preview_ontology_failed2(self):
-        """ database error """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        otl_dao.get_ontology = mock.Mock(side_effect=Exception("SQL"))
-        res = otl_service.preview_ontology(self.params)
-        self.assertEqual(res[0], 500)
-
-
-class TestPreviewData2(TestCase):
-    def setUp(self) -> None:
-        self.params = {"ds_id": 1, "data_source": "mysql"}
-        self.row = [["UXdlMTIzIUAj", "mysql", "anydata", "10.4.1.1", 3306, "anydata", ""]]
-        self.column = ["ds_password", "data_source", "ds_user", "ds_address", "ds_port", "ds_path", "ds_auth"]
-
-    def test_preview_data2_mysql_success(self):
-        """ data_source is mysql success """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        otl_dao.mysqldatashow = mock.Mock(return_value=[])
-        res = otl_service.preview_data2(self.params)
-        self.assertEqual(res[0], 200)
-
-    def test_preview_data2_mysql_failed1(self):
-        """ mysql password decryption failed """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        otl_dao.mysqldatashow = mock.Mock(return_value="-1")
-        res = otl_service.preview_data2(self.params)
-        self.assertEqual(res[0], 500)
-
-    def test_preview_data2_mysql_failed2(self):
-        """ mysql exception """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        otl_dao.mysqldatashow = mock.Mock(side_effect=Exception("password"))
-        res = otl_service.preview_data2(self.params)
-        self.assertEqual(res[0], 500)
-
-    def test_preview_data2_hive_success(self):
-        """ data_source is hive success """
-        dsm_dao.getdatabyid = mock.Mock(
-            return_value=pd.DataFrame([["UXdlMTIzIUAj", "hive", "anydata", "10.4.1.1", 3306, "anydata", ""]],
-                                      columns=self.column))
-        otl_dao.hivedatashow = mock.Mock(return_value="1")
-        res = otl_service.preview_data2({"ds_id": 1, "data_source": "hive"})
-        self.assertEqual(res[0], 200)
-
-    def test_preview_data2_hive_failed(self):
-        """ hive exception """
-        dsm_dao.getdatabyid = mock.Mock(
-            return_value=pd.DataFrame([["UXdlMTIzIUAj", "hive", "anydata", "10.4.1.1", 3306, "anydata", ""]],
-                                      columns=self.column))
-        otl_dao.hivedatashow = mock.Mock(side_effect=Exception("Table not found, Database"))
-        res = otl_service.preview_data2({"ds_id": 1, "data_source": "hive"})
-        self.assertEqual(res[0], 500)
-
-    def test_preview_data2_as_success(self):
-        """ data_source is as success """
-        dsm_dao.getdatabyid = mock.Mock(
-            return_value=pd.DataFrame([["UXdlMTIzIUAj", "as", "anydata", "10.4.1.1", 3306, "anydata", ""]],
-                                      columns=self.column))
-        otl_dao.asdatashow = mock.Mock(return_value=(200, {}))
-        res = otl_service.preview_data2({"ds_id": 1, "data_source": "as"})
-        self.assertEqual(res[0], 200)
-
-    def test_preview_data2_failed1(self):
-        """ data_source_table dont have this id """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame([], columns=self.column))
-        res = otl_service.preview_data2(self.params)
-        self.assertEqual(res[0], 500)
-
-    def test_preview_data2_failed2(self):
-        """ data_source not equal new_data_source """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        res = otl_service.preview_data2({"ds_id": 1, "data_source": "as"})
-        self.assertEqual(res[0], 500)
-
-
-class TestFlatFile(TestCase):
-    def setUp(self) -> None:
-        self.params = {"file_list": [{"docid": "gns://5B32B75DF1D246E59209BE1C04515587"
-                                               "/4932E3A6EFC9476A8549C4D02DE2D40D/667CDDD12E364766B72F8652F624A072",
-                                      "name": "cuostomer.csv",
-                                      "type": "file"}],
-                       "ds_id": 1, "postfix": "csv"
-                       }
-        self.row = [["UXdlMTIzIUAj", "mysql", "anydata", "10.4.1.1", 3306, "anydata", ""]]
-        self.column = ["ds_password", "data_source", "ds_user", "ds_address", "ds_port", "ds_path", "ds_auth"]
-
-    def test_flat_file_success(self):
-        """ success """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        otl_dao.convertpath = mock.Mock(return_value="a/b/c/d")
-        my_mock = mock.Mock(return_value=(
-            200, "cqLusY9-z8xtPwKFlVc97skW-fdqJLXzpLQeCRsKzug.M8aU3w8zBj4epqSYSf8netY6JC9XGVQIszh2aHCE1SI"))
-        with mock.patch('third_party_service.anyshare.token.asToken.get_token', my_mock):
-            res = otl_service.flatfile(self.params)
-        self.assertEqual(res[0], 200)
-
-    def test_flat_file_failed1(self):
-        """ data_source_table dont have this id """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame([], columns=self.column))
-        res = otl_service.flatfile(self.params)
-        self.assertEqual(res[0], 500)
-
-    def test_flat_file_failed2(self):
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        otl_dao.convertpath = mock.Mock(side_effect=Exception("SQL"))
-        my_mock = mock.Mock(return_value=(
-            200, "cqLusY9-z8xtPwKFlVc97skW-fdqJLXzpLQeCRsKzug.M8aU3w8zBj4epqSYSf8netY6JC9XGVQIszh2aHCE1SI"))
-        with mock.patch('third_party_service.anyshare.token.asToken.get_token', my_mock):
-            res = otl_service.flatfile(self.params)
-        self.assertEqual(res[0], 500)
-
-
-class TestGetDocName(TestCase):
-    def setUp(self) -> None:
-        self.row = [["UXdlMTIzIUAj", "mysql", "anydata", "10.4.1.1", 3306, "anydata", ""]]
-        self.column = ["ds_password", "data_source", "ds_user", "ds_address", "ds_port", "ds_path", "ds_auth"]
-
-    def test_get_doc_name_success(self):
-        """ success """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        requests.request = mock.Mock(return_value=MockResponse(200, {"name": "fileName"}))
-        my_mock = mock.Mock(return_value=(200, "tokenID"))
-        with mock.patch('third_party_service.anyshare.token.asToken.get_token', my_mock):
-            res = otl_service.getdocname(1, "docID")
-        self.assertEqual(res[0], 200)
-
-    def test_get_doc_name_failed1(self):
-        """ dataSourcetable dont have this id """
-        dsm_dao.getdatabyid = mock.Mock(return_value=pd.DataFrame([], columns=self.column))
-        res = otl_service.getdocname(1, "docID")
-        self.assertEqual(res[0], 500)
-
-
-class TestFilterOtl(TestCase):
-    def setUp(self) -> None:
-        self.ret_otl = {"res": {"df": [{"entity": [], "edge": []}]}}
-        self.row = [[1, "10.4.1.1", "5555", "root", "bmVidWxh", 1, "orientdb", "root", "bmVidWxh", "", "orientdb_255",
-                     "", "2022-09-01 14:50:08", 1]]
-        self.column = ["id", "ip", "port", "user", "password", "version", "type", "db_user", "db_ps", "db_port", "name",
-                       "created", "updated", "fulltext_id"]
-
-    def test_filter_otl_success(self):
-        """ success """
-        graph_dao.get_configid_by_kgid = mock.Mock(return_value=pd.DataFrame([[1]], columns=["KG_config_id"]))
-        graph_dao.getbyid = mock.Mock(return_value=pd.DataFrame([["[{'graph_Name': 'test123', 'graph_des': 'Ad', "
-                                                                  "'graph_db_id': 1, 'graphDBAddress': "
-                                                                  "'10.4.106.255', 'graph_mongo_Name': 'mongoDB-1', "
-                                                                  "'graph_DBName': "
-                                                                  "'u1040b0bc239011ed8fa50242ac110002'}]"]],
-                                                                columns=["graph_baseInfo"]))
-        task_dao.getGraphDBbyId = mock.Mock(return_value=pd.DataFrame(self.row, columns=self.column))
-        my_mock = mock.Mock(return_value=(200, {"entity": "", "edge": ""}))
-        with mock.patch('dao.graphdb_dao.GraphDB.get_schema', my_mock):
-            res = otl_service.filterotl(1, self.ret_otl)
-        self.assertEqual(res[0], 200)
-
-    def test_filter_otl_failed(self):
-        """ kgid not exist """
-        graph_dao.get_configid_by_kgid = mock.Mock(return_value=pd.DataFrame([], columns=["KG_config_id"]))
-        res = otl_service.filterotl(1, self.ret_otl)
-        self.assertEqual(res[0], 500)
-
-
-
 

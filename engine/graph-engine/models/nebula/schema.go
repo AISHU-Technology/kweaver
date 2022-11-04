@@ -85,7 +85,7 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 		rowValue, _ := tags.GetRowValuesByIndex(i)
 		rowValueSplit := strings.Split(rowValue.String(), ", ")
 
-		vclass.Name = utils.TrimQuotationMarks(rowValueSplit[0])
+		vclass.Name = strings.Trim(rowValueSplit[0], "\"")
 
 		// 获取节点抽取模型
 		if model != nil {
@@ -123,8 +123,8 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 			rowValueSplit := strings.Split(rowValue.String(), ", ")
 
 			vclass.Properties = append(vclass.Properties, Property{
-				Name:        utils.TrimQuotationMarks(rowValueSplit[0]),
-				Type:        utils.TrimQuotationMarks(rowValueSplit[1]),
+				Name:        strings.Trim(rowValueSplit[0], "\""),
+				Type:        strings.Trim(rowValueSplit[1], "\""),
 				LinkedClass: "",
 				Mandatory:   false,
 			})
@@ -137,7 +137,7 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 			}
 		}
 		//fulltext
-		fullTextName := fmt.Sprintf("%s_%s", conf.DB, strings.ToLower(vclass.Name))
+		fullTextName := fmt.Sprintf("%s_%s", conf.DB, vclass.Name)
 
 		if fullTextIndex, ok := allFullTextIndexes[fullTextName]; ok {
 			mappings := fullTextIndex.(map[string]interface{})["mappings"].(map[string]interface{})
@@ -174,7 +174,7 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 		rowValue, _ := edges.GetRowValuesByIndex(i)
 		rowValueSplit := strings.Split(rowValue.String(), ", ")
 
-		eclass.Name = utils.TrimQuotationMarks(rowValueSplit[0])
+		eclass.Name = strings.Trim(rowValueSplit[0], "\"")
 
 		if model != nil {
 			for _, edge := range model.Edge {
@@ -212,7 +212,7 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 			field, _ := row.GetValueByColName("Field")
 			_type, _ := row.GetValueByColName("Type")
 
-			switch utils.TrimQuotationMarks(field.String()) {
+			switch strings.Trim(field.String(), "\"") {
 			//case "name":
 			//	// parse in/out
 			//	comment, _ := row.GetValueByColName("Comment")
@@ -232,15 +232,15 @@ func (s *Schema) GetSchema(conf *utils.KGConf) error {
 			//	})
 			case "in":
 				eclass.Properties = append(eclass.Properties, Property{
-					Name:        utils.TrimQuotationMarks(field.String()),
-					Type:        utils.TrimQuotationMarks(_type.String()),
+					Name:        strings.Trim(field.String(), "\""),
+					Type:        strings.Trim(_type.String(), "\""),
 					LinkedClass: in,
 					Mandatory:   false,
 				})
 			case "out":
 				eclass.Properties = append(eclass.Properties, Property{
-					Name:        utils.TrimQuotationMarks(field.String()),
-					Type:        utils.TrimQuotationMarks(_type.String()),
+					Name:        strings.Trim(field.String(), "\""),
+					Type:        strings.Trim(_type.String(), "\""),
 					LinkedClass: out,
 					Mandatory:   false,
 				})
@@ -313,8 +313,8 @@ func (s Schema) GetRecordsCount(conf *utils.KGConf) ([]Stat, error) {
 		rowValueSplit := strings.Split(rowValue.String(), ", ")
 
 		stats = append(stats, Stat{
-			Type:  utils.TrimQuotationMarks(rowValueSplit[0]),
-			Name:  utils.TrimQuotationMarks(rowValueSplit[1]),
+			Type:  strings.Trim(rowValueSplit[0], "\""),
+			Name:  strings.Trim(rowValueSplit[1], "\""),
 			Count: rowValueSplit[2],
 		})
 	}
@@ -360,20 +360,20 @@ func (s Schema) GetIndexes(conf *utils.KGConf) (*Indexes, error) {
 
 		var fields []string
 		for _, field := range columnsList {
-			fields = append(fields, utils.TrimQuotationMarks(field))
+			fields = append(fields, strings.Trim(field, "\""))
 		}
 
-		if tagIndex.Tag == utils.TrimQuotationMarks(indexTag.String()) {
+		if tagIndex.Tag == strings.Trim(indexTag.String(), "\"") {
 			tagIndex.Indexes = append(tagIndex.Indexes, Index{
-				Name:   utils.TrimQuotationMarks(indexName.String()),
+				Name:   strings.Trim(indexName.String(), "\""),
 				Type:   "",
 				Fields: fields,
 			})
 		} else {
-			tagIndex.Tag = utils.TrimQuotationMarks(indexTag.String())
+			tagIndex.Tag = strings.Trim(indexTag.String(), "\"")
 
 			tagIndex.Indexes = append(tagIndex.Indexes, Index{
-				Name:   utils.TrimQuotationMarks(indexName.String()),
+				Name:   strings.Trim(indexName.String(), "\""),
 				Type:   "",
 				Fields: fields,
 			})
@@ -403,19 +403,19 @@ func (s Schema) GetIndexes(conf *utils.KGConf) (*Indexes, error) {
 
 		var fields []string
 		for _, field := range columnsList {
-			fields = append(fields, utils.TrimQuotationMarks(field))
+			fields = append(fields, strings.Trim(field, "\""))
 		}
 
-		if edgeIndex.Tag == utils.TrimQuotationMarks(indexEdge.String()) {
+		if edgeIndex.Tag == strings.Trim(indexEdge.String(), "\"") {
 			edgeIndex.Indexes = append(edgeIndex.Indexes, Index{
-				Name:   utils.TrimQuotationMarks(indexName.String()),
+				Name:   strings.Trim(indexName.String(), "\""),
 				Type:   "",
 				Fields: fields,
 			})
 		} else {
-			edgeIndex.Tag = utils.TrimQuotationMarks(indexEdge.String())
+			edgeIndex.Tag = strings.Trim(indexEdge.String(), "\"")
 			edgeIndex.Indexes = append(edgeIndex.Indexes, Index{
-				Name:   utils.TrimQuotationMarks(indexName.String()),
+				Name:   strings.Trim(indexName.String(), "\""),
 				Type:   "",
 				Fields: fields,
 			})

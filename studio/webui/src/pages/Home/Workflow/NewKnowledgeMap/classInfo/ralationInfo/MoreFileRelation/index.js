@@ -184,9 +184,10 @@ class MoreFileRelation extends Component {
     const { startNode, endNode, moreFileData, attrSelect, entityName } = this.props;
     const { equation_end, equation_begin, modalVisible, equation } = this.state;
     const { anyDataLang } = this.props;
+
     return (
       <div>
-        {moreFileData?.begin_class_prop && (
+        {moreFileData && moreFileData.begin_class_prop && (
           <div>
             <div className="title-relation">
               <span>{[intl.get('workflow.knowledge.RelationMap')]}</span>
@@ -205,7 +206,7 @@ class MoreFileRelation extends Component {
             </div>
 
             <div className="Relational-mapping">
-              {entityName?.value ? (
+              {entityName && entityName.value ? (
                 <div className="more-file">
                   <div className="select-title">
                     <div className="start">{intl.get('workflow.knowledge.begin')}</div>
@@ -460,13 +461,16 @@ class MoreFileRelation extends Component {
                           title={(moreFileData.begin_class_prop && moreFileData.begin_class_prop.value) || undefined}
                           suffixIcon={<CaretRightOutlined className="ant-select-suffix" rotate={90} />}
                         >
-                          {startNode?.properties?.map(item => {
-                            return (
-                              <Option key={item[0]} title={item}>
-                                {item[0]}
-                              </Option>
-                            );
-                          })}
+                          {startNode &&
+                            startNode.nodeInfo &&
+                            startNode.nodeInfo.attrSelect &&
+                            startNode.nodeInfo.attrSelect.map(item => {
+                              return (
+                                <Option key={item} title={item}>
+                                  {item}
+                                </Option>
+                              );
+                            })}
                         </Select>
 
                         <Select
@@ -513,13 +517,16 @@ class MoreFileRelation extends Component {
                           title={(moreFileData.end_class_prop && moreFileData.end_class_prop.value) || undefined}
                           suffixIcon={<CaretRightOutlined className="ant-select-suffix" rotate={90} />}
                         >
-                          {endNode?.properties?.map(item => {
-                            return (
-                              <Option key={item[0]} title={item}>
-                                {item[0]}
-                              </Option>
-                            );
-                          })}
+                          {endNode &&
+                            endNode.nodeInfo &&
+                            endNode.nodeInfo.attrSelect &&
+                            endNode.nodeInfo.attrSelect.map(item => {
+                              return (
+                                <Option key={item} title={item}>
+                                  {item}
+                                </Option>
+                              );
+                            })}
                         </Select>
                       </ConfigProvider>
                     </Input.Group>

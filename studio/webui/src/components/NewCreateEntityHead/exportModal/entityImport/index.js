@@ -27,16 +27,9 @@ class EntityImport extends Component {
    */
   getSelectData = async () => {
     this.props.openLoading();
-    const OntologyData = {
-      page: -1,
-      size: 10,
-      order: 'descend',
-      knw_id:
-        window.sessionStorage.getItem('selectedKnowledgeId') &&
-        parseInt(window.sessionStorage.getItem('selectedKnowledgeId'))
-    };
 
-    const data = await servicesCreateEntity.getAllNoumenon(OntologyData);
+    const data = await servicesCreateEntity.getAllNoumenon();
+
     if (data && data.res && data.res.df) {
       this.setState({
         selectData: data.res.df
@@ -58,13 +51,8 @@ class EntityImport extends Component {
    */
   onChange = async value => {
     let data = '';
-    const ontologyMessage = this.state.selectData.filter(item => {
-      return value === item.graph_name;
-    });
-    const ontologyIdString = ontologyMessage[0].graph_otl.slice(1);
-    const ontology_id = ontologyIdString.slice(0, -1);
 
-    const resData = await servicesCreateEntity.getEntityInfo(decodeURI(ontology_id));
+    const resData = await servicesCreateEntity.getAllNoumenonData(value);
 
     if (resData && resData.res && resData.res.df) {
       data = resData.res.df[0];
@@ -102,6 +90,9 @@ class EntityImport extends Component {
 
     return (
       <div className="entity-import">
+        {/* <div className="title-ontolog-name">
+          <label className="name">{[intl.get('createEntity.ontologyName')]}</label>
+        </div> */}
         <div className={saveData && saveData.data === '' ? 'select-false' : 'select-true'}>
           <ConfigProvider renderEmpty={this.customizeRenderEmpty}>
             <Select
@@ -115,8 +106,8 @@ class EntityImport extends Component {
             >
               {selectData.map((item, index) => {
                 return (
-                  <Option value={item.graph_name} key={index.toString()} data={item}>
-                    {item.graph_name}
+                  <Option value={item.ontology_name} key={index.toString()} data={item}>
+                    {item.ontology_name}
                   </Option>
                 );
               })}

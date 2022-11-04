@@ -10,6 +10,7 @@ import servicesCreateEntity from '@/services/createEntity';
 import IconFont from '@/components/IconFont';
 import EdgesModal from './edgesModal';
 import ExportModal from './exportModal';
+import EditEntityModal from './editEntityModal';
 import { handleTaskData, asError, handAsData, isFlow, analyUrl } from './assistFunction';
 
 import dianIcon from '@/assets/images/dian.svg';
@@ -28,9 +29,9 @@ class NewCreateEntityHead extends Component {
     saveData: {
       data: undefined, // 数据
       type: 'entity' // 导入类型
-    }, // 预测点数据
-    editNewName: '' // 编辑后的本体名
+    } // 预测点数据
   };
+
   isGetTaskData = false; // 是否有获取任务数据的接口正在调用(如果有，则定时器不发送请求)
 
   isBuildTaskAPIRun = false; // 是否构建任务的接口被点击（如果被点击，则下次请求不触发，用于阻止双击产生两个任务）
@@ -65,15 +66,16 @@ class NewCreateEntityHead extends Component {
    * @description 获取第一页点数据(正在预测点任务一直在第一页，所以用第一页也判断是否预测完点状态)
    */
   getPageOneData = async () => {
-    const { ontology_id, used_task, ontologyId } = this.props;
-    if (ontology_id === '' && ontologyId === 0) {
+    const { ontology_id, used_task } = this.props;
+
+    if (typeof ontology_id !== 'number') {
       return;
     }
 
     const data = {
       page: this.props.taskListRef ? this.props.taskListRef.state.page : 1,
       size: PAGESIZE,
-      ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+      ontology_id,
       used_task
     };
 
@@ -126,7 +128,7 @@ class NewCreateEntityHead extends Component {
    */
   onSave = async () => {
     const { saveData } = this.state;
-    const { ontology_id, ontologyId } = this.props;
+    const { ontology_id } = this.props;
 
     if (saveData.type === 'entity') {
       // 如果data为 '',给输入框添加报错状态
@@ -165,7 +167,7 @@ class NewCreateEntityHead extends Component {
         const resquestData = {
           ds_id: saveData.selectedValue.id,
           file_list: saveData.data,
-          ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+          ontology_id,
           postfix: ''
         };
 
@@ -197,6 +199,7 @@ class NewCreateEntityHead extends Component {
             data_source: saveData.selectedValue.data_source,
             ds_id: saveData.selectedValue.id.toString(),
             extract_type: 'labelExtraction',
+            // file_list: [[saveData.data[0][0].docid, saveData.data[0][2], saveData.data[0][0].name]],
             file_list: [
               { docid: saveData.data[0][0].docid, type: saveData.data[0][0].type, name: saveData.data[0][0].name }
             ],
@@ -227,7 +230,7 @@ class NewCreateEntityHead extends Component {
           const resquestData = {
             ds_id: saveData.selectedValue.id,
             file_list,
-            ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+            ontology_id,
             postfix: saveData.selectedValue.postfix
           };
 
@@ -261,7 +264,7 @@ class NewCreateEntityHead extends Component {
       const resquestData = {
         ds_id: saveData.data.id,
         file_list: [saveData.data.queue],
-        ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+        ontology_id,
         postfix: ''
       };
 
@@ -344,19 +347,11 @@ class NewCreateEntityHead extends Component {
     });
   };
 
-  /**
-   * 修改后的本体名
-   */
-  setEditNewName = editNewName => {
-    this.setState({
-      editNewName
-    });
-  };
-
   render() {
-    const { edgesModal, exportModal, saveData } = this.state;
-    const { centerSelect, nodes, edges, graphName } = this.props;
+    const { edgesModal, exportModal, saveData, editEntityModal } = this.state;
+    const { centerSelect, nodes, edges, ontology_name } = this.props;
     const TYPE = window?.location?.pathname?.includes('knowledge') ? 'view' : analyUrl(window.location.search).type; // 进入图谱的类型
+
     return (
       <div className="new-create-entity-head">
         <div className="name">
@@ -390,9 +385,21 @@ class NewCreateEntityHead extends Component {
             </div>
           )}
 
-          <div className="entity-name" title={graphName}>
-            {graphName}
+          <div className="entity-name" title={ontology_name}>
+            {ontology_name}
           </div>
+
+          {TYPE === 'view' ? null : (
+            <div
+              className="icon"
+              onClick={() => {
+                this.setEditEntityModal(true);
+                this.props.setTouch(true);
+              }}
+            >
+              <IconFont type="icon-edit" className="icon" />
+            </div>
+          )}
         </div>
 
         <div className="tool tool-center">
@@ -710,6 +717,38 @@ class NewCreateEntityHead extends Component {
           </div>
         </div>
 
+        {/* 编辑本体弹层 */}
+        <Modal
+          className="set-entity-244-edit"
+          title={this.props.ontology_id ? intl.get('createEntity.editE') : intl.get('createEntity.createEntity')}
+          width={640}
+          destroyOnClose={true}
+          maskClosable={false}
+          visible={editEntityModal}
+          footer={null}
+          closable={false}
+        >
+          <EditEntityModal
+            setEditEntityModal={this.setEditEntityModal}
+            setOntologyId={this.props.setOntologyId}
+            ontology_name={this.props.ontology_name}
+            setName={this.props.setName}
+            ontology_des={this.props.ontology_des}
+            setDes={this.props.setDes}
+            ontology_id={this.props.ontology_id}
+            nodes={nodes}
+            edges={edges}
+            freeGraphRef={this.props.freeGraphRef}
+            graphId={this.props.graphId}
+            ontoData={this.props.ontoData}
+            prev={this.props.prev}
+            setQuitVisible={this.props.setQuitVisible}
+            setTouch={this.props.setTouch}
+            setOntoData={this.props.setOntoData}
+            onEditEntityModalRef={this.props.onEditEntityModalRef}
+          />
+        </Modal>
+
         {/* 关系类管理弹层 */}
         <Modal
           className="edge-modal-qzdj-true"
@@ -765,10 +804,6 @@ class NewCreateEntityHead extends Component {
             setSaveData={this.setSaveData}
             setTouch={this.props.setTouch}
             graphId={this.props.graphId}
-            dbType={this.props.dbType}
-            osId={this.props.osId}
-            ontology_id={this.props.ontology_id}
-            ontologyId={this.props.ontologyId}
           />
         </Modal>
       </div>

@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from __future__ import (absolute_import, unicode_literals)
 from flask_babel import gettext as _l
 
 errDict = {

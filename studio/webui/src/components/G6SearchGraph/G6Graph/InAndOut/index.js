@@ -556,7 +556,7 @@ class InAndOut extends Component {
               </div>
             ) : (
               <div className="inOut-empty">
-                <Empty style={{ marginTop: 100 }} description={`${intl.get('global.noResult')}`} image={kong} />
+                <Empty style={{ marginTop: 100 }} description={`${intl.get('memberManage.searchNull')}`} image={kong} />
               </div>
             )}
           </div>

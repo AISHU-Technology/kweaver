@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import { Button, Table, message, Dropdown, Menu } from 'antd';
-import { LoadingOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { Button, Table, message } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 
@@ -11,9 +11,8 @@ import Format from '@/components/Format';
 import AvatarName from '@/components/Avatar';
 import IconFont from '@/components/IconFont';
 import SearchInput from '@/components/SearchInput';
-import KnowledgeModal from '@/components/KnowledgeModal';
-import { formatIQNumber } from '@/utils/handleFunction';
 
+import CreateModal from './createModal';
 import DeleteModal from './deleteModal';
 
 import NoResult from '@/assets/images/noResult.svg';
@@ -25,25 +24,10 @@ const ERROR_CODE: any = {
   'Builder.controller.knowledgeNetwork_controller.getAllKnw.PermissionError': 'graphList.permissionError' // 权限错误
 };
 const indicator = <LoadingOutlined style={{ fontSize: 24, color: '#54639c', top: '200px' }} spin />;
-const SORTER_MENU = [
-  { key: 'create', text: intl.get('knowledge.byCreate') },
-  { key: 'update', text: intl.get('knowledge.byUpdate') },
-  { key: 'intelligence_score', text: intl.get('knowledge.byIQ') }
-];
-const SORTER_MAP: Record<string, string> = {
-  descend: 'desc',
-  ascend: 'asc',
-  desc: 'descend',
-  asc: 'ascend',
-  create: 'creation_time',
-  update: 'update_time',
-  creation_time: 'create',
-  update_time: 'update',
-  intelligence_score: 'intelligence_score'
-};
-const sorter2sorter = (key: string) => SORTER_MAP[key] || key;
+
 const GraphList = () => {
   const history = useHistory();
+
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [sorter, setSorter] = useState({ rule: 'update', order: 'desc' });
@@ -55,7 +39,7 @@ const GraphList = () => {
   const { size, total, page } = pagination;
 
   useEffect(() => {
-    document.title = ` ${intl.get('graphList.mygraph')}_KWeaver`;
+    document.title = ` ${intl.get('graphList.mygraph')}_AnyDATA`;
     getData(sorter.rule, sorter.order);
   }, [page, sorter.rule, sorter.order]);
 
@@ -92,10 +76,9 @@ const GraphList = () => {
   /**
    * 表格排序
    */
-  const sortOrderChange = (_: any, __: any, sorter: any, extra: any) => {
-    if (extra.action !== 'sort') return;
-    const order = sorter2sorter(sorter.order);
-    const rule = sorter2sorter(sorter.field);
+  const sortOrderChange = (pagination: any, filters: any, sorter: any) => {
+    const order = sorter.order === 'descend' ? 'desc' : 'asc';
+    const rule = sorter.field === 'creation_time' ? 'create' : 'update';
     setSorter({ rule, order });
   };
 
@@ -143,18 +126,7 @@ const GraphList = () => {
     const type = _.isEmpty(data) ? 'add' : 'edit';
     setCreateOrEditData({ type, data });
   };
-
   const onCloseCreateOrEdit = () => setCreateOrEditData({});
-
-  /**
-   * 点击排序按钮
-   */
-  const onSortMenuClick = (key: string) => {
-    setSorter(({ rule, order }) => ({
-      rule: key,
-      order: rule === key ? (order === 'desc' ? 'asc' : 'desc') : order
-    }));
-  };
 
   const columns: any = [
     {
@@ -170,7 +142,14 @@ const GraphList = () => {
         const { id = '', color = '', knw_description = '' } = record;
         return (
           <div className="columnKnwName" onClick={() => onToPageNetwork(id)}>
-            <AvatarName str={text} color={color} />
+            <AvatarName
+              str={text}
+              style={{
+                color: `${color}`,
+                background: `${`${color}15`}`,
+                border: `1px solid ${`${color}10`}`
+              }}
+            />
             <div className="name-text" title={text}>
               <div className="name ad-ellipsis">{text}</div>
               {knw_description ? (
@@ -184,43 +163,33 @@ const GraphList = () => {
       }
     },
     {
-      title: intl.get('global.domainIQ'),
-      dataIndex: 'intelligence_score',
-      width: 210,
-      sorter: true,
-      sortOrder: sorter.rule === 'intelligence_score' && sorter2sorter(sorter.order),
-      sortDirections: ['ascend', 'descend', 'ascend'],
-      render: (score: number) => formatIQNumber(score)
-    },
-    {
-      title: intl.get('global.creationTime'),
+      title: intl.get('graphList.creationTime'),
       dataIndex: 'creation_time',
-      width: 210,
+      width: 220,
       sorter: true,
-      sortOrder: sorter.rule === 'create' && sorter2sorter(sorter.order),
       sortDirections: ['ascend', 'descend', 'ascend']
     },
     {
-      title: intl.get('global.finalOperatorTime'),
+      title: intl.get('graphList.finalOperatorTime'),
       dataIndex: 'update_time',
-      width: 210,
+      width: 220,
       sorter: true,
-      sortOrder: sorter.rule === 'update' && sorter2sorter(sorter.order),
+      defaultSortOrder: 'descend',
       sortDirections: ['ascend', 'descend', 'ascend']
     },
     {
-      title: intl.get('global.operation'),
+      title: intl.get('graphList.operation'),
       dataIndex: 'op',
-      width: 160,
+      width: 110,
       fixed: 'right',
       render: (text: string, record: any) => {
         return (
           <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => onOpenCreateOrEdit(record)}>
-              {intl.get('global.edit')}
+              {intl.get('graphList.edit')}
             </Button>
             <Button type="link" onClick={() => onOpenDelete(record)}>
-              {intl.get('global.delete')}
+              {intl.get('graphList.delete')}
             </Button>
           </div>
         );
@@ -230,47 +199,20 @@ const GraphList = () => {
 
   return (
     <div id="netWork" className="netWork">
-      <div className="ad-p-6 ad-bg-white">
+      <div className="ad-p-6 ad-bg-white" style={{ height: '100%' }}>
         <Format.Title className="ad-mb-5">{intl.get('graphList.mygraph')}</Format.Title>
         <div className="netWork-list">
           <div className="netWork-list-top">
-            <div>
-              <Button type="primary" onClick={() => onOpenCreateOrEdit({})}>
-                <IconFont type="icon-Add" style={{ color: '#fff' }} />
-                {intl.get('graphList.create')}
-              </Button>
-            </div>
-
-            <div>
-              <SearchInput
-                placeholder={intl.get('graphList.searchName')}
-                onChange={searchChange}
-                onPressEnter={(e: any) => onSearch(e?.target?.value)}
-                onClear={() => onSearch('')}
-              />
-
-              <Dropdown
-                placement="bottomLeft"
-                overlay={
-                  <Menu selectedKeys={[sorter.rule]} onClick={({ key }) => onSortMenuClick(key)}>
-                    {SORTER_MENU.map(({ key, text }) => (
-                      <Menu.Item key={key}>
-                        <ArrowDownOutlined
-                          className="ad-mr-2"
-                          rotate={sorter.order === 'desc' ? 0 : 180}
-                          style={{ opacity: sorter.rule === key ? 0.8 : 0, fontSize: 16, verticalAlign: 'middle' }}
-                        />
-                        {text}
-                      </Menu.Item>
-                    ))}
-                  </Menu>
-                }
-              >
-                <Button className="sort-btn">
-                  <IconFont type="icon-paixu11" className="sort-icon" />
-                </Button>
-              </Dropdown>
-            </div>
+            <Button type="primary" onClick={() => onOpenCreateOrEdit({})}>
+              <IconFont type="icon-Add" style={{ color: '#fff' }} />
+              {intl.get('graphList.create')}
+            </Button>
+            <SearchInput
+              placeholder={intl.get('graphList.searchName')}
+              onChange={searchChange}
+              onPressEnter={(e: any) => onSearch(e?.target?.value)}
+              onClear={() => onSearch('')}
+            />
           </div>
           <div className="table-box">
             <Table
@@ -306,7 +248,7 @@ const GraphList = () => {
                 ) : (
                   <div className="nodata-box">
                     <img src={NoResult} alt="nodata" />
-                    <div className="nodata-text">{intl.get('global.noResult')}</div>
+                    <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
                   </div>
                 )
               }}
@@ -314,11 +256,11 @@ const GraphList = () => {
           </div>
         </div>
 
-        <KnowledgeModal
+        <CreateModal
           visible={!_.isEmpty(createOrEditData)}
           source={createOrEditData}
-          onSuccess={onRefreshList}
-          onCancel={onCloseCreateOrEdit}
+          onRefreshList={onRefreshList}
+          onCloseCreateOrEdit={onCloseCreateOrEdit}
         />
 
         <DeleteModal visible={!!delId} delId={delId} onCloseDelete={onCloseDelete} onRefreshList={onRefreshList} />

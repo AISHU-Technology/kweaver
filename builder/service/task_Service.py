@@ -1,9 +1,8 @@
 # -*-coding:utf-8-*-
-import datetime
 import json
 import time
+
 import requests
-from celery import current_app
 
 from dao.graph_dao import graph_dao
 from utils.common_response_status import CommonResponseStatus
@@ -1098,38 +1097,6 @@ class TaskService():
             data['detail'] = f'{err}'
             data['solution'] = "Please check mariadb status"
         return code, data
-
-    def start_otl_task(self, params_json, task_id):
-        task = current_app.send_task('cel.predict_ontology', (params_json, task_id))
-        task_state = task.status
-        # task_state = task_dao.getstatusbytaskid(task.id)
-
-        if task_state == "":
-            task_status = "redis wrong"  # redis 挂掉了
-        elif task_state == "PENDING":
-            task_status = "running"
-        elif task_state == "SUCCESS":
-            task_status = "finished"
-        elif task_state == "FAILURE":
-            task_status = "failed"
-        else:
-            task_status = "unkonwn"
-        celery_task_id = task.id
-        finished_time = task.date_done
-        if finished_time is None:
-            finished_time = "None"
-        else:
-            date_done = str(finished_time).split(".")[0]
-            UTC_FORMAT = "%Y-%m-%d %H:%M:%S"
-            utcTime = datetime.datetime.strptime(date_done, UTC_FORMAT)
-            finished_time = utcTime + datetime.timedelta(hours=8)
-        # task_id=params_json["task_id"]
-        # 更新本体任务状态
-        ret_code, obj = task_service.update_otl_task(task_status, "", celery_task_id, task_id, finished_time)
-        if ret_code != 200:
-            return ret_code, celery_task_id
-
-        return ret_code, celery_task_id
 
 
 task_service = TaskService()

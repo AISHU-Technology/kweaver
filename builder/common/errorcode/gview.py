@@ -16,40 +16,26 @@ class Gview(object):
 
     @staticmethod
     def replaceArgs(content, ds):
-        try:
-            content = _l(content)
-            p = re.compile('\[(\w+)\]')
-            args = p.findall(content)
-            if len(args) <= 0:
-                return content
-            for arg in args:
-                sub_str = "[{}]".format(arg)
-                content = str(content).replace(sub_str, str(ds[arg]))
+        content = _l(content)
+        p = re.compile('\[(\w+)\]')
+        args = p.findall(content)
+        if len(args) <= 0:
             return content
-        except Exception as e:
-            print(f"international translation error:{repr(e)}")
+        for arg in args:
+            subStr = "[{}]".format(arg)
+            content = str(content).replace(subStr, str(ds[arg]))
         return content
 
     @classmethod
     def TErrorreturn(cls, ErrorCode, **args):
         detailError = errDict[ErrorCode]
-        detailErrorCopy = copy.deepcopy(detailError)
+        detailErrorCopy= copy.deepcopy(detailError)
 
         detailErrorCopy['Description'] = cls.replaceArgs(detailError['Description'], args)
         detailErrorCopy['ErrorDetails'] = cls.replaceArgs(detailError['ErrorDetails'], args)
         detailErrorCopy['Solution'] = cls.replaceArgs(detailError['Solution'], args)
         detailErrorCopy['ErrorLink'] = ""
         return jsonify(detailErrorCopy)
-
-    @classmethod
-    def error_return(cls, error_code, **args):
-        detail_error = errDict[error_code]
-        detail_error_copy = copy.deepcopy(detail_error)
-
-        detail_error_copy['Description'] = cls.replaceArgs(detail_error['Description'], args)
-        detail_error_copy['ErrorDetails'] = cls.replaceArgs(detail_error['ErrorDetails'], args)
-        detail_error_copy['Solution'] = cls.replaceArgs(detail_error['Solution'], args)
-        return jsonify(detail_error_copy)
 
     @staticmethod
     def json_return(data):

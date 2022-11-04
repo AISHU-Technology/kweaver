@@ -34,8 +34,8 @@ const getFileGraphData = async (data: any) => await apiService.axiosPost(API.get
 /**
  * @description 获取所有本体
  */
-const getAllNoumenon = async (data: any) =>
-  await apiService.axiosGetData(API.getAllNoumenon, data);
+const getAllNoumenon = async () =>
+  await apiService.axiosGetData(API.getAllNoumenon, { page: -1, size: 10, order: 'descend' });
 
 /**
  * @description 按本体名获取内容

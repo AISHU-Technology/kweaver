@@ -16,9 +16,9 @@ describe('Menus', () => {
     graphBasicData: {},
     onRefresh: () => {}
   };
-  it('infoList have 5 children', () => {
+  it('infoList have 4 children', () => {
     const wrapper = init(props);
-    expect(wrapper.find('.infoList').children()).toHaveLength(5);
+    expect(wrapper.find('.infoList').children()).toHaveLength(4);
   });
   it('infoDrawer have 1 children', () => {
     const wrapper = init(props);

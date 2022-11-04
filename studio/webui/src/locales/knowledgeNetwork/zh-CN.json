@@ -1,6 +1,7 @@
 {
   "knowledge": {
     "knowRepresent": "知识表示",
+    "searchNull": "抱歉，没有搜到符合条件的结果",
     "create": "新建",
     "about": "关于",
     "entity": "本体",
@@ -16,7 +17,6 @@
     "byName": "按名称",
     "byUpdate": "按最终修改时间",
     "byCreate": "按创建时间",
-    "byIQ": "按领域智商",
     "deleteTitle": "确认要删除该知识表示吗？",
     "deleteDes": "知识表示一旦删除无法找回，请谨慎操作！",
     "up": "收起",

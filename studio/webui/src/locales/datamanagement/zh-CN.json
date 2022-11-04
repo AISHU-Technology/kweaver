@@ -112,7 +112,7 @@
       "authed": "我已认证授权",
       "reAuth": "重新认证授权",
       "authSuccess": "授权认证成功！",
-      "authSuccessText": "已授权认证完成！点击浏览器标签重新返回「KWeaver」进行后续操作。",
+      "authSuccessText": "已授权认证完成！点击浏览器标签重新返回「AnyDATA」进行后续操作。",
       "authError": "授权认证失败！",
       "authErrorText": "造成失败原因可能是打开多个授权认证窗口进行授权认证或长时间未操作导致链接失效，请重新授权认证。",
       "sure": "知道了",

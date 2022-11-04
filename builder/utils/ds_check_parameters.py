@@ -1078,6 +1078,9 @@ class DsCheckParameters(object):
             message = err
             return ret_status, param, message
 
+        # return ret_status, param, message
+
+    ####ljadd
     def Authcheck(self, params_json):
         ret_status = self.VALID
         inexistence = []

@@ -8,8 +8,7 @@ import {
   switchIcon, // 根据文件后缀显示文件图标
   triggerEvent, // 手动触发事件
   localStore, // 对localStorage数据加一层url编码
-  getScrollWidth,
-  formatIQNumber
+  getScrollWidth
 } from './index';
 
 describe('getParam', () => {
@@ -159,19 +158,5 @@ describe('getScrollWidth', () => {
   it('test getScrollWidth', () => {
     const width = getScrollWidth();
     expect(typeof width).toBe('number');
-  });
-});
-
-describe('formatIQNumber', () => {
-  it('test formatIQNumber', () => {
-    expect(formatIQNumber()).toBe('--');
-    expect(formatIQNumber(-1)).toBe('--');
-    expect(formatIQNumber('-1.00')).toBe('--');
-    expect(formatIQNumber(1)).toBe('1');
-    expect(formatIQNumber(1.2)).toBe('1.20');
-    expect(formatIQNumber(0.0)).toBe('0');
-    expect(formatIQNumber(1.23)).toBe('1.23');
-    expect(formatIQNumber(1.234)).toBe('1.23');
-    expect(formatIQNumber(1234.56)).toBe('1,234.56');
   });
 });

@@ -80,8 +80,6 @@
     "shortToLong": "按路径由短到长",
     "longToShort": "按路径由长到短",
     "allDirection": "全部方向",
-    "path": "路径",
-    "explorationTimeOut": "当前探索数据量过大，可选择单方向探索",
-    "expandFalse": "暂无关系路径，请更换实体点探索"
+    "path": "路径"
   }
 }

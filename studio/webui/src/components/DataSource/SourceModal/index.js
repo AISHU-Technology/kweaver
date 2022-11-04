@@ -369,10 +369,6 @@ const ModalContent = props => {
                   >
                     <Option value={MYSQL}>MySQL</Option>
                     <Option value={HIVE}>Hive</Option>
-                    <Option value={`${AS}-${STRUCTURED}`}>AnyShare 7-{intl.get('datamanagement.structured')}</Option>
-                    <Option value={`${AS}-${UNSTRUCTURED}`}>
-                      AnyShare 7-{intl.get('datamanagement.unstructured')}
-                    </Option>
                     <Option value={MQ}>RabbitMQ</Option>
                   </Select>
                 </FormItem>

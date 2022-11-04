@@ -115,14 +115,14 @@ func ExplorePath(conf *utils.KGConf, startRid, endRid, direction string) (interf
 				path := &PathInfo{Edges: make([]*EdgeSimpleInfo, len(edges)), Vertices: make([]string, len(nodes))}
 				//处理点
 				for j, node := range nodes {
-					path.Vertices[j] = utils.TrimQuotationMarks(node.GetID().String())
+					path.Vertices[j] = strings.Trim(node.GetID().String(), "\"")
 				}
 				//处理边
 				for j, edge := range edges {
 					eRecord := &EdgeSimpleInfo{
 						ID:  edge.GetEdgeName() + ":" + edge.GetSrcVertexID().String() + "->" + edge.GetDstVertexID().String(),
-						In:  utils.TrimQuotationMarks(edge.GetDstVertexID().String()),
-						Out: utils.TrimQuotationMarks(edge.GetSrcVertexID().String()),
+						In:  strings.Trim(edge.GetDstVertexID().String(), "\""),
+						Out: strings.Trim(edge.GetSrcVertexID().String(), "\""),
 					}
 					path.Edges[j] = eRecord
 				}
@@ -221,9 +221,9 @@ func PathDetail(conf *utils.KGConf, pathsInfo []map[string][]string) (interface{
 			v2Pro, _ := node.Properties(node.GetTags()[0])
 
 			vRecord := &ExplorePathVertexRes{
-				ID:         utils.TrimQuotationMarks(node.GetID().String()),
+				ID:         strings.Trim(node.GetID().String(), "\""),
 				Class:      node.GetTags()[0],
-				Name:       utils.TrimQuotationMarks(v2Pro["name"].String()),
+				Name:       strings.Trim(v2Pro["name"].String(), "\""),
 				Expand:     false,
 				Properties: nil,
 				Analysis:   false,
@@ -237,7 +237,7 @@ func PathDetail(conf *utils.KGConf, pathsInfo []map[string][]string) (interface{
 			for _, key := range proKeys {
 				vRecord.Properties = append(vRecord.Properties, &ExplorePathProperty{
 					Name:  key,
-					Value: utils.TrimQuotationMarks(v2Pro[key].String()),
+					Value: strings.Trim(v2Pro[key].String(), "\""),
 				})
 			}
 
@@ -278,8 +278,8 @@ func PathDetail(conf *utils.KGConf, pathsInfo []map[string][]string) (interface{
 					ID:    edge.GetEdgeName() + ":" + edge.GetSrcVertexID().String() + "->" + edge.GetDstVertexID().String(),
 					Class: edge.GetEdgeName(),
 					Name:  edge.GetEdgeName(),
-					In:    utils.TrimQuotationMarks(edge.GetDstVertexID().String()),
-					Out:   utils.TrimQuotationMarks(edge.GetSrcVertexID().String()),
+					In:    strings.Trim(edge.GetDstVertexID().String(), "\""),
+					Out:   strings.Trim(edge.GetSrcVertexID().String(), "\""),
 				}
 				for _, s := range schema.E {
 					if s.Name == eRecord.Class {
@@ -298,7 +298,7 @@ func PathDetail(conf *utils.KGConf, pathsInfo []map[string][]string) (interface{
 				for _, key := range proKeys {
 					eRecord.Properties = append(eRecord.Properties, &ExplorePathProperty{
 						Name:  key,
-						Value: utils.TrimQuotationMarks(edgePro[key].String()),
+						Value: strings.Trim(edgePro[key].String(), "\""),
 					})
 				}
 				edgesMap[eRecord.ID] = eRecord
@@ -318,7 +318,7 @@ func PathDetail(conf *utils.KGConf, pathsInfo []map[string][]string) (interface{
 			EdgesInfo:    make([]*ExplorePathEdgeRes, len(pathInfo["eids"])),
 		}
 		for j, id := range pathInfo["vids"] {
-			path.VerticesInfo[j] = verticesMap[utils.TrimQuotationMarks(id)]
+			path.VerticesInfo[j] = verticesMap[strings.Trim(id, "\"")]
 		}
 		for j, id := range pathInfo["eids"] {
 			path.EdgesInfo[j] = edgesMap[id]

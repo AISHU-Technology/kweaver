@@ -48,8 +48,6 @@ func (os OpenSearch) FullTextIndexesList(fulltextID string) (map[string]interfac
 type SearchWithHLBody struct {
 	Query MultiMatch `json:"query"`
 	HL    HighLight  `json:"highlight"`
-	From  int        `json:"from"`
-	Size  int        `json:"size"`
 }
 type Match struct {
 	Query    string   `json:"query"`
@@ -65,15 +63,7 @@ type HighLight struct {
 	Fields   map[string]interface{} `json:"fields"`
 }
 
-func (os OpenSearch) SerachWithHL(fulltextID string, fullTextName string, query string,
-	fields []string, operator string, preTags, postTags []string, sizeOptional ...int) (map[string]interface{}, error) {
-	size := 1000
-	from := 0
-	if len(sizeOptional) > 0 {
-		size = sizeOptional[0]
-		from = sizeOptional[1]
-	}
-
+func (os OpenSearch) SerachWithHL(fulltextID string, fullTextName string, query string, fields []string, operator string, preTags, postTags []string) (map[string]interface{}, error) {
 	osConf, err := dao.GetOSConfig(fulltextID)
 	if err != nil {
 		logger.Error(err)
@@ -97,8 +87,6 @@ func (os OpenSearch) SerachWithHL(fulltextID string, fullTextName string, query 
 			PostTags: postTags,
 			Fields:   fieldsMap,
 		},
-		From: from,
-		Size: size,
 	}
 	b, err := json.Marshal(searchWithHLBody)
 	if err != nil {

@@ -190,7 +190,9 @@ class IndexConfig extends Component {
       fixed: 'right',
       width: 160,
       render: (text, record) => {
-        return (
+        return record.name === '内置opensearch' ? (
+          <span className="icon-sub">- -</span>
+        ) : (
           <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
             <Button type="link" onClick={() => this.getIndex(record, 'edit')}>
               {intl.get('configSys.Edit')}
@@ -267,7 +269,7 @@ class IndexConfig extends Component {
                 ) : (
                   <div className="nodata-box">
                     <img src={noResult} alt="nodata" className="nodata-img"></img>
-                    <div className="nodata-text">{intl.get('global.noResult')}</div>
+                    <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
                   </div>
                 )
             }}

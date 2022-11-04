@@ -8,468 +8,341 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-14 15:27+0800\n"
+"POT-Creation-Date: 2022-09-08 02:39-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.10.3\n"
+"Generated-By: Babel 2.9.0\n"
 
-#: common/errorcode/errors/graph_error.py:8
-#: common/errorcode/errors/graph_error.py:115
-#: common/errorcode/errors/graph_error.py:127
-#: common/errorcode/errors/graph_error.py:133
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:8
 msgid "Parameter [arg] Error."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:9
-#: common/errorcode/errors/graph_error.py:21
-#: common/errorcode/errors/graph_error.py:27
-#: common/errorcode/errors/graph_error.py:51
-#: common/errorcode/errors/graph_error.py:63
-#: common/errorcode/errors/graph_error.py:75
-#: common/errorcode/errors/graph_error.py:87
-#: common/errorcode/errors/graph_error.py:93
-#: common/errorcode/errors/graph_error.py:105
-#: common/errorcode/errors/graph_error.py:111
-#: common/errorcode/errors/lexicon_error.py:16
-#: common/errorcode/errors/lexicon_error.py:22
-#: common/errorcode/errors/lexicon_error.py:28
-#: common/errorcode/errors/lexicon_error.py:70
-#: common/errorcode/errors/lexicon_error.py:76
-#: common/errorcode/errors/lexicon_error.py:83
-#: common/errorcode/errors/lexicon_error.py:89
-#: common/errorcode/errors/lexicon_error.py:96
-#: common/errorcode/errors/lexicon_error.py:102
-#: common/errorcode/errors/lexicon_error.py:109
-#: common/errorcode/errors/lexicon_error.py:115
-#: common/errorcode/errors/lexicon_error.py:140
-#: common/errorcode/errors/lexicon_error.py:146
-#: common/errorcode/errors/lexicon_error.py:153
-#: common/errorcode/errors/lexicon_error.py:159
-#: common/errorcode/errors/lexicon_error.py:165
-#: common/errorcode/errors/lexicon_error.py:177
-#: common/errorcode/errors/lexicon_error.py:190
-#: common/errorcode/errors/lexicon_error.py:196
-#: common/errorcode/errors/lexicon_error.py:216
-#: common/errorcode/errors/lexicon_error.py:222
-#: common/errorcode/errors/lexicon_error.py:228
-#: common/errorcode/errors/lexicon_error.py:236
-#: common/errorcode/errors/lexicon_error.py:242
-#: common/errorcode/errors/lexicon_error.py:249
-#: common/errorcode/errors/lexicon_error.py:255
-#: common/errorcode/errors/lexicon_error.py:274
-#: common/errorcode/errors/lexicon_error.py:288
-#: common/errorcode/errors/lexicon_error.py:294
-#: common/errorcode/errors/lexicon_error.py:301
-#: common/errorcode/errors/lexicon_error.py:307
-#: common/errorcode/errors/lexicon_error.py:368
-#: common/errorcode/errors/lexicon_error.py:374
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:9
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:21
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:27
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:51
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:63
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:75
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:87
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:93
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:105
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:111
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:20
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:26
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:32
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:74
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:80
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:87
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:93
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:100
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:106
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:113
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:119
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:144
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:150
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:157
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:163
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:169
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:181
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:194
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:200
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:220
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:226
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:232
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:240
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:246
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:253
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:259
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:278
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:292
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:298
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:305
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:311
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:372
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:378
 msgid "Please check your parameter again."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:14
-#: common/errorcode/errors/graph_error.py:56
-#: common/errorcode/errors/graph_error.py:80
-#: common/errorcode/errors/graph_error.py:98
-#: common/errorcode/errors/graph_error.py:122
-#: common/errorcode/errors/graph_error.py:146
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:14
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:56
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:80
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:98
 msgid "[cause]"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:15
-#: common/errorcode/errors/graph_error.py:57
-#: common/errorcode/errors/graph_error.py:81
-#: common/errorcode/errors/graph_error.py:99
-#: common/errorcode/errors/graph_error.py:123
-#: common/errorcode/errors/graph_error.py:147
-#: common/errorcode/errors/intelligence_error.py:9
-#: common/errorcode/errors/intelligence_error.py:15
-#: common/errorcode/errors/intelligence_error.py:47
-#: common/errorcode/errors/intelligence_error.py:53
-#: common/errorcode/errors/intelligence_error.py:59
-#: common/errorcode/errors/intelligence_error.py:65
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:15
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:57
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:81
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:99
 msgid "Please contact the developers."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:19
-#: common/errorcode/errors/graph_error.py:20
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:19
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:20
 msgid "graphid [graphid] not exists."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:25
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:25
 msgid "key type error"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:26
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:26
 msgid "key should be list of string"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:31
-#: common/errorcode/errors/graph_error.py:32
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:31
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:32
 msgid "graphdb id [graphdb_id] not exists"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:33
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:33
 msgid "please config your graphdb again."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:43
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:43
 msgid "these keys are not supported: [unsupported_key]"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:44
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:44
 msgid "some keys are not supported."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:45
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:45
 msgid "please check your parameter key again."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:50
-#: common/errorcode/errors/graph_error.py:74
-#: common/errorcode/errors/graph_error.py:92
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:50
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:74
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:92
 msgid "argument [arg] error"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:61
-#: common/errorcode/errors/graph_error.py:62
-#: common/errorcode/errors/graph_error.py:85
-#: common/errorcode/errors/graph_error.py:86
-#: common/errorcode/errors/graph_error.py:103
-#: common/errorcode/errors/graph_error.py:104
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:61
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:62
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:85
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:86
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:103
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:104
 msgid "graph id [graphid] not exists"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:67
-#: common/errorcode/errors/graph_error.py:68
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:67
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:68
 msgid "ontology id [otl_id] not exists"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:69
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:69
 msgid "Please config the ontology."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:109
-#: common/errorcode/errors/graph_error.py:110
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:109
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:110
 msgid "[class_type] [name] not exists"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:116
-#: common/errorcode/errors/graph_error.py:128
-#: common/errorcode/errors/graph_error.py:134
-msgid "parameter [arg] not exists or invalid"
-msgstr ""
-
-#: common/errorcode/errors/graph_error.py:117
-#: common/errorcode/errors/graph_error.py:129
-#: common/errorcode/errors/graph_error.py:135
-#: common/errorcode/errors/graph_error.py:141
-#: common/errorcode/errors/graph_error.py:153
-msgid "please ensure parameter [arg] exists and valid"
-msgstr ""
-
-#: common/errorcode/errors/graph_error.py:139
-#: common/errorcode/errors/graph_error.py:140
-msgid "Parameter [arg] too big please lower than [max]"
-msgstr ""
-
-#: common/errorcode/errors/graph_error.py:151
-#: common/errorcode/errors/graph_error.py:152
-msgid "Parameter [arg] not allow, please choose [allowed]"
-msgstr ""
-
-#: common/errorcode/errors/graphdb_error.py:9
-#: common/errorcode/errors/graphdb_error.py:33
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:10
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:34
 msgid "Please check whether the OrientDB request information is correct."
 msgstr ""
 
-#: common/errorcode/errors/graphdb_error.py:15
-#: common/errorcode/errors/graphdb_error.py:39
-#: common/errorcode/errors/graphdb_error.py:45
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:16
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:40
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:46
 msgid "Please check whether the Nebula request information is correct."
 msgstr ""
 
-#: common/errorcode/errors/graphdb_error.py:21
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:22
 msgid "Please check whether your GraphDB service is running normally."
 msgstr ""
 
-#: common/errorcode/errors/graphdb_error.py:27
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:28
 msgid "Please check whether your DB name is correct."
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:19
-#: common/errorcode/errors/intelligence_error.py:20
-msgid "knowledge graph is waiting build, please calculate after building"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:21
-#: common/errorcode/errors/intelligence_error.py:27
-#: common/errorcode/errors/intelligence_error.py:33
-#: common/errorcode/errors/intelligence_error.py:41
-#: common/errorcode/errors/intelligence_error.py:71
-msgid "Please check graph status"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:25
-#: common/errorcode/errors/intelligence_error.py:26
-msgid "knowledge graph is building, please calculate after building"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:31
-#: common/errorcode/errors/intelligence_error.py:32
-msgid "knowledge graph is configuring build, please calculate after building"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:37
-#: common/errorcode/errors/intelligence_error.py:39
-msgid ""
-"knowledge graph store in NebulaGraph, if you need intelligence score, "
-"please calculate after building successfully"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:45
-msgid "call async task service error"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:46
-#: common/errorcode/errors/intelligence_error.py:52
-#: common/errorcode/errors/intelligence_error.py:58
-#: common/errorcode/errors/intelligence_error.py:64
-#: common/errorcode/errors/network_error.py:8
-#: common/errorcode/errors/network_error.py:14
-msgid "[detail]"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:51
-msgid "async task service internal error"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:57
-msgid "graph intelligence info query error"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:63
-msgid "network intelligence info query error"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:69
-#: common/errorcode/errors/intelligence_error.py:70
-msgid ""
-"Knowledge graph status invalid, please calculate after building "
-"successfully"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:75
-#: common/errorcode/errors/intelligence_error.py:76
-msgid "knowledge network [knw_id] not exists"
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:77
-#: common/errorcode/errors/intelligence_error.py:83
-msgid "please config your knowledge network again."
-msgstr ""
-
-#: common/errorcode/errors/intelligence_error.py:81
-#: common/errorcode/errors/intelligence_error.py:82
-msgid "knowledge graph [graph_id] not exists"
-msgstr ""
-
-#: common/errorcode/errors/lexicon_error.py:9
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:13
 msgid "Please check the database connection."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:21
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:25
 msgid ""
 "The specified knowledge_id [knowledge_id] does not exist, lexicon "
 "creation failed!"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:27
-#: common/errorcode/errors/lexicon_error.py:227
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:31
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:231
 msgid ""
 "Lexicon name [lexicon_name] already exists and cannot be created "
 "repeatedly."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:33
-#: common/errorcode/errors/lexicon_error.py:312
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:37
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:316
 msgid "[ErrorDetails]"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:34
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:38
 msgid "Please check the type, size and content format of the uploaded file."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:39
-#: common/errorcode/errors/lexicon_error.py:324
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:43
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:328
 msgid "Only one file can be selected at most."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:40
-#: common/errorcode/errors/lexicon_error.py:46
-#: common/errorcode/errors/lexicon_error.py:325
-#: common/errorcode/errors/lexicon_error.py:331
-#: common/errorcode/errors/lexicon_error.py:349
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:44
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:50
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:329
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:335
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:353
 msgid "Please select upload file again."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:45
-#: common/errorcode/errors/lexicon_error.py:330
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:49
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:334
 msgid "The file format only supports txt and CSV."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:51
-#: common/errorcode/errors/lexicon_error.py:336
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:55
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:340
 msgid "File content format error."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:52
-#: common/errorcode/errors/lexicon_error.py:337
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:56
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:341
 msgid ""
 "Please check the content and format of the document according to the "
 "template."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:57
-#: common/errorcode/errors/lexicon_error.py:342
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:61
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:346
 msgid "The file only supports UTF-8 encoding."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:58
-#: common/errorcode/errors/lexicon_error.py:343
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:62
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:347
 msgid "Please confirm the file code and reselect the file."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:63
-#: common/errorcode/errors/lexicon_error.py:354
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:67
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:358
 msgid "The amount of uploaded file data exceeds."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:64
-#: common/errorcode/errors/lexicon_error.py:355
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:68
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:359
 msgid ""
 "The uploaded file must be less than 10M and the number of lines must be "
 "less than 350000."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:75
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:79
 msgid ""
 "The specified knowledge_id [knowledge_id] does not exist, get labels "
 "failed!"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:88
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:92
 msgid ""
 "The specified knowledge_id [knowledge_id] does not exist, get lexicon "
 "failed!"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:101
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:105
 msgid "The specified lexicon id [lexicon_id] does not exist, get lexicon failed!"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:114
-#: common/errorcode/errors/lexicon_error.py:139
-#: common/errorcode/errors/lexicon_error.py:158
-#: common/errorcode/errors/lexicon_error.py:195
-#: common/errorcode/errors/lexicon_error.py:221
-#: common/errorcode/errors/lexicon_error.py:241
-#: common/errorcode/errors/lexicon_error.py:254
-#: common/errorcode/errors/lexicon_error.py:293
-#: common/errorcode/errors/lexicon_error.py:306
-#: common/errorcode/errors/lexicon_error.py:373
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:118
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:143
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:162
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:199
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:225
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:245
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:258
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:297
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:310
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:377
 msgid "The specified lexicon id [lexicon_id] does not exist."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:120
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:124
 msgid "The format of the new data [data] does not match the original data"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:121
-#: common/errorcode/errors/lexicon_error.py:127
-#: common/errorcode/errors/lexicon_error.py:171
-#: common/errorcode/errors/lexicon_error.py:202
-#: common/errorcode/errors/lexicon_error.py:319
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:125
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:131
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:175
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:206
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:323
 msgid "Please check lexicon format again."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:126
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:130
 msgid "The newly added word [data] already exists."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:132
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:136
 msgid "lexicon [lexicon_id] status is running, cannot insert."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:133
-#: common/errorcode/errors/lexicon_error.py:183
-#: common/errorcode/errors/lexicon_error.py:208
-#: common/errorcode/errors/lexicon_error.py:267
-#: common/errorcode/errors/lexicon_error.py:361
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:137
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:187
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:212
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:271
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:365
 msgid "lexicon status is running, please make sure lexicon status is correct."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:164
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:168
 msgid "The specified lexicon word [lexicon_word] does not exist."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:170
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:174
 msgid "New data [new_info] and original data [old_info] fields are inconsistent."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:176
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:180
 msgid "The modified word [lexicon_word] already exists."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:182
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:186
 msgid "lexicon [lexicon_id] status is running, cannot edit word."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:201
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:205
 msgid "There is no deleted data [delete_data] in the specified lexicon."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:207
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:211
 msgid "lexicon [lexicon_id] status is running, cannot delete word."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:266
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:270
 msgid "lexicon [lexicon_id] status is running, cannot export."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:280
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:284
 msgid "Please see the error prompt for details."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:313
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:317
 msgid "Please check the type and size of the uploaded file."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:318
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:322
 msgid "New data and original data fields are inconsistent"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:348
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:352
 msgid "Select at least one file."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:360
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:364
 msgid "lexicon [lexicon_id] status is running, cannot import words."
-msgstr ""
-
-#: common/errorcode/errors/network_error.py:7
-msgid "Parameters Error!"
-msgstr ""
-
-#: common/errorcode/errors/network_error.py:9
-#: common/errorcode/errors/network_error.py:15
-msgid "Please check your parameters."
-msgstr ""
-
-#: common/errorcode/errors/network_error.py:13
-msgid "[description]"
 msgstr ""
 

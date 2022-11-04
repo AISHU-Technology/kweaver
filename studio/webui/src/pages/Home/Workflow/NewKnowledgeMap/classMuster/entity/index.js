@@ -68,10 +68,7 @@ class Entity extends Component {
     // 若删除了选中的点
     if (typeof selectedElement.entity_id === 'number') {
       selectInclude = nodes.some(item => {
-        if (selectedElement.entity_id === item.entity_id) {
-          this.props.setSelectedElement(item);
-        }
-        return selectedElement.entity_id === item.entity_id;
+        return selectedElement.name === item.name;
       });
     }
 
@@ -201,6 +198,7 @@ class Entity extends Component {
                       {!this.isEmptyField(item) && !item.Type ? (
                         <div className="tag">
                           <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
+                            {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                             <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                           </Tooltip>
                         </div>
@@ -243,6 +241,7 @@ class Entity extends Component {
                       {!this.isEmptyField(item) && !item.Type ? (
                         <div className="tag">
                           <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
+                            {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                             <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                           </Tooltip>
                         </div>
@@ -289,6 +288,7 @@ class Entity extends Component {
                       {!this.isEmptyField(item) && !item.Type ? (
                         <div className="model-tag">
                           <Tooltip placement="bottom" title={intl.get('workflow.knowledge.configured')}>
+                            {/* <img className="icon-configured" src={Configured} alt="KWeaver" /> */}
                             <IconFont type="icon-duigou" className="icon-configured"></IconFont>
                           </Tooltip>
                         </div>

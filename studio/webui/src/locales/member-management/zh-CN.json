@@ -1,6 +1,7 @@
 {
   "memberManage": {
     "know": "知道了",
-    "delSuccess": "移除成功！"
+    "delSuccess": "移除成功！",
+    "searchNull": "抱歉，没有找到相关内容"
   }
 }

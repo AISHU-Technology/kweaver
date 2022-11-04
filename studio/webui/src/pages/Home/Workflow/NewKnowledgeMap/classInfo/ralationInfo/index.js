@@ -45,24 +45,9 @@ class RalationInfo extends Component {
   }
 
   componentDidUpdate(preProps) {
-    // if (this.props.selectedElement !== preProps.selectedElement) {
-    //   this.getNodeInfo();
-    //   this.initInfo();
-    // }
-
     if (this.props.selectedElement !== preProps.selectedElement) {
       this.getNodeInfo();
-
       this.initInfo();
-
-      return;
-    }
-    if (this.props.current !== preProps.current && this.props.current === 4) {
-      this.getNodeInfo();
-
-      setTimeout(() => {
-        this.initInfo();
-      }, 100);
     }
   }
 
@@ -86,6 +71,7 @@ class RalationInfo extends Component {
     if (!selectedElement) return;
 
     let attrValue = [];
+
     if (selectedElement && selectedElement.edgeInfo) {
       for (let i = 0; i < selectedElement.edgeInfo.property_map.length; i++) {
         attrValue = [
@@ -127,6 +113,7 @@ class RalationInfo extends Component {
         entityName: { Type: 0, value: '' } // 实体类名
       });
     }
+
     if (selectedElement && selectedElement.moreFile) {
       this.setState({ newMoreFileData: selectedElement.moreFile });
     } else {
@@ -393,7 +380,7 @@ class RalationInfo extends Component {
                     virtual={false}
                     key={selectedElement ? `${selectedElement.name}1` : null}
                     filterOption={(input, option) => option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    value={entityName.value || selectedElement?.edgeInfo?.entity_type?.value || undefined}
+                    value={entityName.value || undefined}
                     title={entityName.value || undefined}
                     onChange={(value, option) => {
                       this.selectEntity(value, option);
@@ -490,9 +477,9 @@ class RalationInfo extends Component {
                                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                               }
                               value={
-                                (attrValue1[index] &&
-                                  attrValue1[index].entity_prop &&
-                                  attrValue1[index].entity_prop.value) ||
+                                (attrValue[index] &&
+                                  attrValue[index].entity_prop &&
+                                  attrValue[index].entity_prop.value) ||
                                 undefined
                               }
                               title={
@@ -522,7 +509,7 @@ class RalationInfo extends Component {
                   })}
               </div>
             </div>
-            {selectedElement?.source_type !== 'automatic' ? (
+            {selectedElement.source_type !== 'automatic' ? (
               <MoreFileRelation
                 edgeData={selectedElement}
                 startNode={startNode}

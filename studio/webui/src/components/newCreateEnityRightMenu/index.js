@@ -14,7 +14,6 @@ class NewCreateEnityRightMenu extends Component {
           <TaskList
             selectRightTool={this.props.selectRightTool}
             ontology_id={this.props.ontology_id}
-            ontologyId={this.props.ontologyId}
             nodes={this.props.nodes}
             edges={this.props.edges}
             freeGraphRef={this.props.freeGraphRef}

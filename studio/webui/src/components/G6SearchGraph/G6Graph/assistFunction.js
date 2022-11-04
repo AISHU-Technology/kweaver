@@ -8,7 +8,6 @@ import out from '@/assets/images/chuqu.svg';
 import explore from '@/assets/images/tansuoguanxi.svg';
 import inE from '@/assets/images/jinru.svg';
 import five from '@/assets/images/five.svg';
-import deleteImage from '@/assets/images/delete-edge.svg';
 
 /**
  * @description 鼠标移入操作盘时的样式
@@ -575,6 +574,16 @@ const getExpandHandleData = (data, selectedNode, nodes, edges) => {
           ...outItem,
           source: item.id,
           target: selectedNode.id
+          // start: {
+          //   data: { id, color, name, expand, analysis, alias, properties, class: item.class },
+          //   id: item.id,
+          //   label: item.name.length < 20 ? item.name : `${item.name.substring(0, 17)}...`,
+          //   style: {
+          //     fill: item.color || defaultColor,
+          //     stroke: item.color ? 'white' : 'rgba(0,0,0,0.15)'
+          //   }
+          // },
+          // end: selectedNode
         };
 
         if (!openIds.includes(outItem.id)) {
@@ -591,6 +600,16 @@ const getExpandHandleData = (data, selectedNode, nodes, edges) => {
           ...inItem,
           source: selectedNode.id,
           target: item.id
+          // start: selectedNode,
+          // end: {
+          //   data: { id, color, name, expand, analysis, alias, properties, class: item.class },
+          //   id: item.id,
+          //   label: item.name.length < 20 ? item.name : `${item.name.substring(0, 17)}...`,
+          //   style: {
+          //     fill: item.color || defaultColor,
+          //     stroke: 'white'
+          //   }
+          // }
         };
         // 判断画布中是否已存在这条边
         if (!openIds.includes(inItem.id)) {
@@ -731,28 +750,6 @@ const duplicateRemoval = arr => {
   return array;
 };
 
-// 悬停边的配置
-const hoverEdgeConfig = () => {
-  return {
-    afterDraw(cfg, group) {
-      const shape = group.get('children')[0];
-      const midPoint = shape.getPoint(0.42);
-      group.addShape('image', {
-        attrs: {
-          x: midPoint.x - 18,
-          y: midPoint.y - 18,
-          width: 36,
-          height: 36,
-          img: deleteImage,
-          cursor: 'pointer'
-        },
-        name: 'delete-edge'
-      });
-    },
-    update: undefined
-  };
-};
-
 export {
   hoverIn,
   hoverOut,
@@ -765,6 +762,5 @@ export {
   getEdgesByNode,
   setPathExplorePosition,
   drawMark,
-  duplicateRemoval,
-  hoverEdgeConfig
+  duplicateRemoval
 };

@@ -80,8 +80,6 @@
     "shortToLong": "From short to long",
     "longToShort": "From long to short",
     "allDirection": "All direction",
-    "path": "Path",
-    "explorationTimeOut": "Data volume is too large, single direction can be selected",
-    "expandFalse": "There is no relevant path, please change the entity point to explore"
+    "path": "Path"
   }
 }

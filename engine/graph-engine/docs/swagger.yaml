@@ -172,21 +172,16 @@ definitions:
           $ref: '#/definitions/controllers.AdvConfKG'
         type: array
     type: object
+  controllers.InfoSearchConfRes:
+    properties:
+      res:
+        $ref: '#/definitions/dao.InfoSearchConf'
+    type: object
   controllers.Properties:
     properties:
       p_name:
         type: string
       p_type:
-        type: string
-    type: object
-  controllers.PropertyField:
-    properties:
-      hl:
-        description: DataType string
-        type: string
-      name:
-        type: string
-      value:
         type: string
     type: object
   controllers.Relation:
@@ -223,17 +218,6 @@ definitions:
       time:
         type: string
     type: object
-  controllers.SearchVRes:
-    properties:
-      count:
-        type: string
-      time:
-        type: string
-      vertexes:
-        items:
-          $ref: '#/definitions/controllers.VertexRes'
-        type: array
-    type: object
   controllers.UpdateSearchConfRes:
     properties:
       res:
@@ -267,25 +251,6 @@ definitions:
       word_name:
         type: string
     type: object
-  controllers.VertexRes:
-    properties:
-      analysis:
-        type: boolean
-      class:
-        type: string
-      expand:
-        type: boolean
-      hl:
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      properties:
-        items:
-          $ref: '#/definitions/controllers.PropertyField'
-        type: array
-    type: object
   dao.ConfContent:
     properties:
       display_range:
@@ -318,6 +283,23 @@ definitions:
     required:
     - vertexes
     type: object
+  dao.InfoSearchConf:
+    properties:
+      conf_content:
+        $ref: '#/definitions/dao.ConfContent'
+      conf_desc:
+        type: string
+      conf_id:
+        type: integer
+      conf_name:
+        type: string
+      kg_id:
+        type: integer
+      kg_name:
+        type: string
+      type:
+        type: string
+    type: object
   dao.RangeEdges:
     properties:
       open:
@@ -343,168 +325,6 @@ definitions:
     - vertexes
     type: object
   gql.DataQuery:
-    type: object
-  nebula.ERecord:
-    properties:
-      alias:
-        type: string
-      class:
-        type: string
-      color:
-        type: string
-      in:
-        $ref: '#/definitions/nebula.VRecord'
-      name:
-        type: string
-      out:
-        $ref: '#/definitions/nebula.VRecord'
-      properties:
-        items:
-          $ref: '#/definitions/nebula.PropValue'
-        type: array
-      rid:
-        type: string
-    type: object
-  nebula.ESearchRes:
-    properties:
-      res:
-        items:
-          $ref: '#/definitions/nebula.ERecord'
-        type: array
-    type: object
-  nebula.Edge:
-    properties:
-      alias:
-        type: string
-      class:
-        type: string
-      color:
-        type: string
-      count:
-        type: number
-    type: object
-  nebula.EdgeRes:
-    properties:
-      inE:
-        items:
-          $ref: '#/definitions/nebula.Edge'
-        type: array
-      outE:
-        items:
-          $ref: '#/definitions/nebula.Edge'
-        type: array
-    type: object
-  nebula.PropValue:
-    properties:
-      dataType:
-        type: string
-      hl:
-        type: string
-      name:
-        type: string
-      value:
-        type: string
-    type: object
-  nebula.VRecord:
-    properties:
-      alias:
-        type: string
-      analysis:
-        type: boolean
-      class:
-        type: string
-      color:
-        type: string
-      expand:
-        type: boolean
-      name:
-        type: string
-      properties:
-        items:
-          $ref: '#/definitions/nebula.PropValue'
-        type: array
-      rid:
-        type: string
-    type: object
-  orient.EdgeSimpleInfo:
-    properties:
-      id:
-        type: string
-      in:
-        type: string
-      out:
-        type: string
-    type: object
-  orient.ExplorePathEdgeRes:
-    properties:
-      alias:
-        type: string
-      class:
-        type: string
-      color:
-        type: string
-      id:
-        type: string
-      in:
-        type: string
-      name:
-        type: string
-      out:
-        type: string
-      properties:
-        items:
-          $ref: '#/definitions/orient.ExplorePathProperty'
-        type: array
-    type: object
-  orient.ExplorePathProperty:
-    properties:
-      "n":
-        type: string
-      v:
-        type: string
-    type: object
-  orient.ExplorePathVertexRes:
-    properties:
-      alias:
-        type: string
-      analysis:
-        type: boolean
-      class:
-        type: string
-      color:
-        type: string
-      expand:
-        type: boolean
-      id:
-        type: string
-      name:
-        type: string
-      properties:
-        items:
-          $ref: '#/definitions/orient.ExplorePathProperty'
-        type: array
-    type: object
-  orient.PathDetailInfo:
-    properties:
-      edges:
-        items:
-          $ref: '#/definitions/orient.ExplorePathEdgeRes'
-        type: array
-      vertices:
-        items:
-          $ref: '#/definitions/orient.ExplorePathVertexRes'
-        type: array
-    type: object
-  orient.PathInfo:
-    properties:
-      edges:
-        items:
-          $ref: '#/definitions/orient.EdgeSimpleInfo'
-        type: array
-      vertices:
-        items:
-          type: string
-        type: array
     type: object
   services.AddAdvSearchConf:
     properties:
@@ -571,30 +391,6 @@ definitions:
           type: string
         type: array
     type: object
-  services.ExplorePathBody:
-    properties:
-      direction:
-        enum:
-        - positive
-        - reverse
-        - bidirect
-        type: string
-      endRid:
-        type: string
-      id:
-        type: string
-      shortest:
-        enum:
-        - 0
-        - 1
-        type: integer
-      startRid:
-        type: string
-    required:
-    - endRid
-    - id
-    - startRid
-    type: object
   services.Path:
     properties:
       edges:
@@ -610,29 +406,6 @@ definitions:
           $ref: '#/definitions/services.Vertex'
         type: array
     type: object
-  services.PathBody:
-    properties:
-      id:
-        type: string
-      paths:
-        items:
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          type: object
-        type: array
-    required:
-    - id
-    - paths
-    type: object
-  services.PathDetailRes:
-    properties:
-      res:
-        items:
-          $ref: '#/definitions/orient.PathDetailInfo'
-        type: array
-    type: object
   services.PathMetaData:
     properties:
       depth:
@@ -641,30 +414,6 @@ definitions:
         type: number
       weight:
         type: number
-    type: object
-  services.PathRes:
-    properties:
-      res:
-        items:
-          $ref: '#/definitions/orient.PathInfo'
-        type: array
-    type: object
-  services.ReqAdvSearchDefault:
-    properties:
-      kgid:
-        type: string
-      limit:
-        type: integer
-      page:
-        type: integer
-      query:
-        description: KNetID int    `form:"knet_id"`
-        type: string
-      size:
-        type: integer
-    required:
-    - page
-    - size
     type: object
   services.ReqBody:
     properties:
@@ -684,27 +433,6 @@ definitions:
         type: boolean
     required:
     - sql
-    type: object
-  services.ReqExpandEArgs:
-    properties:
-      class:
-        type: string
-      id:
-        type: string
-      io:
-        type: string
-      page:
-        type: integer
-      rid:
-        type: string
-      size:
-        type: integer
-    required:
-    - class
-    - io
-    - page
-    - rid
-    - size
     type: object
   services.ReqExploreRelationArgs:
     properties:
@@ -728,37 +456,6 @@ definitions:
     - class
     - id
     type: object
-  services.ReqSearchEArgs:
-    properties:
-      id:
-        type: string
-      rid:
-        type: string
-    required:
-    - rid
-    type: object
-  services.ReqSearchVArgs:
-    properties:
-      class:
-        type: string
-      filter:
-        $ref: '#/definitions/utils.SearchFilterArgs'
-      id:
-        type: string
-      page:
-        type: integer
-      query:
-        type: string
-      query_all:
-        type: boolean
-      size:
-        type: integer
-    required:
-    - class
-    - filter
-    - page
-    - size
-    type: object
   services.RequestModel:
     properties:
       conf_content:
@@ -781,15 +478,6 @@ definitions:
       time:
         type: number
     type: object
-  services.ResponseDocument:
-    properties:
-      number:
-        type: integer
-      res:
-        $ref: '#/definitions/services.SearchResultDocument'
-      time:
-        type: number
-    type: object
   services.SearchRange:
     properties:
       edges:
@@ -802,13 +490,6 @@ definitions:
       search:
         items:
           $ref: '#/definitions/services.TargetVertex'
-        type: array
-    type: object
-  services.SearchResultDocument:
-    properties:
-      search:
-        items:
-          $ref: '#/definitions/services.TargetVertexDocument'
         type: array
     type: object
   services.TargetVertex:
@@ -829,19 +510,6 @@ definitions:
         $ref: '#/definitions/services.Path'
       tag:
         type: string
-    type: object
-  services.TargetVertexDocument:
-    properties:
-      explain:
-        type: string
-      gns:
-        type: string
-      kg_id:
-        type: integer
-      labels:
-        type: string
-      score:
-        type: integer
     type: object
   services.UpdateAdvSearchConf:
     properties:
@@ -896,32 +564,6 @@ definitions:
       solution:
         type: string
     type: object
-  utils.SearchFilter:
-    properties:
-      condition:
-        type: string
-      property:
-        type: string
-      pt:
-        type: string
-      range:
-        items:
-          type: string
-        type: array
-    type: object
-  utils.SearchFilterArgs:
-    properties:
-      filter:
-        items:
-          $ref: '#/definitions/utils.SearchFilter'
-        type: array
-      selected:
-        type: string
-      selectedRids:
-        items:
-          type: string
-        type: array
-    type: object
 info:
   contact: {}
   description: KWeaver graph-engine and alg-server
@@ -930,36 +572,6 @@ info:
   title: kw_engine
   version: 1.0.0
 paths:
-  /api/engine/v1/adv-search:
-    get:
-      consumes:
-      - application/json
-      description: only return documents
-      parameters:
-      - description: adv-search query
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/services.ReqAdvSearchDefault'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: result string
-          schema:
-            $ref: '#/definitions/services.ResponseDocument'
-        "400":
-          description: 'EngineServer.ErrArgsErr: Parameter exception'
-          schema:
-            $ref: '#/definitions/utils.Error'
-        "500":
-          description: 'EngineServer.ErrVClassErr: Entity does not exist'
-          schema:
-            $ref: '#/definitions/utils.Error'
-      summary: advanced search document
-      tags:
-      - CEngine
   /api/engine/v1/adv-search-config:
     delete:
       consumes:
@@ -1118,7 +730,7 @@ paths:
         "200":
           description: result string
           schema:
-            $ref: '#/definitions/nebula.EdgeRes'
+            $ref: '#/definitions/controllers.InfoSearchConfRes'
         "400":
           description: 'EngineServer.ErrArgsErr: Parameter exception'
           schema:
@@ -1232,7 +844,7 @@ paths:
           schema:
             $ref: '#/definitions/utils.Error'
         "500":
-          description: 'EngineServer.ErrVClassErr: Entity does not exist'
+          description: 'EngineServer.ErrOrientDBErr: OrientDB error'
           schema:
             $ref: '#/definitions/utils.Error'
       summary: advanced search
@@ -1262,7 +874,7 @@ paths:
           schema:
             $ref: '#/definitions/utils.Error'
         "500":
-          description: 'EngineServer.ErrVClassErr: Entity does not exist'
+          description: 'EngineServer.ErrOrientDBErr: OrientDB error'
           schema:
             $ref: '#/definitions/utils.Error'
       summary: advanced search test
@@ -1332,111 +944,6 @@ paths:
       summary: graphql search
       tags:
       - CEngine
-  /api/engine/v1/explore/{id}/expande:
-    post:
-      consumes:
-      - application/json
-      description: expand edges by id
-      parameters:
-      - description: request body
-        in: body
-        name: conf_content
-        required: true
-        schema:
-          $ref: '#/definitions/services.ReqExpandEArgs'
-      - description: knowledge_graph id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: result string
-          schema:
-            $ref: '#/definitions/nebula.ESearchRes'
-        "400":
-          description: 'EngineServer.ErrArgsErr: Parameter exception'
-          schema:
-            $ref: '#/definitions/utils.Error'
-        "500":
-          description: 'EngineServer.ErrOrientDBErr: OrientDB error'
-          schema:
-            $ref: '#/definitions/utils.Error'
-      summary: expand edges
-      tags:
-      - CEngine
-  /api/engine/v1/explore/{id}/searche:
-    post:
-      consumes:
-      - application/json
-      description: search edges by id
-      parameters:
-      - description: request body
-        in: body
-        name: conf_content
-        required: true
-        schema:
-          $ref: '#/definitions/services.ReqSearchEArgs'
-      - description: knowledge_graph id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: result string
-          schema:
-            $ref: '#/definitions/controllers.SearchVRes'
-        "400":
-          description: 'EngineServer.ErrArgsErr: Parameter exception'
-          schema:
-            $ref: '#/definitions/utils.Error'
-        "500":
-          description: 'EngineServer.ErrOrientDBErr: OrientDB error'
-          schema:
-            $ref: '#/definitions/utils.Error'
-      summary: search edges
-      tags:
-      - CEngine
-  /api/engine/v1/explore/{id}/searchv:
-    post:
-      consumes:
-      - application/json
-      description: search vertexes by query
-      parameters:
-      - description: request body
-        in: body
-        name: conf_content
-        required: true
-        schema:
-          $ref: '#/definitions/services.ReqSearchVArgs'
-      - description: knowledge_graph id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: result string
-          schema:
-            $ref: '#/definitions/controllers.SearchVRes'
-        "400":
-          description: 'EngineServer.ErrArgsErr: Parameter exception'
-          schema:
-            $ref: '#/definitions/utils.Error'
-        "500":
-          description: 'EngineServer.ErrOrientDBErr: OrientDB error'
-          schema:
-            $ref: '#/definitions/utils.Error'
-      summary: search vertexes
-      tags:
-      - CEngine
   /api/engine/v1/explore/expandv:
     get:
       consumes:
@@ -1498,67 +1005,6 @@ paths:
           schema:
             $ref: '#/definitions/utils.Error'
       summary: expand vertexes
-      tags:
-      - CEngine
-  /api/engine/v1/explore/path:
-    post:
-      consumes:
-      - application/json
-      description: explore the path between two vertices
-      parameters:
-      - description: explore path body, direction[positive, reverse, bidirect], shortest[0(all),
-          1(shortest)]
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/services.ExplorePathBody'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: result string
-          schema:
-            $ref: '#/definitions/services.PathRes'
-        "400":
-          description: 'EngineServer.ErrArgsErr: Parameter exception'
-          schema:
-            $ref: '#/definitions/utils.Error'
-        "500":
-          description: 'EngineServer.ErrInternalErr: internal error'
-          schema:
-            $ref: '#/definitions/utils.Error'
-      summary: explore the path
-      tags:
-      - CEngine
-  /api/engine/v1/explore/pathDetail:
-    post:
-      consumes:
-      - application/json
-      description: query path details by paths list
-      parameters:
-      - description: knowledge graph id and paths list
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/services.PathBody'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: result string
-          schema:
-            $ref: '#/definitions/services.PathDetailRes'
-        "400":
-          description: 'EngineServer.ErrArgsErr: Parameter exception'
-          schema:
-            $ref: '#/definitions/utils.Error'
-        "500":
-          description: 'EngineServer.ErrInternalErr: internal error'
-          schema:
-            $ref: '#/definitions/utils.Error'
-      summary: query path details
       tags:
       - CEngine
   /api/engine/v1/explore/relation:

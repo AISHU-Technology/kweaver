@@ -5,8 +5,6 @@ from dao.graph_dao import graph_dao
 from service.dsm_Service import dsm_service
 import pandas as pd
 
-from utils.common_response_status import CommonResponseStatus
-
 
 class Test_addds(TestCase):
     def setUp(self) -> None:
@@ -310,26 +308,3 @@ class Test_delete(TestCase):
 
         res = dsm_service.delete(self.params_json)
         self.assertEqual(res[0], 500)
-
-
-class Test_verify(TestCase):
-    def setUp(self) -> None:
-        self.params_json = {}
-
-    def test_success(self):
-        dsm_dao.verify = mock.Mock(return_value=(
-            200, 'cqLusY9-z8xtPwKFlVc97skW-fdqJLXzpLQeCRsKzug.M8aU3w8zBj4epqSYSf8netY6JC9XGVQIszh2aHCE1SI'))
-        ret_code, res = dsm_service.verify(self.params_json)
-        self.assertEqual(ret_code, 200)
-
-    def test_verify_err(self):
-        dsm_dao.verify = mock.Mock(return_value=(500, {'cause': 'Verify token is empty',
-                                                       'code': CommonResponseStatus.REQUEST_ERROR.value,
-                                                       'message': 'Verify fail'}))
-        ret_code, res = dsm_service.verify(self.params_json)
-        self.assertEqual(ret_code, 500)
-
-    def test_exception(self):
-        dsm_dao.verify = mock.Mock(side_effect=Exception("database error"))
-        ret_code, res = dsm_service.verify(self.params_json)
-        self.assertEqual(ret_code, 500)

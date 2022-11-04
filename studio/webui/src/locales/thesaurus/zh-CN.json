@@ -67,7 +67,7 @@
     "ContentFormatError": "文件内容格式错误",
     "EncodingError": "上传文件只支持UTF-8编码",
     "DataExceeded": "文件大小不可超过10M,且在35万行以内",
-    "importing": "词汇正在导入...",
+    "importing": "词汇正在导入，请耐心等待...",
     "importError": "词汇导入失败",
     "importAgain": "按钮重新导入",
     "editwordsError": "词库中有数据正在导入，请稍后重试",

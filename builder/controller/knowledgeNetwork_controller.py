@@ -1,13 +1,9 @@
 from flask import Blueprint, request, jsonify
-
-from common.errorcode import codes
-from service.intelligence_service import intelligence_calculate_service
 from service.knw_service import knw_service
 from dao.knw_dao import knw_dao
-from utils.Gview import Gview
-from common.errorcode.gview import Gview as Gview2
 from utils.knw_check_params import knw_check_params
 from utils.log_info import Logger
+from utils.Gview import Gview
 from utils.common_response_status import CommonResponseStatus
 from utils.CommonUtil import commonutil
 import json
@@ -15,12 +11,9 @@ from flasgger import swag_from
 import yaml
 import os
 
-from service.intelligence_service import intelligence_query_service
-
 knowledgeNetwork_controller_app = Blueprint('knowledgeNetwork_controller_app', __name__)
 
-GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH',
-                               os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+GBUILDER_ROOT_PATH = os.getenv('GBUILDER_ROOT_PATH', os.path.abspath(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_definitions.yaml'), 'r') as f:
     swagger_definitions = yaml.load(f, Loader=yaml.FullLoader)
 with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r') as f:
@@ -94,14 +87,13 @@ def getAllKnw():
     check_res, message = knw_check_params.getKnwParams(params_json)
     if check_res != 0:
         Logger.log_error("parameters:%s invalid" % params_json)
-        code = codes.Builder_KnowledgeNetworkController_GetAllKnw_ParamsError
-        return Gview2.error_return(code, detail=message), CommonResponseStatus.BAD_REQUEST.value
-
+        return Gview.TErrorreturn("Builder.controller.knowledgeNetwork_controller.getAllKnw.ParamsError"
+                                  , "parameters Error!", "Please check your parameters", message,
+                                  ""), CommonResponseStatus.BAD_REQUEST.value
     ret_code, ret_message = knw_service.getKnw(params_json)
     if ret_code != 200:
-        code = codes.Builder_Service_KnwService_KnwService_GetKnw_RequestError
-        return Gview2.error_return(code, detail=ret_message["cause"],
-                                   description=ret_message["message"]), CommonResponseStatus.BAD_REQUEST.value
+        return Gview.TErrorreturn(ret_message["code"], ret_message["cause"], ret_message["solution"],
+                                  ret_message["message"], ""), CommonResponseStatus.BAD_REQUEST.value
 
     return jsonify(ret_message), CommonResponseStatus.SUCCESS.value
 
@@ -273,64 +265,6 @@ def getGraph():
         return ret_message, ret_code
 
     return jsonify(ret_message), CommonResponseStatus.SUCCESS.value
-
-
-@knowledgeNetwork_controller_app.route('/intelligence', methods=['get'])
-@swag_from(swagger_new_response)
-def intelligence_stats():
-    '''
-    query knowledge network intelligence calculate result
-    ---
-    parameters:
-        -   name: size
-            in: query
-            required: true
-            description: knowledge network intelligence list page size
-            type: integer
-            example: 10
-        -   name: page
-            in: query
-            required: true
-            description: knowledge network intelligence list page index
-            type: integer
-            example: 1
-        -   name: rule
-            in: query
-            required: true
-            description: knowledge network intelligence info sort properties
-            type: string
-            example : [data_quality_B, update_time, data_quality_score]
-        -   name: order
-            in: query
-            required: true
-            description: knowledge network intelligence info sort type, desc or asc
-            type: string
-        -   name: knw_id
-            in: query
-            required: true
-            description: knowledge network id
-            type: integer
-            example: 13
-        -   name: graph_name
-            in: query
-            required: false
-            description: graph name
-            type: string
-    '''
-
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    if param_code != 0 or 'knw_id' not in params_json:
-        code = codes.Builder_KnowledgeNetworkController_IntelligenceStats_ParamError
-        return Gview2.error_return(code, arg='knw_id'), 400
-
-    ret_code, ret_message = intelligence_query_service.query_network_param_check(params_json)
-    if ret_code != codes.successCode:
-        return Gview2.error_return(ret_code, **ret_message), 400
-
-    res_code, result = intelligence_query_service.query_network_intelligence(params_json)
-    if res_code != codes.successCode:
-        return result, 500
-    return result, 200
 
 
 # 添加网络与图谱关系

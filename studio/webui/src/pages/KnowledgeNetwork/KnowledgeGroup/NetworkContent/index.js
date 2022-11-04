@@ -7,7 +7,6 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 import serviceGraphDetail from '@/services/graphDetail';
 import { ad_onChangeGraphStatus } from '@/reduxConfig/action/knowledgeGraph';
-import { getParam } from '@/utils/handleFunction';
 
 import Header from './Header';
 import GraphDetail from './GraphDetail';
@@ -17,18 +16,15 @@ import TaskList from './taskList';
 import knowledgeEmpty from '@/assets/images/kgEmpty.svg';
 import './index.less';
 
-const initTab = () => {
-  const tab = getParam('tab');
-  return ['1', '2', '3'].includes(tab) ? tab : '1';
-};
-
 let TIMER = null;
 const NetworkContents = props => {
   const history = useHistory();
   const { ad_onChangeGraphStatus } = props;
   const { loading, selectedGraph, selectedKnowledge, setSelectedGraph } = props;
   const { onRefreshLeftSpace, openModalImport } = props;
-  const [tabsKey, setTabsKey] = useState(() => initTab());
+
+  const tabsKey3 = window.location.search.includes('&tabsKey');
+  const [tabsKey, setTabsKey] = useState(tabsKey3 ? '3' : '1');
   const [graphBasicData, setGraphBasicData] = useState({});
   const [isFetching, setIsFetching] = useState(false);
 
@@ -38,18 +34,15 @@ const NetworkContents = props => {
   }, [selectedGraph?.kgConfId]);
 
   const getGraphData = async () => {
-    if (!selectedGraph?.kgconfid) return;
+    if (!selectedGraph.kgconfid) return;
     try {
-      const getData = { is_all: true, graph_id: selectedGraph?.kgconfid };
+      const getData = { is_all: true, graph_id: selectedGraph.kgconfid };
       const result = await serviceGraphDetail.graphGetInfoBasic(getData);
       const data = result?.res || {};
       setGraphBasicData(data);
-
-      if (data.step_num < 6 && tabsKey !== '1') setTabsKey('1');
     } catch (error) {
       const { type = '', response = {} } = error || {};
       if (type === 'message') message.error(response?.Description || '');
-      setTabsKey('1');
     }
   };
 
@@ -76,13 +69,12 @@ const NetworkContents = props => {
     <div className="networkContentRoot">
       <Header
         graphBasicData={graphBasicData}
-        isNewGraph={!selectedGraph?.kgconfid}
         selectedKnowledge={selectedKnowledge}
         onRefresh={onRefresh}
         onSelectedGraph={setSelectedGraph}
         onRefreshLeftSpace={onRefreshLeftSpace}
       />
-      {selectedGraph?.kgconfid ? (
+      {selectedGraph.kgconfid ? (
         <div className="content-box">
           <Tabs className="main-tabs" activeKey={tabsKey} onChange={tabsChange}>
             <Tabs.TabPane tab={intl.get('graphDetail.graphOverview')} key="1">
@@ -133,12 +125,12 @@ const NetworkContents = props => {
           <div className="text-des">
             <div className="">
               {intl.get('knowledge.click')}
-              <span className="create-span ad-ml-1 ad-mr-1" onClick={() => history.push('/home/workflow/create')}>
+              <span className="create-span" onClick={() => history.push('/home/workflow/create')}>
                 {intl.get('global.emptyTableCreate')}
               </span>
               {intl.get('knowledge.build')}
               {intl.get('knowledge.orClick')}
-              <span onClick={openModalImport} className="create-span ad-ml-1 ad-mr-1">
+              <span onClick={openModalImport} className="create-span">
                 {intl.get('knowledge.emptyDesImport')}
               </span>
               {intl.get('knowledge.toUpload')}

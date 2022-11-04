@@ -10,7 +10,7 @@ import servicesCreateEntity from '@/services/createEntity';
 import serviceWorkflow from '@/services/workflow';
 
 import ScrollBar from '@/components/ScrollBar';
-import { getPostfix, getParam } from '@/utils/handleFunction';
+import { getPostfix } from '@/utils/handleFunction';
 
 import ShowTable from './ShowTable';
 import SourceList from './SourceList';
@@ -61,7 +61,8 @@ const InfoExtr = (props: any, ref: React.Ref<any>) => {
     infoExtrData,
     setInfoExtrData,
     dataSourceData,
-    anyDataLang,
+    ontoData,
+    anyDataLang
   } = props;
   const preCurrent = useRef(0); // 使用ref hook 模拟 componentDidUpdate
   const boardScrollRef = useRef<any>(); // 展示看板的滚动条ref
@@ -89,7 +90,26 @@ const InfoExtr = (props: any, ref: React.Ref<any>) => {
   }, []);
 
   useEffect(() => {
-    getOntologyList();
+    if ((current === 3 && preCurrent.current === 2) || current === 0) {
+      let dsList: any[] = [];
+
+      // 初次进入, 如果是保存过, 取回数据第四步的数据
+      if (infoExtrData.length > 0 && sourceList.length === 0) {
+        dsList = transExtractData(infoExtrData);
+      }
+
+      if (current === 0) {
+        setSourceList(dsList);
+        return;
+      }
+
+      // 合并第三步数据
+      sourceList.length > 0 && (dsList = [...sourceList]);
+      const step3Source = handleStep3Data(ontoData[0], dsList);
+      dsList = [...dsList, ...step3Source];
+      setSourceList(dsList);
+    }
+
     // 模拟componentDidUpdate更新 步骤current
     current !== preCurrent.current && (preCurrent.current = current);
   }, [current, infoExtrData]);
@@ -111,40 +131,6 @@ const InfoExtr = (props: any, ref: React.Ref<any>) => {
       ? getUnPre(file_id, pId)
       : getPreviewData(pId, data_source, file_id);
   }, [selectedSource.selfId]);
-
-  /**
-   * 获取第三步创建的本体列表
-   */
-  const getOntologyList = async () => {
-    if ((current === 3 && preCurrent.current === 2) || current === 0) {
-      try {
-        const id = parseInt(getParam('id'));
-        let dsList: any[] = [];
-
-        // 初次进入, 如果是保存过, 取回数据第四步的数据
-        if (infoExtrData.length > 0 && sourceList.length === 0) {
-          dsList = transExtractData(infoExtrData);
-        }
-
-        if (current === 0) {
-          setSourceList(dsList);
-          return;
-        }
-
-        // 合并第三步数据
-        sourceList.length > 0 && (dsList = [...sourceList]);
-        const mes = await serviceWorkflow.graphGet(id);
-        const ontology_id = mes.res.graph_otl[0].id;
-        const res = await servicesCreateEntity.getEntityInfo(decodeURI(ontology_id));
-
-        const step3Source = handleStep3Data(res.res.df[0], dsList);
-        dsList = [...dsList, ...step3Source];
-        setSourceList(dsList);
-      } catch (error) {
-        //
-      }
-    }
-  };
 
   /**
    * 获取模型

@@ -8,10 +8,8 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/log/error.log:/var/log/nginx/error.log
-      - ./nginx/https:/cert
     ports:
       - "80:80"
-      - "443:443"
     environment:
       - NGINX_PORT=80
       - TZ=Asia/Shanghai
@@ -75,7 +73,7 @@ services:
 
   kw-studio:
     container_name: kw-studio
-    image: acr.aishu.cn/ad/kw-studio
+    image: kweaverai/kw-studio
     restart: always
     volumes:
       - ./kwconfig-default/:/etc/studio/:ro
@@ -93,7 +91,7 @@ services:
 
   kw-builder:
     container_name: kw-builder
-    image: acr.aishu.cn/ad/kw-builder
+    image: kweaverai/kw-builder
     restart: always
     volumes:
       - ./kwconfig-default/:/etc/builder/:ro
@@ -115,7 +113,7 @@ services:
 
   kw-algserver:
     container_name: kw-algserver
-    image: acr.aishu.cn/ad/kw-algserver
+    image: kweaverai/kw-algserver
     restart: always
     volumes:
       - ./kwconfig-default/:/etc/builder/:ro
@@ -130,7 +128,7 @@ services:
 
   kw-engine:
     container_name: kw-engine
-    image: acr.aishu.cn/ad/kw-engine
+    image: kweaverai/kw-engine
     restart: always
     volumes:
       - ./kwconfig-default/:/etc/builder/:ro

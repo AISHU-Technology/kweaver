@@ -1,7 +1,6 @@
 # -*-coding:utf-8-*-
 from config import config
 from service.Otl_Service import otl_service
-from service.knw_service import knw_service
 from utils.ontology_check_params import otl_check_params
 import datetime
 from flask import Blueprint, request, jsonify
@@ -309,14 +308,7 @@ def get_model_otl():
 def getall():
     '''
     get ontology list
-
-    Only when the page is - 1 can this api be used at the batch ontology import. When the page is a positive integer,
-    the ontology is obtained by paging (used by the previous ontology management page, but it is no longer used).
-
-    Only the knowledge graph name and ontology ID corresponding to the ontology available in the knowledge network
-    are returned
-
-    Available: at least one entity and the task associated with the ontology is not running
+    get ontology list
     ---
     parameters:
         -   name: page
@@ -334,11 +326,6 @@ def getall():
             required: true
             description: descend or ascend. order by time
             type: string
-        -   name: knw_id
-            in: query
-            required: true
-            description: knowledge network id
-            type: string
     '''
     method = request.method
     # 根据不同的请求方式请求方式获得参数并获取异常
@@ -347,18 +334,11 @@ def getall():
     if param_code == 0:
         # 获取该用户可以看见的本体列表
         if method == "GET":
-            # parameter check
             check_res, message = otl_check_params.getAllParOnto(params_json)
             if check_res != 0:
                 Logger.log_error("parameters:%s invalid" % params_json)
                 return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
                                            message=message), CommonResponseStatus.BAD_REQUEST.value
-            # parameter check: knw_id
-            ret_code, ret_message = knw_service.check_knw_id(params_json)
-            if ret_code != 200:
-                return Gview.BuFailVreturn(cause=ret_message["des"], code=CommonResponseStatus.INVALID_KNW_ID.value,
-                                           message=ret_message["detail"]), CommonResponseStatus.SERVER_ERROR.value
-            # get ontology list
             ret_code, ret_message = otl_service.getall(params_json)
             if ret_code == CommonResponseStatus.SERVER_ERROR.value:
                 return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],

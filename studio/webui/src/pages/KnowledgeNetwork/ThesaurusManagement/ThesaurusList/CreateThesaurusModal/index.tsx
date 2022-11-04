@@ -18,14 +18,14 @@ const ERROR_CODE: Record<string, string> = {
   'Builder.LexiconController.CreateLexicon.DuplicatedName': 'ThesaurusManage.nameRepeat',
   'Builder.LexiconController.CreateLexicon.DatabaseError': 'ThesaurusManage.DBerror',
   'Builder.LexiconController.CreateLexicon.FileUploadError': 'ThesaurusManage.uploadFileFailed',
-  'Builder.LexiconController.GetLabels.KnowledgeIdNotExist': 'ThesaurusManage.nullKnowlegeId'
+  'Builder.LexiconController.GetLabels.KnowledgeIdNotExist': 'ThesaurusManage.nullKnowlegeId',
   // 'Builder.LexiconController.CreateLexicon.FileFormatError': 'ThesaurusManage.FileFormatError',
   // 'Builder.LexiconController.CreateLexicon.ContentFormatError': 'ThesaurusManage.ContentFormatError'
-};
+}
 const { OVER_MAX_FILES_COUNT, OVER_SINGLE_FILE_SIZE } = UPLOAD_FAIL_TYPE;
 const UPLOAD_ERROR = {
   [OVER_MAX_FILES_COUNT]: intl.get('ThesaurusManage.fileCountMessage'),
-  [OVER_SINGLE_FILE_SIZE]: intl.get('ThesaurusManage.DataExceeded')
+  [OVER_SINGLE_FILE_SIZE]: intl.get('ThesaurusManage.DataExceeded'),
 };
 const CreateThesaurusModal = (props: any) => {
   const [form] = Form.useForm();
@@ -37,11 +37,11 @@ const CreateThesaurusModal = (props: any) => {
     if (isVisible) {
       getLabels();
     }
-  }, [isVisible]);
+  }, [isVisible])
 
   /**
-   * 获取labels
-   */
+  * 获取labels
+  */
   const getLabels = async () => {
     if (!knowledge?.id) return;
     try {
@@ -56,58 +56,58 @@ const CreateThesaurusModal = (props: any) => {
     } catch (err) {
       //
     }
-  };
+  }
 
   // 提交
   const onSubmit = () => {
-    form.validateFields().then(async values => {
-      const { name, description, file } = values;
-      const files = _.isEmpty(file) ? JSON.stringify([]) : file;
+    form
+      .validateFields()
+      .then(async values => {
+        const { name, description, file } = values;
+        const files = _.isEmpty(file) ? JSON.stringify([]) : file;
 
-      const data = {
-        name,
-        file: files,
-        description: description?.trim() || '',
-        labels: JSON.stringify(tags),
-        knowledge_id: knowledge?.id
-      };
-      try {
-        const response = await serverThesaurus.thesaurusCreate(data);
-        const { ErrorCode, ErrorDetails } = response || {};
-        if (ErrorCode === 'Builder.LexiconController.CreateLexicon.DuplicatedName') {
-          // 重复的名字
-          form.setFields([
-            {
-              name: 'name',
-              errors: [intl.get('ThesaurusManage.nameRepeat')]
-            }
-          ]);
-          return;
+        const data = {
+          name,
+          file: files,
+          description: description?.trim() || '',
+          labels: JSON.stringify(tags),
+          knowledge_id: knowledge?.id
         }
-        if (ErrorCode) {
-          ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode])) : message.error(ErrorDetails);
+        try {
+          const response = await serverThesaurus.thesaurusCreate(data);
+          const { ErrorCode, ErrorDetails } = response || {};
+          if (ErrorCode === 'Builder.LexiconController.CreateLexicon.DuplicatedName') {
+            // 重复的名字
+            form.setFields([
+              {
+                name: 'name',
+                errors: [intl.get('ThesaurusManage.nameRepeat')]
+              }
+            ]);
+            return;
+          }
+          if (ErrorCode) {
+            ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode])) : message.error(ErrorDetails);
+            closeModal();
+            return;
+          }
+          if (response?.res) {
+            message.success(intl.get('graphList.addSuccess'));
+          }
+          setPage(1);
           closeModal();
-          return;
+          getThesaurusList({});
+        } catch (err) {
+          closeModal();
         }
-        if (response?.res) {
-          message.success(intl.get('graphList.addSuccess'));
-        }
-        setPage(1);
-        closeModal();
-        getThesaurusList({});
-      } catch (err) {
-        closeModal();
-      }
-    });
-  };
+      })
+  }
   // 取消
-  const onCancel = () => {
-    closeModal();
-  };
+  const onCancel = () => { closeModal() }
 
   /**
-   * 上传，选中文件后的报错信息
-   */
+  * 上传，选中文件后的报错信息
+  */
   const onError = _.debounce(errorList => {
     if (_.isEmpty(errorList)) return null;
     _.forEach(errorList, item => {
@@ -145,7 +145,7 @@ const CreateThesaurusModal = (props: any) => {
     } catch (error) {
       //
     }
-  };
+  }
 
   return (
     <Modal
@@ -163,7 +163,12 @@ const CreateThesaurusModal = (props: any) => {
         setTags([]);
       }}
     >
-      <Form form={form} layout="vertical" validateTrigger={['onChange', 'onBlur']}>
+      <Form
+        form={form}
+        layout="vertical"
+        validateTrigger={['onChange', 'onBlur']}
+      >
+
         <Form.Item
           name="name"
           label={intl.get('ThesaurusManage.name')}
@@ -191,15 +196,9 @@ const CreateThesaurusModal = (props: any) => {
           extra={
             <div className="createThessurus-extraBox">
               <div className="fileExtra">• {intl.get('ThesaurusManage.filetype')}</div>
-              <div className="fileExtra ad-flex">
-                •<div className="ad-ml-1">{intl.get('ThesaurusManage.fileSize')}</div>
-              </div>
-              <div>
-                •{' '}
-                <span className="ad-c-primary down-style" onClick={() => download()}>
-                  {intl.get('ThesaurusManage.tamplate')}
-                </span>
-              </div>
+              <div className="fileExtra ad-flex">•<div className="ad-ml-1">{intl.get('ThesaurusManage.fileSize')}</div></div>
+              <div>• <span className="ad-c-primary down-style"
+                onClick={() => download()}>{intl.get('ThesaurusManage.tamplate')}</span></div>
             </div>
           }
         >
@@ -216,7 +215,10 @@ const CreateThesaurusModal = (props: any) => {
           />
         </Form.Item>
 
-        <Form.Item name="labels" label={intl.get('ThesaurusManage.labels')}>
+        <Form.Item
+          name="labels"
+          label={intl.get('ThesaurusManage.labels')}
+        >
           <Labels setTags={setTags} tags={tags} selectOption={selectOption} />
         </Form.Item>
 
@@ -239,6 +241,6 @@ const CreateThesaurusModal = (props: any) => {
         </Form.Item>
       </Form>
     </Modal>
-  );
-};
-export default CreateThesaurusModal;
+  )
+}
+export default CreateThesaurusModal

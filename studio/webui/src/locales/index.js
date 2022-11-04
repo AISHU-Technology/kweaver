@@ -24,7 +24,6 @@ import search_zh from './search/zh-CN.json';
 import knowledgeNetwork_zh from './knowledgeNetwork/zh-CN.json';
 import graphDetail_zh from './graphDetail/zh-CN.json';
 import thesaurus_zh from './thesaurus/zh-CN.json';
-import intelligence_zh from './intelligence/zh-CN.json';
 
 import global_en from './global/en-US.json';
 import login_en from './login/en-US.json';
@@ -45,7 +44,6 @@ import search_en from './search/en-US.json';
 import knowledgeNetwork_en from './knowledgeNetwork/en-US.json';
 import graphDetail_en from './graphDetail/en-US.json';
 import thesaurus_en from './thesaurus/en-Us.json';
-import intelligence_en from './intelligence/en-US.json';
 
 const zh_CN = {
   ...global_zh,
@@ -66,8 +64,7 @@ const zh_CN = {
   ...search_zh,
   ...knowledgeNetwork_zh,
   ...graphDetail_zh,
-  ...thesaurus_zh,
-  ...intelligence_zh
+  ...thesaurus_zh
 };
 
 const en_US = {
@@ -89,8 +86,7 @@ const en_US = {
   ...search_en,
   ...knowledgeNetwork_en,
   ...graphDetail_en,
-  ...thesaurus_en,
-  ...intelligence_en
+  ...thesaurus_en
 };
 
 const locales = {

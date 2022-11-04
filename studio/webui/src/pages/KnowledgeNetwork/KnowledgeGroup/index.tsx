@@ -13,7 +13,7 @@ import ModalFeedback from './ModalFeedback';
 
 const KnowledgeGroup = (props: any) => {
   const history = useHistory();
-  const { kgData } = props;
+  const { isRefreshGraph, kgData } = props;
 
   const [loading, setLoading] = useState<any>(false);
   const [isRefreshLeftList, setIsRefreshLeftList] = useState<any>(false);
@@ -26,8 +26,11 @@ const KnowledgeGroup = (props: any) => {
   const [isVisibleExport, setIsVisibleExport] = useState<any>(false);
 
   useEffect(() => {
-    const page = parseInt(getParam('page')) || 1;
-    getGraphList({ page });
+    onRefreshLeftSpace();
+  }, [isRefreshGraph]);
+
+  useEffect(() => {
+    getGraphList({});
   }, [isRefreshLeftList, JSON.stringify(kgData)]);
 
   const onRefreshLeftSpace = () => {
@@ -42,45 +45,46 @@ const KnowledgeGroup = (props: any) => {
     const data = { knw_id: kgData.id, page, size, order, name, rule };
     try {
       const res = await servicesKnowledgeNetwork.graphGetByKnw(data);
-      setLoading(false);
+      if (res && res.res) {
+        if (!selectedGraph) setSelectedGraph(res.res?.df[0] || '');
+        if (selectedGraph) {
+          const graph = graphList.filter((item: any) => item.kgconfid === selectedGraph?.kgconfid);
+          if (graph.length > 0) _setSelectedGraph(graph[0]);
+        }
 
-      if (!res?.res) return;
-      setGraphList(res.res.df);
-      setGraphListCount(res.res.count);
-
-      if (selectedGraph) {
-        const graph = graphList.find((item: any) => item?.kgconfid === selectedGraph?.kgconfid);
-        graph && _setSelectedGraph(graph[0]);
-        return;
+        setGraphList(res.res.df);
+        setGraphListCount(res.res.count);
+        setLoading(false);
       }
-
-      let isInit = false;
-      if (window.location.search.split('&').length > 1) {
-        isInit = initFromOtherRouter(res.res.df);
-      }
-      !isInit && setSelectedGraph(res.res.df[0] || '');
     } catch (error) {
       setLoading(false);
     }
   };
 
-  /**
-   * 从其他页面跳转进入并选中图谱
-   */
-  const initFromOtherRouter = (graphs: any[]) => {
-    const { gid, cid } = getParam(['gid', 'cid']);
-    if (!gid && !cid) return false;
+  useEffect(() => {
+    // 其他页面跳转来，给路由加上selectedKnowledge.id
+    const isFromTask = () => {
+      if (window.location.search.includes('&tabsKey')) {
+        const graphId = parseInt(getParam('tabsKey')) || 0;
+        const graph = graphList.filter((item: any) => item.kgconfid === graphId);
 
-    const graphId = parseInt(gid || cid) || 0;
-    const item = graphs.find((item: any) => item[gid ? 'id' : 'kgconfid'] === graphId);
-    item && _setSelectedGraph(item);
-    return !!item;
-  };
+        if (graph.length > 0) _setSelectedGraph(graph[0]);
+      }
+
+      if (window.location.search.includes('&editId')) {
+        const graphId = parseInt(getParam('editId')) || 0;
+        const graph = graphList.filter((item: any) => item.kgconfid === graphId);
+
+        if (graph.length > 0) _setSelectedGraph(graph[0]);
+      }
+    };
+    isFromTask();
+  }, [JSON.stringify(graphList)]);
 
   const _setSelectedGraph = (data: any) => {
     const { pathname, search } = window.location;
     setSelectedGraph(data);
-    if (search.split('&').length > 1) history.push(`${pathname}?id=${kgData?.id}`);
+    if (search.includes('tabsKey')) history.push(`${pathname}?id=${kgData?.id}`);
   };
 
   const openModalImport = () => setIsVisibleImport(true);

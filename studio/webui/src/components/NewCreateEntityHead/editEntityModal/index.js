@@ -12,7 +12,7 @@ class EditEntityModal extends Component {
     this.props.onEditEntityModalRef(this);
 
     this.formeRef.current.setFieldsValue({
-      entityname: this.props.ontology_name ? this.props.ontology_name : this.props.graphName,
+      entityname: this.props.ontology_name,
       entitydescribe: this.props.ontology_des
     });
   }
@@ -23,17 +23,12 @@ class EditEntityModal extends Component {
    * @description 提交表单
    */
   onFinish = value => {
-    const { ontology_id, setEditNewName, ontologyError } = this.props;
-    setEditNewName(value.entityname);
+    const { ontology_id } = this.props;
 
     const data = {
       ontology_name: value.entityname,
       ontology_des: value.entitydescribe || ''
     };
-
-    if (ontologyError !== '') {
-      this.flowAddEntity(value);
-    }
 
     // 流程模块
     if (this.isFlow()) {
@@ -55,19 +50,19 @@ class EditEntityModal extends Component {
   /**
    * @description 创建本体
    */
-  // addEntity = async data => {
-  //   const res = await servicesCreateEntity.addEntity(data);
+  addEntity = async data => {
+    const res = await servicesCreateEntity.addEntity(data);
 
-  //   if (res && res.res) {
-  //     this.addEntityT(res, data);
+    if (res && res.res) {
+      this.addEntityT(res, data);
 
-  //     return;
-  //   }
+      return;
+    }
 
-  //   if (res && res.Code === 500002) {
-  //     this.addEntityF();
-  //   }
-  // };
+    if (res && res.Code === 500002) {
+      this.addEntityF();
+    }
+  };
 
   /**
    * @description 创建成功执行
@@ -132,7 +127,7 @@ class EditEntityModal extends Component {
       return;
     }
 
-    // this.flowAddEntity(value);
+    this.flowAddEntity(value);
   };
 
   /**
@@ -159,7 +154,6 @@ class EditEntityModal extends Component {
 
     if (resData && resData.res && resData.res.ontology_id) {
       this.props.setOntologyId(resData.res.ontology_id);
-      this.props.setOntologyError('');
       this.changeEntityT(data);
 
       // 初始化数据
@@ -187,7 +181,6 @@ class EditEntityModal extends Component {
       ontology_des: value.entitydescribe || '',
       id: this.props.ontology_id
     };
-    this.props.setName(value.entityname);
 
     const requestData = {
       graph_step: 'graph_otl',

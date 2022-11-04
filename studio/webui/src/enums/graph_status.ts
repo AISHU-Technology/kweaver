@@ -6,7 +6,7 @@ const WAITING = 'waiting'; // 等待中
 const RUNNING = 'running'; // 运行中
 const FAIL = 'failed'; // 失败
 const CONFIGURATION = 'edit'; // 配置中
-const STOP = 'stop'; // 配置中(任务列表显示为`终止`)
+const STOP = 'stop'; // 配置中
 
 const LIST = [NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION, STOP];
 

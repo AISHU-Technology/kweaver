@@ -173,11 +173,7 @@ func (*GraphDBService) GetGraphDBList(condition *vo.GraphListSearchCondition) *v
 		for i, item := range graphDBs {
 			vo := &vo.GraphDBItemVo{ID: item.ID, Name: item.Name, Type: item.Type, User: item.User, TimeVo: vo.TimeVo{Updated: item.Updated.Unix(), Created: item.Created.Unix()}}
 			kw_errors.Try(global.DB.Model(po.GraphConfigTableModel).Where("graph_db_id = ?", item.ID).Count(&vo.Count).Error).Throw(kw_errors.InternalServerError)
-			if item.FulltextId != 0 {
-				kw_errors.Try(global.DB.Model(po.FulltextEngineModel).Select("name").Where("id = ?", item.FulltextId).First(&vo.OsName).Error).Throw(kw_errors.InternalServerError)
-			} else {
-				vo.OsName = ""
-			}
+			kw_errors.Try(global.DB.Model(po.FulltextEngineModel).Select("name").Where("id = ?", item.FulltextId).First(&vo.OsName).Error).Throw(kw_errors.InternalServerError)
 			graphDBVos[i] = vo
 		}
 	}
@@ -210,7 +206,7 @@ func (*GraphDBService) GetGraphDBInfoById(id int) *vo.GraphDBVo {
 	}
 	bytes, err := base64.StdEncoding.DecodeString(graphDb.Password)
 	kw_errors.Try(err).Throw(kw_errors.InternalServerError)
-	return &vo.GraphDBVo{ID: graphDb.ID, Name: graphDb.Name, Type: graphDb.Type, Ip: strings.Split(graphDb.Ip, IpPortSplitChar), Port: strings.Split(graphDb.Port, IpPortSplitChar), User: graphDb.User, Password: string(bytes), OsId: graphDb.FulltextId}
+	return &vo.GraphDBVo{ID: graphDb.ID, Name: graphDb.Name, Type: graphDb.Type, Ip: strings.Split(graphDb.Ip, IpPortSplitChar), Port: strings.Split(graphDb.Port, IpPortSplitChar), User: graphDb.User, Password: string(bytes)}
 }
 
 func (*GraphDBService) GetGraphDBNameById(id int) (name string) {
@@ -269,9 +265,7 @@ func (*GraphDBService) AddGraphDB(vo *vo.GraphDBVo) (id int) {
 			defer global.LockOperator.Unlock("delete_os_lock")
 			//查询opensearch配置是否存在
 			if kw_errors.Try(global.DB.Model(po.FulltextEngineModel).Where("id = ?", vo.OsId).Count(&count).Error).Throw(kw_errors.InternalServerError); count <= 0 {
-				if vo.OsId != 0 {
-					panic(kw_errors.OsRecordNotFoundError)
-				}
+				panic(kw_errors.OsRecordNotFoundError)
 			}
 			graphDb := &po.GraphDB{Name: vo.Name, Type: vo.Type, Ip: strings.Join(vo.Ip, IpPortSplitChar), Port: strings.Join(vo.Port, IpPortSplitChar),
 				User: vo.User, Password: encodedPass, DbUser: vo.User, DbPs: encodedPass, FulltextId: vo.OsId}
@@ -315,14 +309,9 @@ func (*GraphDBService) UpdateGraphDB(vo *vo.GraphDBUpdateVo) {
 		if kw_errors.Try(global.DB.Model(po.GraphDBModel).Where("name = ? and id != ?", vo.Name, vo.ID).Count(&count).Error).Throw(kw_errors.InternalServerError); count > 0 {
 			panic(kw_errors.DuplicateGraphDBRecordNameError)
 		}
-		var fulltextId int
-		kw_errors.Try(global.DB.Model(po.GraphDBModel).Select("fulltext_id").Where("id = ?", vo.ID).Find(&fulltextId).Error).Throw(kw_errors.InternalServerError)
-		if fulltextId != vo.OsId && fulltextId != 0 {
-			panic(kw_errors.InternalServerError)
-		}
 		//查询是否有相同用户名，密码，ip和port的配置
 		checkDuplicateConfig(po.GraphDBModel, vo.ID, vo.User, encodedPass, vo.Ip, vo.Port)
-		graphDb := &po.GraphDB{ID: vo.ID, Name: vo.Name, Type: vo.Type, Ip: strings.Join(vo.Ip, IpPortSplitChar), Port: strings.Join(vo.Port, IpPortSplitChar), User: vo.User, Password: encodedPass, DbUser: vo.User, DbPs: encodedPass, FulltextId: vo.OsId}
+		graphDb := &po.GraphDB{ID: vo.ID, Name: vo.Name, Type: vo.Type, Ip: strings.Join(vo.Ip, IpPortSplitChar), Port: strings.Join(vo.Port, IpPortSplitChar), User: vo.User, Password: encodedPass, DbUser: vo.User, DbPs: encodedPass}
 		r := global.DB.Updates(graphDb)
 		kw_errors.Try(r.Error).Throw(kw_errors.InternalServerError)
 		if r.RowsAffected <= 0 {

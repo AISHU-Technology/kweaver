@@ -38,7 +38,8 @@ module.exports = {
     ...PATH_ALIAS,
     '^@/assets/images(.*)$': '<rootDir>/src/assets/images$1',
     '^@/assets/style(.*)$': '<rootDir>/src/assets/style$1',
-    '^@/assets/font/(.*)$': '<rootDir>/src/assets/font/iconfontMock.js'
+    '^@/assets/font/(.*)$': '<rootDir>/src/assets/font/iconfontMock.js',
+    '^@/downLoad/(.*)$': '<rootDir>/src/downLoad/fileMock.js'
   },
   moduleFileExtensions: ['web.js', 'js', 'web.ts', 'ts', 'web.tsx', 'tsx', 'json', 'web.jsx', 'jsx', 'node'],
   watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
@@ -53,8 +54,6 @@ module.exports = {
     '<rootDir>/src/theme/*',
     '<rootDir>/src/tests/*',
     '<rootDir>/src/graphQLSerVer*',
-    '<rootDir>/src/utils/(?!(helper|handleFunction))/*',
-    '<rootDir>/src/components/freeGraph/*',
-    '<rootDir>/src/components/G6SearchGraph/*'
+    '<rootDir>/src/pages/SwaggerUI*'
   ]
 };
