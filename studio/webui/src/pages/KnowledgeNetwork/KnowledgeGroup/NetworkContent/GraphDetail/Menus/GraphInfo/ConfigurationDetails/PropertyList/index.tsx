@@ -1,0 +1,58 @@
+import React from 'react';
+import _ from 'lodash';
+
+import HOOKS from '@/hooks';
+import Format from '@/components/Format';
+import PaginationCommon from '@/components/PaginationCommon';
+
+import './style.less';
+
+type PropertyType = {
+  name: string;
+  type: string;
+};
+type PropertyListType = {
+  items: PropertyType[];
+};
+const PropertyList = (props: PropertyListType) => {
+  const { items = [] } = props;
+  const { pagination, onUpdatePagination } = HOOKS.PaginationConfig({ count: items.length, pageSize: 4 });
+  const { page, pageSize } = pagination;
+
+  const onChangePagination = (newPagination: any) => {
+    onUpdatePagination(newPagination);
+  };
+
+  const getCurrentList = (items: any, page: number, size: number) => {
+    return items.slice((page - 1) * size, (page - 1) * size + size);
+  };
+
+  return (
+    <div className="propertyListRoot">
+      <div className="properties ad-align-center ad-pb-3 ad-mb-2">
+        <Format.Title>Properties</Format.Title>
+        <Format.Text className="ad-c-subtext">（{items.length}）</Format.Text>
+      </div>
+      {_.map(getCurrentList(items, page, pageSize), (item: PropertyType, index) => {
+        return (
+          <div key={index} className="ad-pb-4">
+            <div className="ad-pb-2">
+              <Format.Text>{item?.name}</Format.Text>
+            </div>
+            <div className="imitationInput">
+              <Format.Text>{item?.type?.toUpperCase()}</Format.Text>
+            </div>
+          </div>
+        );
+      })}
+      <PaginationCommon
+        className="ad-mt-2"
+        paginationData={pagination}
+        onChange={onChangePagination}
+        antProps={{ showTotal: null }}
+      />
+    </div>
+  );
+};
+
+export default PropertyList;

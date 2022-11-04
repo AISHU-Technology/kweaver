@@ -1,0 +1,108 @@
+[2022-06-20 08:57:55] [ERROR] [process-244] [thread-17488] [asyncio-base_events.py:1707] Exception in callback <TaskWakeupMethWrapper object at 0x000001F27C4AF670>(<Future finished result=None>)
+handle: <Handle <TaskWakeupMethWrapper object at 0x000001F27C4AF670>(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "c:\python3.8\lib\asyncio\events.py", line 81, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-1' coro=<Server.serve() running at D:\vir_env\graph\lib\site-packages\uvicorn\server.py:80> wait_for=<Future finished result=None> cb=[_run_until_complete_cb() at c:\python3.8\lib\asyncio\base_events.py:184]> while another task <Task pending name='starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro' coro=<BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro() running at D:\vir_env\graph\lib\site-packages\starlette\middleware\base.py:36> cb=[TaskGroup._spawn.<locals>.task_done() at D:\vir_env\graph\lib\site-packages\anyio\_backends\_asyncio.py:629]> is being executed.
+[2022-06-20 08:57:56] [ERROR] [process-244] [thread-17488] [uvicorn.error-httptools_impl.py:375] Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\vir_env\graph\lib\site-packages\aiomysql\connection.py", line 486, in _connect
+    self._reader, self._writer = await \
+  File "c:\python3.8\lib\asyncio\tasks.py", line 455, in wait_for
+    return await fut
+  File "c:\python3.8\lib\asyncio\streams.py", line 52, in open_connection
+    transport, _ = await loop.create_connection(
+  File "c:\python3.8\lib\asyncio\base_events.py", line 1025, in create_connection
+    raise exceptions[0]
+  File "c:\python3.8\lib\asyncio\base_events.py", line 1010, in create_connection
+    sock = await self._connect_sock(
+  File "c:\python3.8\lib\asyncio\base_events.py", line 924, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "c:\python3.8\lib\asyncio\proactor_events.py", line 702, in sock_connect
+    return await self._proactor.connect(sock, address)
+  File "c:\python3.8\lib\asyncio\tasks.py", line 349, in __wakeup
+    future.result()
+  File "c:\python3.8\lib\asyncio\windows_events.py", line 808, in _poll
+    value = callback(transferred, key, ov)
+  File "c:\python3.8\lib\asyncio\windows_events.py", line 595, in finish_connect
+    ov.getresult()
+ConnectionRefusedError: [WinError 1225] Ô¶³Ì¼ÆËã»ú¾Ü¾øÍøÂçÁ¬½Ó¡£
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\vir_env\graph\lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 372, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "D:\vir_env\graph\lib\site-packages\uvicorn\middleware\proxy_headers.py", line 75, in __call__
+    return await self.app(scope, receive, send)
+  File "D:\vir_env\graph\lib\site-packages\fastapi\applications.py", line 269, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\vir_env\graph\lib\site-packages\starlette\applications.py", line 124, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\vir_env\graph\lib\site-packages\starlette\middleware\errors.py", line 184, in __call__
+    raise exc
+  File "D:\vir_env\graph\lib\site-packages\starlette\middleware\errors.py", line 162, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\vir_env\graph\lib\site-packages\starlette\middleware\base.py", line 68, in __call__
+    response = await self.dispatch_func(request, call_next)
+  File "Z:\ÖÇÄÜËÑË÷\search_engine_sdk\Tasks\anydata_search\app\fastapi_app.py", line 28, in user_define_middleware
+    response = await call_next(request)
+  File "D:\vir_env\graph\lib\site-packages\starlette\middleware\base.py", line 46, in call_next
+    raise app_exc
+  File "D:\vir_env\graph\lib\site-packages\starlette\middleware\base.py", line 36, in coro
+    await self.app(scope, request.receive, send_stream.send)
+  File "D:\vir_env\graph\lib\site-packages\starlette\exceptions.py", line 93, in __call__
+    raise exc
+  File "D:\vir_env\graph\lib\site-packages\starlette\exceptions.py", line 82, in __call__
+    await self.app(scope, receive, sender)
+  File "D:\vir_env\graph\lib\site-packages\fastapi\middleware\asyncexitstack.py", line 21, in __call__
+    raise e
+  File "D:\vir_env\graph\lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\vir_env\graph\lib\site-packages\starlette\routing.py", line 670, in __call__
+    await route.handle(scope, receive, send)
+  File "D:\vir_env\graph\lib\site-packages\starlette\routing.py", line 266, in handle
+    await self.app(scope, receive, send)
+  File "D:\vir_env\graph\lib\site-packages\starlette\routing.py", line 65, in app
+    response = await func(request)
+  File "D:\vir_env\graph\lib\site-packages\fastapi\routing.py", line 227, in app
+    raw_response = await run_endpoint_function(
+  File "D:\vir_env\graph\lib\site-packages\fastapi\routing.py", line 160, in run_endpoint_function
+    return await dependant.call(**values)
+  File "Z:\ÖÇÄÜËÑË÷\search_engine_sdk\Tasks\anydata_search\app\services\search.py", line 46, in post
+    conf_info = await get_adv_conf(ids=conf_content.kg_ids, ids_type="test", conf_content=conf_content.conf_content)
+  File "Z:\ÖÇÄÜËÑË÷\search_engine_sdk\Tasks\anydata_search\app\utils\get_adv_config.py", line 82, in get_adv_conf
+    mysql_connector = inject.instance(AsyncRequestMysql)
+  File "D:\vir_env\graph\lib\site-packages\inject\__init__.py", line 402, in instance
+    return get_injector_or_die().get_instance(cls)
+  File "D:\vir_env\graph\lib\site-packages\inject\__init__.py", line 217, in get_instance
+    return binding()
+  File "D:\vir_env\graph\lib\site-packages\inject\__init__.py", line 264, in __call__
+    self._instance = self._constructor()
+  File "D:\vir_env\graph\lib\site-packages\inject\__init__.py", line 342, in injection_wrapper
+    return sync_func(*args, **kwargs)
+  File "Z:\ÖÇÄÜËÑË÷\search_engine_sdk\Tasks\anydata_search\app\dependencies.py", line 64, in init_mysql_db
+    pool = loop.run_until_complete(aiomysql.create_pool(
+  File "D:\vir_env\graph\lib\site-packages\nest_asyncio.py", line 89, in run_until_complete
+    return f.result()
+  File "c:\python3.8\lib\asyncio\futures.py", line 178, in result
+    raise self._exception
+  File "c:\python3.8\lib\asyncio\tasks.py", line 282, in __step
+    result = coro.throw(exc)
+  File "D:\vir_env\graph\lib\site-packages\aiomysql\utils.py", line 17, in throw
+    return self._coro.throw(typ)
+  File "D:\vir_env\graph\lib\site-packages\aiomysql\pool.py", line 29, in _create_pool
+    await pool._fill_free_pool(False)
+  File "D:\vir_env\graph\lib\site-packages\aiomysql\pool.py", line 167, in _fill_free_pool
+    conn = await connect(echo=self._echo, loop=self._loop,
+  File "D:\vir_env\graph\lib\site-packages\aiomysql\connection.py", line 75, in _connect
+    await conn._connect()
+  File "D:\vir_env\graph\lib\site-packages\aiomysql\connection.py", line 521, in _connect
+    raise OperationalError(2003,
+pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on '10.2.196.57'")
+[2022-08-25 10:22:53] [ERROR] [process-18768] [thread-19068] [asyncio-base_events.py:1707] Exception in callback <TaskWakeupMethWrapper object at 0x000001EC509BD670>(<Future finished result=None>)
+handle: <Handle <TaskWakeupMethWrapper object at 0x000001EC509BD670>(<Future finished result=None>)>
+Traceback (most recent call last):
+  File "C:\Python3.8\lib\asyncio\events.py", line 81, in _run
+    self._context.run(self._callback, *self._args)
+RuntimeError: Cannot enter into task <Task pending name='Task-1' coro=<Server.serve() running at C:\Users\Brooks.he\PycharmProjects\graphengine-alg-server-general\venv\lib\site-packages\uvicorn\server.py:80> wait_for=<Future finished result=None> cb=[_run_until_complete_cb() at C:\Python3.8\lib\asyncio\base_events.py:184]> while another task <Task pending name='starlette.middleware.base.BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro' coro=<BaseHTTPMiddleware.__call__.<locals>.call_next.<locals>.coro() running at C:\Users\Brooks.he\PycharmProjects\graphengine-alg-server-general\venv\lib\site-packages\starlette\middleware\base.py:36> cb=[TaskGroup._spawn.<locals>.task_done() at C:\Users\Brooks.he\PycharmProjects\graphengine-alg-server-general\venv\lib\site-packages\anyio\_backends\_asyncio.py:629]> is being executed.

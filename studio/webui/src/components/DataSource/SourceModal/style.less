@@ -1,0 +1,209 @@
+.data-source-modal {
+  .ant-modal-content {
+    min-width: 640px;
+  }
+
+  .ant-modal-body {
+    position: relative;
+    height: 640px;
+    padding: 0;
+  }
+
+  .modal-title {
+    width: 100%;
+    height: 52px;
+    padding: 13px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: PingFangSC-Medium, PingFang SC;
+    color: var(--ad-heading-color);
+    line-height: 26px;
+    border-bottom: 1px solid var(--ad-line-color);
+  }
+
+  .modal-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    padding: 14px 24px;
+    text-align: right;
+    border-top: 1px solid var(--ad-line-color);
+
+    button {
+      height: 36px;
+      margin-left: 12px;
+    }
+
+    .test-btn[disabled] {
+      color: inherit;
+      background: inherit;
+
+      &:hover, &:focus, &:active {
+        background-color: var(--ad-hover-bg-color);
+        color: var(--ad-text-color);
+      }
+    }
+
+    .save-btn[disabled] {
+      color: #fff;
+      border-color: var(--ad-primary-color);
+      background: var(--ad-primary-color);
+
+      &:hover {
+        border-color: var(--ad-primary-color-hover);
+        background: var(--ad-primary-color-hover);
+      }
+    }
+  }
+
+  .scroll-wrapper {
+    padding: 24px 20px 0 24px;
+  }
+
+  .form-box {
+    width: calc(100% - 4px);
+    height: 524px;
+
+    .form-row {
+      min-height: 98px;
+
+      &.form-textarea {
+        position: relative;
+        min-height: 324px;
+
+        .ant-form-item-label {
+          height: 64px;
+          padding-bottom: 32px;
+        }
+
+        .key-tip {
+          position: absolute;
+          top: 32px;
+          left: 0;
+          width: 100%;
+          height: 32px;
+          line-height: 32px;
+          color: var(--ad-text-color);
+          text-align: center;
+          border: 1px solid #d9d9d9;
+          border-bottom: none;
+          border-radius: 3px 3px 0 0;
+
+          .warn-icon {
+            margin-right: 8px;
+            color: var(--ad-warning-color);
+          }
+        }
+
+        textarea {
+          border-radius: 0 0 3px 3px;
+        }
+      }
+
+      .ant-form-item {
+        margin: 0;
+      }
+
+      &.combo-row {
+        display: flex;
+        justify-content: space-between;
+  
+        .ant-form-item {
+          width: calc(50% - 10px);
+        }
+      }
+
+      .ant-form-item-label {
+        padding-bottom: 10px;
+      }
+
+      .ant-input,
+      .ant-btn,
+      .ant-select-selector {
+        height: 34px;
+      }
+
+      textarea.ant-input {
+        height: 220px;
+
+        &::-webkit-scrollbar {
+          width : 6px;
+        }
+      }
+
+      .ant-select-selector input {
+        height: 32px;
+      }
+
+      .ant-select-selection-item {
+        line-height: 32px;
+      }
+
+      .ant-select-disabled .ant-select-arrow {
+        display: none;
+      }
+
+      // 授权按钮
+      .auth-button-0 {
+        width: 100%;
+      }
+
+      .ant-form-item-has-error {
+        .auth-button-0 {
+          border: 1px solid var(--ad-error-color);
+        }
+      }
+
+      .auth-error {
+        border: 1px solid var(--ad-error-color);
+      }
+
+      .auth-button-1 {
+        width: calc(50% - 10px);
+      }
+
+      .auth-button-2 {
+        width: calc(50% - 10px);
+        background: rgba(82, 196, 26, 0.1) !important;
+        border: 1px solid rgba(82, 196, 26, 0.4);
+      }
+
+      .reauthorize-button {
+        width: calc(50% - 10px);
+        margin-left: 20px;
+      }
+
+      .ant-input[disabled] {
+        cursor: text;
+      }
+
+      .disabled-input-out {
+        height: 34px;
+        width: 100%;
+        border-radius: 3px;
+        background-color: #f5f5f5;
+        border: 1px solid var(--ad-border-color-base) !important;
+        color: var(--ad-text-color);
+        padding: 6px 12px;
+        overflow: hidden;
+
+        .disabled-input-in {
+          line-height: 20px;
+          white-space: nowrap;
+          overflow-x: auto;
+          overflow-y: hidden;
+          user-select: all;
+
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+
+        .disabled-input-in::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+  }
+}

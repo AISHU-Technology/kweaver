@@ -1,0 +1,37 @@
+// 字段select选择器
+.field-select {
+  @max-height: 32px * 4 + 10px; // 一项的高度是32px, 最多显示4项, 10px是margin
+
+  position: absolute;
+  max-height: @max-height;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #fff;
+  z-index: 96; // 99被'更多'按钮占用, 98被'关闭更多'视图层占用
+
+  .field-select-li {
+    height: 32px;
+    width: 100%;
+    padding: 0 8px;
+    margin-bottom: 2px;
+    font-size: 14px;
+    line-height: 32px;
+  }
+
+  .field-select-li:first-of-type {
+    margin-top: 2px;
+  }
+
+  .field-select-li:hover {
+    background: #f5f5f5;
+  }
+
+  &.field-select-up {
+    box-shadow: 0 -2px 5px -2px rgba(0, 0, 0, 0.05), 0 -4px 10px 0 rgba(0, 0, 0, 0.08),
+      0 -6px 20px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  &.field-select-down {
+    box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.05), 0 4px 10px 0 rgba(0, 0, 0, 0.08), 0 6px 20px 4px rgba(0, 0, 0, 0.05);
+  }
+}

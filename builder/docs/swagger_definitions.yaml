@@ -1,0 +1,1175 @@
+tags:
+  - 'KN Builder'
+consumes:
+  - 'application/json'
+produces:
+  - 'application/json'
+definitions:
+  builder:
+    BuilderRes:
+      type: 'object'
+      properties:
+        res:
+          type: 'string'
+          format: 'string'
+          description: 'success information'
+      xml:
+        name: 'builderRes'
+    OldBuilderErrResponse:
+      type: 'object'
+      properties:
+        Cause:
+          type: 'string'
+          format: 'string'
+          description: 'error description'
+        Code:
+          type: 'integer'
+          format: 'int32'
+          description: 'error code'
+        message:
+          type: 'string'
+          format: 'string'
+          description: 'error detail'
+    NewBuilderErrResponse:
+      type: 'object'
+      properties:
+        ErrorCode:
+          type: 'string'
+          format: 'string'
+          description: 'error code'
+        Description:
+          type: 'string'
+          format: 'string'
+          description: 'error description'
+        ErrorDetails:
+          type: 'string'
+          format: 'string'
+          description: 'error detail'
+        Solution:
+          type: 'string'
+          format: 'string'
+          description: 'solution'
+        ErrorLink:
+          type: 'string'
+          format: 'string'
+          description: 'error link'
+    data_source:
+      gettoken:
+        type: 'object'
+        required:
+          - 'ds_code'
+          - 'ds_auth'
+        properties:
+          ds_code:
+            type: string
+            format: string
+            description: Authorization code
+            example: fd4645y6u6756454e5423465gbfxefef
+          ds_auth:
+            type: integer
+            format: int32
+            description: Data source id
+            example: 66
+      connectTest:
+        type: 'object'
+        required:
+          - data_source
+          - ds_address
+          - ds_id
+          - ds_port
+          - ds_path
+          - vhost
+          - queue
+        properties:
+          data_source:
+            type: string
+            format: string
+            description: mysql/as/as7/hive/rabbitmq
+            example: my_mysql
+          ds_address:
+            type: string
+            format: string
+            description: Data source url or ip
+            example: 192.168.0.1
+          ds_id:
+            type: integer
+            format: int32
+            description: Data source id
+            example: 1
+          ds_port:
+            type: integer
+            format: int32
+            description: Data source port
+            example: 3306
+          ds_user:
+            type: string
+            format: string
+            description: Data source user,as does not have this parameter
+            example: admin
+          ds_password:
+            type: string
+            format: string
+            description: Data source password,as does not have this parameter
+            example: ZWlzb28uY29tMTIz
+          ds_path:
+            type: string
+            format: string
+            description: database or path
+            example: anydata
+          vhost:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example: " "
+          queue:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example: " "
+      dsopt_post:
+        type: 'object'
+        required:
+          - dsname
+          - data_source
+          - ds_address
+          - ds_port
+          - ds_user
+          - ds_password
+          - ds_path
+          - extract_type
+          - vhost
+          - queue
+          - dataType
+          - json_schema
+          - knw_id
+        properties:
+          dsname:
+            type: string
+            format: string
+            description: Data source name
+            example: test_mysql
+          data_source:
+            type: string
+            format: string
+            description: mysql/as/as7/hive/rabbitmq
+            example: mysql
+          ds_address:
+            type: string
+            format: string
+            description: Data source url or ip
+            example: 10.4.69.47
+          ds_port:
+            type: integer
+            format: int32
+            description: Data source port
+            example: 3306
+          ds_user:
+            type: string
+            format: string
+            description: Data source user
+            example: root
+          ds_password:
+            type: string
+            format: string
+            description: Data source password,base64 code
+            example: ZWlzb28uY29tMTIz
+          ds_path:
+            type: string
+            format: string
+            description: database or path
+            example: anydata
+          extract_type:
+            type: string
+            format: string
+            description: extract type
+            example: standardExtraction
+          vhost:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example:
+          queue:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example:
+          dataType:
+            type: string
+            format: string
+            description: datasource type,structured、unstructured,rabbitmq is structured
+            example: structured
+          json_schema:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example:
+          knw_id:
+            type: integer
+            format: int32
+            description: knowledge network id
+            example: 1
+      ds:
+        type: 'object'
+        required:
+          - dsname
+          - data_source
+          - ds_address
+          - ds_port
+          - ds_user
+          - ds_password
+          - ds_path
+          - extract_type
+          - vhost
+          - queue
+          - dataType
+          - json_schema
+        properties:
+          dsname:
+            type: string
+            format: string
+            description: Data source name
+            example: test_rabbitmq
+          data_source:
+            type: string
+            format: string
+            description: mysql/as/as7/hive/rabbitmq
+            example: rabbitmq
+          ds_address:
+            type: string
+            format: string
+            description: Data source url or ip
+            example: 192.168.1.1
+          ds_port:
+            type: integer
+            format: int32
+            description: Data source port
+            example: 5672
+          ds_user:
+            type: string
+            format: string
+            description: Data source user
+            example: admin
+          ds_password:
+            type: string
+            format: string
+            description: Data source password
+            example: test123456
+          ds_path:
+            type: string
+            format: string
+            description: database or path
+            example: ""
+          extract_type:
+            type: string
+            format: string
+            description: extract type
+            example: standardExtraction
+          vhost:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example: test
+          queue:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example: test1
+          dataType:
+            type: string
+            format: string
+            description: datasource type,structured、unstructured,rabbitmq is structured
+            example: structured
+          json_schema:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example: {"name": "xiaoming"}
+      delds:
+        type: 'object'
+        required:
+          - dsids
+        properties:
+          dsids:
+            type: string
+            format: string
+            description: Data source ids
+            example: [1,2,3,4]
+      ds_copy:
+        type: 'object'
+        required:
+          - dsname
+          - data_source
+          - ds_address
+          - ds_port
+          - ds_user
+          - ds_password
+          - ds_path
+          - extract_type
+          - vhost
+          - queue
+          - dataType
+          - json_schema
+          - knw_id
+        properties:
+          dsname:
+            type: string
+            format: string
+            description: Data source name
+            example: test_rabbitmq
+          data_source:
+            type: string
+            format: string
+            description: mysql/as/as7/hive/rabbitmq
+            example: rabbitmq
+          ds_address:
+            type: string
+            format: string
+            description: Data source url or ip
+            example: 192.168.1.1
+          ds_port:
+            type: integer
+            format: int32
+            description: Data source port
+            example: 5672
+          ds_user:
+            type: string
+            format: string
+            description: Data source user
+            example: admin
+          ds_password:
+            type: string
+            format: string
+            description: Data source password
+            example: test123456
+          ds_path:
+            type: string
+            format: string
+            description: database or path
+            example: " "
+          extract_type:
+            type: string
+            format: string
+            description: extract type
+            example: standardExtraction
+          vhost:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example: test
+          queue:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example: test1
+          dataType:
+            type: string
+            format: string
+            description: datasource type,structured、unstructured,rabbitmq is structured
+            example: structured
+          json_schema:
+            type: string
+            format: string
+            description: When data_source is not rabbitmq, pass ""
+            example: {"name": "xiaoming"}
+          knw_id:
+            type: integer
+            format: int32
+            description: knowledge network id
+            example: 1
+    ontology:
+      predict_ontology:
+        type: 'object'
+        required:
+          - ds_id
+          - data_source
+          - file_list
+          - extract_type
+          - postfix
+        properties:
+          ds_id:
+            type: string
+            format: string
+            description: data source id
+            example: 8
+          data_source:
+            type: string
+            format: string
+            description: 'data source type. options: as7 mysql hive'
+            example: as7
+          file_list:
+            type: array
+            description: file list
+            example: [
+            {
+              "docid": "gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/667CDDD12E364766B72F8652F624A072",
+              "type": "file",
+              "name": "cuostomer.csv"
+            }
+            ]
+          extract_type:
+            type: string
+            format: string
+            description: labelExtraction or standardExtraction
+            example: standardExtraction
+          step:
+            type: string
+            format: string
+            description: Otl or Ext. only valid when extract type is labelExtraction
+            example:
+          postfix:
+            type: string
+            format: string
+            description: the file postfix
+            example: csv
+      save_ontology:
+        type: 'object'
+        required:
+          - ontology_name
+          - entity
+          - edge
+        properties:
+          ontology_name:
+            type: string
+            format: string
+            description: ontology name
+            example: ontology_name
+          ontology_des:
+            type: string
+            format: string
+            description: ontology description
+            example: ontology_des
+          entity:
+            type: array
+            description: entity class information
+            example: [
+            {
+              "colour": "#546CFF",
+              "name": "entity1",
+              "properties": [["name", "string"]],
+              "relations": ["entity1", "edge1", "entity2"],
+              "ds_name": "data source name or ontology name",
+              "dataTtype": "data type(structured, unstructured)",
+              "extract_type": "standardExtraction",
+              "model": "aishu",
+              "file_type": "file type，data sources such as csv, mysql don't have file type",
+              "source": [
+                "docid",
+                "table"
+              ],
+              "source_type": " automatic,manual,import"
+            }
+            ]
+          edge:
+            type: array
+            description: edge class information
+            example: [
+            {
+              "colour": "#123CDF",
+              "ds_name": "data source name or ontology name",
+              "dataType": "data type(structured, unstructured)",
+              "extract_type": "standardExtraction",
+              "model": "aishu",
+              "data_source": "as",
+              "ds_path": "123",
+              "id": "7",
+              "file_type": "file type，data sources such as csv, mysql don't have file type",
+              "name": "entity1",
+              "properties": [
+              ["name", "string"],
+              ["age", "int"]
+              ],
+              "source": [
+                "docid",
+                "table"
+              ],
+              "source_type": " automatic,manual,import"
+            },
+            ]
+      get_model_otl:
+        type: 'object'
+        required:
+          - file_list
+        properties:
+          file_list:
+            type: array
+            description: file list
+            example: [["gns://3B3FDF44E3FD48FEB0F0C38C0C4D9C13/C6B5BF7F283144E897CA818707F14812/AE3E13B7F7674CF7BA6C48D420D1AD07", "anyshare//anydata研发线//aaa.csv", "aaa.csv"]]
+          model:
+            type: string
+            format: string
+            description: model name
+            example: AImodel
+      delotl:
+        type: 'object'
+        required:
+          - otlids
+        properties:
+          otlids:
+            type: array
+            description: ontology ids
+            example: [990,103,101,102,95,87,89]
+      updateotlname:
+        type: 'object'
+        required:
+          - ontology_name
+          - ontology_des
+        properties:
+          ontology_name:
+            type: string
+            format: string
+            description: ontology name
+            example: ontology_name
+          ontology_des:
+            type: string
+            format: string
+            description: ontology description
+            example: ontology_des
+      updateotlinfo:
+        type: 'object'
+        required:
+          - entity
+          - used_task
+          - flag
+        properties:
+          entity:
+            type: array
+            description: 'entity class information. required fields：entity_id,colour,ds_name,dataType,data_source,ds_path,ds_id, extract_type, name, source_table, source_type, properties. not required fields(the value can be empty, but the field must exist): file_type, task_id, properties_index, model, source_table, ds_address, alias.'
+            example: [
+            {
+              "colour": "#805A9C",
+              "ds_name": "结构化数据",
+              "dataType": "structured",
+              "extract_type": "standardExtraction",
+              "file_type": "csv",
+              "task_id": "55",
+              "name": "nei1",
+              "source_table": [
+              [
+                "gns://B4FFFD35301B43B78DAEA4737A364C47/DC6942AC590846C297A52346AE9B27F0/EDEA69091B1B4538BE74AAA9535D0E66",
+                "结构化数据/csv/nei1.csv",
+                "nei1.csv"
+              ]
+              ],
+              "source_type": "automatic",
+              "properties": [
+              ["name", "string"],
+              ["p", "string"],
+              ["s", "string"]
+              ],
+              "properties_index": ["name", "p", "s"],
+              "data_source": "as7",
+              "ds_path": "结构化数据",
+              "model": "",
+              "entity_id": 4,
+              "ds_id": "5",
+              "ds_address":"https://10.4.69.44",
+              "alias":"花花护花"
+            }
+            ]
+          edge:
+            type: array
+            description: edge class information. edge_id. others(ditto)
+            example: []
+          used_task:
+            type: array
+            description: rendered task
+            example: [1, 23]
+          flag:
+            type: string
+            format: string
+            description: '"nextstep": the next step is to verify that the entity cannot be empty, and the running tasks cannot be saved. "save": it is not verified that the entity is empty, and there are running tasks to save'
+            example: nextstep
+      builde_onto_task:
+        type: 'object'
+        required:
+          - ontology_id
+          - file_list
+          - postfix
+          - ds_id
+        properties:
+          ontology_id:
+            type: string
+            format: string
+            description: When creating an ontology, the ontology ID of the first build task is null, and the temporary ontology ID is returned. Next, all the build tasks use the returned temporary ontology ID. When editing an ontology, the build task uses the ontology ID.
+            example: 8
+          file_list:
+            type: array
+            description: files you want to predict
+            example: [{"docid":"gns://5B32B75DF1D246E59209BE1C04515587/4932E3A6EFC9476A8549C4D02DE2D40D/3D77695B9C1641398944920D7B6D921E","name":"industry_info.csv","type":"file"}]
+          postfix:
+            type: string
+            format: string
+            description: 'Filter criteria: csv,json,""-->mysql/hive'
+            example: csv
+          ds_id:
+            type: integer
+            format: int32
+            description: data source id
+            example: 7
+      gettaskinfo:
+        type: 'object'
+        required:
+          - page
+          - size
+          - ontology_id
+          - used_task
+        properties:
+          page:
+            type: integer
+            format: int32
+            description: page number
+            example: 1
+          size:
+            type: integer
+            format: int32
+            description: number per page
+            example: 20
+          ontology_id:
+            type: string
+            format: string
+            description: ontology id
+            example: 7
+          used_task:
+            type: array
+            description: rendered tasks
+            example: []
+      deletetask:
+        type: 'object'
+        required:
+          - task_list
+        properties:
+          task_list:
+            type: array
+            description: task list
+            example: [13]
+      deletealltask:
+        type: 'object'
+        required:
+          - ontology_id
+          - state
+        properties:
+          ontology_id:
+            type: integer
+            format: int32
+            description: ontology id
+            example: 1
+          state:
+            type: string
+            format: string
+            description: "'edit': edit without saving (delete some tasks); 'notedit': create without saving (delete all tasks)"
+            example: edit
+      copy_otl:
+        type: 'object'
+        required:
+          - ontology_name
+        properties:
+          ontology_name:
+            type: string
+            format: string
+            description: ontology name
+            example: ontology_name
+          ontology_des:
+            type: string
+            format: string
+            description: ontology description
+            example: ontology_description
+    graph:
+      graph:
+        type: 'object'
+        required:
+          - 'graph_process'
+          - 'graph_step'
+          - 'knw_id'
+        properties:
+          graph_process:
+            type: 'object'
+            example: [
+            {
+              "graph_Name": "graph_name",
+              "graph_des": "graph description",
+              "graph_db_id": 1
+            }
+            ]
+          graph_step:
+            type: 'string'
+            format: 'string'
+            description: 'graph step'
+            example: 'graph_baseInfo'
+          knw_id:
+            type: 'integer'
+            format: 'int32'
+            description: 'knowledge network id'
+            example: 2
+      getbyinfoext:
+        type: 'object'
+        required:
+          - graphid
+          - graph_step
+          - infoext_list
+        properties:
+          graphid:
+            type: integer
+            format: int32
+            description: graph id
+            example: 16
+          graph_step:
+            type: string
+            format: string
+            description: graph configuration step
+            example: graph_InfoExt
+          infoext_list:
+            type: array
+            description: extraction file list containing data source name and file source
+            example: [
+            { "ds_name": "data_source_name1", "file_source": "document identification：fileid or tablename" },
+            { "ds_name": "data_source_name1", "file_source": "document identification：fileid or tablename" }
+            ]
+      check_kmapinfo:
+        type: 'object'
+        required:
+          - graphid
+          - graph_KMap
+        properties:
+          graphid:
+            type: integer
+            format: int32
+            description: graph id
+            example: 16
+          graph_KMap:
+            type: array
+            description: details of the graph mapping
+            example: [{
+                        "otls_map": [
+                        {
+                          "otl_name": "test_json",
+                          "entity_type": "test_json",
+                          "property_map": [
+                          { "otl_prop": "name", "entity_prop": "a1" },
+                          { "otl_prop": "a1", "entity_prop": "a1" },
+                          { "otl_prop": "a2", "entity_prop": "a2" }
+                          ]
+                        }
+                        ],
+                        "relations_map": []
+                      }]
+      savenocheck:
+        type: 'object'
+        required:
+          - graph_id
+        properties:
+          graph_id:
+            type: integer
+            format: int32
+            description: graph id
+            example: 4
+          graph_baseInfo:
+            type: array
+            description: graph basic information
+            example: [{ "graph_Name": "1", "graph_des": "", "graph_db_id": 2 }]
+          graph_ds:
+            type: array
+            description: graph data source information
+            example: [6]
+          graph_otl:
+            type: array
+            description: graph ontology information
+            example: []
+          graph_InfoExt:
+            type: array
+            description: graph extraction information
+            example: []
+          graph_KMap:
+            type: array
+            description: graph mapping information
+            example: []
+          graph_KMerge:
+            type: array
+            description: graph merging information
+            example: [{ "status": true, "entity_classes": [] }]
+      graphDeleteByIds:
+        type: 'object'
+        required:
+          - graphids
+          - knw_id
+        properties:
+          graphids:
+            type: array
+            description: list of graph ids to be deleted
+            example: [1, 2]
+          knw_id:
+            type: integer
+            format: int32
+            description: knowledge network id
+            example: 1
+      graph_config_output:
+        type: 'object'
+        required:
+          - ids
+        properties:
+          ids:
+            type: array
+            description: list of graph ids to be exported. If its length exceeds 1, an error will be reported.
+            example: ["86"]
+      graph_config_input:
+        type: 'object'
+        required:
+          - knw_id
+          - graph_id
+          - method
+        properties:
+          knw_id:
+            type: integer
+            format: int32
+            description: knowledge network id
+            example: 1
+          graph_id:
+            type: integer
+            format: int32
+            description: graph id
+            example: 1
+          method:
+            type: integer
+            format: int32
+            description: '0: skip when graph id exists; 1: update when graph id exists'
+            example: 0
+    celery_task:
+      taskcrud_post:
+        type: 'object'
+        required:
+          - task_type
+        properties:
+          task_type:
+            type: string
+            format: string
+            description: 'full or increment'
+            example: full
+      taskcrud_delete:
+        type: 'object'
+        required:
+          - task_ids
+        properties:
+          task_ids:
+            type: array
+            description: task ids to be deleted
+            example: ["727d3a54-2b31-4501-8f4c-d054b91dacaa"]
+    graph_count:
+      graphs_count_all:
+        type: 'object'
+        required:
+          - entities
+          - pro
+          - edges
+          - all
+        properties:
+          entities:
+            type: integer
+            description: entity numbers
+            example: 10
+          pro:
+            type: integer
+            description: properties numbers
+            example: 3
+          edges:
+            type: integer
+            description: edge numbers
+            example: 30
+          all:
+            type: integer
+            description: total numbers
+            example: 43
+    timer:
+      add_timed_task:
+        type: 'object'
+        required:
+          - task_type
+          - cycle
+          - datetime
+          - date_list
+        properties:
+          task_type:
+            type: string
+            format: string
+            description: 'building task type. allowableValues: full, increment'
+            example: increment
+          cycle:
+            type: string
+            format: string
+            description: "'one': execute once; 'day': execute daily; 'week': execute weekly; 'month': execute monthly. "
+            example: month
+          datetime:
+            type: string
+            format: string
+            description: "The delivery parameters that are only executed once are the specific date, such as: '2021-12-20 15:54', the delivery parameters are hours and minutes for daily, week and month, such as: '16:40'."
+            example: "17:20"
+          enabled:
+            type: integer
+            format: int32
+            description: "task switch on(default): 1; off: 0"
+            example: 1
+          date_list:
+            type: array
+            description: Indicates the day of the week / day of execution. The content of the list is int, the effective value of the page every week is 1 ~ 7, the number of elements cannot be greater than 7, and the effective value of the page every month is 1 ~ 31. For example, [1, 4], the number of elements cannot be greater than 31, which represents Monday to Sunday or 1 ~ 31 in turn. The page of one execution and daily execution can only send an empty list, and other values will be directly discarded.
+            example: [1,2,3,4,5]
+      update_timed_task:
+        type: 'object'
+        required:
+          - task_id
+          - task_type
+          - cycle
+          - datetime
+          - date_list
+        properties:
+          task_id:
+            type: string
+            format: string
+            description: scheduled task id
+            example: "edfeca62-77f8-11ec-9513-4281da722808"
+          task_type:
+            type: string
+            format: string
+            description: build task type，full, increment
+            example: increment
+          cycle:
+            type: string
+            format: string
+            description: 'Valid values are one, day, week, month, one: execute once, day: execute every day, week: execute every week, month: execute every month'
+            example: week
+          datetime:
+            type: string
+            format: string
+            description: "The delivery parameters that are only executed once are the specific date, such as: '2021-12-20 15:54', the delivery parameters are hours and minutes of each day, week and month, such as: '16:40'"
+            example: '17:02'
+          enabled:
+            type: integer
+            format: int32
+            description: 'Task switch, on: 1, off: 0, on by default'
+            example: 1
+          date_list:
+            type: array
+            description: Indicates the day of the week / day of execution. The content of the list is int, the effective value of the page every week is 1 ~ 7, the number of elements cannot be greater than 7, and the effective value of the page every month is 1 ~ 31. For example, [1, 4], the number of elements cannot be greater than 31, which represents Monday to Sunday or 1 ~ 31 in turn. The page of one execution and daily execution can only send an empty list, and other values will be directly discarded.
+            example: [1]
+      delete_timed_task:
+        type: 'object'
+        required:
+          - task_id
+        properties:
+          task_id:
+            type: array
+            description: List of scheduled task IDs. The contents of the list are scheduled task IDS, such as ['aaa','BBBB']
+            example: ["122","4bfc6d8e-68ab-11ec-b9d3-005056ba834d"]
+      timed_switch:
+        type: 'object'
+        required:
+          - task_id
+          - enabled
+        properties:
+          task_id:
+            type: string
+            format: string
+            description: scheduled task id
+            example: "ce29686e-7352-11ec-8b53-005056ba834d"
+          enabled:
+            type: integer
+            format: int32
+            description: 'Task switch, on: 1, off: 0'
+            example: 1
+    knowledge_network:
+      save_knowledgenetwork:
+        type: 'object'
+        required:
+          - knw_name
+          - knw_color
+        properties:
+          knw_name:
+            type: string
+            format: string
+            description: knowledge network name
+            example: knowledge_network_name
+          knw_des:
+            type: string
+            format: string
+            description: knowledge network description
+            example: knowledge network description
+          knw_color:
+            type: string
+            format: string
+            description: knowledge network color
+            example: '#126EE3'
+      editKnw:
+        type: 'object'
+        required:
+          - knw_id
+          - knw_name
+          - knw_color
+        properties:
+          knw_id:
+            type: integer
+            format: int32
+            description: knowledge network id
+            example: 1
+          knw_name:
+            type: string
+            format: string
+            description: knowledge network name
+            example: knw_name
+          knw_des:
+            type: string
+            format: string
+            description: knowledge network description
+            example: knw_des
+          knw_color:
+            type: string
+            format: string
+            description: knowledge network color
+            example: '#126EE3'
+    lexicon:
+      create_lexicon:
+        type: 'object'
+        required:
+          - name
+          - labels
+          - description
+          - knowledge_id
+        properties:
+          name:
+            type: string
+            format: string
+            description: lexicon name,Input 50 characters at most. Only Chinese and English numbers can be underlined. It cannot be blank. The name of the lexicon under the same knowledge network cannot be duplicate
+            example: "lexicon1"
+          labels:
+            type: array
+            description: label of lexicon
+            example: ["finance", "economy"]
+          description:
+            type: string
+            format: string
+            description: description of lexicon
+            example: "This is a lexicon in the financial field"
+          knowledge_id:
+            type: integer
+            format: int32
+            description: knowledge network id
+            example: 1
+      insert_word2lexicon:
+        type: 'object'
+        required:
+          - id
+        properties:
+          id:
+            type: integer
+            format: int32
+            description: lexicon id
+            example: 1
+          word_info:
+            type: object
+            description: word info
+            example: {"word1": "test1", "word2": "test2"}
+      search_word_in_lexicon:
+        type: 'object'
+        required:
+          - id
+        properties:
+          id:
+            type: integer
+            format: int32
+            description: lexicon id
+            example: 1
+          word:
+            type: string
+            format: string
+            description: search term
+            example: "test"
+      edit_word_in_lexicon:
+        type: 'object'
+        required:
+          - id
+          - new_info
+        properties:
+          id:
+            type: integer
+            format: int32
+            description: lexicon id
+            example: 1
+          old_info:
+            type: object
+            description: word to be modified
+            example: old_info
+          new_info:
+            type: object
+            description: modified word information
+            example: {"word": "new_word"}
+      delete_word_in_lexicon:
+        type: 'object'
+        required:
+          - id
+        properties:
+          id:
+            type: integer
+            format: int32
+            description: lexicon id
+            example: 1
+          word_info_list:
+            type: array
+            description: words to be deleted
+            example: [{"word": "word1"}, {"word": "word2"}]
+      edit_lexicon:
+        type: 'object'
+        required:
+          - id
+          - name
+          - labels
+          - description
+        properties:
+          id:
+            type: integer
+            format: int32
+            description: lexicon id
+            example: 1
+          name:
+            type: string
+            format: string
+            description: lexicon name
+            example: "lexicon1"
+          labels:
+            type: string
+            format: string
+            description: label of lexicon
+            example: ["finance", "economy"]
+          description:
+            type: string
+            format: string
+            description: description of lexicon
+            example: "This is a lexicon in the financial field"
+      delete_lexicon:
+        type: 'object'
+        required:
+          - id_list
+        properties:
+          id_list:
+            type: array
+            description: lexicon id list
+            example: [1, 2, 3]
+      import_word2lexicon:
+        type: 'object'
+        required:
+          - id
+        properties:
+          id:
+            type: integer
+            format: int32
+            description: graph id
+            example: 1
+          mode:
+            type: string
+            format: string
+            description: mode of importing words
+            example: 'add'
+      export_lexicon:
+        type: 'object'
+        required:
+          - id_list
+        properties:
+          id_list:
+            type: array
+            description: lexicon id list
+            example: [1, 2, 3]

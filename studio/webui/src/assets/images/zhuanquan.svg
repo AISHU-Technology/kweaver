@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="60px" height="49px" viewBox="0 0 60 49" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Combined Shape Copy 17</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="9.12388554%" y2="5.86129703%" id="linearGradient-1">
+            <stop stop-color="#9ABBEF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="本体管理_详情（预测中等待）" transform="translate(-1087.000000, -584.000000)" fill="url(#linearGradient-1)">
+            <g id="详情弹窗" transform="translate(460.000000, 153.000000)">
+                <g id="右侧文件列表" transform="translate(338.000000, 196.000000)">
+                    <path d="M319.46875,235 C319.62718,235 319.78357,235.008733 319.937465,235.025744 L319.937343,235.014365 C336.072169,235.509562 349,248.745052 349,265 C349,281.568542 335.568542,295 319,295 C302.431458,295 289,281.568542 289,265 L289,265 L296.542347,264.999949 C296.514251,265.465116 296.5,265.934019 296.5,266.40625 C296.5,279.09154 306.78346,289.375 319.46875,289.375 C332.15404,289.375 342.4375,279.09154 342.4375,266.40625 C342.4375,253.87768 332.406565,243.691961 319.937796,243.442194 L319.937465,243.411756 C319.78357,243.428767 319.62718,243.4375 319.46875,243.4375 C317.138799,243.4375 315.25,241.548701 315.25,239.21875 C315.25,236.888799 317.138799,235 319.46875,235 Z" id="Combined-Shape-Copy-17" transform="translate(319.000000, 265.000000) scale(-1, 1) rotate(-90.000000) translate(-319.000000, -265.000000) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

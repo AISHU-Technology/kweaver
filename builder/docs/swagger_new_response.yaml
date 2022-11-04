@@ -1,0 +1,13 @@
+responses:
+  '200':
+    description: 'operation success'
+    schema:
+      $ref: '#/definitions/builder/BuilderRes'
+  '500':
+    description: 'operation failure'
+    schema:
+      $ref: '#/definitions/builder/NewBuilderErrResponse'
+  '400':
+    description: 'parameter error'
+    schema:
+      $ref: '#/definitions/builder/NewBuilderErrResponse'

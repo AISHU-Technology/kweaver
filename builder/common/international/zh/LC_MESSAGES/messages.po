@@ -1,0 +1,363 @@
+# Chinese translations for PROJECT.
+# Copyright (C) 2022 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2022-09-08 02:39-0400\n"
+"PO-Revision-Date: 2022-06-23 17:41+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh\n"
+"Language-Team: zh <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.0\n"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:8
+msgid "Parameter [arg] Error."
+msgstr "参数[arg]错误"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:9
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:21
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:27
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:51
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:63
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:75
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:87
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:93
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:105
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:111
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:20
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:26
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:32
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:74
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:80
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:87
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:93
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:100
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:106
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:113
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:119
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:144
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:150
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:157
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:163
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:169
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:181
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:194
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:200
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:220
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:226
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:232
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:240
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:246
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:253
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:259
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:278
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:292
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:298
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:305
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:311
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:372
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:378
+msgid "Please check your parameter again."
+msgstr "请重新检查输入参数"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:14
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:56
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:80
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:98
+msgid "[cause]"
+msgstr ""
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:15
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:57
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:81
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:99
+msgid "Please contact the developers."
+msgstr "请联系开发人员"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:19
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:20
+msgid "graphid [graphid] not exists."
+msgstr "graphid [graphid] 不存在"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:25
+msgid "key type error"
+msgstr "key类型错误"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:26
+msgid "key should be list of string"
+msgstr "key应为字符串列表"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:31
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:32
+msgid "graphdb id [graphdb_id] not exists"
+msgstr "图数据库id [graphdb_id] 不存在"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:33
+msgid "please config your graphdb again."
+msgstr "请重新配置图数据库"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:43
+msgid "these keys are not supported: [unsupported_key]"
+msgstr "这些字段不支持: [unsupported_key]"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:44
+msgid "some keys are not supported."
+msgstr "key中有不支持的字段"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:45
+msgid "please check your parameter key again."
+msgstr "请检查传入的参数key"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:50
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:74
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:92
+msgid "argument [arg] error"
+msgstr "参数[arg]错误"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:61
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:62
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:85
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:86
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:103
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:104
+msgid "graph id [graphid] not exists"
+msgstr "graph id [graphid] 不存在"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:67
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:68
+msgid "ontology id [otl_id] not exists"
+msgstr "本体id [otl_id] 不存在"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:69
+msgid "Please config the ontology."
+msgstr "请配置本体"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:109
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graph_error.py:110
+msgid "[class_type] [name] not exists"
+msgstr ""
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:10
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:34
+msgid "Please check whether the OrientDB request information is correct."
+msgstr "请检查OrientDB请求信息是否正确"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:16
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:40
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:46
+msgid "Please check whether the Nebula request information is correct."
+msgstr "请检查Nebula请求信息是否正确"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:22
+msgid "Please check whether your GraphDB service is running normally."
+msgstr "请检查图数据库服务是否正常运行"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/graphdb_error.py:28
+msgid "Please check whether your DB name is correct."
+msgstr "请检查图数据库名称是否正确"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:13
+msgid "Please check the database connection."
+msgstr "抢检查数据库连接情况"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:25
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, lexicon "
+"creation failed!"
+msgstr "指定的知识网络id [knowledge_id] 不存在，词库创建失败"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:31
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:231
+msgid ""
+"Lexicon name [lexicon_name] already exists and cannot be created "
+"repeatedly."
+msgstr "词库名称 [lexicon_name] 已经存在，不可以重复创建"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:37
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:316
+msgid "[ErrorDetails]"
+msgstr ""
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:38
+msgid "Please check the type, size and content format of the uploaded file."
+msgstr "请核对上传文件的大小、类型以及内容格式"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:43
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:328
+msgid "Only one file can be selected at most."
+msgstr "仅支持上传一个文件"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:44
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:50
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:329
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:335
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:353
+msgid "Please select upload file again."
+msgstr "请重新选择上传文件"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:49
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:334
+msgid "The file format only supports txt and CSV."
+msgstr "文件格式错误，仅支持txt、csv"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:55
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:340
+msgid "File content format error."
+msgstr "文件内容格式错误"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:56
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:341
+msgid ""
+"Please check the content and format of the document according to the "
+"template."
+msgstr "请按照模板核对文件内容格式"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:61
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:346
+msgid "The file only supports UTF-8 encoding."
+msgstr "上传文件只支持UTF-8编码"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:62
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:347
+msgid "Please confirm the file code and reselect the file."
+msgstr "请确认文件编码，重新选择文件"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:67
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:358
+msgid "The amount of uploaded file data exceeds."
+msgstr "上传文件数据量超出"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:68
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:359
+msgid ""
+"The uploaded file must be less than 10M and the number of lines must be "
+"less than 350000."
+msgstr "文件大小不可超过10M，且在35万行以内"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:79
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, get labels "
+"failed!"
+msgstr "指定的知识网络id [knowledge_id] 不存在，获取标签失败"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:92
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, get lexicon "
+"failed!"
+msgstr "指定的知识网络id [knowledge_id] 不存在，获取词库信息失败"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:105
+msgid "The specified lexicon id [lexicon_id] does not exist, get lexicon failed!"
+msgstr "指定的词库id [lexicon_id] 不存在，获取词库信息失败"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:118
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:143
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:162
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:199
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:225
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:245
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:258
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:297
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:310
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:377
+msgid "The specified lexicon id [lexicon_id] does not exist."
+msgstr "指定的词库id [lexicon_id] 不存在"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:124
+msgid "The format of the new data [data] does not match the original data"
+msgstr "新数据 [data] 和词库中已有数据的格式不匹配"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:125
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:131
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:175
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:206
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:323
+#, fuzzy
+msgid "Please check lexicon format again."
+msgstr "请重新检查输入参数"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:130
+msgid "The newly added word [data] already exists."
+msgstr "新增的词汇[data]已经存在."
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:136
+msgid "lexicon [lexicon_id] status is running, cannot insert."
+msgstr "running状态的词库[lexicon_id]，无法新增词汇"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:137
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:187
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:212
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:271
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:365
+msgid "lexicon status is running, please make sure lexicon status is correct."
+msgstr "词库状态running，请确保词库状态正确"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:168
+msgid "The specified lexicon word [lexicon_word] does not exist."
+msgstr "指定的词库词汇 [lexicon_word] 不存在"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:174
+msgid "New data [new_info] and original data [old_info] fields are inconsistent."
+msgstr "新数据 [new_info] 和 已有数据 [old_info] 的字段不一致"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:180
+msgid "The modified word [lexicon_word] already exists."
+msgstr "修改后的词汇[lexicon_word]已经存在."
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:186
+msgid "lexicon [lexicon_id] status is running, cannot edit word."
+msgstr "running状态的词库[lexicon_id]，无法编辑词汇"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:205
+msgid "There is no deleted data [delete_data] in the specified lexicon."
+msgstr "需要删除的词 [delete_data] 在指定的词库中不存在"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:211
+msgid "lexicon [lexicon_id] status is running, cannot delete word."
+msgstr "running状态的词库[lexicon_id]，无法删除词汇"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:270
+msgid "lexicon [lexicon_id] status is running, cannot export."
+msgstr "running状态的词库[lexicon_id]，无法导出"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:284
+msgid "Please see the error prompt for details."
+msgstr "请查看详细的错误提示信息"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:317
+#, fuzzy
+msgid "Please check the type and size of the uploaded file."
+msgstr "请核对上传文件的大小、类型以及内容格式"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:322
+msgid "New data and original data fields are inconsistent"
+msgstr "导入的数据和词库已有数据字段不一致"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:352
+msgid "Select at least one file."
+msgstr "请至少选择一个文件"
+
+#: /root/code/189495/gbuilder-builder/common/errorcode/errors/lexicon_error.py:364
+msgid "lexicon [lexicon_id] status is running, cannot import words."
+msgstr "running状态的词库[lexicon_id]，无法导入词汇"
+
+#~ msgid "File format conflict, all file structures need to be unified."
+#~ msgstr "字段格式冲突，所有文件的内容结构需要一致"
+
+#~ msgid "The file format only supports CSV and TXT."
+#~ msgstr "上传文件仅支持csv和txt."
+
+#~ msgid "The maximum number of uploaded file is 5;"
+#~ msgstr "上传文件个数最多为5个."
+
+#~ msgid "Failed to get file."
+#~ msgstr "获取文件失败"
+

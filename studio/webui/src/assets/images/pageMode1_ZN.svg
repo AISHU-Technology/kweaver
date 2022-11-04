@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="476px" height="148px" viewBox="0 0 476 148" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>多文件示意图</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="知识映射（模式2内部）" transform="translate(-464.000000, -623.000000)">
+            <g id="多文件示意图" transform="translate(464.000000, 623.000000)">
+                <g id="表格" transform="translate(0.000000, 80.000000)">
+                    <g id="表1" transform="translate(0.000000, 0.500000)">
+                        <rect id="矩形" stroke-opacity="0.14" stroke="#989CAC" fill="#FFFFFF" x="0.5" y="0.5" width="179" height="66"></rect>
+                        <rect id="矩形" fill-opacity="0.14" fill="#54639C" x="1" y="0.5" width="178" height="32"></rect>
+                        <rect id="矩形" fill-opacity="0.14" fill="#989CAC" transform="translate(89.500000, 33.500000) scale(-1, 1) translate(-89.500000, -33.500000) " x="89" y="0.5" width="1" height="66"></rect>
+                        <rect id="矩形" stroke-opacity="0.2" stroke="#CFD2DB" transform="translate(90.000000, 33.000000) rotate(-90.000000) translate(-90.000000, -33.000000) " x="90" y="-55.5" width="1" height="177"></rect>
+                    </g>
+                    <g id="表2" transform="translate(296.000000, 0.500000)">
+                        <rect id="矩形" stroke-opacity="0.14" stroke="#989CAC" fill="#FFFFFF" x="0.5" y="0.5" width="179" height="66"></rect>
+                        <rect id="矩形" fill-opacity="0.14" fill="#54639C" x="1" y="0.5" width="178" height="32"></rect>
+                        <rect id="矩形" fill-opacity="0.14" fill="#989CAC" transform="translate(89.500000, 33.500000) scale(-1, 1) translate(-89.500000, -33.500000) " x="89" y="0.5" width="1" height="66"></rect>
+                        <rect id="矩形" stroke-opacity="0.2" stroke="#CFD2DB" transform="translate(90.000000, 33.000000) rotate(-90.000000) translate(-90.000000, -33.000000) " x="90" y="-55.5" width="1" height="177"></rect>
+                    </g>
+                </g>
+                <g id="表头" transform="translate(26.000000, 86.000000)" fill="#333333" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal" line-spacing="22">
+                    <text id="Field-1">
+                        <tspan x="0" y="15">Field 1</tspan>
+                    </text>
+                    <text id="Field-2">
+                        <tspan x="85" y="15">Field 2</tspan>
+                    </text>
+                    <text id="Field-1">
+                        <tspan x="296" y="15">Field 1</tspan>
+                    </text>
+                    <text id="Field-2">
+                        <tspan x="381" y="15">Field 2</tspan>
+                    </text>
+                </g>
+                <g id="表名" transform="translate(33.000000, 0.000000)" fill="#333333" font-family="PingFangSC-Regular, PingFang SC" font-size="14" font-weight="normal">
+                    <text id="Table-A(起始实体)">
+                        <tspan x="0" y="15">Table A(起始实体)</tspan>
+                    </text>
+                    <text id="Table-B(终点实体)">
+                        <tspan x="295" y="15">Table B(终点实体)</tspan>
+                    </text>
+                </g>
+                <g id="关系" transform="translate(133.000000, 46.000000)">
+                    <path id="路径-2" d="M206,13.5 C208.414273,13.5 210.384489,15.4012365 210.495102,17.7881643 L210.5,18 L210.5,33.5 L214.5,33.5 L210,42.5 L205.5,33.5 L209.5,33.5 L209.5,18 C209.5,16.1314366 208.035722,14.6048736 206.192035,14.5051789 L206,14.5 L4,14.5 C2.1314366,14.5 0.604873551,15.9642776 0.505178863,17.8079648 L0.5,18 L0.5,33.5 L4.5,33.5 L-3.061617e-17,42.5 L-4.5,33.5 L-0.5,33.5 L-0.5,18 C-0.5,15.5857267 1.40123652,13.6155109 3.7881643,13.504898 L4,13.5 L206,13.5 Z" fill="#5163A0" fill-rule="nonzero"></path>
+                    <rect id="矩形" fill="#FFFFFF" x="27" y="0" width="156" height="25"></rect>
+                    <text id="关系：A.Field2=B.Field1" font-family="PingFangSC-Medium, PingFang SC" font-size="13" font-weight="400" line-spacing="22" fill="#5163A0">
+                        <tspan x="33" y="16">关系：A.Field2=B.Field1</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

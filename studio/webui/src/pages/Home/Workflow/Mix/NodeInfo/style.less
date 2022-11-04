@@ -1,0 +1,64 @@
+.node-info-box {
+  width: 100%;
+  height: 100%;
+
+  .info-title {
+    height: 56px;
+    padding: 20px;
+    line-height: 16px;
+    font-size: 16px;
+    color: var(--ad-heading-color);
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    border-bottom: 1px solid #e5e7ed;
+  }
+
+  .node-list-box {
+    width: 100%;
+    height: calc(100% - 56px);
+    padding: 20px;
+
+    .vertex-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 46px;
+      padding: 0 16px;
+      border-top: 1px solid #f4f4f4;
+      cursor: pointer;
+
+      .vertex-icon {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1px solid #e5e5e5;
+      }
+
+      .vertex-name {
+        width: calc(100% - 14px);
+        height: 20px;
+        padding-left: 10px;
+        line-height: 20px;
+        font-size: 14px;
+        font-family: PingFangSC-Medium;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .vertex-item:last-of-type {
+      border-bottom: 1px solid #f4f4f4;
+    }
+
+    .vertex-item:hover {
+      background: var(--ad-hover-bg-color);
+    }
+
+    .vertex-item-active {
+      background: var(--ad-select-bg-color) !important;
+    }
+  }
+}

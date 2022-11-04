@@ -1,0 +1,42 @@
+.configurationDetailsRoot {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  .content {
+    height: 100%;
+    overflow-y: auto;
+    .header {
+      border-bottom: 1px solid #f4f4f4;
+    }
+    .empty {
+      display: flex;
+      padding: 88px 12px;
+      align-items: center;
+      flex-direction: column;
+    }
+    .nodeInfo {
+      .imitationInput {
+        height: 34px;
+        display: flex;
+        padding: 0px 12px;
+        align-items: center;
+        border-radius: var(--ad-border-radius-base);
+        border: 1px solid var(--ad-border-color-base);
+        background-color: var(--ad-imitation-input-color);
+        .point {
+          width: 14px;
+          height: 14px;
+          min-width: 14px;
+          margin-right: 10px;
+          border-radius: 14px;
+        }
+        .line {
+          width: 14px;
+          height: 2px;
+          min-width: 14px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,213 @@
+.new-edge-family {
+  .node-family {
+    .all-row {
+      padding: 4px 0;
+      margin: 0 20px;
+      border-bottom: 1px solid rgba(244, 244, 244, 1);
+    }
+
+    .all-row-top {
+      margin-top: -1px;
+      border-top: 1px solid rgba(244, 244, 244, 1);
+    }
+
+    .check-data-row {
+      float: left;
+      margin: 14px 0 0 12px;
+    }
+
+    .had-alias {
+      margin-top: 4px;
+    }
+
+    .all-row-checked {
+      padding: 4px 0;
+      margin: 0 20px;
+      background: var(--ad-select-bg-color);
+      border-bottom: 1px solid rgba(244, 244, 244, 1);
+    }
+
+    .all-row:hover {
+      background: var(--ad-hover-bg-color);
+    }
+
+    .all-row:hover .delete {
+      display: block;
+    }
+
+    .all-row-checked:hover .delete {
+      display: block;
+    }
+
+    .row {
+      width: calc(100% - 42px);
+      height: 46px;
+      display: flex;
+      cursor: pointer;
+
+      .color {
+        width: 14px;
+        height: 2px;
+        margin: 24px 10px 15px;
+      }
+
+      .alias-color {
+        width: 14px;
+        height: 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(229, 229, 229, 1);
+        margin: 8px 10px 15px;
+      }
+
+      .name {
+        width: 238px;
+        line-height: 36px;
+        margin: 14px 0 12px 0;
+
+        .ori-name {
+          width: 238px;
+          height: 20px;
+          font-size: 14px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          line-height: 20px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          color: rgba(0, 0, 0, 0.65);
+        }
+
+        .alias {
+          width: 238px;
+          height: 16px;
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 0.45);
+          line-height: 16px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .had-alias {
+        margin-top: 4px;
+      }
+
+      .repeat {
+        color: var(--ad-error-color);
+        width: 20px;
+        height: 26px;
+        font-size: 14px;
+        margin: 12px 0 0 0px;
+        padding: 4px 0 0 0;
+      }
+
+      .delete {
+        width: 20px;
+        height: 26px;
+        display: none;
+        font-size: 14px;
+        margin: 12px 0 0 0px;
+        padding: 4px 0 0 0;
+      }
+    }
+
+    .row-repeat {
+      background: rgba(254, 240, 240, 0.5) !important;
+    }
+
+    .no-data {
+      margin-top: 100px;
+      text-align: center;
+      margin: 110px;
+
+      .icon {
+        width: 144px;
+        height: auto;
+      }
+
+      .word {
+        height: 22px;
+        text-align: center;
+        margin: 8px 0 0 0;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--ad-text-color);
+        line-height: 22px;
+      }
+    }
+  }
+
+  .name-tip {
+    margin: 8px 16px 0 16px;
+  }
+
+  .nick-name {
+    margin: 8px 16px 0 16px;
+    padding: 14px 0 0 0;
+    border-top: 1px dashed rgba(255, 255, 255, 1);
+  }
+
+  .des-tip {
+    word-break: break-all;
+    margin: 8px 16px 14px 16px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .select-all-check {
+    position: absolute;
+    width: 100%;
+    bottom: 14px;
+    border-top: 1px solid rgba(244, 244, 244, 1);
+    padding: 14px 0 0 0;
+
+    .check-data {
+      float: left;
+      margin: 8px 0 0 20px;
+    }
+
+    .delete {
+      height: 36px;
+      margin: 0 20px 0 0;
+      float: right;
+    }
+  }
+}
+
+.delete-create-info-45679 {
+  width: 432px !important;
+
+  .ant-modal-body {
+    height: auto !important;
+    padding: 24px 0px 0px 32px;
+  }
+
+  .ant-modal-footer {
+    padding: 20px 2px;
+    border-top: 0px solid #f0f0f0;
+  }
+
+  .title-content {
+    .icon {
+      font-size: 22px;
+      color: var(--ad-error-color);
+    }
+
+    .title-word {
+      margin: 0 0 0 16px;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: var(--ad-heading-color);
+      line-height: 24px;
+    }
+  }
+
+  .content-word {
+    margin: 10px 0 0 38px;
+    padding: 0 36px 0 0px;
+    line-height: 22px;
+  }
+}

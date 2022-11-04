@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .container {
+        gap: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .image-box {
+        width: 160px;
+        height: 160px;
+        padding: 10px;
+        overflow: hidden;
+        border-radius: 4px;
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+      .image-box img {
+        width: 100%;
+        object-fit: contain;
+        height: calc(100% - 40px);
+      }
+      .image-box .name {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        font-size: 12px;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="root">
+      <h2 class="h2"></h2>
+      <div class="container"></div>
+    </div>
+    <script src="./data.js"></script>
+    <script>
+      console.log('images images', images);
+      const root = document.querySelector('.root');
+      const h2 = document.querySelector('.h2');
+      const container = document.querySelector('.container');
+
+      h2.append(`一共有 ${images.length} 张图片`);
+
+      images.forEach(item => {
+        const imageBox = document.createElement('div');
+        const img = document.createElement('img');
+        const name = document.createElement('div');
+
+        imageBox.setAttribute('class', 'image-box');
+        name.setAttribute('class', 'name');
+        name.append(item);
+        img.src = `../images/${item}`;
+
+        imageBox.appendChild(img);
+        imageBox.appendChild(name);
+        container.appendChild(imageBox);
+      });
+    </script>
+  </body>
+</html>

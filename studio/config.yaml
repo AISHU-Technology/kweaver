@@ -1,0 +1,61 @@
+server:
+  host: 0.0.0.0
+  port: 6800
+  mode: release
+
+mariadb:
+  user: root
+  password: 123456
+  port: 3306
+  host: localhost
+  database: anydata
+  max-idle-conns: 10
+  max-open-conns: 100
+  conn-max-lifetime: 60 #60min
+  log-mode: false
+  log-level: 4
+
+redis:
+  mode: stand-alone #stand-alone sentinel
+  host: 10.4.68.144
+  port: 6379
+  user: ""
+  password: "123456"
+  master_name: mymaster
+  sentinel:
+    - host: 10.4.69.47
+      port: 26380
+    - host: 10.4.69.47
+      port: 26381
+  sentinel_user: ~
+  sentinel_password: ~
+  db: 0
+
+#zap配置
+zap:
+  level: 'info'
+  format: 'console' #console json
+  director: 'log'
+  link-name: 'latest_log'
+  show-line: true
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: true
+  prefix: '[github.com/KWeaver/kw-studio]'
+
+swagger:
+  title: "KWeaver OpenAPI"
+  version: "0.1.0"
+  description: "Welcome to KWeaver 0.1.0 OpenAPI"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+  tags:
+    - { "name": "Introduction", "description": "Kweaver provides OpenAPI capabilities, and uses KWeaver's capabilities by calling KWeaver's OpenAPI to realize and apply KWeaver integration and interaction." }
+    - { "name": "Studio", "description": "KWeaver UI" }
+    - { "name": "KN Builder", "description": "Knowledge Network Builder (KN Builder): Use artificial intelligence technology to transform data of different forms into knowledge networks to realize data knowledge. Including knowledge graph, language model and rule base." }
+    - { "name": "CEngine", "description": "Knowledge network exploratory analysis related API, which can realize the search of entities and explore the entities associated with them. Follow the GraphQL interface specification, the detailed schema can be viewed in graphql schema" }
+  doc_urls:
+    - "http://localhost:6800/swagger/doc.json"
+    - "http://kw-builder:6475/swagger_json.json"
+    - "http://kw-engine:6474/swagger/doc.json"
