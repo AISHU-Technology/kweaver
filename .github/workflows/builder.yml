@@ -1,7 +1,8 @@
 # 工作流名称
 name: kw-builder CI
 
-# push tag 时触发执行 
+# 手动触发执行
+# push tag 时触发执行
 on:
   workflow_dispatch:
   push:
