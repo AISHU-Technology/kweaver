@@ -8,7 +8,6 @@ ADD . /app
 
 # 卸载基础镜像中的DataTransform，安装指定分支，默认安装develop，替换celery.py源码，加入自定义pytorch模型类
 RUN cp -f /app/celery_task/celery_pytorch.py  /usr/local/lib/python3.9/site-packages/celery/bin/celery.py && \
-    let TIMESTAMP=`date +%s`+900 && \
     pip uninstall -y DataTransform && \
     wget https://obs-aishu-anydate-kweaver.obs.cn-east-3.myhuaweicloud.com/DataTransform-0.0.1-py3-none-any.whl \
     && pip install DataTransform-0.0.1-py3-none-any.whl -i https://repo.huaweicloud.com/repository/pypi/simple/ \
