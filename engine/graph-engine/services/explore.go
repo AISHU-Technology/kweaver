@@ -2,91 +2,134 @@ package services
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"graph-engine/controllers"
 	"graph-engine/utils"
 )
 
-//type ReqSearchVArgs struct {
-//	ID               string
-//	Class            string                  `json:"class" binding:"required"`
-//	Q                string                  `json:"query" binding:"omitempty"`
-//	Page             int32                   `json:"page" binding:"required,gt=0"`
-//	Size             int32                   `json:"size" binding:"required,gt=0"`
-//	QueryAll         bool                    `json:"query_all"`
-//	SearchFilterArgs *utils.SearchFilterArgs `json:"filter" binding:"required"`
-//}
-//
-//// searchV
-//func KGSearchVHandler(c *gin.Context) {
-//	var body ReqSearchVArgs
-//
-//	body.ID, _ = c.Params.Get("id")
-//
-//	err := c.ShouldBindWith(&body, binding.JSON)
-//	if err != nil {
-//		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
-//		return
-//	}
-//	//fmt.Println(body)
-//
-//	status, res := controllers.KGSearchV(body.ID, body.Class, body.Q, body.Page, body.Size, body.QueryAll, body.SearchFilterArgs)
-//
-//	c.JSON(status, gin.H{
-//		"res": res,
-//	})
-//}
+type ReqSearchVArgs struct {
+	ID               string
+	Class            string                  `json:"class" binding:"required"`
+	Q                string                  `json:"query" binding:"omitempty"`
+	Page             int32                   `json:"page" binding:"required,gt=0"`
+	Size             int32                   `json:"size" binding:"required,gt=0"`
+	QueryAll         bool                    `json:"query_all"`
+	SearchFilterArgs *utils.SearchFilterArgs `json:"filter" binding:"required"`
+}
 
-//type ReqSearchEArgs struct {
-//	ID  string
-//	Rid string `form:"rid" binding:"required"`
-//}
+// KGSearchVHandler
+// @Summary search vertexes
+// @Description search vertexes by query
+// @Tags CEngine
+// @Param conf_content body ReqSearchVArgs true "request body"
+// @Param id path string true "knowledge_graph id"
+// @Router /api/engine/v1/explore/{id}/searchv [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.SearchVRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
+func KGSearchVHandler(c *gin.Context) {
+	var body ReqSearchVArgs
 
-// searchE
-//func KGSearchEHandler(c *gin.Context) {
-//	var body ReqSearchEArgs
-//	err := c.ShouldBind(&body)
-//	if err != nil {
-//		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
-//		return
-//	}
-//
-//	body.ID, _ = c.Params.Get("id")
-//
-//	status, res := controllers.KGSearchE(body.ID, body.Rid)
-//
-//	c.JSON(status, gin.H{
-//		"res": res,
-//	})
-//}
-//
-//type ReqExpandEArgs struct {
-//	ID    string
-//	Class string `form:"class" binding:"required"`
-//	IO    string `form:"io" binding:"required"`
-//	Rid   string `form:"rid" binding:"required"`
-//	Page  int32  `form:"page" binding:"required,gt=0"`
-//	Size  int32  `form:"size" binding:"required,gt=0"`
-//}
-//
-//// expandE
-//func KGExpandEHandler(c *gin.Context) {
-//	var body ReqExpandEArgs
-//
-//	err := c.ShouldBind(&body)
-//	if err != nil {
-//		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
-//		return
-//	}
-//
-//	body.ID, _ = c.Params.Get("id")
-//
-//	status, res := controllers.KGExpandE(body.ID, body.Class, body.IO, body.Rid, body.Page, body.Size)
-//
-//	c.JSON(status, gin.H{
-//		"res": res,
-//	})
-//}
-//
+	body.ID, _ = c.Params.Get("id")
+
+	err := c.ShouldBindWith(&body, binding.JSON)
+	if err != nil {
+		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
+		return
+	}
+	//fmt.Println(body)
+
+	status, res := controllers.KGSearchV(body.ID, body.Class, body.Q, body.Page, body.Size, body.QueryAll, body.SearchFilterArgs)
+
+	c.JSON(status, gin.H{
+		"res": res,
+	})
+}
+
+type ReqSearchEArgs struct {
+	ID  string
+	Rid string `form:"rid" binding:"required"`
+}
+
+// KGSearchEHandler
+// @Summary search edges
+// @Description search edges by id
+// @Tags CEngine
+// @Param conf_content body ReqSearchEArgs true "request body"
+// @Param id path string true "knowledge_graph id"
+// @Router /api/engine/v1/explore/{id}/searche [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.SearchVRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
+func KGSearchEHandler(c *gin.Context) {
+	var body ReqSearchEArgs
+	err := c.ShouldBind(&body)
+	if err != nil {
+		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
+		return
+	}
+
+	body.ID, _ = c.Params.Get("id")
+
+	status, res := controllers.KGSearchE(body.ID, body.Rid)
+
+	c.JSON(status, gin.H{
+		"res": res,
+	})
+}
+
+type ReqExpandEArgs struct {
+	ID    string
+	Class string `form:"class" binding:"required"`
+	IO    string `form:"io" binding:"required"`
+	Rid   string `form:"rid" binding:"required"`
+	Page  int32  `form:"page" binding:"required,gt=0"`
+	Size  int32  `form:"size" binding:"required,gt=0"`
+}
+
+// KGSearchEHandler
+// @Summary expand edges
+// @Description expand edges by id
+// @Tags CEngine
+// @Param conf_content body ReqExpandEArgs true "request body"
+// @Param id path string true "knowledge_graph id"
+// @Router /api/engine/v1/explore/{id}/expande [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} nebula.ESearchRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+// @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"
+// @Failure 500 {object} utils.Error "EngineServer.ErrVClassErr: Entity does not exist"
+// @Failure 500 {object} utils.Error "EngineServer.ErrOrientDBErr: OrientDB error"
+func KGExpandEHandler(c *gin.Context) {
+	var body ReqExpandEArgs
+
+	err := c.ShouldBind(&body)
+	if err != nil {
+		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
+		return
+	}
+
+	body.ID, _ = c.Params.Get("id")
+
+	status, res := controllers.KGExpandE(body.ID, body.Class, body.IO, body.Rid, body.Page, body.Size)
+
+	c.JSON(status, gin.H{
+		"res": res,
+	})
+}
+
 type ReqExpandVArgs struct {
 	ID    string `form:"id" binding:"required"`
 	Class string `form:"class"`
