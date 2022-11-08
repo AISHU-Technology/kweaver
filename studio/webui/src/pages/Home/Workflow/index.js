@@ -34,6 +34,7 @@ const Workflow = props => {
   const step6Ref = useRef(); // 绑定流程六组件实例
   const [current, setCurrent] = useState(0); // 步骤
   const [dbType, setDbType] = useState('');
+  const [osId, setOsId] = useState(0); // 图数据库绑定的openserch id
   const [basicData, setBasicData] = useState({}); // 基本信息
   const [dataSourceData, setDataSourceData] = useState([]); // 数据源
   const [useDs, setUseDs] = useState([]); // 被使用的数据源
@@ -45,6 +46,7 @@ const Workflow = props => {
   const [graphStatus, setGraphStatus] = useState(''); // 图谱状态
   const [quitVisible, setQuitVisible] = useState(false); // 控制退出弹框
   const [dataLoading, setDataLoading] = useState(false); // 流程一加载loading
+  const [ontologyId, setOntologyId] = useState(0); // 本体id
 
   useEffect(() => {
     if (history?.location?.pathname === '/home/workflow/create') {
@@ -59,7 +61,6 @@ const Workflow = props => {
   // 取出id
   useEffect(() => {
     const id = parseInt(getParam('id'));
-
     if (id) {
       getGraph(id);
     }
@@ -84,6 +85,7 @@ const Workflow = props => {
       res.res.graph_KMerge && setConflation(res.res.graph_KMerge);
       res.res.graph_status && setGraphStatus(res.res.graph_status);
       setGraphId(id);
+      setOsId(res?.res?.graph_db_id);
     }
 
     if (res?.Code) {
@@ -144,13 +146,13 @@ const Workflow = props => {
    */
   const onExit = () => {
     if (current === 0 && !step1Ref.current.isModify()) {
+      let graphIdFix = '';
       if (window.location.pathname.includes('edit')) {
-        const id = parseInt(getParam('id'));
-        history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}&editId=${id}`);
-        return;
+        const id = getParam('id');
+        graphIdFix = `&cid=${id}`;
       }
 
-      history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId')}`);
+      history.push(`/knowledge/network?id=${window.sessionStorage.getItem('selectedKnowledgeId') + graphIdFix}`);
       return;
     }
 
@@ -271,6 +273,7 @@ const Workflow = props => {
             setBasicData={setBasicData}
             setGraphId={setGraphId}
             ref={step1Ref}
+            setOsId={setOsId}
           />
         </div>
         <div className={`hide space center ${current === 1 && 'show'}`}>
@@ -282,6 +285,10 @@ const Workflow = props => {
             next={next}
             prev={prev}
             dataSourceRef={step2Ref}
+            ontoData={ontoData}
+            ontologyId={ontologyId}
+            setOntologyId={setOntologyId}
+            setOntoData={setOntoData}
           />
         </div>
         <div className={`hide ${current === 2 && 'show'}`}>
@@ -290,13 +297,15 @@ const Workflow = props => {
             prev={prev}
             useDs={useDs}
             dbType={dbType}
+            osId={osId}
             setUseDs={setUseDs}
             ontoData={ontoData}
-            setOntoData={setOntoData}
             current={current}
             graphId={graphId}
+            ontologyId={ontologyId}
             childRef={step3Ref}
             setQuitVisible={setQuitVisible}
+            graphName={basicData.graph_Name}
           />
         </div>
         <div className={`hide space center ${current === 3 && 'show'}`}>
@@ -312,6 +321,7 @@ const Workflow = props => {
             infoExtrData={infoExtrData}
             setInfoExtrData={setInfoExtrData}
             ref={step4Ref}
+            ontologyId={ontologyId}
           />
         </div>
         <div className={`hide space ${current === 4 && 'show center'}`}>
@@ -325,6 +335,7 @@ const Workflow = props => {
             knowMapData={knowMapData}
             setKnowMapData={setKnowMapData}
             ref={step5Ref}
+            ontologyId={ontologyId}
           />
         </div>
         <div className={`hide space center ${current === 5 && 'show'}`}>
@@ -341,6 +352,7 @@ const Workflow = props => {
             next={next}
             setConflation={setConflation}
             ref={step6Ref}
+            ontologyId={ontologyId}
           />
         </div>
       </div>

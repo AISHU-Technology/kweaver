@@ -14,6 +14,7 @@ const source = Axios.CancelToken.source();
  */
 const analysisReportGet = async data => {
   return await apiService.axiosGetData(API.analysisReportGet, data);
+  // return await apiService.axiosGet(`${API.analysisReportGet}/?id=${data.id}&rid=${data.rid}`);
 };
 
 /**

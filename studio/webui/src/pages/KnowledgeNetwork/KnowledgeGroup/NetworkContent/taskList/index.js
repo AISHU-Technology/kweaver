@@ -1,8 +1,8 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import intl from 'react-intl-universal';
-import { Button, Select, Table, Tooltip, Menu, Dropdown, message, Modal, ConfigProvider, Radio } from 'antd';
-import { EllipsisOutlined, LoadingOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { Button, Select, Table, Tooltip, message, Modal, ConfigProvider, Radio } from 'antd';
+import { LoadingOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 
 import HOOKS from '@/hooks';
 import serviceTaskManagement from '@/services/taskManagement';
@@ -490,74 +490,6 @@ const TaskList = props => {
       }
     },
     {
-      title: intl.get('task.operation'),
-      width: 122,
-      render: (text, record, index) => {
-        const menu = (
-          <Menu>
-            {record.task_status === 'running' || record.task_status === 'waiting' ? (
-              <Menu.Item key="op" onClick={() => handleStop(record.graph_id)}>
-                <span>{intl.get('task.termination')}</span>
-              </Menu.Item>
-            ) : null}
-
-            {record.task_status === 'stop' || record.task_status === 'failed' ? (
-              <Menu.Item
-                key="o"
-                onClick={() => {
-                  setSelectUpdateId(record.graph_id);
-                  if (record.trigger_type === 2) return handleRun(record.graph_id, 'full');
-                  if (!record.effective_storage) return message.error(intl.get('task.runError'));
-                  setUpdateVisible(true);
-                }}
-              >
-                <span>{intl.get('task.run')}</span>
-              </Menu.Item>
-            ) : null}
-
-            {record.task_status === 'normal' ? (
-              <Menu.Item
-                key="n"
-                onClick={() => {
-                  setSelectUpdateId(record.graph_id);
-                  if (record.trigger_type === 2) return handleRun(record.graph_id, 'full');
-                  if (!record.effective_storage) return message.error(intl.get('task.runError'));
-                  setUpdateVisible(true);
-                }}
-              >
-                <span>{intl.get('task.run')}</span>
-              </Menu.Item>
-            ) : null}
-
-            <Menu.Item key="del" onClick={() => handleDelete(record)}>
-              <span>{intl.get('graphList.delete')}</span>
-            </Menu.Item>
-          </Menu>
-        );
-
-        const menu1 = (
-          <Menu>
-            <Menu.Item key="del" onClick={() => handleDelete(record)}>
-              <span>{intl.get('graphList.delete')}</span>
-            </Menu.Item>
-          </Menu>
-        );
-
-        return (
-          <Dropdown
-            overlay={index === 0 ? menu : menu1}
-            trigger={['click']}
-            overlayClassName="network-table-overlay"
-            onVisibleChange={visible => (visible ? setSelectKey(record.id) : setSelectKey(0))}
-          >
-            <span className="icon-wrap">
-              <EllipsisOutlined className="ellipsis-icon" />
-            </span>
-          </Dropdown>
-        );
-      }
-    },
-    {
       title: intl.get('task.number'),
       width: 136,
       key: 'info',
@@ -636,6 +568,51 @@ const TaskList = props => {
       key: 'end_time',
       dataIndex: 'end_time',
       render: text => text || '--'
+    },
+    {
+      title: intl.get('task.operation'),
+      dataIndex: 'op',
+      fixed: 'right',
+      width: 160,
+      render: (text, record, index) => {
+        if (index === 0) {
+          return (
+            <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
+              {(record.task_status === 'running' || record.task_status === 'waiting') && (
+                <Button type="link" onClick={() => handleStop(record.graph_id)}>
+                  {intl.get('task.termination')}
+                </Button>
+              )}
+              {(record.task_status === 'stop' ||
+                record.task_status === 'failed' ||
+                record.task_status === 'normal') && (
+                <Button
+                  type="link"
+                  onClick={() => {
+                    setSelectUpdateId(record.graph_id);
+                    if (record.trigger_type === 2) return handleRun(record.graph_id, 'full');
+                    if (!record.effective_storage) return message.error(intl.get('task.runError'));
+                    setUpdateVisible(true);
+                  }}
+                >
+                  {intl.get('task.run')}
+                </Button>
+              )}
+              <Button type="link" onClick={() => handleDelete(record)}>
+                {intl.get('graphList.delete')}
+              </Button>
+            </div>
+          );
+        } else {
+          return (
+            <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
+              <Button type="link" onClick={() => handleDelete(record)}>
+                {intl.get('graphList.delete')}
+              </Button>
+            </div>
+          );
+        }
+      }
     }
   ];
 
@@ -719,7 +696,7 @@ const TaskList = props => {
               ) : (
                 <div className="nodata-box">
                   <img src={noResult} alt="nodata" className="nodata-img"></img>
-                  <div className="nodata-text">{intl.get('memberManage.searchNull')}</div>
+                  <div className="nodata-text">{intl.get('global.noResult')}</div>
                 </div>
               )
           }}

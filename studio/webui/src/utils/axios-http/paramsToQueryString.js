@@ -13,7 +13,7 @@ const paramsToQueryString = params => {
 
   const query = _.map(keys, key => {
     const value = objectToStringify(params[key]);
-    return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    return `${encodeURIComponent(key)}=${value}`;
   }).join('&');
 
   return `?${query}`;
