@@ -202,7 +202,6 @@ class GraphCheckParameters(object):
         return ret_status, message
 
     def checkparam_getinfoext(self, params_json):
-        '''Flora 20201101'''
         ret_status = self.VALID
         message = ""
         graphid = params_json.get("graphid", None)
@@ -242,8 +241,7 @@ class GraphCheckParameters(object):
             return ret_status, message
 
     def graph_InfoExt(self, graph_process):
-        '''Flora
-        graph_InfoExt保存更新update接口参数校验方法'''
+        '''graph_InfoExt保存更新update接口参数校验方法'''
         message = ""
         ret_status = self.VALID
         if len(graph_process) == 0:
@@ -324,8 +322,7 @@ class GraphCheckParameters(object):
         return ret_status, message
 
     def graph_KMap(self, graph_process):
-        '''Flora
-        graph_KMap保存更新update接口参数校验方法'''
+        '''graph_KMap保存更新update接口参数校验方法'''
         message = ""
         ret_status = self.VALID
         if not isinstance(graph_process, list):
@@ -1768,6 +1765,24 @@ class GraphCheckParameters(object):
             message = "unknown error!"
         return ret_status, message
 
+    def getidbygns_params(self, params_json):
+        ret_status = 0
+        message = ""
+        if not isinstance(params_json, dict):
+            message += "parameter type must be json; "
+            ret_status = -1
+        else:
+            if list(params_json.keys()) != ["gns"]:
+                message += "parameter must be 'gns'; "
+                ret_status = -1
+            if not isinstance(params_json.get("gns"), list):
+                message += "parameter gns must be list; "
+                ret_status = -1
+            else:
+                if len(params_json.get("gns")) == 0:
+                    message += "parameter gns can not be empty list; "
+                    ret_status = -1
+        return ret_status, message
 
     def output(self, params_json):
         pass #empty

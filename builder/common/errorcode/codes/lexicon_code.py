@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import (absolute_import, unicode_literals)
 # 数据库异常
 Builder_LexiconController_DatabaseError = "Builder.LexiconController.DatabaseError"
 

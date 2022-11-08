@@ -16,6 +16,7 @@ import numpy as np
 from configparser import ConfigParser
 from concurrent.futures import ThreadPoolExecutor, wait, ProcessPoolExecutor
 from dao.graph_dao import graph_dao
+from dao.graphdb_dao import GraphDB, get_md5
 from dao.task_dao import task_dao
 from service.graph_Service import graph_Service
 from utils.CommonUtil import commonutil
@@ -43,9 +44,11 @@ def except_decorator():
                 res = func(*args, **kwargs)
             except Exception as e:
                 traceback.print_exc()
-                return EXCEPTION_STATUS, {"message": str(e),
-                                          "cause": "inner error",
-                                          "code": CommonResponseStatus.REQUEST_ERROR.value}
+                return EXCEPTION_STATUS, {"ErrorDetails": str(e),
+                                          "Description": str(e),
+                                          "ErrorCode": "Builder.SubjectDao.Except.InternalError",
+                                          "Solution": "inner error",
+                                          "ErrorLink": ""}
             return res
         return wrapper
     return sub_func
@@ -460,7 +463,7 @@ class TextMatchTask(object):
                            "35", "16", "33", "19", "18", "06", "15", "07", "11", "22", "10",
                            "23", "12", "130", "更多", "资料"}
 
-    # 构建文档向量
+    # Build the document vector
     @except_decorator()
     def build_document_embed(self):
         # if self.document_source == "mongodb":
@@ -468,7 +471,91 @@ class TextMatchTask(object):
         # elif self.document_source == "orientdb":
         #     self.build_document_embed_orientdb()
         # else:
-        self.build_document_embed_orientdb()
+        if self.document_source == "nebula":
+            self.build_document_embed_nebula()
+        else:
+            self.build_document_embed_orientdb()
+
+    # Building word vectors based on nebula
+    def build_document_embed_nebula(self):
+        ret_code, obj = graph_Service.getGraphById(self.kg_id, "")
+        if ret_code != NORMAL_STATUS:
+            obj["code"] = CommonResponseStatus.KGID_NOT_EXIST.value
+            logger.error(obj)
+            return ret_code, obj
+        res = obj["res"]
+        graph_baseInfo = res["graph_baseInfo"]
+        base_info = graph_baseInfo[0]
+        graph_db_name = base_info["graph_DBName"]
+        graph_db_id = base_info["graph_db_id"]
+
+        # If the index has not been created in opensearch, create index
+        opensearch_manager = OpenSearchManager(graph_db_id)
+        opensearch_manager.create_index(self.kg_id)
+
+        graphdb = GraphDB(graph_db_id)
+
+        i = 0
+        cache_num = 100
+        res_list = []
+        document_word_embed_cache = []
+        document_infos_list = []
+
+        if len(tm.embed_model):
+            tm.load_model()
+
+        ngql = "match (v1:document) - [e:label2document] - (v2) return v1.document.gns as gns,v1.document.name," \
+               "v1.document.file_type,v2.label.name order by gns"
+        ret_code, props_res = graphdb.exec(ngql, graph_db_name)
+
+        if ret_code == NORMAL_STATUS and props_res.row_size() > 0:
+            for n in range(props_res.row_size()):
+                val = props_res.row_values(n)
+                if n == 0 or val[0] != props_res.row_values(n - 1)[0]:
+                    res_list.append(
+                        {'gns': str(val[0])[1:-1], 'name': str(val[1])[1:-1], 'file_type': str(val[2])[1:-1],
+                         'label_names': [str(val[3])[1:-1]]})
+                else:
+                    res_list[-1]["label_names"].append(str(val[3])[1:-1])
+
+            for document in res_list:
+                document_title_list = [NeoWord(word, 2.0) for word in jieba.cut(document["name"]) if
+                                       word not in self.stop_words]
+                document_represent = [NeoWord(label, 1.5) for label in
+                                      document["label_names"] if
+                                      label not in self.stop_words] + document_title_list
+
+                document_word_set = set()
+                for nw in document_represent:
+                    document_word_set.add(nw.word)
+
+                document_word_embed = [(tm.embed_model[item.word] * item.weight, item.weight) for item in
+                                       document_represent if
+                                       item.word in tm.embed_model]
+                if len(document_word_embed) == 0:
+                    continue
+                document_word_embed_cache.append(min_embed(document_word_embed))
+                document_infos_list.append({"gns": document["gns"], "name": document["name"], "_id": i,
+                                            "word_list": list(document_word_set)})
+                i += 1
+
+                if len(document_word_embed_cache) == cache_num:
+                    for emb, info in zip(document_word_embed_cache, document_infos_list):
+                        emb = np.array(emb).astype('float32')
+                        doc_name = info.get("name")
+                        gns = info.get("gns")
+                        # opensearch写入数据
+                        opensearch_manager.insert_data(self.kg_id, doc_name, gns, emb)
+                    document_word_embed_cache = []
+                    document_infos_list = []
+
+        if len(document_word_embed_cache):
+            for emb, info in zip(document_word_embed_cache, document_infos_list):
+                emb = np.array(emb).astype('float32')
+                doc_name = info.get("name")
+                gns = info.get("gns")
+                # opensearch写入数据
+                opensearch_manager.insert_data(self.kg_id, doc_name, gns, emb)
 
     # 基于orientdb 构建词向量
     def build_document_embed_orientdb(self):
@@ -827,19 +914,24 @@ class TextMatchTask(object):
         return res
 
 
-# 插入主题任务
 @except_decorator()
 def insert_subject_task(kg_id, **kwargs):
     ret_code, obj = graph_Service.getGraphById(kg_id, slient=True)
     if ret_code != NORMAL_STATUS:
         obj["code"] = CommonResponseStatus.KGID_NOT_EXIST.value
-        return ret_code, obj
+        return ret_code, {"ErrorDetails": obj["message"],
+                          "Description": obj["message"],
+                          "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.KgIdNotExist",
+                          "Solution": "Please check your params",
+                          "ErrorLink": ""}
 
     otl_id_list = graph_dao.get_graph_otl_id(kg_id)
     if len(otl_id_list) == 0:
-        return EXCEPTION_STATUS, {"cause": "kg id {} anyshare document model is not exits".format(kg_id),
-                                  "message": "kg id {} anyshare document model is not exits".format(kg_id),
-                                  "code": CommonResponseStatus.KG_AS_MODEL_NOT_EXIST.value}
+        return EXCEPTION_STATUS, {"ErrorDetails": "kg id {} anyshare document model is not exits".format(kg_id),
+                                  "Description": "kg id {} anyshare document model is not exits".format(kg_id),
+                                  "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.AsModelNotExist",
+                                  "Solution": "Please change your knowledge graph",
+                                  "ErrorLink": ""}
     kg_as_state = 0
     # print(otl_id_list["graph_otl"])
     for otl_id in eval(otl_id_list["graph_otl"][0]):
@@ -854,19 +946,26 @@ def insert_subject_task(kg_id, **kwargs):
         if kg_as_state:
             break
     if kg_as_state == 0:
-        return EXCEPTION_STATUS, {"cause": "kg id {} anyshare document model is not exits".format(kg_id),
-                                  "message": "kg id {} anyshare document model is not exits".format(kg_id),
-                                  "code": CommonResponseStatus.KG_AS_MODEL_NOT_EXIST.value}
+        return EXCEPTION_STATUS, {"ErrorDetails": "kg id {} anyshare document model is not exits".format(kg_id),
+                                  "Description": "kg id {} anyshare document model is not exits".format(kg_id),
+                                  "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.AsModelNotExist",
+                                  "Solution": "Please change your knowledge graph",
+                                  "ErrorLink": ""}
     code, graph_info = graph_count_controller.getGraphCountByid(graph_id=kg_id)
     if code != codes.successCode:
-        return EXCEPTION_STATUS, {"message": "OrientDB has something wrong!",
-                                  "code": CommonResponseStatus.REQUEST_ERROR.value,
-                                  "cause": "OrientDB has something wrong!"}
+        return EXCEPTION_STATUS, {"ErrorDetails": "Graph database has something wrong!",
+                                  "Description": "Graph database has something wrong!",
+                                  "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.InternalError",
+                                  "Solution": "Please change your graph database",
+                                  "ErrorLink": ""}
+
     edges, entities, edge_pros, entity_pros, properties = graph_info
     if edges == 0 and entities == 0:
-        return EXCEPTION_STATUS, {"cause": "kg id {} knowledge is empty".format(kg_id),
-                                  "message": "kg id {} knowledge is empty".format(kg_id),
-                                  "code": CommonResponseStatus.KG_DB_EMPTY.value}
+        return EXCEPTION_STATUS, {"ErrorDetails": "kg id {} knowledge is empty".format(kg_id),
+                                  "Description": "kg id {} knowledge is empty".format(kg_id),
+                                  "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.KgDBEmpty",
+                                  "Solution": "kg id {} knowledge is empty".format(kg_id),
+                                  "ErrorLink": ""}
 
     # task_id = "{0}-{1}-{2}".format(int(time.time()), kg_id, random.randint(0, 100))
     res = obj["res"]
@@ -878,15 +977,18 @@ def insert_subject_task(kg_id, **kwargs):
     ret = task_dao.getGraphDBbyId(graph_db_id)
     rec_dict = ret.to_dict('records')
     if len(rec_dict) == 0:
-        return EXCEPTION_STATUS, {"message": "OrientDB ip does not exist",
-                                  "code": CommonResponseStatus.REQUEST_ERROR.value,
-                                  "cause": "OrientDB ip does not exits"}
+        return EXCEPTION_STATUS, {"ErrorDetails": "GraphDB ip does not exist",
+                                  "Description": "GraphDB ip does not exist",
+                                  "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.InternalError",
+                                  "Solution": "GraphDB ip does not exist",
+                                  "ErrorLink": ""}
 
     rec_dict = rec_dict[0]
     username = rec_dict["db_user"]
     password = rec_dict["db_ps"]
     password = commonutil.DecryptBybase64(password)
     graph_db_port = rec_dict["port"].split(";")[0]
+    db_type = rec_dict["type"]
 
     args = {
         "ip": address,
@@ -896,20 +998,51 @@ def insert_subject_task(kg_id, **kwargs):
         "passwd": password
     }
 
-    db_utils = OrientDBUtils()
-    db_utils.init_db(args=args)
-    ret, subject_res = db_utils.query_subject_exits(subject_id=kwargs["subject_id"])
-    if ret != NORMAL_STATUS:
-        return EXCEPTION_STATUS, subject_res
-    if subject_res > 0:
-        return EXCEPTION_STATUS, {"cause": "subject_id exits",
-                                  "message": "subject_id exits",
-                                  "code": CommonResponseStatus.SUBJECT_ID_EXIST.value}
-    db_utils.insert_subject(**kwargs)
+    if db_type == "nebula":
+        graphdb = GraphDB(graph_db_id)
+        ret_code, subject_res = graphdb.exec("match (v:subject{subject_id:" + str(kwargs["subject_id"]) + "}) return v",
+                                             graph_db_name)
+        if ret_code != NORMAL_STATUS:
+            return EXCEPTION_STATUS, {"ErrorDetails": "internal error",
+                                      "Description": subject_res.error_msg(),
+                                      "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.InternalError",
+                                      "Solution": "internal error",
+                                      "ErrorLink": ""}
+        if subject_res.row_size() > 0:
+            return EXCEPTION_STATUS, {"ErrorDetails": "subject_id exits",
+                                      "Description": "subject_id exits",
+                                      "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.SubjectIdExist",
+                                      "Solution": "subject_id exits",
+                                      "ErrorLink": ""}
+
+        ret_code, subject_res = insert_subject_nebula(graphdb, graph_db_name, **kwargs)
+        if ret_code != NORMAL_STATUS:
+            return EXCEPTION_STATUS, {"ErrorDetails": subject_res,
+                                      "Description": subject_res,
+                                      "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.InternalError",
+                                      "Solution": subject_res,
+                                      "ErrorLink": ""}
+    else:
+        db_utils = OrientDBUtils()
+        db_utils.init_db(args=args)
+        ret, subject_res = db_utils.query_subject_exits(subject_id=kwargs["subject_id"])
+        if ret != NORMAL_STATUS:
+            return EXCEPTION_STATUS, {"ErrorDetails": subject_res["cause"],
+                                      "Description": subject_res["message"],
+                                      "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.InternalError",
+                                      "Solution": subject_res["message"],
+                                      "ErrorLink": ""}
+        if subject_res > 0:
+            return EXCEPTION_STATUS, {"ErrorDetails": "subject_id exits",
+                                      "Description": "subject_id exits",
+                                      "ErrorCode": "Builder.SubjectDao.InsertSubjectTask.SubjectIdExist",
+                                      "Solution": "subject_id exits",
+                                      "ErrorLink": ""}
+        db_utils.insert_subject(**kwargs)
     return NORMAL_STATUS, {"state": "success"}
 
 
-# 删除主题任务
+# delete subject
 @except_decorator()
 def delete_subject_task(kg_id, subject_id):
     ret_code, obj = graph_Service.getGraphById(kg_id)
@@ -950,7 +1083,7 @@ def delete_subject_task(kg_id, subject_id):
     return NORMAL_STATUS, "message"
 
 
-# 更新主题任务
+# update subject
 @except_decorator()
 def update_subject_task(kg_id, **kwargs):
     ret_code, obj = graph_Service.getGraphById(kg_id)
@@ -1036,7 +1169,7 @@ def update_subject_task(kg_id, **kwargs):
     return NORMAL_STATUS, "message"
 
 
-# 查询主题任务
+# query subject
 @except_decorator()
 def query_subject_task(kg_id, **kwargs):
     ret_code, obj = graph_Service.getGraphById(kg_id)
@@ -1126,7 +1259,7 @@ def query_subject_task(kg_id, **kwargs):
     return NORMAL_STATUS, final_res
 
 
-# 查询主题任务
+# query subject
 @except_decorator()
 def search_subject_task(kg_id, **kwargs):
     search_type = kwargs["search_type"]
@@ -1155,7 +1288,7 @@ def search_subject_task(kg_id, **kwargs):
     page_ = kwargs["page"]
     limit_ = kwargs["limit"]
 
-    # 根据查询类型的不同，选择不同的查询方式
+    # Depending on the query type, choose a different query method
     if search_type == "vector":
         tmt = TextMatchTask("task", kg_id)
         graph_mongo_name = base_info["graph_mongo_Name"]
@@ -1218,7 +1351,7 @@ def search_subject_task(kg_id, **kwargs):
     return NORMAL_STATUS, final_res
 
 
-# 查询多个主题
+# query multiple subject
 @except_decorator()
 def search_kgs_subject_task(kg_id_list, **kwargs):
     # search_type = kwargs["search_type"]
@@ -1240,9 +1373,11 @@ def search_kgs_subject_task(kg_id_list, **kwargs):
         kg_info[kg_id] = graph_info.iloc[0]
 
     if len(kg_info) == 0:
-        return EXCEPTION_STATUS, {"message": "{} not exist!".format(kg_id_list),
-                                  "code": CommonResponseStatus.KGID_NOT_EXIST.value,
-                                  "cause": "{} not exist!".format(kg_id_list)}
+        return EXCEPTION_STATUS, {"ErrorDetails": "{} not exist!".format(kg_id_list),
+                                  "Description": "{} not exist!".format(kg_id_list),
+                                  "ErrorCode": "Builder.SubjectDao.SearchKgsSubjectTask.KgIdNotExist",
+                                  "Solution": "{} not exist!".format(kg_id_list),
+                                  "ErrorLink": ""}
 
     final_res = {}
 
@@ -1254,21 +1389,53 @@ def search_kgs_subject_task(kg_id_list, **kwargs):
         graph_db_name = base_info["graph_DBName"]
         graph_db_id = base_info["graph_db_id"]
 
+        ret = task_dao.getGraphDBbyId(graph_db_id)
+        rec_dict = ret.to_dict('records')
+        if len(rec_dict) == 0:
+            return EXCEPTION_STATUS, {"ErrorDetails": "GraphDB ip does not exist",
+                                      "Description": "GraphDB ip does not exist",
+                                      "ErrorCode": "Builder.SubjectDao.QuerySubjectTask.InternalError",
+                                      "Solution": "internal error",
+                                      "ErrorLink": ""}
+
+        rec_dict = rec_dict[0]
+        db_type = rec_dict["type"]
+        username = rec_dict["db_user"]
+        password = rec_dict["db_ps"]
+        password = commonutil.DecryptBybase64(password)
+        graph_db_port = rec_dict["port"].split(";")[0]
+
         args = {
             "ip": address,
-            "port": os.getenv("ORIENTPORT", "2480"),
+            "port": graph_db_port,
             "database": graph_db_name,
-            "user": os.getenv("ORIENTUSER", "admin"),
-            "passwd": os.getenv("ORIENTPASS", "admin")
+            "user": username,
+            "passwd": password
         }
 
-        db_utils = OrientDBUtils()
-        db_utils.init_db(args=args)
-        kwargs["page"] = 1
-        kwargs["limit"] = 100
-        ret_code, text_res = db_utils.search_subject(**kwargs)
-        if ret_code != NORMAL_STATUS:
-            return EXCEPTION_STATUS, text_res
+        if db_type == "nebula":
+            graphdb = GraphDB(graph_db_id)
+            kwargs["page"] = 1
+            kwargs["limit"] = 100
+            ret_code, text_res = search_subject_nebula(graphdb, graph_db_name, **kwargs)
+            if ret_code != NORMAL_STATUS:
+                return EXCEPTION_STATUS, {"ErrorDetails": text_res,
+                                          "Description": text_res,
+                                          "ErrorCode": "Builder.SubjectDao.SearchKgsSubjectTask.InternalError",
+                                          "Solution": text_res,
+                                          "ErrorLink": ""}
+        else:
+            db_utils = OrientDBUtils()
+            db_utils.init_db(args=args)
+            kwargs["page"] = 1
+            kwargs["limit"] = 100
+            ret_code, text_res = db_utils.search_subject(**kwargs)
+            if ret_code != NORMAL_STATUS:
+                return EXCEPTION_STATUS, {"ErrorDetails": text_res["message"],
+                                          "Description": text_res["message"],
+                                          "ErrorCode": "Builder.SubjectDao.SearchKgsSubjectTask.InternalError",
+                                          "Solution": text_res["message"],
+                                          "ErrorLink": ""}
         text_res_dict = {}
         for i, item in enumerate(text_res):
             item["score"] = 1 - i / 100
@@ -1321,7 +1488,87 @@ def search_kgs_subject_task(kg_id_list, **kwargs):
     return NORMAL_STATUS, final_res
 
 
-# 任务管理
+# nebula insert subject
+def insert_subject_nebula(graphdb, graph_db_name, **kwargs):
+    subject_id = kwargs["subject_id"]
+    subject_path = kwargs["subject_path"]
+    subject_fold = kwargs["subject_fold"]
+    subject_name = kwargs["subject_name"]
+    subject_desc = kwargs["subject_desc"]
+    subject_label = kwargs["subject_label"]
+    subject_document = kwargs["subject_document"]
+
+    # insert vertex
+    props = ["subject_id", "subject_path", "subject_fold", "name", "subject_desc"]
+    values = [int(subject_id), subject_path, subject_fold, subject_name, subject_desc]
+    graphdb.create_vertex(db=graph_db_name, otl_name="subject", props=props, values=values, values_index=[subject_id],
+                          pro_value="pro_value", pro_value_index="pro_value_index")
+
+    ngql = "match (v:subject{subject_id:" + str(subject_id) + "}) return id(v) as vid"
+    ret_code, props_res = graphdb.exec(ngql, graph_db_name)
+    if ret_code != NORMAL_STATUS:
+        return EXCEPTION_STATUS, props_res.error_msg()
+    if props_res.row_size() < 1:
+        return EXCEPTION_STATUS, "nebula has something wrong"
+    vid = str(props_res.row_values(0)[0])[1:-1]
+
+    # insert label edge
+    for label in subject_label:
+        ngql = "match (v:label{name:'" + label["name"] + "'}) return id(v) as vid"
+        ret_code, props_res = graphdb.exec(ngql, graph_db_name)
+        if ret_code != NORMAL_STATUS:
+            continue
+        if props_res.row_size() < 1:
+            label_vid = get_md5("'" + label["name"] + "'_")
+            ngql = 'insert vertex `label` (name, type_kc) values "{0}":("{1}", true)'.format(label_vid, label["name"])
+            ret_code, props_res = graphdb.exec(ngql, graph_db_name)
+            if ret_code != NORMAL_STATUS:
+                continue
+        else:
+            label_vid = str(props_res.row_values(0)[0])[1:-1]
+        graphdb.create_edge("label2subject", label_vid, vid, [["name"], ["'label2subject'"]], graph_db_name)
+
+    # insert document edge
+    for document in subject_document:
+        ngql = "match (v:document{gns:'" + document["gns"] + "'}) return id(v) as vid"
+        ret_code, props_res = graphdb.exec(ngql, graph_db_name)
+        if ret_code != NORMAL_STATUS:
+            continue
+        if props_res.row_size() < 1:
+            continue
+        document_vid = str(props_res.row_values(0)[0])[1:-1]
+        score = document.get("score", 0.0)
+        graphdb.create_edge("subject2document", vid, document_vid,
+                            [["name", "score"], ["'subject2document'", str(score)]], graph_db_name)
+    return 200, "message"
+
+
+def search_subject_nebula(graphdb, graph_db_name, **kwargs):
+    subject_name = kwargs["subject_name"].strip()
+    subject_desc = kwargs["subject_desc"]
+    doc_title_keyword = kwargs["doc_title_keyword"]
+    page = int(kwargs["page"])
+    limit = int(kwargs["limit"])
+
+    ngql = "match (v1:subject)-[e:subject2document]->(v2:document) " \
+           "where v1.subject.name contains '{0}' and v1.subject.subject_desc contains '{1}' " \
+           "and v2.document.name contains '{2}' " \
+           "return e.score as score, v2.document.gns as gns, v2.document.name as name " \
+           "order by score desc skip {3} limit {4}".format(subject_name, subject_desc, doc_title_keyword, page * limit - limit, limit)
+    ret_code, props_res = graphdb.exec(ngql, graph_db_name)
+    if ret_code != NORMAL_STATUS:
+        return EXCEPTION_STATUS, props_res.error_msg()
+    res_list = []
+    for i in range(props_res.row_size()):
+        val = props_res.row_values(i)
+        res_list.append({
+            "score": float(str(val[0])),
+            "gns": str(val[1])[1:-1],
+            "name": str(val[2])[1:-1]
+        })
+    return 200, res_list
+
+
 class TaskManger(object):
 
     def __new__(cls, *args, **kw):
