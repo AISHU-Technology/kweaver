@@ -125,8 +125,8 @@ class Knw_check_params(object):
                     if not isinstance(value, str):
                         message += " parameters: " + key + " must be str！"
                         ret_status = self.INVALID
-                    elif value not in ["create", "update"]:
-                        message += " parameters: " + key + " must be create or update！"
+                    elif value not in ["create", "update", "intelligence_score"]:
+                        message += " parameters: " + key + " must be create or update or intelligence_score！"
                         ret_status = self.INVALID
                 else:  # 多余参数
                     message_dict["request_error"].append(key)

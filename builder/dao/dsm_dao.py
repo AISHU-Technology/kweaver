@@ -216,8 +216,10 @@ class DsmDao(object):
         return len(df)
 
     @connect_execute_close_db
-    def getCount(self, connection, cursor, ):
-        sql = """SELECT id FROM data_source_table; """
+    def getCount(self,graph_id ,connection, cursor, ):
+        sql = f"select knw_id from network_graph_relation where graph_id={graph_id}"
+        knw_id = pd.read_sql(sql, connection).to_dict("records")[0]['knw_id']
+        sql = f"""SELECT id FROM data_source_table where knw_id={knw_id};"""
         Logger.log_info(sql)
         df = pd.read_sql(sql, connection)
         return len(df)
@@ -313,7 +315,7 @@ class DsmDao(object):
         return new_id
 
     @connect_execute_close_db
-    def getall(self, page, size, order, knw_id, connection, cursor):
+    def getall(self, page, size, order, limit_id, limit_type, connection, cursor):
         if page == -2:
             sql = """
                 SELECT
@@ -335,25 +337,32 @@ class DsmDao(object):
             Logger.log_info(sql)
             return df
         else:
+            if limit_type == "knw":
+                limit_sql = f"where knw_id={limit_id}"
+            else:
+                sql = f"select knw_id from network_graph_relation where graph_id={limit_id}"
+                knw_id = pd.read_sql(sql, connection).to_dict("records")[0]['knw_id']
+                limit_sql = f"where knw_id={knw_id}"
             if order == "descend":
-                sql = """
+                sql = f"""
                     SELECT *
                     FROM
                       data_source_table
+                    {limit_sql}
                     order by
                       update_time asc
                     limit
-                      {0}, {1};"""
+                      {page * size}, {size};"""
             else:
-                sql = """
+                sql = f"""
                     SELECT *
                     FROM
                       data_source_table
+                    {limit_sql}
                     order by
                       update_time Desc
                     limit
-                      {0}, {1};"""
-            sql = sql.format(page * size, size, knw_id)
+                      {page * size}, {size};"""
             Logger.log_info(sql)
             df = pd.read_sql(sql, connection)
             return df

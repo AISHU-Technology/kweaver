@@ -28,7 +28,7 @@
     "ldapAccessFiled": "ldap连接错误",
     "ladpSearchError": "ldap查询异常",
     "ladpAttrError": "ldap用户属性异常",
-    "invalid": "账号试用已过期，不能进入AnyDATA系统！",
+    "invalid": "账号试用已过期，不能进入KWeaver系统！",
     "authTip": "当前还未解锁模块，请购买软件授权许可！",
     "studio": "工作台",
     "inputAccount": "请输入账号",

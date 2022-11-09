@@ -15,7 +15,9 @@ from requests.auth import HTTPBasicAuth
 import requests
 # from utils.ConnectUtil import redisConnect
 from os import path
+
 sys.path.append(os.path.abspath("../"))
+from common.errorcode import codes
 from common.exception.base import ExceptLevel
 from common.exception.celerytask_exception import CeleryTaskException
 from utils.ConnectUtil import redisConnect, mongoConnect
@@ -29,8 +31,8 @@ import itertools
 
 sys.path.append(os.path.abspath("../"))
 from utils.util import get_timezone, redislock
-from spo.ie_flora import Extract_SPO #,SubjectModel,ObjectModel
-from spo.train_flora import SubjectModel,ObjectModel
+from spo.ie_flora import Extract_SPO  # ,SubjectModel,ObjectModel
+from spo.train_flora import SubjectModel, ObjectModel
 
 from contracrt_extract.extractor.multi_process_extract import MultiExtract
 from ARModel.operation_maintenance_model import OperationMaintenanceModel
@@ -83,13 +85,13 @@ beat_scheduler = 'celery_task.celery_beat:DatabaseScheduler'
 # default: 0
 beat_max_loop_interval = 10
 with open(db_config_path, 'r') as f:
-    yaml_config = yaml.load(f)
+    yaml_config = yaml.load(f, Loader=yaml.FullLoader)
 mariadb_config = yaml_config['mariadb']
 ip = mariadb_config.get('host')
 port = mariadb_config.get('port')
 user = mariadb_config.get('user')
 passwd = mariadb_config.get('password')
-passwd=parse.quote_plus(passwd)
+passwd = parse.quote_plus(passwd)
 database = mariadb_config.get('database')
 beat_dburi = f'mysql+mysqlconnector://{user}:{passwd}@{ip}:{port}/{database}'
 beat_config = dict(
@@ -174,7 +176,6 @@ from bson.objectid import ObjectId
 import redis
 
 
-
 class GeneralVariable(object):
     """
     存储全部通用的变量
@@ -215,6 +216,7 @@ class Configure(object):
 
 general_variable = GeneralVariable()
 
+
 def buildACTree(data, prop):
     '''构造AC自动机
     将data中的数据prop属性的值加入到trie树中
@@ -234,6 +236,7 @@ def buildACTree(data, prop):
     ACtree.make_automaton()
     return ACtree
 
+
 def conndb():
     """
     连接mongodb数据库
@@ -244,6 +247,7 @@ def conndb():
     db = mongoConnect.connect_mongo()
     # db = conn[mongo_db]
     return db
+
 
 def account_verify(address, port, username, password, graph_db_id):
     """
@@ -276,7 +280,6 @@ def account_verify(address, port, username, password, graph_db_id):
         if not code:
             return False
         return True
-
 
 
 def decrypt_base64(password):
@@ -513,6 +516,7 @@ def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_i
 
     return ret_code, 'standard_extract success'
 
+
 def normalize_text(text):
     text = re.sub(r"[\n\t\'\"]", " ", text)
     text = text.replace("\\", "\\\\").strip()
@@ -668,7 +672,7 @@ def labelExtraction(graph_KMerge, graph_used_ds, data_source, ds_id, file_name, 
                                     pro_v = '`' + k + '`' + "=" + '"' + normalize_text(v) + '"'
                                     begainpro_value_index.append(pro_v)
                             graphdb.create_vertex(graph_name, otl_name=begin_entity, props=props, values=values,
-                                                values_index=values, pro_value=begainpro_value, 
+                                                  values_index=values, pro_value=begainpro_value,
                                                   pro_value_index=begainpro_value_index)
                             if begin_entity != "document":
                                 start_sql = sqlProcessor.select_sql(begin_entity, property_dict=begin_property,
@@ -699,7 +703,7 @@ def labelExtraction(graph_KMerge, graph_used_ds, data_source, ds_id, file_name, 
                                     pro_v = '`' + k + '`' + "=" + '"' + normalize_text(v) + '"'
                                     endpro_value_index.append(pro_v)
                             graphdb.create_vertex(graph_name, otl_name=end_entity, props=props, values=values,
-                                                values_index=values, pro_value=endpro_value, 
+                                                  values_index=values, pro_value=endpro_value,
                                                   pro_value_index=endpro_value_index)
                             if end_entity != "document":
                                 start_sql = sqlProcessor.select_sql(end_entity, property_dict=end_property,
@@ -713,7 +717,8 @@ def labelExtraction(graph_KMerge, graph_used_ds, data_source, ds_id, file_name, 
                                     for end_sql_i in end_sql:
                                         graphdb.create_edge(end_entity + "2document", start_sql, end_sql_i, prop_val_sql, graph_name)
                                 else:
-                                    graphdb.create_edge(end_entity + "2document", start_sql, end_sql, prop_val_sql, graph_name)
+                                    graphdb.create_edge(end_entity + "2document", start_sql, end_sql, prop_val_sql,
+                                                        graph_name)
                     if "relation_entity" in one["relation"]:
                         relation = one["relation"]["relation_entity"]
                         if "relation_property" in one["relation"]:
@@ -728,6 +733,7 @@ def labelExtraction(graph_KMerge, graph_used_ds, data_source, ds_id, file_name, 
                                                               merge_pro=list(merge_otls[end_entity].keys()))
                             prop_val_sql = sqlProcessor.prop_value_sql(prop=list(relation_property.keys()), value=list(relation_property.values()))
                             graphdb.create_edge(relation, start_sql, end_sql, prop_val_sql, graph_name)
+
 
 def contract_model_extract(conn_db, graph_mongo_Name, ds_id, file_source, configYaml, model, stopwords_file,
                            process_num, schema_file, files_type):
@@ -771,8 +777,6 @@ def operation_maintenance_model_extract(conn_db, graph_mongo_Name, ds_id, file_s
         # 写入mongodb
         ar_model.write2mongodb(conn_db, graph_mongo_Name, spos)
     Logger.log_info("operation maintenance model extract finished!")
-    
-    
 
 
 
@@ -1260,6 +1264,7 @@ def get_pro_type(graph_otl):
             edge_pro_dict[name][pro[0]] = pro[1]
     return entity_pro_dict, edge_pro_dict
 
+
 def get_graph_config_info(graphid):
     """
     读取graph_config_table内容， 获取图谱配置信息
@@ -1372,6 +1377,7 @@ def get_Kmerge_dict(g_merge):
                 merge_pro[ft_pro] = ft
             merge_otls[otl_n] = merge_pro
     return merge_otls, merge_flag
+
 
 def get_map_info(otls_map):
     """获取实体映射信息
@@ -1529,7 +1535,7 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
                 for k, v in merge_otls[otl_name].items():
                     merge_pro.append(k)
                 graphdb.create_uni_index(otl_name, merge_pro, present_index_name_unique, mongo_db,
-                                        en_pro_dict[otl_name])
+                                         en_pro_dict[otl_name])
         print('创建点类结束，耗时{}s'.format(time.time() - tag_class_start))
         # 创建边类
         edge_class_start = time.time()
@@ -1609,7 +1615,6 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
         return 500, repr(e)
 
 
-
 def mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMerge,
                     graphid, graph_db_id, mongo_db, graph_mongo_Name):
     """mongodb数据写入graphdb
@@ -1648,14 +1653,13 @@ def mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMe
         rec_dict = ret.to_dict('records')
         rec_dict = rec_dict[0]
         db_type = rec_dict['type']
-        if db_type == 'orientdb':
-            if "subject" in en_pro_dict:
-                print("build document vector start")
-                start_time = time.time()
-                from dao.subject_dao import TextMatchTask
-                subject_match_task = TextMatchTask("test", graphid)
-                subject_match_task.build_document_embed()
-                print("build document vector end, cost {}".format(time.time() - start_time))
+        if "subject" in en_pro_dict:
+            print("build document vector start")
+            start_time = time.time()
+            from dao.subject_dao import TextMatchTask
+            subject_match_task = TextMatchTask("test", graphid, document_source=db_type)
+            subject_match_task.build_document_embed()
+            print("build document vector end, cost {}".format(time.time() - start_time))
 
         obj = {"state": 'graph_KMerge', "meta": {'current': "graph_KMerge", 'total': "100"}}
         # time.sleep(30)
@@ -1726,9 +1730,9 @@ def rabbitmq_task(json_data, args):
         standard_extract_rabbitmq(json_data, graph_mongo_Name, conn_db, ds_id, rules, entity_type)
         # mongodb写入orientdb
         ret_obj = mongodb2graphdb(args.get("pro_index"), args.get("en_pro_dict"), args.get("edge_pro_dict"),
-                                   args.get("graph_KMap"), args.get("graph_KMerge"),
-                                   args.get("graphid"), args.get("graph_db_id"), args.get("mongo_db"),
-                                   args.get("graph_mongo_Name"))
+                                  args.get("graph_KMap"), args.get("graph_KMerge"),
+                                  args.get("graphid"), args.get("graph_db_id"), args.get("mongo_db"),
+                                  args.get("graph_mongo_Name"))
         obj = {"state": ret_obj["state"], "meta": ret_obj["meta"]}
     return obj
 
@@ -1766,6 +1770,9 @@ def buildertask(self, graphid, flag):
         flag: 是否是增量，增量：increment； 全量：full
     """
     try:
+        # 构建状态默认值，领域智商计算用
+        build_success_flag = False
+
         general_variable.updategraph = False
         # 读取配置
         configure = Configure(aspi_config_path="./../config/asapi.conf", config_ini_path="./../config/config.ini")
@@ -1813,6 +1820,10 @@ def buildertask(self, graphid, flag):
                                       meta={'cause': graphdb.state['meta']['cause'],
                                             'message': graphdb.state['meta']['message']})
                     return {'current': 100, 'total': 100}
+
+                # cancel intelligence task
+                cancel_intelligence_task(graphid)
+
                 # 获取图谱使用的数据源配置信息
                 code, args = get_rabbitinfo(graphid)
                 if code == 0:
@@ -1840,7 +1851,7 @@ def buildertask(self, graphid, flag):
                     args["username"] = username
                     args["password"] = password
                     args["graph_DBPort"] = graph_DBPort
-    
+
                     # 启动监听
                     Logger.log_info("图谱{}，RabbitMQ启动监听...".format(graphid))
                     rabbit_start_listening(args)
@@ -1859,8 +1870,9 @@ def buildertask(self, graphid, flag):
                         files_type = infoext["file_type"]
                         # 标准抽取
                         if extract_type == "standardExtraction":
-                            ret_code, obj = standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_id, file_name,
-                                             file_source, rules, graph_KMerge, entity_type)
+                            ret_code, obj = standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source,
+                                                             ds_id, file_name,
+                                                             file_source, rules, graph_KMerge, entity_type)
                             if ret_code != CommonResponseStatus.SUCCESS.value:
                                 self.update_state(state='FAILURE', meta=obj)
                                 return {'current': 100, 'total': 100}
@@ -1873,17 +1885,20 @@ def buildertask(self, graphid, flag):
                             extract_model = infoext["extract_model"]
                             # 合同模型
                             if extract_model == "Contractmodel":
-                                contract_model_extract(conn_db, graph_mongo_Name, ds_id, file_source, configure.configYaml,
+                                contract_model_extract(conn_db, graph_mongo_Name, ds_id, file_source,
+                                                       configure.configYaml,
                                                        configure.model, configure.stopwords_file, configure.process_num,
                                                        configure.schema_file, files_type)
                             elif extract_model == "OperationMaintenanceModel":
                                 try:
-                                    operation_maintenance_model_extract(conn_db, graph_mongo_Name, ds_id, file_source, configure.aspi_config_path, files_type)
+                                    operation_maintenance_model_extract(conn_db, graph_mongo_Name, ds_id, file_source,
+                                                                        configure.aspi_config_path, files_type)
                                 except Exception as e:
                                     Logger.log_error("OperationMaintenanceModel error： {}".format(repr(e)))
                             # AI模型和通用模型
                             elif extract_model != "Anysharedocumentmodel":
-                                obj = ai_common_model_extract(Config.modeldir, extract_model, conn_db, ds_id, file_source, files_type,
+                                obj = ai_common_model_extract(Config.modeldir, extract_model, conn_db, ds_id,
+                                                              file_source, files_type,
                                                               extract_rules, graph_mongo_Name)
                                 if obj:
                                     self.update_state(state=obj["state"],
@@ -1909,6 +1924,8 @@ def buildertask(self, graphid, flag):
             ret_obj = mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMerge,
                                       graphid, graph_db_id, mongo_db, graph_mongo_Name)
             self.update_state(state=ret_obj["state"], meta=ret_obj["meta"])
+            # 构建成功标记
+            build_success_flag = True
             return {'current': 100, 'total': 100}
     except Exception as e:
         self.update_state(state='FAILURE', meta={'cause': repr(e), 'message': "buildertask failed"})
@@ -1930,6 +1947,10 @@ def buildertask(self, graphid, flag):
                             (ExceptLevel.ERROR, 'Builder.celeryTask.graphdb.nebulaTimeOutError', 'nebula job time out'))
         except Exception:
             pass  # 统计任务失败的异常忽略掉
+        finally:
+            if graphdb.type != 'nebula' or build_success_flag:
+                print(f"start post intelligence task graph:{graphid}")
+                send_intelligence_task(graphid)
 
 
 @cel.task
@@ -1958,7 +1979,6 @@ def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
             print(f"send timer success,task_id:{task_id}")
     except Exception as e:
         print(f'send timer exception:{str(e)}')
-
 
 
 def create_mongo_index(graph_mongo_Name, entity_type, g_merge):
@@ -2017,8 +2037,42 @@ class RelationBuildBase(object):
         self.graph_mongo_Name = graph_mongo_Name
         self.graphdb = GraphDB(self.graph_db_id)
         self.sqlProcessor = SQLProcessor(self.graphdb.type)
+        self.merge_entity = self.get_merge_entity()
+        self.entity_prop_dict = self.get_entity_prop_dict()
 
-    def gen_vid(self, otl_name, one_data):
+    def get_merge_entity(self):
+        """
+        将融合属性映射表，由实体类字典转成抽取对象类字典，方便后续写边vid计算
+        """
+        merge_entity = dict()
+        for key, value in self.merge_otls.items():
+            entity_name = self.get_entity_class(key)
+            merge_dict = dict()
+            for merge_key in value.keys():
+                entity_merge_key = self.get_entity_prop(key, merge_key)
+                merge_dict[entity_merge_key] = value.get(merge_key)
+            merge_entity[entity_name] = merge_dict
+        return merge_entity
+
+    def get_entity_prop_dict(self):
+        """
+        将实体类属性字典转换成抽取对象属性字典，方便后续计算
+        """
+        entity_prop_dict = dict()
+        for otl, prop_dict in self.en_pro_dict.items():
+            entity_name = self.get_entity_class(otl)
+            en_prop_dict = dict()
+            for prop in prop_dict.keys():
+                entity_prop = self.get_entity_prop(otl, prop)
+                en_prop_dict[entity_prop] = prop_dict.get(prop)
+
+            entity_prop_dict[entity_name] = {
+                "otl_name": otl,
+                "pro_map": en_prop_dict
+            }
+        return entity_prop_dict
+
+    def gen_vid(self, entity_name, one_data):
         """
         计算实体one_data在图数据库中的的VertexId，支持nebula和orientdb
 
@@ -2026,7 +2080,7 @@ class RelationBuildBase(object):
             根据实体类的融合属性，根据web页面的先后顺序，计算出MD5结果
 
         参数
-            otl_name: 实体类名称，用来获实体类的融合属性
+            entity_name: 抽取对象名称，用来获实体类的融合属性
             one_data: 实际的实体点数据
 
         条件
@@ -2036,7 +2090,7 @@ class RelationBuildBase(object):
             MD5字符串
                 demo: 7f3fdf6fbbbcb5875062a88473303e0a
         """
-        return gen_doc_vid(self.merge_otls, otl_name, one_data, self.en_pro_dict, self.graphdb.type)
+        return gen_doc_vid(self.merge_entity, entity_name, one_data, self.entity_prop_dict, self.graphdb.type)
 
     def get_collection_name(self, class_name):
         """
@@ -2046,6 +2100,32 @@ class RelationBuildBase(object):
             class_name: 实体类名
         """
         return self.graph_mongo_Name + "_" + class_name
+
+    def get_entity_class(self, otl_class_name):
+        """
+        根据实体类或者关系类的名称，找出抽取对象类名称
+        参数：
+            otl_class_name： 实体类或者关系类的名称
+        """
+        entity_dict = self.otl_tab_map.get(otl_class_name, None)
+        if not entity_dict or not isinstance(entity_dict, dict):
+            return otl_class_name
+        return entity_dict.get('entity_data', otl_class_name)
+
+    def get_entity_prop(self, otl_class_name, otl_prop):
+        """
+        根据抽取对象的属性，给出实体类对象属性，差不到返回原值
+        参数：
+            otl_class_name： 实体类或者关系类的名称
+            otl_prop： 实体类或者关系类的属性
+        """
+        entity_dict = self.otl_tab_map.get(otl_class_name, None)
+        if not entity_dict or not isinstance(entity_dict, dict):
+            return otl_prop
+        prop_map = entity_dict.get('pro_map', None)
+        if not prop_map or not isinstance(prop_map, dict):
+            return otl_prop
+        return prop_map.get(otl_prop, otl_prop)
 
 
 class RelationManualBase(object):
@@ -2130,38 +2210,14 @@ class RelationManualBuilder(object):
             len_dict[class_name] = len_value
             self.len_dict = len_dict
 
-    def props_filter(self):
-        """
-        mongo查询，没必要获取文档的所有属性，将相关的属性返回即可
-
-        逻辑
-            包含
-                1. 起点和终点的融合属性  》 计算VertexID
-                2. 起点和终点，关系类的关联属性   》 直接关系和间接关系的所有属性
-        """
-        merge_pro = {}
-        # 起点的融合属性
-        for k, v in self.buildInfo.merge_otls[self.begin_vertex_class].items():
-            merge_pro[k] = 1
-        # 终点的融合属性
-        for k, v in self.buildInfo.merge_otls[self.end_vertex_class].items():
-            merge_pro[k] = 1
-
-        filter_dict = {
-            self.begin_class_prop: 1,
-            self.relation_begin_pro: 1,
-            self.relation_end_pro: 1,
-            self.end_class_prop: 1}
-        filter_dict.update(merge_pro)
-        return filter_dict
-
     def edge_sql(self, one_data):
         """
         构造边的属性值sql语句
         """
         sql_processor: SQLProcessor = self.buildInfo.sqlProcessor
         return sql_processor.prop_value_sql(
-            self.entity_data, self.edge_otl_tab_pro, one_data, edge_class=self.edge_class)
+            self.entity_data, self.edge_otl_tab_pro, one_data, edge_class=self.edge_class,
+            edge_pro_dict=self.buildInfo.edge_pro_dict)
 
     def find_contain_relations(self, collection, len_dict, collection_prop, find_value):
         """
@@ -2179,7 +2235,7 @@ class RelationManualBuilder(object):
 
         """
         sub_strings = MongoBuildDao.gen_sub_str(len_dict, find_value)
-        exist_items = MongoBuildDao.relations(collection, collection_prop, sub_strings, self.props_filter())
+        exist_items = MongoBuildDao.relations(collection, collection_prop, sub_strings)
         return exist_items
 
     def find_equal_relations(self, batch_data, batch_prop, relation_collection, relation_prop):
@@ -2200,7 +2256,7 @@ class RelationManualBuilder(object):
         返回： 字典 one_of_batch[batch_prop]:list[mongo_document]
         """
         values = [one[batch_prop] for one in batch_data if batch_prop in one]
-        items = relation_collection.find({relation_prop: {"$in": values}}, self.props_filter())
+        items = relation_collection.find({relation_prop: {"$in": values}})
 
         results = dict()
         for item in items:
@@ -2251,8 +2307,12 @@ class RelationManualBuilder(object):
                         total += 5000
                         # nebula插入必须单线程，这里加锁
                         self.lock.acquire()
-                        graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
-                        self.lock.release()
+                        try:
+                            graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
+                        except Exception as e:
+                            raise e
+                        finally:
+                            self.lock.release()
 
                         # 循环重置
                         starts = []
@@ -2263,8 +2323,12 @@ class RelationManualBuilder(object):
             total += len(starts)
 
             self.lock.acquire()
-            graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
-            self.lock.release()
+            try:
+                graphdb.create_edges(self.edge_class, starts, ends, prop_val_sqls, self.buildInfo.mongo_db)
+            except Exception as e:
+                raise e
+            finally:
+                self.lock.release()
 
             # print("write {} edge".format(total))
 
@@ -2301,6 +2365,8 @@ class RelationManualBuilder(object):
 
         results = dict()
         for one_data in batch_data:
+            if batch_prop not in one_data:
+                continue
             key = one_data[batch_prop]
             if key not in end_item_dict:
                 continue
@@ -2357,15 +2423,14 @@ class RelationIn2Class(RelationManualBuilder):
         """
             边构建的前期准备，主要是准备一些属性
         """
-        self.start_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
-                                     self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
-        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
-                                   self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.start_entity_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
+        self.start_collection_name = self.buildInfo.graph_mongo_Name + "_" + self.start_entity_class
 
-        self.start_collection = MongoBuildDao.get_collection(
-            self.start_collection_name)
-        self.end_collection = MongoBuildDao.get_collection(
-            self.end_collection_name)
+        self.end_entity_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + self.end_entity_class
+
+        self.start_collection = MongoBuildDao.get_collection(self.start_collection_name)
+        self.end_collection = MongoBuildDao.get_collection(self.end_collection_name)
 
         self.start_data_count = self.start_collection.count_documents({})
         self.end_data_count = self.end_collection.count_documents({})
@@ -2376,8 +2441,8 @@ class RelationIn2Class(RelationManualBuilder):
         """
         self.all_data_collection = self.start_collection
         self.all_data_count = self.start_data_count
-        self.find_class = self.begin_vertex_class
-        self.relation_class = self.end_vertex_class
+        self.find_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
+        self.relation_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
         self.find_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
         self.relation_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
         self.reverse = False
@@ -2388,8 +2453,8 @@ class RelationIn2Class(RelationManualBuilder):
         """
         self.all_data_collection = self.end_collection
         self.all_data_count = self.end_data_count
-        self.find_class = self.end_vertex_class
-        self.relation_class = self.begin_vertex_class
+        self.find_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.relation_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
         self.find_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
         self.relation_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
         self.reverse = True
@@ -2426,15 +2491,25 @@ class RelationIn2Class(RelationManualBuilder):
             return
 
         pool = ThreadPool(10)
+        error_report = []
+
+        def error_callback(error):
+            print(error)
+            error_report.append(error)
+
         iter_size = 1000
         current = 0
         while current < self.all_data_count:
-            pool.apply_async(self.process, (self.all_data_collection, current, iter_size))
-            # f(c, current, iter_size)
+            pool.apply_async(self.process, (self.all_data_collection, current, iter_size),
+                             error_callback=error_callback)
             current += iter_size
         pool.close()
         pool.join()
-        print("edge_class:{}=>{}->{} total: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, self.all_data_count))
+        if len(error_report) == 0:
+            print("edge_class:{}=>{}->{} success. total: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, self.all_data_count))
+        else:
+            print("edge_class:{}=>{}->{} error. total: {}".format(self.edge_class, self.begin_vertex_class,
+                                                                    self.end_vertex_class, self.all_data_count))
 
 
     def process(self, collection, current, iter_size):
@@ -2446,7 +2521,7 @@ class RelationIn2Class(RelationManualBuilder):
             current: 当前数据的索引
             iter_size: 每次数据的长度
         """
-        batch_results = collection.find({}, self.props_filter()).skip(current).limit(iter_size)
+        batch_results = collection.find({}).skip(current).limit(iter_size)
         batch_data = list(batch_results)
         print("edge_class:{}=>{}->{} current: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, current))
 
@@ -2454,8 +2529,7 @@ class RelationIn2Class(RelationManualBuilder):
         batch_begin = self.gen_batch_vid(self.find_class, batch_data)
 
         if self.equation == "包含" or self.equation == "被包含":
-            batch_end = self.batch_contain_relations(batch_data, self.find_prop, self.relation_class,
-                                                     self.relation_prop)
+            batch_end = self.batch_contain_relations(batch_data, self.find_prop, self.relation_class, self.relation_prop)
 
         if self.equation == "等于":
             batch_end = self.batch_equal_relations(batch_data, self.find_prop, self.relation_class, self.relation_prop)
@@ -2489,10 +2563,11 @@ class RelationIn3Class(RelationManualBuilder):
     def __init__(self, relation_base_info: RelationManualBase):
         super().__init__(relation_base_info)
 
-        self.start_collection_ame = self.buildInfo.graph_mongo_Name + "_" + \
-                                    self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
-        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + \
-                                   self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.start_entity_class = self.buildInfo.otl_tab_map[self.begin_vertex_class]["entity_data"]
+        self.start_collection_ame = self.buildInfo.graph_mongo_Name + "_" + self.start_entity_class
+
+        self.end_entity_class = self.buildInfo.otl_tab_map[self.end_vertex_class]["entity_data"]
+        self.end_collection_name = self.buildInfo.graph_mongo_Name + "_" + self.end_entity_class
 
         self.start_prop = self.buildInfo.otl_tab_map[self.begin_vertex_class]["pro_map"][self.begin_class_prop]
         self.end_prop = self.buildInfo.otl_tab_map[self.end_vertex_class]["pro_map"][self.end_class_prop]
@@ -2537,15 +2612,26 @@ class RelationIn3Class(RelationManualBuilder):
                 self.load_collection_prop_len(self.end_vertex_class, self.end_class_prop)
 
         pool = ThreadPool(10)
+        error_report = []
+
+        def error_callback(error):
+            print(error)
+            error_report.append(error)
+
         iter_size = 1000
         current = 0
         while current < total:
-            pool.apply_async(self.process, (edge_collection, current, iter_size))
-            # self.write_process(edge_collection, current, iter_size)
+            pool.apply_async(self.process, (edge_collection, current, iter_size),
+                             error_callback=error_callback)
             current += iter_size
         pool.close()
         pool.join()
-        print("edge_class:{}=>{}->{} total: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, total))
+        if len(error_report) == 0:
+            print("edge_class:{}=>{}->{} success. total: {}".format(self.edge_class, self.begin_vertex_class,
+                                                                    self.end_vertex_class, total))
+        else:
+            print("edge_class:{}=>{}->{} error. total: {}".format(self.edge_class, self.begin_vertex_class,
+                                                                  self.end_vertex_class, total))
 
     def process(self, collection, current, iter_size):
         """
@@ -2556,26 +2642,26 @@ class RelationIn3Class(RelationManualBuilder):
             current: 当前数据的索引
             iter_size: 每次数据的长度
         """
-        batch_results = collection.find({}, self.props_filter()).skip(current).limit(iter_size)
+        batch_results = collection.find({}).skip(current).limit(iter_size)
         batch_data = list(batch_results)
         if current % 100000 == 0:
             print("edge_class:{}=>{}->{} current: {}".format(self.edge_class, self.begin_vertex_class, self.end_vertex_class, current))
 
         if self.equation_begin == "等于":
-            batch_begin = self.batch_equal_relations(batch_data, self.relation_begin_pro, self.begin_vertex_class,
-                                                     self.begin_class_prop)
+            batch_begin = self.batch_equal_relations(batch_data, self.relation_begin_pro, self.start_entity_class,
+                                                     self.start_prop)
 
         if self.equation_begin == "被包含":
-            batch_begin = self.batch_contain_relations(batch_data, self.relation_begin_pro, self.begin_vertex_class,
-                                                       self.begin_class_prop)
+            batch_begin = self.batch_contain_relations(batch_data, self.relation_begin_pro, self.start_entity_class,
+                                                       self.start_prop)
 
         if self.equation_end == "等于":
-            batch_end = self.batch_equal_relations(batch_data, self.relation_end_pro, self.end_vertex_class,
-                                                   self.end_class_prop)
+            batch_end = self.batch_equal_relations(batch_data, self.relation_end_pro, self.end_entity_class,
+                                                   self.end_prop)
 
         if self.equation_end == "包含":
-            batch_end = self.batch_contain_relations(batch_data, self.relation_end_pro, self.end_vertex_class,
-                                                     self.end_class_prop)
+            batch_end = self.batch_contain_relations(batch_data, self.relation_end_pro, self.end_entity_class,
+                                                     self.end_prop)
 
         self.create_batch_edges(batch_data, batch_begin, batch_end)
 
@@ -2635,6 +2721,12 @@ class EdgeWriter(object):
             alldata = table2.find()
             # 关系改为批量执行
             pool = ThreadPool(20)
+            error_report = []
+
+            def error_callback(error):
+                print(error)
+                error_report.append(error)
+
             # pool = multiprocessing.Pool(10)
             if alldata.count() > 0:
                 table = conn_db[graph_mongo_Name + "_" + edge_class]
@@ -2665,7 +2757,7 @@ class EdgeWriter(object):
                         graphdb._check_schema_nebula(
                             mongo_db, edge_class, props_check, 'edge')
                     pool.apply_async(
-                        graphdb.exec_batch, (sql_list, mongo_db))
+                        graphdb.exec_batch, (sql_list, mongo_db), error_callback=error_callback)
                     if graphdb.type == 'nebula':
                         if (batch_id):
                             batch = table.find().limit(iter_size).skip(current)
@@ -2691,7 +2783,10 @@ class EdgeWriter(object):
                         print(f'{edge_class}已插入数据：{current}条')
             pool.close()
             pool.join()
-            print(f'{edge_class}共插入(更新)数据{alldata.count()}条')
+            if len(error_report) == 0:
+                print(f'{edge_class}共插入(更新)数据{alldata.count()}条')
+            else:
+                print(f'{edge_class}在插入(更新)数据{alldata.count()}条的过程中失败')
 
 
 class VertexWriter(object):
@@ -2723,51 +2818,62 @@ class VertexWriter(object):
             total = collection.count_documents({})
             if total <= 0:
                 continue
-            iter_size = MongoBuildDao.step_size(collection_name, 4194304)
-
+            # iter_size = MongoBuildDao.step_size(collection_name, 4194304)
+            iter_size = 1000
             index = 0
             batch_size = 200000
+            error_report = []
+
+            def error_callback(error):
+                print(error)
+                error_report.append(error)
+
             while index < total:
                 # 多线程插入
                 pool = ThreadPool(10)
                 current = 0
+
                 while current < batch_size and (current + index) <= total:
-                    pool.apply_async(self.process, (collection, current + index, iter_size, otl_tab, otl_name))
-                    # self.process(collection, current+ index, iter_size, otl_tab, otl_name)
+                    pool.apply_async(self.process, (collection, current + index, iter_size, otl_tab, otl_name),
+                                     error_callback=error_callback)
                     current += iter_size
                 pool.close()
                 pool.join()
-
                 index += batch_size
-            print(f'创建顶点{otl_name}, total:{total} 成功,耗时:{time.time() - vertex_time1}s')
+            if len(error_report) == 0:
+                print(f'创建顶点{otl_name}, total:{total} 成功,耗时:{time.time() - vertex_time1}s')
+            else:
+                print(f'创建顶点{otl_name}, total:{total} 过程中失败,耗时:{time.time() - vertex_time1}s')
 
     def process(self, collection, current, iter_size, otl_tab, otl_name):
+        batch = collection.find({}).skip(current).limit(iter_size)
+        batch_copy = copy.deepcopy(batch)
+
+        # 生成ES索引
+        es_bulk_index = ''
+        if self.graphdb.type == 'nebula':
+            es_bulk_index = self.sqlProcessor.es_bulk_multi(self.mongo_db, otl_name, otl_tab,
+                                                            self.en_pro_dict, self.merge_otls,
+                                                            batch, self.graph_db_id)
+
+        # 生成nebula插入语句
+        batch_sql = self.sqlProcessor.vertex_sql_multi(batch_copy, otl_tab, self.en_pro_dict,
+                                                       self.merge_otls, otl_name)
+
+        # 插入nebula点， 单线程
+        self.lock.acquire()
         try:
-            batch = collection.find({}).skip(current).limit(iter_size)
-            batch_copy = copy.deepcopy(batch)
-
-            # 生成ES索引
-            es_bulk_index = ''
-            if self.graphdb.type == 'nebula':
-                es_bulk_index = self.sqlProcessor.es_bulk_multi(self.mongo_db, otl_name, otl_tab,
-                                                                self.en_pro_dict, self.merge_otls,
-                                                                batch, self.graph_db_id)
-
-            # 生成nebula插入语句
-            batch_sql = self.sqlProcessor.vertex_sql_multi(batch_copy, otl_tab, self.en_pro_dict,
-                                                           self.merge_otls, otl_name)
-
-            # 插入nebula点， 单线程
-            self.lock.acquire()
             self.graphdb.create_vertex(self.mongo_db, batch_sql=batch_sql, es_bulk_index=es_bulk_index,
-                                       otl_name=otl_name, props=list(otl_tab.keys()))
+                                   otl_name=otl_name, props=list(otl_tab.keys()))
+        except Exception as e:
+            print("插入顶点{}失败，当前current={} iter_size={}".format(otl_name, current, iter_size))
+            raise e
+        finally:
             self.lock.release()
 
-            # 打个日志
-            if (current + iter_size) % 100000 == 0:
-                print("当前插入顶点{}， {}个".format(otl_name, current + iter_size))
-        except Exception as e:
-            traceback.print_exc()
+        # 打个日志
+        if (current + iter_size) % 100000 == 0:
+            print("当前插入顶点{}， {}个".format(otl_name, current + iter_size))
 
 
 
@@ -2802,7 +2908,7 @@ class Transfer(object):
             exist_rule = [r for r in self.rules if r in columns_dict]
 
             for row in data:
-                temp_dict = {k: row[v] for k, v in columns_dict.items() if row[v]}
+                temp_dict = {k: row[v] for k, v in columns_dict.items()}
                 m = {k: str(temp_dict[k]) if temp_dict[k] is not None else None for k in exist_rule if k in temp_dict}
                 m["ds_id"] = self.ds_id
                 mongo_data.append(m)
@@ -2863,12 +2969,21 @@ class HiveTransfer(Transfer):
                 rows = [list(data) for data in ret]
 
                 pool = ThreadPool(10)
+                error_report = []
+
+                def error_callback(error):
+                    print(error)
+                    error_report.append(error)
+
                 current = 0
                 while current < total:
-                    pool.apply_async(self.extract, (rows[current:current + self.parser_batch_number], columns))
+                    pool.apply_async(self.extract, (rows[current:current + self.parser_batch_number], columns),
+                                     error_callback=error_callback)
                     current += self.parser_batch_number
                 pool.close()
                 pool.join()
+                if len(error_callback) != 0:
+                    print("extract data error.")
         except BaseException as e:
             print("extract data error:{}".format(repr(e)))
 
@@ -2927,13 +3042,21 @@ class MysqlTransfer(Transfer):
 
                 current = 0
                 pool = ThreadPool(10)
+                error_report = []
+
+                def error_callback(error):
+                    print(error)
+                    error_report.append(error)
+
                 while current < total:
-                    pool.apply_async(self.extract, (data[current:current + iter_size], df2))
+                    pool.apply_async(self.extract, (data[current:current + iter_size], df2),
+                                     error_callback=error_callback)
                     current += iter_size
 
                 pool.close()
                 pool.join()
-
+                if len(error_report) != 0:
+                    print('standard_extract fail')
                 skip += batch_size
         except BaseException:
             traceback.print_exc()
@@ -3094,3 +3217,45 @@ class ASTransfer(Transfer):
             print("error : {}".format(self.file_name))
 
         return ret_code, 'standard_extract success'
+
+
+def send_intelligence_task(graph_id):
+    url = "http://localhost:6488/task/intelligence"
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    param_json = dict()
+    param_json['task_type'] = 'intelligence'
+    param_json['relation_id'] = graph_id
+    param_json['task_name'] = 'intelligence-{}'.format(graph_id)
+    param_json['async_task_name'] = "cel.intelligence_calculate"
+    # 设置是否取消正在运行的同图谱任务
+    param_json['cancel_pre'] = True
+    param_json['task_params'] = json.dumps({"graph_id": graph_id})
+
+    try:
+        response = requests.request("POST", url, headers=headers, data=json.dumps(param_json))
+        if response.status_code != 200:
+            print(f"post task {graph_id} failed:{str(response.text)}")
+            return
+        print(f"post task {graph_id} success:{repr(response.json())}")
+    except Exception as e:
+        print(f"post task {graph_id} failed:{repr(e)}")
+
+
+def cancel_intelligence_task(graph_id):
+    url = "http://localhost:6488/task/intelligence/cancel_by_relation_id"
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    graph_id = int(graph_id)
+    param_json = dict()
+    param_json['relation_id_list'] = [graph_id]
+
+    try:
+        response = requests.request("POST", url, headers=headers, data=json.dumps(param_json))
+        if response.status_code != 200:
+            raise Exception(str(response.text))
+        return response.status_code, response.json()
+    except Exception as e:
+        print(f"cancel task {graph_id} failed:{repr(e)}")

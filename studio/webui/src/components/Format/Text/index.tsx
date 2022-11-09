@@ -15,7 +15,7 @@ const TEXT_ALIGN = {
 };
 
 /**
- * @param {string}  tip         - 文字提示
+ * @param {string}  tip         - 文字提示, 不同于 `title`
  * @param {string}  intl        - 国际化
  * @param {object}  style       - 内联样式
  * @param {string}  align       - 剧中方式 start | center | end
@@ -24,33 +24,37 @@ const TEXT_ALIGN = {
  * @param {boolean} noHeight    - 文字是否有高度，默认为: false
  * @param {string}  tipPosition - 文字提示位置，默认为: topLeft
  * @param {string}  className   - class名
+ * @param {boolean} ellipsis    - 单行超长是否显示省略号
  * @returns Component
  */
 const Text = (props: TextInterface) => {
   const {
     tip,
     intl,
-    style,
     align,
     level = 21,
     strong = 4,
     noHeight = false,
     tipPosition = 'topLeft',
-    className
+    className,
+    children,
+    ellipsis,
+    ...other
   } = props;
-  const text = intl ? _intl.get(intl) : props.children;
+  const text = intl ? _intl.get(intl) : children;
   const textAlign = TEXT_ALIGN[align as keyof typeof TEXT_ALIGN] || '';
 
   const component = (
     <div
+      {...other}
       className={classnames(
         'ad-format-text',
         noHeight ? `ad-format-text-no-height-${level}` : `ad-format-text-${level}`,
         `ad-format-strong-${strong}`,
+        { 'ad-ellipsis': ellipsis },
         textAlign,
         className
       )}
-      style={style}
     >
       {text}
     </div>

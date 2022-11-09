@@ -102,11 +102,11 @@ class Information extends Component {
                   <LoadingOutlined className="icon" />
                 </div>
               ) : inData?.length ? (
-                inData.map((item, index) => {
+                _.map(inData, (item, index) => {
                   return (
                     <div
                       className={
-                        item.class === selectEdge.class && selectEdge.type === 'in'
+                        item?.class === selectEdge.class && selectEdge.type === 'in'
                           ? 'edge-name edge-name-selected'
                           : 'edge-name'
                       }
@@ -141,11 +141,11 @@ class Information extends Component {
             ) : (
               <div className="edge-muster">
                 {outData?.length ? (
-                  outData.map((item, index) => {
+                  _.map(outData, (item, index) => {
                     return (
                       <div
                         className={
-                          item.class === selectEdge.class && selectEdge.type === 'out'
+                          item?.class === selectEdge.class && selectEdge.type === 'out'
                             ? 'edge-name edge-name-selected'
                             : 'edge-name'
                         }

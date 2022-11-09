@@ -196,8 +196,11 @@ def create_subject():
         if param_code == 0:
             ret_code, message = check_params(params_json, "create")
             if ret_code != 200:
-                return Gview.BuFailVreturnV2(cause=message["cause"], code=message["code"],
-                                             message=message["message"]), CommonResponseStatus.BAD_REQUEST.value
+                return Gview.TErrorreturn(ErrorCode="Builder.CeleryControllerOpenKc.CreateSubject.ParamsError",
+                                          Description=message["cause"],
+                                          Solution=message["message"],
+                                          ErrorDetails=message["message"],
+                                          ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
             kg_id = params_json["kg_id"]
             ret_code, task_res = tm.submit_subject_task(kg_id,
                                                         subject_id=params_json["subject_id"],
@@ -208,14 +211,14 @@ def create_subject():
                                                         subject_label=params_json["subject_label"],
                                                         subject_document=params_json["subject_document"])
             if ret_code != 200:
-                return Gview.BuFailVreturnV2(cause=task_res["cause"],
-                                             code=task_res["code"],
-                                             message=task_res["message"]), CommonResponseStatus.SERVER_ERROR.value
+                return Gview.VErrorreturn(task_res), CommonResponseStatus.SERVER_ERROR.value
             return Gview.text_match_return(data=task_res), CommonResponseStatus.SUCCESS.value
         else:
-            return Gview.BuFailVreturnV2(cause=param_message,
-                                         code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                         message="Incorrect parameter format"), CommonResponseStatus.SERVER_ERROR.value
+            return Gview.TErrorreturn(ErrorCode="Builder.CeleryControllerOpenKc.CreateSubject.ParamsError",
+                                      Description="Incorrect parameter format",
+                                      Solution=param_message,
+                                      ErrorDetails=param_message,
+                                      ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
 
 
 # delete theme
@@ -352,8 +355,11 @@ def search_kgs_subject():
         if param_code == 0:
             ret_code, message = check_params_v2(params_json, "search_kgs")
             if ret_code != 200:
-                return Gview.BuFailVreturnV2(cause=message["cause"], code=message["code"],
-                                             message=message["message"]), CommonResponseStatus.BAD_REQUEST.value
+                return Gview.TErrorreturn(ErrorCode="Builder.CeleryControllerOpenKc.SearchKgsSubject.ParamsError",
+                                          Description=message["cause"],
+                                          Solution=message["message"],
+                                          ErrorDetails=message["message"],
+                                          ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
             kg_id = params_json["kg_id_list"]
 
             ret_code, task_res = search_kgs_subject_task(
@@ -366,18 +372,20 @@ def search_kgs_subject():
                 search_type=params_json.get("search_type", "vector"),
                 page=params_json["page"],
                 limit=params_json["limit"],
-                filter_documents=params_json["filter_documents"])
+                filter_documents=params_json["filter_documents"],
+                doc_title_keyword=params_json["doc_title_keyword"])
+
             if ret_code != 200:
-                return Gview.BuFailVreturnV2(cause=task_res["cause"],
-                                             code=task_res["code"],
-                                             message=task_res["message"]), CommonResponseStatus.SERVER_ERROR.value
+                return Gview.VErrorreturn(task_res), CommonResponseStatus.SERVER_ERROR.value
 
             return Gview.text_match_return(data=task_res), CommonResponseStatus.SUCCESS.value
 
         else:
-            return Gview.BuFailVreturnV2(cause=param_message,
-                                         code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                         message="Incorrect parameter format"), CommonResponseStatus.SERVER_ERROR.value
+            return Gview.TErrorreturn(ErrorCode="Builder.CeleryControllerOpenKc.SearchKgsSubject.ParamsError",
+                                      Description="Incorrect parameter format",
+                                      Solution=param_message,
+                                      ErrorDetails=param_message,
+                                      ErrorLink=""), CommonResponseStatus.BAD_REQUEST.value
 
 
 def check_params_embedding(param_json):
@@ -441,8 +449,8 @@ def get_embeddings():
             print("batch: ", len(texts))
             if len(texts) > MAX_BATCH:
                 return Gview.BuFailVreturnV2(cause="text processed exceeds the maximum batch", code=500001,
-                                             message="the text processed({}) exceeds the maximum batch".format(len(texts))), CommonResponseStatus.SERVER_ERROR.value
-                
+                                             message="the text processed({}) exceeds the maximum batch".format(
+                                                 len(texts))), CommonResponseStatus.SERVER_ERROR.value
             feature_nums = len(texts[0])
             default_weights = [1] * feature_nums
             pooling_type = params_json.get("type", "mean")

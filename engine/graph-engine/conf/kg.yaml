@@ -5,7 +5,7 @@ kg:
       name: 百科知识图谱
       user: admin
       password: admin
-      url: http://10.2.196.40:2480
+      url:
       db: ownthinkdb
       version: 3
       hlStart: "@-highlight-content-start-@"
@@ -16,7 +16,7 @@ kg:
       name: KOMDB 知识图谱
       user: admin
       password: admin
-      url: http://10.2.196.39:2480
+      url:
       db: komdb_dw
       version: 3
       hlStart: "@-highlight-content-start-@"
@@ -27,7 +27,7 @@ kg:
       name: 百科知识图谱
       user: admin
       password: admin
-      url: http://10.2.196.39:2480
+      url:
       db: ownthinkdbsample2
       version: 3
       hlStart: "@-highlight-content-start-@"

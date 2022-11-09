@@ -1,8 +1,8 @@
-import React, { memo, useState, useEffect } from 'react'
+import React, { memo, useState, useEffect } from 'react';
 import _ from 'lodash';
 import { message, Select } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import useInterval from '@/utils/useInterval/index';
+import HOOKS from '@/hooks';
 import servicesExplore from '@/services/explore';
 import apiService from '@/utils/axios-http';
 import intl from 'react-intl-universal';
@@ -41,7 +41,7 @@ export interface PathexplorationProps {
   setPathLoading: (loading: boolean) => void;
 }
 
-const ONCE_SHOW_LENGTH = 300;// 数据量过大分批显示
+const ONCE_SHOW_LENGTH = 300; // 数据量过大分批显示
 
 const Pathexploration: React.FC<PathexplorationProps> = props => {
   const {
@@ -85,18 +85,18 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
         setEndNode(selectedNode);
       }
     }
-  }, [selectedNode, lefSelect, sideBarVisible])
+  }, [selectedNode, lefSelect, sideBarVisible]);
 
   useEffect(() => {
-    const value = `${pathType}-${direction}`
-    setselectValue(value)
+    const value = `${pathType}-${direction}`;
+    setselectValue(value);
   }, [pathType, direction]);
 
   useEffect(() => {
-    if ((isCognitive && _.isEmpty(selectGraph))) {
+    if (isCognitive && _.isEmpty(selectGraph)) {
       clearExplorePath();
     }
-  }, [selectGraph])
+  }, [selectGraph]);
 
   // 开启探索
   const startExplore = async () => {
@@ -140,7 +140,7 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
     } catch (error) {
       setPathLoading(false);
     }
-  }
+  };
 
   /**
    * 获取点和边的详细信息
@@ -157,14 +157,14 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
       }
 
       if (response?.ErrorCode) {
-        message.error(response.Description)
+        message.error(response.Description);
       }
 
       setPathLoading(false);
     } catch (err) {
       setPathLoading(false);
     }
-  }
+  };
 
   // 循环展开数据
   const loop = (data: any) => {
@@ -177,9 +177,9 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
 
       edges = [...edges, ...item.edges];
       list = [...list, item.vertices];
-    })
+    });
 
-    edges = edges.map((e: { id: any; out: any; in: any }) => e.id)
+    edges = edges.map((e: { id: any; out: any; in: any }) => e.id);
 
     // 去重
     vertices = duplicateRemoval(vertices);
@@ -187,11 +187,11 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
 
     getPathDeatil(vertices, edges);
     setPathList({ ...pathList, data: list });
-  }
+  };
 
   // 定时批量展开
-  useInterval(async () => {
-    if ((isExplorePath && !_.isEmpty(allData))) {
+  HOOKS.useInterval(async () => {
+    if (isExplorePath && !_.isEmpty(allData)) {
       const data = allData;
 
       if (countOfRender >= pathList?.count) {
@@ -205,13 +205,13 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
       const spliceData = data.splice(0, ONCE_SHOW_LENGTH);
 
       loop(spliceData);
-      setAlldata(data)
+      setAlldata(data);
 
       if (!data?.length) {
         setIsFirst(false);
       }
     }
-  }, 5 * 1000)
+  }, 5 * 1000);
 
   // 获取选择框的值
   const getSelectValue = (value: string) => {
@@ -221,10 +221,10 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
       positive: intl.get('searchGraph.forward'),
       reverse: intl.get('searchGraph.reverse'),
       bidirect: intl.get('searchGraph.allDirection')
-    }
+    };
     const d = direction[values[1]];
-    return `${type}-${d}`
-  }
+    return `${type}-${d}`;
+  };
 
   // 语义分析返回清空已探索的路径
   const clearExplorePath = () => {
@@ -236,17 +236,13 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
     setPathLoading(false);
     setType(1);
     setDirection('positive');
-  }
+  };
   return (
     <div className="path-exploration" id="path-exploration">
       <div className="path-exploration-top">
-        <div className="exploration-title">
-          {intl.get('searchGraph.pathExploration')}
-        </div>
+        <div className="exploration-title">{intl.get('searchGraph.pathExploration')}</div>
         <div className="select-path-type">
-          <span>
-            {intl.get('searchGraph.pathType')}
-          </span>
+          <span>{intl.get('searchGraph.pathType')}</span>
           <Select
             defaultValue="最短路径-正向"
             value={getSelectValue(selectValue)}
@@ -257,7 +253,8 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
               setType(parseInt(values[0])); // 设置路径类型
               setDirection(values[1]); // 设置方向
               setselectValue(value);
-            }}>
+            }}
+          >
             <OptGroup title="false" label={<span className="label-style">{intl.get('searchGraph.shortPath')}</span>}>
               <Option value="1-positive">{intl.get('searchGraph.forward')}</Option>
               <Option value="1-reverse">{intl.get('searchGraph.reverse')}</Option>
@@ -278,27 +275,27 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
           searchVisible={searchVisible}
           setEndNode={setEndNode}
           setStartNode={setStartNode}
-          startExplore={startExplore} />
+          startExplore={startExplore}
+        />
       </div>
 
-      {
-        (pathLoading && isFirst) ? (
-          <div className="path-loading-data">
-            <LoadingOutlined className="icon" />
-            <p className="loading-tip">{intl.get('searchGraph.loadingTip')}</p>
-          </div>) :
-          isExplorePath ?
-            <PathListBox
-              nodes={nodes}
-              setSelectedPath={setSelectedPath}
-              pathList={pathList}
-              setPathList={setPathList}
-              loading={pathLoading}
-              pathType={pathType}
-              setIsFirst={setIsFirst}
-            /> : null
-      }
-    </div >
-  )
-}
+      {pathLoading && isFirst ? (
+        <div className="path-loading-data">
+          <LoadingOutlined className="icon" />
+          <p className="loading-tip">{intl.get('searchGraph.loadingTip')}</p>
+        </div>
+      ) : isExplorePath ? (
+        <PathListBox
+          nodes={nodes}
+          setSelectedPath={setSelectedPath}
+          pathList={pathList}
+          setPathList={setPathList}
+          loading={pathLoading}
+          pathType={pathType}
+          setIsFirst={setIsFirst}
+        />
+      ) : null}
+    </div>
+  );
+};
 export default memo(Pathexploration);

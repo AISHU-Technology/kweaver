@@ -23,7 +23,7 @@ const ipsTest =
   /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5]):([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
 
 const ModalContent = memo(props => {
-  const { optionType, getData, closeModal, initData } = props;
+  const { optionType, getData, closeModal, initData, dbType } = props;
   const [form] = Form.useForm();
   const [list, setList] = useState([]);
   const [configRepeat, setConfigRepeat] = useState(false);
@@ -34,6 +34,12 @@ const ModalContent = memo(props => {
 
   useEffect(() => {
     getIndexList();
+
+    if (dbType === 'nebula') {
+      setPlaceholder(intl.get('configSys.nebulaIpPlace'));
+    } else {
+      setPlaceholder(intl.get('configSys.ipPlace'));
+    }
   }, []);
 
   /**
@@ -47,8 +53,8 @@ const ModalContent = memo(props => {
 
       if (!_.isEmpty(result?.res)) {
         setList(result.res?.data);
-        if (optionType === 'create') {
-          const dt = result.res?.data.filter(item => item.name === '内置opensearch')[0];
+        if (optionType === 'create' && props.dbType === 'nebula') {
+          const dt = result.res?.data?.[0];
 
           dt && form.setFieldsValue({ osId: dt.id });
           dt && setDefaultIndex(dt.id);
@@ -71,6 +77,10 @@ const ModalContent = memo(props => {
     }
   };
 
+  /**
+   *
+   * 提交
+   */
   const onOk = e => {
     form.validateFields().then(async values => {
       const { ips, name, user, type, password, osId } = values;
@@ -102,7 +112,15 @@ const ModalContent = memo(props => {
 
       try {
         if (optionType === 'create') {
-          const result = await serviceStorageManagement.graphDBCreate({ ip, name, user, type, password, port, osId });
+          const result = await serviceStorageManagement.graphDBCreate({
+            ip,
+            name,
+            user,
+            type,
+            password,
+            port,
+            osId
+          });
           if (result && result.res) {
             message.success(intl.get('configSys.saveSuccess'));
             closeModal();
@@ -112,7 +130,7 @@ const ModalContent = memo(props => {
 
         if (optionType === 'edit') {
           const { id } = initData;
-          const res = await serviceStorageManagement.graphDBUpdate({ name, ip, id, user, type, password, port });
+          const res = await serviceStorageManagement.graphDBUpdate({ name, ip, id, user, type, password, port, osId });
           if (res && res.res) {
             message.success(intl.get('configSys.editSuccess'));
             closeModal();
@@ -126,6 +144,9 @@ const ModalContent = memo(props => {
     });
   };
 
+  /**
+   * 测试连接
+   */
   const testConnection = () => {
     form.validateFields().then(async values => {
       const { ips, name, user, type, password } = values;
@@ -197,7 +218,7 @@ const ModalContent = memo(props => {
               layout="vertical"
               initialValues={{
                 name: initData.name || '',
-                type: initData.type || 'orientdb',
+                type: initData.type || props.dbType,
                 user: initData.user || '',
                 password: initData.password || '',
                 ips: initData.ips || [''],
@@ -231,7 +252,7 @@ const ModalContent = memo(props => {
                   <Select
                     getPopupContainer={triggerNode => triggerNode.parentElement}
                     autoComplete="off"
-                    disabled={optionType === 'check'}
+                    disabled
                     onChange={resetForm}
                   >
                     <Select.Option key="orientdb" value="orientdb">
@@ -247,13 +268,19 @@ const ModalContent = memo(props => {
                   label={intl.get('configSys.bindIndex')}
                   name="osId"
                   validateFirst={true}
-                  rules={[{ required: true, message: [intl.get('subscription.cannotNull')] }]}
+                  rules={[
+                    {
+                      required: props.dbType === 'nebula',
+                      message: [intl.get('subscription.cannotNull')]
+                    }
+                  ]}
                 >
                   <Select
                     getPopupContainer={triggerNode => triggerNode.parentElement}
                     autoComplete="off"
-                    disabled={optionType !== 'create'}
+                    disabled={optionType !== 'create' && initData.osName}
                     placeholder={intl.get('configSys.osIdPlaceholder')}
+                    allowClear
                   >
                     {_.map(list, item => {
                       return (
@@ -263,35 +290,6 @@ const ModalContent = memo(props => {
                       );
                     })}
                   </Select>
-                </Form.Item>
-              </div>
-              <div className="form-row">
-                {/* 访问账户名称 */}
-                <Form.Item
-                  name="user"
-                  label={[intl.get('configSys.username')]}
-                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
-                >
-                  <Input
-                    className="user-input"
-                    autoComplete="off"
-                    placeholder={intl.get('configSys.userPlaceholder')}
-                    disabled={optionType === 'check'}
-                  ></Input>
-                </Form.Item>
-                {/* 访问存储密码 */}
-                <Form.Item
-                  name="password"
-                  label={[intl.get('configSys.password')]}
-                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
-                >
-                  <Input.Password
-                    autoComplete="off"
-                    visibilityToggle={false}
-                    placeholder={intl.get('configSys.passPlaceholder')}
-                    disabled={optionType === 'check'}
-                    className="pass-input"
-                  ></Input.Password>
                 </Form.Item>
               </div>
               {/* 存储地址 */}
@@ -370,6 +368,35 @@ const ModalContent = memo(props => {
                   </>
                 )}
               </Form.List>
+              <div className="form-row">
+                {/* 访问账户名称 */}
+                <Form.Item
+                  name="user"
+                  label={[intl.get('configSys.username')]}
+                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
+                >
+                  <Input
+                    className="user-input"
+                    autoComplete="off"
+                    placeholder={intl.get('configSys.userPlaceholder')}
+                    disabled={optionType === 'check'}
+                  ></Input>
+                </Form.Item>
+                {/* 访问存储密码 */}
+                <Form.Item
+                  name="password"
+                  label={[intl.get('configSys.password')]}
+                  rules={[{ required: true, message: intl.get('subscription.cannotNull') }]}
+                >
+                  <Input.Password
+                    autoComplete="off"
+                    visibilityToggle={false}
+                    placeholder={intl.get('configSys.passPlaceholder')}
+                    disabled={optionType === 'check'}
+                    className="pass-input"
+                  ></Input.Password>
+                </Form.Item>
+              </div>
             </Form>
           </div>
         </ScrollBar>
@@ -399,7 +426,7 @@ const ModalContent = memo(props => {
 
 // 弹窗
 const CreateModal = props => {
-  const { visible, closeModal, optionType, getData, initData, ...otherProps } = props;
+  const { visible, closeModal, optionType, getData, initData, dbType, ...otherProps } = props;
   const created = [intl.get('configSys.createdStorage')];
   const edit = [intl.get('configSys.editStorage')];
   const check = [intl.get('configSys.checkStorage')];
@@ -427,6 +454,7 @@ const CreateModal = props => {
         optionType={optionType}
         getData={getData}
         initData={initData}
+        dbType={dbType}
       />
     </Modal>
   );

@@ -8,8 +8,10 @@ services:
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/log/error.log:/var/log/nginx/error.log
+      - ./nginx/https:/cert
     ports:
       - "80:80"
+      - "443:443"
     environment:
       - NGINX_PORT=80
       - TZ=Asia/Shanghai

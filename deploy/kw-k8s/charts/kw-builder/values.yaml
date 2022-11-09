@@ -1,0 +1,32 @@
+replicaCount: 1
+
+namespace: kweaver
+
+image:
+  repository: kweaverai/kw-builder
+  tag: latest
+  pullPolicy: IfNotPresent
+  name: kw-builder
+
+service:
+  type: ClusterIP
+  ports:
+    port1: 6475
+    targetPort1: 6475
+    name1: kw-builder
+    port2: 6485
+    protocol2: TCP
+    targetPort2: 6485
+    name2: task
+    port3: 6488
+    protocol3: TCP
+    targetPort3: 6488
+    name3: task2
+
+  
+volumes:  
+  hostPath: /kweaver/deploy/kw-k8s/conf/kwconfig/
+  
+hostAliases:
+  ip: molen
+  hostnames: kwhost

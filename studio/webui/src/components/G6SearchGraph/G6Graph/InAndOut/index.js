@@ -108,31 +108,11 @@ class InAndOut extends Component {
         _.forEach(item.out_e, outItem => {
           outItem.source = item.id;
           outItem.target = selectedNode.id;
-          // outItem.start = {
-          //   data: { id, color, name, expand, analysis, alias, properties, class: item.class },
-          //   id: item.id,
-          //   label: item.name.length < 20 ? item.name : `${item.name.substring(0, 17)}...`,
-          //   style: {
-          //     fill: item.color || defaultColor,
-          //     stroke: item.color ? 'white' : 'rgba(0,0,0,0.15)'
-          //   }
-          // };
-          // outItem.end = selectedNode;
         });
       } else {
         _.forEach(item.in_e, inItem => {
           inItem.source = selectedNode.id;
           inItem.target = item.id;
-          // inItem.start = selectedNode;
-          // inItem.end = {
-          //   data: { id, color, name, expand, analysis, alias, properties, class: item.class },
-          //   id: item.id,
-          //   label: item.name.length < 20 ? item.name : `${item.name.substring(0, 17)}...`,
-          //   style: {
-          //     fill: item.color || defaultColor,
-          //     stroke: 'white'
-          //   }
-          // };
         });
       }
       item.data = { id, color, name, expand, analysis, alias, properties, class: item.class };
@@ -171,7 +151,7 @@ class InAndOut extends Component {
 
     const edge = value.in_e || value.out_e;
     openEdges = openEdges.filter(item => {
-      return item.id !== edge[0].id;
+      return item.id !== edge?.[0]?.id;
     });
 
     openNodes = openNodes.filter(item => {
@@ -189,14 +169,14 @@ class InAndOut extends Component {
    */
   addCurveOffset = (openEdges, value) => {
     const edge = value.in_e || value.out_e;
-    const addEdge = edge[0];
+    const addEdge = edge?.[0];
 
-    if (addEdge.source === addEdge.target) {
+    if (addEdge?.source === addEdge?.target) {
       addEdge.type = 'loop';
       addEdge.loopCfg = { position: 'top', dist: 100 };
       addEdge.style = {
         endArrow: {
-          fill: addEdge.color,
+          fill: addEdge?.color,
           path: G6.Arrow.triangle(10, 12, 0),
           d: 0
         }
@@ -243,7 +223,7 @@ class InAndOut extends Component {
    */
   deleteCurveOffset = (openEdges, value) => {
     const edge = value.in_e || value.out_e;
-    const { id } = edge[0];
+    const { id } = edge?.[0] || {};
 
     for (let i = 0; i < openEdges.length; i++) {
       if (id === openEdges[i].id && openEdges[i].reverse !== undefined) {
@@ -271,9 +251,9 @@ class InAndOut extends Component {
   setChecked = node => {
     const { openEdges } = this.state;
 
-    const edge = node.in_e || node.out_e;
+    const edge = node?.in_e || node?.out_e;
     for (let i = 0; i < openEdges.length; i++) {
-      if (edge[0].id === openEdges[i].id) {
+      if (edge?.[0]?.id === openEdges[i].id) {
         return true;
       }
     }
@@ -328,12 +308,12 @@ class InAndOut extends Component {
     let { openEdges, openNodes } = this.state;
 
     if (e.target.checked) {
-      const openEdgeIds = openEdges.map(item => item.id);
-      const openNodeIds = openNodes.map(item => item.id);
-      sourceData.forEach(item => {
+      const openEdgeIds = _.map(openEdges, item => item?.id);
+      const openNodeIds = _.map(openNodes, item => item?.id);
+      _.forEach(sourceData, item => {
         const edge = item.in_e || item.out_e;
 
-        if (!openEdgeIds.includes(edge[0].id)) {
+        if (!openEdgeIds.includes(edge?.[0]?.id)) {
           const addEdge = this.addCurveOffset(openEdges, item);
 
           openEdges = [...openEdges, addEdge];
@@ -344,24 +324,24 @@ class InAndOut extends Component {
         }
       });
     } else {
-      const deleteEdgeIds = sourceData.map(item => {
-        const edge = item.in_e || item.out_e;
-        return edge[0].id;
+      const deleteEdgeIds = _.map(sourceData, item => {
+        const edge = item?.in_e || item?.out_e;
+        return edge?.[0]?.id;
       });
 
-      const deleteNodeIds = sourceData.map(item => {
-        return item.id;
+      const deleteNodeIds = _.map(sourceData, item => {
+        return item?.id;
       });
 
       let deleteData = [];
 
-      openEdges.forEach(item => {
+      _.forEach(openEdges, item => {
         if (deleteEdgeIds.includes(item.id)) {
           deleteData = [...deleteData, item];
         }
       });
 
-      deleteData.forEach(item => {
+      _.forEach(deleteData, item => {
         if (item.reverse) {
           openEdges[item.reverse].reverse = undefined;
           openEdges[item.reverse].type = 'line';
@@ -408,7 +388,7 @@ class InAndOut extends Component {
     for (let i = 0; i < sourceData.length; i++) {
       const edge = sourceData[i].in_e || sourceData[i].out_e;
       for (let j = 0; j < openEdges.length; j++) {
-        if (edge[0].id === openEdges[j].id) {
+        if (edge?.[0]?.id === openEdges[j].id) {
           break;
         }
 
@@ -526,7 +506,7 @@ class InAndOut extends Component {
                     </div>
                   </div>
 
-                  {sourceData.map((item, index) => {
+                  {_.map(sourceData, (item, index) => {
                     return (
                       <div className="box" key={index.toString()}>
                         <Checkbox
@@ -544,9 +524,9 @@ class InAndOut extends Component {
                         <div className="check-box-relation">
                           <span
                             className="check-box-span-tooltip-relation"
-                            title={selectEdge.type === 'in' ? item?.out_e[0]?.name : item?.in_e[0]?.name}
+                            title={selectEdge.type === 'in' ? item?.out_e?.[0]?.name : item?.in_e?.[0]?.name}
                           >
-                            {selectEdge.type === 'in' ? item?.out_e[0]?.name : item?.in_e[0]?.name}
+                            {selectEdge.type === 'in' ? item?.out_e?.[0]?.name : item?.in_e?.[0]?.name}
                           </span>
                         </div>
                       </div>
@@ -556,7 +536,7 @@ class InAndOut extends Component {
               </div>
             ) : (
               <div className="inOut-empty">
-                <Empty style={{ marginTop: 100 }} description={`${intl.get('memberManage.searchNull')}`} image={kong} />
+                <Empty style={{ marginTop: 100 }} description={`${intl.get('global.noResult')}`} image={kong} />
               </div>
             )}
           </div>

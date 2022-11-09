@@ -1000,6 +1000,7 @@ const initCheckedData = (nodes, edges, mapEntity) => {
  * @description 第三步修改属性更新,如果属性不存在了，就在校验参数里去掉
  */
 const updateProperty = (ontoData, data) => {
+  // if (ontoData.length === 0) return;
   const tempNode = ontoData[0].entity;
   const tempEdge = ontoData[0].edge;
 

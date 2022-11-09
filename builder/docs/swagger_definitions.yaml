@@ -832,6 +832,15 @@ definitions:
             format: int32
             description: '0: skip when graph id exists; 1: update when graph id exists'
             example: 0
+      getGraphByGns:
+        type: 'object'
+        required:
+          - gns
+        properties:
+          gns:
+            type: array
+            description: list of gns
+            example: ["gns://1D16DB1FF85E419BA56EA18E1B3ADD8B/D70979B4372046F8861FA57C5C06B86F"]
     celery_task:
       taskcrud_post:
         type: 'object'
@@ -985,11 +994,13 @@ definitions:
             format: string
             description: knowledge network name
             example: knowledge_network_name
+            maxLength: 50
           knw_des:
             type: string
             format: string
             description: knowledge network description
             example: knowledge network description
+            maxLength: 150
           knw_color:
             type: string
             format: string
@@ -1012,11 +1023,13 @@ definitions:
             format: string
             description: knowledge network name
             example: knw_name
+            maxLength: 50
           knw_des:
             type: string
             format: string
             description: knowledge network description
             example: knw_des
+            maxLength: 150
           knw_color:
             type: string
             format: string

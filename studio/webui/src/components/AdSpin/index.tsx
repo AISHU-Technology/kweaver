@@ -16,7 +16,6 @@ const AdSpin: React.FC<AdSpinProps> = props => {
   return (
     <div className={classNames('ad-spin', className)} style={{ ...style }}>
       <img className="spin-img" style={{ width: size }} src={loadingSvg} alt="loading" />
-
       {desc && <p className="spin-desc">{desc}</p>}
     </div>
   );

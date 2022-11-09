@@ -248,3 +248,14 @@ func CreateQuestionMarks(n int) string {
 	}
 	return s
 }
+
+//删去nebula返回string中的首尾各一个引号
+func TrimQuotationMarks(s string) string {
+	if s == "" {
+		return s
+	}
+	if s[0] == '"' {
+		return s[1 : len(s)-1]
+	}
+	return s
+}

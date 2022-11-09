@@ -1,9 +1,9 @@
 from distutils.util import strtobool
 
 from dao.knw_dao import knw_dao
+from service.intelligence_service import intelligence_query_service
 from utils.common_response_status import CommonResponseStatus
 from utils.log_info import Logger
-from flask import request
 
 
 class knwService:
@@ -67,6 +67,11 @@ class knwService:
 
             ret = knw_dao.get_knw_by_name(knw_name, page - 1, size, order, rule)
             rec_dict = ret.to_dict('records')
+
+            for rec in rec_dict:
+                intelligence_score = rec.get('intelligence_score', -1.0)
+                rec['intelligence_score'] = '{:.2f}'.format(intelligence_score)
+
             res = {"count": count, "df": rec_dict}
             obj["res"] = res
 
@@ -246,6 +251,15 @@ class knwService:
         return knw_dao.update_knw(graph_id)
 
     def check_knw_id(self, params_json, delete_graph=False):
+        '''
+        check whether knw_id exists. If delete_graph=True, check whether the knowledge network matches the graph ids.
+        Args:
+            params_json: consist of 'knw_id'. If delete_graph=True, 'graphids' is required.
+            delete_graph:
+        Returns:
+            ret_code: return code
+            obj: return object
+        '''
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
