@@ -14,7 +14,7 @@ go build -o graph-engine && \
 ls -R .. 
 
 
-FROM acr.aishu.cn/public/ubuntu:21.10.20211119
+FROM xavierhuang/ubuntu:v1
 RUN apt-get install -y tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY --from=gomake /root/graph-engine/graph-engine /root/graph-engine/
 COPY ./conf /root/graph-engine/conf
