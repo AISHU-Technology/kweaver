@@ -46,15 +46,16 @@ func (os OpenSearch) FullTextIndexesList(fulltextID string) (map[string]interfac
 }
 
 type SearchWithHLBody struct {
-	Query MultiMatch `json:"query"`
-	HL    HighLight  `json:"highlight"`
-	From  int        `json:"from"`
-	Size  int        `json:"size"`
+	Query Query     `json:"query"`
+	HL    HighLight `json:"highlight"`
+	From  int       `json:"from"`
+	Size  int       `json:"size"`
 }
 type Match struct {
 	Query    string   `json:"query"`
 	Fields   []string `json:"fields"`
 	Operator string   `json:"operator"`
+	Type     string   `json:"type"`
 }
 type MultiMatch struct {
 	Match Match `json:"multi_match"`
@@ -63,6 +64,13 @@ type HighLight struct {
 	PreTags  []string               `json:"pre_tags"`
 	PostTags []string               `json:"post_tags"`
 	Fields   map[string]interface{} `json:"fields"`
+}
+type Query struct {
+	Bool Bool `json:"bool"`
+}
+type Bool struct {
+	Must   []MultiMatch `json:"must"`
+	Should []MultiMatch `json:"should"`
 }
 
 func (os OpenSearch) SerachWithHL(fulltextID string, fullTextName string, query string,
@@ -87,11 +95,27 @@ func (os OpenSearch) SerachWithHL(fulltextID string, fullTextName string, query 
 		fieldsMap[field] = map[string]interface{}{}
 	}
 	searchWithHLBody := SearchWithHLBody{
-		Query: MultiMatch{Match: Match{
-			Query:    query,
-			Fields:   fields,
-			Operator: operator,
-		}},
+		Query: Query{
+			Bool: Bool{
+				Must: []MultiMatch{{
+					Match: Match{
+						Query:    query,
+						Fields:   fields,
+						Operator: operator,
+						Type:     "best_fields",
+					},
+				}},
+				Should: []MultiMatch{{
+					Match: Match{
+						Query:    query,
+						Fields:   fields,
+						Operator: operator,
+						Type:     "phrase_prefix",
+					},
+				}},
+			},
+		},
+
 		HL: HighLight{
 			PreTags:  preTags,
 			PostTags: postTags,

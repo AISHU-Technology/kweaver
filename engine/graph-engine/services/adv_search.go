@@ -72,7 +72,7 @@ func AdvSearchTestHandler(c *gin.Context) {
 	c.JSON(httpcode, res)
 }
 
-// 智能搜索(文档)
+// 知识网络搜索(文档)
 type ReqAdvSearchDefault struct {
 	KGID string `form:"kg_id"`
 	//KNetID int    `form:"knet_id"`
@@ -82,7 +82,7 @@ type ReqAdvSearchDefault struct {
 	Limit int    `form:"limit"`
 }
 
-// 认知搜索(文档)
+// 知识网络搜索(文档)
 // AdvSearchDocumentHandler
 // @Summary advanced search document
 // @Description only return documents
@@ -107,7 +107,8 @@ func AdvSearchDocumentHandler(c *gin.Context) {
 	header := c.Request.Header
 
 	eventid := c.Request.Header.Get("Event-Id")
-	httpcode, res := controllers.AdvSearchDocument(eventid, body.KGID, body.Query, body.Page, body.Size, body.Limit, header)
+	dataIds := c.Request.Header.Get("dataIds")
+	httpcode, res := controllers.AdvSearchDocument(eventid, body.KGID, body.Query, body.Page, body.Size, body.Limit, header, dataIds)
 
 	c.JSON(httpcode, res)
 

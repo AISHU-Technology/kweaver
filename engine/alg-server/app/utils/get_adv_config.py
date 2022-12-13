@@ -117,7 +117,7 @@ async def get_adv_conf(ids: str, ids_type: str, conf_content: Optional[ConfConte
         graph_otl = json.loads(graph_otl)[0]
 
         if ids_type in ["kg_id", "all"] and conf_content["display_range"]["vertexes"]["open"] != ["document"]:
-            raise HTTPException(status_code=500, detail="display range should only contain 'document'!")
+            continue
 
         res.append({
             "max_depth": conf_content["max_depth"],
@@ -142,7 +142,8 @@ async def get_adv_conf(ids: str, ids_type: str, conf_content: Optional[ConfConte
         })
 
         otl_ids.add(graph_otl)
-
+    if len(res) == 0:
+        raise HTTPException(status_code=500, detail="display range should only contain 'document'!")
     # 获取本体信息
     otl_info = await mysql_connector.get(OTL_SQL.format(ids=str(otl_ids)[1:-1]))
     for otl_id, entity_otl, edge_otl in otl_info:

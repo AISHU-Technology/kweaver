@@ -140,25 +140,60 @@ func AdvSearchTest(body AdvSearchTestBody, header map[string][]string) (httpcode
 	return http.StatusOK, respRes
 }
 
-func AdvSearchDocument(eventid string, kgid string, query string, page, size, limit int, header map[string][]string) (httpcode int, response interface{}) {
+func AdvSearchDocument(eventid string, kgid string, query string, page, size, limit int, header map[string][]string, dataIds string) (httpcode int, response interface{}) {
 	var res map[string]interface{}
 
 	t := time.Now()
 	l := fmt.Sprintf("begin time: %s", time.Since(t))
 	logger.Info(l)
+	var trueKgids []string
+	var trueKgid string
 	// kgid 可为空
 	if kgid == "" {
 		kgids, err := dao.GetConfKGID()
 		if err != nil {
-			return 500, utils.ErrInfo(utils.ErrAdvSearchConfIDErr, errors.New("adv_conf not exist"))
+			return 500, utils.ErrInfo(utils.ErrAdvSearchConfIDErr, errors.New("knowledge_graph or adv_conf does not exist"))
 		}
-		for _, a_kgid := range kgids {
-			kgid = kgid + strconv.Itoa(a_kgid) + ","
+		if dataIds != "" {
+			filter := strings.Split(dataIds, ",")
+			for _, a_kgid := range kgids {
+				id := strconv.Itoa(a_kgid)
+				if utils.In(id, filter) == true {
+					trueKgids = append(trueKgids, id)
+				}
+			}
+		} else {
+			//dataIds == ""
+			for _, a_kgid := range kgids {
+				id := strconv.Itoa(a_kgid)
+				trueKgids = append(trueKgids, id)
+			}
 		}
-		kgid = kgid[0 : len(kgid)-1]
+		if trueKgids == nil {
+			return 500, utils.ErrInfo(utils.ErrAdvSearchConfIDErr, errors.New("knowledge_graph or adv_conf does not exist"))
+		}
+		trueKgid = strings.Join(trueKgids, ",")
 		l = fmt.Sprintf("get ConfKGID time: %s", time.Since(t))
 		logger.Info(l)
+	} else {
+		//kgid != ""
+		if dataIds != "" {
+			filter := strings.Split(dataIds, ",")
+			kgids := strings.Split(kgid, ",")
+			for _, a_kgid := range kgids {
+				if utils.In(a_kgid, filter) == true {
+					trueKgids = append(trueKgids, a_kgid)
+				}
+			}
+			if trueKgids == nil {
+				return 500, utils.ErrInfo(utils.ErrAdvSearchConfIDErr, errors.New("knowledge_graph or adv_conf does not exist"))
+			}
+			trueKgid = strings.Join(trueKgids, ",")
+		} else {
+			trueKgid = kgid
+		}
 	}
+
 	//else{
 	//	// 过滤没有高级配置的图谱id
 	//	filterKgidArray, err := dao.FilterKgidNoAdvConf(kgid)
@@ -185,13 +220,16 @@ func AdvSearchDocument(eventid string, kgid string, query string, page, size, li
 	//	//}
 	//	//kgid = strings.Join(trueKgids, ",")
 
+	//filter
+	//这里的过滤方式过于臃肿复杂，需要优化
+
 	host := utils.CONFIG.AlgConf.IP + ":" + utils.CONFIG.AlgConf.Port
 	urlStr := fmt.Sprintf(utils.UrlCONF.AdvSearch2AS, host)
 
 	req, _ := http.NewRequest("GET", urlStr, nil)
 	req.Header.Set("Event-Id", eventid)
 	params := req.URL.Query()
-	params.Add("kg_id", kgid)
+	params.Add("kg_id", trueKgid)
 	params.Add("query", query)
 	params.Add("page", strconv.Itoa(page))
 	params.Add("size", strconv.Itoa(size))

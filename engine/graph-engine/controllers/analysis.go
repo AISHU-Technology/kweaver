@@ -113,10 +113,10 @@ func Analysis(id, rid string) (httpcode int, res interface{}) {
 					Out:   tMap["out"].(interface{}),
 				}
 
-				if _, ok := tMap["ds_id"]; !ok {
+				if _, ok := tMap["_ds_id_"]; !ok {
 					return 500, utils.ErrInfo(utils.ErrInternalErr, errors.New("missing ds_id"))
 				}
-				rec.DsID, _ = strconv.Atoi(tMap["ds_id"].(string))
+				rec.DsID, _ = strconv.Atoi(tMap["_ds_id_"].(string))
 			}
 		}
 

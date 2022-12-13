@@ -813,3 +813,30 @@ func GetConfKGID() (kgids []int, err error) {
 	}
 	return kgids, nil
 }
+
+func GetKGIDBackward(ConfigId []int) (kgids []int, err error) {
+	engine := utils.GetConnect()
+	sql := "select distinct kg_id from search_config where id in (%s)"
+	var configIdstr []string
+	for _, id := range ConfigId {
+		configIdstr = append(configIdstr, strconv.Itoa(id))
+	}
+
+	sql = fmt.Sprintf(sql, strings.Join(configIdstr, ","))
+	kgID, err := engine.Query(sql)
+	if err != nil {
+		return nil, utils.ErrInfo(utils.ErrInternalErr, err)
+	}
+
+	defer kgID.Close()
+
+	for kgID.Next() {
+		var kgid int
+		err = kgID.Scan(&kgid)
+		if err != nil {
+			return nil, utils.ErrInfo(utils.ErrInternalErr, err)
+		}
+		kgids = append(kgids, kgid)
+	}
+	return kgids, nil
+}

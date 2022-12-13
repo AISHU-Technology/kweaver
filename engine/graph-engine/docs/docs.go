@@ -301,7 +301,7 @@ const docTemplate = `{
                     "200": {
                         "description": "result string",
                         "schema": {
-                            "$ref": "#/definitions/nebula.EdgeRes"
+                            "$ref": "#/definitions/controllers.InfoSearchConfRes"
                         }
                     },
                     "400": {
@@ -352,6 +352,52 @@ const docTemplate = `{
                         "description": "result string",
                         "schema": {
                             "$ref": "#/definitions/controllers.AdvConfKGListRes"
+                        }
+                    },
+                    "500": {
+                        "description": "EngineServer.ErrInternalErr: internal error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/engine/v1/adv-search-config/kglist-backward": {
+            "post": {
+                "description": "get kglist by config id list",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CEngine"
+                ],
+                "summary": "get kglist-backward",
+                "parameters": [
+                    {
+                        "description": "configId",
+                        "name": "configId",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.KGListBackwardBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "result string",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.GetKgIdBackwardRes"
+                        }
+                    },
+                    "400": {
+                        "description": "EngineServer.ErrArgsErr: Parameter exception",
+                        "schema": {
+                            "$ref": "#/definitions/utils.Error"
                         }
                     },
                     "500": {
@@ -941,7 +987,7 @@ const docTemplate = `{
                     "200": {
                         "description": "result string",
                         "schema": {
-                            "$ref": "#/definitions/controllers.SearchVRes"
+                            "$ref": "#/definitions/controllers.EdgeRes"
                         }
                     },
                     "400": {
@@ -1276,7 +1322,10 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "res": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -1291,6 +1340,55 @@ const docTemplate = `{
                 },
                 "value": {
                     "type": "string"
+                }
+            }
+        },
+        "controllers.EdgeRes": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "in_v": {
+                    "$ref": "#/definitions/controllers.ExpandEVertexRes"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "out_v": {
+                    "$ref": "#/definitions/controllers.ExpandEVertexRes"
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.Property"
+                    }
+                }
+            }
+        },
+        "controllers.ExpandEVertexRes": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "type": "string"
+                },
+                "expand": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/controllers.Property"
+                    }
                 }
             }
         },
@@ -1409,6 +1507,17 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.GetKgIdBackwardRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                }
+            }
+        },
         "controllers.GetPropertiesRes": {
             "type": "object",
             "properties": {
@@ -1434,6 +1543,14 @@ const docTemplate = `{
                 }
             }
         },
+        "controllers.InfoSearchConfRes": {
+            "type": "object",
+            "properties": {
+                "res": {
+                    "$ref": "#/definitions/dao.InfoSearchConf"
+                }
+            }
+        },
         "controllers.Properties": {
             "type": "object",
             "properties": {
@@ -1441,6 +1558,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "p_type": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.Property": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
                     "type": "string"
                 }
             }
@@ -1657,8 +1785,37 @@ const docTemplate = `{
                 }
             }
         },
+        "dao.InfoSearchConf": {
+            "type": "object",
+            "properties": {
+                "conf_content": {
+                    "$ref": "#/definitions/dao.ConfContent"
+                },
+                "conf_desc": {
+                    "type": "string"
+                },
+                "conf_id": {
+                    "type": "integer"
+                },
+                "conf_name": {
+                    "type": "string"
+                },
+                "kg_id": {
+                    "type": "integer"
+                },
+                "kg_name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "dao.RangeEdges": {
             "type": "object",
+            "required": [
+                "open"
+            ],
             "properties": {
                 "open": {
                     "type": "array",
@@ -1670,6 +1827,9 @@ const docTemplate = `{
         },
         "dao.RangeVertexes": {
             "type": "object",
+            "required": [
+                "open"
+            ],
             "properties": {
                 "open": {
                     "type": "array",
@@ -1736,40 +1896,6 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/nebula.ERecord"
-                    }
-                }
-            }
-        },
-        "nebula.Edge": {
-            "type": "object",
-            "properties": {
-                "alias": {
-                    "type": "string"
-                },
-                "class": {
-                    "type": "string"
-                },
-                "color": {
-                    "type": "string"
-                },
-                "count": {
-                    "type": "number"
-                }
-            }
-        },
-        "nebula.EdgeRes": {
-            "type": "object",
-            "properties": {
-                "inE": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/nebula.Edge"
-                    }
-                },
-                "outE": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/nebula.Edge"
                     }
                 }
             }
@@ -2075,6 +2201,20 @@ const docTemplate = `{
                 },
                 "startRid": {
                     "type": "string"
+                }
+            }
+        },
+        "services.KGListBackwardBody": {
+            "type": "object",
+            "required": [
+                "config_id"
+            ],
+            "properties": {
+                "config_id": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

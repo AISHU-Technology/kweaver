@@ -86,7 +86,7 @@ func (a *AnalysisRes) Analysis(conf *utils.KGConf, rid string) error {
 		vInfo.Name = utils.TrimQuotationMarks(nodePro["name"].String())
 		vInfo.Class = node.GetTags()[0]
 		vInfo.Gns = utils.TrimQuotationMarks(nodePro["gns"].String())
-		vInfo.DsID = utils.TrimQuotationMarks(nodePro["ds_id"].String())
+		vInfo.DsID = utils.TrimQuotationMarks(nodePro["_ds_id_"].String())
 
 		node2Pro, _ := node2.Properties(node2.GetTags()[0])
 		newNode2Pro := make(map[string]interface{}, len(node2Pro))

@@ -90,6 +90,11 @@ func (Nebula) Client(conf *utils.KGConf, query string) (*nebula.ResultSet, error
 			resultSet.GetErrorMsg() == "There is no any stats info to show, please execute `submit job stats' firstly!" {
 			err := utils.ErrInfo(utils.ErrNebulaStatsErr, errors.New(fmt.Sprintf("ErrorCode: %d, ErrorMsg: %s", resultSet.GetErrorCode(), resultSet.GetErrorMsg())))
 			return nil, err
+		} else if strings.Contains(resultSet.GetErrorMsg(), "No edge type found ") {
+			//部分查询语句在没有边时会报错,内部处理,不抛出
+			err := errors.New("no edge")
+			return nil, err
+
 		} else {
 			err := utils.ErrInfo(utils.ErrNebulaErr, errors.New(fmt.Sprintf("ErrorCode: %d, ErrorMsg: %s", resultSet.GetErrorCode(), resultSet.GetErrorMsg())))
 			return nil, err

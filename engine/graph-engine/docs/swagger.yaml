@@ -70,7 +70,9 @@ definitions:
   controllers.DelSearchConfRes:
     properties:
       res:
-        type: string
+        items:
+          type: integer
+        type: array
     type: object
   controllers.EdgeProperties:
     properties:
@@ -80,6 +82,38 @@ definitions:
         type: string
       value:
         type: string
+    type: object
+  controllers.EdgeRes:
+    properties:
+      class:
+        type: string
+      id:
+        type: string
+      in_v:
+        $ref: '#/definitions/controllers.ExpandEVertexRes'
+      name:
+        type: string
+      out_v:
+        $ref: '#/definitions/controllers.ExpandEVertexRes'
+      properties:
+        items:
+          $ref: '#/definitions/controllers.Property'
+        type: array
+    type: object
+  controllers.ExpandEVertexRes:
+    properties:
+      class:
+        type: string
+      expand:
+        type: boolean
+      id:
+        type: string
+      name:
+        type: string
+      properties:
+        items:
+          $ref: '#/definitions/controllers.Property'
+        type: array
     type: object
   controllers.ExpandProperty:
     properties:
@@ -156,6 +190,13 @@ definitions:
           $ref: '#/definitions/controllers.GetConfByKGName'
         type: array
     type: object
+  controllers.GetKgIdBackwardRes:
+    properties:
+      res:
+        items:
+          type: integer
+        type: array
+    type: object
   controllers.GetPropertiesRes:
     properties:
       res:
@@ -172,11 +213,23 @@ definitions:
           $ref: '#/definitions/controllers.AdvConfKG'
         type: array
     type: object
+  controllers.InfoSearchConfRes:
+    properties:
+      res:
+        $ref: '#/definitions/dao.InfoSearchConf'
+    type: object
   controllers.Properties:
     properties:
       p_name:
         type: string
       p_type:
+        type: string
+    type: object
+  controllers.Property:
+    properties:
+      name:
+        type: string
+      value:
         type: string
     type: object
   controllers.PropertyField:
@@ -318,12 +371,31 @@ definitions:
     required:
     - vertexes
     type: object
+  dao.InfoSearchConf:
+    properties:
+      conf_content:
+        $ref: '#/definitions/dao.ConfContent'
+      conf_desc:
+        type: string
+      conf_id:
+        type: integer
+      conf_name:
+        type: string
+      kg_id:
+        type: integer
+      kg_name:
+        type: string
+      type:
+        type: string
+    type: object
   dao.RangeEdges:
     properties:
       open:
         items:
           type: string
         type: array
+    required:
+    - open
     type: object
   dao.RangeVertexes:
     properties:
@@ -331,6 +403,8 @@ definitions:
         items:
           type: string
         type: array
+    required:
+    - open
     type: object
   dao.SearchRange:
     properties:
@@ -370,28 +444,6 @@ definitions:
       res:
         items:
           $ref: '#/definitions/nebula.ERecord'
-        type: array
-    type: object
-  nebula.Edge:
-    properties:
-      alias:
-        type: string
-      class:
-        type: string
-      color:
-        type: string
-      count:
-        type: number
-    type: object
-  nebula.EdgeRes:
-    properties:
-      inE:
-        items:
-          $ref: '#/definitions/nebula.Edge'
-        type: array
-      outE:
-        items:
-          $ref: '#/definitions/nebula.Edge'
         type: array
     type: object
   nebula.PropValue:
@@ -594,6 +646,15 @@ definitions:
     - endRid
     - id
     - startRid
+    type: object
+  services.KGListBackwardBody:
+    properties:
+      config_id:
+        items:
+          type: integer
+        type: array
+    required:
+    - config_id
     type: object
   services.Path:
     properties:
@@ -1118,7 +1179,7 @@ paths:
         "200":
           description: result string
           schema:
-            $ref: '#/definitions/nebula.EdgeRes'
+            $ref: '#/definitions/controllers.InfoSearchConfRes'
         "400":
           description: 'EngineServer.ErrArgsErr: Parameter exception'
           schema:
@@ -1157,6 +1218,36 @@ paths:
           schema:
             $ref: '#/definitions/utils.Error'
       summary: get kglist
+      tags:
+      - CEngine
+  /api/engine/v1/adv-search-config/kglist-backward:
+    post:
+      consumes:
+      - application/json
+      description: get kglist by config id list
+      parameters:
+      - description: configId
+        in: body
+        name: configId
+        required: true
+        schema:
+          $ref: '#/definitions/services.KGListBackwardBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: result string
+          schema:
+            $ref: '#/definitions/controllers.GetKgIdBackwardRes'
+        "400":
+          description: 'EngineServer.ErrArgsErr: Parameter exception'
+          schema:
+            $ref: '#/definitions/utils.Error'
+        "500":
+          description: 'EngineServer.ErrInternalErr: internal error'
+          schema:
+            $ref: '#/definitions/utils.Error'
+      summary: get kglist-backward
       tags:
       - CEngine
   /api/engine/v1/adv-search-config/update:
@@ -1390,7 +1481,7 @@ paths:
         "200":
           description: result string
           schema:
-            $ref: '#/definitions/controllers.SearchVRes'
+            $ref: '#/definitions/controllers.EdgeRes'
         "400":
           description: 'EngineServer.ErrArgsErr: Parameter exception'
           schema:

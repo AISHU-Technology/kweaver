@@ -201,17 +201,19 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				}
 
 				// 节点是否可展开
-				gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+				//gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+				gqlExpand := "GO FROM '%s' OVER * BIDIRECT YIELD src(edge)| LIMIT 1;"
 				gqlExpand = fmt.Sprintf(gqlExpand, rec.Rid)
 				eCount, err := nebula.Client(conf, gqlExpand)
 				if err != nil {
-					return err
-				}
-				row, _ := eCount.GetRowValuesByIndex(0)
-				value, _ := row.GetValueByIndex(0)
-				ecount, _ := value.AsInt()
-				if int(ecount) != 0 {
-					rec.Expand = true
+					if err.Error() != "no edge" {
+						return err
+					}
+				} else {
+					row, _ := eCount.GetRowValuesByIndex(0)
+					if row != nil {
+						rec.Expand = true
+					}
 				}
 
 				// 导入的图谱不存在分析报告
@@ -285,17 +287,19 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				}
 
 				// 节点是否可展开
-				gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+				//gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+				gqlExpand := "GO FROM '%s' OVER * BIDIRECT YIELD src(edge)| LIMIT 1;"
 				gqlExpand = fmt.Sprintf(gqlExpand, rec.Rid)
 				eCount, err := nebula.Client(conf, gqlExpand)
 				if err != nil {
-					return err
-				}
-				row, _ := eCount.GetRowValuesByIndex(0)
-				value, _ := row.GetValueByIndex(0)
-				ecount, _ := value.AsInt()
-				if int(ecount) != 0 {
-					rec.Expand = true
+					if err.Error() != "no edge" {
+						return err
+					}
+				} else {
+					row, _ := eCount.GetRowValuesByIndex(0)
+					if row != nil {
+						rec.Expand = true
+					}
 				}
 
 				// 导入的图谱不存在分析报告
@@ -404,6 +408,16 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 			s.Counts = uint64(vcount)
 
 			// nebula search
+			var vids_split []string
+			if _, ok := filterStrMap["filter"]; ok {
+				vids_split = vids
+			} else {
+				if len(vids) < int(skip+limit) {
+					vids_split = vids[skip:]
+				} else {
+					vids_split = vids[skip : skip+limit]
+				}
+			}
 			var gql string
 			if _, ok := filterStrMap["vids"]; ok {
 				gql = "match (%s:%s) where %s %s return %s skip %d limit %d;"
@@ -419,7 +433,7 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 					gqlCount = fmt.Sprintf(gql, class, filterStrMap["vids"], "", class, skip, limit)
 				}
 			} else {
-				gql = "match (%s:%s) where id(%s) in [%s] %s return %s skip %d limit %d;;"
+				gql = "match (%s:%s) where id(%s) in [%s] %s return %s limit %d;;"
 				if _, ok := filterStrMap["filter"]; ok {
 					// nebula 3.0.0 版本开始，为了区别不同 Tag 的属性，match语句返回属性时必须额外指定 Tag 名称
 					filterlist := []string{}
@@ -427,9 +441,9 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 						filterlist = append(filterlist, fmt.Sprintf("%s.", class)+filter)
 					}
 					filterStr := strings.Join(filterlist, " and ")
-					gql = fmt.Sprintf(gql, class, class, class, strings.Join(vids, ", "), "and "+filterStr, class, skip, limit)
+					gql = fmt.Sprintf(gql, class, class, class, strings.Join(vids_split, ", "), "and "+filterStr, class, limit)
 				} else {
-					gql = fmt.Sprintf(gql, class, class, class, strings.Join(vids, ", "), "", class, skip, limit)
+					gql = fmt.Sprintf(gql, class, class, class, strings.Join(vids_split, ", "), "", class, limit)
 				}
 			}
 
@@ -437,6 +451,8 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 			if err != nil {
 				return err
 			}
+
+			var res []VRecord
 
 			for i := 0; i < reusltSet.GetRowSize(); i++ {
 				row, _ := reusltSet.GetRowValuesByIndex(i)
@@ -478,17 +494,19 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 				}
 
 				// 节点是否可展开
-				gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+				//gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+				gqlExpand := "GO FROM '%s' OVER * BIDIRECT YIELD src(edge)| LIMIT 1;"
 				gqlExpand = fmt.Sprintf(gqlExpand, rec.Rid)
 				eCount, err := nebula.Client(conf, gqlExpand)
 				if err != nil {
-					return err
-				}
-				rowValue, _ := eCount.GetRowValuesByIndex(0)
-				value, _ := rowValue.GetValueByIndex(0)
-				ecount, _ := value.AsInt()
-				if int(ecount) != 0 {
-					rec.Expand = true
+					if err.Error() != "no edge" {
+						return err
+					}
+				} else {
+					rowValue, _ := eCount.GetRowValuesByIndex(0)
+					if rowValue != nil {
+						rec.Expand = true
+					}
 				}
 
 				// 导入的图谱不存在分析报告
@@ -507,9 +525,22 @@ func (s *VSearchRes) SearchVWithFilter(conf *utils.KGConf, class, q string, page
 						break
 					}
 				}
+				res = append(res, rec)
 
-				s.Res = append(s.Res, rec)
 			}
+			if _, ok := filterStrMap["filter"]; ok {
+				s.Res = res
+			} else {
+				for _, id := range vids_split {
+					id = strings.Trim(id, "'")
+					for _, r := range res {
+						if r.Rid == id {
+							s.Res = append(s.Res, r)
+						}
+					}
+				}
+			}
+
 		}
 	}
 
@@ -617,26 +648,28 @@ func (e *EdgeRes) SearchE(conf *utils.KGConf, rid string) error {
 	nebula := Nebula{}
 
 	// outE
-	outEgql := "MATCH (v)-[e]->(v2) WHERE id(v) IN ['%s'] RETURN e;"
+	//outEgql := "MATCH (v)-[e]->(v2) WHERE id(v) IN ['%s'] RETURN e;"
+	outEgql := "GO FROM '%s' OVER * YIELD EDGE AS e | YIELD TYPE ($-.e) as t | GROUP BY $-.t YIELD $-.t AS type, COUNT(*) as count;"
 	outEgql = fmt.Sprintf(outEgql, rid)
 
 	outE, err := nebula.Client(conf, outEgql)
 	if err != nil {
-		return err
+		if err.Error() != "no edge" {
+			return err
+		} else {
+			return nil
+		}
 	}
 
-	outECount := make(map[string]int, 0)
+	outECount := make(map[string]int64, 0)
 
 	for i := 0; i < outE.GetRowSize(); i++ {
 		row, _ := outE.GetRowValuesByIndex(i)
-		valWrap, _ := row.GetValueByIndex(0)
-		edge, err := valWrap.AsRelationship()
-		if err != nil {
-			return utils.ErrInfo(utils.ErrNebulaErr, err)
-		}
-
-		edgeName := edge.GetEdgeName()
-		outECount[edgeName]++
+		typeWrap, _ := row.GetValueByIndex(0)
+		countWrap, _ := row.GetValueByIndex(1)
+		eType, _ := typeWrap.AsString()
+		eCount, _ := countWrap.AsInt()
+		outECount[eType] = eCount
 	}
 
 	var outECountKeys []string
@@ -663,26 +696,27 @@ func (e *EdgeRes) SearchE(conf *utils.KGConf, rid string) error {
 	}
 
 	// inE
-	inEgql := "MATCH (v)<-[e]-(v2) WHERE id(v) IN ['%s'] RETURN e;"
+	//inEgql := "MATCH (v)<-[e]-(v2) WHERE id(v) IN ['%s'] RETURN e;"
+	inEgql := "GO FROM '%s' OVER * REVERSELY YIELD EDGE AS e | YIELD TYPE ($-.e) as t | GROUP BY $-.t YIELD $-.t AS type, COUNT(*) as count;"
 	inEgql = fmt.Sprintf(inEgql, rid)
 
 	inE, err := nebula.Client(conf, inEgql)
 	if err != nil {
-		return err
+		if err.Error() != "no edge" {
+			return err
+		} else {
+			return nil
+		}
 	}
 
-	inECount := make(map[string]int, 0)
-
+	inECount := make(map[string]int64, 0)
 	for i := 0; i < inE.GetRowSize(); i++ {
 		row, _ := inE.GetRowValuesByIndex(i)
-		valWrap, _ := row.GetValueByIndex(0)
-		edge, err := valWrap.AsRelationship()
-		if err != nil {
-			return utils.ErrInfo(utils.ErrNebulaErr, err)
-		}
-
-		edgeName := edge.GetEdgeName()
-		inECount[edgeName]++
+		typeWrap, _ := row.GetValueByIndex(0)
+		countWrap, _ := row.GetValueByIndex(1)
+		eType, _ := typeWrap.AsString()
+		eCount, _ := countWrap.AsInt()
+		inECount[eType] = eCount
 	}
 
 	var inECountKeys []string
@@ -832,17 +866,19 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			}
 
 			// 节点是否可展开
-			gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+			//gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+			gqlExpand := "GO FROM '%s' OVER * BIDIRECT YIELD src(edge)| LIMIT 1;"
 			gqlExpand = fmt.Sprintf(gqlExpand, eRecord.Out.Rid)
 			eCount, err := nebula.Client(conf, gqlExpand)
 			if err != nil {
-				return err
-			}
-			rowValue, _ := eCount.GetRowValuesByIndex(0)
-			value, _ := rowValue.GetValueByIndex(0)
-			ecount, _ := value.AsInt()
-			if int(ecount) != 0 {
-				eRecord.Out.Expand = true
+				if err.Error() != "no edge" {
+					return err
+				}
+			} else {
+				rowValue, _ := eCount.GetRowValuesByIndex(0)
+				if rowValue != nil {
+					eRecord.Out.Expand = true
+				}
 			}
 
 		} else {
@@ -888,20 +924,21 @@ func (e *ESearchRes) ExpandE(conf *utils.KGConf, eclass string, vrid string, ino
 			}
 
 			// 节点是否可展开
-			gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+			//gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+			gqlExpand := "GO FROM '%s' OVER * BIDIRECT YIELD src(edge)| LIMIT 1;"
 			gqlExpand = fmt.Sprintf(gqlExpand, eRecord.In.Rid)
 			eCount, err := nebula.Client(conf, gqlExpand)
 			if err != nil {
-				return err
-			}
-			rowValue, _ := eCount.GetRowValuesByIndex(0)
-			value, _ := rowValue.GetValueByIndex(0)
-			ecount, _ := value.AsInt()
-			if int(ecount) != 0 {
-				eRecord.In.Expand = true
+				if err.Error() != "no edge" {
+					return err
+				}
+			} else {
+				rowValue, _ := eCount.GetRowValuesByIndex(0)
+				if rowValue != nil {
+					eRecord.In.Expand = true
+				}
 			}
 		}
-
 		e.Res = append(e.Res, &eRecord)
 
 	}
@@ -951,7 +988,11 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 
 	resultSet, err := nebula.Client(conf, gql)
 	if err != nil {
-		return err
+		if err.Error() != "no edge" {
+			return err
+		} else {
+			return nil
+		}
 	}
 	vidList := make([]string, resultSet.GetRowSize())
 	for i := 0; i < resultSet.GetRowSize(); i++ {
@@ -1037,17 +1078,19 @@ func (e *ExpandVRes) ExpandV(conf *utils.KGConf, eclass string, vrid string, ino
 			}
 
 			// 节点是否可展开
-			gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+			//gqlExpand := "MATCH (v)-[e]-(v2) where id(v) in ['%s'] RETURN count(e);"
+			gqlExpand := "GO FROM '%s' OVER * BIDIRECT YIELD src(edge)| LIMIT 1;"
 			gqlExpand = fmt.Sprintf(gqlExpand, vrec.Rid)
 			eCount, err := nebula.Client(conf, gqlExpand)
 			if err != nil {
-				return err
-			}
-			rowValue, _ := eCount.GetRowValuesByIndex(0)
-			value, _ := rowValue.GetValueByIndex(0)
-			ecount, _ := value.AsInt()
-			if int(ecount) != 0 {
-				vrec.Expand = true
+				if err.Error() != "no edge" {
+					return err
+				}
+			} else {
+				rowValue, _ := eCount.GetRowValuesByIndex(0)
+				if rowValue != nil {
+					vrec.Expand = true
+				}
 			}
 			e.Res = append(e.Res, &vrec)
 		}

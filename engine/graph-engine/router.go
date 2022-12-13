@@ -51,13 +51,11 @@ var GroupGQLKGRouters = map[string][]leo.Router{
 		// 分析详情
 		leo.NewRouter("get", "/analysis", services.AnalysisHandler),
 
-		// 认知搜索采纳日志
-		leo.NewRouter("post", "/adv-search/feedback", services.AdvSearchFeedBackLog),
-		// 认知搜索接口
+		// 知识网络搜索接口
 		leo.NewRouter("get", "/adv-search/:confid", services.AdvSearchHandler),
 		leo.NewRouter("post", "/adv-search/test", services.AdvSearchTestHandler),
-		leo.NewRouter("get", "/adv-search", services.AdvSearchDocumentHandler),
-		// 认知搜索配置
+		leo.NewRouter("get", "/adv-search/document", services.AdvSearchDocumentHandler),
+		// 知识网络搜索配置
 		leo.NewRouter("get", "/adv-search-config", services.GetAdvSearchConfigHandler),
 		leo.NewRouter("delete", "/adv-search-config", services.DelAdvSearchConfigHandler),
 		leo.NewRouter("post", "/adv-search-config", services.AddAdvSearchConfigHandler),
@@ -65,5 +63,6 @@ var GroupGQLKGRouters = map[string][]leo.Router{
 		leo.NewRouter("get", "/adv-search-config/info/:confid", services.GetInfoAdvSearchConfigHandler),
 		//leo.NewRouter("get", "/adv-search-config/conf/:kgid", services.GetConfByKGNameAdvSearchConfigHandler),
 		leo.NewRouter("post", "/adv-search-config/kglist", services.KGListAdvSearchConfigHandler),
+		leo.NewRouter("post", "/adv-search-config/kglist-backward", services.KGIDBackwardHandler),
 	},
 }

@@ -8,6 +8,7 @@ from fastapi import HTTPException
 from cognition.Connector import NebulaConnector, OrientDBConnector
 import time
 from collections import defaultdict
+import logging
 
 
 class NebulaAnyDataGraphSearch(NebulaSearch):
@@ -15,6 +16,7 @@ class NebulaAnyDataGraphSearch(NebulaSearch):
         if not entity_rids:
             return {}
 
+        space = "`"+space+"`"
         # 查询属性
         sql = """
             use {space};
@@ -35,6 +37,7 @@ class NebulaAnyDataGraphSearch(NebulaSearch):
         if not entity_rids:
             return {}
 
+        space = "`"+space+"`"
         # 查询属性
         sql = """
             use {space};
@@ -76,6 +79,7 @@ class NebulaAnyDataGraphSearch(NebulaSearch):
                     target_id_to_path[mention.id]["vertexes"].add(mention.id)
             return target_id_to_path
 
+        space = "`"+space+"`"
         # 子图查询
         sql = """
                 use {space};
@@ -90,7 +94,7 @@ class NebulaAnyDataGraphSearch(NebulaSearch):
         print(sql)
 
         res = await graph_connector.execute(sql)
-
+        logger = logging.getLogger(__name__)
         # 解析查询结果
         for i in range(len(res)):
             via_id_to_path = defaultdict(lambda: {"vertexes": set(), "edges": set(), "meta_data": list()})
@@ -99,8 +103,14 @@ class NebulaAnyDataGraphSearch(NebulaSearch):
             # node字段解析
             for node in res[i][0].as_list():
                 node = node.as_node()
-                node_tag = node.tags()[0]
                 node_id = node.get_id().as_string()
+
+                if node.tags() == []:
+                    str1 = "\ncannot find id: "+node.get_id().as_string()
+                    logger.error(str1)
+                    continue
+
+                node_tag = node.tags()[0]
                 # 保留在display_range_vertexs范围的点
                 if node_tag in display_range_vertexs:
                     if i == 0:
