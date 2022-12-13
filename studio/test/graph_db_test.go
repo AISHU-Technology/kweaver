@@ -33,7 +33,7 @@ func TestGetGraphDBList(t *testing.T) {
 }
 
 func TestGetGraphInfoByGraphDBId(t *testing.T) {
-	global.DB = NewDBMockCreator().Logger(Logger).Select(po.GraphConfigTable{ID: 1, GraphName: "graph_01", CreateTime: "2022-03-25 13:34:28"}).Count(1).Create()
+	global.DB = NewDBMockCreator().Logger(Logger).Count(1).Select(po.GraphConfigTable{ID: 1, GraphName: "graph_01", CreateTime: "2022-03-25 13:34:28"}).Count(1).Create()
 	r := DoRequest(http.MethodGet, "/api/studio/v1/graphdb/graph/list?page=2&size=10&id=1", nil)
 	assert.Equal(t, http.StatusOK, r.Code)
 }
@@ -58,13 +58,13 @@ func TestAddGraphDB(t *testing.T) {
 	lockMock.EXPECT().Unlock(gomock.Any()).Return(true)
 	global.LockOperator = lockMock
 
-4	r := DoRequest(http.MethodPost, "/api/studio/v1/graphdb/add", &vo.GraphDBVo{Name: "`9348里分解hiifeh&---*(*(*()><》$", OsId: 1, Type: constant.Nebula, User: "root", Password: "nebula", Ip: []string{"10.4.32.45", "10.4.32.45", "10.4.32.45"}, Port: []string{"2232", "3223", "2232"}})
+	r := DoRequest(http.MethodPost, "/api/studio/v1/graphdb/add", &vo.GraphDBVo{Name: "`9348里分解hiifeh&---*(*(*()><》$", OsId: 1, Type: constant.Nebula, User: "root", Password: "nebula", Ip: []string{"10.4.32.45", "10.4.32.45", "10.4.32.45"}, Port: []string{"2232", "3223", "2232"}})
 	assert.Equal(t, http.StatusOK, r.Code)
 	service.ConnTestHandlers[constant.Nebula] = nebulaTestHandler
 }
 
 func TestDeleteGraphDBById(t *testing.T) {
-	global.DB = NewDBMockCreator().Logger(Logger).Count(1).Delete(1, 1).Create()
+	global.DB = NewDBMockCreator().Logger(Logger).Count(1).Count(0).Delete(1, 1).Create()
 	r := DoRequest(http.MethodPost, "/api/studio/v1/graphdb/delete", &vo.IdVo{ID: 3})
 	assert.Equal(t, http.StatusOK, r.Code)
 
