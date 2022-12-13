@@ -21,6 +21,7 @@ from nebula3.gclient.net import ConnectionPool
 from nebula3.Config import Config as NebulaConfig
 from common.errorcode.gview import Gview as Gview2
 from common.errorcode import codes
+import traceback
 
 requests.packages.urllib3.disable_warnings()
 
@@ -77,7 +78,7 @@ def gen_doc_vid(merge_entity_list, entity_name, one_data, en_pro_dict, gtype='ne
     """
     tab_val_index = []  # 属性列表
     for k, v in merge_entity_list[entity_name].items():
-        value = type_transform(gtype, normalize_text(str(one_data[k])), en_pro_dict[entity_name]['pro_map'][k])
+        value = normalize_text(str(one_data[k]))
         if gtype == "orientdb":
             value = "  `{}` = '{}' ".format(k, normalize_text(str(one_data[k])))
         tab_val_index.append(value)
@@ -199,7 +200,7 @@ class GraphDB(object):
         state_code = 200
         res = {}
         if db:
-            res = session.execute('USE {}'.format(db))
+            res = session.execute('USE `{}`'.format(db))
             if not res.is_succeeded():
                 print(ngql)
                 print(res.error_msg())
@@ -269,7 +270,7 @@ class GraphDB(object):
             else:
                 self._check_orientdb(dbname, databaselist)
         elif self.type == 'nebula':
-            if not re.match(r'^[a-zA-Z][a-zA-Z0-9]*$', dbname):
+            if not re.match(r'^[a-zA-Z][a-zA-Z0-9-]*$', dbname):
                 self.state = {'state': 'FAILURE',
                               'meta': {
                                   'cause': "dbname must start with a letter and consist of letters, numbers. "
@@ -379,7 +380,7 @@ class GraphDB(object):
         state_code = 200
         res = {}
         if db:
-            res = session.execute('USE {}'.format(db))
+            res = session.execute('USE `{}`'.format(db))
             if not res.is_succeeded():
                 print(ngql)
                 print(res.error_msg())
@@ -468,7 +469,7 @@ class GraphDB(object):
         '''
             nebula创建数据库
         '''
-        ngql = 'CREATE SPACE {} (partition_num = 30,replica_factor = 1,vid_type = FIXED_STRING(32))'.format(db)
+        ngql = 'CREATE SPACE `{}` (partition_num = 30,replica_factor = 1,vid_type = FIXED_STRING(32))'.format(db)
         code, res = self._nebula_exec(ngql=ngql)
         if code != 200 or not res.is_succeeded():
             self.state = {'state': 'FAILURE',
@@ -727,19 +728,22 @@ class GraphDB(object):
             res['edge'].append(res_edges.row_values(i)[0].as_string())
         return 200, res
 
-    def create_class(self, db, otl_name, otl_pro=None, en_pro_dict=None):
+    def create_class(self, db, otl_name, otl_pro=None, en_pro_dict=None, is_batch=False):
         '''创建点类
-        创建本体点以及本体的属性,属性增加ds_id(string)、timestamp(double)
+        创建本体点以及本体的属性,属性增加_ds_id_(string)、_timestamp_(integer)
 
         Args:
             db: 数据库名
             otl_name: 本体名
             otl_pro: 本体属性列表
             en_pro_dict: {实体名:{属性名:属性类型}}
+            is_batch: if the task is batch task, drop the class before creating
         Returns:
             code: 返回码,成功为200
             res:
         '''
+        if is_batch:
+            self.drop_class(db, otl_name)
         if self.type == 'orientdb':
             return self._create_class_orientdb(otl_name, otl_pro, en_pro_dict, db)
         elif self.type == 'nebula':
@@ -758,11 +762,11 @@ class GraphDB(object):
                 code, res = self._orientdb_http(e_pro, db)
                 if code != 200:
                     return code, res
-        address_pro = "create property `{}`.`{}` {}".format(otl_name, "ds_id", "string")
+        address_pro = "create property `{}`.`{}` {}".format(otl_name, "_ds_id_", "string")
         code, res = self._orientdb_http(address_pro, db)
         if code != 200:
             return code, res
-        address_pro = "create property `{}`.`{}` {}".format(otl_name, "timestamp", "DOUBLE")
+        address_pro = "create property `{}`.`{}` {}".format(otl_name, "_timestamp_", "integer")
         code, res = self._orientdb_http(address_pro, db)
         if code != 200:
             return code, res
@@ -775,8 +779,8 @@ class GraphDB(object):
         if otl_pro and len(otl_pro) != 0:
             for o_p in otl_pro:
                 props.append('`' + o_p + '` ' + data_type_transform(en_pro_dict[otl_name][o_p]))
-            props.append('`ds_id` string')
-            props.append('`timestamp` double')
+            props.append('`_ds_id_` string')
+            props.append('`_timestamp_` int')
         create_tag += '(' + ','.join(props) + ')'
         code, res = self._nebula_exec(create_tag, db)
         return code, res
@@ -813,7 +817,7 @@ class GraphDB(object):
             code, res = self._drop_index_nebula(db, present_index_name_unique[otl_name], class_type)
             if code != 200:
                 return code, res
-        ngql = 'DROP {} `{}`'.format(class_type, otl_name)
+        ngql = 'DROP {} IF EXISTS`{}`'.format(class_type, otl_name)
         code, res = self._nebula_exec(ngql, db)
         return code, res
 
@@ -968,7 +972,10 @@ class GraphDB(object):
 
     def _drop_fulltext_index_nebula(self, index_name):
         url = 'http://' + self.esaddress + ':' + str(self.esport) + '/' + index_name
-        response = requests.delete(url=url, auth=HTTPBasicAuth(self.esusername, self.espassword), verify=False)
+        response = requests.delete(url=url,
+                                   params={'ignore_unavailable': 'true'},
+                                   auth=HTTPBasicAuth(self.esusername, self.espassword),
+                                   verify=False)
         if response.status_code != 200:
             self.state = {"state": "FAILURE",
                           "meta": {'cause': response.content,
@@ -1046,7 +1053,7 @@ class GraphDB(object):
                     self._drop_index_nebula(db, present_index_name_unique[otl_name])
                 self._create_tag_index_nebula(db, index_name, otl_name, merge_pro, pro_dict)
         if otl_name == "label":
-            merge_pro = ["name", "ds_id"]
+            merge_pro = ["name", "_ds_id_"]
             index_name = otl_name + '_' + "_".join(i for i in merge_pro)
             if self.type == 'orientdb':
                 properties = ",".join("`" + i + "`" for i in merge_pro)
@@ -1144,7 +1151,7 @@ class GraphDB(object):
             elif self.type == 'nebula':
                 vid = otl_name + '_'
                 for v in values_index:
-                    vid += f"'{v}'_"
+                    vid += f"{v}_"
                 vid = get_md5(vid)
                 propsstr = []
                 for p in props:
@@ -1257,19 +1264,22 @@ class GraphDB(object):
                 return codes.successCode, False
         return codes.successCode, True
 
-    def create_edge_class(self, edge_class, edge_otl_pro, edge_pro_dict, db):
+    def create_edge_class(self, edge_class, edge_otl_pro, edge_pro_dict, db, is_batch=False):
         '''创建边类
-        创建边类及边的属性,属性增加timestamp(double)
+        创建边类及边的属性,属性增加_timestamp_(integer)
 
         Args:
             edge_class: 边名
             edge_otl_pro: 边的属性列表
             edge_pro_dict: {边名:{属性名:属性类型}}
             db: 数据库名
+            is_batch: if the task is batch task, drop the class before creating
         Returns:
             code: 成功返回200
             res:
         '''
+        if is_batch:
+            self.drop_class(db, edge_class, 'edge')
         if self.type == 'orientdb':
             return self._create_edge_class_orientdb(edge_class, edge_otl_pro, edge_pro_dict, db)
         elif self.type == 'nebula':
@@ -1289,7 +1299,7 @@ class GraphDB(object):
             if code != 200:
                 return code, res
         address_pro = "create property `{}`.`{}` {}" \
-            .format(edge_class, "timestamp", "DOUBLE")
+            .format(edge_class, "_timestamp_", "integer")
         code, res = self._orientdb_http(address_pro, db)
         return code, res
 
@@ -1300,18 +1310,18 @@ class GraphDB(object):
         for o_p in edge_otl_pro:
             prop = '`' + o_p + '` ' + data_type_transform(edge_pro_dict[edge_class][o_p])
             props.append(prop)
-        props.append('`timestamp` double')
+        props.append('`_timestamp_` int')
         create_edge += '(' + ','.join(props) + ')'
         code, res = self._nebula_exec(create_edge, db)
         return code, res
 
     def create_edge_index(self, edge_class, edge_otl_pro, present_index_name, present_index_field,
-                          pro_index, edge_pro_dict, db):
+                          pro_index, edge_pro_dict, db, is_batch):
         if self.type == 'nebula':
             self._create_edge_index_nebula(db, edge_class + '_' + '_'.join(edge_otl_pro),
                                            edge_class, edge_otl_pro, edge_pro_dict[edge_class])
         # 创建全文索引
-        if edge_class.lower() in present_index_name:
+        if not is_batch and edge_class.lower() in present_index_name:
             present_field = present_index_field[edge_class.lower()]  # 已有索引的属性
             if isinstance(present_field, str):
                 present_field = [present_field]  # 如果只有单个属性，将其包装成列表
@@ -1417,68 +1427,120 @@ class GraphDB(object):
         # 多进程 读取nebula数据，插入全文索引
         pool = multiprocessing.Pool(10)
         partial_work = partial(self._fulltext_rebuild_process, pro_index=tag_pro_index, db=db, class_type='vertex')
-        pool.map(partial_work, tag_pro_index.keys())
+        vertex_res = pool.map(partial_work, tag_pro_index.keys())
         partial_work = partial(self._fulltext_rebuild_process, pro_index=edge_pro_index, db=db, class_type='edge')
-        pool.map(partial_work, edge_pro_index.keys())
+        edge_res = pool.map(partial_work, edge_pro_index.keys())
         pool.close()
         pool.join()
         end_time = time.time()
         print('重建索引结束，耗时{}s'.format(end_time - start_time))
         from utils.ConnectUtil import redisConnect
         redis = redisConnect.connect_redis("0", model="write")
+        success = True
+        for a_vertex_res in vertex_res:
+            if a_vertex_res[0] != 200:
+                success = False
+                break
+        if not success:
+            redis.set(f"rebuild_flag_{graphid}", -1, ex=86400)
+            return
+        for a_edge_res in edge_res:
+            if a_edge_res[0] != 200:
+                success = False
+                break
+        if not success:
+            redis.set(f"rebuild_flag_{graphid}", -1, ex=86400)
+            return
         redis.set(f"rebuild_flag_{graphid}", 0, ex=86400)
 
     def _fulltext_rebuild_process(self, otl_name, pro_index, db, class_type):
         '''
         创建全文索引process
-        
+
         Args:
             otl_name: 点/边名
             pro_index: {点/边名: 属性list}
             db: 数据库名
             class_type: 点/边: vertex/edge
+        Returns:
+            code:
+            res:
         '''
         # 创建全文索引
-        code, res = self.get_present_index(db)
-        if code != 200:
-            print(self.state)
-            return
-        _, present_index_name, _, _ = res
-        self.create_full_index(otl_name, pro_index[otl_name], present_index_name, db)
-        # 遍历nebula
-        props = []
-        for p in pro_index[otl_name]:
-            props.append('properties({}).`{}`'.format(class_type, p))
-        sql = '''LOOKUP ON `{}` yield {}'''.format(otl_name, ','.join((props)))
-        code, data = self._nebula_exec(sql, db)
-        if code != 200:
-            self.state = {'state': 'FAILURE',
-                          'meta': {'cause': res.error_msg(),
-                                   'message': 'nebula run ngql failed: {}'.format(sql)}}
-            print(self.state)
-            return
-        # 插入全文索引
-        index_name = db + '_' + otl_name
-        body = []
-        for i in range(data.row_size()):
-            row = data.row_values(i)
-            vid = ''
-            if class_type == 'vertex':
-                vid = row[0].as_string()
-            elif class_type == 'edge':
-                vid = row[0].as_string() + '_' + row[1].as_string()
-            body_index = {"index": {"_index": index_name, "_id": vid}}
-            body_field = {}
-            j = 1
-            if class_type == 'edge':
-                j = 3
+        try:
+            code, res = self.get_present_index(db)
+            if code != 200:
+                print(self.state)
+                return code, {otl_name: self.state}
+            _, present_index_name, _, _ = res
+            self.create_full_index(otl_name, pro_index[otl_name], present_index_name, db)
+            # 遍历nebula
+            # 属性拼接
+            props = []
             for p in pro_index[otl_name]:
-                body_field[p] = row[j].as_string()
-                j += 1
-            body.append(json.dumps(body_index) + '\n' + json.dumps(body_field))
-        if body:
-            body = '\n'.join(body) + '\n'
-            self.fulltext_bulk_index(body)
+                props.append('properties({}).`{}`'.format(class_type, p))
+            # 获取总数
+            ngql = 'show stats'
+            code, res = self._nebula_exec(ngql, db)
+            if code != 200:
+                self.state = {'state': 'FAILURE',
+                              'meta': {'cause': res.error_msg(),
+                                       'message': 'nebula run ngql failed: {}'.format(ngql)}}
+                print(self.state)
+                return code, {otl_name: self.state}
+            count = 0
+            for i in range(res.row_size()):
+                row = res.row_values(i)
+                if row[1].as_string() == 'econ_kind':
+                    count = row[2].as_int()
+                    break
+            iter_size = 1000
+            current = 0
+            while current <= count:
+                if class_type == 'vertex':
+                    sql = '''LOOKUP ON `{}` yield id(vertex),{} | limit {}, {}''' \
+                        .format(otl_name, ','.join(props), current, iter_size)
+                elif class_type == 'edge':
+                    sql = '''LOOKUP ON `{}` yield src(edge),dst(edge),rank(edge),{} | limit {}, {}''' \
+                        .format(otl_name, ','.join(props), current, iter_size)
+                code, data = self._nebula_exec(sql, db)
+                if code != 200:
+                    self.state = {'state': 'FAILURE',
+                                  'meta': {'cause': res.error_msg(),
+                                           'message': 'nebula run ngql failed: {}'.format(sql)}}
+                    print(self.state)
+                    return code, {otl_name: self.state}
+                # 插入全文索引
+                index_name = db + '_' + otl_name
+                body = []
+                for i in range(data.row_size()):
+                    row = data.row_values(i)
+                    vid = ''
+                    if class_type == 'vertex':
+                        vid = row[0].as_string()
+                    elif class_type == 'edge':
+                        vid = row[0].as_string() + '_' + row[1].as_string()
+                    body_index = {"index": {"_index": index_name, "_id": vid}}
+                    body_field = {}
+                    # 对nebula返回结果取值的开始列
+                    j = 1
+                    if class_type == 'edge':
+                        j = 3
+                    for p in pro_index[otl_name]:
+                        if row[j].is_string():
+                            body_field[p] = row[j].as_string()
+                        else:
+                            body_field[p] = ''
+                        j += 1
+                    body.append(json.dumps(body_index) + '\n' + json.dumps(body_field))
+                if body:
+                    body = '\n'.join(body) + '\n'
+                    self.fulltext_bulk_index(body)
+                current += iter_size
+            return 200, {otl_name: 'success'}
+        except Exception as e:
+            traceback.print_exc()
+            return 500, {otl_name: e}
 
     def fulltext_bulk_index(self, es_bulk_index_body):
         url = 'http://{}:{}/_bulk'.format(self.esaddress, self.esport)
@@ -1826,6 +1888,39 @@ class GraphDB(object):
         code, res = self._nebula_session_exec_(sql, db)
         return code, res
 
+    def drop_database(self, db):
+        if self.type == 'orientdb':
+            self._orientdb_drop_database(db)
+        else:
+            self._nebula_drop_database(db)
+
+    def _orientdb_drop_database(self, db):
+        url = 'http://' + self.address[0] + ':' + str(self.port[0]) + '/database/' + db
+        r = requests.delete(url, auth=(self.username, self.password), timeout=30)
+        if r.status_code != 200:
+            self.state = {"state": "FAILURE",
+                          "meta": {'cause': str(r.text),
+                                   'message': "graph_InfoExt failed0"}
+                          }
+            print(self.state)
+
+    def _nebula_drop_database(self, db):
+        self._drop_fulltext_index_nebula('{}_*'.format(db))
+        ngql = 'DROP SPACE IF EXISTS `{}`'.format(db)
+        code, res = self._nebula_exec(ngql=ngql)
+        if code != 200 or not res.is_succeeded():
+            self.state = {'state': 'FAILURE',
+                          'meta': {'cause': res.error_msg(),
+                                   'message': 'graph_InfoExt failed'}}
+            print(self.state)
+
+    def check_version(self, KDB_name):
+        databaselist = self.get_list()
+        if databaselist != -1:
+            for databasename in databaselist:
+                if "-" in databasename and databasename.split("-")[0] == KDB_name:
+                    self.drop_database(databasename)
+
 
 class SQLProcessor:
     def __init__(self, dbtype) -> None:
@@ -1855,8 +1950,8 @@ class SQLProcessor:
             pros = []
             for k in otl_tab.keys():
                 pros.append('`' + k + '`')
-            pros.append('`ds_id`')
-            pros.append('`timestamp`')
+            pros.append('`_ds_id_`')
+            pros.append('`_timestamp_`')
             batch_sql = 'INSERT VERTEX `{}` ({}) VALUES {}' \
                 .format(otl_name,
                         ','.join(pros),
@@ -1896,6 +1991,7 @@ class SQLProcessor:
                         else:
                             otlvalue = type_transform(self.type, normalize_text(str(row_val_t)),
                                                       en_pro_dict[otl_name][ot_tb])
+                            value_for_vid = normalize_text(str(row_val_t))
                             val = "%(otlpro)s=%(otlvalue)s" \
                                   % {"otlpro": "`" + ot_tb + "`",
                                      "otlvalue": otlvalue}
@@ -1907,7 +2003,7 @@ class SQLProcessor:
                                     if self.type == 'orientdb':
                                         tab_val_index.append(val)
                                     elif self.type == 'nebula':
-                                        tab_val_index.append(otlvalue)
+                                        tab_val_index.append(value_for_vid)
                     else:
                         valueExist = False
             else:
@@ -1918,13 +2014,13 @@ class SQLProcessor:
                                   "otlvalue": default_value(self.type, en_pro_dict[otl_name][ot_tb])})
                 vals.append(default_value(self.type, en_pro_dict[otl_name][ot_tb]))
         if tab_val:
-            if "ds_id" in row.keys():
-                tab_val.append('`ds_id`=\'' + str(row["ds_id"]) + '\'')
-                vals.append('\'' + str(row["ds_id"]) + '\'')
+            if "_ds_id_" in row.keys():
+                tab_val.append('`_ds_id_`=\'' + str(row["_ds_id_"]) + '\'')
+                vals.append('\'' + str(row["_ds_id_"]) + '\'')
             else:
                 vals.append(default_value(self.type, 'string'))
-            ts = time.time()
-            tab_val.append(" `timestamp` = " + str(ts))
+            ts = int(time.time())
+            tab_val.append(" `_timestamp_` = " + str(ts))
             vals.append(str(ts))
             sql = ''
             if tab_val_index:
@@ -1950,11 +2046,6 @@ class SQLProcessor:
                 print(
                     'missing merge properties, can\'t get nebula vid. otl_name: {}. batch_iter: {}'.format(otl_name,
                                                                                                            batch_iter))
-                # idval = ''
-                # for m in vals:
-                #     idval += f'{m}_'
-                # vid = get_md5(idval)
-                # sql = '"{}":({})'.format(vid, ','.join(vals))
             process_class_sql = sql
         process_class_sql = re.sub('[\r|\n]*', "", process_class_sql)
         return process_class_sql
@@ -2017,14 +2108,12 @@ class SQLProcessor:
                             otlvalue = type_transform(self.type, normalize_text_es(str(row_val_t)),
                                                       en_pro_dict[otl_name][ot_tb],
                                                       sql_format=False)
-                            otlindexvalue = type_transform(self.type, normalize_text(str(row_val_t)),
-                                                           en_pro_dict[otl_name][ot_tb],
-                                                           sql_format=False)
-                            vals.append(otlindexvalue)
+                            value_for_vid = normalize_text(str(row_val_t))
+                            vals.append(otlvalue)
                             if otl_name in merge_otls:
                                 merge_pros = merge_otls[otl_name]
                                 if ot_tb in merge_pros:
-                                    tab_val_index.append(otlindexvalue)
+                                    tab_val_index.append(value_for_vid)
                             if ot_tb in index_props:
                                 body_field[ot_tb] = otlvalue
                         # todo 非浮点数处理方式
@@ -2034,7 +2123,7 @@ class SQLProcessor:
         if vals and tab_val_index:
             idval = otl_name + '_'
             for m in tab_val_index:
-                idval += f"'{m}'_"
+                idval += f"{m}_"
             vid = get_md5(idval)
         else:
             # 报错
@@ -2123,10 +2212,10 @@ class SQLProcessor:
                     prop_val_sql[0].append('name')
                     prop_val_sql[1].append("'" + str(edge_class) + "'")
             if self.type == 'orientdb':
-                prop_val_sql[0].append("`timestamp`=" + "'" + str(time.time()) + "'")
+                prop_val_sql[0].append("`_timestamp_`=" + "'" + str(int(time.time())) + "'")
             elif self.type == 'nebula':
-                prop_val_sql[0].append('timestamp')
-                prop_val_sql[1].append(str(time.time()))
+                prop_val_sql[0].append('_timestamp_')
+                prop_val_sql[1].append(str(int(time.time())))
         else:
             if self.type == 'orientdb':
                 for i in range(len(prop)):
@@ -2187,7 +2276,7 @@ class SQLProcessor:
                                      'message': "contructing select sql failed"}}
                         print(state)
                     property_value = normalize_text(str(property_dict[pro]))
-                    val += "'{}'_".format(property_value)
+                    val += "{}_".format(property_value)
                 sql = get_md5(val)
             return sql
 
@@ -2244,7 +2333,7 @@ class SQLProcessor:
             edge_pro_dict: {边名:{属性名:属性类型}}
         '''
         s, p, o, s_pro, p_pro, o_pro = item["s"], item["p"], item["o"], item["s_pro"], item["p_pro"], item["o_pro"]
-        p_pro["timestamp"] = str(time.time())
+        p_pro["_timestamp_"] = str(int(time.time()))
         if "_id" in s_pro:
             del s_pro["_id"]
         if "_id" in p_pro:
@@ -2266,12 +2355,12 @@ class SQLProcessor:
                 if pro in p_pro:
                     pro_value = normalize_text(str(p_pro[pro]))
                     if num == 0:
-                        if pro == "timestamp":
+                        if pro == "_timestamp_":
                             relation_create_sql += " , `{}`={} ".format(pro, str(pro_value))
                         else:
                             relation_create_sql += " set `{}`='{}' ".format(pro, str(pro_value))
                     else:
-                        if pro == "timestamp":
+                        if pro == "_timestamp_":
                             relation_create_sql += " , `{}`={} ".format(pro, str(pro_value))
                         else:
                             relation_create_sql += " , `{}`='{}' ".format(pro, str(pro_value))

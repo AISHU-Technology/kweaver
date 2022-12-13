@@ -14,6 +14,7 @@ from dao.graph_dao import graph_dao
 from dao.graphdb_dao import GraphDB
 from dao.intelligence_dao import intelligence_dao
 from dao.knw_dao import knw_dao
+from dao.task_dao import task_dao
 from service.graph_Service import graph_Service, GraphService
 from service.intelligence_service import intelligence_calculate_service, intelligence_query_service
 from test import MockResponse, MockNebulaResponse
@@ -40,8 +41,8 @@ class TestIntelligenceCalculateService(unittest.TestCase):
                                    ['industry_level', 'string'],
                                    ['industry_status', 'string'],
                                    ['industry_id', 'string'],
-                                   ['ds_id', 'string'],
-                                   ['timestamp', 'double']])
+                                   ['_ds_id_', 'string'],
+                                   ['_timestamp_', 'integer']])
         res_nebula = MockNebulaResponse(data=res_nebula)
         GraphDB._nebula_exec = mock.Mock(return_value=(200, res_nebula))
 
@@ -118,9 +119,9 @@ class TestIntelligenceCalculateService(unittest.TestCase):
                      'defaultValue': None},
                     {'name': 'name', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'ds_id', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_ds_id_', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
                     {'name': 'subindustry_name', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
@@ -141,12 +142,12 @@ class TestIntelligenceCalculateService(unittest.TestCase):
                     {'name': 'sub_industry_id', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
                      'defaultValue': None},
-                    {'name': 'ds_id', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_ds_id_', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
                     {'name': 'subindustry_name', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
                      'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None}],
                  'indexes': [{'name': 'sub_industry_info_fulltext', 'type': 'FULLTEXT', 'fields': ['name']},
                              {'name': 'sub_industry_info_sub_industry_id', 'type': 'UNIQUE_HASH_INDEX',
@@ -156,7 +157,7 @@ class TestIntelligenceCalculateService(unittest.TestCase):
                  'clusterSelection': 'round-robin', 'records': 1053, 'properties': [
                     {'name': 'name', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None}],
                  'indexes': [
                      {'name': 'sub_industry_info_2_industry_info_fulltext', 'type': 'FULLTEXT', 'fields': ['name']}]}]
@@ -207,6 +208,12 @@ class TestIntelligenceQueryService(unittest.TestCase):
 
     def setUp(self) -> None:
         # mock nebula
+        task_dao.getGraphDBbyId = mock.Mock(
+            return_value=pd.DataFrame([['1.1.1.1', '1111', 'root', 'bmVidWxh', 'nebula', 1]],
+                                      columns=['ip', 'port', 'db_user', 'db_ps', 'type', 'fulltext_id']))
+        task_dao.getFulltextEnginebyId = mock.Mock(
+            return_value=pd.DataFrame([['1.1.1.1', 1111, 'root', 'bmVidWxh']],
+                                      columns=['ip', 'port', 'user', 'password']))
         self.graph_db_nebula = GraphDB(2)
         self.graph_db_nebula.type = 'nebula'
         self.graph_db_nebula.address = ['kg-orientdb']
@@ -264,31 +271,32 @@ class TestIntelligenceQueryService(unittest.TestCase):
         }]
         self.successCode = 'success'
 
-        self.graph_detail_list = [{'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
-                                   'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
-                                   'graph_id': 4, 'graph_config_id': 4, 'graph_name': '文档结构模型',
-                                   'KDB_name': 'u16bb67533ef911ed9ba2040300000000', 'graph_db_id': 1,
-                                   'graph_otl': '[4]', 'last_update_time': '2022-10-10 13:13:51'},
-                                  {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
-                                   'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
-                                   'graph_id': 13, 'graph_config_id': 13, 'graph_name': '空值test_orientdb',
-                                   'KDB_name': 'u8237f094490a11ed8bca040300000000', 'graph_db_id': 2,
-                                   'graph_otl': '[13]', 'last_update_time': '2022-10-11 11:25:51'},
-                                  {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
-                                   'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
-                                   'graph_id': 16, 'graph_config_id': 16, 'graph_name': '映射name',
-                                   'KDB_name': 'u7863ae384f7b11ed9273040300000000', 'graph_db_id': 2,
-                                   'graph_otl': '[19]', 'last_update_time': '2022-10-21 15:21:10'},
-                                  {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
-                                   'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
-                                   'graph_id': 33, 'graph_config_id': 33, 'graph_name': '结构化as测试',
-                                   'KDB_name': 'u6f967d7f3ef911ed9ba2040300000000', 'graph_db_id': 1,
-                                   'graph_otl': '[36]', 'last_update_time': '2022-10-20 09:19:51'},
-                                  {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
-                                   'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
-                                   'graph_id': 35, 'graph_config_id': 35, 'graph_name': '合同模型测试',
-                                   'KDB_name': 'u890f1489486211ed8bca040300000000', 'graph_db_id': 1,
-                                   'graph_otl': '[38]', 'last_update_time': '2022-10-20 14:34:10'}]
+        self.graph_detail_list = [
+            {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
+             'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
+             'graph_id': 4, 'graph_config_id': 4, 'graph_name': '文档结构模型',
+             'KDB_name': 'u16bb67533ef911ed9ba2040300000000', 'graph_db_id': 1,
+             'graph_otl': '[4]', 'last_update_time': '2022-10-10 13:13:51'},
+            {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
+             'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
+             'graph_id': 13, 'graph_config_id': 13, 'graph_name': '空值test_orientdb',
+             'KDB_name': 'u8237f094490a11ed8bca040300000000', 'graph_db_id': 2,
+             'graph_otl': '[13]', 'last_update_time': '2022-10-11 11:25:51'},
+            {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
+             'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
+             'graph_id': 16, 'graph_config_id': 16, 'graph_name': '映射name',
+             'KDB_name': 'u7863ae384f7b11ed9273040300000000', 'graph_db_id': 2,
+             'graph_otl': '[19]', 'last_update_time': '2022-10-21 15:21:10'},
+            {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
+             'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
+             'graph_id': 33, 'graph_config_id': 33, 'graph_name': '结构化as测试',
+             'KDB_name': 'u6f967d7f3ef911ed9ba2040300000000', 'graph_db_id': 1,
+             'graph_otl': '[36]', 'last_update_time': '2022-10-20 09:19:51'},
+            {'knw_id': 3, 'knw_name': 'gjk_test', 'knw_description': '', 'color': '#126EE3',
+             'creation_time': '2022-09-28 14:36:37', 'update_time': '2022-10-21 15:21:10',
+             'graph_id': 35, 'graph_config_id': 35, 'graph_name': '合同模型测试',
+             'KDB_name': 'u890f1489486211ed8bca040300000000', 'graph_db_id': 1,
+             'graph_otl': '[38]', 'last_update_time': '2022-10-20 14:34:10'}]
 
         self.graph_score_list = [
             {'graph_id': 16, 'graph_name': '映射name', 'id': 57, 'total_knowledge': 49, 'repeat_number': 0,
@@ -332,6 +340,11 @@ class TestIntelligenceQueryService(unittest.TestCase):
              'task_params': '{"graph_id": "16"}', 'result': None,
              'created_time': datetime.datetime(2022, 10, 21, 15, 20, 33),
              'finished_time': datetime.datetime(2022, 10, 21, 15, 20, 33)}]
+        knw_dao.get_knw_by_id = mock.Mock(
+            return_value=pd.DataFrame([[1, '1212', '', 23.81, '#126EE3', '2022-11-03 13:41:13',
+                                        '2022-11-21 16:16:50', '211a3254-5b3a-11ed-acf4-0242c0a81007']],
+                                      columns=['id', 'knw_name', 'knw_description', 'intelligence_score', 'color',
+                                               'creation_time', 'update_time', 'identify_id']))
 
     def tearDown(self) -> None:
         pass
@@ -369,10 +382,10 @@ class TestIntelligenceQueryService(unittest.TestCase):
     def test_query_real_entity_list(self):
         GraphDB.stats = mock.Mock(return_value=[])
         intelligence_query_service.query_graph_onto_info = mock.Mock(return_value=[])
-
-        graph_id = 13
-        space_id = '123456789'
-        onto_list = intelligence_query_service.query_real_entity_list(self.graph_db_nebula, graph_id, space_id)
+        with mock.patch('dao.graphdb_dao.GraphDB.stats', mock.Mock(return_value=('success', []))):
+            graph_id = 13
+            space_id = '123456789'
+            onto_list = intelligence_query_service.query_real_entity_list(self.graph_db_nebula, graph_id, space_id)
         self.assertTrue(len(onto_list) > 0)
 
     def test_query_network_param_check(self):

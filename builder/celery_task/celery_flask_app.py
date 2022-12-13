@@ -14,6 +14,7 @@ from config import config
 print("工作路基:{}".format(os.getcwd()))
 from utils.ConnectUtil import redisConnect
 from common.errorcode import codes
+from common.international import bind_i18n
 
 
 class Config(object):  # 创建配置，用类
@@ -156,9 +157,16 @@ else:
     # 要存储 Celery 任务的状态或运行结果时就必须要配置
     app.config['CELERY_RESULT_BACKEND'] = 'redis://' + config.redis_add + ':' + config.redis_port + '/2'
 
+# Start internationalization
+bind_i18n(app)
+
 if __name__ == "__main__":
     from celery_blue import celery_controller_app
     from apscheduler.schedulers.background import BackgroundScheduler
+
+    # ignore warnings
+    import warnings
+    warnings.filterwarnings('ignore')
 
     # America/Chicago Asia/Shanghai
 

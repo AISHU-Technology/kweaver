@@ -61,6 +61,8 @@ from celery.utils.log import get_task_logger
 
 from dao.task_dao import task_dao
 from dao.graphdb_dao import GraphDB, SQLProcessor, gen_doc_vid
+from dao.subgraph_dao import subgraph_dao
+from batch_task_param_processer import BatchTaskParamProcessor
 
 logger = get_task_logger(__name__)
 
@@ -301,8 +303,8 @@ def decrypt_base64(password):
 
 def create_mongodb_by_graph_name(conn_db, graph_mongo_Name, flag="full"):
     """
-    根据图谱名称创建mongo数据库
-    如果不是增量，删除collection；是增量，gnsinfo,.files,.chunks,empty_data不删除
+    delete mongodb collections
+    如果不是增量，删除所有collection；是增量，gnsinfo,.files,.chunks,empty_data不删除
     Args:
         conn_db: mongo连接
         mongodb name, baseInfo["graph_mongo_Name"]
@@ -326,6 +328,21 @@ def create_mongodb_by_graph_name(conn_db, graph_mongo_Name, flag="full"):
                 db_collection.drop()
                 Logger.log_info(
                     "is deleting mongo database {}, table {} is deleted".format(graph_mongo_Name, collection_name))
+
+def delete_mongodb(conn_db, graph_mongo_Name, entity_types):
+    '''delete specified mongodb collections
+    Args:
+        conn_db: monngodb connection
+        graph_mongo_Name: A graph unified mongodb collection prefix name
+        entity_types: specific suffix of collection names to be deleted.
+    '''
+    collection_names = conn_db.list_collection_names()
+    for entity_type in entity_types:
+        collection_name = graph_mongo_Name + '_' + entity_type
+        if collection_name in collection_names:
+            db_collection = conn_db[collection_name]
+            db_collection.drop()
+            Logger.log_info("is deleting mongo. table {} is deleted".format(collection_name))
 
 
 # 读取mysql数据
@@ -464,7 +481,7 @@ def get_rules(graph_InfoExt):
 
 
 def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_id, file_name, file_source, rules,
-                     graph_KMerge, entity_type):
+                     graph_KMerge, entity_type, graph_KMap):
     """
     标准抽取, standardExtraction，处理数据加入mongodb
     Args：
@@ -478,6 +495,7 @@ def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_i
         rules: 抽取规则 {文件名: 属性列表}
         graph_KMerge: 融合属性，在monogo中用于构建唯一索引
         entity_type: 点名, 即文件名
+        graph_KMap: 映射信息，本体的类与抽取对象的对应关系
     """
     ret_code = CommonResponseStatus.SUCCESS.value
     for used_ds in graph_used_ds:
@@ -498,7 +516,7 @@ def standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source, ds_i
                         ret_code = CommonResponseStatus.SUCCESS.value
 
             print(f'创建mongodb集合:{entity_type} 唯一索引')
-            create_mongo_index(graph_mongo_Name, entity_type, graph_KMerge)
+            create_mongo_index(graph_mongo_Name, entity_type, graph_KMerge, graph_KMap)
 
             entity_rules = rules[entity_type]
             if len(entity_rules) <= 0:
@@ -848,19 +866,19 @@ def insert_mogodb(conn_db, graph_mongo_Name, result_list, property_dict, relatio
             data["o_pro"] = {'name': o}
             result_p = conn_db[graph_mongo_Name + "_" + p].find_one(data)
             if not result_p:
-                data["ds_id"] = ds_id
+                data["_ds_id_"] = ds_id
                 conn_db[graph_mongo_Name + "_" + p].insert_one(data)
             result_s = conn_db[graph_mongo_Name + "_" + class_s].find_one(condition_s)
             if not result_s:
                 data_s = {}
                 data_s["name"] = s
-                data_s["ds_id"] = ds_id
+                data_s["_ds_id_"] = ds_id
                 conn_db[graph_mongo_Name + "_" + class_s].insert_one(data_s)
             result_o = conn_db[graph_mongo_Name + "_" + class_o].find_one(condition_o)
             if not result_o:
                 data_o = {}
                 data_o["name"] = o
-                data_o["ds_id"] = ds_id
+                data_o["_ds_id_"] = ds_id
                 conn_db[graph_mongo_Name + "_" + class_o].insert_one(data_o)
         else:  ###如果數據是屬性spo
             if p in property_dict.keys():
@@ -878,7 +896,7 @@ def insert_mogodb(conn_db, graph_mongo_Name, result_list, property_dict, relatio
                         data[p] = o
                         result_ss = conn_db[graph_mongo_Name + "_" + class_s].find_one(data)
                         if not result_ss:
-                            data["ds_id"] = ds_id
+                            data["_ds_id_"] = ds_id
                             conn_db[graph_mongo_Name + "_" + class_s].insert_one(data)
 
 
@@ -1044,8 +1062,6 @@ def as_document_model_extract(conn_db, ds_id, file_source, flag, graph_mongo_Nam
         print("start extracting document structure")
     documents = datetime.datetime.now()
     print(documents)
-    # AnyshareDocumentModel 李宁宁
-    # FileDownloadByGnsId 顾磊
     spo = AnyshareDocumentModel(entity_property_dict, relationship_property_dict, conn_db,
                                 as7_json,
                                 config_path=config_path,
@@ -1055,65 +1071,6 @@ def as_document_model_extract(conn_db, ds_id, file_source, flag, graph_mongo_Nam
     documente = datetime.datetime.now()
     print(documente)
     print("document structure spends {}s ".format((documente - documents).total_seconds()))
-
-
-def insert2orientdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_baseInfo, graph_KMerge, graphid,
-                    data_source_set):
-    """
-    mongodb中的数据插入orientdb
-    Args：
-        pro_index：属性索引
-        en_pro_dict：点属性dict
-        edge_pro_dict：边属性dict
-        graph_KMap：映射信息
-        graph_baseInfo：图谱配置信息
-        graph_KMerge：融合信息
-        graphid：图谱id
-
-    """
-    obj = {}
-    try:
-        print("start write into orientdb ")
-        orientdbs = datetime.datetime.now()
-        print(orientdbs)
-        status_code, message = gr_map2(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_baseInfo, graph_KMerge,
-                                       graphid, data_source_set)
-        print("writing into orientdb finished ")
-        orientdbe = datetime.datetime.now()
-        print(orientdbe)
-        print("wiriting into orientdb spend {}s".format((orientdbe - orientdbs).total_seconds()))
-        if status_code == 500:
-            # print(message)
-            obj = {"state": "FAILURE",
-                   "meta": {'cause': message, 'message': "graph_KMap failed"}
-                   }
-        if "subject" in en_pro_dict:
-            print("build document vector start")
-            start_time = time.time()
-            from dao.subject_dao import TextMatchTask
-            subject_match_task = TextMatchTask("test", graphid)
-            subject_match_task.build_document_embed()
-            print("build document vector end, cost {}".format(time.time() - start_time))
-
-        obj = {"state": "graph_KMerge",
-               "meta": {'current': "graph_KMerge", 'total': "100"}
-               }
-        return obj
-    except Exception as e:
-        obj = {"state": "FAILURE",
-               "meta": {'cause': repr(e), 'message': "graph_KMap failed"}
-               }
-        return obj
-    finally:
-        if general_variable.updategraph:
-            try:
-                graph_dao.updategraphstatus(graphid)
-            except Exception as e:
-                print(f'update mysql error:{str(e)}')
-            else:
-                print('update mysql sucess')
-        # return obj
-
 
 def get_docids(ds_id, postfix, file_source, files_type):
     """
@@ -1245,11 +1202,19 @@ def mongo_type_tansform(value):
 
 
 def get_pro_type(graph_otl):
+    """获取本体信息
+    Args:
+        graph_otl: 本体信息
+    Returns
+        entity_pro_dict: entity class property dictionary
+            example: {'entity_class_name': {'property_name': 'property_type'}}
+        edge_pro_dict: edge class property dictionary
+            example: {'edge_class_name': {'property_name', 'property_type'}}
+    """
     entity_pro_dict = {}
     edge_pro_dict = {}
-    otl = graph_otl[0]
-    entitys = otl["entity"]
-    edges = otl["edge"]
+    entitys = graph_otl["entity"]
+    edges = graph_otl["edge"]
     for entity in entitys:
         name = entity["name"]
         properties = entity["properties"]
@@ -1268,6 +1233,33 @@ def get_pro_type(graph_otl):
 def get_graph_config_info(graphid):
     """
     读取graph_config_table内容， 获取图谱配置信息
+    根据图谱当前运行的子图id筛选出对应子图的各图谱配置信息
+
+    Returns:
+        res_obj: state information.
+                example: {"state": 'graph_InfoExt', "meta": {'current': "graph_InfoExt", 'total': "100"}}
+        graph_baseInfo: graph_baseInfo from table graph_config_table
+                example: [{'graph_Name': '1', 'graph_des': '', 'graph_db_id': 1, 'graphDBAddress': '10.0.0.0',
+                        'graph_mongo_Name': 'mongoDB-1', 'graph_DBName': 'uxxxx'}]
+        pro_index: properties from ontology entity classes and edge classes that need to add fulltext index
+                example: {'entity_class_name': ['property_name1'], 'edge_clas_name': ['property_name2']}
+        en_pro_dict: entity class property dictionary
+                example: {'entity_class_name': {'property_name': 'property_type'}}
+        edge_pro_dict: edge class property dictionary
+                example: {'edge_class_name': {'property_name', 'property_type'}}
+        graph_InfoExt: graph_InfoExt from table graph_config_table
+        graph_KMap: graph_KMap from table graph_config_table
+        graph_KMerge: graph_KMerge from graph_config_table
+        graph_used_ds: data source names used by temporary ontology data, ontology data, information extraction data
+        address: graph db ip address
+        mongo_db: graph db database name
+        graph_mongo_Name: mongodb collection name
+        graph_db_id: graph db id
+        is_batch: whether the task is batch task
+        entity_types: extract objects for subgraph.
+        entity_names: entities that need to be built (both in ontology level and in data level)
+        edge_relations： relation list of edges that need to be built (only in data level)
+        edge_names: edge names that need to be built (only in ontology level)
     """
     sys.path.append(os.path.abspath("../"))
     from service.graph_Service import graph_Service
@@ -1283,24 +1275,26 @@ def get_graph_config_info(graphid):
         graph_baseInfo = res["graph_baseInfo"]
         res_obj = {"state": 'graph_baseInfo', "meta": {'current': "graph_baseInfo", 'total': "100"}}
         res_obj = {"state": 'graph_ds', "meta": {'current': "graph_ds", 'total': "100"}}
-        graph_otl = res["graph_otl"]
+        batch_param_processor = BatchTaskParamProcessor(graphid)
+        entity_names, edge_relations, edge_names, graph_InfoExt, entity_types \
+            = batch_param_processor.process(res["graph_otl"][0], res["graph_InfoExt"],
+                                            res["graph_KMap"], res["graph_KMerge"])
+        is_batch = batch_param_processor.is_batch
+        graph_otl = res['graph_otl'][0]
+        graph_KMap = res["graph_KMap"]
+        graph_KMerge = res['graph_KMerge']
         # 获取该图谱对应的本体信息
         en_pro_dict, edge_pro_dict = get_pro_type(graph_otl)
         time.sleep(3)
         res_obj = {"state": 'graph_otl', "meta": {'current': "graph_otl", 'total': "100"}}
-        graph_otl_info = graph_otl[0]
-        entity = graph_otl_info["entity"]
-        edge = graph_otl_info["edge"]
+        entity = graph_otl["entity"]
+        edge = graph_otl["edge"]
         pro_index = {}
         for i in entity:
             pro_index[i["name"]] = i["properties_index"]
         for i in edge:
             pro_index[i["name"]] = i["properties_index"]
-        graph_InfoExt = res["graph_InfoExt"]
         res_obj = {"state": 'graph_InfoExt', "meta": {'current': "graph_InfoExt", 'total': "100"}}
-        graph_KMap = res["graph_KMap"]
-        graph_KMerge = res["graph_KMerge"]
-        # time.sleep(10)
         graph_used_ds = res["graph_used_ds"]
         address = ""
         mongo_db = ""
@@ -1311,8 +1305,11 @@ def get_graph_config_info(graphid):
             mongo_db = baseInfo["graph_DBName"]  # oeientdb name
             graph_mongo_Name = baseInfo["graph_mongo_Name"]  # mongodb name
             graph_db_id = baseInfo["graph_db_id"]
-        return res_obj, graph_baseInfo, pro_index, en_pro_dict, edge_pro_dict, graph_InfoExt, graph_KMap, graph_KMerge, graph_used_ds, address, mongo_db, graph_mongo_Name, graph_db_id
+        return res_obj, graph_baseInfo, pro_index, en_pro_dict, edge_pro_dict, graph_InfoExt, graph_KMap,\
+               graph_KMerge, graph_used_ds, address, mongo_db, graph_mongo_Name, graph_db_id, is_batch, entity_types,\
+               entity_names, edge_relations, edge_names
     except Exception as e:
+        traceback.print_exc()
         er = repr(e)
         if "_source" in er:
             er = "read data failed! file_path error!"
@@ -1426,53 +1423,39 @@ def get_map_info(otls_map):
     return all_otl_class, otl_tab_map, tab_otl_map
 
 
-def get_Kmap_dict(o_i, all_otl_class):
+def get_Kmap_dict(otl_name, otl_tab_map):
     """细节处理map信息
 
     Args:
-        o_i: all_otl_class其中一项的编号
-        all_otl_class: 表graph_config_table中的graph_KMap项中的otls_map中的信息，结构：
-            [[{otl_name: entity_type}, {property_map.otl_prop: property_map.entity_prop}, …], …]
-            表示 [[{本体: 实体}, {本体属性: 实体属性}, …], …]
+        otl_name: 实体类名
+        otl_tab_map: 表graph_config_table中的graph_KMap项中的otls_map中的信息，结构：
+            {otl_name: {"entity_data": entity_type, "pro_map": {property_map.otl_prop: property_map.entity_prop, …}}, …}
+            表示 {实体类名: {"entity_data": 抽取对象名, "pro_map": {实体类属性: 抽取对象属性, ...}, ...}
 
     Returns:
-        otl_name: 本体名，all_otl_class[o_i]的otl_name
-        tab_: 表，all_otl_class[o_i]的entity_type
-        otl_pro: 本体属性，[property_map.otl_prop, …]
-        tab_pro: [property_map.entity_prop, …]
-        tab_otl: {property_map.entity_prop: property_map.otl_prop, …}
-        otl_tab: {property_map.otl_prop: property_map.entity_prop, …}
+        tab_: 抽取对象名
+        otl_pro: 实体类属性 列表
+        tab_pro: 抽取对象属性 列表
+        tab_otl: 抽取对象属性-实体类属性 dict
+        otl_tab: 实体类属性-抽取对象属性 dict
 """
-    dict_otl = all_otl_class[o_i]
-    otl_name = ""  # 本体
-    tab_ = ""  # 表
+    dict_otl = otl_tab_map[otl_name]
+    tab_ = dict_otl['entity_data']  # 表
     otl_pro = []
     tab_pro = []
     tab_otl = {}
-    otl_tab = {}
+    otl_tab = dict_otl['pro_map']
     ## 开始处理本体
-    for all_otl_in in range(len(dict_otl)):
-        otl_keys = dict_otl[all_otl_in]
-        ## 本体类
-        ## {本体：实体}
-        if all_otl_in == 0:
-
-            otl_key = list(otl_keys.keys())
-            otl_name = otl_key[0]
-            tab_ = otl_keys[otl_name]
-        ## {本体属性：实体属性}
-        ## 属性
-        else:
-            # otl_keys = dict_otl[all_otl_in]
-            otl_key = list(otl_keys.keys())
-            otl_pro.append(otl_key[0])
-            tab_pro.append(otl_keys[otl_key[0]])
-            tab_otl[otl_keys[otl_key[0]]] = otl_key[0]
-            otl_tab[otl_key[0]] = otl_keys[otl_key[0]]
-    return otl_name, tab_, otl_pro, tab_pro, tab_otl, otl_tab
+    for a_otl_pro in otl_tab.keys():
+        a_tab_pro = otl_tab[a_otl_pro]
+        otl_pro.append(a_otl_pro)
+        tab_pro.append(a_tab_pro)
+        tab_otl[a_tab_pro] = a_otl_pro
+    return tab_, otl_pro, tab_pro, tab_otl, otl_tab
 
 
-def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, graph_db_id, mongo_db, graph_mongo_Name):
+def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, graph_db_id, mongo_db, graph_mongo_Name,
+            is_batch, entity_names, edge_relations, edge_names):
     """图谱映射
 
     Args:
@@ -1485,6 +1468,10 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
         graph_db_id: 图数据库id
         mongo_db: 表graph_config_table中的graph_baseInfo中的graph_DBName，表示orientdb中database的名字
         graph_mongo_Name: 表graph_config_table中的graph_baseInfo中的graph_mongo_Name，例：mongoDB-2
+        is_batch: whether the task is batch task
+        entity_names: entity name list that need to be built (both in ontology level and in data level)
+        edge_relations: edge relation list that need to be built (only in data level)
+        edge_names: edge name list that need to be built (only in ontology level)
 
     Returns:
         code:
@@ -1508,16 +1495,15 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
         # 创建点类
         tag_class_start = time.time()
         print('开始创建点类')
-        for o_i in range(len(all_otl_class)):
-            ## 细节处理map信息
-            otl_name, tab_, otl_pro, tab_pro, tab_otl, otl_tab = get_Kmap_dict(o_i, all_otl_class)
+        for otl_name in entity_names:
+            otl_pro = list(en_pro_dict[otl_name].keys())  # 实体类的属性列表
             ## 创建点类
             print(f'开始创建顶点:{otl_name}')
-            graphdb.create_class(mongo_db, otl_name, otl_pro, en_pro_dict)
+            graphdb.create_class(mongo_db, otl_name, otl_pro, en_pro_dict, is_batch)
             if not general_variable.updategraph:
                 general_variable.updategraph = True
             # 创建全文索引
-            if otl_name in present_index_name:
+            if not is_batch and otl_name in present_index_name:
                 present_field = present_index_field[otl_name.lower()]  # 已有索引的属性
                 if isinstance(present_field, str):
                     present_field = [present_field]  # 如果只有单个属性，将其包装成列表
@@ -1540,50 +1526,12 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
         # 创建边类
         edge_class_start = time.time()
         print('开始创建边类')
-        for rel_i in range(len(relations_map)):
-            rela = relations_map[rel_i]
-            '''rela结构:
-            {
-                "relation_info": {
-                    "source_type": "automatic",
-                    "model": "Anysharedocumentmodel"
-                    "begin_name": "folder",
-                    "edge_name": "folder2document",
-                    "end_name": "document",
-                    "entity_type": "folder2document"
-                },
-                "property_map": [
-                    {
-                        "edge_prop": "name",
-                        "entity_prop": "name"
-                    }
-                ],
-                "relation_map": [  ## 四个框的情况
-                    {
-                        "begin_class_prop": "name",
-                        "equation_begin": "等于",
-                        "relation_begin_pro": "name",
-                        "equation": "",
-                        "relation_end_pro": "name",
-                        "equation_end": "等于",
-                        "end_class_prop": "name"
-                    }
-                ]
-            }
-            '''
-            relation_info = rela["relation_info"]
-            edge_class = relation_info["edge_name"]
-            ## 获取 边 属性
-            property_map = rela["property_map"]
-            edge_otl_pro = []  # 边的属性列表
-            edge_otl_tab_pro = {}  # 边的属性对应的实体属性
-            for pro_map in property_map:
-                edge_otl_pro.append(pro_map["edge_prop"])
-                edge_otl_tab_pro[pro_map["edge_prop"]] = pro_map["entity_prop"]
+        for edge_class in edge_names:
+            edge_otl_pro = list(edge_pro_dict[edge_class].keys())  # 边的属性列表
             print(f'开始创建边类:{edge_class}')
-            graphdb.create_edge_class(edge_class, edge_otl_pro, edge_pro_dict, mongo_db)
+            graphdb.create_edge_class(edge_class, edge_otl_pro, edge_pro_dict, mongo_db, is_batch)
             graphdb.create_edge_index(edge_class, edge_otl_pro, present_index_name,
-                                      present_index_field, pro_index, edge_pro_dict, mongo_db)
+                                      present_index_field, pro_index, edge_pro_dict, mongo_db, is_batch)
         print('创建边类结束，耗时{}s'.format(time.time() - edge_class_start))
         if graphdb.type == 'nebula':
             print('waiting for nebula creating schema. please wait...')
@@ -1599,14 +1547,14 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
 
         # 插入点
         start_create_vertex = time.time()
-        vertex_writer = VertexWriter(all_otl_class, graph_mongo_Name, graphdb, graph_db_id, mongo_db, en_pro_dict,
-                                     merge_otls)
+        vertex_writer = VertexWriter(otl_tab_map, graph_mongo_Name, graphdb, graph_db_id, mongo_db, en_pro_dict,
+                                     merge_otls, entity_names)
         vertex_writer.write()
         print(f'创建顶点总耗时：{time.time() - start_create_vertex}s')
         ## 遍历边 创建边
         start_create_edge = time.time()
         edgeWriter = EdgeWriter(otls_map, en_pro_dict, edge_pro_dict, relations_map, g_merge,
-                                graph_db_id, mongo_db, graph_mongo_Name)
+                                graph_db_id, mongo_db, graph_mongo_Name, edge_relations)
         edgeWriter.write()
         print(f'创建边总耗时：{time.time() - start_create_edge}s')
         return 200, "success"
@@ -1616,7 +1564,8 @@ def gr_map1(pro_index, en_pro_dict, edge_pro_dict, g_kmap, g_merge, graphid, gra
 
 
 def mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMerge,
-                    graphid, graph_db_id, mongo_db, graph_mongo_Name):
+                    graphid, graph_db_id, mongo_db, graph_mongo_Name, is_batch, entity_names,
+                    edge_relations, edge_names):
     """mongodb数据写入graphdb
 
     Args:
@@ -1629,6 +1578,10 @@ def mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMe
         graph_db_id: 图数据库id
         mongo_db: 表graph_config_table中的graph_baseInfo中的graph_DBName，表示orientdb中database的名字
         graph_mongo_Name: 表graph_config_table中的graph_baseInfo中的graph_mongo_Name，例：mongoDB-2
+        is_batch: whether the task is batch task
+        entity_names: 实体类名列表
+        edge_relations: 边的关系列表
+        edge_names: 边类名列表
 
     Return:
         obj: 结构：{"state":"", "meta": {}}
@@ -1639,7 +1592,8 @@ def mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMe
         graphdbs = datetime.datetime.now()
         print(graphdbs)
         status_code, message = gr_map1(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMerge, graphid,
-                                       graph_db_id, mongo_db, graph_mongo_Name)
+                                       graph_db_id, mongo_db, graph_mongo_Name, is_batch, entity_names, edge_relations,
+                                       edge_names)
         print("writing into graphdb finished. graphid: {}. graph_db_id: {}".format(graphid, graph_db_id))
         graphdbe = datetime.datetime.now()
         print(graphdbe)
@@ -1709,7 +1663,7 @@ def standard_extract_rabbitmq(json_data, graph_mongo_Name, conn_db, ds_id, rules
         for all_en in mongodict:
             value = mongodict[all_en]
             Entity1_data = value  # 实体1的属性
-            Entity1_data["ds_id"] = ds_id
+            Entity1_data["_ds_id_"] = ds_id
             # print("Entity1_data:", Entity1_data)
             mongo_data.append(Entity1_data)
         collection.insert_many(mongo_data)
@@ -1732,7 +1686,8 @@ def rabbitmq_task(json_data, args):
         ret_obj = mongodb2graphdb(args.get("pro_index"), args.get("en_pro_dict"), args.get("edge_pro_dict"),
                                   args.get("graph_KMap"), args.get("graph_KMerge"),
                                   args.get("graphid"), args.get("graph_db_id"), args.get("mongo_db"),
-                                  args.get("graph_mongo_Name"))
+                                  args.get("graph_mongo_Name"), False, args.get('entity_names'),
+                                  args.get('edge_relations'), args.get('edge_names'))
         obj = {"state": ret_obj["state"], "meta": ret_obj["meta"]}
     return obj
 
@@ -1761,6 +1716,45 @@ def get_rabbitinfo(graphid):
     return -1, df
 
 
+def new_version(graph_id):
+    ret = graph_dao.get_version_by_id(graph_id)
+    ret_dict = ret.to_dict('records')[0]
+    KDB_name = ret_dict["KDB_name"]
+    KDB_name_temp = ret_dict["KDB_name_temp"]
+    if not KDB_name_temp:
+        return KDB_name, KDB_name_temp, KDB_name
+    if KDB_name_temp == "None_Version":
+        return KDB_name, KDB_name_temp, KDB_name + "-2"
+    # 新版本的版本号
+    version_info = max(KDB_name, KDB_name_temp).split('-')
+    version_uuid = version_info[0]
+    version_num = int(version_info[1]) + 1
+    new_db_name = "{}-{}".format(version_uuid, str(version_num))
+    return KDB_name, KDB_name_temp, new_db_name
+
+
+def change_version(KDB_name, KDB_name_temp, new_db_name, graph_id, graphdb, flag):
+    # 第一次构建
+    if not KDB_name_temp:
+        graph_dao.update_version(KDB_name, "None_Version", graph_id)
+        return
+
+    # 根据构建结果切换版本
+    if flag:
+        graph_dao.update_version(new_db_name, KDB_name, graph_id)
+        df = graph_dao.getbaseinfoById(graph_id)
+        graph_baseInfo = df.to_dict('records')[0]['graph_baseInfo']
+        graph_baseInfo = eval(graph_baseInfo)
+        graph_baseInfo[0]['graph_DBName'] = new_db_name
+        graph_dao.update_base_info(str(graph_baseInfo), graph_id)
+    else:
+        graph_dao.update_version(KDB_name, new_db_name, graph_id)
+
+    # 如果不是第两次构建则删除被覆盖版本信息
+    if KDB_name_temp != "None_Version":
+        graphdb.drop_database(KDB_name_temp)
+
+
 @cel.task(name='app.buildertask', bind=True)
 def buildertask(self, graphid, flag):
     """运行任务，
@@ -1770,6 +1764,7 @@ def buildertask(self, graphid, flag):
         flag: 是否是增量，增量：increment； 全量：full
     """
     try:
+        print('======== start builder task: graph_id = {} ========='.format(graphid))
         # 构建状态默认值，领域智商计算用
         build_success_flag = False
 
@@ -1777,7 +1772,9 @@ def buildertask(self, graphid, flag):
         # 读取配置
         configure = Configure(aspi_config_path="./../config/asapi.conf", config_ini_path="./../config/config.ini")
         # 读取graph_config_table内容，获取图谱配置信息
+        print('----- start getting graph config info -----')
         res = get_graph_config_info(graphid)
+        print('graph config info: ', res)
         data_source_set = set()
         if len(res) == 2:
             res_obj, res_code = res[0], res[1]
@@ -1786,7 +1783,12 @@ def buildertask(self, graphid, flag):
                 return {'current': 100, 'total': 100}
         else:
             res_obj, graph_baseInfo, pro_index, en_pro_dict, edge_pro_dict, graph_InfoExt, graph_KMap, graph_KMerge, \
-            graph_used_ds, address, mongo_db, graph_mongo_Name, graph_db_id = res
+            graph_used_ds, address, mongo_db, graph_mongo_Name, graph_db_id, is_batch, entity_types, entity_names,\
+            edge_relations, edge_names = res
+            # 全量构建创建新版本并使用新图数据库构建
+            if flag == 'full' and not is_batch:
+                KDB_name, KDB_name_temp, new_db_name = new_version(graphid)
+                mongo_db = new_db_name
             self.update_state(state=res_obj["state"], meta=res_obj["meta"])
             try:
                 ret = task_dao.getGraphDBbyId(graph_db_id)
@@ -1806,12 +1808,6 @@ def buildertask(self, graphid, flag):
                                             'message': "graph_InfoExt failed"})
                     return {'current': 100, 'total': 100}
                 graph_DBPort = rec_dict["port"]
-                # 验证用户名密码是否可用
-                # if not account_verify(address, graph_Port, username, password, graph_db_id):
-                #     self.update_state(state='FAILURE',
-                #                       meta={'cause': "user and password verification failed",
-                #                             'message': "graph_InfoExt failed"})
-                #     return {'current': 100, 'total': 100}
                 graphdb = GraphDB(graph_db_id)  # 图数据库操作
                 # 检查图数据库是否存在，不存在则新建
                 graphdb.check_db(mongo_db)
@@ -1840,6 +1836,9 @@ def buildertask(self, graphid, flag):
                     args["pro_index"] = pro_index
                     args["en_pro_dict"] = en_pro_dict
                     args["edge_pro_dict"] = edge_pro_dict
+                    args['entity_names'] = entity_names
+                    args['edge_relations'] = edge_relations
+                    args['edge_names'] = edge_names
                     args["graph_KMap"] = graph_KMap
                     args["graph_baseInfo"] = graph_baseInfo
                     args["graph_KMerge"] = graph_KMerge
@@ -1859,8 +1858,18 @@ def buildertask(self, graphid, flag):
                     return {'current': 100, 'total': 100}
                 else:
                     # 非RabbitMQ
-                    # 根据图谱名称创建数据库
-                    create_mongodb_by_graph_name(conn_db, graph_mongo_Name, flag=flag)
+                    # delete mongodb collections
+                    if is_batch:
+                        # 当前为分组构建的第一组，则清理所有mongo
+                        task = task_dao.gettaskbyid(graphid).to_dict('records')[0]
+                        subgraph_ids = eval(task['subgraph_ids'])
+                        current_subgraph_id = task['current_subgraph_id']
+                        if current_subgraph_id == subgraph_ids[0]:
+                            create_mongodb_by_graph_name(conn_db, graph_mongo_Name, flag=flag)
+                        else:
+                            delete_mongodb(conn_db, graph_mongo_Name, entity_types)
+                    else:
+                        create_mongodb_by_graph_name(conn_db, graph_mongo_Name, flag=flag)
                     # 根据抽取信息 抽取中间存储数据
                     for infoext in graph_InfoExt:
                         # 从每一条抽取信息中获取抽取规则
@@ -1872,7 +1881,7 @@ def buildertask(self, graphid, flag):
                         if extract_type == "standardExtraction":
                             ret_code, obj = standard_extract(conn_db, graph_mongo_Name, graph_used_ds, data_source,
                                                              ds_id, file_name,
-                                                             file_source, rules, graph_KMerge, entity_type)
+                                                             file_source, rules, graph_KMerge, entity_type, graph_KMap)
                             if ret_code != CommonResponseStatus.SUCCESS.value:
                                 self.update_state(state='FAILURE', meta=obj)
                                 return {'current': 100, 'total': 100}
@@ -1922,17 +1931,20 @@ def buildertask(self, graphid, flag):
             # mongodb数据写入graphdb
             self.update_state(state='graph_KMap', meta={'current': "graph_KMap", 'total': "100"})
             ret_obj = mongodb2graphdb(pro_index, en_pro_dict, edge_pro_dict, graph_KMap, graph_KMerge,
-                                      graphid, graph_db_id, mongo_db, graph_mongo_Name)
+                                      graphid, graph_db_id, mongo_db, graph_mongo_Name, is_batch, entity_names,
+                                      edge_relations, edge_names)
             self.update_state(state=ret_obj["state"], meta=ret_obj["meta"])
             # 构建成功标记
-            build_success_flag = True
+            if ret_obj['state'] != 'FAILURE':
+                build_success_flag = True
             return {'current': 100, 'total': 100}
     except Exception as e:
         self.update_state(state='FAILURE', meta={'cause': repr(e), 'message': "buildertask failed"})
         return {'current': 100, 'total': 100}
     finally:
-        # 无论图谱构建成功或失败，都要统计数量信息
+        # 无论图谱构建成功或失败，都要执行以下任务
         try:
+            # 统计数量信息
             if graphdb.type == 'nebula':
                 print('nebula submit job stats.')
                 time.sleep(20)
@@ -1947,10 +1959,20 @@ def buildertask(self, graphid, flag):
                             (ExceptLevel.ERROR, 'Builder.celeryTask.graphdb.nebulaTimeOutError', 'nebula job time out'))
         except Exception:
             pass  # 统计任务失败的异常忽略掉
-        finally:
+        try:
+            # 全量构建切换版本
+            if flag == 'full' and not is_batch:
+                change_version(KDB_name, KDB_name_temp, new_db_name, graphid, graphdb, build_success_flag)
+        except Exception:
+            pass  # 全量构建切换版本的异常忽略掉
+        try:
+            # 计算领域智商
             if graphdb.type != 'nebula' or build_success_flag:
                 print(f"start post intelligence task graph:{graphid}")
                 send_intelligence_task(graphid)
+        except Exception:
+            pass  # 计算领域智商的异常忽略掉
+
 
 
 @cel.task
@@ -1981,7 +2003,7 @@ def send_builder_task(task_type, graph_id, trigger_type, cycle, task_id):
         print(f'send timer exception:{str(e)}')
 
 
-def create_mongo_index(graph_mongo_Name, entity_type, g_merge):
+def create_mongo_index(graph_mongo_Name, entity_type, g_merge, g_kmap):
     """
     给指定的集合创建唯一索引
     从融合属性里面找到融合属性列表，然后创建唯一索引
@@ -1995,18 +2017,26 @@ def create_mongo_index(graph_mongo_Name, entity_type, g_merge):
             demo: {"t_stock_percent_wide": {"name": "equality"}}
                   name: 是融合属性
                   equality: 是融合的方法
+        g_kmap: 映射信息
     """
+    # 处理融合属性信息
     merge_otls, merge_flag = get_Kmerge_dict(g_merge)
     # 如果merge_flag==False，那么可以抛出错误，不允许，没有融合属性
     if not merge_flag:
         raise Exception("entity {}, merge flag not set error".format(entity_type))
-
+    # 处理映射属性信息
+    otls_map, relations_map = get_map_dict(g_kmap)
+    all_otl_class, otl_tab_map, tab_otl_map = get_map_info(otls_map)
+    # 创建唯一索引
     c = MongoBuildDao.get_collection(graph_mongo_Name + "_" + entity_type)
     merge_pro = []  # 属性列表
     if entity_type not in merge_otls:
         return
     for k, v in merge_otls[entity_type].items():
-        merge_pro.append((k, 1))
+        # k: 融合属性（本体类的属性）
+        # 获取抽取对象属性
+        obj_prop = otl_tab_map[entity_type]['pro_map'][k]
+        merge_pro.append((obj_prop, 1))
     try:
         c.create_index(merge_pro, unique=True)
     except Exception as e:
@@ -2019,7 +2049,7 @@ class RelationBuildBase(object):
     """
 
     def __init__(self, otls_map, en_pro_dict, edge_pro_dict, relations_map,
-                 g_merge, graph_db_id, mongo_db, graph_mongo_Name):
+                 g_merge, graph_db_id, mongo_db, graph_mongo_Name, edge_relations):
         self.otls_map = otls_map
         self.relations_map = relations_map
 
@@ -2029,6 +2059,7 @@ class RelationBuildBase(object):
 
         self.en_pro_dict = en_pro_dict
         self.edge_pro_dict = edge_pro_dict
+        self.edge_relations = edge_relations
         self.merge_otls = merge_otls
         self.g_merge = g_merge
         self.graph_db_id = graph_db_id
@@ -2133,40 +2164,41 @@ class RelationManualBase(object):
     每种边类型的基础信息，基本都是从buildInfo.relations_map中获取的
 
     参数
-        rela_id: 边类型索引，整形
+        relation: 边的关系 列表 example: [start_entity_name, edge_name, end_entity_name]
         buildInfo: RelationBuildBase,写边基础信息
     """
 
-    def __init__(self, rela_id: int, buildInfo: RelationBuildBase):
+    def __init__(self, relation, buildInfo: RelationBuildBase):
         self.buildInfo = buildInfo
 
-        rela = self.buildInfo.relations_map[rela_id]
-
-        relation_info = rela["relation_info"]
-        self.source = relation_info["source_type"]
-        self.model = relation_info["model"]
-        # 获取头尾实体
-        self.begin_vertex_class = relation_info["begin_name"]
-        self.edge_class = relation_info["edge_name"]
-        self.end_vertex_class = relation_info["end_name"]
-        self.entity_data = relation_info["entity_type"]
-        # 获取 边 属性
-        property_map = rela["property_map"]
-        self.edge_otl_pro = []  # 边的属性列表
-        self.edge_otl_tab_pro = {}  # 边的属性对应的实体属性
-        for pro_map in property_map:
-            self.edge_otl_pro.append(pro_map["edge_prop"])
-            self.edge_otl_tab_pro[pro_map["edge_prop"]
-            ] = pro_map["entity_prop"]
-        # 获取 映射 数据
-        relation_map = rela["relation_map"][0]
-        self.begin_class_prop = relation_map["begin_class_prop"]
-        self.equation_begin = relation_map["equation_begin"]
-        self.relation_begin_pro = relation_map["relation_begin_pro"]
-        self.equation = relation_map["equation"]
-        self.relation_end_pro = relation_map["relation_end_pro"]
-        self.equation_end = relation_map["equation_end"]
-        self.end_class_prop = relation_map["end_class_prop"]
+        for rela in self.buildInfo.relations_map:
+            relation_info = rela['relation_info']
+            if relation != [relation_info['begin_name'], relation_info['edge_name'], relation_info['end_name']]:
+                continue
+            self.source = relation_info["source_type"]
+            self.model = relation_info["model"]
+            # 获取头尾实体
+            self.begin_vertex_class = relation_info["begin_name"]
+            self.edge_class = relation_info["edge_name"]
+            self.end_vertex_class = relation_info["end_name"]
+            self.entity_data = relation_info["entity_type"]
+            # 获取 边 属性
+            property_map = rela["property_map"]
+            self.edge_otl_pro = []  # 边的属性列表
+            self.edge_otl_tab_pro = {}  # 边的属性对应的实体属性
+            for pro_map in property_map:
+                self.edge_otl_pro.append(pro_map["edge_prop"])
+                self.edge_otl_tab_pro[pro_map["edge_prop"]
+                ] = pro_map["entity_prop"]
+            # 获取 映射 数据
+            relation_map = rela["relation_map"][0]
+            self.begin_class_prop = relation_map["begin_class_prop"]
+            self.equation_begin = relation_map["equation_begin"]
+            self.relation_begin_pro = relation_map["relation_begin_pro"]
+            self.equation = relation_map["equation"]
+            self.relation_end_pro = relation_map["relation_end_pro"]
+            self.equation_end = relation_map["equation_end"]
+            self.end_class_prop = relation_map["end_class_prop"]
 
 
 class RelationManualBuilder(object):
@@ -2668,13 +2700,15 @@ class RelationIn3Class(RelationManualBuilder):
 
 class EdgeWriter(object):
 
-    def __init__(self, otls_map, en_pro_dict, edge_pro_dict, relations_map, g_merge, graph_db_id, mongo_db, graph_mongo_Name):
+    def __init__(self, otls_map, en_pro_dict, edge_pro_dict, relations_map, g_merge, graph_db_id, mongo_db,
+                 graph_mongo_Name, edge_relations):
         self.relationBuildInfo = RelationBuildBase(
-            otls_map, en_pro_dict, edge_pro_dict, relations_map, g_merge, graph_db_id, mongo_db, graph_mongo_Name)
+            otls_map, en_pro_dict, edge_pro_dict, relations_map, g_merge, graph_db_id, mongo_db, graph_mongo_Name,
+            edge_relations)
 
     def write(self):
-        for rel_i in range(len(self.relationBuildInfo.relations_map)):
-            base_info = RelationManualBase(rel_i, self.relationBuildInfo)
+        for relation in self.relationBuildInfo.edge_relations:
+            base_info = RelationManualBase(relation, self.relationBuildInfo)
             # 如果是手绘
             if base_info.source == 'manual':
                 self.manual(base_info)
@@ -2791,21 +2825,23 @@ class EdgeWriter(object):
 
 class VertexWriter(object):
 
-    def __init__(self, all_otl_class, graph_mongo_name, graphdb, graph_db_id, mongo_db, en_pro_dict, merge_otls):
+    def __init__(self, otl_tab_map, graph_mongo_name, graphdb, graph_db_id, mongo_db, en_pro_dict, merge_otls,
+                 entity_names):
         self.graphdb = graphdb
-        self.all_otl_class = all_otl_class
+        self.otl_tab_map = otl_tab_map
         self.graph_mongo_name = graph_mongo_name
         self.en_pro_dict = en_pro_dict
         self.mongo_db = mongo_db
         self.graph_db_id = graph_db_id
         self.merge_otls = merge_otls
+        self.entity_names = entity_names
         self.sqlProcessor = SQLProcessor(self.graphdb.type)
         self.lock = threading.Lock()
 
     def write(self):
-        for o_i in range(len(self.all_otl_class)):
+        for otl_name in self.entity_names:
             # 细节处理map信息
-            otl_name, tab_, otl_pro, tab_pro, tab_otl, otl_tab = get_Kmap_dict(o_i, self.all_otl_class)
+            tab_, otl_pro, tab_pro, tab_otl, otl_tab = get_Kmap_dict(otl_name, self.otl_tab_map)
 
             if not tab_:
                 continue
@@ -2910,7 +2946,7 @@ class Transfer(object):
             for row in data:
                 temp_dict = {k: row[v] for k, v in columns_dict.items()}
                 m = {k: str(temp_dict[k]) if temp_dict[k] is not None else None for k in exist_rule if k in temp_dict}
-                m["ds_id"] = self.ds_id
+                m["_ds_id_"] = self.ds_id
                 mongo_data.append(m)
             MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)
         except BaseException:
@@ -3146,7 +3182,7 @@ class ASTransfer(Transfer):
             for all_en in mongodict:
                 value = mongodict[all_en]
                 Entity1_data = value  # 实体1的属性
-                Entity1_data["ds_id"] = self.ds_id
+                Entity1_data["_ds_id_"] = self.ds_id
                 mongo_data.append(Entity1_data)
                 if len(mongo_data) % 10000 == 0:
                     MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)
@@ -3182,7 +3218,7 @@ class ASTransfer(Transfer):
             for all_en in mongodict:
                 value = mongodict[all_en]
                 Entity1_data = value  # 实体1的属性
-                Entity1_data["ds_id"] = self.ds_id
+                Entity1_data["_ds_id_"] = self.ds_id
                 mongo_data.append(Entity1_data)
                 if len(mongo_data) % 10000 == 0:
                     MongoBuildDao.insert_many(c=self.collection, documents=mongo_data, ordered=False)

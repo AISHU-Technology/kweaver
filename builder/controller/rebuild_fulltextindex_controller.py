@@ -149,9 +149,14 @@ def rebuild_status(KDB_name):
         ), 500
     redis = redisConnect.connect_redis("0", model="read")
     status = redis.get(f"rebuild_flag_{graph_id}")
+    # redis状态: 0: 已结束; -1: 失败; 1: 运行中
     if not status or status.decode("utf-8") == '0':
         res = 'rebuild fulltext task finished.'
         result = {"res": res}
+        return result
+    elif status.decode('utf-8') == '-1':
+        res = 'rebuild fulltext task failed.'
+        result = {'res': res}
         return result
     else:
         res = 'rebuild fulltext task still running.'

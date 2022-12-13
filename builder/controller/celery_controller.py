@@ -17,6 +17,10 @@ from service.Otl_Service import otl_service
 from flasgger import swag_from
 import yaml
 import os
+from common.errorcode.gview import Gview as Gview2
+from common.errorcode import codes
+from utils.celery_check_params_json import celery_check_params
+from flask_babel import gettext as _l
 
 task_controller_app = Blueprint('task_controller_app', __name__)
 
@@ -33,7 +37,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 
 @task_controller_app.route('/<graph_id>', methods=["post"], strict_slashes=False)
 @swag_from(swagger_old_response)
-def taskcrud_post(graph_id):
+def execute_task(graph_id):
     '''
     execute the task of building the graph
     execute the task of building the graph
@@ -49,7 +53,7 @@ def taskcrud_post(graph_id):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/builder/celery_task/taskcrud_post'
+                $ref: '#/definitions/builder/celery_task/execute_task'
     '''
     print(graph_id)
     if not graph_id.isdigit():
@@ -71,9 +75,6 @@ def taskcrud_post(graph_id):
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
         tasktype = params_json["tasktype"]
-        # graph_task_state = graph_dao.getnormaltask(graph_id)
-        # if len(graph_task_state) == 0:
-        #     tasktype = "full"
         trigger_type = 0
 
         # 根据graph_id 获取使用数据源类型, rabbitmq数据源时，trigger_type = 2
@@ -86,9 +87,11 @@ def taskcrud_post(graph_id):
                                            message=re_obj["message"]), CommonResponseStatus.SERVER_ERROR.value
         # 调用执行
         url = "http://kw-builder:6485/buildertask"
+        # url = "http://localhost:6486/buildertask"  # for debug
         payload = {"graph_id": graph_id, "tasktype": tasktype, "trigger_type": trigger_type}
         headers = {
             'Content-Type': 'application/json',
+            'Accept-Language': request.headers.get('Accept-Language')
         }
         response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
         res_json = response.json()
@@ -104,9 +107,66 @@ def taskcrud_post(graph_id):
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
 
-@task_controller_app.route('/<graph_id>', methods=["DELETE"], strict_slashes=False)
-@swag_from(swagger_old_response)
-def taskcrud_delete(graph_id):
+@task_controller_app.route('/batch/<graph_id>', methods=["post"], strict_slashes=False)
+@swag_from(swagger_new_response)
+def batch_execute_task(graph_id):
+    '''
+    execute the task of building the graph in batches
+    execute the task of building the graph in batches
+    ---
+    parameters:
+        -   name: 'graph_id'
+            in: 'path'
+            required: True
+            description: 'graph id'
+            type: 'integer'
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
+            required: true
+            schema:
+                $ref: '#/definitions/builder/celery_task/batch_execute_task'
+    '''
+    try:
+        # check parameters validation
+        if not graph_id.isdigit():
+            message = _l("The parameter graph_id must be int!")
+            code = codes.Builder_CeleryController_BatchExecuteTask_ParamError
+            return Gview2.error_return(code, message=message), 400
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        if param_code != 0:
+            code = codes.Builder_CeleryController_BatchExecuteTask_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+        param_code, param_message = celery_check_params.batch_build(params_json)
+        if param_code != celery_check_params.VALID:
+            code = codes.Builder_CeleryController_BatchExecuteTask_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+        # check whether graph id exists
+        ret_code, ret_message = task_service.getgraphcountbyid(graph_id)
+        if ret_code != CommonResponseStatus.SUCCESS.value:
+            code = codes.Builder_CeleryController_BatchExecuteTask_GraphIdNotExist
+            return Gview2.error_return(code, graph_id=graph_id), 500
+
+        # execute batch task
+        subgraph_ids = params_json['subgraph_ids']
+        write_mode = params_json['write_mode']
+        url = "http://kw-builder:6485/builder_task/batch"
+        # url = "http://localhost:6486/builder_task/batch"  # for debug
+        headers = {'Content-Type': 'application/json',
+                   'Accept-Language': request.headers.get('Accept-Language')}
+        payload = {"graph_id": graph_id,
+                   "subgraph_ids": subgraph_ids,
+                   "write_mode": write_mode}
+        res = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+        return res.json(), res.status_code
+    except Exception as e:
+        code = codes.Builder_CeleryController_BatchExecuteTask_UnknownError
+        return Gview2.error_return(code, description=str(e), cause=str(e)), 500
+
+
+@task_controller_app.route('/delete/<graph_id>', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_new_response)
+def delete_task(graph_id):
     '''
     delete the task of building the graph
     delete the task of building the graph
@@ -122,47 +182,40 @@ def taskcrud_delete(graph_id):
             description: 'request body'
             required: true
             schema:
-                $ref: '#/definitions/builder/celery_task/taskcrud_delete'
+                $ref: '#/definitions/builder/celery_task/delete_task'
     '''
-    print(graph_id)
-    if not graph_id.isdigit():
-        message = "The parameter graph_id type must be int!"
-        return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message=message), CommonResponseStatus.BAD_REQUEST.value
-    # 图谱id是否存在
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    if param_code == 0:
+    try:
+        if not graph_id.isdigit():
+            message = _l("The parameter graph_id type must be int!")
+            code = codes.Builder_CeleryController_DeleteTask_ParamError
+            return Gview2.TErrorreturn(code, message=message), 400
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        if param_code != 0:
+            code = codes.Builder_CeleryController_DeleteTask_ParamError
+            return Gview2.TErrorreturn(code, message=param_message), 400
         check_res, message = dsCheckParameters.deletetaskbyidPar(params_json)
         if check_res != 0:
-            Logger.log_error("parameters:%s invalid" % params_json)
-            return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                       message=message), CommonResponseStatus.BAD_REQUEST.value
+            code = codes.Builder_CeleryController_DeleteTask_ParamError
+            return Gview2.TErrorreturn(code, message=message), 400
         ret_code, ret_message = task_service.getgraphcountbyid(graph_id)
-        # 服务错误, 500001 服务错误， 500021 需要处理，图谱不存在
         if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                       message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
+            code = codes.Builder_CeleryController_DeleteTask_GraphIdNotExist
+            return Gview2.TErrorreturn(code, graph_id=graph_id), 500
+
         task_ids = params_json['task_ids']
         # 调用执行
         url = "http://kw-builder:6485/delete_task"
+        # url = "http://localhost:6486/delete_task"  # for debug
         payload = {"graph_id": graph_id, "task_ids": task_ids}
         headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept-Language': request.headers.get('Accept-Language')
         }
         response = requests.request("DELETE", url, headers=headers, data=json.dumps(payload))
-        res_json = response.json()
-        code = res_json["code"]
-        ret_message = res_json["res"]
-        obj = {}
-        obj["res"] = ret_message
-        if code == 200:
-            return obj, CommonResponseStatus.SUCCESS.value
-        Logger.log_error(json.dumps(res_json))
-        return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                   message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-    else:
-        return Gview.BuFailVreturn(cause=param_message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
+        return response.json(), response.status_code
+    except Exception as e:
+        code = codes.Builder_CeleryController_DeleteTask_UnknownError
+        return Gview2.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 @task_controller_app.route('/<graph_id>', methods=["GET"], strict_slashes=False)
 @swag_from(swagger_new_response)
@@ -190,7 +243,7 @@ def getalltask(graph_id):
         -   name: order
             in: query
             required: true
-            description: "'descend': newest on the top; 'ascend': else"
+            description: "'desc': newest on the top; 'asc': else"
             type: string
         -   name: status
             in: query
@@ -213,137 +266,125 @@ def getalltask(graph_id):
             description: "trigger method. 'all'(default): query all; '0': manual triggering, '1': timed automatic triggering, '2': real-time triggering"
             type: string
     '''
-    if not graph_id.isdigit():
-        error_link = ""
-        detail = "The parameter graph_id type must be int!"
-        code = CommonResponseStatus.PARAMETERS_ERROR.value
-        desc = "invalid parameter graph_id"
-        solution = "Please check your parameter"
-        return Gview.TErrorreturn(code, desc, solution, detail,
-                                  error_link), CommonResponseStatus.BAD_REQUEST.value
-    # 图谱id是否存在
-    ret_code, ret_message = task_service.getgraphcountbyid(graph_id)
-    # 服务错误, 500001 服务错误， 500021 需要处理，图谱不存在
-    if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-        error_link = ""
-        detail = ret_message["cause"]
-        code = ret_message["code"]
-        desc = ret_message["message"]
-        solution = ret_message["solution"]
-        return Gview.TErrorreturn(code, desc, solution, detail,
-                                  error_link), CommonResponseStatus.SERVER_ERROR.value
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    check_res, message = dsCheckParameters.searchtaskbynamePar(params_json)
-    if check_res != 0:
-        Logger.log_error("parameters:%s invalid" % params_json)
-        error_link = ""
-        solution = "Please chech your parameters"
-        return Gview.TErrorreturn(CommonResponseStatus.PARAMETERS_ERROR.value, message, solution, message,
-                                  error_link), CommonResponseStatus.BAD_REQUEST.value
-    params = ["page", "size", "order", "graph_name", "status", "task_type", "trigger_type"]
-    payload = {"graph_id": graph_id}
-    for k in params:
-        payload[k] = params_json[k]
-    url = "http://kw-builder:6485/buildertask"
-    response = requests.request("GET", url, params=payload)
-    print(f"url={response.url}")
-    res_json = response.json()
-    code = res_json["code"]
-    ret_message = res_json["res"]
-    if code == 200:
-        return ret_message, CommonResponseStatus.SUCCESS.value
-    Logger.log_error(json.dumps(res_json))
-    error_link = ""
-    solution = ret_message.get("solution", "")
-    desc = ret_message["message"]
-    code = ret_message["code"]
-    detail = ret_message["cause"]
-    return Gview.TErrorreturn(code, desc, solution, detail,
-                              error_link), CommonResponseStatus.SERVER_ERROR.value
+    try:
+        if not graph_id.isdigit():
+            message = _l("The parameter graph_id type must be int!")
+            code = codes.Builder_CeleryController_GetAllTask_ParamError
+            return Gview2.TErrorreturn(code, message=message), 400
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        check_res, message = dsCheckParameters.searchtaskbynamePar(params_json)
+        if check_res != 0:
+            code = codes.Builder_CeleryController_GetAllTask_ParamError
+            return Gview2.TErrorreturn(code, message=message), 400
+        # 图谱id是否存在
+        ret_code, ret_message = task_service.getgraphcountbyid(graph_id)
+        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
+            code = codes.Builder_CeleryController_GetAllTask_GraphIdNotExist
+            return Gview2.TErrorreturn(code, graph_id=graph_id), 500
+        params = ["page", "size", "order", "graph_name", "status", "task_type", "trigger_type"]
+        payload = {"graph_id": graph_id}
+        for k in params:
+            payload[k] = params_json[k]
+        url = "http://kw-builder:6485/buildertask"
+        # url = "http://localhost:6486/buildertask"  # for debug
+        headers = {'Accept-Language': request.headers.get('Accept-Language')}
+        response = requests.request("GET", url, params=payload, headers=headers)
+        return response.json(), response.status_code
+    except Exception as e:
+        code = codes.Builder_CeleryController_GetAllTask_UnknownError
+        return Gview2.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@task_controller_app.route('/stoptask/<graph_id>', methods=["POST"], strict_slashes=False)
-@swag_from(swagger_old_response)
-def stoptask(graph_id):
+@task_controller_app.route('/stoptask', methods=["POST"], strict_slashes=False)
+@swag_from(swagger_new_response)
+def stoptask():
     '''
     terminate the task of building the graph
-    terminate the task of building the graph
+    If the parameter is graph_id, terminate all tasks of the graph. If the parameter is task_id, terminate the task.
+    Parameters cannot be both graph_id and task_id.
     ---
     parameters:
-        -   name: graph_id
-            in: path
+        -   in: 'body'
+            name: 'body'
+            description: 'request body'
             required: true
-            description: graph id
-            type: integer
+            schema:
+                $ref: '#/definitions/builder/celery_task/stoptask'
     '''
-    method = request.method
-    print(graph_id)
-    if not graph_id.isdigit():
-        message = "The parameter graph_id type must be int!"
-        return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message=message), CommonResponseStatus.BAD_REQUEST.value
-    if method == "POST":
+    try:
+        # parameter check
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        if param_code != 0:
+            code = codes.Builder_CeleryController_StopTask_ParamError
+            return Gview2.TErrorreturn(code, message=param_message), 400
+        graph_id = params_json.get('graph_id')
+        task_id = params_json.get('task_id')
+        if graph_id and task_id:
+            message = _l('parameters cannot be both graph_id and task_id.')
+            code = codes.Builder_CeleryController_StopTask_ParamError
+            return Gview2.TErrorreturn(code, message=message), 400
+        elif graph_id:
+            if type(graph_id) != int:
+                message = _l('graph_id must be int.')
+                code = codes.Builder_CeleryController_StopTask_ParamError
+                return Gview2.TErrorreturn(code, message=message), 400
+            elif graph_id <= 0:
+                message = _l('graph_id must be larger than zero.')
+                code = codes.Builder_CeleryController_StopTask_ParamError
+                return Gview2.TErrorreturn(code, message=message), 400
+        elif task_id:
+            if type(task_id) != int:
+                message = _l('task_id must be int.')
+                code = codes.Builder_CeleryController_StopTask_ParamError
+                return Gview2.TErrorreturn(code, message=message), 400
+            elif task_id <= 0:
+                message = _l('task_id must be larger than zero.')
+                code = codes.Builder_CeleryController_StopTask_ParamError
+                return Gview2.TErrorreturn(code, message=message), 400
+        else:
+            message = _l('parameter must be graph_id or task_id.')
+            code = codes.Builder_CeleryController_StopTask_ParamError
+            return Gview2.TErrorreturn(code, message=message), 400
+
         # 调用执行
         url = "http://kw-builder:6485/stoptask"
-        payload = "{\"graph_id\":" + graph_id + "  \n}"
-        headers = {
-            'Content-Type': 'application/json'
-        }
-        response = requests.request("POST", url, headers=headers, data=payload)
-        # return make_response(jsonify(result=response.text))
-        res_json = response.json()
-        code = res_json["code"]
-        ret_message = res_json["res"]
-        obj = {}
-        obj["res"] = ret_message
-        if code == 200:
-            return obj, CommonResponseStatus.SUCCESS.value
-        return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                   message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
+        # url = "http://localhost:6486/stoptask"  # for debug
+        headers = {'Accept-Language': request.headers.get('Accept-Language')}
+        response = requests.request("POST", url, json=params_json, headers=headers)
+        return response.json(), response.status_code
+    except Exception as e:
+        code = codes.Builder_CeleryController_StopTask_UnknownError
+        return Gview2.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@task_controller_app.route('/get_progress/<graph_id>', methods=["GET"], strict_slashes=False)
-@swag_from(swagger_old_response)
-def getprogress(graph_id):
+@task_controller_app.route('/get_progress/<task_id>', methods=["GET"], strict_slashes=False)
+@swag_from(swagger_new_response)
+def getprogress(task_id):
     '''
     get task progress
     get the progress of the knowledge graph construction task
     ---
     parameters:
-        -   name: graph_id
+        -   name: task_id
             in: path
             required: true
-            description: graph id
+            description: graph history task id
             type: integer
     '''
-    method = request.method
-    print(graph_id)
-    if not graph_id.isdigit():
-        message = "The parameter graph_id type must be int!"
-        return Gview.BuFailVreturn(cause=message, code=CommonResponseStatus.PARAMETERS_ERROR.value,
-                                   message=message), CommonResponseStatus.BAD_REQUEST.value
-    if method == "GET":
-        # 图谱id是否存在
-        ret_code, ret_message = task_service.getgraphcountbyid(graph_id)
-        # 服务错误, 500001 服务错误， 500021 需要处理，图谱不存在
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                       message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
+    try:
+        if not task_id.isdigit():
+            code = codes.Builder_CeleryController_GetProgress_ParamError
+            return Gview2.TErrorreturn(code), 400
+
         # 调用执行
-        url = "http://kw-builder:6485/get_task_progress?graph_id=" + graph_id + ""
-        payload = {}
-        response = requests.request("GET", url, data=payload)
-        # return make_response(jsonify(result=response.text))
-        res_json = response.json()
-        code = res_json["code"]
-        ret_message = res_json["res"]
-        obj = {}
-        obj["res"] = ret_message
-        if code == 200:
-            return obj, CommonResponseStatus.SUCCESS.value
-        Logger.log_error(json.dumps(res_json))
-        return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                   message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
+        url = "http://kw-builder:6485/get_task_progress"
+        # url = "http://localhost:6486/get_task_progress"  # for debug
+        headers = {'Accept-Language': request.headers.get('Accept-Language')}
+        response = requests.request("GET", url, params={'task_id': task_id}, headers=headers)
+        return response.json(), response.status_code
+    except Exception as e:
+        code = codes.Builder_CeleryController_GetProgress_UnknownError
+        return Gview2.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
 # 健康检查 /api/builder/v1/task/health/ready
@@ -404,3 +445,37 @@ def healthalive():
                                    message="failed"), CommonResponseStatus.SERVER_ERROR.value
     except Exception:
         return "failed", CommonResponseStatus.SERVER_ERROR.value
+
+
+@task_controller_app.route('/subgraph/<task_id>', methods=["GET"], strict_slashes=False)
+@swag_from(swagger_new_response)
+def get_subgraph_config(task_id):
+    '''
+    query sub graph by task id
+    query sub graph by task id
+    ---
+    parameters:
+        -   in: path
+            name: task_id
+            description: task_id
+            required: true
+            type: integer
+    '''
+    try:
+        # check task_id
+        if not task_id.isdigit():
+            message = _l("parameter task_id must be int!")
+            code = codes.Builder_CeleryController_GetSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+        if task_id == "0":
+            message = _l("parameter task_id cannot be 0!")
+            code = codes.Builder_CeleryController_GetSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+
+        code, res = task_service.get_subgraph_config(task_id)
+        if code != codes.successCode:
+            return res, 500
+        return Gview2.json_return(res), 200
+    except Exception as e:
+        code = codes.Builder_CeleryController_GetSubgraphConfig_UnknownError
+        return Gview2.error_return(code, description=str(e), cause=str(e)), 500

@@ -31,61 +31,66 @@ class Otl_check_params(object):
     params={}
     param_dic = {}
     ####数据表显示 as/mysql 不同
-    otl_paramdic["get_table"]=("ds_id","data_source","postfix",)
+    otl_paramdic["get_table"] = ("ds_id", "data_source", "postfix",)
     #####按需返回
-    otl_paramdic["show_by_postfix"]=("docid","postfix","ds_id",)
+    otl_paramdic["show_by_postfix"] = ("docid", "postfix", "ds_id",)
     #####本体预览
     otl_paramdic["preview_ontology"] = ("ontologyname",)
     #####数据预览
-    otl_paramdic["preview_data"] = ("ds_id","name","data_source",)
+    otl_paramdic["preview_data"] = ("ds_id", "name", "data_source",)
     #####算法预测 as/mysql 不同
-    otl_paramdic["predict_ontology"] = ("ds_id","data_source","file_list","extract_type","postfix")
+    otl_paramdic["predict_ontology"] = ("ds_id", "data_source", "file_list", "extract_type", "postfix")
     ####本体保存
     otl_paramdic["ontology_save"] = ("ontology_name", "ontology_des")
     otl_paramdic["update_otl_name"] = ("ontology_name", "ontology_des")
-    otl_paramdic["update_otl_info"] = ( "entity", "edge", "used_task", "flag")
+    otl_paramdic["update_otl_info"] = ("entity", "edge", "used_task", "flag")
     ####获取模型
     otl_paramdic["modelspo"] = ("model",)
     ####获取模型本体
-    otl_paramdic["getmodelotl"] = ("model","file_list",)
+    otl_paramdic["getmodelotl"] = ("model", "file_list",)
     ######戰平文件夾
-    otl_paramdic["flatfile"] = ("ds_id", "postfix","file",)
-    param_dic["extract_type"] = ["standardExtraction", "modelExtraction","labelExtraction","",]
-    param_dic["file_type"]=["csv","json","","all",]
-    param_dic["dataType"] = ["structured", "unstructured","",]
-    param_dic["source_type"]=[ "automatic","manual",]
-    param_dic["model"] = ["AImodel", "Generalmodel","Anysharedocumentmodel","Contractmodel", "OperationMaintenanceModel", ""]
-    param_dic["data_source"] = ["mysql", "hive", "as","","as7", "rabbitmq"]
-    params["entity"]=["name","alias","properties","colour","source_type","ds_name","source_table","file_type","dataType","extract_type","model","ds_id","data_source","ds_path","properties_index","task_id","entity_id"]
-    params["edge"]=["name","alias","colour","ds_name", "dataType","extract_type","model","file_type", "properties","source_table","source_type","relations","properties_index","task_id","ds_id","edge_id"]
-    propertytype=["boolean", "float", "double", "string", "decimal", "datetime","date","integer",]
+    otl_paramdic["flatfile"] = ("ds_id", "postfix", "file",)
+    param_dic["extract_type"] = ["standardExtraction", "modelExtraction", "labelExtraction", "", ]
+    param_dic["file_type"] = ["csv", "json", "", "all", ]
+    param_dic["dataType"] = ["structured", "unstructured", "", ]
+    param_dic["source_type"] = ["automatic", "manual", ]
+    param_dic["model"] = ["AImodel", "Generalmodel", "Anysharedocumentmodel", "Contractmodel",
+                          "OperationMaintenanceModel", ""]
+    param_dic["data_source"] = ["mysql", "hive", "as", "", "as7", "rabbitmq"]
+    params["entity"] = ["name", "alias", "properties", "colour", "source_type", "ds_name", "source_table", "file_type",
+                        "dataType", "extract_type", "model", "ds_id", "data_source", "ds_path", "properties_index",
+                        "task_id", "entity_id"]
+    params["edge"] = ["name", "alias", "colour", "ds_name", "dataType", "extract_type", "model", "file_type",
+                      "properties", "source_table", "source_type", "relations", "properties_index", "task_id", "ds_id",
+                      "edge_id"]
+    propertytype = ["boolean", "float", "double", "string", "decimal", "datetime", "date", "integer", ]
+
     ####边和点的校验
     def entity_edge_check(self, flag, params_json):
-        ret_status=self.VALID
-        inexistence=[]
-        message=flag+" "
-        illegual=[]
-        empty=[]
-        logic_mirror=[]
+        ret_status = self.VALID
+        inexistence = []
+        message = flag + " "
+        illegual = []
+        empty = []
+        logic_mirror = []
 
-        newparams=self.params[flag]
+        newparams = self.params[flag]
         for param in newparams:
             if param not in params_json:
                 inexistence.append(param)
                 ret_status = self.INVALID
             else:
                 value = params_json[param]
-                if  value is None:####如果傳入的參數是none
+                if value is None:  ####如果傳入的參數是none
                     message += param + "is None type ;"
                     illegual.append(param)
                     ret_status = self.INVALID
                 else:
                     if param == "name":
-                        if not type(value)==str:
+                        if not type(value) == str:
                             message += param + " must be  str ; "
                             illegual.append(param)
                             ret_status = self.INVALID
-
                         else:
                             message += value + " has some error : "
                             if len(value) > 50 or not re.search(u'^[_a-zA-Z0-9]+$', value):
@@ -95,13 +100,11 @@ class Otl_check_params(object):
                             if not value == ''.join(value.split()) or value == "":  # 所有参数值 校验是否包含空格或为空
                                 empty.append(param)
                                 ret_status = self.INVALID
-
                     elif param == "alias":
-                        if not type(value)==str:
+                        if not type(value) == str:
                             message += param + " must be  str ; "
                             illegual.append(param)
                             ret_status = self.INVALID
-
                         else:
                             message += value + " has some error : "
                             if len(value) > 50 or not re.search(u'^[\s\u4e00-\u9fa5_a-zA-Z0-9]+$', value):
@@ -112,16 +115,12 @@ class Otl_check_params(object):
                             if not value == ''.join(value.split()) or value == "":  # 所有参数值 校验是否包含空格或为空
                                 empty.append(param)
                                 ret_status = self.INVALID
-
-
-
                     elif param == "properties_index":
                         if not isinstance(value, list):
                             message += param + " must be  list ; "
                             illegual.append(param)
                             ret_status = self.INVALID
-
-                    elif param=="colour":
+                    elif param == "colour":
                         if not isinstance(value, str):
                             message += param + " must be  str ; "
                             illegual.append(param)
@@ -134,30 +133,20 @@ class Otl_check_params(object):
                             if not value == ''.join(value.split()) or value == "":  # 所有参数值 校验是否包含空格或为空
                                 empty.append(param)
                                 ret_status = self.INVALID
-
                     elif param in self.param_dic:
                         if value not in self.param_dic[param]:
                             message += param + " must be in " + str(self.param_dic[param]) + ";"
                             illegual.append(param)
                             ret_status = self.INVALID
-
-                        # else:
-                        #     if len(value )> 100 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', value):
-                        #         message += param + " must < 100 ; and it is must be consisted of letter ,number and underline "
-                        #         illegual.append(param)
-                        #         ret_status = self.INVALID
-                        #     if not value == ''.join(value.split()) or value == "":  # 所有参数值 校验是否包含空格或为空
-                        #         empty.append(param)
-                        #         ret_status = self.INVALID
-                    elif param=="relations":
+                    elif param == "relations":
                         if not isinstance(value, list):
                             message += param + " must be  list ; "
                             illegual.append(param)
                             ret_status = self.INVALID
                         else:
-                            if len(value)==3:
-                                for one in value :
-                                    if len(one )> 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', one):
+                            if len(value) == 3:
+                                for one in value:
+                                    if len(one) > 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', one):
                                         message += param + " must <= 50 ; and it is must be consisted of letter ,number and underline ; "
                                         illegual.append(param)
                                         ret_status = self.INVALID
@@ -166,77 +155,55 @@ class Otl_check_params(object):
                                 illegual.append(param)
                                 ret_status = self.INVALID
                     elif param == "properties":
-                        # if flag=="edge":
-                        #     if not isinstance(value, list):
-                        #         message += param + " must be  list ; "
-                        #         illegual.append(param)
-                        #         ret_status = self.INVALID
-                        #     else:
-
-                                ####校验property是否含有name属性
-                        #         if len(value) ==1 :
-                        #             # for one in value:
-                        #             if value[0][0]!="name":
-                        #                 message +=param+ " must have name ; "
-                        #             else:
-                        #                 if value[0][1]!="string":
-                        #                     message += param + " name must be string ; "
-                        #         else:
-                        #             message += param + " must have only one property:name ;"
-                        #             illegual.append(param)
-                        #             ret_status = self.INVALID
-                        # if flag == "entity":
                         if not isinstance(value, list):
                             message += param + " must be  list ; "
                             illegual.append(param)
                             ret_status = self.INVALID
                         else:
-                            s=0
-                            propertyname=[]
+                            s = 0
+                            propertyname = []
                             ####校验property是否含有name属性
-                            if len(value) >=1 :
+                            if len(value) >= 1:
                                 for one in value:
-                                    if one[0] not in  propertyname:
+                                    if one[0] not in propertyname:
                                         propertyname.append(one[0])
-                                    else :
-                                        message+=param+" : "+one[0]+" is dupulicated ; "
+                                    else:
+                                        message += param + " : " + one[0] + " is dupulicated ; "
                                         illegual.append(one[0])
                                         ret_status = self.INVALID
-                                    if one[0]=="name":
-                                        s=1
-                                        if one[1]!="string":
+                                    if one[0] == "name":
+                                        s = 1
+                                        if one[1] != "string":
                                             message += param + " name must be string ; "
                                             illegual.append(param)
                                             ret_status = self.INVALID
 
-                                    if len(one[0] )> 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', one[0]):
+                                    if len(one[0]) > 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', one[0]):
                                         message += param + " must <= 50 ; and it is must be consisted of letter ,number and underline ; "
                                         illegual.append(param)
                                         ret_status = self.INVALID
-                                    else :
+                                    else:
                                         if one[1] not in self.propertytype:
                                             message += param + " type is illegal ; "
                                             illegual.append(param)
                                             ret_status = self.INVALID
-
-
-                                if s==0:
-                                    message +=param+ " must have name ; "
+                                if s == 0:
+                                    message += param + " must have name ; "
                                     illegual.append(param)
                                     ret_status = self.INVALID
                             else:
                                 message += param + " must have  one property:name ; "
                                 illegual.append(param)
                                 ret_status = self.INVALID
-                    elif param=="ds_name":
+                    elif param == "ds_name":
                         if not isinstance(value, str):
                             message += param + " must be  str ; "
                             illegual.append(param)
                             ret_status = self.INVALID
                         else:
-                            if len(value)!=0:
+                            if len(value) != 0:
 
-                                if len(value )> 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', value):
+                                if len(value) > 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', value):
                                     message += param + " must <= 50 ; and it is must be consisted of letter ,number and underline ; "
                                     illegual.append(param)
                                     ret_status = self.INVALID
@@ -246,12 +213,12 @@ class Otl_check_params(object):
                             illegual.append(param)
                             ret_status = self.INVALID
                     elif param == "ds_id" or param == "task_id":
-                        if not isinstance(value,str):
+                        if not isinstance(value, str):
                             message += param + " must be  str ; "
                             illegual.append(param)
                             ret_status = self.INVALID
                         else:
-                            if value!="":
+                            if value != "":
                                 try:
                                     value = int(value)
                                     if value < 0:
@@ -263,11 +230,11 @@ class Otl_check_params(object):
                                     illegual.append(param)
                                     ret_status = self.INVALID
                     elif param == "entity_id" or param == "edge_id":
-                        if not isinstance(value,int):
+                        if not isinstance(value, int):
                             message += param + " must be  int ; "
                             illegual.append(param)
                             ret_status = self.INVALID
-                        else :
+                        else:
                             if value <= 0:
                                 message += param + " must  more than 0 ; "
                                 illegual.append(param)
@@ -277,38 +244,15 @@ class Otl_check_params(object):
                             message += param + " must be  str ; "
                             illegual.append(param)
                             ret_status = self.INVALID
-
-
-                            # if not value == ''.join(value.split()) or value == "":  # 所有参数值 校验是否包含空格或为空
-                            #     empty.append(param)
-                            #     ret_status = self.INVALID
-
-                    # if param=="name":
-                    #     if not isinstance(value, str):
-                    #         message += param + " must be  str ; "
-                    #         illegual.append(param)
-                    #         ret_status = self.INVALID
-                    #     else:
-                    #         if len(value )> 100 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', value):
-                    #             message += param + " must < 100 ; and it is must be consisted of letter ,number and underline "
-                    #             illegual.append(param)
-                    #             ret_status = self.INVALID
-                    #         if not value == ''.join(value.split()) or value == "":  # 所有参数值 校验是否包含空格或为空
-                    #             empty.append(param)
-                    #             ret_status = self.INVALID
-
-
-
-
         inexistence = set(inexistence)
         illegual = set(illegual)
         empty = set(empty)
         # logic_mirror = set(logic_mirror)
         if inexistence:
-            message += "These parameters :"+",".join(inexistence) +" are inexistence ; "
-            ret_status=self.INVALID
+            message += "These parameters :" + ",".join(inexistence) + " are inexistence ; "
+            ret_status = self.INVALID
         if empty:
-            message += "These parameters :"+",".join(empty) +"  are exist but empty or have blankspace:"
+            message += "These parameters :" + ",".join(empty) + "  are exist but empty or have blankspace:"
             ret_status = self.INVALID
         if illegual:
             # message += "These parameters :" + ",".join(illegual) + " are illegual ; "
@@ -316,188 +260,38 @@ class Otl_check_params(object):
         if logic_mirror:
             message += "These parameters :" + ",".join(logic_mirror) + "   has logic mirror :"
             ret_status = self.INVALID
+        return ret_status, message
 
-
-        return ret_status ,message
-
-    def entity_relation_check(self,params_json):
+    def entity_relation_check(self, params_json):
         ret_status = self.VALID
-        message=""
-        illegal=[]
-        if len(params_json["entity"])==0:
-            if len(params_json["edge"])!=0:
-                message +=  " if entity is empty ,edge must be empty "
+        message = ""
+        illegal = []
+        if len(params_json["entity"]) == 0:
+            if len(params_json["edge"]) != 0:
+                message += " if entity is empty ,edge must be empty "
                 illegal.append("edge")
                 ret_status = self.INVALID
-
         else:
-
             if len(params_json["edge"]) != 0:
                 names = []
                 for one in params_json["entity"]:
                     names.append(one["name"])
                 print(names)
-                for ones  in params_json["edge"]:
-                    relation=ones["relations"]
-
-                    if relation[0]  not in names or relation[2]  not in names:
-                        message += " relation`s entity not in entitylist  "
+                for ones in params_json["edge"]:
+                    relation = ones["relations"]
+                    if relation[0] not in names or relation[2] not in names:
+                        message += 'The entity of edge {}\'s relationship is not in the entity list. '\
+                            .format(ones['name'])
                         illegal.append("edge")
                         ret_status = self.INVALID
-                    if relation[1]!= ones["name"]:
-                        message += " Edge class`s name is not match relation   "
+                    if relation[1] != ones["name"]:
+                        message += "Edge class {}\'s name does not match the relation. ".format(ones['name'])
                         illegal.append("edge")
                         ret_status = self.INVALID
-
-
         if illegal:
             ret_status = self.INVALID
-        return ret_status,message
+        return ret_status, message
 
-    # def edge_entity_logic_check(self,params_json):
-    #     ret_status=self.VALID
-    #     message=""
-    #     value = params_json["name"]
-    #
-    #     message += value + " has some error : "
-    #     if params_json["source_type"] == "manual":
-    #         if params_json["source"] != "":
-    #             message += "when source_type is manual source must be  none ; "
-    #             ret_status = self.INVALID
-    #         else:
-    #             if params_json["file_type"] != "":
-    #                 message += "when source is none , file_type must be  none ; "
-    #                 ret_status = self.INVALID
-    #
-    #         if params_json["ds_name"] != "":
-    #             message += "when source_type is  manual,ds_name must be  none ; "
-    #             ret_status = self.INVALID
-    #         if params_json["dataType"] != "":
-    #             message += "when source_type is  manual,dataType must be  none ; "
-    #             ret_status = self.INVALID
-    #         else :
-    #             if params_json["extract_type"] != "":
-    #                 message += "when dataType is  none ,extract_type must be  none ; "
-    #                 ret_status = self.INVALID
-    #             else:
-    #                 if params_json["model"] != "":
-    #                     message += "when extract_type is  none ,model must be  none ; "
-    #                     ret_status = self.INVALID
-    #
-    #     elif params_json["source_type"] == "automatic":
-    #         if params_json["ds_name"] == "":
-    #             message += "when source_type is  automatic,ds_name cannot be  none ; "
-    #             ret_status = self.INVALID
-    #         if params_json["source"] == "":
-    #             message += "when source_type is  automatic, source_type can not be none ; "
-    #             ret_status = self.INVALID
-    #         elif "gns://" in params_json["source"]:
-    #             if params_json["file_type"]=="":
-    #                 message += "when source is  docid, file_type cannot be none ; "
-    #                 ret_status = self.INVALID
-    #             if  params_json["dataType"]=="":
-    #                 message += "when source is  docid, dataType cannot be none ; "
-    #                 ret_status = self.INVALID
-    #             elif params_json["dataType"]=="unstructured":
-    #                 if params_json["extract_type"] != "model":
-    #                     message += "when dataType is unstructured, extract_type must be model ; "
-    #                     ret_status = self.INVALID
-    #                 else:
-    #                     if params_json["model"] == "":
-    #                         message += "when extract_type is model, modelname cannot be none ; "
-    #                         ret_status = self.INVALID
-    #             else:
-    #                 if params_json["extract_type"] != "standard":
-    #                     message += "when dataType is structured, extract_type must be standard ; "
-    #                     ret_status = self.INVALID
-    #                 else:
-    #                     if params_json["model"] != "":
-    #                         message += "when extract_type is standard, modelname must be none ; "
-    #                         ret_status = self.INVALID
-    #
-    #         else:
-    #             if params_json["file_type"]!="":
-    #                 message += "when source is  table, file_type must be none ; "
-    #                 ret_status = self.INVALID
-    #             elif params_json["dataType"]!="structured":
-    #                 message += "when source is  table, dataType must be structured ; "
-    #                 ret_status = self.INVALID
-    #             else:
-    #                 if params_json["extract_type"] != "standard":
-    #                     message += "when dataType is structured, extract_type must be standard ; "
-    #                     ret_status = self.INVALID
-    #                 else:
-    #                     if params_json["model"] != "":
-    #                         message += "when extract_type is standard, modelname must be none ; "
-    #                         ret_status = self.INVALID
-    #
-    #     else:
-    #         if params_json["ds_name"] == "":
-    #             message += "when source_type is  import ,ds_name cannot be  none ;  "
-    #             ret_status = self.INVALID
-    #         if params_json["source"] == "":
-    #             if params_json["file_type"] != "":
-    #                 message += "when source is none , file_type must be  none ; "
-    #                 ret_status = self.INVALID
-    #         elif "gns://" in params_json["source"]:
-    #             if params_json["file_type"] == "":
-    #                 message += "when source is  docid, file_type cannot be none ; "
-    #                 ret_status = self.INVALID
-    #             if params_json["dataType"] == "":
-    #                 message += "when source is  docid, dataType cannot be none ; "
-    #                 ret_status = self.INVALID
-    #             elif params_json["dataType"] == "unstructured":
-    #                 if params_json["extract_type"] != "model":
-    #                     message += "when dataType is unstructured, extract_type must be model ; "
-    #                     ret_status = self.INVALID
-    #                 else:
-    #                     if params_json["model"] == "":
-    #                         message += "when extract_type is model, modelname cannot be none ; "
-    #                         ret_status = self.INVALID
-    #             else:
-    #                 if params_json["extract_type"] != "standard":
-    #                     message += "when dataType is structured, extract_type must be standard ; "
-    #                     ret_status = self.INVALID
-    #                 else:
-    #                     if params_json["model"] != "":
-    #                         message += "when extract_type is standard, modelname must be none ; "
-    #                         ret_status = self.INVALID
-    #
-    #
-    #
-    #         else:
-    #
-    #             if params_json["file_type"] != "":
-    #
-    #                 message += "when source is  table, file_type must be none ; "
-    #
-    #                 ret_status = self.INVALID
-    #
-    #             elif params_json["dataType"] != "structured":
-    #
-    #                 message += "when source is  table, dataType must be structured ; "
-    #
-    #                 ret_status = self.INVALID
-    #
-    #             else:
-    #
-    #                 if params_json["extract_type"] != "standard":
-    #
-    #                     message += "when dataType is structured, extract_type must be standard ; "
-    #
-    #                     ret_status = self.INVALID
-    #
-    #                 else:
-    #
-    #                     if params_json["model"] != "":
-    #                         message += "when extract_type is standard, modelname must be none ; "
-    #
-    #                         ret_status = self.INVALID
-    #
-    #
-    #     return ret_status,message
-
-    ####合法校验
     def valid_params_check(self,flag,params_json):
         print(params_json)
         message=""
@@ -560,24 +354,7 @@ class Otl_check_params(object):
                                     illegual.append(param)
                                     ret_status = self.INVALID
 
-                    # elif param=="entity" or param=="edge":
-                    #     if not isinstance(value, list):
-                    #         message += param + "must be  list ; "
-                    #         illegual.append(param)
-                    #         ret_status = self.INVALID
-                    #     else:
-                    #         try:
-                    #             name=[]
-                    #             for one in value:
-                    #                 n=one["name"]
-                    #                 if n not in name:
-                    #                     name.append(n)
-                    #                 else:
-                    #                     duplicate.append(param)
-                    #         except:
-                    #             illegual.append(param)
-                    #             ret_status = self.INVALID
-                    elif param=="file":
+                    elif param == "file":
                         params_file=["docid","name","type"]
                         for file_p in params_file:
                             if file_p not in value:
@@ -606,7 +383,6 @@ class Otl_check_params(object):
                                         message += file_p + " must be  dir ; "
                                         illegual.append(file_p)
                                         ret_status = self.INVALID
-
                     elif param == "used_task":
                         if not isinstance(value, list):
                             message += param + " must be  list ; "
@@ -623,7 +399,6 @@ class Otl_check_params(object):
                                 message += param + "has some error : "+err+" isn`t a valid parameter"
                                 illegual.append(param)
                                 ret_status = self.INVALID
-
                     elif param == "ontology_id":
 
                         if not isinstance(value, str):
@@ -661,9 +436,7 @@ class Otl_check_params(object):
                                     message += param + " must be  number ; "
                                     illegual.append(param)
                                     ret_status = self.INVALID
-
-
-                    elif param=="ds_port" or param=="ds_id":
+                    elif param == "ds_port" or param == "ds_id":
 
                         if not isinstance(value, str):
                             message += param + " must be  str ; "
@@ -692,7 +465,7 @@ class Otl_check_params(object):
                                 message += param + " must be  number ; "
                                 illegual.append(param)
                                 ret_status = self.INVALID
-                    elif  param=="file_list":
+                    elif param == "file_list":
                         if not isinstance(value, list):
                             message += param + " must be  list ; "
                             illegual.append(param)
@@ -743,20 +516,16 @@ class Otl_check_params(object):
                                                 #     message += "docid is not illegal "
                                                 #     illegual.append(param)
                                                 #     ret_status = self.INVALID
-
-
-
-                    elif param == "entity" or  param == "edge":
-
-                        if not isinstance(value,list):
+                    elif param == "entity" or param == "edge":
+                        if not isinstance(value, list):
                             message += param + " must be  list ; "
                             illegual.append(param)
                             ret_status = self.INVALID
                         else:
-                            if param =="edge" and len(value)==0:
-                                edge=0
-                            elif param =="entity" and len(value)==0:
-                                if "flag" not in illegual and"flag" not in inexistence:
+                            if param == "edge" and len(value) == 0:
+                                edge = 0
+                            elif param == "entity" and len(value) == 0:
+                                if "flag" not in illegual and "flag" not in inexistence:
                                     if params_json["flag"] == "nextstep":
                                         illegual.append(param)
                                         ret_status = self.INVALID
@@ -767,23 +536,14 @@ class Otl_check_params(object):
                                     for one in value:
                                         ret_status, message1 = self.entity_edge_check(param, one)
                                         ret_statuslist.append(ret_status)
-                                        if ret_status==self.INVALID:
+                                        if ret_status == self.INVALID:
                                             illegual.append(param)
                                             ret_status = self.INVALID
-                                            message+=message1
-                                        # else:
-                                        #     ret,message2=self.edge_entity_logic_check(one)
-                                        #     if ret==self.INVALID:
-                                        #         message += message2
-                                        # if ret_status == self.INVALID:
-                                        #     message += param + ":" + "( " + message + " )"
-                                        # if one["name"] not in names:
-                                        #     names.append(param)
+                                            message += message1
                                     if self.INVALID in ret_statuslist:
                                         illegual.append(param)
                                         ret_status = self.INVALID
                                 else:
-                                    # message += param + " is not illegal ; "
                                     if params_json["data_source"] != "rabbitmq":
                                         empty.append(param)
                                         ret_status = self.INVALID

@@ -1,13 +1,16 @@
 # -*- coding:utf-8 -*-
 import unittest
-from unittest import mock
+from unittest import mock, TestCase
 import pandas as pd
 from dao.graph_dao import graph_dao
 from dao.graphdb_dao import GraphDB
 from dao.otl_dao import otl_dao
+from dao.subgraph_dao import subgraph_dao
 from service.graph_Service import graph_Service
+from service.subgraph_service import subgraph_service
 from test import testApp
 from common.errorcode import codes
+from utils.common_response_status import CommonResponseStatus
 
 
 class TestGetGraphInfoBasic(unittest.TestCase):
@@ -36,12 +39,12 @@ class TestGetGraphInfoBasic(unittest.TestCase):
         res = pd.DataFrame(row, columns=column)
         graph_dao.getStatusById = mock.Mock(return_value=res)
         # mock graph_dao.getbyid
-        column = ['id', 'create_time',  'update_time',
+        column = ['id', 'create_time', 'update_time',
                   'graph_name', 'graph_status', 'graph_baseInfo', 'graph_ds', 'graph_otl',
                   'graph_otl_temp', 'graph_InfoExt', 'graph_KMap', 'graph_KMerge',
                   'rabbitmq_ds', 'graph_db_id', 'upload', 'step_num', 'is_upload']
         row = [[118, '2022-07-12 23:36:03',
-               '2022-07-13 13:16:30',
+                '2022-07-13 13:16:30',
                 '1111', 'finish',
                 "[{'graph_Name': '1111', 'graph_des': '', 'graph_db_id': 5, 'graphDBAddress': '10.4.133.125;10.4.131.18;10.4.131.25', 'graph_mongo_Name': 'mongoDB-118', 'graph_DBName': 'u4d1b761a01f811edb7079af371d61d07'}]",
                 '[101]', '[250]', '[]',
@@ -234,7 +237,7 @@ class TestGetGraphInfoDetail(unittest.TestCase):
             # mock GraphDB.get_properties
             res_properties = {'name': 'string', 'industry_name': 'string', 'subindustry_name': 'string',
                               'industry_level': 'string', 'industry_status': 'string', 'industry_id': 'string',
-                              'ds_id': 'string', 'timestamp': 'double'}
+                              '_ds_id_': 'string', '_timestamp_': 'integer'}
             origin_GraphDB_get_properties = GraphDB.get_properties
             GraphDB.get_properties = mock.Mock(return_value=(codes.successCode, res_properties))
             # mock GraphDB.get_present_index
@@ -304,3 +307,367 @@ class TestGetGraphInfoDetail(unittest.TestCase):
             self.assertNotEqual(code, codes.successCode)
             # 取消mock
             GraphDB.check_schema = origin_GraphDB_check_schema
+
+
+class TestCreateSubgraphConfig(TestCase):
+    def setUp(self) -> None:
+        self.params = {
+            "edge": [
+                {
+                    "edge_id": 1,
+                    "colour": "#F44336",
+                    "ds_name": "",
+                    "dataType": "",
+                    "data_source": "",
+                    "ds_path": "",
+                    "ds_id": "",
+                    "extract_type": "",
+                    "name": "contain",
+                    "source_table": [],
+                    "source_type": "automatic",
+                    "properties": [["name", "string"]],
+                    "file_type": "",
+                    "task_id": "",
+                    "properties_index": ["name"],
+                    "model": "Contractmodel",
+                    "relations": ["contract", "contain", "clause"],
+                    "ds_address": "",
+                    "alias": "包含"
+                }
+            ],
+            "entity": [
+                {
+                    "entity_id": 3,
+                    "colour": "#ED679F",
+                    "ds_name": "",
+                    "dataType": "",
+                    "data_source": "",
+                    "ds_path": "",
+                    "ds_id": "",
+                    "extract_type": "",
+                    "name": "clause",
+                    "source_table": [],
+                    "source_type": "automatic",
+                    "properties": [
+                        ["name", "string"],
+                        ["content", "string"]
+                    ],
+                    "file_type": "",
+                    "task_id": "",
+                    "properties_index": ["name", "content"],
+                    "model": "Contractmodel",
+                    "ds_address": "",
+                    "alias": "条款"
+                }
+            ],
+            "graph_id": 1,
+            "name": "subgraph_name_2",
+            "ontology_id": 1
+        }
+        graph_dao.getbyid = mock.Mock(return_value=pd.DataFrame([['[1]']], columns=['graph_otl']))
+        subgraph_dao.get_subgraph_list_by_graph_id = mock.Mock(return_value=[{'name': 'name1'}])
+        otl_dao.getbyid = mock.Mock(return_value=pd.DataFrame([
+            ['[{"edge_id": 1,"colour": "#F44336","ds_name": "","dataType": "","data_source": "","ds_path": "",'
+             '"ds_id": "","extract_type": "","name": "contain","source_table": [],"source_type": "automatic",'
+             '"properties": [["name", "string"]],"file_type": "","task_id": "","properties_index": ["name"],'
+             '"model": "Contractmodel","relations": ["contract", "contain", "clause"],"ds_address": "",'
+             '"alias": "包含"}]',
+             '[{"entity_id": 3,"colour": "#ED679F","ds_name": "","dataType": "","data_source": "",'
+             '"ds_path": "","ds_id": "","extract_type": "","name": "clause","source_table": [],"source_type":'
+             ' "automatic","properties": [["name", "string"],["content", "string"]],"file_type": "","task_id": "",'
+             '"properties_index": ["name", "content"],"model": "Contractmodel","ds_address": "","alias": "条款"}]']
+        ], columns=['edge', 'entity']))
+        subgraph_dao.insert_subgraph_config = mock.Mock(return_value='1')
+        graph_Service.getrunbygraphid = mock.Mock(return_value=(CommonResponseStatus.SUCCESS.value, {}))
+
+    def test_create_subgraph_config_success(self):
+        code, res = subgraph_service.create_subgraph_config(self.params)
+        self.assertEqual(code, codes.successCode)
+
+    def test_create_subgraph_config_failed1(self):
+        """Builder_SubgraphService_CreateSubgraphConfig_GraphIdNotExist"""
+        graph_dao.getbyid = mock.Mock(return_value=pd.DataFrame([], columns=['graph_otl']))
+        code, res = subgraph_service.create_subgraph_config(self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_CreateSubgraphConfig_GraphIdNotExist)
+
+    def test_create_subgraph_config_failed2(self):
+        """Builder_SubgraphService_CreateSubgraphConfig_OntologyNotExist"""
+        graph_dao.getbyid = mock.Mock(return_value=pd.DataFrame([['[2]']], columns=['graph_otl']))
+        code, res = subgraph_service.create_subgraph_config(self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_CreateSubgraphConfig_OntologyNotExist)
+
+    def test_create_subgraph_config_failed3(self):
+        """Builder_SubgraphService_CreateSubgraphConfig_DuplicateName"""
+        subgraph_dao.get_subgraph_list_by_graph_id = mock.Mock(return_value=[{'name': 'subgraph_name_2'}])
+        code, res = subgraph_service.create_subgraph_config(self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_CreateSubgraphConfig_DuplicateName)
+
+    def test_create_subgraph_config_failed4(self):
+        """Builder_SubgraphService_CreateSubgraphConfig_UnexpectedClass"""
+        otl_dao.getbyid = mock.Mock(return_value=pd.DataFrame([
+            ['[]', '[{"entity_id": 3,"colour": "#ED679F","ds_name": "","dataType": "","data_source": "",'
+                   '"ds_path": "","ds_id": "","extract_type": "","name": "clause","source_table": [],"source_type":'
+                   ' "automatic","properties": [["name", "string"],["content", "string"]],"file_type": "","task_id": "",'
+                   '"properties_index": ["name", "content"],"model": "Contractmodel","ds_address": "","alias": "条款"}]']
+        ], columns=['edge', 'entity']))
+        code, res = subgraph_service.create_subgraph_config(self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_CreateSubgraphConfig_UnexpectedClass)
+
+    def test_create_subgraph_config_failed5(self):
+        otl_dao.getbyid = mock.Mock(return_value=pd.DataFrame([['[]', '[]']], columns=['edge', 'entity']))
+        code, res = subgraph_service.create_subgraph_config(self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_CreateSubgraphConfig_UnexpectedClass)
+
+    def test_create_subgraph_config_fail6(self):
+        """Builder_SubgraphService_CreateSubgraphConfig_GraphRunning"""
+        graph_Service.getrunbygraphid = mock.Mock(return_value=(500, {}))
+        code, res = subgraph_service.create_subgraph_config(self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_CreateSubgraphConfig_GraphRunning)
+
+
+class TestEditSubgraphConfig(TestCase):
+    def setUp(self) -> None:
+        self.params = [
+            {
+                "subgraph_id": 1,
+                "name": "subgraph_1",
+                "entity": [
+                    {
+                        "entity_id": 3,
+                        "colour": "#ED679F",
+                        "ds_name": "",
+                        "dataType": "",
+                        "data_source": "",
+                        "ds_path": "",
+                        "ds_id": "",
+                        "extract_type": "",
+                        "name": "clause",
+                        "source_table": [],
+                        "source_type": "automatic",
+                        "properties": [
+                            ["name", "string"],
+                            ["content", "string"]
+                        ],
+                        "file_type": "",
+                        "task_id": "",
+                        "properties_index": ["name", "content"],
+                        "model": "Contractmodel",
+                        "ds_address": "",
+                        "alias": "条款"
+                    }
+                ],
+                "edge": [{
+                    "edge_id": 1,
+                    "colour": "#F44336",
+                    "ds_name": "",
+                    "dataType": "",
+                    "data_source": "",
+                    "ds_path": "",
+                    "ds_id": "",
+                    "extract_type": "",
+                    "name": "contain",
+                    "source_table": [],
+                    "source_type": "automatic",
+                    "properties": [["name", "string"]],
+                    "file_type": "",
+                    "task_id": "",
+                    "properties_index": ["name"],
+                    "model": "Contractmodel",
+                    "relations": ["contract", "contain", "clause"],
+                    "ds_address": "",
+                    "alias": "包含"
+                }]
+            }
+        ]
+        subgraph_dao.get_subgraph_list_by_graph_id = mock.Mock(return_value=[{'id': 1, 'name': 'name1'},
+                                                                             {'id': 2, 'name': 'name2'},
+                                                                             {'id': 3, 'name': 'ungrouped'}])
+        graph_dao.getbyid = mock.Mock(return_value=pd.DataFrame([['[1]']], columns=['graph_otl']))
+        otl_dao.getbyid = mock.Mock(return_value=pd.DataFrame([
+            ['[{"entity_id": 3,"colour": "#ED679F","ds_name": "","dataType": "","data_source": "","ds_path": "",'
+             '"ds_id": "","extract_type": "","name": "clause","source_table": [],"source_type": "automatic",'
+             '"properties": [["name", "string"],["content", "string"]],"file_type": "","task_id": "",'
+             '"properties_index": ["name", "content"],"model": "Contractmodel","ds_address": "","alias": "条款"}]',
+             '[{"edge_id": 1,"colour": "#F44336","ds_name": "","dataType": "","data_source": "","ds_path": "",'
+             '"ds_id": "","extract_type": "","name": "contain","source_table": [],"source_type": "automatic",'
+             '"properties": [["name", "string"]],"file_type": "","task_id": "","properties_index": ["name"],'
+             '"model": "Contractmodel","relations": ["contract", "contain", "clause"],"ds_address": "",'
+             '"alias": "包含"}]']], columns=['entity', 'edge']))
+        subgraph_dao.update_subgraph_config = mock.Mock(return_value={})
+        graph_Service.getrunbygraphid = mock.Mock(return_value=(200, {}))
+
+    def test_edit_subgraph_config_success(self):
+        code, res = subgraph_service.edit_subgraph_config(1, self.params)
+        self.assertEqual(code, codes.successCode)
+
+    def test_edit_subgraph_config_failed1(self):
+        """Builder_SubgraphService_EditSubgraphConfig_SubgraphIdNotExist"""
+        subgraph_dao.get_subgraph_list_by_graph_id = mock.Mock(return_value=[{'id': 9, 'name': 'name1'}])
+        code, res = subgraph_service.edit_subgraph_config(1, self.params)
+        error = res.get('error')
+        self.assertIsInstance(error, list)
+        error_code = []
+        for e in error:
+            error_code.append(e.get('ErrorCode'))
+        self.assertIn(codes.Builder_SubgraphService_EditSubgraphConfig_SubgraphIdNotExist, error_code)
+
+    def test_edit_subgraph_config_failed2(self):
+        """Builder_SubgraphService_EditSubgraphConfig_DuplicateName"""
+        subgraph_dao.get_subgraph_list_by_graph_id = mock.Mock(return_value=[{'id': 1, 'name': 'subgraph'},
+                                                                             {'id': 2, 'name': 'subgraph_1'}])
+        code, res = subgraph_service.edit_subgraph_config(1, self.params)
+        error = res.get('error')
+        self.assertIsInstance(error, list)
+        error_code = []
+        for e in error:
+            error_code.append(e.get('ErrorCode'))
+        self.assertIn(codes.Builder_SubgraphService_EditSubgraphConfig_DuplicateName, error_code)
+
+    def test_edit_subgraph_config_failed3(self):
+        """Builder_SubgraphService_EditSubgraphConfig_UnexpectedClass"""
+        otl_dao.getbyid = mock.Mock(return_value=pd.DataFrame([
+            ['[{"entity_id": 3,"colour": "#ED679F","ds_name": "","dataType": "","data_source": "","ds_path": "",'
+             '"ds_id": "","extract_type": "","name": "clause","source_table": [],"source_type": "automatic",'
+             '"properties": [["name", "string"],["content", "string"]],"file_type": "","task_id": "",'
+             '"properties_index": ["name", "content"],"model": "Contractmodel","ds_address": "","alias": "条款"}]',
+             '[]']], columns=['entity', 'edge']))
+        code, res = subgraph_service.edit_subgraph_config(1, self.params)
+        error = res.get('error')
+        self.assertIsInstance(error, list)
+        error_code = []
+        for e in error:
+            error_code.append(e.get('ErrorCode'))
+        self.assertIn(codes.Builder_SubgraphService_EditSubgraphConfig_UnexpectedClass, error_code)
+
+    def test_edit_subgraph_config_failed4(self):
+        """Builder_SubgraphService_EditSubgraphConfig_UnexpectedClass"""
+        otl_dao.getbyid = mock.Mock(return_value=pd.DataFrame([['[]', '[]']], columns=['entity', 'edge']))
+        code, res = subgraph_service.edit_subgraph_config(1, self.params)
+        error = res.get('error')
+        self.assertIsInstance(error, list)
+        error_code = []
+        for e in error:
+            error_code.append(e.get('ErrorCode'))
+        self.assertIn(codes.Builder_SubgraphService_EditSubgraphConfig_UnexpectedClass, error_code)
+
+    def test_edit_subgraph_config_failed5(self):
+        """Builder_SubgraphService_EditSubgraphConfig_GraphIdNotExist"""
+        graph_dao.getbyid = mock.Mock(return_value=pd.DataFrame([]))
+        code, res = subgraph_service.edit_subgraph_config(1, self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_EditSubgraphConfig_GraphIdNotExist)
+
+    def test_edit_subgraph_config_failed6(self):
+        """Builder_SubgraphService_EditSubgraphConfig_GraphRunning"""
+        graph_Service.getrunbygraphid = mock.Mock(return_value=(500, {}))
+        code, res = subgraph_service.edit_subgraph_config(1, self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_EditSubgraphConfig_GraphRunning)
+
+    def test_edit_subgraph_config_failed7(self):
+        """Builder_SubgraphService_EditSubgraphConfig_CannotRenamedToUngrouped"""
+        params = [{"subgraph_id": 1, "name": "ungrouped", "entity": [], "edge": []}]
+        code, res = subgraph_service.edit_subgraph_config(1, params)
+        error = res.get('error')
+        self.assertIsInstance(error, list)
+        error_code = []
+        for e in error:
+            error_code.append(e.get('ErrorCode'))
+        self.assertIn(codes.Builder_SubgraphService_EditSubgraphConfig_CannotRenamedToUngrouped, error_code)
+
+    def test_edit_subgraph_config_failed8(self):
+        """Builder_SubgraphService_EditSubgraphConfig_UngroupedCannotRename"""
+        params = [{"subgraph_id": 3, "name": "a_name", "entity": [], "edge": []}]
+        code, res = subgraph_service.edit_subgraph_config(1, params)
+        error = res.get('error')
+        self.assertIsInstance(error, list)
+        error_code = []
+        for e in error:
+            error_code.append(e.get('ErrorCode'))
+        self.assertIn(codes.Builder_SubgraphService_EditSubgraphConfig_UngroupedCannotRename, error_code)
+
+
+class TestGetSubgraphList(TestCase):
+    def setUp(self) -> None:
+        self.params = {'graph_id': 1, 'subgraph_name': 'name', 'return_all': 'True'}
+        self.subgraph_list = [{'id': 1, 'name': 'name', 'entity': '[{},{},{}]', 'edge': '[{},{},{}]'}]
+
+    def test_get_subgraph_list_success(self):
+        graph_dao.getbyid = mock.Mock(return_value=pd.DataFrame([[1]], columns=['id']))
+        subgraph_dao.get_subgraph_list = mock.Mock(return_value=self.subgraph_list)
+        code, res = subgraph_service.get_subgraph_list(self.params)
+        self.assertEqual(code, codes.successCode)
+
+    def test_get_subgraph_list_failed(self):
+        """Builder_SubgraphService_GetSubgraphList_GraphIdNotExist"""
+        graph_dao.getbyid = mock.Mock(return_value=pd.DataFrame([], columns=['id']))
+        code, res = subgraph_service.get_subgraph_list(self.params)
+        self.assertEqual(code, codes.Builder_SubgraphService_GetSubgraphList_GraphIdNotExist)
+
+
+class TestGetSubgraphConfig(TestCase):
+    def setUp(self) -> None:
+        self.subgraph_list = [{'id': 1, 'name': 'name', 'entity': '[{},{},{}]', 'edge': '[{},{},{}]'}]
+
+    def test_get_subgraph_config_success(self):
+        subgraph_dao.get_subgraph_config_by_id = mock.Mock(return_value=self.subgraph_list)
+        code, res = subgraph_service.get_subgraph_config(1)
+        self.assertEqual(code, codes.successCode)
+
+    def test_get_subgraph_config_failed(self):
+        """Builder_SubgraphService_GetSubgraphConfig_SubgraphIdNotExist"""
+        subgraph_dao.get_subgraph_config_by_id = mock.Mock(return_value=[])
+        code, res = subgraph_service.get_subgraph_config(1)
+        self.assertEqual(code, codes.Builder_SubgraphService_GetSubgraphConfig_SubgraphIdNotExist)
+
+
+class TestDeleteSubgaph_config(TestCase):
+    def setUp(self) -> None:
+        graph_dao.get_knowledge_graph_by_id = mock.Mock(return_value=pd.DataFrame([['normal']], columns=['status']))
+        subgraph_dao.delete_subgraph_config = mock.Mock(return_value=1)
+        subgraph_dao.get_subgraph_list_by_graph_id = mock.Mock(return_value=[{'id': 1, 'name': 'name1'},
+                                                                             {'id': 2, 'name': 'name2'},
+                                                                             {'id': 3, 'name': 'ungrouped'}])
+
+    def test_delete_subgraph_config_success1(self):
+        code, res = subgraph_service.delete_subgraph_config(1, [1])
+        self.assertEqual(code, codes.successCode)
+
+    def test_delete_subgraph_config_failed1(self):
+        """Builder_SubgraphService_DeleteSubgraphConfig_DeleteUngrouped"""
+        code, res = subgraph_service.delete_subgraph_config(1, [3])
+        error = res.get('error')
+        self.assertIsInstance(error, list)
+        error_code = []
+        for e in error:
+            error_code.append(e.get('ErrorCode'))
+        self.assertIn(codes.Builder_SubgraphService_DeleteSubgraphConfig_DeleteUngrouped, error_code)
+
+    def test_delete_subgraph_config_failed2(self):
+        """Builder_SubgraphService_DeleteSubgraphConfig_GraphRunning"""
+        graph_dao.get_knowledge_graph_by_id = mock.Mock(return_value=pd.DataFrame([['running']], columns=['status']))
+        code, res = subgraph_service.delete_subgraph_config(1, [1])
+        self.assertEqual(code, codes.Builder_SubgraphService_DeleteSubgraphConfig_GraphRunning)
+
+    def test_delete_subgraph_config_failed3(self):
+        """Builder_SubgraphService_DeleteSubgraphConfig_GraphWaiting"""
+        graph_dao.get_knowledge_graph_by_id = mock.Mock(return_value=pd.DataFrame([['waiting']], columns=['status']))
+        code, res = subgraph_service.delete_subgraph_config(1, [1])
+        self.assertEqual(code, codes.Builder_SubgraphService_DeleteSubgraphConfig_GraphWaiting)
+
+    def test_delete_subgraph_config_failed4(self):
+        """Builder_SubgraphService_DeleteSubgraphConfig_GraphIdNotExist"""
+        graph_dao.get_knowledge_graph_by_id = mock.Mock(return_value=pd.DataFrame([]))
+        code, res = subgraph_service.delete_subgraph_config(1, [1])
+        self.assertEqual(code, codes.Builder_SubgraphService_DeleteSubgraphConfig_GraphIdNotExist)
+
+    def test_delete_subgraph_config_failed5(self):
+        """Builder_SubgraphService_DeleteSubgraphConfig_SubgraphIdNotExist"""
+        code, res = subgraph_service.delete_subgraph_config(1, [999])
+        self.assertEqual(code, 500)
+        error = res.get('error')
+        self.assertIsInstance(error, list)
+        error_code = []
+        for e in error:
+            error_code.append(e.get('ErrorCode'))
+        self.assertIn(codes.Builder_SubgraphService_DeleteSubgraphConfig_SubgraphIdNotExist, error_code)
+
+

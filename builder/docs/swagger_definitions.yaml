@@ -841,18 +841,112 @@ definitions:
             type: array
             description: list of gns
             example: ["gns://1D16DB1FF85E419BA56EA18E1B3ADD8B/D70979B4372046F8861FA57C5C06B86F"]
-    celery_task:
-      taskcrud_post:
+      create_subgraph_config:
         type: 'object'
         required:
-          - task_type
+          - name
+          - entity
+          - edge
+          - ontology_id
+          - graph_id
         properties:
-          task_type:
+          name:
+            type: string
+            format: string
+            description: subgraph name
+            example: subgraph_name
+          entity:
+            type: string
+            format: string
+            description: the information of subgraph entity
+            example: [{'entity_id': 1, 'colour': '#795648', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'contract', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string'], ['id', 'string'], ['number', 'string'], ['currency', 'string'], ['amount', 'string'], ['sign_date', 'string'], ['account_name', 'string'], ['bank', 'string'], ['bank_number', 'string'], ['tax_rate', 'string'], ['tax_amount', 'string'], ['amount_without_tax', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name', 'number', 'amount', 'sign_date', 'account_name', 'bank'], 'model': 'Contractmodel', 'ds_address': '', 'alias': '合同'}, {'entity_id': 2, 'colour': '#FFC106', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'company', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': 'Contractmodel', 'ds_address': '', 'alias': '公司或人'}, {'entity_id': 3, 'colour': '#F44336', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'clause', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string'], ['content', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name', 'content'], 'model': 'Contractmodel', 'ds_address': '', 'alias': '条款'}]
+          edge:
+            type: string
+            format: string
+            description: the information of subgraph edge
+            example: [{'edge_id': 1, 'colour': '#45639C', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'contain', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': 'Contractmodel', 'relations': ['contract', 'contain', 'clause'], 'ds_address': '', 'alias': '包含'}, {'edge_id': 2, 'colour': '#B31ACC', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'ownerSubject', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': 'Contractmodel', 'relations': ['contract', 'ownerSubject', 'company'], 'ds_address': '', 'alias': '我方主体'}, {'edge_id': 3, 'colour': '#CDDC39', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'otherSubject', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': 'Contractmodel', 'relations': ['contract', 'otherSubject', 'company'], 'ds_address': '', 'alias': '对方主体'}]
+          ontology_id:
+            type: integer
+            format: int32
+            description: ontology_id
+            example: 1
+          graph_id:
+            type: integer
+            format: int32
+            description: graph id
+            example: 1
+      edit_subgraph_config:
+        type: 'array'
+        items:
+          $ref: '#/definitions/builder/graph/edit_subgraph_config_item'
+      edit_subgraph_config_item:
+        type: object
+        required:
+          - subgraph_id
+          - name
+          - entity
+          - edge
+        properties:
+          subgraph_id:
+            type: integer
+            format: int32
+            description: subgraph id
+            example: 1
+          name:
+            type: string
+            format: string
+            description: subgraph name
+            example: subgraph_name
+          entity:
+            type: string
+            format: string
+            description: the information of subgraph entity
+            example: [{'entity_id': 1, 'colour': '#795648', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'contract', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string'], ['id', 'string'], ['number', 'string'], ['currency', 'string'], ['amount', 'string'], ['sign_date', 'string'], ['account_name', 'string'], ['bank', 'string'], ['bank_number', 'string'], ['tax_rate', 'string'], ['tax_amount', 'string'], ['amount_without_tax', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name', 'number', 'amount', 'sign_date', 'account_name', 'bank'], 'model': 'Contractmodel', 'ds_address': '', 'alias': '合同'}, {'entity_id': 2, 'colour': '#FFC106', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'company', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': 'Contractmodel', 'ds_address': '', 'alias': '公司或人'}, {'entity_id': 3, 'colour': '#F44336', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'clause', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string'], ['content', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name', 'content'], 'model': 'Contractmodel', 'ds_address': '', 'alias': '条款'}]
+          edge:
+            type: string
+            format: string
+            description: the information of subgraph edge
+            example: [{'edge_id': 1, 'colour': '#45639C', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'contain', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': 'Contractmodel', 'relations': ['contract', 'contain', 'clause'], 'ds_address': '', 'alias': '包含'}, {'edge_id': 2, 'colour': '#B31ACC', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'ownerSubject', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': 'Contractmodel', 'relations': ['contract', 'ownerSubject', 'company'], 'ds_address': '', 'alias': '我方主体'}, {'edge_id': 3, 'colour': '#CDDC39', 'ds_name': '', 'dataType': '', 'data_source': '', 'ds_path': '', 'ds_id': '', 'extract_type': '', 'name': 'otherSubject', 'source_table': [], 'source_type': 'automatic', 'properties': [['name', 'string']], 'file_type': '', 'task_id': '', 'properties_index': ['name'], 'model': 'Contractmodel', 'relations': ['contract', 'otherSubject', 'company'], 'ds_address': '', 'alias': '对方主体'}]
+      delete_subgraph_config:
+        type: object
+        required:
+          - graph_id
+          - subgraph_ids
+        properties:
+          graph_id:
+            type: integer
+            description: graph id
+            example: 1
+          subgraph_ids:
+            type: array
+            description: task id list
+            example: [1, 2]
+    celery_task:
+      execute_task:
+        type: 'object'
+        required:
+          - tasktype
+        properties:
+          tasktype:
             type: string
             format: string
             description: 'full or increment'
             example: full
-      taskcrud_delete:
+      batch_execute_task:
+        type: 'object'
+        required:
+          - subgraph_ids
+        properties:
+          subgraph_ids:
+            type: array
+            description: subgraph config ids list
+            example: [1,2,3]
+          write_mode:
+            type: string
+            format: string
+            description: 'write mode executed by the same class among multiple groups in a batch execution. optional values: skip, overwrite'
+            example: skip
+      delete_task:
         type: 'object'
         required:
           - task_ids
@@ -860,7 +954,19 @@ definitions:
           task_ids:
             type: array
             description: task ids to be deleted
-            example: ["727d3a54-2b31-4501-8f4c-d054b91dacaa"]
+            example: [1]
+      stoptask:
+        type: 'object'
+        required:
+        properties:
+          graph_id:
+            type: int
+            description: graph id
+            example: 1
+          task_id:
+            type: int
+            description: graph history task id
+            example: 1
     graph_count:
       graphs_count_all:
         type: 'object'

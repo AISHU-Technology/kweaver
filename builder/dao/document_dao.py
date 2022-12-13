@@ -945,7 +945,7 @@ class Anyshare():
         #             label_property_list[0]: l
         #         }
         #         db["label"].insert_one(label_dict)
-        property_dict["ds_id"] = self.file_info_dict["ds_id"]
+        property_dict["_ds_id_"] = self.file_info_dict["ds_id"]
         db["document"].insert_one(property_dict)
 
         # 导入folder
@@ -989,7 +989,7 @@ class Anyshare():
                              }
             result = db["folder"].find_one(property_dict)
             if not result:
-                property_dict["ds_id"] =str( self.file_info_dict["ds_id"])
+                property_dict["_ds_id_"] =str( self.file_info_dict["ds_id"])
                 db["folder"].insert_one(property_dict)
 
 
@@ -1008,7 +1008,7 @@ class Anyshare():
                          "o_pro": {"gns": folder_gns}}
             result = db["folder2folder"].find_one(item_dict)
             if not result:
-                item_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                item_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
                 db["folder2folder"].insert_one(item_dict)
             latest_folder_gns = folder_gns
             latest_folder = folder
@@ -1018,7 +1018,7 @@ class Anyshare():
                      "s_pro": {"gns": latest_folder_gns},
                      "p_pro": {"name": "folder2document"},
                      "o_pro": {"gns": self.file_gns}}
-        item_dict["ds_id"] =str(self.file_info_dict["ds_id"])
+        item_dict["_ds_id_"] =str(self.file_info_dict["ds_id"])
         db["folder2document"].insert_one(item_dict)
 
         if self.head2text_spo_list:
@@ -1028,10 +1028,10 @@ class Anyshare():
                 o = self.normalize_text(o)
 
                 head_property_dict = {head_property_list[0]: self.normalize_text(s),head_property_list[1]:self.normalize_text(self.file_path), head_property_list[2]:  s_pro["level"] }
-                head_property_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                head_property_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
                 db["chapter"].insert_one(head_property_dict)
                 text_property_dict = {text_property_list[0]: o}
-                text_property_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                text_property_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
                 db["text"].insert_one(text_property_dict)
 
 
@@ -1041,7 +1041,7 @@ class Anyshare():
                              "s_pro": head_property_dict,
                              "p_pro": {"name": "chapter2text"},
                              "o_pro": text_property_dict}
-                item_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                item_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
                 db["chapter2text"].insert_one(item_dict)
 
         if self.document2head_spo_list:
@@ -1054,7 +1054,7 @@ class Anyshare():
                                  head_property_list[2]: item["o_pro"]["level"]
                                  }
                 if s not in done_head_list:
-                    property_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                    property_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
                     db["chapter"].insert_one(property_dict)
                     done_head_list.append(s)
                 item_dict = {"s": s,
@@ -1071,7 +1071,7 @@ class Anyshare():
                 o = self.normalize_text(o)
                 # name #adlabel_kcid #kc_topic_tags #type_as #type_sa #type_nw #type_kc
                 property_dict = {label_property_list[0]: s }
-                property_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                property_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
                 property_dict['adlabel_kcid'] = s
                 commonutil.updatemongo(db,"label",property_dict,db_type)
                 item_dict = {"s": s,
@@ -1090,7 +1090,7 @@ class Anyshare():
                 o = self.normalize_text(o)
 
                 property_dict = {text_property_list[0]: o }
-                property_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                property_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
 
 
                 db["text"].insert_one(property_dict)
@@ -1126,7 +1126,7 @@ class Anyshare():
                 s = self.normalize_text(s)
                 o = self.normalize_text(o)
                 desc_property_dict = {desc_property_list[0]: s}
-                desc_property_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                desc_property_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
                 db["desc"].insert_one(desc_property_dict)
                 property_dict2 = {label_property_list[0]: o}
                 property_dict2['adlabel_kcid'] = o
@@ -1143,7 +1143,7 @@ class Anyshare():
                 s = self.normalize_text(s)
                 o = self.normalize_text(o)
                 desc_property_dict = {desc_property_list[0]: s}
-                desc_property_dict["ds_id"] = str(self.file_info_dict["ds_id"])
+                desc_property_dict["_ds_id_"] = str(self.file_info_dict["ds_id"])
                 item_dict = {"s": s,
                              "p": "desc2document",
                              "o": o,
@@ -1847,11 +1847,11 @@ def process_tim(model, input_sentence_list, input_infos, ds_id, db, collection_n
                                "o_pro": {"name": rs["entity"], "adlabel_kcid": rs["entity"]}})
         if "desc2document" in relation_property_dict:
             desc2document.append({"s": rs["describe"], "p": "desc2document", "o": input_infos[iv]["name"],
-                                  "s_pro": {"name": rs["describe"], "ds_id": ds_id},
+                                  "s_pro": {"name": rs["describe"], "_ds_id_": ds_id},
                                   "p_pro": {"name": "desc2document"},
                                   "o_pro": {"gns": input_infos[iv]["gns"]}})
         if "desc" in entity_property_dict:
-            desc.append({"name": rs["describe"], "ds_id": ds_id})
+            desc.append({"name": rs["describe"], "_ds_id_": ds_id})
         if "label" in entity_property_dict:
             labels.append({
                 "name": rs["entity"],
@@ -1859,7 +1859,7 @@ def process_tim(model, input_sentence_list, input_infos, ds_id, db, collection_n
                 "kc_topic_tags": "",
                 "confidence": "",
                 "type_sa": "true",
-                "ds_id": ds_id
+                "_ds_id_": ds_id
             })
         if "label2documents" in relation_property_dict:
             label2documents.append({
@@ -1869,7 +1869,7 @@ def process_tim(model, input_sentence_list, input_infos, ds_id, db, collection_n
                 "s_pro": {
                     "name": rs["entity"],
                     "adlabel_kcid": rs["entity"],
-                    "ds_id": ds_id,
+                    "_ds_id_": ds_id,
                     "type_sa": "true"
                 },
                 "p_pro": {
@@ -2116,7 +2116,7 @@ class AnyshareDocumentModel(object):
                     head_property_list[0]: chapter,
                     head_property_list[1]: input_file_content["path"],
                     head_property_list[2]: 1,
-                    "ds_id": self.ds_id
+                    "_ds_id_": self.ds_id
                 }
                 if "chapter" in self.entity_property_dict:
                     self.mongo_gns_info_db[self.collection_name_map["chapter"]].insert_one(chapter_info)
@@ -2127,7 +2127,7 @@ class AnyshareDocumentModel(object):
                                         "s_pro": {"gns": input_file_content["gns"]},
                                         "p_pro": {"name": "document2chapter"},
                                         "o_pro": chapter_info,
-                                        "ds_id": self.ds_id}
+                                        "_ds_id_": self.ds_id}
                     self.mongo_gns_info_db[self.collection_name_map["document2chapter"]].insert_one(doc2chapter_info)
 
             text_list = []
@@ -2153,24 +2153,24 @@ class AnyshareDocumentModel(object):
                 text_span_id = last_text_ind
                 if text_span == "":
                     continue
-                text_list.append({text_property_list[0]: text_span, "ds_id": self.ds_id})
+                text_list.append({text_property_list[0]: text_span, "_ds_id_": self.ds_id})
                 doc2text.append({"s": input_file_content["name"], "p": "document2text", "o": text_span,
                                  "s_pro": {"gns": input_file_content["gns"]},
                                  "p_pro": {"name": "document2text"},
-                                 "o_pro": {"name": text_span, "ds_id": self.ds_id}})
+                                 "o_pro": {"name": text_span, "_ds_id_": self.ds_id}})
                 if last:
                     text2text.append({"s": last, "p": "text2text", "o": text_span,
                                       "s_pro": {"name": last},
                                       "p_pro": {"name": "text2text"},
                                       "o_pro": {"name": text_span},
-                                      "ds_id": self.ds_id})
+                                      "_ds_id_": self.ds_id})
 
                 if chapter:
                     chapter2text.append({"s": chapter, "p": "chapter2text", "o": text_span,
                                          "s_pro": chapter_info,
                                          "p_pro": {"name": "chapter2text"},
-                                         "o_pro": {"name": text_span, "ds_id": self.ds_id},
-                                         "ds_id": self.ds_id})
+                                         "o_pro": {"name": text_span, "_ds_id_": self.ds_id},
+                                         "_ds_id_": self.ds_id})
                 last = text_span
 
             if text_list and "text" in self.entity_property_dict:
@@ -2244,10 +2244,10 @@ class AnyshareDocumentModel(object):
                                    "o_pro": {"name": rs["entity"], "adlabel_kcid": rs["entity"]}})
 
                 desc2document.append({"s": rs["describe"], "p": "desc2document", "o": input_infos[iv]["name"],
-                                      "s_pro": {"name": rs["describe"], "ds_id": self.ds_id},
+                                      "s_pro": {"name": rs["describe"], "_ds_id_": self.ds_id},
                                       "p_pro": {"name": "desc2document"},
                                       "o_pro": {"gns": input_infos[iv]["gns"]}})
-                desc.append({"name": rs["describe"], "ds_id": self.ds_id})
+                desc.append({"name": rs["describe"], "_ds_id_": self.ds_id})
 
                 labels.append({
                     "name": rs["entity"],
@@ -2255,7 +2255,7 @@ class AnyshareDocumentModel(object):
                     "kc_topic_tags": "",
                     "confidence": "",
                     "type_sa": "true",
-                    "ds_id": self.ds_id
+                    "_ds_id_": self.ds_id
                 })
                 label2documents.append({
                     "s": rs["entity"],
@@ -2264,7 +2264,7 @@ class AnyshareDocumentModel(object):
                     "s_pro": {
                         "name": rs["entity"],
                         "adlabel_kcid": rs["entity"],
-                        "ds_id": self.ds_id,
+                        "_ds_id_": self.ds_id,
                         "type_sa": "true"
                     },
                     "p_pro": {
@@ -2399,7 +2399,7 @@ class AnyshareDocumentModel(object):
                                                      folder_property_list[2]: gns_info["gns"],
                                                      folder_property_list[3]: gns_info["create_time"],
                                                      "rev": gns_info["rev"],
-                                                     "ds_id": self.ds_id})
+                                                     "_ds_id_": self.ds_id})
         if "folder2document" in self.relationship_property_dict:
             for child_file in gns_info["child_file_info"]:
                 insert_info = {
@@ -2410,7 +2410,7 @@ class AnyshareDocumentModel(object):
                     "o_pro": {"gns": child_file["gns"]},
                     "p_pro": {"name": "folder2document", "domain": child_file["name"].split(".")[-1],
                               "range": child_file["name"]},
-                    "ds_id": self.ds_id
+                    "_ds_id_": self.ds_id
                 }
                 self.mongo_gns_info_db[self.collection_name_map["folder2document"]].insert_one(insert_info)
         if "folder2folder" in self.relationship_property_dict:
@@ -2422,7 +2422,7 @@ class AnyshareDocumentModel(object):
                     "s_pro": {"gns": gns_info["gns"]},
                     "o_pro": {"gns": child_file["gns"]},
                     "p_pro": {"name": "folder2folder", "domain": gns_info["name"], "range": child_file["name"]},
-                    "ds_id": self.ds_id
+                    "_ds_id_": self.ds_id
                 }
 
                 self.mongo_gns_info_db[self.collection_name_map["folder2folder"]].insert_one(insert_info)
@@ -2504,7 +2504,7 @@ class AnyshareDocumentModel(object):
                         "kc_topic_tags": "",
                         "confidence": "",
                         "type_as": "true",
-                        "ds_id": self.ds_id
+                        "_ds_id_": self.ds_id
                     })
                     if "label2document" not in self.relationship_property_dict:
                         continue
@@ -2515,7 +2515,7 @@ class AnyshareDocumentModel(object):
                         "s_pro": {
                             "name": label,
                             "adlabel_kcid": label,
-                            "ds_id": self.ds_id,
+                            "_ds_id_": self.ds_id,
                             "type_as": "true"
                         },
                         "p_pro": {
@@ -2548,7 +2548,7 @@ class AnyshareDocumentModel(object):
                     document_property_list[6]: gns_info.get("file_type", file_type),
                     document_property_list[7]: gns_info.get("modified_time", ""),
                     "rev": gns_info["rev"],
-                    "ds_id": self.ds_id
+                    "_ds_id_": self.ds_id
                     }
         # print(doc_info)
         if "document" in self.entity_property_dict:

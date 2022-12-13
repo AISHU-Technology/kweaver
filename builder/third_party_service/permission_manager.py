@@ -207,16 +207,6 @@ class Permission(object):
                     "message": message}, CommonResponseStatus.BAD_REQUEST.value
         return {}, 0
 
-    # 中止任务
-    def task_stop(self, graph_id):
-        if not graph_id.isdigit():
-            message = "The url api/builder/v1/task/stoptask/graph_id graph_id type must be int!"
-            Logger.log_error("error:%s " % message)
-            return {"cause": message,
-                    "code": CommonResponseStatus.PARAMETERS_ERROR.value,
-                    "message": message}, CommonResponseStatus.BAD_REQUEST.value
-        return {}, 0
-
     # 历史记录
     def task_history(self, graph_id):
         if not graph_id.isdigit():

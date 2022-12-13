@@ -45,9 +45,9 @@ class TestGetProperties(unittest.TestCase):
                      'defaultValue': None},
                     {'name': 'name', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'ds_id', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_ds_id_', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
                     {'name': 'subindustry_name', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
@@ -68,12 +68,12 @@ class TestGetProperties(unittest.TestCase):
                     {'name': 'sub_industry_id', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
                      'defaultValue': None},
-                    {'name': 'ds_id', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_ds_id_', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
                     {'name': 'subindustry_name', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
                      'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None}],
                  'indexes': [{'name': 'sub_industry_info_fulltext', 'type': 'FULLTEXT', 'fields': ['name']},
                              {'name': 'sub_industry_info_sub_industry_id', 'type': 'UNIQUE_HASH_INDEX',
@@ -83,7 +83,7 @@ class TestGetProperties(unittest.TestCase):
                  'clusterSelection': 'round-robin', 'records': 1053, 'properties': [
                     {'name': 'name', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None}],
                  'indexes': [
                      {'name': 'sub_industry_info_2_industry_info_fulltext', 'type': 'FULLTEXT', 'fields': ['name']}]}]
@@ -101,8 +101,8 @@ class TestGetProperties(unittest.TestCase):
                                    ['industry_level', 'string'],
                                    ['industry_status', 'string'],
                                    ['industry_id', 'string'],
-                                   ['ds_id', 'string'],
-                                   ['timestamp', 'double']])
+                                   ['_ds_id_', 'string'],
+                                   ['_timestamp_', 'integer']])
         res_nebula = MockNebulaResponse(data=res_nebula)
         GraphDB._nebula_exec = mock.Mock(return_value=(200, res_nebula))
 
@@ -192,9 +192,9 @@ class TestCount(unittest.TestCase):
                      'defaultValue': None},
                     {'name': 'name', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'ds_id', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_ds_id_', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
                     {'name': 'subindustry_name', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
@@ -215,12 +215,12 @@ class TestCount(unittest.TestCase):
                     {'name': 'sub_industry_id', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
                      'defaultValue': None},
-                    {'name': 'ds_id', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_ds_id_', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
                     {'name': 'subindustry_name', 'type': 'STRING', 'mandatory': False, 'readonly': False,
                      'notNull': False, 'min': None, 'max': None, 'regexp': None, 'collate': 'default',
                      'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None}],
                  'indexes': [{'name': 'sub_industry_info_fulltext', 'type': 'FULLTEXT', 'fields': ['name']},
                              {'name': 'sub_industry_info_sub_industry_id', 'type': 'UNIQUE_HASH_INDEX',
@@ -230,7 +230,7 @@ class TestCount(unittest.TestCase):
                  'clusterSelection': 'round-robin', 'records': 1053, 'properties': [
                     {'name': 'name', 'type': 'STRING', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None},
-                    {'name': 'timestamp', 'type': 'DOUBLE', 'mandatory': False, 'readonly': False, 'notNull': False,
+                    {'name': '_timestamp_', 'type': 'integer', 'mandatory': False, 'readonly': False, 'notNull': False,
                      'min': None, 'max': None, 'regexp': None, 'collate': 'default', 'defaultValue': None}],
                  'indexes': [
                      {'name': 'sub_industry_info_2_industry_info_fulltext', 'type': 'FULLTEXT', 'fields': ['name']}]}]
@@ -260,10 +260,10 @@ class TestCount(unittest.TestCase):
                                        ['Space', 'vertices', 37],
                                        ['Space', 'edges', 224]])
         self.res_tag = pd.DataFrame([['name', 'string'],
-                                     ['ds_id', 'string'],
-                                     ['timestamp', 'double']])
+                                     ['_ds_id_', 'string'],
+                                     ['_timestamp_', 'integer']])
         self.res_edge = pd.DataFrame([['name', 'string'],
-                                      ['timestamp', 'double']])
+                                      ['_timestamp_', 'integer']])
         res_nebula_vals = {'show stats': (200, MockNebulaResponse(data=self.res_stats)),
                            'describe tag': (200, MockNebulaResponse(data=self.res_tag)),
                            'describe edge': (200, MockNebulaResponse(data=self.res_edge))}

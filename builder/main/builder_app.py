@@ -74,17 +74,6 @@ def before_request():
             return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
                                        message=res_message["message"]), res_code
         return None
-    # 图谱编辑
-    elif "/api/builder/v1/graph" in path and method == "POST":
-        graphid = path.split("/")[-1]
-        if graphid not in ["check_kmapinfo", "getgraphbygns", "delbyids", "graph_info",
-                           "query", "savenocheck", "task", "infoext_list"]:
-            res_message, res_code = permission.graphEdit(graphid=graphid)
-            if res_code != 0:
-                return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                           message=res_message["message"]), res_code
-        return None
-
     # 定时任务增删改查权限与图谱编辑权限保持一致
     elif "/api/builder/v1/timer" in path:
         if method == "GET":
@@ -164,13 +153,6 @@ def before_request():
     elif "/api/builder/v1/task/getdetail" in path and method == "GET":
         graph_id = path.split("/")[-1]
         res_message, res_code = permission.task_detail(graph_id)
-        if res_code != 0:
-            return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
-                                       message=res_message["message"]), res_code
-    # 中止任务
-    elif "/api/builder/v1/task/stoptask" in path and method == "POST":
-        graph_id = path.split("/")[-1]
-        res_message, res_code = permission.task_stop(graph_id)
         if res_code != 0:
             return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
                                        message=res_message["message"]), res_code

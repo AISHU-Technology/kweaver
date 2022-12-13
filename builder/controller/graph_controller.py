@@ -25,6 +25,7 @@ from utils.log_info import Logger
 from service.task_Service import task_service
 from service.intelligence_service import intelligence_query_service
 from service.intelligence_service import intelligence_calculate_service
+from service.subgraph_service import subgraph_service
 
 from controller.knowledgeNetwork_controller import saveRelation, deleteRelation, updateKnw
 from common.errorcode.gview import Gview as Gview2
@@ -32,6 +33,7 @@ from common.errorcode import codes
 import uuid
 from flasgger import swag_from
 import yaml
+from flask_babel import gettext as _l
 
 graph_controller_app = Blueprint('graph_controller_app', __name__)
 
@@ -63,7 +65,7 @@ def graphopt():
                 $ref: '#/definitions/builder/graph/graph'
     '''
     param_code, params_json, param_message = commonutil.getMethodParam()
-    params_json["graph_process"][0]["graph_DBName"] = other_dao.get_random_uuid()
+    params_json["graph_process"][0]["graph_DBName"] = "u{}".format(str(uuid.uuid1()).replace('-', ''))
     ret_code, ret_message = knw_service.check_knw_id(params_json)
     if ret_code != 200:
         return Gview.BuFailVreturn(cause=ret_message["des"], code=CommonResponseStatus.INVALID_KNW_ID.value,
@@ -105,6 +107,11 @@ def graph(grapid):
             schema:
                 $ref: '#/definitions/builder/graph/graph'
     '''
+    permission = Permission()
+    res_message, res_code = permission.graphEdit(graphid=grapid)
+    if res_code != 0:
+        return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
+                                   message=res_message["message"]), res_code
     # graphCheckParameters.graphAddPar进行参数格式校验
     # graph_Service.update编辑图谱
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -134,18 +141,19 @@ def graph(grapid):
                 return Gview.BuFailVreturn(cause='ontology already exists', code=CommonResponseStatus.SERVER_ERROR.value,
                                            message='ontology already exists'), CommonResponseStatus.SERVER_ERROR.value
             #  流程中本体的部分 如果是新增本体 直接调用新增本体
+            graph_process_dict['graph_id'] = grapid
             ret_code, ret_message, otl_id = otl_service.ontology_save(graph_process_dict)
-            if ret_code == 200:  # 本体添加成功才更新图谱配置
-                # otl_id = ret_message["res"]["ontology_id"]
-                ret_code2, ret_message2 = graph_Service.update(grapid, params_json, otl_id)
-                if ret_code2 == CommonResponseStatus.SERVER_ERROR.value:
-                    return Gview.BuFailVreturn(cause=ret_message2["cause"], code=ret_message2["code"],
-                                               message=ret_message2[
-                                                   "message"]), CommonResponseStatus.SERVER_ERROR.value
-                return ret_message, CommonResponseStatus.SUCCESS.value
-            else:
+            if ret_code != 200:
                 return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                            message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
+            # 本体添加成功才更新图谱配置
+            ret_code2, ret_message2 = graph_Service.update(grapid, params_json, otl_id)
+            if ret_code2 == CommonResponseStatus.SERVER_ERROR.value:
+                return Gview.BuFailVreturn(cause=ret_message2["cause"], code=ret_message2["code"],
+                                           message=ret_message2["message"]), \
+                       CommonResponseStatus.SERVER_ERROR.value
+            return ret_message, CommonResponseStatus.SUCCESS.value
+
 
         elif updateoradd == "update_otl_name" or updateoradd == "update_otl_info":
             #  获得otl_id 根据 otl id更新本体
@@ -256,20 +264,6 @@ def getgraphdb():
     ---
     '''
     ret_code, ret_message = graph_Service.getGraphDB()
-    if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-        return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
-                                   message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
-    return ret_message, CommonResponseStatus.SUCCESS.value
-
-
-@graph_controller_app.route('/getbis', methods=["get"], strict_slashes=False)
-@swag_from(swagger_old_response)
-def getbis():
-    """
-    get base info switch
-    get base info switch
-    """
-    ret_code, ret_message = graph_Service.getbis()
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
@@ -522,47 +516,34 @@ def graphDeleteByIds():
     # get parameters
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
-        error_link = ''
-        code = CommonResponseStatus.PARAMETERS_ERROR.value
-        detail = 'Incorrect parameter format'
-        desc = "Incorrect parameter format"
-        solution = 'Please check your parameter format'
-        return Gview.TErrorreturn(code, desc, solution, detail,
-                                  error_link), CommonResponseStatus.BAD_REQUEST.value
+        code = codes.Builder_GraphController_GraphDeleteByids_ParamError
+        return Gview2.TErrorreturn(code, message=param_message), 400
     # parameter verification
     check_res, message = graphCheckParameters.graphDelPar(params_json)
     if check_res != 0:
         Logger.log_error("parameters:%s invalid" % params_json)
-        solution = "Please check parameters"
-        code = CommonResponseStatus.PARAMETERS_ERROR.value
-        desc = "parameters error"
-        error_link = ""
-        return Gview.TErrorreturn(code, desc, solution, message,
-                                  error_link), CommonResponseStatus.BAD_REQUEST.value
+        code = codes.Builder_GraphController_GraphDeleteByids_ParamError
+        return Gview2.TErrorreturn(code, message=message), 400
     ret_code, ret_message = knw_service.check_knw_id(params_json, delete_graph=True)
     if ret_code != 200:
-        code = ret_message["code"]
-        if code == CommonResponseStatus.GRAPH_NOT_KNW.value:
-            code = CommonResponseStatus.GRAPH_NOT_KNW.value
-        else:
-            code = CommonResponseStatus.INVALID_KNW_ID.value
-        return Gview.BuFailVreturn(cause=ret_message["des"], code=code,
-                                   message=ret_message["detail"]), CommonResponseStatus.SERVER_ERROR.value
+        code = codes.Builder_GraphController_GraphDeleteByids_KnwIdNotExist
+        return Gview2.TErrorreturn(code, knw_id=params_json["knw_id"]), 500
     graphids = params_json["graphids"]
     # get the graphs whose task status is running
     res_mess, res_code = graph_Service.getStatusByIds(graphids)
     if res_code != 0:
-        return Gview.TErrorreturn(res_mess["code"], res_mess["message"], res_mess["solution"], res_mess["cause"],
-                                  ""), CommonResponseStatus.SERVER_ERROR.value
+        code = codes.Builder_GraphController_GraphDeleteByIds_UnknownError
+        return Gview2.TErrorreturn(code, description=res_mess["message"], cause=res_mess["cause"]), 500
     # the list of graph ids whose task status is running
     runs = res_mess["runs"]
 
     # get the graph ids that not exist in the database
     res, code = graph_Service.getNoExistIds(graphids)
     if code != 0:
-        return Gview.TErrorreturn(res["code"], res["message"], res["solution"], res["cause"],
-                                  ""), CommonResponseStatus.SERVER_ERROR.value
+        code = codes.Builder_GraphController_GraphDeleteByIds_UnknownError
+        return Gview2.TErrorreturn(code, description=res["message"], cause=res["cause"]), 500
     noExist = res["noExist"]
+
     normal = list(set(graphids) - set(noExist) - set(runs))
     # delete one
     if len(graphids) == 1:
@@ -601,8 +582,8 @@ def graphDeleteByIds():
         # delete normal graphs
         res, code = graph_Service.deleteGraphByIds(normal)
         if code != 0:
-            return Gview.TErrorreturn(res["code"], res["message"], res["solution"], res["cause"],
-                                      ""), CommonResponseStatus.SERVER_ERROR.value
+            code = codes.Builder_GraphController_GraphDeleteByIds_UnknownError
+            return Gview2.TErrorreturn(code, description=res["message"], cause=res["cause"]), 500
         # delete the relationship between the knowledge network and the knowledge graphs
         knw_id = params_json["knw_id"]
         deleteRelation(knw_id, normal)
@@ -620,9 +601,9 @@ def graphDeleteByIds():
     if len(normal) > 0:
         updateKnw(normal[0])
     if obj_code == 200:
-        return obj, 200
-    solution = "请检查是否有删除权限或者图谱是否在运行中"
-    return Gview.TErrorreturn(obj["Code"], obj["message"], solution, obj["Cause"], ""), obj_code
+        return Gview2.json_return('success'), 200
+    code = codes.Builder_GraphController_GraphDeleteByIds_DeleteFail
+    return Gview2.TErrorreturn(code, description=obj["message"], cause=obj["Cause"]), 500
 
 
 @graph_controller_app.route('/ds/<graphid>', methods=["GET"], strict_slashes=False)
@@ -1102,6 +1083,8 @@ def get_graph_info_count():
                                        description='请确保graph_id存在，且graph_id应为数字'), 400
         code, data = graph_Service.get_graph_info_count(graph_id)
         if code != codes.successCode:
+            if data.json["ErrorDetails"] == "nebula show stats failed":
+                return jsonify({"res": {"edge": [], "edge_count": 0, "entity": [], "entity_count": 0}}), 200
             return data, 400
         return data, 200
     except Exception as e:
@@ -1221,3 +1204,227 @@ def intelligence_stats(graph_id):
         return result, 500
 
     return Gview2.json_return(result), 200
+
+
+@graph_controller_app.route('/subgraph', methods=['post'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def create_subgraph_config():
+    '''
+    create a subgraph configuration of a graph
+    create a subgraph configuration of a graph
+    ---
+    parameters:
+    -   in: 'body'
+        name: 'body'
+        description: 'request body'
+        required: true
+        schema:
+            $ref: '#/definitions/builder/graph/create_subgraph_config'
+    '''
+    try:
+        # check parameters
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        if param_code < 0:
+            code = codes.Builder_GraphController_CreateSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+        param_code, param_message = graphCheckParameters.create_subgraph_config(params_json)
+        if param_code != graphCheckParameters.VALID:
+            code = codes.Builder_GraphController_CreateSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+
+        code, resp = subgraph_service.create_subgraph_config(params_json)
+        if code != codes.successCode:
+            return resp, 500
+        return Gview2.json_return(resp), 200
+    except Exception as e:
+        code = codes.Builder_GraphController_CreateSubgraphConfig_UnknownError
+        return Gview2.error_return(code, description=str(e), cause=str(e)), 500
+
+
+@graph_controller_app.route('/subgraph/edit/<graph_id>', methods=['post'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def edit_subgraph_config(graph_id):
+    '''
+    edit subgraph configuration
+    edit subgraph configuration
+    ---
+    parameters:
+    -   in: path
+        name: graph_id
+        description: graph id
+        required: true
+        type: integer
+    -   in: 'body'
+        name: 'body'
+        description: 'request body'
+        required: true
+        schema:
+            $ref: '#/definitions/builder/graph/edit_subgraph_config'
+    '''
+    try:
+        # check graph_id
+        if not graph_id.isdigit():
+            message = _l("parameter graph_id must be int!")
+            code = codes.Builder_GraphController_EditSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+        code, ret = graph_Service.checkById(graph_id)
+        if code != 0:
+            code = codes.Builder_GraphController_EditSubgraphConfig_GraphIdNotExist
+            return Gview2.error_return(code, graph_id=graph_id), 500
+        # check parameters
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        if param_code < 0:
+            code = codes.Builder_GraphController_EditSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+        param_code, param_message = graphCheckParameters.edit_subgraph_config(params_json)
+        if param_code != graphCheckParameters.VALID:
+            code = codes.Builder_GraphController_EditSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+
+        code, res = subgraph_service.edit_subgraph_config(graph_id, params_json)
+        if code != codes.successCode:
+            return res, 500
+        return Gview2.json_return(res), 200
+    except Exception as e:
+        code = codes.Builder_GraphController_EditSubgraphConfig_UnknownError
+        return Gview2.error_return(code, description=str(e), cause=str(e)), 500
+
+
+@graph_controller_app.route('/subgraph', methods=['get'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def get_subgraph_list():
+    '''
+    query subgraph list
+    query subgraph list
+    ---
+    parameters:
+        -   name: graph_id
+            in: query
+            required: true
+            description: graph id
+            type: integer
+        -   name: subgraph_name
+            in: query
+            required: true
+            description: sub graph name
+            type: string
+        -   name: return_all
+            in: query
+            required: false
+            description: False return id, name, entity number, edge number; True additional return entity config info, edge config info
+            type: boolean
+    '''
+    try:
+        # check parameters
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        if param_code < 0:
+            code = codes.Builder_GraphController_GetSubgraphList_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+        param_code, param_message = graphCheckParameters.get_subgraph_list(params_json)
+        if param_code != graphCheckParameters.VALID:
+            code = codes.Builder_GraphController_GetSubgraphList_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+
+        code, res = subgraph_service.get_subgraph_list(params_json)
+        if code != codes.successCode:
+            return res, 500
+        return Gview2.json_return(res), 200
+    except Exception as e:
+        code = codes.Builder_GraphController_GetSubgraphList_UnknownError
+        return Gview2.error_return(code, description=str(e), cause=str(e)), 500
+
+
+@graph_controller_app.route('/subgraph/<subgraph_id>', methods=['get'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def get_subgraph_config(subgraph_id):
+    '''
+    get subgraph config info by subgrapph id
+    get subgraph config info by subgrapph id
+    ---
+    parameters:
+        -   in: path
+            name: subgraph_id
+            description: subgraph id
+            required: true
+            type: integer
+    '''
+    try:
+        # check subgraph_id
+        if not subgraph_id.isdigit():
+            message = _l("parameter subgraph_id must be int!")
+            code = codes.Builder_GraphController_GetSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+        if subgraph_id == "0":
+            message = _l("parameter subgraph_id cannot be 0!")
+            code = codes.Builder_GraphController_GetSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+
+        code, res = subgraph_service.get_subgraph_config(subgraph_id)
+        if code != codes.successCode:
+            return res, 500
+        return Gview2.json_return(res), 200
+    except Exception as e:
+        code = codes.Builder_GraphController_GetSubgraphConfig_UnknownError
+        return Gview2.error_return(code, description=str(e), cause=str(e)), 500
+
+
+@graph_controller_app.route('/subgraph/delete', methods=['post'], strict_slashes=False)
+@swag_from(swagger_new_response)
+def delete_subgraph_config():
+    '''
+    delete subgraph configuration
+    delete subgraph configuration
+    ---
+    parameters:
+        -   in: 'body'
+        name: 'body'
+        description: 'request body'
+        required: true
+        schema:
+            $ref: '#/definitions/builder/graph/delete_subgraph_config'
+    '''
+    try:
+        param_code, params_json, param_message = commonutil.getMethodParam()
+        if param_code < 0:
+            code = codes.Builder_GraphController_DeleteSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=param_message), 400
+        graph_id = params_json.get('graph_id')
+        subgraph_ids = params_json.get('subgraph_ids')
+        if not graph_id:
+            message = _l('parameter graph_id cannot be empty. ')
+            code = codes.Builder_GraphController_DeleteSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+        if not isinstance(graph_id, int):
+            message = _l('parameter graph_id must be integer. ')
+            code = codes.Builder_GraphController_DeleteSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+        if graph_id <= 0:
+            message = _l('parameter graph_id must be larger than zero. ')
+            code = codes.Builder_GraphController_DeleteSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+        if not subgraph_ids:
+            message = _l('parameter subgraph_ids cannot be empty. ')
+            code = codes.Builder_GraphController_DeleteSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+        if not isinstance(subgraph_ids, list):
+            message = _l('parameter subgraph_ids must be a list. ')
+            code = codes.Builder_GraphController_DeleteSubgraphConfig_ParamError
+            return Gview2.error_return(code, message=message), 400
+        for subgraph_id in subgraph_ids:
+            # check subgraph_id
+            if not isinstance(subgraph_id, int):
+                message = _l("parameter subgraph_id {} must be int!".format(subgraph_id))
+                code = codes.Builder_GraphController_DeleteSubgraphConfig_ParamError
+                return Gview2.error_return(code, message=message), 400
+            if subgraph_id <= 0:
+                message = _l("parameter subgraph_id must be larger than zero!")
+                code = codes.Builder_GraphController_DeleteSubgraphConfig_ParamError
+                return Gview2.error_return(code, message=message), 400
+
+        code, res = subgraph_service.delete_subgraph_config(graph_id, subgraph_ids)
+        if code != codes.successCode:
+            return res, 500
+        return Gview2.json_return(res), 200
+    except Exception as e:
+        code = codes.Builder_GraphController_DeleteSubgraphConfig_UnknownError
+        return Gview2.error_return(code, description=str(e), cause=str(e)), 500
