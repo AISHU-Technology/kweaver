@@ -146,6 +146,7 @@
     "notexist": "OpenSearch record does not exist",
     "graphDatabase": "Graph database",
     "indexConfig": "OpenSearch",
-    "addIndex": "button add index configuration"
+    "addIndex": "button add index configuration",
+    "dbUseing": "Graph database is being used"
   }
 }

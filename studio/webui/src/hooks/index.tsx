@@ -5,6 +5,7 @@ import { useForm } from './useForm';
 import { useThrottle } from './useThrottle';
 import PaginationConfig from './PaginationConfigHook';
 import useInterval from './useInterval';
+import { useUpdateEffect } from './useUpdateEffect';
 
 const HOOKS = {
   useForm,
@@ -13,7 +14,8 @@ const HOOKS = {
   useControllableValue,
   useForceUpdate,
   PaginationConfig,
-  useInterval
+  useInterval,
+  useUpdateEffect
 };
 
 export default HOOKS;

@@ -146,6 +146,7 @@
     "notexist": "OpenSearch 记录不存在",
     "graphDatabase": "图数据库",
     "indexConfig": "OpenSearch",
-    "addIndex": "按钮添加索引配置"
+    "addIndex": "按钮添加索引配置",
+    "dbUseing": "图数据库正在被使用"
   }
 }

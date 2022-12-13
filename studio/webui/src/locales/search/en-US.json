@@ -39,6 +39,8 @@
     "swContent": "Once switched, the existing search results and exploration analysis results will be cleared, please operate with caution.",
     "exit": "Exit",
     "runningErr": "Graph is running, please try again later…",
-    "reset": "Reset"
+    "reset": "Reset",
+    "findLess": "Find relevant results ",
+    "findOver": "Intelligent recommendation displays the top "
   }
 }

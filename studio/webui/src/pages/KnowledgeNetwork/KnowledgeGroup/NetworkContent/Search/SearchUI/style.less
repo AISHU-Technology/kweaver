@@ -125,7 +125,7 @@
           background-color: var(--ad-line-color);
         }
 
-        & > span {
+        &>span {
           display: inline-block;
           transform: translateY(4px);
         }
@@ -168,8 +168,8 @@
 
     .list-wrapper {
       flex: 1;
-      min-width: 0;
       min-height: 0;
+      min-width: 400px;
       height: 100%;
       background-color: #fff;
 
@@ -178,6 +178,7 @@
         justify-content: space-between;
         align-items: center;
         height: 32px;
+        min-width: 400px;
         margin: 0 24px;
         border-bottom: 1px solid var(--ad-line-color);
 
@@ -240,7 +241,7 @@
           font-size: 16px;
           width: 64px;
 
-          & + .ant-tabs-tab {
+          &+.ant-tabs-tab {
             margin-left: 120px;
           }
         }

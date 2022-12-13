@@ -43,11 +43,10 @@ class DetailModal extends Component {
   getTaskList = async () => {
     const { ontology_id, ontologyId } = this.props;
     const { page } = this.state;
-
     const data = {
       page,
       size: PAGESIZE,
-      ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+      ontology_id: ontology_id || ontologyId,
       used_task: []
     };
 

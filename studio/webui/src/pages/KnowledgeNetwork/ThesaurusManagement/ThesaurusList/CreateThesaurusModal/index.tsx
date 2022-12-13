@@ -162,6 +162,8 @@ const CreateThesaurusModal = (props: any) => {
         form.resetFields();
         setTags([]);
       }}
+      okText={intl.get('global.ok')}
+      cancelText={intl.get('global.cancel')}
     >
       <Form form={form} layout="vertical" validateTrigger={['onChange', 'onBlur']}>
         <Form.Item

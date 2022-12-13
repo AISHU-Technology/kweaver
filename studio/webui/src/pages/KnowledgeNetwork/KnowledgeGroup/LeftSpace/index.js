@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { Input, Button, Dropdown, Menu, Pagination, Tooltip, message } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
 
+import HOOKS from '@/hooks';
 import { wrapperTitle } from '@/utils/handleFunction';
 
 import IconFont from '@/components/IconFont';
@@ -35,7 +36,7 @@ const LeftSpace = props => {
   const [page, setPage] = useState(1); // 页码
   const [name, setName] = useState(''); // 搜索名称
 
-  useEffect(() => {
+  HOOKS.useUpdateEffect(() => {
     getGraphList({ page, order, rule });
   }, [page, order, rule]);
 

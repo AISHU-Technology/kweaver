@@ -161,7 +161,7 @@ const ModalContent = memo((props: ModalContentType) => {
                       <span className={isSelected ? 'selected colors' : 'colors'} style={{ backgroundColor: color }} />
                       <CheckOutlined
                         className="checked"
-                        style={{ color: '#fff', borderColor: color, display: isSelected ? 'block' : 'none' }}
+                        style={{ color, borderColor: color, display: isSelected ? 'block' : 'none' }}
                       />
                     </div>
                   </Radio.Button>

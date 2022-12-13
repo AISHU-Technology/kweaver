@@ -337,7 +337,7 @@ class GraphDatabase extends Component {
                     <div className="nodata-text">
                       <p>
                         {intl.get('configSys.click')}
-                        <span className="create-span" onClick={this.onCreate}>
+                        <span className="create-span" onClick={() => this.onCreate('orientdb')}>
                           {intl.get('global.emptyTableCreate')}
                         </span>
                         {intl.get('configSys.addStorage')}

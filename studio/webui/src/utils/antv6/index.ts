@@ -1,10 +1,10 @@
 import registerEdgeActivate from './registerEdgeActivate';
+import registerEdgeAdd from './registerEdgeAdd';
 import registerNodeActivate from './registerNodeActivate';
-import tooltip from './tooltip';
+import { tooltip, toolTipWorkFlow } from './tooltip';
 
 const constructEdgeConfig = (color: string, opacity: any) => ({
   style: { opacity, lineAppendWidth: 30 },
-  loopCfg: { position: 'top', dist: 50, style: { opacity } },
   labelCfg: { autoRotate: true, refY: 7, style: { fill: color, opacity } }
 });
 
@@ -13,5 +13,7 @@ const constructNodeConfig = (color: string, opacity: any) => ({
   labelCfg: { position: 'top', offset: 7, style: { opacity } }
 });
 
-export { registerEdgeActivate, registerNodeActivate, tooltip };
+export { registerEdgeActivate, registerEdgeAdd, registerNodeActivate, tooltip, toolTipWorkFlow };
 export { constructEdgeConfig, constructNodeConfig };
+export * from './registerCheckedEdge';
+export * from './registerModelNode';

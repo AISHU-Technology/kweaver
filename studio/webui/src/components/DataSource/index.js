@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect, useImperativeHandle, useCallback, useMemo, useRef } from 'react';
+import _ from 'lodash';
 import { Table, Button, Modal, message, Checkbox, Tooltip } from 'antd';
 import { ExclamationCircleFilled, LoadingOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import apiService from '@/utils/axios-http';
@@ -62,7 +63,6 @@ const DataSource = props => {
   const [currentSelected, setCurrentSelected] = useState(1);
   const [checkedSort, setCheckedSort] = useState('ascend'); // 选中数据排序
   const [loading, setLoading] = useState(false);
-  const [operationVisible, setOperationVisible] = useState(false); // 操作下拉卡片
   const [lockMqId, setLockMqId] = useState(0); // 锁定的rabbitMQ数据源id, 0正常, > 0 禁用其他, -1禁用MQ
   const usedID = useMemo(() => useDs.map(d => d.id), [useDs]); // 已使用的数据源id
   const isWorkflow = useMemo(() => window.location.pathname.includes(WORKFLOW_URL), []); // 是否是在构建流程中
@@ -107,6 +107,19 @@ const DataSource = props => {
       setSelectedRowKeys(mergeKeys);
     }
   }, [dataSourceData, usedID]);
+
+  useEffect(() => {
+    if (dataSourceData?.length === 0 && tableData?.length > 0 && usedID?.length > 0) {
+      const sedIdKV = {};
+      _.forEach(usedID, key => {
+        sedIdKV[key] = true;
+      });
+      const selectKeys = [...new Set([...usedID])];
+      setSelectedRowKeys(selectKeys);
+      const sourceData = _.filter(tableData, item => sedIdKV[item.id]);
+      setDataSourceData(sourceData);
+    }
+  }, [tableData, usedID.toString()]);
 
   // 获取初始数据
   const getData = async (page, order) => {
@@ -412,13 +425,31 @@ const DataSource = props => {
       render: (_, record) => {
         return (
           <div className="ad-center columnOp" style={{ justifyContent: 'flex-start' }}>
-            <Button type="link" onClick={() => onEdit(record)}>
+            <Button
+              type="link"
+              onClick={e => {
+                e.stopPropagation();
+                onEdit(record);
+              }}
+            >
               {intl.get('datamanagement.edit')}
             </Button>
-            <Button type="link" onClick={() => onCopy(record)}>
+            <Button
+              type="link"
+              onClick={e => {
+                e.stopPropagation();
+                onCopy(record);
+              }}
+            >
               {intl.get('datamanagement.copy')}
             </Button>
-            <Button type="link" onClick={() => onOperationDel(record)}>
+            <Button
+              type="link"
+              onClick={e => {
+                e.stopPropagation();
+                onOperationDel(record);
+              }}
+            >
               {intl.get('datamanagement.delete')}
             </Button>
           </div>
@@ -534,7 +565,7 @@ const DataSource = props => {
         pagination={checked ? paginationBySelected : pagination}
         className={`dataSource-table ${isUnCheckAll && 'uncheck-all'}`}
         rowKey={record => record.id}
-        rowClassName={record => (record.id === selectKey && operationVisible ? 'selectRow' : '')}
+        rowClassName={record => (record.id === selectKey ? 'selectRow' : '')}
         tableLayout="fixed"
         loading={
           loading && {

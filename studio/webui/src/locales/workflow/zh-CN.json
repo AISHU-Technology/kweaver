@@ -238,7 +238,8 @@
       "emptyErr": "输入不能为空",
       "repeatErr": "重复选择，请修改",
       "delSuccess": "属性配置删除成功！",
-      "timedrun": "定时运行"
+      "timedrun": "定时运行",
+      "configNow": "提交配置"
     },
 
     "ok": "确定",

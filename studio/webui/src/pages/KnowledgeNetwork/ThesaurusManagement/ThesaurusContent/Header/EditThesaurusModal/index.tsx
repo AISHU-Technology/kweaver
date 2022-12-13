@@ -11,7 +11,7 @@ const { TextArea } = Input;
 const ERROR_CODE: Record<string, string> = {
   'Builder.LexiconController.DeleteLexicon.LexiconIdNotExist': 'ThesaurusManage.nullThesaurusId',
   'Builder.LexiconController.GetLabels.KnowledgeIdNotExist': 'ThesaurusManage.nullKnowlegeId'
-}
+};
 const EditThesaurusModal = (props: any) => {
   const [form] = Form.useForm();
   const { isVisible, knowledge, closeModal, getThesaurusList, selectedThesaurus } = props;
@@ -25,7 +25,7 @@ const EditThesaurusModal = (props: any) => {
     const initvalue = {
       name: selectedThesaurus?.lexicon_name,
       description: selectedThesaurus?.description
-    }
+    };
     form.setFieldsValue({ ...initvalue });
 
     const { labels } = selectedThesaurus;
@@ -33,8 +33,8 @@ const EditThesaurusModal = (props: any) => {
   }, [isVisible]);
 
   /**
- * 获取labels
- */
+   * 获取labels
+   */
   const getLabels = async () => {
     if (!knowledge?.id) return;
     try {
@@ -49,47 +49,46 @@ const EditThesaurusModal = (props: any) => {
     } catch (err) {
       //
     }
-  }
+  };
 
   // 提交
   const onSubmit = () => {
-    form
-      .validateFields()
-      .then(async values => {
-        const { name, description } = values;
-        const data = {
-          name,
-          description: description?.trim() || '',
-          labels: tags,
-          id: selectedThesaurus?.id
-        }
+    form.validateFields().then(async values => {
+      const { name, description } = values;
+      const data = {
+        name,
+        description: description?.trim() || '',
+        labels: tags,
+        id: selectedThesaurus?.id
+      };
 
-        const response = await serverThesaurus.thesaurusEdit(data);
-        const { ErrorCode } = response || {};
-        if (ErrorCode === 'Builder.LexiconController.EditLexicon.DuplicatedName') {
-          // 重复的名字
-          form.setFields([
-            {
-              name: 'name',
-              errors: [intl.get('ThesaurusManage.nameRepeat')]
-            }
-          ]);
-          return;
-        }
-        // 其他错误
-        if (ErrorCode) {
-          ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode]))
-            : message.error(response?.ErrorDetails);
-          closeModal();
-          return;
-        }
-        message.success(intl.get('graphList.editSuccess'));
+      const response = await serverThesaurus.thesaurusEdit(data);
+      const { ErrorCode } = response || {};
+      if (ErrorCode === 'Builder.LexiconController.EditLexicon.DuplicatedName') {
+        // 重复的名字
+        form.setFields([
+          {
+            name: 'name',
+            errors: [intl.get('ThesaurusManage.nameRepeat')]
+          }
+        ]);
+        return;
+      }
+      // 其他错误
+      if (ErrorCode) {
+        ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode])) : message.error(response?.ErrorDetails);
         closeModal();
-        getThesaurusList({});
-      })
-  }
+        return;
+      }
+      message.success(intl.get('graphList.editSuccess'));
+      closeModal();
+      getThesaurusList({});
+    });
+  };
   // 取消
-  const onCancel = () => { closeModal() }
+  const onCancel = () => {
+    closeModal();
+  };
 
   return (
     <Modal
@@ -105,6 +104,8 @@ const EditThesaurusModal = (props: any) => {
       afterClose={() => {
         form.resetFields();
       }}
+      okText={intl.get('global.ok')}
+      cancelText={intl.get('global.cancel')}
     >
       <Form
         form={form}
@@ -115,7 +116,6 @@ const EditThesaurusModal = (props: any) => {
           description: selectedThesaurus?.description
         }}
       >
-
         <Form.Item
           name="name"
           label={intl.get('graphList.name')}
@@ -137,12 +137,8 @@ const EditThesaurusModal = (props: any) => {
             }}
           />
         </Form.Item>
-        <Form.Item
-          name="labels"
-          label={intl.get('ThesaurusManage.labels')}
-        >
+        <Form.Item name="labels" label={intl.get('ThesaurusManage.labels')}>
           <Labels setTags={setTags} tags={tags} selectOption={selectOption} />
-
         </Form.Item>
 
         <Form.Item
@@ -164,6 +160,6 @@ const EditThesaurusModal = (props: any) => {
         </Form.Item>
       </Form>
     </Modal>
-  )
-}
-export default EditThesaurusModal
+  );
+};
+export default EditThesaurusModal;

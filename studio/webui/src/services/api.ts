@@ -92,7 +92,7 @@ const API = {
   taskGet: `${baseBuilder}/task`,
   taskCreate: `${baseBuilder}/task`,
   taskStop: `${baseBuilder}/task/stoptask`,
-  taskDelete: `${baseBuilder}/task`,
+  taskDelete: `${baseBuilder}/task/delete`,
   taskGetProgress: `${baseBuilder}/task/get_progress`,
   graphDelByIds: `${baseBuilder}/graph/delbyids`,
   taskPerform: `${baseBuilder}/task`,
@@ -109,7 +109,6 @@ const API = {
   graphGet: `${baseBuilder}/graph`,
   graphEdit: `${baseBuilder}/graph`,
   graphCreate: `${baseBuilder}/graph`,
-  graphGetBis: `${baseBuilder}/graph/getbis`,
   graphSaveNoCheck: `${baseBuilder}/graph/savenocheck`,
   graphCheckKmApInfo: `${baseBuilder}/graph/check_kmapinfo`,
   graphGetInfoExt: `${baseBuilder}/graph/graph_InfoExt/graphid`,
@@ -137,7 +136,16 @@ const API = {
   // intelligence
   intelligenceCalculate: `${baseBuilder}/graph/intelligence/task`,
   intelligenceGetByKnw: `${baseBuilder}/knw/intelligence`,
-  intelligenceGetByGraph: `${baseBuilder}/graph/intelligence`
+  intelligenceGetByGraph: `${baseBuilder}/graph/intelligence`,
+
+  // subGraph
+  subGraphGetList: `${baseBuilder}/graph/subgraph`,
+  subGraphInfoDetail: `${baseBuilder}/graph/subgraph`,
+  subgraphRunTask: `${baseBuilder}/task/batch`,
+  subgraphHistoryDetail: `${baseBuilder}/task/subgraph`,
+  subgraphAdd: `${baseBuilder}/graph/subgraph`,
+  subgraphEdit: `${baseBuilder}/graph/subgraph/edit`,
+  subgraphDelete: `${baseBuilder}/graph/subgraph/delete`
 };
 
 export { API };

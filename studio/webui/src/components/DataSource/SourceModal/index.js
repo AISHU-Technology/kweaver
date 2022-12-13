@@ -263,7 +263,7 @@ const ModalContent = props => {
               message.error(intl.get('datamanagement.notAuth'));
               break;
             case curCode === 500002 || curCode === 'Builder.service.dsm_Service.DsmService.addds.SameNameError':
-              message.error(intl.get('datamanagement.alreadyUsed'));
+              setErrors(form, { dsname: intl.get('datamanagement.alreadyUsed') });
               break;
             case curCode === 'Studio.Graph.AddDefaultPermissionError':
               message.error('datamanagement.addAuthError');

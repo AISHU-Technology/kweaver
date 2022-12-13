@@ -67,6 +67,12 @@
     "graphID": "knowledge graph ID",
     "openSearchNull": "OpenSearch not bound, please configure it at System Configuration, Storage Management.",
     "databaseNull": "Graph database not bound, please configure it at System Configuration, Storage Management.",
-    "goNow": "GO now"
+    "goNow": "GO now",
+    "lenErr": "Up to {len} characters",
+    "onlyKeyboard": "Only Chinese, English, numbers and special characters on the keyboard",
+    "onlyNormalName": "Support Chinese and English, numbers and underscores",
+    "batchTask": "For batch task",
+    "ge": "",
+    "add": "Add"
   }
 }

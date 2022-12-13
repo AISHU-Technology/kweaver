@@ -26,19 +26,24 @@ describe('Statistics', () => {
     await sleep();
     wrapper.update();
     const { score } = wrapper.find('ScoreCard').at(0).props() as any;
-    expect(score).toBe(mockStatistics.data_quality_score);
+    expect(score).toBe(mockStatistics.data_quality_B);
   });
 
   it('test calculate failed', async () => {
     const wrapper = init();
     await sleep();
-    mockServiceResponse({ ErrorCode: 'failed', Description: 'failed' });
+    mockServiceResponse({
+      ErrorCode: 'failed',
+      Description: 'failed',
+      res: { calculate_status: 'CALCULATE_FAIL', last_task_message: 'failed' }
+    });
 
     act(() => {
       wrapper.find('.compute-btn').simulate('click');
     });
     await sleep();
     wrapper.update();
+
     expect(wrapper.find('.error-tip .error-text').text()).toBe('failed');
 
     act(() => {

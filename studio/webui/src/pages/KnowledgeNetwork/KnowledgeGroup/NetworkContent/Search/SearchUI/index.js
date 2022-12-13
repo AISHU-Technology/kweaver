@@ -75,11 +75,11 @@ class searchUI extends PureComponent {
   componentDidMount() {
     const { selectedGraph } = this.props;
     if (!(selectedGraph && selectedGraph.step_num >= 6)) return;
-    this.onChoiceGraph({
-      kg_id: selectedGraph?.id?.toString(),
-      kg_name: selectedGraph?.KG_name,
-      graph_db_name: selectedGraph.graph_db_name
-    });
+    // this.onChoiceGraph({
+    //   kg_id: selectedGraph?.id?.toString(),
+    //   kg_name: selectedGraph?.KG_name,
+    //   graph_db_name: selectedGraph?.graphdb_dbname
+    // });
     window.addEventListener('resize', this.listenResize);
     window.addEventListener('click', this.listenRightInfo);
   }
@@ -110,7 +110,7 @@ class searchUI extends PureComponent {
       this.onChoiceGraph({
         kg_id: this.props.selectedGraph?.id?.toString(),
         kg_name: this.props.selectedGraph?.KG_name,
-        graph_db_name: this.props.selectedGraph?.graph_db_name
+        graph_db_name: this.props.selectedGraph?.graphdb_dbname
       });
 
       // 初始化
@@ -513,7 +513,7 @@ class searchUI extends PureComponent {
     const { id, name } = data;
     const params = {
       id: this.props.selectGraph.kg_id,
-      rid: encodeURIComponent(id)
+      rid: id
     };
 
     this.setState({ analysisTitle: name, analysisLoading: true });
@@ -690,7 +690,8 @@ class searchUI extends PureComponent {
                       />
 
                       <span>
-                        {intl.get('search.find1')}
+                        {/* {intl.get('search.find1')} */}
+                        {resInfo?.count <= 1000 ? intl.get('search.findLess') : intl.get('search.findOver')}
                         <span className="hl-text">{resInfo.count}</span>
                         {intl.get('search.find2', { time: resInfo.time })}
                       </span>
