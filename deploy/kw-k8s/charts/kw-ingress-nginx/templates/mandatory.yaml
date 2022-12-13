@@ -7,6 +7,12 @@ metadata:
     app.kubernetes.io/name: {{ .Values.image.name }}
     app.kubernetes.io/part-of: {{ .Values.image.name }}
 
+data:
+  proxy-connect-timeout: "300"
+  proxy-read-timeout: "300"
+  proxy-send-timeout: "300"
+  proxy-body-size: "200m"
+
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -103,6 +109,23 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -157,6 +180,17 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
