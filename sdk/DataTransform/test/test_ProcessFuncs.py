@@ -74,3 +74,61 @@ def test_passage_parse(dir_test):
         for passages in row['passages']:
             for passage in passages:
                 assert len(passage) <= 200
+
+
+def test_knowledge_graph_alignment():
+    start_time = time.time()
+    # kg1_rel_path = '../sample_data/MED-BBK-9K/rel_triples_1'
+    # kg1_attr_path = '../sample_data/MED-BBK-9K/attr_triples_1'
+    # kg2_rel_path = '../sample_data/MED-BBK-9K/rel_triples_2'
+    # kg2_attr_path = '../sample_data/MED-BBK-9K/attr_triples_2'
+    # test_path = '../sample_data/MED-BBK-9K/ent_links'
+
+    # kg1_rel_path = '../sample_data/D_W_15K/rel_triples_1'
+    # kg1_attr_path = '../sample_data/D_W_15K/attr_triples_1'
+    # kg2_rel_path = '../sample_data/D_W_15K/rel_triples_2'
+    # kg2_attr_path = '../sample_data/D_W_15K/attr_triples_2'
+    # test_path = '../sample_data/D_W_15K/ent_links'
+
+    kg1_rel_path = '../sample_data/irrelevant/rel_triples_1'
+    kg1_attr_path = '../sample_data/irrelevant/attr_triples_1'
+    kg2_rel_path = '../sample_data/irrelevant/rel_triples_2'
+    kg2_attr_path = '../sample_data/irrelevant/attr_triples_2'
+    test_path = '../sample_data/irrelevant/ent_links'
+
+    # kg1_rel_path = '../sample_data/EN_FR_15K_V2/rel_triples_1'
+    # kg1_attr_path = '../sample_data/EN_FR_15K_V2/attr_triples_1'
+    # kg2_rel_path = '../sample_data/EN_FR_15K_V2/rel_triples_2'
+    # kg2_attr_path = '../sample_data/EN_FR_15K_V2/attr_triples_2'
+    # test_path = '../sample_data/EN_FR_15K_V2/ent_links'
+
+    train_data_files = {"kg1_rel_path": kg1_rel_path, "kg1_attr_path": kg1_attr_path, "kg2_rel_path": kg2_rel_path,
+                        "kg2_attr_path": kg2_attr_path}
+    test_data_files = {"test_path": test_path}
+    train_dataset_dict = DataflowDatasetDict(load_dataset('csv', data_files=train_data_files, sep="\t", header=None))
+    test_dataset_dict = DataflowDatasetDict(load_dataset('csv', data_files=test_data_files, sep="\t", header=None))
+
+    # 配置处理器
+    knowledge_graph_alignment_processor = DatasetProcessor(
+        process_name="knowledge_graph_alignment",
+        process_method="self_define_process",
+        aug_func=knowledge_graph_alignment,
+        model_name='GCN_Align',
+        iteration=1,
+        test_dataset_dict=test_dataset_dict,
+        out_path='./'
+    )
+    # 设置pipeline，pipeline由一个个processor组成
+    train_dataset_dict.set_process_pipeline([knowledge_graph_alignment_processor])
+    # 运行pipeline
+    train_dataset_dict.run_process_pipeline()
+    # 查看结果
+    print(train_dataset_dict["mapping_res"].to_pandas().head())
+    # 检查行数
+    end_time = time.time()
+    # 执行时长
+    print(end_time - start_time)
+
+
+if __name__ == '__main__':
+    res = test_knowledge_graph_alignment()
