@@ -1,11 +1,20 @@
 .ad-search-input {
-  width: 272px;
+  &.input-w-272 {
+    width: 272px;
+  }
 
   .s-input-icon {
     color: var(--ad-disabled-color);
     cursor: pointer;
 
     &:hover {
+      color: var(--ad-primary-color);
+    }
+  }
+
+  &.ant-input-affix-wrapper-focused,
+  &.ant-input-affix-wrapper:focus {
+    .s-input-icon {
       color: var(--ad-primary-color);
     }
   }

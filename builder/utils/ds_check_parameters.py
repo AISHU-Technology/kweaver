@@ -4,6 +4,7 @@ import json
 from config import config as Config
 from utils.CommonUtil import commonutil
 import re
+from flask_babel import gettext as _l
 
 
 class DsCheckParameters(object):
@@ -16,10 +17,6 @@ class DsCheckParameters(object):
     ds_getall_params = ["page", "size", "order", "knw_id"]
     task_status_params = ["page", "size", "order", "status"]
     search_taskbyname_params = ["page", "size", "order", "graph_name", "status", "task_type", "trigger_type"]
-    # ds_add_params = ["dsname", "dataType", "data_source", "ds_address", "ds_port", "ds_user", "ds_password", "ds_path",
-    #                  "extract_type"]
-    # ds_contest_params = ["data_source", "ds_address", "ds_port", "ds_user", "ds_password", "ds_path"]
-
     ds_add_params = ("dsname", "dataType", "data_source", "ds_address", "ds_port", "ds_user", "ds_password", "ds_path",
                      "extract_type", "ds_auth", "vhost", "queue", "json_schema", "knw_id")
     ds_edit_params = ("dsname", "dataType", "data_source", "ds_address", "ds_port", "ds_user", "ds_password", "ds_path",
@@ -102,7 +99,7 @@ class DsCheckParameters(object):
                 ret_status = self.INVALID
         # 缺少参数
         if len(message_dict["no_request"]) > 0:
-            message += " parameters: %s can not be empty !" % ",".join(
+            message += _l("parameters: %s can not be empty!") % ",".join(
                 message_dict["no_request"])
             return ret_status, message
         for k in params_json.keys():
@@ -113,36 +110,31 @@ class DsCheckParameters(object):
                         continue
                     else:
                         if not value.isdigit() or value == "0":
-                            message += " parameters: " + k + " must be int, and more than zero!"
+                            message += _l("parameters: page must be int, and more than zero!")
                             ret_status = self.INVALID
-
                 elif k == "order":
-                    if value not in ["ascend", "descend"]:
-                        message += " parameters: " + k + " must be ascend or descend!"
+                    if value not in ["asc", "desc"]:
+                        message += _l("parameters: order must be asc or desc!")
                         ret_status = self.INVALID
-
                 elif k == "status":
                     if value not in ["normal", "running", "waiting", "failed", "stop", "all"]:
-                        message += " parameters: " + k + ' must be in (normal,running,waiting,failed, stop,all)!'
+                        message += _l("parameters: status must be in (normal, running, waiting, failed, stop, all)!")
                         ret_status = self.INVALID
                 elif k == "graph_name":
                     if len(value) > 50:
-                        message += " parameters: " + k + " Length over 50 "
+                        message += _l("parameters: graph_name Length over 50.")
                         ret_status = self.INVALID
-                    # if len(value) > 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', value):
-                    #     message += " parameters: " + k + " Length over 50 or Characters are not _, Chinese, English！"
-                    #     ret_status = self.INVALID
                 elif k == "size":
                     if not value.isdigit() or value == "0":
-                        message += " parameters: " + k + " must be int, and more than zero!"
+                        message += _l("parameters: size must be int, and more than zero!")
                         ret_status = self.INVALID
                 elif k == "task_type":
                     if value not in ("full", "increment", "all"):
-                        message += " parameters: " + k + ' must be in (full,increment,all)'
+                        message += _l("parameters: tas_type must be in (full,increment,all)")
                         ret_status = self.INVALID
                 elif k == "trigger_type":
                     if value not in ("0", "1", "2", "all"):
-                        message += " parameters: " + k + ' must be in (0,1,2,all)'
+                        message += _l("parameters: trigger_type must be in (0,1,2,all)")
                         ret_status = self.INVALID
             else:
                 # 注释 api 如果传入错误请求参数，要校验
@@ -151,13 +143,13 @@ class DsCheckParameters(object):
                     ret_status = self.INVALID
 
         if len(message_dict["request_error"]) > 0:
-            message += " parameters:  %s  error!" % ",".join(message_dict["request_error"])
+            message += _l("parameters: %s error!") % ",".join(message_dict["request_error"])
         if len(message_dict["request_illegal"]) > 0:
-            message += " parameters: %s illegal!" % ",".join(message_dict["request_illegal"])
+            message += _l("parameters: %s illegal!") % ",".join(message_dict["request_illegal"])
         if len(message_dict["no_rule"]) > 0:
-            message += " parameters: %s no rule!" % ",".join(message_dict["no_rule"])
+            message += _l("parameters: %s no rule!") % ",".join(message_dict["no_rule"])
         if message == "":
-            message = "unknown error!"
+            message = _l("unknown error!")
         return ret_status, message
 
     def getAllPar(self, params_json):
@@ -1202,25 +1194,25 @@ class DsCheckParameters(object):
                 if not k in values:
                     MissingParameters.append(k)
         if len(unnecessaryParameters) > 0:
-            message += "parameters:  %s  are not required!" % ",".join(unnecessaryParameters)
+            message += _l("parameters:  %s  are not required!" % ",".join(unnecessaryParameters))
             ret_status = self.INVALID
         if len(MissingParameters) > 0:
-            message += "parameters:  %s  are Missing!" % ",".join(MissingParameters)
+            message += _l("parameters:  %s  are Missing!" % ",".join(MissingParameters))
             ret_status = self.INVALID
         # 校验顺序一 先校验参数是否缺少或者多的
         if len(unnecessaryParameters) > 0 or len(MissingParameters) > 0:
             return ret_status, message
         if not isinstance(task_ids, list):
-            message += "parameters task_id must be list!"
+            message += _l("parameters task_id must be list!")
             ret_status = self.INVALID
         else:
             if task_ids:
                 for v in task_ids:
-                    if not isinstance(v, str) or len(v) > 36:
-                        message += " parameters: task_ids content must be str and length<=36"
+                    if not isinstance(v, int):
+                        message += _l("parameters: task_ids content must be int.")
                         ret_status = self.INVALID
             else:
-                message += " parameters: task_ids list can not be empty"
+                message += _l("parameters: task_ids list can not be empty.")
                 ret_status = self.INVALID
         return ret_status, message
 

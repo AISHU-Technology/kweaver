@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { Modal, Form, Input, message } from 'antd';
 import intl from 'react-intl-universal';
@@ -12,7 +12,7 @@ const EDIT_ERROR: Record<string, string> = {
   'Builder.LexiconController.InsertLexiconWord.FormatMismatch': 'ThesaurusManage.formatMismatch',
   'Builder.LexiconController.InsertLexiconWord.InvalidStatus': 'ThesaurusManage.editwordsError',
   'Builder.LexiconController.EditLexiconWord.InvalidStatus': 'ThesaurusManage.editwordsError'
-}
+};
 const AddWordsModal = (props: any) => {
   const [form] = Form.useForm();
   const { isVisible, type, columns, page, selectedThesaurus, editRecord } = props;
@@ -23,7 +23,7 @@ const AddWordsModal = (props: any) => {
     if (type === 'edit') {
       form.setFieldsValue({ ...editRecord });
     }
-  }, [type, editRecord, isVisible])
+  }, [type, editRecord, isVisible]);
 
   /**
    * 确认提交
@@ -39,7 +39,7 @@ const AddWordsModal = (props: any) => {
         const data = {
           word_info: values,
           id: selectedThesaurus?.id
-        }
+        };
 
         try {
           const response = await serverThesaurus.thesaurusInsertWords(data);
@@ -50,7 +50,8 @@ const AddWordsModal = (props: any) => {
             return;
           }
           if (ErrorCode) {
-            EDIT_ERROR[ErrorCode] ? message.error(intl.get(EDIT_ERROR[ErrorCode]))
+            EDIT_ERROR[ErrorCode]
+              ? message.error(intl.get(EDIT_ERROR[ErrorCode]))
               : message.error(response?.ErrorDetails);
             return;
           }
@@ -69,7 +70,7 @@ const AddWordsModal = (props: any) => {
           new_info: values,
           old_info: editRecord,
           id: selectedThesaurus?.id
-        }
+        };
         try {
           const response = await serverThesaurus.thesaurusEditWords(data);
           const { ErrorCode } = response || {};
@@ -79,7 +80,8 @@ const AddWordsModal = (props: any) => {
             return;
           }
           if (ErrorCode) {
-            EDIT_ERROR[ErrorCode] ? message.error(intl.get(EDIT_ERROR[ErrorCode]))
+            EDIT_ERROR[ErrorCode]
+              ? message.error(intl.get(EDIT_ERROR[ErrorCode]))
               : message.error(response?.ErrorDetails);
             return;
           }
@@ -90,8 +92,8 @@ const AddWordsModal = (props: any) => {
           closeModal();
         }
       }
-    })
-  }
+    });
+  };
   // 设置错误状态
   const setFormError = () => {
     _.forEach(columns, (item: any, index: number) => {
@@ -101,14 +103,16 @@ const AddWordsModal = (props: any) => {
           errors: [intl.get('ThesaurusManage.wordsExists')]
         }
       ]);
-    })
-  }
+    });
+  };
   // 恢复正确的状态
   const setFormSuccess = () => {
     if (!isExisted) return;
     form.validateFields();
-  }
-  const onCancel = () => { closeModal() }
+  };
+  const onCancel = () => {
+    closeModal();
+  };
   return (
     <Modal
       visible={isVisible}
@@ -123,60 +127,58 @@ const AddWordsModal = (props: any) => {
       afterClose={() => {
         form.resetFields();
       }}
+      okText={intl.get('global.ok')}
+      cancelText={intl.get('global.cancel')}
     >
       <div>
-        <Form
-          form={form}
-          layout="vertical"
-        >
+        <Form form={form} layout="vertical">
           {columns.map((item: any, index: number) => {
-            return (
-              index !== columns.length - 1 ?
-                <React.Fragment key={index}>
-                  <Form.Item
-                    name={item.dataIndex}
-                    label={item.dataIndex}
-                    rules={[
-                      {
-                        required: true,
-                        message: intl.get('global.noNull')
-                      },
-                      {
-                        validator: async (rule, value) => {
-                          const test =
-                            /([\\s\u4e00-\u9fa5_a-zA-Z0-9=~!@#$&%^&*()_+`'"{}[\];:,.?<>|/~！@#￥%…&*·（）—+。={}|【】：；‘’“”、《》？，。/\n\\]+$)|-/;
-                          const reg = /(^\s*|\s*$)/g;
+            return index !== columns.length - 1 ? (
+              <React.Fragment key={index}>
+                <Form.Item
+                  name={item.dataIndex}
+                  label={item.dataIndex}
+                  rules={[
+                    {
+                      required: true,
+                      message: intl.get('global.noNull')
+                    },
+                    {
+                      validator: async (rule, value) => {
+                        const test =
+                          /([\\s\u4e00-\u9fa5_a-zA-Z0-9=~!@#$&%^&*()_+`'"{}[\];:,.?<>|/~！@#￥%…&*·（）—+。={}|【】：；‘’“”、《》？，。/\n\\]+$)|-/;
+                        const reg = /(^\s*|\s*$)/g;
 
-                          if (value?.toString().replace(reg, '').length > 50) {
-                            return Promise.reject([intl.get('datamanagement.maxLength')]);
-                          }
+                        if (value?.toString().replace(reg, '').length > 50) {
+                          return Promise.reject([intl.get('datamanagement.maxLength')]);
+                        }
 
-                          if (value && !test.test(value?.toString()?.replace(reg, ''))) {
-                            return Promise.reject([intl.get('graphList.onlyKeyboard')]);
-                          }
+                        if (value && !test.test(value?.toString()?.replace(reg, ''))) {
+                          return Promise.reject([intl.get('graphList.onlyKeyboard')]);
                         }
                       }
-                    ]}
-                  >
-                    <Input
-                      placeholder={intl.get('searchConfig.pleaseInput')}
-                      autoComplete="off"
-                      onChange={e => {
-                        const { value } = e.target;
-                        if (value === ' ') {
-                          form.setFieldsValue({ [item.dataIndex]: value.trim() });
-                        }
-                        setFormSuccess();
-                        setIsExisted(false);
-                      }}
-                    />
-                  </Form.Item>
-                </React.Fragment> : null
-            )
+                    }
+                  ]}
+                >
+                  <Input
+                    placeholder={intl.get('searchConfig.pleaseInput')}
+                    autoComplete="off"
+                    onChange={e => {
+                      const { value } = e.target;
+                      if (value === ' ') {
+                        form.setFieldsValue({ [item.dataIndex]: value.trim() });
+                      }
+                      setFormSuccess();
+                      setIsExisted(false);
+                    }}
+                  />
+                </Form.Item>
+              </React.Fragment>
+            ) : null;
           })}
         </Form>
       </div>
-    </Modal >
-  )
-}
+    </Modal>
+  );
+};
 export default AddWordsModal;

@@ -65,7 +65,7 @@ type ReqSearchEArgs struct {
 // @Router /api/engine/v1/explore/{id}/searche [post]
 // @Accept  json
 // @Produce json
-// @Success 200 {object} controllers.SearchVRes "result string"
+// @Success 200 {object} controllers.EdgeRes "result string"
 // @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
 // @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 // @Failure 500 {object} utils.Error "EngineServer.ErrConfigStatusErr: configuration is in editing status"

@@ -1,4 +1,6 @@
 # -*-coding:utf-8-*-
+from flask_babel import gettext as _l
+
 class celery_check_params(object):
     VALID = 0
     INVALID = -1
@@ -178,6 +180,38 @@ class celery_check_params(object):
         message += "\n"
         return ret_status, message
 
+    def batch_build(self, params_json):
+        # check parameter subgraph_ids
+        subgraph_ids = params_json.get('subgraph_ids')
+        if not subgraph_ids:
+            ret_status = self.INVALID
+            message = _l('subgraph_ids cannot be empty.')
+            return ret_status, message
+        elif type(subgraph_ids) != list:
+            ret_status = self.INVALID
+            message = _l('subgraph_ids must be a list.')
+            return ret_status, message
+        elif len(set(subgraph_ids)) != len(subgraph_ids):
+            ret_status = self.INVALID
+            message = _l('subgraph_ids have repeating items.')
+            return ret_status, message
+        else:
+            for subgraph_id in subgraph_ids:
+                if type(subgraph_id) != int or subgraph_id <= 0:
+                    ret_status = self.INVALID
+                    message = _l('subgraph_id must be int and must be larger than zero.')
+                    return ret_status, message
+        # check parameter write_mode
+        write_mode = params_json.get('write_mode')
+        if not write_mode:
+            ret_status = self.INVALID
+            message = _l('write_mode cannot be empty.')
+            return ret_status, message
+        elif write_mode not in ['skip', 'overwrite']:
+            ret_status = self.INVALID
+            message = _l('write_mode must be skip or overwrite.')
+            return ret_status, message
+        return self.VALID, ''
 
 celery_check_params=celery_check_params()
 

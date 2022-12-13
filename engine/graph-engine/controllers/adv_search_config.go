@@ -13,6 +13,7 @@ import (
 	"graph-engine/utils"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // -------------------------
@@ -42,7 +43,7 @@ type AdvConf struct {
 }
 
 // 获取配置列表
-func GetAdvSearchConf(kNetID int, filter, query, sort string, page, size int) (httpcode int, res interface{}) {
+func GetAdvSearchConf(kNetID int, filter, query, sort string, page, size int, dataIds string) (httpcode int, res interface{}) {
 	var SearchConf GetSearchConfRes
 	SearchConf.Res = make([]AdvConfKG, 0)
 
@@ -51,13 +52,25 @@ func GetAdvSearchConf(kNetID int, filter, query, sort string, page, size int) (h
 		return 500, err
 	}
 
+	//filter
+	var trueKgids []int64
+	if kgids != nil && dataIds != "" {
+		filter := strings.Split(dataIds, ",")
+		for _, kgid := range kgids {
+			id := strconv.Itoa(int(kgid))
+			if utils.In(id, filter) == true {
+				trueKgids = append(trueKgids, kgid)
+			}
+		}
+		kgids = trueKgids
+	}
+	if kgids == nil {
+		return http.StatusOK, SearchConf
+	}
+
 	advConfs, err := dao.GetAdvSearchConf(filter, query, sort)
 	if err != nil {
 		return 500, err
-	}
-
-	if advConfs == nil {
-		return http.StatusOK, SearchConf
 	}
 
 	// 双层排序，外层知识网络从新至旧降序，里层高级配置从新至旧降序
@@ -144,7 +157,7 @@ func GetAdvSearchConf(kNetID int, filter, query, sort string, page, size int) (h
 // 删除搜索配置
 // -------------------------
 type DelSearchConfRes struct {
-	Res string `json:"res"`
+	Res []int `json:"res"`
 }
 
 func DelAdvSearchConf(confIDs []int) (httpcode int, res interface{}) {
@@ -163,17 +176,15 @@ func DelAdvSearchConf(confIDs []int) (httpcode int, res interface{}) {
 	}
 
 	if len(confidKgids) == 0 {
-		delSearchConfRes.Res = "delete success"
 		return http.StatusOK, delSearchConfRes
 	}
 
-	// 删除有权限的，保留无权限的
 	err = dao.DelAdvSearchConf(engine, confIDs)
 	if err != nil {
 		return 500, err
 	}
 
-	delSearchConfRes.Res = "delete success"
+	delSearchConfRes.Res = confIDs
 	return http.StatusOK, delSearchConfRes
 }
 
@@ -411,7 +422,7 @@ type AdvConfKGList struct {
 	ConfigStatus string `json:"config_status"`
 }
 
-func AdvSearchConfKGList(kNetId int, kgName string) (httpcode int, res interface{}) {
+func AdvSearchConfKGList(kNetId int, kgName string, dataIds string) (httpcode int, res interface{}) {
 	var hasKGListRes AdvConfKGListRes
 	hasKGListRes.Res = make([]AdvConfKGList, 0)
 
@@ -425,8 +436,21 @@ func AdvSearchConfKGList(kNetId int, kgName string) (httpcode int, res interface
 		return 500, err
 	}
 
-	if kglist != nil {
+	//filter
+	var trueKglist []utils.KGConf
+	if kglist != nil && dataIds != "" {
+		filter := strings.Split(dataIds, ",")
 		for _, kg := range kglist {
+			if utils.In(kg.ID, filter) == true {
+				trueKglist = append(trueKglist, kg)
+			}
+		}
+	} else {
+		trueKglist = kglist
+	}
+
+	if trueKglist != nil {
+		for _, kg := range trueKglist {
 			kglistRes := AdvConfKGList{
 				Name:         kg.Name,
 				UpdateTime:   kg.UpdateTime,
@@ -496,4 +520,23 @@ func checkConfContent(sc models.SchemaInterface, confContent dao.ConfContent) (e
 	}
 
 	return nil
+}
+
+type GetKgIdBackwardRes struct {
+	Res []int `json:"res"`
+}
+
+func GetKGIDBackward(ConfigId []int) (httpcode int, res interface{}) {
+
+	if len(ConfigId) == 0 {
+		return 400, utils.ErrInfo(utils.ErrArgsErr, errors.New("no config ids"))
+	}
+
+	kgids, err := dao.GetKGIDBackward(ConfigId)
+	if err != nil {
+		return 500, err
+	}
+	var r GetKgIdBackwardRes
+	r.Res = kgids
+	return http.StatusOK, r
 }

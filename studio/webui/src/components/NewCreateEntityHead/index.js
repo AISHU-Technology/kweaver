@@ -66,6 +66,7 @@ class NewCreateEntityHead extends Component {
    */
   getPageOneData = async () => {
     const { ontology_id, used_task, ontologyId } = this.props;
+
     if (ontology_id === '' && ontologyId === 0) {
       return;
     }
@@ -73,12 +74,11 @@ class NewCreateEntityHead extends Component {
     const data = {
       page: this.props.taskListRef ? this.props.taskListRef.state.page : 1,
       size: PAGESIZE,
-      ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+      ontology_id: ontology_id || ontologyId,
       used_task
     };
 
     this.isGetTaskData = true;
-
     const res = await servicesCreateEntity.getEntityTasks(data);
 
     // 处理任务数据点和边，导入到绘图中
@@ -165,7 +165,7 @@ class NewCreateEntityHead extends Component {
         const resquestData = {
           ds_id: saveData.selectedValue.id,
           file_list: saveData.data,
-          ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+          ontology_id: ontology_id || ontologyId,
           postfix: ''
         };
 
@@ -227,7 +227,7 @@ class NewCreateEntityHead extends Component {
           const resquestData = {
             ds_id: saveData.selectedValue.id,
             file_list,
-            ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+            ontology_id: ontology_id || ontologyId,
             postfix: saveData.selectedValue.postfix
           };
 
@@ -261,7 +261,7 @@ class NewCreateEntityHead extends Component {
       const resquestData = {
         ds_id: saveData.data.id,
         file_list: [saveData.data.queue],
-        ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+        ontology_id: ontology_id || ontologyId,
         postfix: ''
       };
 

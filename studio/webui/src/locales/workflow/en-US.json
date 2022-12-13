@@ -236,7 +236,8 @@
       "emptyErr": "The value cannot be null",
       "repeatErr": "Repeat selection.Please modify",
       "delSuccess": "Attribute configuration deleted successfully!",
-      "timedrun": "Timed run"
+      "timedrun": "Timed run",
+      "configNow": "Go"
     },
 
     "ok": "OK",

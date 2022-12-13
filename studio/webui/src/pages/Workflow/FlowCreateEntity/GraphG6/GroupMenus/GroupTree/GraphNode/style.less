@@ -1,0 +1,31 @@
+.graph-group-tree-node {
+  max-width: 200px;
+  padding-left: 8px;
+
+  .node-icon {
+    display: inline-block;
+    width: 14px;
+    height: 3px;
+    border-radius: 1px;
+    margin-right: 8px;
+    user-select: none;
+    cursor: default;
+
+    &.circle {
+      width: 14px;
+      height: 14px;
+      border: 1px solid #e5e5e5;
+      border-radius: 50%;
+    }
+  }
+
+  .node-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .start-node,
+  .end-node {
+    max-width: 84px;
+  }
+}

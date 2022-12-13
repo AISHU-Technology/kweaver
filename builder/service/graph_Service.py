@@ -6,6 +6,7 @@ import pickle
 import arrow
 from flask import jsonify
 from config import config
+from dao.task_onto_dao import task_dao_onto
 from utils.Gview import Gview
 from utils.common_response_status import CommonResponseStatus
 from dao.graph_dao import graph_dao
@@ -38,6 +39,8 @@ from nebula3.gclient.net import ConnectionPool
 from nebula3.Config import Config as NebulaConfig
 from common.errorcode import codes
 from common.errorcode.gview import Gview as Gview2
+from utils.opensearch_util import OpenSearchManager
+
 
 class GraphService():
     def getGraphDB(self):
@@ -188,9 +191,6 @@ class GraphService():
                     if not graph_DBName.islower():
                         graphdb_invalid = True
                         obj['cause'] = "nebula graph_DBName must be lowercase"
-                    if '_' in graph_DBName:
-                        graphdb_invalid = True
-                        obj['cause'] = "nebula graph_DBName can not contain '_'"
                     if graphdb_invalid:
                         obj['code'] = CommonResponseStatus.PARAMETERS_ERROR.value
                         obj['message'] = "create graph config fail"
@@ -320,6 +320,24 @@ class GraphService():
         return graph_DBName
 
     def getGraphById(self, grapid, slient=False):
+        """Get the graph configuration by graph id
+        
+        Args:
+            grapid: graph id
+            slient: print log or not
+
+        Returns:
+            a dictionary of following keys:
+            graph_ds: a list of detailed data source information from table data_source_table
+                    whose ids are used by this graph
+            graph_baseInfo: the value (instead of longtext string) of graph_baseInfo from table graph_config_table
+            graph_KMap: the value (instead of longtext string) of graph_KMap from table graph_config_table
+            graph_KMerge: the value (instead of longtext string) of graph_KMerge from table graph_config_table
+            graph_otl: detailed ontology information value. if temporary ontology is not null,
+                    return the temporary ontology information, else return the information from ontology_table.
+            graph_InfoExt: the value (instead of longtext string) of graph_InfoExt from table graph_config_table
+            grph_used_ds: the detailed information of data source used by temporary ontology, ontology and graph_InfoExt
+        """
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
@@ -331,9 +349,6 @@ class GraphService():
                 obj['message'] = str(grapid) + " not exist!"
                 return ret_code, obj
             else:
-
-                # graph_ds = ret["graph_ds"].to_dict()
-                # print(graph_ds.get("0"))
                 rec_dict = ret.to_dict('records')
                 rec_dict = rec_dict[0]
                 ds_ids = rec_dict["graph_ds"]
@@ -357,27 +372,13 @@ class GraphService():
                 else:
                     rec_dict["graph_ds"] = eval(ds_ids)
                 # 流程中 图谱基本信息
-                # if graph_info is not None and len(eval(graph_info)) > 0:
-                #     rec_dict["graph_baseInfo"] = eval(graph_info)
-                # else:
                 rec_dict["graph_baseInfo"] = eval(graph_info)
-
                 # 流程中 图谱映射
-                # if graph_kMap is not None and len(eval(graph_kMap)) > 0:
-                #     rec_dict["graph_KMap"] = eval(graph_kMap)
-                # else:
                 rec_dict["graph_KMap"] = eval(graph_kMap)
-                # 流程中 图谱映射
-                # if graph_kMerge is not None and len(eval(graph_kMerge)) > 0:
-                #     rec_dict["graph_KMerge"] = eval(graph_kMerge)
-                # else:
+                # 流程中 融合
                 rec_dict["graph_KMerge"] = eval(graph_kMerge)
-
                 # 查询时先 查询graph_otl_temp本体临时字段， 退出保存时存入的数据
                 if graph_otl_temp is not None and len(eval(graph_otl_temp)) > 0:
-                    # graph_otl_temp = graph_otl_temp[0]
-                    # print("&&&&&&&&&&&&&&")
-
                     list_all, otl_used_ds = self.getotlinfo(eval(graph_otl_temp))
                     if not slient:
                         print(list_all)
@@ -386,7 +387,6 @@ class GraphService():
                     rec_dict["graph_otl"] = list_all
                 else:
                     # 流程中 使用的本体
-
                     if graph_otl is not None and len(eval(graph_otl)) > 0:
                         otl = otl_dao.getbyids(eval(graph_otl))
                         if not slient:
@@ -411,14 +411,13 @@ class GraphService():
                                 used_ds.append(info_v)
                 else:
                     rec_dict["graph_InfoExt"] = eval(graph_InfoExt)
-
                 # 流程中  本体和抽取已经使用的数据源
                 if len(used_ds) > 0:
                     if not slient:
                         print(used_ds)
                     ds_byname = dsm_dao.getdsbynames(list(set(used_ds)))
                     ds_byname_dict = ds_byname.to_dict('records')
-                    # # 将本体和抽取中使用的数据源详细信息赋值给graph_used_ds
+                    # 将本体和抽取中使用的数据源详细信息赋值给graph_used_ds
                     rec_dict["graph_used_ds"] = ds_byname_dict
                 else:
                     rec_dict["graph_used_ds"] = []
@@ -455,9 +454,6 @@ class GraphService():
                                         # 将本体中选择的数据源 单独拿出来给used_ds 后续将抽取中的数据源拿出来给流程中的数据源展示那块用
                                         used_ds.append(ds_v)
                     dict_all[key] = value
-                # elif key == "id":  # 本体id
-                #     idd = reslist[key]
-                #     print(idd)
                 else:
                     dict_all[key] = reslist[key]
             list_all.append(dict_all)
@@ -855,7 +851,7 @@ class GraphService():
             graph_ids = df["graph_id"].tolist()
             records = df["task_status"].tolist()
             for id, record in zip(graph_ids, records):
-                if record == "running":
+                if record in ["running", "waiting"]:
                     runs.append(id)
             obj["runs"] = runs
             return obj, 0
@@ -909,9 +905,30 @@ class GraphService():
             collection_names = client_mon.collection_names()
             for graph_id in graph_ids:
                 for collection_name in collection_names:
-                    if collection_name.startswith("mongodb-" + str(graph_id)):
-                        db_collection = client_mon["mongo-" + str(graph_id)]
+                    if collection_name.startswith("mongoDB-" + str(graph_id)):
+                        db_collection = client_mon[collection_name]
                         db_collection.drop()
+
+            # delete opensearch data
+            df = graph_dao.get_graph_db_id(graph_ids)
+            graph_db_ids = list(df['graph_db_id'])
+            graph_ids = list(df['id'])
+            for i, graph_db_id in enumerate(graph_db_ids):
+                opensearch_manager = OpenSearchManager(graph_db_id)
+                opensearch_manager.delete_index(graph_ids[i])
+
+            # delete graph db data
+            for graph_id in graph_ids:
+                df = graph_dao.get_graph_db_id([graph_id])
+                graph_db_id = df.to_dict('records')[0]['graph_db_id']
+                graphdb = GraphDB(graph_db_id)
+                ret = graph_dao.get_version_by_id(graph_id)
+                ret_dict = ret.to_dict('records')[0]
+                KDB_name = ret_dict['KDB_name']
+                KDB_name_temp = ret_dict['KDB_name_temp']
+                graphdb.drop_database(KDB_name)
+                graphdb.drop_database(KDB_name_temp)
+
             # delete mysql data
             ret = graph_dao.deleteGraphByIds(graph_ids)
             if ret == 0:
@@ -1121,23 +1138,31 @@ class GraphService():
         # 此处，file_name 默认是uuid，其余情况下均为图配置名称
         file_name = "graph"
         for graph_id in graph_ids:
+            # 根据图谱id，看看图谱搜索表
+            search_graph = graph_dao.get_knowledge_graph_by_id(graph_id)
+            search_graph = search_graph.to_dict(orient="records")
+            if len(search_graph) > 0:
+                search_graph = search_graph[0]
+            search_graph["KDB_name"] = search_graph["KDB_name"].split("-")[0]
+            search_graph["KDB_name_temp"] = "None_Version"
+            search_graph_id = search_graph["id"]
+
             # 根据图谱id，查看图谱配置表。
             config = graph_dao.getbyid(graph_id)
             config = config.to_dict(orient="records")
             if len(config) > 0:
                 config = config[0]
             file_name = config["graph_name"]
+            graph_baseInfo = eval(config["graph_baseInfo"])
+            graph_baseInfo[0]['graph_DBName'] = search_graph["KDB_name"]
+            config["graph_baseInfo"] = str(graph_baseInfo)
+
+            # 查看知识网络表
             knw_id = knw_dao.get_knw_id_by_graph_id(config["id"])
             knowledge_network = knw_dao.get_knw_by_id(knw_id)
             knowledge_network = knowledge_network.to_dict(orient="records")
             if len(knowledge_network) > 0:
                 knowledge_network = knowledge_network[0]
-            # 根据图谱id，看看图谱搜索表
-            search_graph = graph_dao.get_knowledge_graph_by_id(graph_id)
-            search_graph = search_graph.to_dict(orient="records")
-            if len(search_graph) > 0:
-                search_graph = search_graph[0]
-            search_graph_id = search_graph["id"]
 
             # 查看本体表
             if len(config) > 0:
@@ -1255,6 +1280,7 @@ class GraphService():
             if is_update:
                 # 如果是更新，将旧版本id替换
                 ontology["id"] = eval(old_graph_config["graph_otl"])[0]
+                task_dao_onto.delete_otl_task_by_id(ontology["id"])
             ontology["create_time"] = time_now
             ontology["update_time"] = time_now
 
@@ -1348,6 +1374,10 @@ class GraphService():
 
             new_ids = graph_dao.input_data(knowledge_network, graph_config, knowledge_graph, ontology, search_configs,
                                            is_update, knw_id)
+
+            if is_update:
+                graphdb = GraphDB(graph_id)
+                graphdb.check_version(kdb_name)
 
             if is_update and not knowledge_network["is_update"]:
                 # 这种情况不存在，如果需要特殊处理，需要在此处修改。

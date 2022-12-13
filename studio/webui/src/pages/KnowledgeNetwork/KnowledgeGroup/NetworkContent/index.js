@@ -12,6 +12,7 @@ import { getParam } from '@/utils/handleFunction';
 import Header from './Header';
 import GraphDetail from './GraphDetail';
 import Search from './Search';
+// import TaskList from './taskList/copy.js';
 import TaskList from './taskList';
 
 import knowledgeEmpty from '@/assets/images/kgEmpty.svg';
@@ -36,6 +37,13 @@ const NetworkContents = props => {
     getGraphData();
     onUpdateGraphStatus('');
   }, [selectedGraph?.kgConfId]);
+
+  useEffect(() => {
+    // 图数据库无缝切换，graphdb_dbname更新的问题
+    if (['1', '2'].includes(tabsKey)) {
+      getGraphData();
+    }
+  }, [tabsKey]);
 
   const getGraphData = async () => {
     if (!selectedGraph?.kgconfid) return;
@@ -108,7 +116,7 @@ const NetworkContents = props => {
                 </div>
               }
             >
-              <Search selectedGraph={selectedGraph} />
+              <Search selectedGraph={graphBasicData} />
             </Tabs.TabPane>
             <Tabs.TabPane
               key="3"

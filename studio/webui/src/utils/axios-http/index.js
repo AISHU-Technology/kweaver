@@ -118,11 +118,11 @@ service.interceptors.response.use(
 
       return error;
     }
-    const { status, data: { Code, ErrorCode, code } = {} } = error.response;
+    const { status, data: { Code, ErrorCode, code, error: errList } = {} } = error.response;
     const curCode = `${Code || ErrorCode || code || ''}`;
 
     if (status === 500 || status === 403) {
-      if (curCode || error.response.config.url.includes('api/builder/v1/graph/output')) {
+      if (curCode || errList || error.response.config.url.includes('api/builder/v1/graph/output')) {
         return error.response;
       }
 

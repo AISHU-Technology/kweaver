@@ -13,10 +13,11 @@ import './style.less';
 export interface SearchInputProps extends InputProps {
   onIconClick?: Function; // 点击icon回调
   onClear?: Function; // 清空搜索框回调
+  autoWidth?: boolean; // width: 100%
 }
 
-const SearchInput: React.ForwardRefRenderFunction<unknown, SearchInputProps> = (
-  { className = '', onChange, onPressEnter, onIconClick, onClear, ...otherProps },
+const SearchInputFunc: React.ForwardRefRenderFunction<unknown, SearchInputProps> = (
+  { className = '', autoWidth, onChange, onPressEnter, onIconClick, onClear, ...otherProps },
   ref
 ) => {
   const inputRef = useRef<any>();
@@ -25,12 +26,13 @@ const SearchInput: React.ForwardRefRenderFunction<unknown, SearchInputProps> = (
   // 转发ref
   useImperativeHandle(ref, () => inputRef.current);
 
+  // 输入框变化
   const handleChange = (e: any) => {
     if (isCompos.current) return;
 
     onChange?.(e);
 
-    // antd没有暴露清除按钮的事件回调, 但清除时会触发onChange
+    // TODO antd没有暴露清除按钮的事件回调, 但清除时会触发onChange
     if (e.type === 'click' && !e.target.value) {
       setTimeout(() => {
         handleClear(e);
@@ -38,25 +40,23 @@ const SearchInput: React.ForwardRefRenderFunction<unknown, SearchInputProps> = (
     }
   };
 
+  // 输入开始开始
   const handleStart = () => {
     isCompos.current = true;
   };
 
+  // 输入法结束
   const handleEnd = (e: any) => {
     isCompos.current = false;
     onChange?.(e);
   };
 
-  /**
-   * 点击前缀搜索图标, 默认触发回车搜索
-   */
+  // 点击前缀搜索图标, 默认触发回车搜索
   const onPrefixClick = (e: any) => {
     onIconClick ? onIconClick(e) : onPressEnter?.(e);
   };
 
-  /**
-   * 处理清空输入框事件, 默认触发回车搜索
-   */
+  // 处理清空输入框事件, 默认触发回车搜索
   const handleClear = (e: any) => {
     onClear ? onClear(e) : onPressEnter?.(e);
   };
@@ -65,7 +65,7 @@ const SearchInput: React.ForwardRefRenderFunction<unknown, SearchInputProps> = (
     <Input
       ref={inputRef}
       allowClear
-      className={classNames('ad-search-input', className)}
+      className={classNames('ad-search-input', className, { 'input-w-272': !autoWidth })}
       prefix={<IconFont type="icon-sousuo" className="s-input-icon" onClick={onPrefixClick} />}
       onChange={handleChange}
       onPressEnter={onPressEnter}
@@ -76,4 +76,6 @@ const SearchInput: React.ForwardRefRenderFunction<unknown, SearchInputProps> = (
   );
 };
 
-export default forwardRef(SearchInput);
+const SearchInput = forwardRef(SearchInputFunc);
+SearchInput.displayName = 'SearchInput';
+export default SearchInput;

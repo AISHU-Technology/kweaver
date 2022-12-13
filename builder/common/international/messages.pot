@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2022-10-14 15:27+0800\n"
+"POT-Creation-Date: 2022-12-01 10:48+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,459 +17,996 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.10.3\n"
 
-#: common/errorcode/errors/graph_error.py:8
-#: common/errorcode/errors/graph_error.py:115
-#: common/errorcode/errors/graph_error.py:127
-#: common/errorcode/errors/graph_error.py:133
-msgid "Parameter [arg] Error."
+#: /root/WorkCode/kweaver/builder/celery_task/celery_blue.py:230
+msgid "{} start running success."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:9
-#: common/errorcode/errors/graph_error.py:21
-#: common/errorcode/errors/graph_error.py:27
-#: common/errorcode/errors/graph_error.py:51
-#: common/errorcode/errors/graph_error.py:63
-#: common/errorcode/errors/graph_error.py:75
-#: common/errorcode/errors/graph_error.py:87
-#: common/errorcode/errors/graph_error.py:93
-#: common/errorcode/errors/graph_error.py:105
-#: common/errorcode/errors/graph_error.py:111
-#: common/errorcode/errors/lexicon_error.py:16
-#: common/errorcode/errors/lexicon_error.py:22
-#: common/errorcode/errors/lexicon_error.py:28
-#: common/errorcode/errors/lexicon_error.py:70
-#: common/errorcode/errors/lexicon_error.py:76
-#: common/errorcode/errors/lexicon_error.py:83
-#: common/errorcode/errors/lexicon_error.py:89
-#: common/errorcode/errors/lexicon_error.py:96
-#: common/errorcode/errors/lexicon_error.py:102
-#: common/errorcode/errors/lexicon_error.py:109
-#: common/errorcode/errors/lexicon_error.py:115
-#: common/errorcode/errors/lexicon_error.py:140
-#: common/errorcode/errors/lexicon_error.py:146
-#: common/errorcode/errors/lexicon_error.py:153
-#: common/errorcode/errors/lexicon_error.py:159
-#: common/errorcode/errors/lexicon_error.py:165
-#: common/errorcode/errors/lexicon_error.py:177
-#: common/errorcode/errors/lexicon_error.py:190
-#: common/errorcode/errors/lexicon_error.py:196
-#: common/errorcode/errors/lexicon_error.py:216
-#: common/errorcode/errors/lexicon_error.py:222
-#: common/errorcode/errors/lexicon_error.py:228
-#: common/errorcode/errors/lexicon_error.py:236
-#: common/errorcode/errors/lexicon_error.py:242
-#: common/errorcode/errors/lexicon_error.py:249
-#: common/errorcode/errors/lexicon_error.py:255
-#: common/errorcode/errors/lexicon_error.py:274
-#: common/errorcode/errors/lexicon_error.py:288
-#: common/errorcode/errors/lexicon_error.py:294
-#: common/errorcode/errors/lexicon_error.py:301
-#: common/errorcode/errors/lexicon_error.py:307
-#: common/errorcode/errors/lexicon_error.py:368
-#: common/errorcode/errors/lexicon_error.py:374
+#: /root/WorkCode/kweaver/builder/celery_task/celery_blue.py:333
+msgid "delete task success"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/celery_task/celery_blue.py:454
+msgid "stop task success."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:9
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:21
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:27
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:39
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:51
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:75
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:81
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:99
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:117
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:135
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:141
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:159
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:165
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:9
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:21
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:27
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:51
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:63
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:75
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:87
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:93
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:105
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:111
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:159
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:171
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:177
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:189
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:201
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:213
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:225
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:231
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:16
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:22
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:28
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:70
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:76
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:83
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:89
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:96
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:102
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:109
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:115
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:140
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:146
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:153
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:159
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:165
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:177
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:190
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:196
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:216
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:222
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:228
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:236
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:242
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:249
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:255
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:274
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:288
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:294
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:301
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:307
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:368
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:374
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:9
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:15
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:21
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:27
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:40
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:46
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:52
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:58
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:76
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:82
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:88
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:94
 msgid "Please check your parameter again."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:14
-#: common/errorcode/errors/graph_error.py:56
-#: common/errorcode/errors/graph_error.py:80
-#: common/errorcode/errors/graph_error.py:98
-#: common/errorcode/errors/graph_error.py:122
-#: common/errorcode/errors/graph_error.py:146
-msgid "[cause]"
-msgstr ""
-
-#: common/errorcode/errors/graph_error.py:15
-#: common/errorcode/errors/graph_error.py:57
-#: common/errorcode/errors/graph_error.py:81
-#: common/errorcode/errors/graph_error.py:99
-#: common/errorcode/errors/graph_error.py:123
-#: common/errorcode/errors/graph_error.py:147
-#: common/errorcode/errors/intelligence_error.py:9
-#: common/errorcode/errors/intelligence_error.py:15
-#: common/errorcode/errors/intelligence_error.py:47
-#: common/errorcode/errors/intelligence_error.py:53
-#: common/errorcode/errors/intelligence_error.py:59
-#: common/errorcode/errors/intelligence_error.py:65
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:15
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:33
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:45
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:87
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:93
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:105
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:111
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:129
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:147
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:153
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:171
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:15
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:57
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:81
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:99
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:123
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:147
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:165
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:183
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:195
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:207
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:219
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:237
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:9
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:15
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:47
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:53
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:59
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:65
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:71
 msgid "Please contact the developers."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:19
-#: common/errorcode/errors/graph_error.py:20
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:19
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:20
+msgid "task_id [task_id] not exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:37
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:38
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:139
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:140
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:163
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:164
+msgid "graph id [graph_id] not exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:49
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:50
+msgid "subgraph id [subgraph_id] not exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:55
+msgid "task cannot run, the storage address of this graph does not exist."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:56
+msgid "invalid storage address."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:57
+msgid "Please config a valid graph_db address for this graph."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:61
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:62
+msgid "task cannot run, the current knowledge graph has not been configured yet."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:63
+msgid "Please try again after configuration."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:67
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:68
+msgid "task cannot run, the current knowledge graph is running or waiting."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:69
+msgid "Please try again after the task ends."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:73
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:74
+msgid "task id must be integer."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:79
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:80
+msgid "task id [task_id] not exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:115
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:116
+msgid "task not exists. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:121
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:122
+msgid "task cannot stop, because the task status is not waiting or running."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/celery_error.py:123
+msgid "you cannot stop a completed graph task."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:8
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:115
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:127
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:133
+msgid "Parameter [arg] Error."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:14
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:56
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:80
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:98
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:122
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:146
+msgid "[cause]"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:19
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:20
 msgid "graphid [graphid] not exists."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:25
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:25
 msgid "key type error"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:26
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:26
 msgid "key should be list of string"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:31
-#: common/errorcode/errors/graph_error.py:32
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:31
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:32
 msgid "graphdb id [graphdb_id] not exists"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:33
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:33
 msgid "please config your graphdb again."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:43
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:43
 msgid "these keys are not supported: [unsupported_key]"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:44
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:44
 msgid "some keys are not supported."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:45
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:45
 msgid "please check your parameter key again."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:50
-#: common/errorcode/errors/graph_error.py:74
-#: common/errorcode/errors/graph_error.py:92
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:50
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:74
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:92
 msgid "argument [arg] error"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:61
-#: common/errorcode/errors/graph_error.py:62
-#: common/errorcode/errors/graph_error.py:85
-#: common/errorcode/errors/graph_error.py:86
-#: common/errorcode/errors/graph_error.py:103
-#: common/errorcode/errors/graph_error.py:104
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:61
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:62
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:85
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:86
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:103
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:104
 msgid "graph id [graphid] not exists"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:67
-#: common/errorcode/errors/graph_error.py:68
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:67
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:68
 msgid "ontology id [otl_id] not exists"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:69
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:69
 msgid "Please config the ontology."
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:109
-#: common/errorcode/errors/graph_error.py:110
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:109
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:110
 msgid "[class_type] [name] not exists"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:116
-#: common/errorcode/errors/graph_error.py:128
-#: common/errorcode/errors/graph_error.py:134
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:116
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:128
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:134
 msgid "parameter [arg] not exists or invalid"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:117
-#: common/errorcode/errors/graph_error.py:129
-#: common/errorcode/errors/graph_error.py:135
-#: common/errorcode/errors/graph_error.py:141
-#: common/errorcode/errors/graph_error.py:153
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:117
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:129
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:135
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:141
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:153
 msgid "please ensure parameter [arg] exists and valid"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:139
-#: common/errorcode/errors/graph_error.py:140
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:139
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:140
 msgid "Parameter [arg] too big please lower than [max]"
 msgstr ""
 
-#: common/errorcode/errors/graph_error.py:151
-#: common/errorcode/errors/graph_error.py:152
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:151
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:152
 msgid "Parameter [arg] not allow, please choose [allowed]"
 msgstr ""
 
-#: common/errorcode/errors/graphdb_error.py:9
-#: common/errorcode/errors/graphdb_error.py:33
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:175
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:176
+msgid "graph id [graph_id] not exists"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:229
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:230
+msgid "knowledge network id [knw_id] not exists"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graph_error.py:243
+msgid ""
+"Please check whether you have permission to delete or whther the graph is"
+" running."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graphdb_error.py:9
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graphdb_error.py:33
 msgid "Please check whether the OrientDB request information is correct."
 msgstr ""
 
-#: common/errorcode/errors/graphdb_error.py:15
-#: common/errorcode/errors/graphdb_error.py:39
-#: common/errorcode/errors/graphdb_error.py:45
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graphdb_error.py:15
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graphdb_error.py:39
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graphdb_error.py:45
 msgid "Please check whether the Nebula request information is correct."
 msgstr ""
 
-#: common/errorcode/errors/graphdb_error.py:21
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graphdb_error.py:21
 msgid "Please check whether your GraphDB service is running normally."
 msgstr ""
 
-#: common/errorcode/errors/graphdb_error.py:27
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/graphdb_error.py:27
 msgid "Please check whether your DB name is correct."
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:19
-#: common/errorcode/errors/intelligence_error.py:20
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:19
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:20
 msgid "knowledge graph is waiting build, please calculate after building"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:21
-#: common/errorcode/errors/intelligence_error.py:27
-#: common/errorcode/errors/intelligence_error.py:33
-#: common/errorcode/errors/intelligence_error.py:41
-#: common/errorcode/errors/intelligence_error.py:71
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:21
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:27
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:33
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:41
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:77
 msgid "Please check graph status"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:25
-#: common/errorcode/errors/intelligence_error.py:26
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:25
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:26
 msgid "knowledge graph is building, please calculate after building"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:31
-#: common/errorcode/errors/intelligence_error.py:32
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:31
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:32
 msgid "knowledge graph is configuring build, please calculate after building"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:37
-#: common/errorcode/errors/intelligence_error.py:39
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:37
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:39
 msgid ""
 "knowledge graph store in NebulaGraph, if you need intelligence score, "
 "please calculate after building successfully"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:45
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:45
 msgid "call async task service error"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:46
-#: common/errorcode/errors/intelligence_error.py:52
-#: common/errorcode/errors/intelligence_error.py:58
-#: common/errorcode/errors/intelligence_error.py:64
-#: common/errorcode/errors/network_error.py:8
-#: common/errorcode/errors/network_error.py:14
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:46
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:52
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:58
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:64
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:70
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/network_error.py:8
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/network_error.py:14
 msgid "[detail]"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:51
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:51
 msgid "async task service internal error"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:57
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:57
+msgid "cancel async task service internal error"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:63
 msgid "graph intelligence info query error"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:63
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:69
 msgid "network intelligence info query error"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:69
-#: common/errorcode/errors/intelligence_error.py:70
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:75
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:76
 msgid ""
 "Knowledge graph status invalid, please calculate after building "
 "successfully"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:75
-#: common/errorcode/errors/intelligence_error.py:76
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:81
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:82
 msgid "knowledge network [knw_id] not exists"
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:77
-#: common/errorcode/errors/intelligence_error.py:83
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:83
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:89
 msgid "please config your knowledge network again."
 msgstr ""
 
-#: common/errorcode/errors/intelligence_error.py:81
-#: common/errorcode/errors/intelligence_error.py:82
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:87
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/intelligence_error.py:88
 msgid "knowledge graph [graph_id] not exists"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:9
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:9
 msgid "Please check the database connection."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:21
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:21
 msgid ""
 "The specified knowledge_id [knowledge_id] does not exist, lexicon "
 "creation failed!"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:27
-#: common/errorcode/errors/lexicon_error.py:227
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:27
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:227
 msgid ""
 "Lexicon name [lexicon_name] already exists and cannot be created "
 "repeatedly."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:33
-#: common/errorcode/errors/lexicon_error.py:312
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:33
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:312
 msgid "[ErrorDetails]"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:34
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:34
 msgid "Please check the type, size and content format of the uploaded file."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:39
-#: common/errorcode/errors/lexicon_error.py:324
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:39
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:324
 msgid "Only one file can be selected at most."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:40
-#: common/errorcode/errors/lexicon_error.py:46
-#: common/errorcode/errors/lexicon_error.py:325
-#: common/errorcode/errors/lexicon_error.py:331
-#: common/errorcode/errors/lexicon_error.py:349
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:40
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:46
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:325
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:331
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:349
 msgid "Please select upload file again."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:45
-#: common/errorcode/errors/lexicon_error.py:330
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:45
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:330
 msgid "The file format only supports txt and CSV."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:51
-#: common/errorcode/errors/lexicon_error.py:336
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:51
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:336
 msgid "File content format error."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:52
-#: common/errorcode/errors/lexicon_error.py:337
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:52
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:337
 msgid ""
 "Please check the content and format of the document according to the "
 "template."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:57
-#: common/errorcode/errors/lexicon_error.py:342
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:57
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:342
 msgid "The file only supports UTF-8 encoding."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:58
-#: common/errorcode/errors/lexicon_error.py:343
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:58
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:343
 msgid "Please confirm the file code and reselect the file."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:63
-#: common/errorcode/errors/lexicon_error.py:354
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:63
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:354
 msgid "The amount of uploaded file data exceeds."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:64
-#: common/errorcode/errors/lexicon_error.py:355
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:64
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:355
 msgid ""
 "The uploaded file must be less than 10M and the number of lines must be "
 "less than 350000."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:75
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:75
 msgid ""
 "The specified knowledge_id [knowledge_id] does not exist, get labels "
 "failed!"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:88
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:88
 msgid ""
 "The specified knowledge_id [knowledge_id] does not exist, get lexicon "
 "failed!"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:101
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:101
 msgid "The specified lexicon id [lexicon_id] does not exist, get lexicon failed!"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:114
-#: common/errorcode/errors/lexicon_error.py:139
-#: common/errorcode/errors/lexicon_error.py:158
-#: common/errorcode/errors/lexicon_error.py:195
-#: common/errorcode/errors/lexicon_error.py:221
-#: common/errorcode/errors/lexicon_error.py:241
-#: common/errorcode/errors/lexicon_error.py:254
-#: common/errorcode/errors/lexicon_error.py:293
-#: common/errorcode/errors/lexicon_error.py:306
-#: common/errorcode/errors/lexicon_error.py:373
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:114
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:139
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:158
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:195
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:221
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:241
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:254
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:293
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:306
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:373
 msgid "The specified lexicon id [lexicon_id] does not exist."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:120
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:120
 msgid "The format of the new data [data] does not match the original data"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:121
-#: common/errorcode/errors/lexicon_error.py:127
-#: common/errorcode/errors/lexicon_error.py:171
-#: common/errorcode/errors/lexicon_error.py:202
-#: common/errorcode/errors/lexicon_error.py:319
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:121
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:127
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:171
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:202
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:319
 msgid "Please check lexicon format again."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:126
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:126
 msgid "The newly added word [data] already exists."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:132
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:132
 msgid "lexicon [lexicon_id] status is running, cannot insert."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:133
-#: common/errorcode/errors/lexicon_error.py:183
-#: common/errorcode/errors/lexicon_error.py:208
-#: common/errorcode/errors/lexicon_error.py:267
-#: common/errorcode/errors/lexicon_error.py:361
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:133
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:183
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:208
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:267
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:361
 msgid "lexicon status is running, please make sure lexicon status is correct."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:164
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:164
 msgid "The specified lexicon word [lexicon_word] does not exist."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:170
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:170
 msgid "New data [new_info] and original data [old_info] fields are inconsistent."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:176
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:176
 msgid "The modified word [lexicon_word] already exists."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:182
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:182
 msgid "lexicon [lexicon_id] status is running, cannot edit word."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:201
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:201
 msgid "There is no deleted data [delete_data] in the specified lexicon."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:207
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:207
 msgid "lexicon [lexicon_id] status is running, cannot delete word."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:266
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:266
 msgid "lexicon [lexicon_id] status is running, cannot export."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:280
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:280
 msgid "Please see the error prompt for details."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:313
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:313
 msgid "Please check the type and size of the uploaded file."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:318
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:318
 msgid "New data and original data fields are inconsistent"
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:348
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:348
 msgid "Select at least one file."
 msgstr ""
 
-#: common/errorcode/errors/lexicon_error.py:360
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/lexicon_error.py:360
 msgid "lexicon [lexicon_id] status is running, cannot import words."
 msgstr ""
 
-#: common/errorcode/errors/network_error.py:7
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/network_error.py:7
 msgid "Parameters Error!"
 msgstr ""
 
-#: common/errorcode/errors/network_error.py:9
-#: common/errorcode/errors/network_error.py:15
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/network_error.py:9
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/network_error.py:15
 msgid "Please check your parameters."
 msgstr ""
 
-#: common/errorcode/errors/network_error.py:13
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/network_error.py:13
 msgid "[description]"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:7
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:8
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:38
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:39
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:80
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:81
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:92
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:93
+msgid "graph_id [graph_id] not exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:13
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:14
+msgid "ontology_id [ontology_id] not exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:19
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:20
+msgid "subgraph name [name] already exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:25
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:56
+msgid "there are entity classes or edge classes not in the ontology. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:31
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:62
+msgid "graph is running or waiting."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:32
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:63
+msgid "graph is running or waiting"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:33
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:64
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:100
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:106
+msgid "Please stop building graph or wait the graph finish building."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:44
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:45
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:86
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:87
+msgid "subgraph_id [subgraph_id] not exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:50
+msgid "subgraph name already exists."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:51
+msgid "names of these subgraphs are duplicate: [items]"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:68
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:69
+msgid "ungrouped subgraph [subgraph_id] cannot rename."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:70
+msgid "you cannot rename ungrouped."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:74
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:75
+msgid "subgraph [subgraph_id] name cannot be 未分组 or ungrouped. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:98
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:99
+msgid "graph status is running, cannot delete subgraph."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:104
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:105
+msgid "graph status is waiting, cannot delete subgraph."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:110
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:111
+msgid "cannot delete ungrouped subgraph [subgraph_id]."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:112
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:118
+msgid "Please change the subgraph to delete."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:116
+#: /root/WorkCode/kweaver/builder/common/errorcode/errors/subgraph_error.py:117
+msgid "subgraph_id [subgraph_id] does not exist or does not match the graph_id."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:133
+msgid "The parameter graph_id must be int!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:189
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:271
+msgid "The parameter graph_id type must be int!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:323
+msgid "parameters cannot be both graph_id and task_id."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:328
+msgid "graph_id must be int."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:332
+msgid "graph_id must be larger than zero."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:337
+msgid "task_id must be int."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:341
+msgid "task_id must be larger than zero."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:345
+msgid "parameter must be graph_id or task_id."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:467
+msgid "parameter task_id must be int!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/celery_controller.py:471
+msgid "parameter task_id cannot be 0!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1279
+msgid "parameter graph_id must be int!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1366
+msgid "parameter subgraph_id must be int!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1370
+msgid "parameter subgraph_id cannot be 0!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1406
+msgid "parameter graph_id cannot be empty. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1410
+msgid "parameter graph_id must be integer. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1414
+msgid "parameter graph_id must be larger than zero. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1418
+msgid "parameter subgraph_ids cannot be empty. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1422
+msgid "parameter subgraph_ids must be a list. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1428
+msgid "parameter subgraph_id {} must be int!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/controller/graph_controller.py:1432
+msgid "parameter subgraph_id must be larger than zero!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/service/subgraph_service.py:52
+#: /root/WorkCode/kweaver/builder/service/subgraph_service.py:118
+msgid "entity {} not in the ontology. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/service/subgraph_service.py:54
+#: /root/WorkCode/kweaver/builder/service/subgraph_service.py:120
+msgid "edge {} not in the ontology. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/service/subgraph_service.py:122
+msgid "subgraph id {} has unexpected classes: "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/celery_check_params_json.py:188
+msgid "subgraph_ids cannot be empty."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/celery_check_params_json.py:192
+msgid "subgraph_ids must be a list."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/celery_check_params_json.py:196
+msgid "subgraph_ids have repeating items."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/celery_check_params_json.py:202
+msgid "subgraph_id must be int and must be larger than zero."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/celery_check_params_json.py:208
+msgid "write_mode cannot be empty."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/celery_check_params_json.py:212
+msgid "write_mode must be skip or overwrite."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:102
+#, python-format
+msgid "parameters: %s can not be empty!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:113
+msgid "parameters: page must be int, and more than zero!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:117
+msgid "parameters: order must be asc or desc!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:121
+msgid ""
+"parameters: status must be in (normal, running, waiting, failed, stop, "
+"all)!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:125
+msgid "parameters: graph_name Length over 50."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:129
+msgid "parameters: size must be int, and more than zero!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:133
+msgid "parameters: tas_type must be in (full,increment,all)"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:137
+msgid "parameters: trigger_type must be in (0,1,2,all)"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:146
+#, python-format
+msgid "parameters: %s error!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:148
+#, python-format
+msgid "parameters: %s illegal!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:150
+#, python-format
+msgid "parameters: %s no rule!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:152
+msgid "unknown error!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:1197
+#, python-format
+msgid "parameters:  %s  are not required!,"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:1200
+#, python-format
+msgid "parameters:  %s  are Missing!,"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:1206
+msgid "parameters task_id must be list!"
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:1212
+msgid "parameters: task_ids content must be int."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/ds_check_parameters.py:1215
+msgid "parameters: task_ids list can not be empty."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1805
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1931
+msgid "parameter name cannot be empty. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1809
+msgid ""
+"parameter name cannot exceed 50 characters and characters must be "
+"numbers, _, chinese or english. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1813
+msgid "parameter name cannot be \"未分组\" or \"ungrouped\". "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1819
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:2010
+msgid "parameter graph_id cannot be empty."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1823
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:2014
+msgid "parameter graph_id must be int. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1827
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:2018
+msgid "parameter graph_id must be larger than zero."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1833
+msgid "parameter ontology_id cannot be empty."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1837
+msgid "parameter ontology_id must be int. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1841
+msgid "parameter ontology_id must be larger than zero."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1902
+msgid "the parameter must be a list. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1911
+msgid "parameter subgraph_id cannot be empty."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1915
+msgid "parameter subgraph_id must be int. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1919
+msgid "parameter subgraph_id must be larger than zero."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1923
+msgid "subgraph id {} is duplicate. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1935
+msgid ""
+"parameter name {} cannot exceed 50 characters and characters must be "
+"numbers, _, chinese or english. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1942
+msgid "name {} is duplicate."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1950
+msgid "parameter entity must be list. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:1975
+msgid "parameter edge must be list. "
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:2024
+msgid "parameter subgraph_name cannot be empty."
+msgstr ""
+
+#: /root/WorkCode/kweaver/builder/utils/graph_check_parameters.py:2030
+msgid "parameter return_all must be False or True."
 msgstr ""
 

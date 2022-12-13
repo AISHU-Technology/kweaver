@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import kong from '@/assets/images/kong.svg';
 import './style.less';
 
-const SHOW_INFO = [{ n: 'id' }, { n: 'class' }];
+const SHOW_INFO = ['name', 'id', 'class'];
 class Basic extends Component {
   state = {
     check: 'info'
@@ -81,11 +81,18 @@ class Basic extends Component {
                     selectedNode?.source ? showEdgeProperty?.[selectedNodeClass] : showNodeProperty?.[selectedNodeClass]
                   }
                 >
-                  <div className="set-show-item">
-                    <Radio value="name">name</Radio>
-                  </div>
-                  {_.map(SHOW_INFO.concat(property), item => {
-                    if (item.n === 'name') return;
+                  {_.map(SHOW_INFO, item => {
+                    return (
+                      <div className="set-show-item" key={item}>
+                        <Radio value={item} key={item}>
+                          {item}
+                        </Radio>
+                      </div>
+                    );
+                  })}
+
+                  {_.map(property, item => {
+                    if (SHOW_INFO.includes(item?.n)) return;
                     return (
                       <div className="set-show-item" key={item.n}>
                         <Radio value={item.n} key={item.n}>

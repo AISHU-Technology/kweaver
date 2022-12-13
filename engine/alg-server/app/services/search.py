@@ -8,7 +8,7 @@ from ..schemas.response import Response, ASTargetVertex, SearchResult, ASSearchR
 from ..schemas.request import RequestModel
 import time
 from typing import Optional
-
+from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix='/v2/adv_search', tags=['search'])
 
@@ -18,17 +18,23 @@ async def get(conf_ids: str, query: str, page: int, size: int):
     """
     AD平台语义搜索接口
     """
-    start_time = time.time()
-    conf_info = await get_adv_conf(ids=conf_ids, ids_type="conf_id")
-    kg_id_to_search_engine, kg_id_to_search_kwargs = await init_search_engine(conf_info)
-    tasks = []
-    for kg_id, search_engine in kg_id_to_search_engine.items():
-        tasks.append(asyncio.create_task(search_engine.search(query, **kg_id_to_search_kwargs[kg_id])))
+    try:
+        start_time = time.time()
+        conf_info = await get_adv_conf(ids=conf_ids, ids_type="conf_id")
+        kg_id_to_search_engine, kg_id_to_search_kwargs = await init_search_engine(conf_info)
+        tasks = []
+        for kg_id, search_engine in kg_id_to_search_engine.items():
+            tasks.append(asyncio.create_task(search_engine.search(query, **kg_id_to_search_kwargs[kg_id])))
 
-    result_of_multi_kg = []
-    for task in tasks:
-        result_of_one_kg = await task
-        result_of_multi_kg += result_of_one_kg
+        result_of_multi_kg = []
+        for task in tasks:
+            result_of_one_kg = await task
+            result_of_multi_kg += result_of_one_kg
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
     # 对搜索结果按得分排序
     target_vertexes = sorted(result_of_multi_kg, key=attrgetter('score'), reverse=True)[(page - 1) * size:page * size]
@@ -51,17 +57,23 @@ async def post(conf_content: RequestModel):
     """
     AD平台测试搜索接口
     """
-    start_time = time.time()
-    conf_info = await get_adv_conf(ids=conf_content.kg_ids, ids_type="test", conf_content=conf_content.conf_content)
-    kg_id_to_search_engine, kg_id_to_search_kwargs = await init_search_engine(conf_info)
-    tasks = []
-    for kg_id, search_engine in kg_id_to_search_engine.items():
-        tasks.append(asyncio.create_task(search_engine.search(conf_content.query, **kg_id_to_search_kwargs[kg_id])))
+    try:
+        start_time = time.time()
+        conf_info = await get_adv_conf(ids=conf_content.kg_ids, ids_type="test", conf_content=conf_content.conf_content)
+        kg_id_to_search_engine, kg_id_to_search_kwargs = await init_search_engine(conf_info)
+        tasks = []
+        for kg_id, search_engine in kg_id_to_search_engine.items():
+            tasks.append(asyncio.create_task(search_engine.search(conf_content.query, **kg_id_to_search_kwargs[kg_id])))
 
-    result_of_multi_kg = []
-    for task in tasks:
-        result_of_one_kg = await task
-        result_of_multi_kg += result_of_one_kg
+        result_of_multi_kg = []
+        for task in tasks:
+            result_of_one_kg = await task
+            result_of_multi_kg += result_of_one_kg
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
     # 对搜索结果按得分排序
     target_vertexes = sorted(result_of_multi_kg, key=attrgetter('score'), reverse=True)[(conf_content.page - 1) * conf_content.size:conf_content.page * conf_content.size]

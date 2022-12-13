@@ -81,7 +81,7 @@ class CoPairGen:
                 'type_sa': 'false',
                 'type_nw': 'true',
                 'type_kc': 'false',
-                'ds_id': self.as_cfg['id']
+                '_ds_id_': self.as_cfg['id']
             }
             key_word_items.append(item)
         logger.info('label num {}'.format(len(key_word_items)))

@@ -65,7 +65,13 @@ module.exports = {
         'react/display-name': OFF,
         '@typescript-eslint/no-use-before-define': OFF,
         '@typescript-eslint/no-empty-function': OFF,
-        '@typescript-eslint/no-non-null-assertion': OFF
+        '@typescript-eslint/no-non-null-assertion': OFF,
+        '@typescript-eslint/no-this-alias': [
+          ERROR,
+          {
+            allowedNames: ['self']
+          }
+        ]
       }
     }
   ],

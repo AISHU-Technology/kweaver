@@ -1062,7 +1062,7 @@ class DataInfo extends Component {
 
             <Panel header={intl.get('createEntity.attlist')} key="2">
               <div className="add-all-index">
-                <span>{intl.get('createEntity.addI')}</span>
+                <span>{intl.get('createEntity.openIndex')}</span>
 
                 <span className="add">
                   <Tooltip placement="right" title={intl.get('createEntity.addAllIndex')}>

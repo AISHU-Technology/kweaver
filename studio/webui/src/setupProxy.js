@@ -7,7 +7,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 // const TARGET_URL = 'https://10.4.69.53';
 // const TARGET_URL = 'https://10.2.174.228';
 // const TARGET_URL = 'https://10.4.107.186';
-// const TARGET_URL = 'https://10.4.106.255';
+// const TARGET_URL = 'http://10.4.106.255:6476';
 // const TARGET_URL = 'http://10.4.129.24';
 // const TARGET_URL = 'https://10.4.69.176';
 // const TARGET_URL = 'http://10.2.174.230';
@@ -18,7 +18,8 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 // const TARGET_URL = 'http://10.2.174.230:6800';
 // const TARGET_URL = 'http://10.4.69.51';
 // const TARGET_URL = 'http://10.4.131.17';
-const TARGET_URL = 'https://10.4.130.54';
+const TARGET_URL = 'https://10.4.132.45';
+// const TARGET_URL = 'https://10.2.174.230';
 
 /**
  * 拦截的服务

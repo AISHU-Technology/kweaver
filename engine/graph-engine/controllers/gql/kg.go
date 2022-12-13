@@ -1063,13 +1063,23 @@ func getKgListByFilter(k utils.KGConf, authKGResp []interface{}) (KG, error) {
 func (q *KGInfoQuery) KG(ctx context.Context, args struct{ ID graphql.ID }) (*KGResovler, error) {
 	c := ctx.Value("Context").(*gin.Context)
 
-	// 天津项目根据KDB_name查询kgid
+	// 根据KDB_name查询kgid
 	id, err := dao.GetKGIDByKGName(string(args.ID))
 	if err != nil {
 		return nil, err
 	}
 	if id == "" {
 		return nil, utils.ErrInfo(utils.ErrInternalErr, errors.New("KG does not exist"))
+	}
+
+	//filter
+	dataIds := c.Request.Header.Get("dataIds")
+	if dataIds != "" {
+		filter := strings.Split(dataIds, ",")
+		if utils.In(id, filter) == false {
+			c.Status(500)
+			return nil, utils.ErrInfo(utils.ErrInternalErr, errors.New("KG does not exist"))
+		}
 	}
 
 	// 数据库获取配置
@@ -1081,7 +1091,7 @@ func (q *KGInfoQuery) KG(ctx context.Context, args struct{ ID graphql.ID }) (*KG
 
 	var res *KGResovler = nil
 	for _, k := range r {
-		if string(args.ID) == k.DB { // 天津项目根据KDB_name查询kgid
+		if string(args.ID) == k.DB { // 根据KDB_name查询kgid
 			kg := KG{
 				ID:     graphql.ID(k.ID),
 				Name:   k.Name,

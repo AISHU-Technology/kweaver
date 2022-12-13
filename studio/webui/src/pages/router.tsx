@@ -12,11 +12,11 @@ import getAntdGlobalConfig from '@/theme/getAntdGlobalConfig';
 import asyncComponent from '@/components/AsyncComponent';
 
 const Home = asyncComponent(() => import('@/pages/Home'));
-const Workflow = asyncComponent(() => import('@/pages/Home/Workflow'));
+const Workflow = asyncComponent(() => import('@/pages/Workflow'));
 const KnowledgeNetwork = asyncComponent(() => import('@/pages/KnowledgeNetwork'));
-const NotFound = asyncComponent(() => import('@/components/NotFound'));
 const AuthSuccess = asyncComponent(() => import('@/pages/AuthAS7'));
 const SwaggerUI = asyncComponent(() => import('@/pages/SwaggerUI'));
+const NotFound = asyncComponent(() => import('@/components/NotFound'));
 
 const App = (props: any) => {
   useEffect(() => {

@@ -151,6 +151,96 @@ errDict = {
         "Description": _l("Parameter [arg] not allow, please choose [allowed]"),
         "ErrorDetails": _l("Parameter [arg] not allow, please choose [allowed]"),
         "Solution": _l("please ensure parameter [arg] exists and valid")
+    },
+    'Builder.GraphController.CreateSubgraphConfig.ParamError': {
+        "ErrorCode": "Builder.GraphController.CreateSubgraphConfig.ParamError",
+        "Description": '[message]',
+        "ErrorDetails": '[message]',
+        "Solution": _l("Please check your parameter again.")
+    },
+    'Builder.GraphController.CreateSubgraphConfig.UnknownError': {
+        "ErrorCode": 'Builder.GraphController.CreateSubgraphConfig.UnknownError',
+        "Description": "[description]",
+        "ErrorDetails": "[cause]",
+        "Solution": _l("Please contact the developers.")
+    },
+    'Builder.GraphController.EditSubgraphConfig.ParamError': {
+        "ErrorCode": 'Builder.GraphController.EditSubgraphConfig.ParamError',
+        "Description": '[message]',
+        "ErrorDetails": '[message]',
+        "Solution": _l("Please check your parameter again.")
+    },
+    'Builder.GraphController.EditSubgraphConfig.GraphIdNotExist': {
+        "ErrorCode": 'Builder.GraphController.EditSubgraphConfig.GraphIdNotExist',
+        "Description": _l('graph id [graph_id] not exists'),
+        "ErrorDetails": _l('graph id [graph_id] not exists'),
+        "Solution": _l("Please check your parameter again.")
+    },
+    'Builder.GraphController.EditSubgraphConfig.UnknownError': {
+        "ErrorCode": 'Builder.GraphController.EditSubgraphConfig.UnknownError',
+        "Description": "[description]",
+        "ErrorDetails": "[cause]",
+        "Solution": _l("Please contact the developers.")
+    },
+    'Builder.GraphController.GetSubgraphList.ParamError': {
+        "ErrorCode": 'Builder.GraphController.GetSubgraphList.ParamError',
+        "Description": '[message]',
+        "ErrorDetails": '[message]',
+        "Solution": _l("Please check your parameter again.")
+    },
+    'Builder.GraphController.GetSubgraphList.UnknownError': {
+        "ErrorCode": 'Builder.GraphController.GetSubgraphList.UnknownError',
+        "Description": "[description]",
+        "ErrorDetails": "[cause]",
+        "Solution": _l("Please contact the developers.")
+    },
+    'Builder.GraphController.GetSubgraphConfig.ParamError': {
+        "ErrorCode": 'Builder.GraphController.GetSubgraphConfig.ParamError',
+        "Description": '[message]',
+        "ErrorDetails": '[message]',
+        "Solution": _l("Please check your parameter again.")
+    },
+    'Builder.GraphController.GetSubgraphConfig.UnknownError': {
+        "ErrorCode": 'Builder.GraphController.GetSubgraphConfig.UnknownError',
+        "Description": "[description]",
+        "ErrorDetails": "[cause]",
+        "Solution": _l("Please contact the developers.")
+    },
+    'Builder.GraphController.DeleteSubgraphConfig.ParamError': {
+        "ErrorCode": 'Builder.GraphController.DeleteSubgraphConfig.ParamError',
+        "Description": '[message]',
+        "ErrorDetails": '[message]',
+        "Solution": _l("Please check your parameter again.")
+    },
+    'Builder_GraphController.DeleteSubgraphConfig.UnknownError': {
+        "ErrorCode": 'Builder_GraphController.DeleteSubgraphConfig.UnknownError',
+        "Description": "[description]",
+        "ErrorDetails": "[cause]",
+        "Solution": _l("Please contact the developers.")
+    },
+    'Builder.GraphController.GraphDeleteByids.ParamError': {
+        "ErrorCode": 'Builder.GraphController.GraphDeleteByids.ParamError',
+        "Description": '[message]',
+        "ErrorDetails": '[message]',
+        "Solution": _l("Please check your parameter again.")
+    },
+    'Builder.GraphController.GraphDeleteByids.KnwIdNotExist': {
+        "ErrorCode": 'Builder.GraphController.GraphDeleteByids.KnwIdNotExist',
+        "Description": _l('knowledge network id [knw_id] not exists'),
+        "ErrorDetails": _l('knowledge network id [knw_id] not exists'),
+        "Solution": _l("Please check your parameter again.")
+    },
+    'Builder.GraphController.GraphDeleteByIds.UnknownError': {
+        "ErrorCode": 'Builder.GraphController.GraphDeleteByIds.UnknownError',
+        "Description": "[description]",
+        "ErrorDetails": "[cause]",
+        "Solution": _l("Please contact the developers.")
+    },
+    'Builder.GraphController.GraphDeleteByIds.DeleteFail': {
+        "ErrorCode": 'Builder.GraphController.GraphDeleteByIds.DeleteFail',
+        "Description": "[description]",
+        "ErrorDetails": "[cause]",
+        "Solution": _l("Please check whether you have permission to delete or whther the graph is running.")  # 请检查是否有删除权限或者图谱是否在运行中
+    },
 
-    }
 }

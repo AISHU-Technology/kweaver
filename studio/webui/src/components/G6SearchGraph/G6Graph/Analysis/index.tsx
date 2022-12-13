@@ -16,9 +16,9 @@ const AnalysisModal = (props: any) => {
       return;
     }
     if (selectedNode) {
-      getReport({ id: selectGraph.kg_id, rid: selectedNode?.id?.replace('#', '%23') })
+      getReport({ id: selectGraph.kg_id, rid: selectedNode?.id });
     }
-  }, [selectedNode, visible])
+  }, [selectedNode, visible]);
 
   /**
    * @description 获取分析报告
@@ -54,7 +54,7 @@ const AnalysisModal = (props: any) => {
 
     if (res && res.ErrorCode) {
       setReportData(res.res);
-      return res.res
+      return res.res;
     }
 
     if (res && res.res) {

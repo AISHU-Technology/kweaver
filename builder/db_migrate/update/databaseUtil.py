@@ -1,9 +1,11 @@
 # -*- coding:utf-8 -*-
 from db_migrate.update.update_table_1 import builder_1
 from db_migrate.update.update_table_2 import builder_2
+from db_migrate.update.update_table_3 import builder_3
 
 versions = {'builder-1.1.1': builder_1,
-            'builder-1.1.2': builder_2
+            'builder-1.1.2': builder_2,
+            'builder-1.1.3': builder_3,
             }
 
 

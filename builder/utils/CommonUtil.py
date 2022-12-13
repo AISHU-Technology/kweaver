@@ -260,7 +260,7 @@ class Commonutil(object):
                         "type_sa": "false",
                         "type_nw": "false",
                         "type_kc": "false",
-                        "ds_id":str(filter["ds_id"])}
+                        "_ds_id_":str(filter["ds_id"])}
                 data[source] = "true"
                 db[collection].insert_one(data)
 

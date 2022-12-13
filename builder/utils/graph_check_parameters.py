@@ -1,11 +1,14 @@
 # -*-coding:utf-8-*-
 import re
+
+from dao.subgraph_dao import subgraph_dao
 from utils.CommonUtil import commonutil
 from utils.ds_check_parameters import dsCheckParameters
 from service.graph_Service import graph_Service
 from jsonschema import validate, ValidationError
 
 from utils.ontology_check_params import otl_check_params
+from flask_babel import gettext as _l
 
 
 class GraphCheckParameters(object):
@@ -1791,6 +1794,242 @@ class GraphCheckParameters(object):
     def input(self, knw_id, graph_id, method):
 
         pass #empty
+
+    def create_subgraph_config(self, params_json):
+        ret_status = self.VALID
+        message = ''
+        # check parameter name
+        name = params_json.get('name')
+        if not name:
+            ret_status = self.INVALID
+            message += _l('parameter name cannot be empty. ')
+            return ret_status, message
+        elif len(name) > 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', name):
+            ret_status = self.INVALID
+            message += _l("parameter name cannot exceed 50 characters and characters must be numbers, _, chinese or english. ")
+            return ret_status, message
+        elif name in ['未分组', 'ungrouped']:
+            ret_status = self.INVALID
+            message = _l('parameter name cannot be "未分组" or "ungrouped". ')
+            return ret_status, message
+        # check parameter graph_id
+        graph_id = params_json.get('graph_id')
+        if not graph_id:
+            ret_status = self.INVALID
+            message = _l('parameter graph_id cannot be empty.')
+            return ret_status, message
+        elif type(graph_id) != int:
+            ret_status = self.INVALID
+            message = _l('parameter graph_id must be int. ')
+            return ret_status, message
+        elif graph_id <= 0:
+            ret_status = self.INVALID
+            message = _l('parameter graph_id must be larger than zero.')
+            return ret_status, message
+        # check parameter ontology_id
+        ontology_id = params_json.get('ontology_id')
+        if not ontology_id:
+            ret_status = self.INVALID
+            message = _l('parameter ontology_id cannot be empty.')
+            return ret_status, message
+        elif type(ontology_id) != int:
+            ret_status = self.INVALID
+            message = _l('parameter ontology_id must be int. ')
+            return ret_status, message
+        elif ontology_id <= 0:
+            ret_status = self.INVALID
+            message = _l('parameter ontology_id must be larger than zero.')
+            return ret_status, message
+        # check parameter entity
+        entity = params_json.get('entity')
+        if type(entity) != list:
+            ret_status = self.INVALID
+            message += 'parameter entity must be list. '
+            return ret_status, message
+        else:
+            message = ''
+            ret_status = self.VALID
+            entity_names, duplicate_entity = [], set()
+            for a_entity in entity:
+                entity_check_code, entity_check_message = otl_check_params.entity_edge_check('entity', a_entity)
+                if entity_check_code != otl_check_params.VALID:
+                    ret_status = self.INVALID
+                    message += entity_check_message
+                if a_entity['name'] in entity_names:
+                    duplicate_entity.add(a_entity['name'])
+                else:
+                    entity_names.append(a_entity['name'])
+            if len(duplicate_entity) != 0:
+                ret_status = self.INVALID
+                message += 'entities {} are duplicate. '.format(duplicate_entity)
+            if ret_status == self.INVALID:
+                return ret_status, message
+        # check parameter edge
+        edge = params_json.get('edge')
+        if type(edge) != list:
+            ret_status = self.INVALID
+            message += 'parameter edge must be list. '
+            return ret_status, message
+        else:
+            message = ''
+            ret_status = self.VALID
+            edge_relations, duplicate_edge = [], set()
+            for a_edge in edge:
+                edge_check_code, edge_check_message = otl_check_params.entity_edge_check('edge', a_edge)
+                if edge_check_code != otl_check_params.VALID:
+                    ret_status = self.INVALID
+                    message += edge_check_message
+                if a_edge['relations'] in edge_relations:
+                    duplicate_edge.add(a_edge['relations'])
+                else:
+                    edge_relations.append(a_edge['relations'])
+            if len(duplicate_edge) != 0:
+                ret_status = self.INVALID
+                message += 'edge relations {} are duplicate. '.format(duplicate_edge)
+            if ret_status == self.INVALID:
+                return ret_status, message
+        # check relation of entity and edge
+        relation_code, relation_message = otl_check_params.entity_relation_check({'entity': entity, 'edge': edge})
+        if relation_code != otl_check_params.VALID:
+            ret_status = self.INVALID
+            message += relation_message
+            return ret_status, message
+        return ret_status, message
+
+    def edit_subgraph_config(self, params_json):
+        if type(params_json) != list:
+            ret_status = self.INVALID
+            message = _l('the parameter must be a list. ')
+            return ret_status, message
+        names = []
+        subgraph_ids = []
+        for a_subgraph_config in params_json:
+            # check parameter subgraph_id
+            subgraph_id = a_subgraph_config.get('subgraph_id')
+            if not subgraph_id:
+                ret_status = self.INVALID
+                message = _l('parameter subgraph_id cannot be empty.')
+                return ret_status, message
+            elif type(subgraph_id) != int:
+                ret_status = self.INVALID
+                message = _l('parameter subgraph_id must be int. ')
+                return ret_status, message
+            elif subgraph_id <= 0:
+                ret_status = self.INVALID
+                message = _l('parameter subgraph_id must be larger than zero.')
+                return ret_status, message
+            elif subgraph_id in subgraph_ids:
+                ret_status = self.INVALID
+                message = _l('subgraph id {} is duplicate. ').format(subgraph_id)
+                return ret_status, message
+            else:
+                subgraph_ids.append(subgraph_id)
+            # check parameter name
+            name = a_subgraph_config.get('name')
+            if not name:
+                ret_status = self.INVALID
+                message = _l('parameter name cannot be empty. ')
+                return ret_status, message
+            elif len(name) > 50 or not re.search(u'^[_a-zA-Z0-9\u4e00-\u9fa5]+$', name):
+                ret_status = self.INVALID
+                message = _l("parameter name {} cannot exceed 50 characters and characters must be "\
+                          "numbers, _, chinese or english. ").format(name)
+                return ret_status, message
+            else:
+                # check whether the names are duplicate
+                if name in names:
+                    ret_status = self.INVALID
+                    message = _l('name {} is duplicate.').format(name)
+                    return ret_status, message
+                names.append(name)
+            # check parameter entity
+            if 'entity' in a_subgraph_config:
+                entity = a_subgraph_config.get('entity')
+                if type(entity) != list:
+                    ret_status = self.INVALID
+                    message = _l('parameter entity must be list. ')
+                    return ret_status, message
+                else:
+                    message = ''
+                    ret_status = self.VALID
+                    entity_names, duplicate_entity = [], set()
+                    for a_entity in entity:
+                        entity_check_code, entity_check_message = otl_check_params.entity_edge_check('entity', a_entity)
+                        if entity_check_code != otl_check_params.VALID:
+                            ret_status = self.INVALID
+                            message += entity_check_message
+                        if a_entity['name'] in entity_names:
+                            duplicate_entity.add(a_entity['name'])
+                        else:
+                            entity_names.append(a_entity['name'])
+                    if len(duplicate_entity) != 0:
+                        ret_status = self.INVALID
+                        message += 'entities {} are duplicate. '.format(duplicate_entity)
+                    if ret_status == self.INVALID:
+                        return ret_status, message
+            # check parameter edge
+            if 'edge' in a_subgraph_config:
+                edge = a_subgraph_config.get('edge')
+                if type(edge) != list:
+                    ret_status = self.INVALID
+                    message = _l('parameter edge must be list. ')
+                    return ret_status, message
+                else:
+                    message = ''
+                    ret_status = self.VALID
+                    edge_relations, duplicate_edge = [], set()
+                    for a_edge in edge:
+                        edge_check_code, edge_check_message = otl_check_params.entity_edge_check('edge', a_edge)
+                        if edge_check_code != otl_check_params.VALID:
+                            ret_status = self.INVALID
+                            message += edge_check_message
+                        if a_edge['relations'] in edge_relations:
+                            duplicate_edge.add(a_edge['relations'])
+                        else:
+                            edge_relations.append(a_edge['relations'])
+                    if len(duplicate_edge) != 0:
+                        ret_status = self.INVALID
+                        message += 'edge relations {} are duplicate. '.format(duplicate_edge)
+                    if ret_status == self.INVALID:
+                        return ret_status, message
+            # check relation of entity and edge
+            if 'entity' in a_subgraph_config and 'edge' in a_subgraph_config:
+                relation_code, relation_message = otl_check_params.entity_relation_check({'entity': entity, 'edge': edge})
+                if relation_code != otl_check_params.VALID:
+                    ret_status = self.INVALID
+                    message = relation_message
+                    return ret_status, message
+        return self.VALID, 'success'
+
+    def get_subgraph_list(self, params_json):
+        ret_status = self.VALID
+        # check parameter graph_id
+        graph_id = params_json.get('graph_id')
+        if not graph_id:
+            ret_status = self.INVALID
+            message = _l('parameter graph_id cannot be empty.')
+            return ret_status, message
+        elif type(graph_id) != int and not graph_id.isdigit():
+            ret_status = self.INVALID
+            message = _l('parameter graph_id must be int. ')
+            return ret_status, message
+        elif int(graph_id) <= 0:
+            ret_status = self.INVALID
+            message = _l('parameter graph_id must be larger than zero.')
+            return ret_status, message
+        # check parameter subgraph_name
+        subgraph_name = params_json.get('subgraph_name')
+        if subgraph_name is None:
+            ret_status = self.INVALID
+            message = _l('parameter subgraph_name cannot be empty.')
+            return ret_status, message
+        # check parameter return_all
+        return_all = params_json.get('return_all', "False")
+        if return_all not in ["False", "True"]:
+            ret_status = self.INVALID
+            message = _l('parameter return_all must be False or True.')
+            return ret_status, message
+        return ret_status, 'success'
 
 
 graphCheckParameters = GraphCheckParameters()

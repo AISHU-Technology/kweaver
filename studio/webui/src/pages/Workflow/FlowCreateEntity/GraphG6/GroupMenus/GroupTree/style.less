@@ -1,0 +1,64 @@
+.graph-group-tree {
+  color: var(--ad-heading-color);
+
+  .group-node-title {
+    padding: 0 4px;
+  }
+
+  .ant-tree-switcher-noop {
+    width: 0;
+  }
+
+  .ant-tree-node-content-wrapper {
+    min-height: 36px;
+    line-height: 36px;
+    padding: 0;
+
+    &:hover {
+      .click-mask {
+        display: inline-block;
+      }
+    }
+
+    &.ant-tree-node-selected {
+      background-color: var(--ad-select-bg-color);
+    }
+
+    &:not(.ant-tree-node-selected) {
+      .hover-node {
+        background: #f5f5f5;
+      }
+    }
+  }
+
+  .ant-tree-switcher {
+    line-height: 36px;
+
+    .ant-tree-switcher-icon {
+      font-size: 12px;
+      transform: translateY(1px);
+    }
+  }
+
+  .group-info {
+    flex: 1;
+    min-width: 0;
+    max-width: 200px;
+  }
+
+  .group-name {
+    display: inline-block;
+    vertical-align: top;
+    min-width: 24px;
+    max-width: calc(100% - 30px);
+  }
+
+  .click-mask {
+    display: none;
+    vertical-align: middle;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+  }
+}

@@ -57,7 +57,7 @@ class TaskList extends Component {
     const data = {
       page,
       size: PAGESIZE,
-      ontology_id: ontology_id !== '' ? ontology_id : ontologyId,
+      ontology_id: ontology_id || ontologyId,
       used_task: []
     };
 
@@ -263,7 +263,7 @@ class TaskList extends Component {
                     {TYPE === 'view' ? null : <span className="set">|</span>}
 
                     <IconFont
-                      type="icon-bianzu8"
+                      type="icon-wendang-xianxing"
                       className="icon"
                       title={intl.get('createEntity.td')}
                       onClick={e => {

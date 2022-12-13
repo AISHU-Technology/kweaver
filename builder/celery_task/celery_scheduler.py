@@ -11,19 +11,20 @@ from utils.ConnectUtil import redisConnect
 def updatedata():
     print("实时刷新")
     # 遍历
-    # Logger.log_info("定时刷新: {}".format(""))
-    df = task_dao.getCount()
+    # task information from mysql table
+    df = task_dao.get_unfinished_task()
+    # df = task_dao.getCount()  # get all task information from mysql table
     # 获得任务列表中的所有task_id
     df_taskid = df["task_id"]
     df_taskid_list = df_taskid.values.tolist()
-    # 遍历获取所有任务的信息
+    # 遍历redis 获取所有任务的celery信息
     status_code, task_info = task_dao.gettaskall(df_taskid_list)
     if status_code == "400":
         print("redis 断开，不再更新原来数据 失败，失败原因是redis挂断")
         task_service.updatetaredis(df, task_info)
     else:
         try:
-            task_service.updatetatus2(df, task_info)
+            task_service.update_task_status(df, task_info)
         except Exception as e:
             print(e)
 

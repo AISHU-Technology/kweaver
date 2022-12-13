@@ -187,6 +187,10 @@ func (*GraphDBService) GetGraphDBList(condition *vo.GraphListSearchCondition) *v
 
 // GetGraphInfoByGraphDBId 查询存储项关联的图谱信息
 func (*GraphDBService) GetGraphInfoByGraphDBId(condition *vo.GraphSearchCondition) *vo.ListVo {
+	var count int64
+	if kw_errors.Try(global.DB.Model(po.GraphDBModel).Where("id = ?", condition.ID).Count(&count).Error).Throw(kw_errors.InternalServerError); count <= 0 {
+		panic(kw_errors.GraphDBRecordNotFoundError)
+	}
 	var graphConfigTableList = make([]*po.GraphConfigTable, condition.Size)
 	kw_errors.Try(global.DB.Model(po.GraphConfigTableModel).Select("create_time", "graph_name").
 		Where("graph_db_id = ?", condition.ID).Offset((condition.Page - 1) * condition.Size).Limit(condition.Size).
@@ -293,6 +297,10 @@ func (*GraphDBService) DeleteGraphDBById(id int) {
 	var count int64
 	if kw_errors.Try(global.DB.Model(po.GraphDBModel).Where("id = ?", id).Count(&count).Error).Throw(kw_errors.InternalServerError); count <= 0 {
 		panic(kw_errors.GraphDBRecordNotFoundError)
+	}
+	//检查db是否被使用
+	if kw_errors.Try(global.DB.Model(po.GraphConfigTableModel).Where("graph_db_id = ?", id).Count(&count).Error).Throw(kw_errors.InternalServerError); count > 0 {
+		panic(kw_errors.GraphDbRecordUsedError)
 	}
 	r := global.DB.Model(po.GraphDBModel).Delete("id", id)
 	kw_errors.Try(r.Error).Throw(kw_errors.InternalServerError)

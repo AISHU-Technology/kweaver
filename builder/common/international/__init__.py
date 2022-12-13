@@ -144,7 +144,7 @@ def bind_i18n(app):
 
 
     # 编译所有的模板翻译
-    compile_all()
+    # compile_all()
 
     """
     国际化中间件，将所有返回的json拦截并翻译

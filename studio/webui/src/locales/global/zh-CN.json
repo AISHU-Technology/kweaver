@@ -67,6 +67,12 @@
     "graphID": "知识图谱ID",
     "openSearchNull": "未绑定OpenSearch，您可前往【系统配置-存储管理】进行配置。",
     "databaseNull": "未配置图数据库，您可前往【系统配置-存储管理】进行配置。",
-    "goNow": "立即前往"
+    "goNow": "立即前往",
+    "lenErr": "最多输入{len}个字符",
+    "onlyKeyboard": "仅支持中英文、数字及键盘上的特殊字符",
+    "onlyNormalName": "仅支持中英文、数字及下划线",
+    "batchTask": "分批任务",
+    "ge": "个",
+    "add": "添加"
   }
 }

@@ -16,19 +16,16 @@ serviceTaskManagement.taskGet = jest.fn(() => Promise.resolve(taskList));
 serviceTaskManagement.taskGetProgress = jest.fn(() =>
   Promise.resolve({
     res: {
-      df: [
-        {
-          graph_name: '123',
-          graph_id: 1,
-          task_status: 1,
-          create_user_name: 1,
-          create_time: 'full',
-          create_user_email: 1,
-          effective_storage: true
-        }
-      ],
-      count: 1
-    }
+      graph_name: '123',
+      graph_id: 1,
+      task_status: 'running',
+      create_user_name: 1,
+      create_time: 'full',
+      create_user_email: 1,
+      effective_storage: true,
+      task_id: 1
+    },
+    count: 1
   })
 );
 serviceTaskManagement.taskDelete = jest.fn(() => Promise.resolve({ res: 'success' }));
@@ -89,64 +86,30 @@ describe('fun test', () => {
     await sleep();
     expect(serviceTaskManagement.taskGet).toBeCalled();
   });
-});
 
-describe('option', () => {
-  it('run btn', async () => {
-    serviceTaskManagement.taskGet = jest.fn(() =>
-      Promise.resolve({
-        res: {
-          df: [
-            {
-              graph_name: '123',
-              graph_id: 1,
-              task_status: 'normal',
-              id: 1,
-              task_type: 'full',
-              trigger_type: 1,
-              effective_storage: true
-            },
-            {
-              graph_name: '456',
-              graph_id: 2,
-              task_status: 'running',
-              id: 2,
-              task_type: 'full',
-              trigger_type: 1,
-              effective_storage: true
-            }
-          ],
-          count: 2
-        }
-      })
-    );
+  it('test', async () => {
     const wrapper = init();
-
     await sleep();
+    wrapper.update();
+    // 刷新
+    act(() => {
+      wrapper.find('.btn-height').at(0).simulate('click');
+    });
 
-    expect(serviceTaskManagement.taskGet).toBeCalled();
+    expect(serviceTaskManagement.taskGet).toHaveBeenCalled();
+    // 任务进度
+    act(() => {
+      wrapper.find('.status-button').at(0).simulate('click');
+    });
 
-    const runBtn = wrapper.find('Button');
+    expect(serviceTaskManagement.taskGetProgress).toHaveBeenCalled();
 
     act(() => {
-      runBtn.at(0).simulate('click');
+      wrapper.find('.ant-btn.ant-btn-default.ad-ml-2').at(0).simulate('click');
     });
     await sleep();
+    wrapper.update();
 
-    const okBtn = wrapper.find('.ant-btn.save');
-
-    act(() => {
-      okBtn.at(0).simulate('click');
-    });
-    await sleep();
-
-    expect(serviceTaskManagement.taskCreate).toBeCalled();
-    const statusBtn = wrapper.find('.status-button');
-
-    act(() => {
-      statusBtn.at(0).simulate('click');
-    });
-    await sleep();
-    expect(serviceTaskManagement.taskGetProgress).toBeCalled();
+    expect(wrapper.hasClass('ad-tip-modal')).toBeDefined();
   });
 });

@@ -45,6 +45,7 @@ module.exports = {
 
   // 忽略某些文件的测试
   coveragePathIgnorePatterns: [
+    '<rootDir>/src/*mockData.(js|ts)$',
     '<rootDir>/src/assets/*',
     '<rootDir>/src/services/*',
     '<rootDir>/src/locales/*',

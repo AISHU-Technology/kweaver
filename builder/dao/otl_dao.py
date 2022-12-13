@@ -1804,6 +1804,21 @@ class OtlDao(object):
         sql = """INSERT INTO ontology_table (ontology_name, ontology_des, entity,edge,used_task,all_task,create_time,update_time) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
         new_id = cursor.lastrowid
+
+        # after the ontology is added, add a subgraph whose name is 'ungrouped'
+        value_list = []
+        value_list.append(params_json.get('graph_id'))
+        value_list.append(new_id)  # ontology_id
+        value_list.append('ungrouped')  # name
+        value_list.append('[]')  # entity
+        value_list.append('[]')  # edge
+        value_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
+        value_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
+        sql = '''INSERT INTO subgraph_config 
+                    (graph_id, ontology_id, name, entity, edge, create_time, update_time)
+                VALUES 
+                    (%s, %s, %s, %s, %s, %s, %s)'''
+        cursor.execute(sql, value_list)
         return new_id
 
     @connect_execute_close_db

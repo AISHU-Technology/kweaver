@@ -99,7 +99,7 @@ class G6Graph extends Component {
     }
 
     if (selectedPath !== preProps.selectedPath) {
-      if (!selectedPath?.length) {
+      if (!selectedPath?.vertices?.length) {
         this.recoveryStyle();
         return;
       }
@@ -529,14 +529,13 @@ class G6Graph extends Component {
 
     let vertices = []; // 批量查询的实体点id
     let edges = []; // 批量查询的边id
-    let list = pathList?.data; // 路径
+    const list = [...pathList?.data, ...data];
     _.forEach(data, item => {
       vertices = [...vertices, ...item.vertices];
 
       const edgeIds = _.map(item.edges, e => e.id);
 
       edges = [...edges, ...edgeIds];
-      list = [...list, item.vertices];
     });
 
     // 去掉重复的id
@@ -641,9 +640,11 @@ class G6Graph extends Component {
     this.props.updateGraphData({ nodes: newNodes, edges: newEdges });
     this.graph.refresh();
     // this.recoveryStyle();
+    // this.setSelectedStyle();
     setTimeout(() => {
       this.changeGraphSize();
     }, 10);
+
     // 两节点多条边的处理
     const offsetDiff = 40;
     const multiEdgeType = 'quadratic';
@@ -773,8 +774,7 @@ class G6Graph extends Component {
     // 悬停操作圈其他模块，并且不是点击打开弹窗
     if (!direction) {
       this.setState({
-        informationVisible: false,
-        selectEdge: ''
+        informationVisible: false
       });
       return;
     }
@@ -1054,14 +1054,9 @@ class G6Graph extends Component {
     const totalData = [...nodes, ...edges];
 
     // 高亮的id
-    let ids = [];
-    edges.forEach(item => {
-      if (selectedPath.includes(item.source) && selectedPath.includes(item.target)) {
-        ids = [...ids, item.id];
-      }
-    });
+    const edgeIds = _.map(selectedPath?.edges, item => item.id);
+    const ids = [...selectedPath?.vertices, ...edgeIds];
 
-    ids = [...ids, ...selectedPath];
     totalData.forEach(({ id }) => {
       this.setOpacity(id, ids.includes(id) ? 1 : 0.2);
     });

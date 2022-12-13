@@ -268,7 +268,8 @@ class GraphDao():
                 create_time=%s, 
                 update_time=%s, 
                 graph_update_time=%s,
-                kg_data_volume=%s
+                kg_data_volume=%s,
+                KDB_name_temp=%s
             where id = %s           
             """
             # 拼接knowledge所需要的结构
@@ -284,6 +285,7 @@ class GraphDao():
             knowledge_graph_value_list.append(knowledge_graph["update_time"])
             knowledge_graph_value_list.append(knowledge_graph["graph_update_time"])
             knowledge_graph_value_list.append(knowledge_graph["kg_data_volume"])
+            knowledge_graph_value_list.append("None_Version")
 
             knowledge_graph_value_list.append(knowledge_graph["id"])
 
@@ -840,6 +842,7 @@ class GraphDao():
         sql3 = """DELETE FROM knowledge_graph WHERE KG_config_id in ({});""".format(",".join(map(str, graph_ids)))
         sql4 = """DELETE FROM graph_task_history_table WHERE graph_id in ({});""".format(",".join(map(str, graph_ids)))
         sql5 = """DELETE FROM graph_task_table WHERE graph_id in ({});""".format(",".join(map(str, graph_ids)))
+        sql6 = """DELETE FROM subgraph_config WHERE graph_id in ({});""".format(",".join(map(str, graph_ids)))
         # delete the timed task to which the graph belongs
         delete_crontab = """DELETE from timer_crontab where id in (select crontab_id from timer_task where
                              graph_id in ({}));""".format(",".join(map(str, graph_ids)))
@@ -852,6 +855,7 @@ class GraphDao():
         cursor.execute(sql3)
         cursor.execute(sql4)
         cursor.execute(sql5)
+        cursor.execute(sql6)
         cursor.execute(delete_crontab)
         cursor.execute(delete_task)
         cursor.execute(update_run_sql)
@@ -873,7 +877,7 @@ class GraphDao():
         :param kdb_name: 名称，唯一字段
         :return: True 存在，False 不存在
         """
-        sql = """SELECT * FROM knowledge_graph WHERE KDB_name = '{}'""".format(kdb_name)
+        sql = """SELECT * FROM knowledge_graph WHERE KDB_name like '{}%'""".format(kdb_name)
         df = pd.read_sql(sql, connection)
         df = df.to_dict(orient="records")
         if len(df) > 0:
@@ -889,7 +893,7 @@ class GraphDao():
         :param kdb_name: 名称，唯一字段
         :return: dict
         """
-        sql = """SELECT * FROM knowledge_graph WHERE KDB_name = '{}'""".format(kdb_name)
+        sql = """SELECT * FROM knowledge_graph WHERE KDB_name like '{}%'""".format(kdb_name)
         df = pd.read_sql(sql, connection)
         df = df.to_dict(orient="records")
         return df
@@ -1199,6 +1203,22 @@ class GraphDao():
             .format(",".join(map(str, graph_id)))
         df = pd.read_sql(sql, connection)
         return df
+
+    @connect_execute_close_db
+    def get_version_by_id(self, graph_id, connection, cursor):
+        sql = f"""select KDB_name, KDB_name_temp from knowledge_graph where id={graph_id}"""
+        df = pd.read_sql(sql, connection)
+        return df
+
+    @connect_execute_commit_close_db
+    def update_version(self, KDB_name, KDB_name_temp, graph_id, connection, cursor):
+        sql = f"update knowledge_graph set KDB_name='{KDB_name}',KDB_name_temp='{KDB_name_temp}' where id={graph_id}"
+        cursor.execute(sql)
+
+    @connect_execute_commit_close_db
+    def update_base_info(self, graph_baseInfo, graph_id, connection, cursor):
+        sql = f"""update graph_config_table set graph_baseInfo="{graph_baseInfo}" where id={graph_id}"""
+        cursor.execute(sql)
 
 
 graph_dao = GraphDao()

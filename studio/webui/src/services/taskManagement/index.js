@@ -31,16 +31,15 @@ const taskCreate = async (id, data) => await apiService.axiosPost(`${API.taskCre
 
 /**
  * 终止任务
- * @param {*} id
+ * @param {*data} 内容为graph_id或者task_id，分别表示终止该图谱下所有任务和终止某个任务。传参只能为两者之一，不能两个参数都传。
  */
-const taskStop = async id => await apiService.axiosPost(`${API.taskStop}/${id}`);
+const taskStop = async data => await apiService.axiosPost(API.taskStop, data);
 
 /**
  * 删除任务
  * @param {*} id
  */
-const taskDelete = async (id, body) =>
-  await apiService.axiosDelete(`${API.taskDelete}/${id}`, { data: { task_ids: body } });
+const taskDelete = async (id, body) => await apiService.axiosPost(`${API.taskDelete}/${id}`, { task_ids: body });
 
 /**
  * 获取任务进度

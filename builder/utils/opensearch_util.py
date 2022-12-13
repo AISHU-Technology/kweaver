@@ -156,4 +156,13 @@ class OpenSearchManager(object):
         except Exception as e:
             Logger.log_error("search word error: {}".format(repr(e)))
 
+    def delete_index(self, kg_id):
+        index = self.test_index + "_" + str(kg_id)
+        try:
+            res = self.client.indices.delete(
+                index=index,
+            )
+            return res
+        except Exception as e:
+            Logger.log_error("search word error: {}".format(repr(e)))
 

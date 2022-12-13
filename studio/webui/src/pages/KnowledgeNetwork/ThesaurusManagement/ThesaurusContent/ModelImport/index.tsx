@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Modal, Form, message, Radio, Space } from 'antd';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
@@ -17,11 +17,11 @@ const ERROR_CODE: Record<string, string> = {
   'Builder.LexiconController.ImportWord2Lexicon.FileFormatError': 'ThesaurusManage.FileFormatError',
   'Builder.LexiconController.ImportWord2Lexicon.ContentFormatError': 'ThesaurusManage.ContentFormatError',
   'Builder.LexiconController.ImportWord2Lexicon.InvalidStatus': 'ThesaurusManage.editwordsError'
-}
+};
 const { OVER_MAX_FILES_COUNT, OVER_SINGLE_FILE_SIZE } = UPLOAD_FAIL_TYPE;
 const UPLOAD_ERROR = {
   [OVER_MAX_FILES_COUNT]: intl.get('ThesaurusManage.fileCountMessage'),
-  [OVER_SINGLE_FILE_SIZE]: intl.get('ThesaurusManage.DataExceeded'),
+  [OVER_SINGLE_FILE_SIZE]: intl.get('ThesaurusManage.DataExceeded')
 };
 const ModalImport = (props: any) => {
   const [form] = Form.useForm();
@@ -39,7 +39,7 @@ const ModalImport = (props: any) => {
         id: selectedThesaurus?.id,
         file,
         mode
-      }
+      };
       try {
         const response = await serverThesaurus.thesaurusImportWords(data);
         const { ErrorCode, ErrorDetails } = response || {};
@@ -59,14 +59,14 @@ const ModalImport = (props: any) => {
       } catch (err) {
         closeModal();
       }
-    })
-  }
+    });
+  };
 
   const onCancel = () => closeModal();
 
   /**
-  * 上传，选中文件后的报错信息
-  */
+   * 上传，选中文件后的报错信息
+   */
   const onError = _.debounce(errorList => {
     if (_.isEmpty(errorList)) return null;
     _.forEach(errorList, item => {
@@ -92,8 +92,8 @@ const ModalImport = (props: any) => {
   };
 
   /**
-  * 下载示例
-  */
+   * 下载示例
+   */
   const download = async () => {
     try {
       const response = await serverThesaurus.downloadTemplate();
@@ -103,7 +103,7 @@ const ModalImport = (props: any) => {
     } catch (error) {
       //
     }
-  }
+  };
 
   return (
     <Modal
@@ -119,6 +119,8 @@ const ModalImport = (props: any) => {
       afterClose={() => {
         form.resetFields();
       }}
+      okText={intl.get('global.ok')}
+      cancelText={intl.get('global.cancel')}
     >
       <div>
         <Form
@@ -137,8 +139,15 @@ const ModalImport = (props: any) => {
             extra={
               <div className="importWords-extraBox">
                 <div className="fileExtra">• {intl.get('ThesaurusManage.filetype')}</div>
-                <div className="fileExtra ad-flex">•<div className="ad-ml-1">{intl.get('ThesaurusManage.fileSize')}</div></div>
-                <div>• <span className="ad-c-primary down-style" onClick={() => download()}>{intl.get('ThesaurusManage.tamplate')}</span></div>
+                <div className="fileExtra ad-flex">
+                  •<div className="ad-ml-1">{intl.get('ThesaurusManage.fileSize')}</div>
+                </div>
+                <div>
+                  •{' '}
+                  <span className="ad-c-primary down-style" onClick={() => download()}>
+                    {intl.get('ThesaurusManage.tamplate')}
+                  </span>
+                </div>
               </div>
             }
           >
@@ -154,10 +163,7 @@ const ModalImport = (props: any) => {
               onCallBackFileChange={onCallBackFileChange}
             />
           </Form.Item>
-          <Form.Item
-            name="mode"
-            label={intl.get('ThesaurusManage.importPolicy')}
-          >
+          <Form.Item name="mode" label={intl.get('ThesaurusManage.importPolicy')}>
             <Radio.Group>
               <Space direction="vertical">
                 <Radio value="add">
@@ -174,6 +180,6 @@ const ModalImport = (props: any) => {
         </Form>
       </div>
     </Modal>
-  )
-}
+  );
+};
 export default ModalImport;

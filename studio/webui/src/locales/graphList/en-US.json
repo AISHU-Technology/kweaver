@@ -152,7 +152,7 @@
     "sureDelNetwork": "Are you sure you want to delete the knowledge network?",
     "delNetworkDes": "Once the knowledge network is deleted, it cannot be retrieved. Please operate with caution!",
     "noKnow": "No knowledge representation",
-    "delFailed": "Deletion failed. Please delete all knowledge representations in the knowledge network first!",
+    "delFailed": "Deletion failed. Please delete all knowledge graphs in the knowledge network first!",
     "notDes": "[No description]",
     "repeatName": "Name already exists,please modify",
     "adminKong": "There is no accessible knowledge network",

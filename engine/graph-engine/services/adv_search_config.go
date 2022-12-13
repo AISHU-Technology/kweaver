@@ -50,7 +50,8 @@ func GetAdvSearchConfigHandler(c *gin.Context) {
 		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
 		return
 	}
-	httpcode, res := controllers.GetAdvSearchConf(body.KNetID, body.Filter, body.Query, body.Sort, body.Page, body.Size)
+	dataIds := c.Request.Header.Get("dataIds")
+	httpcode, res := controllers.GetAdvSearchConf(body.KNetID, body.Filter, body.Query, body.Sort, body.Page, body.Size, dataIds)
 
 	c.JSON(httpcode, res)
 }
@@ -201,7 +202,7 @@ func UpdateAdvSearchConfigHandler(c *gin.Context) {
 // @Router /api/engine/v1/adv-search-config/info/{confid} [get]
 // @Accept  x-www-form-urlencoded
 // @Produce json
-// @Success 200 {object} nebula.EdgeRes "result string"
+// @Success 200 {object} controllers.InfoSearchConfRes "result string"
 // @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
 // @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
 // @Failure 500 {object} utils.Error "EngineServer.ErrAdvSearchConfIDErr: config ID does not exist"
@@ -272,7 +273,37 @@ func KGListAdvSearchConfigHandler(c *gin.Context) {
 		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
 		return
 	}
-	httpcode, res := controllers.AdvSearchConfKGList(body.KNetworkId, body.KGName)
+	dataIds := c.Request.Header.Get("dataIds")
+	httpcode, res := controllers.AdvSearchConfKGList(body.KNetworkId, body.KGName, dataIds)
+
+	c.JSON(httpcode, res)
+}
+
+type KGListBackwardBody struct {
+	ConfigId []int `json:"config_id" binding:"required"`
+}
+
+// KGListBackwardHandler
+// @Summary get kglist-backward
+// @Description get kglist by config id list
+// @Tags CEngine
+// @Param configId body KGListBackwardBody true "configId"
+// @Router /api/engine/v1/adv-search-config/kglist-backward [post]
+// @Accept  json
+// @Produce json
+// @Success 200 {object} controllers.GetKgIdBackwardRes "result string"
+// @Failure 400 {object} utils.Error "EngineServer.ErrArgsErr: Parameter exception"
+// @Failure 500 {object} utils.Error "EngineServer.ErrInternalErr: internal error"
+func KGIDBackwardHandler(c *gin.Context) {
+
+	var body KGListBackwardBody
+	err := c.ShouldBindJSON(&body)
+	if err != nil {
+		c.JSON(400, utils.ErrInfo(utils.ErrArgsErr, err))
+		return
+	}
+
+	httpcode, res := controllers.GetKGIDBackward(body.ConfigId)
 
 	c.JSON(httpcode, res)
 }

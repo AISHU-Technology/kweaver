@@ -104,6 +104,8 @@ const ModalImport = (props: any) => {
       afterClose={() => {
         form.resetFields();
       }}
+      okText={intl.get('global.ok')}
+      cancelText={intl.get('global.cancel')}
     >
       <div className="formContainer">
         <Form {...layout} form={form} name="importForm" requiredMark={false} initialValues={{ method: '1' }}>

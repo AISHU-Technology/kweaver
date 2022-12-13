@@ -8,13 +8,12 @@ COPY . .
 RUN ls && \
 go env -w GO111MODULE=on && \
 go env -w GOPROXY=https://goproxy.cn,direct && \
-go env -w GOPRIVATE=gitlab.aishu.cn && \
 go mod tidy && \
 go build -o graph-engine && \
 ls -R .. 
 
 
-FROM acr.aishu.cn/public/ubuntu:21.10.20211119
+FROM xavierhuang/ubuntu:v1
 RUN apt-get install -y tzdata && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 COPY --from=gomake /root/graph-engine/graph-engine /root/graph-engine/
 COPY ./conf /root/graph-engine/conf

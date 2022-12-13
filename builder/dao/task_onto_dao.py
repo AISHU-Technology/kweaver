@@ -329,6 +329,13 @@ class TaskDaoOnto(object):
         new_id = cursor.lastrowid
         return new_id
 
+    @connect_execute_commit_close_db
+    def delete_otl_task_by_id(self, otl_id, connection, cursor):
+        sql = f"""DELETE FROM ontology_task_table WHERE ontology_id={otl_id}"""
+        cursor.execute(sql)
+        new_id = cursor.lastrowid
+        return new_id
+
 
 
 

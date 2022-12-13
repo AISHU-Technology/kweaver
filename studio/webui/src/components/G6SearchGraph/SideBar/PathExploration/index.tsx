@@ -110,7 +110,7 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
       direction,
       shortest: pathType
     };
-    setSelectedPath([]); // 再次探索，清空上此选择的路径
+    setSelectedPath({}); // 再次探索，清空上此选择的路径
     setAlldata([]); // 清空上此请求保存的数据
     Object.keys(apiService.sources).forEach((key: string) => {
       (apiService.sources as any)[key]('取消请求');
@@ -127,10 +127,6 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
         return;
       }
 
-      // if (res?.res === null) {
-      //   setPathList({ data: [], count: 0 });
-      //   setPathLoading(false);
-      // }
       if (res?.ErrorCode) {
         message.error(res?.Description);
       }
@@ -170,13 +166,12 @@ const Pathexploration: React.FC<PathexplorationProps> = props => {
   const loop = (data: any) => {
     let vertices: any[] = []; // 点
     let edges: any[] = []; // 边
-    let list: Array<any[]> = pathList?.data; // 路径
+    const list = [...pathList?.data, ...data];
 
     data.forEach((item: any) => {
       vertices = [...vertices, ...item.vertices];
 
       edges = [...edges, ...item.edges];
-      list = [...list, item.vertices];
     });
 
     edges = edges.map((e: { id: any; out: any; in: any }) => e.id);

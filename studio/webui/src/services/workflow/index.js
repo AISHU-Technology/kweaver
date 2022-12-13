@@ -34,11 +34,6 @@ const graphCheckKmApInfo = async data => await apiService.axiosPost(API.graphChe
  */
 const taskPerform = async (id, data) => await apiService.axiosPost(`${API.taskPerform}/${id}`, data);
 
-/**
- * @description 流程一查询开关状态
- */
-const graphGetBis = async () => await apiService.axiosGet(API.graphGetBis);
-
 export default {
   graphCreate,
   graphEdit,
@@ -46,6 +41,5 @@ export default {
   graphSaveNoCheck,
   graphGetInfoExt,
   graphCheckKmApInfo,
-  taskPerform,
-  graphGetBis
+  taskPerform
 };

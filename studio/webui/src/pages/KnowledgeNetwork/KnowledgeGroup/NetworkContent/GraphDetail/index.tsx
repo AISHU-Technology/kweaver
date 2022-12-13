@@ -45,16 +45,14 @@ const GraphDetail = (props: GraphDetailType) => {
       if (isConfiguration) return setIsLoading(false);
 
       let resultCount: any = { res: { entity: [], edge: [], entity_count: 0, edge_count: 0 } };
-      // WARNING 运行中不查询数量信息, nebula运行失败查询会报错
-      if (graphBasicData.status !== GRAPH_STATUS.RUNNING) {
-        try {
-          resultCount = await serviceGraphDetail.graphGetInfoCount({ graph_id: graphid });
-        } catch (error) {
-          // console.log('errors', error);
-        }
-        const { entity = [], edge = [], entity_count = 0, edge_count = 0 } = resultCount?.res || {};
-        setGraphCount({ nodes: entity, edges: edge, nodeCount: entity_count, edgeCount: edge_count });
+      // WARNING 运行中不查询数量信息, nebula运行失败查询会报错, 直接返回空
+      try {
+        resultCount = await serviceGraphDetail.graphGetInfoCount({ graph_id: graphid });
+      } catch (error) {
+        //
       }
+      const { entity = [], edge = [], entity_count = 0, edge_count = 0 } = resultCount?.res || {};
+      setGraphCount({ nodes: entity, edges: edge, nodeCount: entity_count, edgeCount: edge_count });
 
       const resultOnto = await serviceGraphDetail.graphGetInfoOnto({ graph_id: graphid });
       const nodesKV: any = _.keyBy(resultCount?.res?.entity, 'name') || {};

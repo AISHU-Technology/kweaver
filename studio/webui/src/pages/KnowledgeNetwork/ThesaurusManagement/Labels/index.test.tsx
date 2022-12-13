@@ -21,11 +21,28 @@ describe('Labels', () => {
 describe('function', () => {
   it('click', async () => {
     const wrapper = init();
+
+    await sleep();
+    wrapper.update();
+
     act(() => {
-      wrapper.find('.ant-tag').at(0).simulate('click');
+      wrapper.find('.ant-tag').at(1).simulate('click');
     });
     await sleep();
     wrapper.update();
-    expect(wrapper.find('.site-tag-plus').exists()).toBe(true);
+    act(() => {
+      wrapper.find('.ad-pl-3.ad-pr-3.select-item.ad-ellipsis').at(0).simulate('click');
+    });
+    await sleep();
+    wrapper.update();
+    expect(wrapper.find('.ant-tag').length).toBe(2);
+  });
+  it('delete tag', async () => {
+    const wrapper = init();
+    await sleep();
+    wrapper.update();
+    act(() => {
+      wrapper.find('.ant-tag-close-icon').at(0).simulate('click');
+    });
   });
 });

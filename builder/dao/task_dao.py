@@ -11,6 +11,7 @@ from utils.CommonUtil import commonutil
 from utils.ConnectUtil import redisConnect
 from utils.log_info import Logger
 from common.errorcode import codes
+from dao.subgraph_dao import subgraph_dao
 
 
 class TaskDao(object):
@@ -161,16 +162,12 @@ class TaskDao(object):
     def getredisbytaskid(self, taskid):
         try:
             r = redisConnect.connect_redis(db=2, model="read")
-            # keys = r.keys()
-            redisdata = {}
-            # for i in keys:
-            #     key = i.decode("utf-8")
-            #     if taskid in key:
             key = "celery-task-meta-" + str(taskid)
             data = r.get(key)
-            data = data.decode("utf-8")
-            redisdata = json.loads(data)
-            return redisdata
+            if data:
+                data = data.decode("utf-8")
+                data = json.loads(data)
+            return data
         except Exception as e:
             err = repr(e)
             print(err)
@@ -299,7 +296,7 @@ class TaskDao(object):
 
     @connect_execute_close_db
     def gettaskupdata(self, task_id, task_status, connection, cursor, ):
-        sql = """SELECT id FROM graph_task_table where task_id = %s and task_status = %s """ % (
+        sql = """SELECT id FROM graph_task_history_table where task_id = %s and task_status = %s """ % (
             '"' + task_id + '"', '"' + task_status + '"')
         # sql = sql.format()
         df = pd.read_sql(sql, connection)
@@ -320,10 +317,8 @@ class TaskDao(object):
 
     @connect_execute_commit_close_db
     def deletehistorytask(self, task_ids, graph_id, connection, cursor):
-        print(task_ids)
-        print(type(task_ids))
-        task_ids = ','.join("'{0}'".format(x) for x in task_ids)
-        sql = f"""DELETE FROM graph_task_history_table WHERE task_id in ({task_ids}) and graph_id={graph_id}"""
+        task_ids = ','.join(map(str, task_ids))
+        sql = f"""DELETE FROM graph_task_history_table WHERE id in ({task_ids}) and graph_id={graph_id}"""
         print(sql)
         cursor.execute(sql)
         new_id = cursor.lastrowid
@@ -403,27 +398,6 @@ class TaskDao(object):
         cursor.execute(sql, values_list)
         return new_id
 
-    # 任务管理详细能不能查看
-    def taskdetail(self, graph_id):
-        from service.graph_Service import graph_Service
-        ret_code, obj = graph_Service.getGraphById(graph_id)
-        res = obj["res"]
-        graph_baseInfo = res["graph_baseInfo"]
-        graph_DBName = ''
-        graph_db_id = 0
-        for baseInfo in graph_baseInfo:
-            graph_DBName = baseInfo["graph_DBName"]
-            graph_db_id = baseInfo["graph_db_id"]
-        from dao.graphdb_dao import GraphDB
-        graphdb = GraphDB(graph_db_id)
-        code, countres = graphdb.count(graph_DBName)
-        if code != codes.successCode:
-            return False
-        edges, entities, name2count, _, _, edge2pros, entity2pros = countres
-        if entities > 0:
-            return True
-        return False
-
     # 更新总任务记录
     @connect_execute_commit_close_db
     def update_history(self, graph_id, task_data, connection, cursor):
@@ -473,6 +447,61 @@ class TaskDao(object):
             "graph_id: {}, {} task_dao.inserthistory after id is {}".format(graph_id, task_data["task_status"], new_id))
         return new_id
 
+    @connect_execute_commit_close_db
+    def update_waiting_tasks_knowledge(self, graph_id, task_data, connection, cursor):
+        '''update the knowledge number of waiting tasks of graph_task_history_table
+        Args:
+            graph_id: graph id
+            task_data: a dictionary whose required keys are end_time and error_report
+        '''
+        values_list = []
+        values_list.append(task_data["end_time"])
+        # 实体数量
+        # 图谱数量
+        # 总数
+        values_list.append(100)
+        res = self.geKGDBbyid(graph_id)
+        graph_baseInfo = res["graph_baseInfo"]
+        graph_otl = res["graph_otl"]
+        resdict = self.getotlnum(graph_otl)
+        otl_en_num = resdict["entitynums"]
+        edgenums = resdict["edgenums"]
+        propertynums = resdict["propertynums"]
+        entity_pro_num = propertynums[0]
+        edge_pro_num = propertynums[1]
+        values_list.append(otl_en_num)
+        values_list.append(edgenums)
+        values_list.append(entity_pro_num)
+        values_list.append(edge_pro_num)
+        mongo_db = ""
+        graph_db_id = 0
+        for baseInfo in graph_baseInfo:
+            mongo_db = baseInfo["graph_DBName"]  # 图数据库名也是MongoDB数据库名
+            graph_db_id = baseInfo["graph_db_id"]  # 图数据库名也是MongoDB数据库名
+        from dao.graphdb_dao import GraphDB
+        graphdb = GraphDB(graph_db_id)
+        code, countres = graphdb.count(mongo_db)
+        edges, entities = 0, 0
+        if code == codes.successCode:
+            edges, entities, name2count, _, _, edge2pros, entity2pros = countres
+        g_e_count = edges
+        g_v_count = entities
+        values_list.append(g_e_count)
+        values_list.append(g_v_count)
+        print(str(task_data["error_report"]))
+        values_list.append(str(task_data["error_report"]))
+        values_list.append(graph_id)
+        print(values_list)
+        sql = """UPDATE graph_task_history_table 
+                SET end_time=%s, all_num=%s, entity_num=%s, edge_num=%s, entity_pro_num=%s,
+                    edge_pro_num=%s, graph_edge=%s, graph_entity=%s, error_report=%s  
+                where graph_id=%s and task_status='waiting'"""
+        cursor.execute(sql, values_list)
+        new_id = cursor.lastrowid
+        Logger.log_info(
+            "graph_id: {}, {} task_dao.inserthistory after id is {}".format(graph_id, task_data["task_status"], new_id))
+        return new_id
+
     # 插入任务列表数据
     @connect_execute_commit_close_db
     def insertData(self, params_json, connection, cursor):
@@ -504,6 +533,12 @@ class TaskDao(object):
         return df
 
     @connect_execute_close_db
+    def get_unfinished_task(self, connection, cursor):
+        '''get information of unfinished task'''
+        sql = '''SELECT * FROM graph_task_table where task_status in ("waiting", "running")'''
+        return pd.read_sql(sql, connection)
+
+    @connect_execute_close_db
     def getnumbysn(self, status, graph_name, graph_id, task_type, trigger_type, connection, cursor, ):
         sql = f"""SELECT id FROM graph_task_history_table where graph_id={graph_id}"""
         if status != "all":
@@ -527,7 +562,6 @@ class TaskDao(object):
         if trigger_type != "all":
             limit_str += f" and task_his.trigger_type={trigger_type}"
         limit_str += f" and graph_name collate utf8_general_ci like '%{graph_name}%'"
-        order_map = {"descend": "desc", "ascend": "asc"}
         sql = f"""
             SELECT
               task_his.*,
@@ -538,7 +572,7 @@ class TaskDao(object):
             where
               graph_id = {graph_id} {limit_str}
             order by
-              start_time {order_map[order]}
+              task_his.id {order}
             limit
               {page * size},
               {size}"""
@@ -548,7 +582,7 @@ class TaskDao(object):
     # 获得正在运行的任务
     @connect_execute_close_db
     def getRunByid(self, graph_id, connection, cursor, ):
-        sql = """SELECT * FROM graph_task_table where (task_status="running" OR  task_status="waiting") and  graph_id=%s	"""
+        sql = """SELECT * FROM graph_task_table where (task_status="running" OR  task_status="waiting") and  graph_id=%s"""
         sql = sql % ('"' + graph_id + '"')
         df = pd.read_sql(sql, connection)
         return df
@@ -735,38 +769,9 @@ class TaskDao(object):
         df = pd.read_sql(sql, connection)
         return df
 
-    # def graph_count_func(self,sql,address, mongo_db):
-    #     import requests
-    #     from requests.auth import HTTPBasicAuth
-    #
-    #     ret = self.getGraphDBbyIp(address)
-    #     rec_dict = ret.to_dict('records')
-    #     if len(rec_dict) == 0:
-    #         return "0"
-    #     rec_dict = rec_dict[0]
-    #     graph_DBPort = rec_dict["port"]
-    #     adminname = rec_dict["user"]
-    #     adminpassword = rec_dict["password"]
-    #     try:
-    #         url = 'http://' + address + ':' + str(graph_DBPort) + '/database/' + mongo_db
-    #         r = requests.get(url, auth=(adminname, adminpassword),timeout=5)
-    #     except Exception as e:
-    #         return "0"
-    #     orient_url = "http://{}:{}/command/{}/sql".format(address, "2480", mongo_db)
-    #     body = {"command": sql}
-    #     or_res = requests.post(url=orient_url, json=body, auth=HTTPBasicAuth(adminname, adminpassword))
-    #     counts = "0"
-    #     if or_res.status_code ==200:
-    #         or_res = or_res.json()
-    #     #     result = or_res["result"]
-    #     #     counts = result[0]
-    #     #     counts = counts["count"]
-    #
-    #         return or_res
-    #     else:
-    #         return "0"
     @connect_execute_close_db
     def get_invalid_graph(self, connection, cursor):
+        '''return the graph id where the graph db is not available'''
         sql = """select distinct id from graph_config_table where graph_db_id not in (select id from graph_db)"""
         df = pd.read_sql(sql, connection)
         return df
@@ -829,5 +834,152 @@ class TaskDao(object):
         else:
             return False
 
+    @connect_execute_commit_close_db
+    def initiate_graph_task(self, params, connection, cursor):
+        # initiate graph_task_table
+        value_list = []
+        value_list.append(params.get('graph_id'))
+        value_list.append(params.get('graph_name'))
+        value_list.append('waiting')
+        value_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
+        value_list.append(params.get('task_type', 'full'))
+        value_list.append(params.get('trigger_type', 0))
+        value_list.append(str(params.get('subgraph_ids', [0])))
+        value_list.append(params.get('subgraph_ids', [0])[0])
+        value_list.append(params.get('write_mode', 'skip'))
+        sql = '''INSERT INTO graph_task_table
+                (graph_id, graph_name, task_status, create_time, task_type, trigger_type, subgraph_ids, 
+                current_subgraph_id, write_mode)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+        cursor.execute(sql, value_list)
+        # initiate graph_task_history_table
+        values = []
+        for subgraph_id in params.get('subgraph_ids', [0]):
+            value = []
+            value.append(params.get('graph_id'))
+            value.append('"' + params.get('graph_name') + '"')
+            value.append('"waiting"')
+            value.append('"' + params.get('task_type', 'full') + '"')
+            value.append(str(params.get('trigger_type', 0)))
+            value.append(str(subgraph_id))
+            task_name = params.get('graph_name')
+            if subgraph_id != 0:
+                task_name = subgraph_dao.get_subgraph_config_by_id(subgraph_id)[0]['name']
+            value.append('"' + task_name + '"')
+            value = '(' + ','.join(value) + ')'
+            values.append(value)
+        values = ','.join(values)
+        sql = '''INSERT INTO graph_task_history_table
+                (graph_id, graph_name, task_status, task_type, trigger_type, subgraph_id, task_name)
+                VALUES {}'''.format(values)
+        cursor.execute(sql)
+
+    @connect_execute_commit_close_db
+    def update_task_id(self, graph_id, subgraph_id, task_id, connection, cursor):
+        sql = '''UPDATE graph_task_table set task_id=%s where graph_id=%s'''
+        cursor.execute(sql, [task_id, graph_id])
+        sql = '''UPDATE graph_task_history_table 
+                set task_id=%s, start_time=%s
+                where subgraph_id=%s and task_status="waiting"'''
+        cursor.execute(sql, [task_id, arrow.now().format('YYYY-MM-DD HH:mm:ss'), subgraph_id])
+
+    @connect_execute_commit_close_db
+    def update_history_table_status(self, status, error_report, task_id, connection, cursor):
+        sql = '''UPDATE graph_task_history_table
+                set task_status=%s, error_report=%s
+                where task_id=%s'''
+        cursor.execute(sql, [status, str(error_report), task_id])
+
+    @connect_execute_commit_close_db
+    def update_history_table_status_by_id(self, status, error_report, id, connection, cursor):
+        sql = '''UPDATE graph_task_history_table
+                    set task_status=%s, error_report=%s
+                    where id=%s'''
+        cursor.execute(sql, [status, error_report, id])
+
+    @connect_execute_commit_close_db
+    def insert_task_ontology(self, task_id, ontology, connection, cursor):
+        sql = '''UPDATE graph_task_history_table
+                set entity=%s, edge=%s
+                where id=%s'''
+        cursor.execute(sql, [str(ontology['entity']), str(ontology['edge']), task_id])
+
+    @connect_execute_close_db
+    def get_task_ontology(self, task_id, connection, cursor):
+        sql = '''SELECT entity, edge from graph_task_history_table WHERE task_id="{}"'''.format(task_id)
+        cursor.execute(sql)
+        return cursor.fetchall()
+
+    @connect_execute_commit_close_db
+    def update_success_subgraph(self, task_id, successful_subgraph, connection, cursor):
+        sql = '''UPDATE graph_task_table set successful_subgraph="{}"
+                WHERE task_id="{}"'''.format(str(successful_subgraph), task_id)
+        cursor.execute(sql)
+
+    @connect_execute_commit_close_db
+    def update_failed_subgraph_ids(self, graph_id, failed_subgraph_ids, connection, cursor):
+        sql = '''UPDATE graph_task_table set failed_subgraph_ids="{}"
+                WHERE graph_id={}'''.format(str(failed_subgraph_ids), graph_id)
+        cursor.execute(sql)
+
+    @connect_execute_commit_close_db
+    def update_stop_subgraph_ids(self, graph_id, stop_subgraph_ids, connection, cursor):
+        sql = '''UPDATE graph_task_table set stop_subgraph_ids="{}"
+                    WHERE graph_id={}'''.format(str(stop_subgraph_ids), graph_id)
+        cursor.execute(sql)
+
+    @connect_execute_commit_close_db
+    def update_current_subgraph_id(self, graph_id, current_subgraph_id, connection, cursor):
+        sql = '''UPDATE graph_task_table set current_subgraph_id={}
+                        WHERE graph_id={}'''.format(current_subgraph_id, graph_id)
+        cursor.execute(sql)
+
+    @connect_execute_commit_close_db
+    def update_task_table_status(self, status, graph_id, connection, cursor):
+        sql = '''UPDATE graph_task_table
+                set task_status=%s
+                where graph_id=%s'''
+        cursor.execute(sql, [status, graph_id])
+
+    @connect_execute_commit_close_db
+    def update_waiting_tasks(self, status, error_report, graph_id, connection, cursor):
+        sql = '''UPDATE graph_task_history_table SET task_status=%s,error_report=%s 
+                where graph_id=%s and task_status="waiting"'''
+        cursor.execute(sql, [status, error_report, graph_id])
+
+    @connect_execute_close_db
+    def get_waiting_tasks(self, graph_id, connection, cursor):
+        sql = '''SELECT * from graph_task_history_table
+                where graph_id=%s and task_status="waiting"'''
+        cursor.execute(sql, [graph_id])
+        return cursor.fetchall()
+
+    @connect_execute_close_db
+    def get_task_config(self, task_id, connection, cursor):
+        sql = f"""SELECT subgraph_id id, task_name name, entity_num, edge_num, entity, edge 
+                    FROM graph_task_history_table t where t.id = {task_id}"""
+        df = pd.read_sql(sql, connection)
+        return df
+
+    @connect_execute_close_db
+    def get_history_task_by_id(self, id, connection, cursor):
+        sql = '''SELECT * from graph_task_history_table where id=%s'''
+        cursor.execute(sql, [id])
+        return cursor.fetchall()
+
+    @connect_execute_close_db
+    def get_unfinished_task_by_graph_id(self, graph_id, connection, cursor):
+        sql = '''SELECT * from graph_task_history_table
+                where graph_id=%s and task_status in ('waiting' ,'running')'''
+        cursor.execute(sql, [graph_id])
+        return cursor.fetchall()
+
+    @connect_execute_close_db
+    def get_tasks(self, graph_id, task_ids, connection, cursor):
+        sql = '''SELECT * from graph_task_history_table
+                where graph_id={} and id in ({})'''\
+            .format(graph_id, ",".join(map(str, task_ids)))
+        cursor.execute(sql)
+        return cursor.fetchall()
 
 task_dao = TaskDao()

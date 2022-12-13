@@ -14,6 +14,7 @@ var (
 	GraphDBAccountError             = &Error{HttpCode: http.StatusInternalServerError, ErrorCode: "Studio.GraphDB.AccountError", Description: "The connection account or password is incorrect"}
 	URLError                        = &Error{HttpCode: http.StatusInternalServerError, ErrorCode: "Studio.GraphDB.URLError", Description: "Wrong ip or port"}
 	DuplicateConfigError            = &Error{HttpCode: http.StatusInternalServerError, ErrorCode: "Studio.GraphDB.DuplicateConfigError", Description: "Configuration information is duplicated"}
+	GraphDbRecordUsedError          = &Error{HttpCode: http.StatusInternalServerError, ErrorCode: "Studio.GraphDB.GraphDbRecordUsedError", Description: "Graphdb record is being used"}
 
 	//opensearch配置
 	OsRecordNotFoundError      = &Error{HttpCode: http.StatusInternalServerError, ErrorCode: "Studio.OpenSearch.OsRecordNotFoundError", Description: "Record of opensearch does not exist"}
