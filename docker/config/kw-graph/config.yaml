@@ -1,0 +1,60 @@
+Name: kw-graph
+Host: 0.0.0.0
+Port: 6480
+Timeout: 600000
+MaxBytes: 100000000
+
+Log:
+  Mode: console
+  ServiceName: kw-graph
+  Stat: false
+  Level: info
+
+DataSources:
+  Host: mysql
+  Port: 3306
+  Config: ""
+  DBName: kweaver
+  Username: root
+  Password: Kw1ea2ver!3
+  DriverName: mysql
+
+Builder:
+  BuilderHost: kw-builder
+  BuilderPort: 6475
+
+Redis:
+  ConnectType: standalone
+  SentinelMasterName: mymaster
+  SentinelName: root
+  SentinelPass: Kw1ea2ver!3
+  RedisHost: redis
+  RedisPort: 6379
+  # 低版本redis，username环境变量为空，go-zero读取yaml文件这里也应该为空
+  # 注意： 本地debug完成后，提交代码不要赋值
+  RedisUser:
+  RedisPass: Kw1ea2ver!3
+  RedisReadHost: xxx.dcs.huaweicloud.com
+  RedisReadPort: 26379
+  # 华为云低版本redis username环境变量为空，go-zero读取yaml文件这里也应该为空
+  # 注意： 本地debug完成后，提交代码不要赋值
+  RedisReadUser:
+  RedisReadPass: Kw1ea2ver!3
+  RedisWriteHost: xxx-readonly.dcs.huaweicloud.com
+  RedisWritePort: 26379
+  # 华为云低版本redis username环境变量为空，go-zero读取yaml文件这里也应该为空
+  # 注意： 本地debug完成后，提交代码不要赋值
+  RedisWriteUser:
+  RedisWritePass: Kw1ea2ver!3
+
+Nebula:
+  NebulaHost: nebula-graphd
+  NebulaPort: 9669
+  NebulaUser: root
+  NebulaPass: Kw1ea2ver!3
+
+OpenSearch:
+  OpenSearchHost: opensearch
+  OpenSearchPort: 9200
+  OpenSearchUser: admin
+  OpenSearchPass: Kw1ea2ver!3

@@ -1,0 +1,11 @@
+{
+  "component": {
+    "tags": {
+      "labelRule": "仅支持键盘上特殊字符，且不包含",
+      "labelExist": "该标签已存在，请重新输入",
+      "labelEnter": "按回车添加自定义标签",
+      "placeInput": "请输入/选择",
+      "addLabel": "添加标签"
+    }
+  }
+}

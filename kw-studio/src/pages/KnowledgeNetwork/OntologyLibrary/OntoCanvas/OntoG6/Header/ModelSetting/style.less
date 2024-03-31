@@ -1,0 +1,64 @@
+.modelSettingRoot {
+  width: 280px;
+  padding: 20px 24px;
+
+  .settingColor {
+    .graphBackgroundColor {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      position: relative;
+      margin-right: 16px;
+      border-radius: 22px;
+      border: 1px solid var(--kw-line-color);
+      .checkOutlined {
+        display: none;
+      }
+    }
+    .selected {
+      width: 30px;
+      height: 30px;
+      border-radius: 30px;
+      border: 2px solid var(--kw-primary-color);
+      .checkOutlined {
+        display: block;
+        top: -5px;
+        right: -6px;
+        width: 14px;
+        height: 14px;
+        display: flex;
+        align-items: center;
+        border-radius: 14px;
+        position: absolute;
+        background-color: var(--kw-primary-color);
+      }
+    }
+  }
+
+  .settingImage {
+    .graphBackgroundImage {
+      width: 100px;
+      height: 40px;
+      cursor: pointer;
+      margin-right: 8px;
+      border-radius: 3px;
+      position: relative;
+      border: 1px solid var(--kw-line-color);
+    }
+    .empty {
+      &::before {
+        content: '';
+        top: 18px;
+        left: -4px;
+        width: 74px;
+        height: 1px;
+        position: absolute;
+        background-color: red;
+        transform: rotate(28deg);
+      }
+    }
+    .selected {
+      border: 1px solid var(--kw-primary-color);
+    }
+  }
+}

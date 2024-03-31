@@ -1,0 +1,14 @@
+.basic-info-display-root {
+  .field-item {
+    margin: 0 0 20px 0;
+  }
+
+  &.horizontal-layout {
+    display: flex;
+    justify-content: space-between;
+
+    .field-item {
+      width: calc((100% - 20px * 2) / 3);
+    }
+  }
+}

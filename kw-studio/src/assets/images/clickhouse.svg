@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="19px" viewBox="0 0 20 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 6</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="数据源1" transform="translate(-531.000000, -939.000000)">
+            <g id="表格" transform="translate(88.000000, 204.000000)">
+                <g id="1" transform="translate(0.000000, 720.000000)">
+                    <g id="编组-9" transform="translate(441.000000, 13.000000)">
+                        <g id="编组-6" transform="translate(2.000000, 2.000000)">
+                            <rect id="矩形" fill="#FFCC02" x="4.5" y="0" width="2" height="18.8125"></rect>
+                            <rect id="矩形" fill="#FFCC02" x="0" y="0" width="2" height="18.8125"></rect>
+                            <rect id="矩形" fill="#FF0002" x="0" y="16.8125" width="2" height="2"></rect>
+                            <rect id="矩形" fill="#FFCC02" x="13.5" y="0" width="2" height="18.8125"></rect>
+                            <rect id="矩形" fill="#FFCC02" x="18" y="6.1875" width="2" height="6"></rect>
+                            <rect id="矩形" fill="#FFCC02" x="9" y="0" width="2" height="18.8125"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

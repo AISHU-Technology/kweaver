@@ -1,0 +1,73 @@
+.flow-3-model-import-modal {
+  .ant-modal-content {
+    min-width: 1000px;
+    .kw-universal-modal-content {
+      padding: 0;
+    }
+  }
+
+  .ant-modal-body {
+    padding: 0;
+  }
+
+  .m-main {
+    position: relative;
+    height: 552px;
+  }
+
+  .side-bar {
+    width: 228px;
+    padding: 4px 0 0;
+    border-right: 1px solid var(--kw-line-color);
+
+    .tab-item {
+      position: relative;
+      height: 40px;
+      padding: 0 24px;
+      line-height: 40px;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--kw-hover-bg-color);
+      }
+
+      &.selected {
+        background: var(--kw-select-bg-color);
+        color: var(--ant-primary-color);
+
+        &::before {
+          content: '';
+          display: inline-block;
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 3px;
+          background: var(--kw-primary-color);
+        }
+      }
+    }
+  }
+
+  .m-content {
+    flex: 1;
+    min-width: 0;
+
+    .child-wrapper {
+      position: relative;
+      height: 100%;
+      padding: 24px 24px;
+    }
+
+    .m-footer {
+      height: 86px;
+      text-align: right;
+
+      button {
+        height: 32px;
+        min-width: 72px;
+        margin-left: 10px;
+      }
+    }
+  }
+}

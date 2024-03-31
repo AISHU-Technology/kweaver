@@ -1,0 +1,61 @@
+.mf-prompt-project-list {
+  flex-shrink: 0;
+  width: 320px;
+  border-right: 1px solid var(--kw-line-color);
+
+  &-tool {
+    padding: 8px 16px;
+    justify-content: space-between;
+  }
+
+  // Tree 样式修改
+  .custom-tree-node {
+    height: 38px;
+    &:hover,
+    &.hovered {
+      background: var(--kw-hover-bg-color);
+      .prompt-op-bar-root {
+        display: flex;
+      }
+    }
+  }
+  .checked {
+    background: var(--kw-select-bg-color) !important;
+  }
+  .ant-tree-switcher {
+    line-height: 38px;
+  }
+  .ant-tree-switcher-leaf-line {
+    display: none;
+  }
+  .ant-tree-switcher-noop {
+    width: 12px;
+  }
+  .ant-tree-node-content-wrapper {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+
+    &:hover,
+    &.ant-tree-node-selected {
+      background-color: #fff;
+    }
+  }
+  .ant-tree-list-scrollbar-show {
+    display: block !important;
+  }
+
+  // 操作按钮
+  .prompt-op-bar-root {
+    display: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 2px;
+
+    &:hover,
+    &.hovered {
+      display: flex;
+      background: #fff;
+    }
+  }
+}

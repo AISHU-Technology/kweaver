@@ -1,0 +1,1609 @@
+tags:
+  - 'Builder'
+components:
+  schemas:
+    builder.BuilderRes:
+      type: 'object'
+      properties:
+        res:
+          type: 'string'
+          format: 'string'
+          description: 'success提示'
+      xml:
+        name: 'builderRes'
+    builder.OldBuilderErrResponse:
+      type: 'object'
+      properties:
+        Cause:
+          type: 'string'
+          format: 'string'
+          description: '错误提示'
+        Code:
+          type: 'integer'
+          format: 'int32'
+          description: '错误码'
+        message:
+          type: 'string'
+          format: 'string'
+          description: '错误描述'
+    builder.NewBuilderErrResponse:
+      type: 'object'
+      properties:
+        ErrorCode:
+          type: 'string'
+          format: 'string'
+          description: 错误码
+        Description:
+          type: 'string'
+          format: 'string'
+          description: 错误描述
+        ErrorDetails:
+          type: 'string'
+          format: 'string'
+          description: 错误详情
+        Solution:
+          type: 'string'
+          format: 'string'
+          description: 解决方案
+        ErrorLink:
+          type: 'string'
+          format: 'string'
+          description: 错误链接
+    builder.ontology.common.entity:
+      type: array
+      items:
+        type: object
+        properties:
+          entity_id:
+            type: integer
+            description: 实体类id
+            example: 1
+          name:
+            type: string
+            description: 实体类名
+            example: entity_name
+          alias:
+            type: string
+            description: '实体类别名'
+            example: 'alias'
+          ds_id:
+            type: string
+            description: 数据源id
+            example: '1'
+          source_type:
+            type: string
+            description: '实体类来源。automatic: 从数据源预测或者模型本体；manual: 手绘'
+            example: 'automatic'
+          properties:
+            type: array
+            items:
+              type: array
+              items:
+                type: string
+              description: '[属性名, 属性类型, 属性别名]'
+              example: ['id', 'string', 'id']
+          default_tag:
+            type: string
+            description: 默认显示属性
+            example: 'name'
+          properties_indes:
+            type: array
+            items:
+              type: string
+            description: 需要创建全文索引的属性
+            example: ['id']
+          file_type:
+            type: string
+            description: AS文件类型 csv或json
+            example: ''
+          task_id:
+            type: string
+            description: 从数据源预测实体类的任务id
+            example: '27'
+          model:
+            type: string
+            description: 模型类型
+            example: ''
+          colour:
+            type: string
+            description: 颜色
+            example: '#68798e'
+          icon:
+            type: string
+            description: 图标
+            example: ''
+          x:
+            type: number
+            description: x坐标
+            example: 821
+          y:
+            type: number
+            description: y坐标
+            example: 821
+    builder.ontology.common.edge:
+      type: array
+      items:
+        type: object
+        properties:
+          edge_id:
+            type: integer
+            description: 关系类id
+            example: 1
+          name:
+            type: string
+            description: 关系类名
+            example: edge_name
+          alias:
+            type: string
+            description: '关系类别名'
+            example: 'alias'
+          source_type:
+            type: string
+            description: '实体类来源。automatic: 从数据源预测或者模型本体；manual: 手绘'
+            example: 'automatic'
+          properties:
+            type: array
+            items:
+              type: array
+              items:
+                type: string
+              description: '[属性名, 属性类型, 属性别名]'
+              example: ['id', 'string', 'id']
+          properties_indes:
+            type: array
+            items:
+              type: string
+            description: 需要创建全文索引的属性
+            example: ['id']
+          task_id:
+            type: string
+            description: 任务id
+            example: '27'
+          model:
+            type: string
+            description: 模型类型
+            example: ''
+          colour:
+            type: string
+            description: 颜色
+            example: '#68798e'
+          relations:
+            type: array
+            items:
+              type: string
+            description: '[起点实体类名, 边名, 终点实体类名]'
+            example: ["person", "work_on", "enterprise"]
+    builder.ontology.updateotlschema:
+      type: 'object'
+      required:
+        - graph_id
+        - operationtype
+        - datatype
+        - classname
+      properties:
+        graph_id:
+          type: integer
+          format: int32
+          description: 图谱id
+          example: 1
+        operationtype:
+          type: string
+          format: string
+          description: 操作类型，add(添加) delete(删除) update(更新)； name属性不能被修改和删除
+          example: add
+        datatype:
+          type: string
+          format: string
+          description: 操作对象类型，要操作的schema数据类型实体类：entity 边类：edge 实体类属性：entityindex 边类属性：edgeindex 实体类索引：entityproperty 边类索引： edgeproperty
+          example: entity
+        classname:
+          type: string
+          format: string
+          description: 实体类名称或边类名称
+          example: entity_name
+        propertyname:
+          type: string
+          format: string
+          description: 属性名称
+          example: pro_name
+        propertytype:
+          type: string
+          format: string
+          description: 属性类型，boolean,float,double,string,decimal,datetime,date,integer
+          example: integer
+        altertype:
+          type: string
+          format: string
+          description: 修改类型，name 代表修改名称,type 代表修改类型
+          example: name
+        oldname:
+          type: string
+          format: string
+          description: 类或者属性名
+          example: oldname
+        indextype:
+          type: string
+          format: string
+          description: 索引类型，[fulltext] 全文索引 只提供新增全文索引的功能， 新增全文索引的时候 删除已有的全文索引，根据参数indexproperties新建新的全文索引（包含name）;本体中的索引使用indexproperties覆盖
+          example: fulltext
+        indexproperties:
+          type: array
+          items:
+            type: string
+          description: 索引字段，对哪些属性进行建立索引
+          example: [
+            "name",
+            "id",
+            "weight"
+          ]
+        edgein:
+          type: string
+          format: string
+          description: 入边名称
+          example: edgein
+        edgeout:
+          type: string
+          format: string
+          description: 出边名称
+          example: edgeout
+        unsafe:
+          type: string
+          format: string
+          description: true为不安全模式，可暴力删除修改；false为使用安全模式，索引不能删除和修改
+          example: true
+    builder.graph.getGraphByGns:
+      type: 'object'
+      required:
+        - gns
+      properties:
+        gns:
+          type: array
+          items:
+            type: string
+          description: 数据源gns的列表（gns为AnyShare文档路径唯一标识）
+          example: ["gns://1D16DB1FF85E419BA56EA18E1B3ADD8B/D70979B4372046F8861FA57C5C06B86F"]
+    builder.graph.getGraphByGns_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            'gns://abcd':
+              type: array
+              description: 数据源gns的地址
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: 图谱id
+                    example: 1
+                  name:
+                    type: string
+                    description: 图谱名称
+                    example: 'name'
+    builder.graph.input_response200:
+      type: object
+      properties:
+          graph_id:
+              type: array
+              description: 新建图谱ID
+              items:
+                type: integer
+                description: 图谱id
+                example: 42
+    builder.graph.output_response200:
+      type: object
+      properties:
+          knowledge_network:
+              type: object
+              description: 知识网络信息
+              properties:
+                  id:
+                      description: 知识网络ID
+                      type: string
+                      example: 1
+                  knw_name:
+                      description: 知识网络名
+                      type: string
+                      example: 第一个知识网络
+                  knw_description:
+                      description: 描述
+                      type: string
+                      example: 这是第一个知识网络
+                  intelligence_score:
+                      description: 知识量得分
+                      type: number
+                      example: 23.52
+                  color:
+                      description: 颜色
+                      type: string
+                      example: #126EE3
+                  creator_id:
+                      description: 创建者ID
+                      type: string
+                      example: cb5cbb2e-4ee3-4d29-b50a-34a990de22ed
+                  final_operator:
+                      description: 最终修改者
+                      type: string
+                      example: cb5cbb2e-4ee3-4d29-b50a-34a990de22ed
+                  creation_time:
+                      description: 创建时间
+                      type: string
+                      example: "2023-03-31 16:30:37"
+                  update_time:
+                      description: 修改时间
+                      type: string
+                      example: "2023-04-13 15:20:08"
+                  identify_id:
+                      description: 知识网络识别ID
+                      type: string
+                      example: 4fef7c82-cf9e-11ed-ba1e-daa5323cca6f
+                  to_be_uploaded:
+                      description: '是否支持上传图谱(0:否，1:是)'
+                      enum:
+                          - '0'
+                          - '1'
+                      type: string
+                      example: 0
+          config:
+              type: object
+              description: 图谱配置信息
+              properties:
+                  id:
+                      description: 图谱ID
+                      type: integer
+                      example: 38
+                  create_user:
+                      description: 创建者
+                      type: string
+                      example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
+                  create_time:
+                      description: 创建时间
+                      type: string
+                      example: "2023-08-15 14:17:49"
+                  update_user:
+                      description: 修改者
+                      type: string
+                      example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
+                  update_time:
+                      description: 修改时间
+                      type: string
+                      example: "2023-08-15 14:21:00"
+                  graph_name:
+                      description: 图谱名称
+                      type: string
+                      example: "88888"
+                  graph_status:
+                      description: 图谱状态
+                      type: string
+                      example: finish
+                  graph_baseInfo:
+                      description: 图谱基础信息
+                      type: string
+                      example: "[{'graph_Name': '88888', 'graph_des': '', 'to_be_uploaded': 0, 'graphDBAddress': '10.4.131.25', 'graph_mongo_Name': 'mongoDB-38', 'graph_DBName': 'u758d18683b3311eea17632df070d9916'}]"
+                  graph_ds:
+                      description: 使用的数据源
+                      type: string
+                      example: "[24]"
+                  graph_otl:
+                      description: 使用的本体
+                      type: string
+                      example: "[39]"
+                  graph_InfoExt:
+                      description: 抽取规则
+                      type: string
+                      example: "[{'ds_id': 24, 'data_source': 'mysql', 'ds_path': 'MyOwnDb', 'file_source': 'bucket_config', 'file_name': 'bucket_config', 'file_path': 'MyOwnDb', 'file_type': '', 'extract_type': 'standardExtraction', 'extract_rules': [{'is_model': 'not_model', 'entity_type': 'bucket_config', 'property': {'property_field': 'id', 'column_name': 'id', 'property_func': 'All'}}, {'is_model': 'not_model', 'entity_type': 'bucket_config', 'property': {'property_field': 'bucket_id', 'column_name': 'bucket_id', 'property_func': 'All'}}, {'is_model': 'not_model', 'entity_type': 'bucket_config', 'property': {'property_field': 'bucket_name', 'column_name': 'bucket_name', 'property_func': 'All'}}, {'is_model': 'not_model', 'entity_type': 'bucket_config', 'property': {'property_field': 'server_name', 'column_name': 'server_name', 'property_func': 'All'}}], 'ds_name': '999999'}]"
+                  graph_KMap:
+                      description: 合并规则
+                      type: string
+                      example: "[{'otls_map': [{'otl_name': 'bucket_config', 'entity_type': 'bucket_config', 'property_map': [{'otl_prop': 'id', 'entity_prop': 'id'}, {'otl_prop': 'bucket_id', 'entity_prop': 'bucket_id'}, {'otl_prop': 'bucket_name', 'entity_prop': 'bucket_name'}, {'otl_prop': 'server_name', 'entity_prop': 'server_name'}], 'default_tag': 'id'}], 'relations_map': []}]"
+                  rabbitmq_ds:
+                      description: 是否用到mq数据源
+                      type: integer
+                      example: 0
+                  upload:
+                      description: 图谱是否处于上传中
+                      type: integer
+                      example: 0
+                  step_num:
+                      description: 配置到的步骤号
+                      type: integer
+                      example: 5
+                  is_upload:
+                      description: 是否是上传的图谱
+                      type: integer
+                      example: 0
+                  to_be_uploaded:
+                      description: 是否需要上传
+                      type: integer
+                      example: 0
+                  upload_ready:
+                      description: 图谱是否可上传（已将最新的图谱构建nGQL上传至ECeph）
+                      type: integer
+                      example: 0
+          search_graph:
+              type: object
+              description: 图谱信息
+              properties:
+                  id:
+                      description: 图谱ID
+                      type: integer
+                      example: 38
+                  KDB_ip:
+                      description: 图谱列表IP
+                      type: string
+                      example: 10.4.131.25
+                  KDB_name:
+                      description: 图谱配置名称
+                      type: string
+                      example: u758d18683b3311eea17632df070d9916
+                  KDB_name_temp:
+                      description: 图谱临时名称
+                      type: string
+                      example: None_Version
+                  KG_config_id:
+                      description: 图谱配置id
+                      type: string
+                      example: 38
+                  KG_name:
+                      description: 图谱配置名称
+                      type: string
+                      example: "88888"
+                  status:
+                      description: 图谱状态
+                      type: string
+                      example: normal
+                  hlStart:
+                      description: 高亮
+                      type: string
+                      example: "@-highlight-content-start-@"
+                  hlEnd:
+                      description: 高亮
+                      type: string
+                      example: "@-highlight-content-end-@"
+                  create_user:
+                      description: 创建者ID
+                      type: string
+                      example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
+                  create_time:
+                      description: 创建时间
+                      type: string
+                      example: "2023-08-15 14:17:49"
+                  update_user:
+                      description: 修改者ID
+                      type: string
+                      example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
+                  update_time:
+                      description: 修改时间
+                      type: string
+                      example: "2023-08-15 14:20:56"
+                  graph_update_time:
+                      description: 最新一次图谱任务运行结束时间
+                      type: string
+                      example: "2023-08-15 14:18:59"
+                  kg_data_volume:
+                      description: 图数据库点和边是否已经创建成功，默认0：没成功，1：成功
+                      type: integer
+                      example: 1
+          ontology:
+              type: object
+              description: 本体信息
+              properties:
+                  id:
+                      description: 本体ID
+                      type: integer
+                      example: 39
+                  create_user:
+                      description: 创建者ID
+                      type: string
+                      example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
+                  create_time:
+                      description: 创建时间
+                      type: string
+                      example: "2023-08-15 14:17:56"
+                  update_user:
+                      description: 修改者ID
+                      type: string
+                      example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
+                  update_time:
+                      description: 修改时间
+                      type: string
+                      example: "2023-08-15 14:18:08"
+                  ontology_name:
+                      description: 本体名
+                      type: string
+                      example: 
+                  ontology_des:
+                      description: 本体描述
+                      type: string
+                      example: 
+                  otl_status:
+                      description: 本体状态
+                      type: string
+                      example: available
+                  entity:
+                      description: 实体
+                      type: string
+                      example: "[{'entity_id': 13, 'name': 'bucket_config', 'description': '', 'alias': 'bucket_config', 'synonym': '', 'default_tag': 'id', 'properties_index': ['id'], 'primary_key': ['id'], 'properties': [{'name': 'id', 'description': '', 'alias': 'id', 'data_type': 'string', 'synonym': ''}, {'name': 'bucket_id', 'description': '', 'alias': 'bucket_id', 'data_type': 'string', 'synonym': ''}, {'name': 'bucket_name', 'description': '', 'alias': 'bucket_name', 'data_type': 'string', 'synonym': ''}, {'name': 'server_name', 'description': '', 'alias': 'server_name', 'data_type': 'string', 'synonym': ''}], 'x': 849.5, 'y': 295.5, 'icon': '', 'shape': 'circle', 'size': '0.5x', 'fill_color': 'rgba(217,112,76,1)', 'stroke_color': 'rgba(217,112,76,1)', 'text_color': 'rgba(0,0,0,1)', 'text_position': 'top', 'text_width': 15, 'index_default_switch': False, 'index_main_switch': False, 'text_type': 'adaptive', 'source_type': 'automatic', 'model': '', 'task_id': '21', 'icon_color': '#ffffff'}]"
+                  edge:
+                      description: 边
+                      type: string
+                      example: "[]"
+                  used_task:
+                      description: 已经被渲染过的本体相关任务
+                      type: string
+                      example: "[21]"
+                  all_task:
+                      description: 本体相关的所有相关任务
+                      type: string
+                      example: "[21]"
+                  identify_id:
+                      description: 所属知识图谱ID
+                      type: string
+                      example: null
+                  knw_id:
+                      description: 知识网络ID
+                      type: integer
+                      example: 3
+                  domain:
+                      description: 域
+                      type: string
+                      example: "[]"
+                  otl_temp:
+                      description: 临时本体配置
+                      type: string
+                      example: "[]"
+          search_config:
+              type: array
+              description: 搜索信息集合
+              items:
+                  type: object
+                  description: 搜索信息
+                  properties:
+                      id:
+                          description: 配置id
+                          type: integer
+                          example: 1
+                      conf_name:
+                          description: 配置名称
+                          type: string
+                          example: 6666
+                      type:
+                          description: 配置类型
+                          type: string
+                          example: 
+                      conf_desc:
+                          description: 配置描述
+                          type: string
+                          example: 
+                      kg_id:
+                          description: 图谱id
+                          type: integer
+                          example: 38
+                      conf_content:
+                          description: 配置内容
+                          type: string
+                          example: '{"max_depth":1,"start_range":{"vertexes":{"open":["bucket_config"]}},"search_range":{"vertexes":{"open":["bucket_config","bucket_config"]},"edges":{"open":[]}},"display_range":{"vertexes":{"open":["bucket_config"]}},"sort_rules":{"lucene_weight":1,"depth_weight":5}}'
+                      db_2_doc:
+                          description: 配置搜索信息
+                          type: string
+                          example: 
+                      create_time:
+                          description: 创建时间
+                          type: string
+                          example: "2023-08-15 14:17:56"
+                      update_time:
+                          description: 修改时间
+                          type: string
+                          example: "2023-08-15 14:18:08"
+                      create_user:
+                          description: 创建者ID
+                          type: string
+                          example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
+                      update_user:
+                          description: 修改者ID
+                          type: string
+                          example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
+          subgraph_config:
+              type: array
+              description: 子图信息集合
+              items:
+                  type: object
+                  description: 子图信息
+                  properties:
+                      id:
+                          description: 子图ID
+                          type: integer
+                          example: 50
+                      ontology_id:
+                          description: 本体ID
+                          type: integer
+                          example: 39
+                      graph_id:
+                          description: 图谱ID
+                          type: integer
+                          example: 38
+                      name:
+                          description: 子图名称
+                          type: string
+                          example: "ungrouped"
+                      entity:
+                          description: 实体信息
+                          type: string
+                          example: "[{'entity_id': 13, 'name': 'bucket_config', 'description': '', 'alias': 'bucket_config', 'synonym': '', 'default_tag': 'id', 'properties_index': ['id'], 'primary_key': ['id'], 'properties': [{'name': 'id', 'description': '', 'alias': 'id', 'data_type': 'string', 'synonym': ''}, {'name': 'bucket_id', 'description': '', 'alias': 'bucket_id', 'data_type': 'string', 'synonym': ''}, {'name': 'bucket_name', 'description': '', 'alias': 'bucket_name', 'data_type': 'string', 'synonym': ''}, {'name': 'server_name', 'description': '', 'alias': 'server_name', 'data_type': 'string', 'synonym': ''}], 'x': 849.5, 'y': 295.5, 'icon': '', 'shape': 'circle', 'size': '0.5x', 'fill_color': 'rgba(217,112,76,1)', 'stroke_color': 'rgba(217,112,76,1)', 'text_color': 'rgba(0,0,0,1)', 'text_position': 'top', 'text_width': 15, 'index_default_switch': False, 'index_main_switch': False, 'text_type': 'adaptive', 'source_type': 'automatic', 'model': '', 'task_id': '21', 'icon_color': '#ffffff'}]"
+                      edge:
+                          description: 边信息
+                          type: string
+                          example: "[]"
+                      create_time:
+                          description: 创建时间
+                          type: string
+                          example: "2023-08-15 14:17:56"
+                      update_time:
+                          description: 修改时间
+                          type: string
+                          example: "2023-08-15 14:18:08"
+          ds_basic_infos:
+              type: array
+              description: 子图信息集合
+              items:
+                  type: object
+                  description: 子图信息
+                  properties:
+                      id:
+                          description: 数据源ID
+                          type: integer
+                          example: 24
+                      dsname:
+                          description: 数据源名称
+                          type: string
+                          example: "999999"
+                      ds_path:
+                          description: 路径
+                          type: string
+                          example: MyOwnDb
+                      dataType:
+                          description: 数据类型
+                          type: string
+                          example: structured
+                      data_source:
+                          description: 数据源类型
+                          type: string
+                          example: mysql
+    builder.graph.get_graph_info_basic_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            name:
+              type: string
+              description: 图谱名称
+              example: "graph"
+            id:
+              type: integer
+              description: 图谱ID
+              example: 1
+            graph_des:
+              type: string
+              description: 描述信息
+              example: "这是一条描述"
+            create_email:
+              type: string
+              description: 创建人Email
+              example: "abc@abc.com"
+            create_user:
+              type: string
+              description: 创建人名称
+              example: "abc"
+            create_time:
+              type: string
+              description: 创建时间
+              example: "2022-12-19 15:55:24"
+            update_email:
+              type: string
+              description: 最终操作人Email
+              example: "abc@abc.com"
+            update_user:
+              type: string
+              description: 最终操作人名称
+              example: "abc"
+            update_time:
+              type: string
+              description: 最终操作时间
+              example: "2022-12-19 15:55:24"
+            export:
+              type: boolean
+              description: 是否可以导出
+              example: true
+            is_import:
+              type: boolean
+              description: 是否为外部导入的图谱
+              example: false
+            knowledge_type:
+              type: string
+              description: 知识类型
+              example: "kg"
+            status:
+              type: string
+              description: '状态,edit：配置中,normal：正常,waiting：等待中,running：运行中,stop：终止,failed：失败'
+              example: "normal"
+            task_status:
+              type: string
+              description: '任务运行状态,当图谱未运行过时是None,运行过后返回的值与status相同'
+              example: "normal"
+            step_num:
+              type: integer
+              description: 图谱配置流程到了第几步
+              example: 6
+            ds:
+              type: string
+              description: 图谱使用的数据源
+              example: "[1,2]"
+            otl:
+              type: string
+              description: 本体ID
+              example: '1'
+            info_ext:
+              type: string
+              description: 抽取规则的信息
+              example: ""
+            kmap:
+              type: string
+              description: 映射规则信息
+              example: ""
+            mongo_name:
+              type: string
+              description: MongoDB表名
+              example: "mongoDB-1"
+            graphdb_name:
+              type: string
+              description: 图数据库DB名
+              example: "u04a631767f7211ed9c1dca2fa0926bdf"
+            graphdb_type:
+              type: string
+              description: 图数据库类型
+              example: "nebulaGraph"
+            graphdb_address:
+              type: string
+              description: 图数据库地址
+              example: "10.1.1.1"
+    builder.graph.get_graph_info_onto_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            entity:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 实体名称
+                    example: 'entity1'
+                  alias:
+                    type: string
+                    description: 实体别名
+                    example: 'entity1_alias'
+                  color:
+                    type: string
+                    description: 实体颜色
+                    example:  "#D9704C"
+                  entity_id:
+                    type: integer
+                    description: 实体ID
+                    example: 1
+                  icon:
+                    type: string
+                    description: 图标
+                    example: ''
+                  x:
+                    type: number
+                    description: x坐标
+                    example: 821
+                  y:
+                    type: number
+                    description: y坐标
+                    example: 821
+            edge:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 关系名称
+                    example: 'edge1'
+                  alias:
+                    type: string
+                    description: 关系别名
+                    example: 'edge1_alias'
+                  color:
+                    type: string
+                    description: 关系颜色
+                    example: "#D9704C"
+                  edge_id:
+                    type: string
+                    description: 关系ID
+                    example: 1
+                  relation:
+                    type: array
+                    items:
+                      type: string
+                    description: '[起点实体类名, 边名, 终点实体类名]'
+                    example: ['entity1', 'edge1', 'entity1']
+    builder.graph.get_graph_info_count_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            entity:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 实体类名称
+                    example: 'entity1'
+                  count:
+                    type: integer
+                    description: 此实体类数量
+                    example: 10
+                  prop_number:
+                    type: integer
+                    description: 属性数量
+                    example: 2
+            entity_count:
+              type: integer
+              description: 总实体数量
+              example: 10
+            edge:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 关系类名称
+                    example: 'entity1'
+                  count:
+                    type: integer
+                    description: 此关系类数量
+                    example: 10
+                  prop_number:
+                    type: integer
+                    description: 属性数量
+                    example: 2
+            edge_count:
+              type: integer
+              description: 总关系数量
+              example: 10
+    builder.graph.get_graph_info_detail_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            indexes:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 索引名称
+                    example: 'name1'
+                  "type":
+                    type: string
+                    description: 索引类型
+                    example: "FULLTEXT"
+                  properties:
+                    type: array
+                    items:
+                      type: string
+                      description: 索引属性
+                      example: 'p1'
+            properties:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 属性名称
+                    example: "name"
+                  'type':
+                    type: string
+                    description: 属性类型
+                    example: "string"
+
+    builder.celery_task.execute_task:
+      type: 'object'
+      required:
+        - tasktype
+      properties:
+        tasktype:
+          type: string
+          format: string
+          description: '任务构建类型，full(全量构建)，increment(增量构建)'
+          example: full
+    builder.celery_task.execute_task_response200:
+      type: object
+      properties:
+        res:
+          type: string
+          description: success提示
+          example: "0b29afde-f845-47a6-b880-c2bda42bd4ad start running success"
+
+    builder.celery_task.getalltask_response200:
+      type: object
+      properties:
+        res:
+          type: 'object'
+          properties:
+            count:
+              type: integer
+              description: 总任务条数
+              example: 1
+            df:
+              type: array
+              items:
+                type: object
+                properties:
+                  all_num:
+                    type: integer
+                    description: 总数
+                    example: 100
+                  all_time:
+                    type: string
+                    description: 总耗时
+                    example: "00:00:06"
+                  count_status:
+                    type: integer
+                    description: nebula实体和关系数量是否统计完成，0:未统计完成，1：统计完成
+                    example: 1
+                  edge_num:
+                    type: integer
+                    description: 关系类数量
+                    example: 10
+                  edge_pro_num:
+                    type: integer
+                    description: 关系类属性数量
+                    example: 20
+                  effective_storage:
+                    type: boolean
+                    description: 图数据库是否有效
+                    example: true
+                  end_time:
+                    type: string
+                    description: 任务结束时间
+                    example: "2022-12-20 10:30:01"
+                  entity_num:
+                    type: integer
+                    description: 实体类数量
+                    example: 10
+                  entity_pro_num:
+                    type: integer
+                    description: 实体类属性数量
+                    example: 20
+                  error_report:
+                    type: string
+                    description: 错误提示
+                    example: ""
+                  graph_edge:
+                    type: integer
+                    description: 关系数量
+                    example: 10
+                  graph_entity:
+                    type: integer
+                    description: 实体数量
+                    example: 10
+                  graph_id:
+                    type: integer
+                    description: 图谱ID
+                    example: 1
+                  graph_name:
+                    type: string
+                    description: 图谱名称
+                    example: "graph"
+                  kg_id:
+                    type: integer
+                    description: 图谱ID
+                    example: 1
+                  start_time:
+                    type: string
+                    description: 任务开始时间
+                    example: "2022-12-20 10:29:01"
+                  task_id:
+                    type: integer
+                    description: 任务ID
+                    example: 1
+                  task_status:
+                    type: string
+                    description: '任务状态, 可选值: running, failed, stop, waiting, normal'
+                    example: "normal"
+                  task_type:
+                    type: string
+                    description: 任务类型，全量或是增量
+                    example: "full"
+                  trigger_type:
+                    type: integer
+                    description: 任务触发方式，0：手动触发，1：定时任务触发，2：实时触发
+                    example: 0
+                  celert_task_id:
+                    type: string
+                    description: celery任务ID
+                    example: "33390df2-cdac-45c5-b522-454e4162452c"
+                  entity:
+                    $ref: '#/components/schemas/builder.ontology.common.entity'
+                  edge:
+                    $ref: '#/components/schemas/builder.ontology.common.edge'
+                  subgraph_id:
+                    type: integer
+                    description: 子图id, 0表示全图构建
+                    example: 0
+                  task_name:
+                    type: string
+                    description: 任务名称，如果是分组构建则为分组名称，如果是全图构建则为图谱名称
+                    example: name
+    builder.celery_task.stoptask:
+      type: 'object'
+      properties:
+        graph_id:
+          type: integer
+          description: 图谱配置id
+          example: 1
+        task_id:
+          type: integer
+          description: 图谱历史任务id
+          example: 1
+    builder.celery_task.getprogress_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            all_num:
+              type: integer
+              description: 总数
+              example: 100
+            count_status:
+              type: integer
+              description: 'nebula实体和关系数量是否统计完成，0:未统计完成，1：统计完成'
+              example: 1
+            create_user_name:
+              type: string
+              description: 创建人名字
+              example: 'abc'
+            create_user_email:
+              type: string
+              description: 创建人邮箱
+              example: 'abc@abc.com'
+            error_report:
+              type: string
+              description: 错误描述
+              example: ''
+            graph_id:
+              type: integer
+              description: 图谱描述
+              example: 1
+            graph_name:
+              type: string
+              description: 图谱名称
+              example: 'graph'
+            celery_task_id:
+              type: string
+              description: celery任务ID
+              example: "33390df2-cdac-45c5-b522-454e4162452c"
+            id:
+              type: integer
+              description: 任务id
+              example: 1
+            task_status:
+              type: string
+              description: '任务状态, 0: 获取配置信息, 1: 正在抽取数据, 2: 中转存储数据, -1:, 失败或已终止或等待中, 3: 知识图谱构建完成'
+              example: 'normal'
+            task_type:
+              type: string
+              description: '任务类型, 可选值: full, increment'
+              example: 'full'
+            trigger_type:
+              type: integer
+              description: '任务触发方式, 0: 手动触发, 1: 定时任务触发, 2:实时触发'
+              example: 0
+            edge:
+              $ref: '#/components/schemas/builder.ontology.common.edge'
+            edge_num:
+              type: integer
+              description: 关系类数量
+              example: 12
+            edge_pro_num:
+              type: integer
+              description: 关系类属性数量
+              example: 16
+            end_time:
+              type: string
+              description: 任务结束时间
+              example: "2023-04-23 10:38:29"
+            entity:
+              $ref: '#/components/schemas/builder.ontology.common.entity'
+            entity_num:
+              type: integer
+              description: 实体类数量
+              example: 7
+            entity_pro_num:
+              type: integer
+              description: 实体类属性数量
+              example: 32
+            graph_edge:
+              type: integer
+              description: 关系数量
+              example: 15
+            graph_entity:
+              type: integer
+              description: 实体数量
+              example: 16
+            start_time:
+              type: string
+              description: 任务开始时间
+              example: "2023-04-23 10:34:15"
+            subgraph_id:
+              type: integer
+              description: 子图id, 0表示全图构建
+              example: 0
+            task_name:
+              type: string
+              description: 任务名称，如果是分组构建则为分组名称，如果是全图构建则为图谱名称
+              example: name
+    builder.graph_count.graphs_count_by_id_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            entity_pro:
+              type: integer
+              description: 实体数量
+              example: 10
+            edge_pro:
+              type: integer
+              description: 关系数量
+              example: 10
+            pros:
+              type: integer
+              description: 总数
+              example: 20
+            status:
+              type: integer
+              description: 是否统计成功，0代表成功，-1代表统计失败或者nebula还在异步统计中
+              example: 0
+
+    builder.knowledge_network.save_knowledgenetwork:
+      type: 'object'
+      required:
+        - knw_name
+        - knw_color
+      properties:
+        knw_name:
+          type: string
+          format: string
+          description: 知识网络名称
+          example: knowledge_network_name
+          maxLength: 50
+        knw_des:
+          type: string
+          format: string
+          description: 知识网络描述
+          example: knowledge network description
+          maxLength: 255
+        knw_color:
+          type: string
+          format: string
+          description: 知识网络颜色
+          example: '#126EE3'
+    builder.knowledge_network.getAllKnw_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: 总知识网络条数
+              example: 1
+            df:
+              type: array
+              items:
+                type: object
+                properties:
+                  color:
+                    type: string
+                    description: 颜色
+                    example: "#126EE3"
+                  creation_time:
+                    type: string
+                    description: 知识网络创建时间
+                    example: "2022-12-22 04:09:04"
+                  creator_email:
+                    type: string
+                    description: 创建人邮箱
+                    example: "abc@abc.com"
+                  creator_id:
+                    type: string
+                    description: 创建人uuid
+                    example: "a6926148-9f9f-4c28-8ad8-1e7053a481db"
+                  creator_name:
+                    type: string
+                    description: 创建人名称
+                    example: "abc"
+                  final_operator:
+                    type: string
+                    description: 最终操作人uuid
+                    example: "a6926148-9f9f-4c28-8ad8-1e7053a481db"
+                  update_time:
+                    type: string
+                    description: 最终操作时间
+                    example: "2022-12-22 04:09:04"
+                  id:
+                    type: integer
+                    description: 知识网络ID
+                    example: 1
+                  knw_description:
+                    type: string
+                    description: 知识网络描述
+                    example: "知识网络描述"
+                  knw_name:
+                    type: string
+                    description: 知识网络名称
+                    example: "知识网络1"
+                  operator_name:
+                    type: string
+                    description: 最终操作人名称
+                    example: "abc"
+                  operator_email:
+                    type: string
+                    description: 最终操作人邮箱
+                    example: "abc@abc.com"
+                  group_column:
+                    type: integer
+                    description: '0: 有领域智商值, 1: 没有领域智商值'
+                    example: 0
+                  identify_id:
+                    type: string
+                    description: 知识网络唯一id
+                    example: "071119dc-dcc6-11ed-82e5-2297c6abc8ad"
+                  intelligence_score:
+                    type: string
+                    description: 领域智商值
+                    example: "36.49"
+                  to_be_uploaded:
+                    type: integer
+                    description: 是否打开了上传开关
+                    example: 0
+                  graph_db_type:
+                    type: string
+                    description: 图数据库类型
+                    example: nebulaGraph
+    builder.knowledge_network.getKnwByName_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: 总知识网络条数
+              example: 1
+            df:
+              type: array
+              items:
+                type: object
+                properties:
+                  color:
+                    type: string
+                    description: 颜色
+                    example: "#126EE3"
+                  creation_time:
+                    type: string
+                    description: 知识网络创建时间
+                    example: "2022-12-22 04:09:04"
+                  creator_email:
+                    type: string
+                    description: 创建人邮箱
+                    example: "abc@abc.com"
+                  creator_id:
+                    type: string
+                    description: 创建人uuid
+                    example: "a6926148-9f9f-4c28-8ad8-1e7053a481db"
+                  creator_name:
+                    type: string
+                    description: 创建人名称
+                    example: "abc"
+                  final_operator:
+                    type: string
+                    description: 最终操作人uuid
+                    example: "a6926148-9f9f-4c28-8ad8-1e7053a481db"
+                  update_time:
+                    type: string
+                    description: 最终操作时间
+                    example: "2022-12-22 04:09:04"
+                  id:
+                    type: integer
+                    description: 知识网络ID
+                    example: 1
+                  knw_description:
+                    type: string
+                    description: 知识网络描述
+                    example: "知识网络描述"
+                  knw_name:
+                    type: string
+                    description: 知识网络名称
+                    example: "知识网络1"
+                  operator_name:
+                    type: string
+                    description: 最终操作人名称
+                    example: "abc"
+                  operator_email:
+                    type: string
+                    description: 最终操作人邮箱
+                    example: "abc@abc.com"
+                  group_column:
+                    type: integer
+                    description: '0: 有领域智商值, 1: 没有领域智商值'
+                    example: 0
+                  identify_id:
+                    type: string
+                    description: 知识网络唯一id
+                    example: "071119dc-dcc6-11ed-82e5-2297c6abc8ad"
+                  intelligence_score:
+                    type: string
+                    description: 领域智商值
+                    example: "36.49"
+                  to_be_uploaded:
+                    type: integer
+                    description: 是否打开了上传开关
+                    example: 0
+                  graph_db_type:
+                    type: string
+                    description: 图数据库类型
+                    example: nebulaGraph
+
+    builder.knowledge_network.deleteKnw:
+      type: 'object'
+      required:
+        - knw_id
+      properties:
+        knw_id:
+          type: integer
+          format: int32
+          description: 知识网络ID
+          example: 1
+    builder.knowledge_network.getGraph_response200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: 返回图谱数量
+              example: 1
+            df:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: 图谱名称
+                    example: "graph"
+                  id:
+                    type: integer
+                    description: 图谱ID
+                    example: 1
+                  kgDesc:
+                    type: string
+                    description: 描述信息
+                    example: "这是一条描述"
+                  create_email:
+                    type: string
+                    description: 创建人Email
+                    example: "abc@abc.com"
+                  create_user:
+                    type: string
+                    description: 创建人名称
+                    example: "abc"
+                  create_time:
+                    type: string
+                    description: 创建时间
+                    example: "2022-12-19 15:55:24"
+                  update_email:
+                    type: string
+                    description: 最终操作人Email
+                    example: "abc@abc.com"
+                  update_time:
+                    type: string
+                    description: 最终操作时间
+                    example: "2022-12-20 15:55:24"
+                  update_user:
+                    type: string
+                    description: 最终操作人名称
+                    example: "abc"
+                  export:
+                    type: boolean
+                    description: 是否可以导出
+                    example: true
+                  is_import:
+                    type: boolean
+                    description: 是否为外部导入的图谱
+                    example: false
+                  knowledge_type:
+                    type: string
+                    description: 知识类型
+                    example: "kg"
+                  status:
+                    type: string
+                    description: 图谱状态
+                    example: "normal"
+                  taskstatus:
+                    type: string
+                    description: 任务运行状态
+                    example: "normal"
+                  step_num:
+                    type: integer
+                    description: 图谱配置流程到了第几步
+                    example: 6
+                  otl_id:
+                    type: integer
+                    description: 本体ID
+                    example: 1
+                  graph_db_name:
+                    type: string
+                    description: 图数据库DB名
+                    example: "u04a631767f7211ed9c1dca2fa0926bdf"
+                  rabbitmqDs:
+                    type: integer
+                    description: 是否使用rabbitmq数据源；1为使用，0为未使用
+                    example: 0
+    builder.ds.getdss200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            count:
+              type: integer
+              description: 返回图谱数量
+              example: 1
+            df:
+              type: array
+              items:
+                type: object
+                properties:
+                  connect_type:
+                    type: string
+                    description: 连接类型，如果为odbc连接则填 odbc，其他填空
+                    example: "odbc"
+                  create_time:
+                    type: string
+                    description: 数据源创建时间
+                    example: "2023-08-22 09:31:31"
+                  create_user:
+                    type: string
+                    description: 创建人uuid
+                    example: "93e2682e-9322-9d28-a8df-509035bebb8d"
+                  create_user_name:
+                    type: string
+                    description: 创建人显示名
+                    example: "tom"
+                  dataType:
+                    type: string
+                    description: unstructured：非结构化，structured：结构化
+                    example: "structured"
+                  data_source:
+                    type: string
+                    description: 数据源类型
+                    example: "mysql"
+                  ds_address:
+                    type: string
+                    description: 数据源ip地址
+                    example: "10.4.4.4"
+                  ds_auth:
+                    type: string
+                    description: anyshare 认证信息id，非as数据源为null
+                    example: null
+                  ds_password:
+                    type: string
+                    description: 加密后的数据源密码
+                    example: "RWlzb28uY29tMTIz"
+                  ds_path:
+                    type: string
+                    description: 数据源是as为as路径，数据源是rabbitmq为vhost_queue，其他数据源为数据库database名
+                    example: "anydata"
+                  ds_port:
+                    type: integer
+                    description: 数据源端口号
+                    example: 1234
+                  ds_user:
+                    type: string
+                    description: 数据源用户名
+                    example: "admin"
+                  dsname:
+                    type: string
+                    description: 数据源名称
+                    example: "mysql"
+                  extract_type:
+                    type: string
+                    description: 抽取规则，standardExtraction：标准抽取
+                    example: "standardExtraction"
+                  id:
+                    type: integer
+                    description: 数据源id
+                    example: 1
+                  knw_id:
+                    type: integer
+                    description: 知识网络id
+                    example: 1
+                  update_time:
+                    type: string
+                    description: 数据源更新时间
+                    example: "2023-08-22 09:31:31"
+                  update_user:
+                    type: string
+                    description: 操作人uuid
+                    example: "93e2682e-9322-9d28-a8df-509035bebb8d"
+                  update_user_name:
+                    type: string
+                    description: 操作人显示名
+                    example: "tom"
+                  vhost:
+                    type: string
+                    description: 仅rabbitmq数据源有值，为Vhost名称
+                    example: ""
+                  queue:
+                    type: string
+                    description: 仅rabbitmq数据源有值，为队列名称
+                    example: ""
+                  json_schema:
+                    type: string
+                    description: 仅rabbitmq数据源有值，为json模板
+                    example: ""
+    builder.ds.get_by_id200:
+      type: object
+      properties:
+        res:
+          type: object
+          properties:
+            data_source:
+              type: string
+              description: 数据源类型
+              example: "mysql"
+            ds_address:
+              type: string
+              description: 数据源ip地址
+              example: "10.1.1.1"
+            ds_name:
+              type: string
+              description: 数据源名称
+              example: "data_source1"
+            ds_password:
+              type: string
+              description: 经base64加密后的数据源密码
+              example: "ZWlzb28uY29tMTIz"
+            ds_path:
+              type: string
+              description: 数据源是as为as路径，数据源是rabbitmq为vhost_queue，其他数据源为数据库database名
+              example: "test"
+            ds_port:
+              type: integer
+              description: 数据源端口号
+              example: 3306
+            ds_user:
+              type: string
+              description: 数据源用户名
+              example: "root"

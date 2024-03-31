@@ -1,0 +1,38 @@
+.graphContainerRoot {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  &-hideToolbar {
+    .graphContainer {
+      height: 100%;
+    }
+  }
+
+  .reminderBox {
+    left: 50%;
+    z-index: 1052;
+    display: flex;
+    font-size: 12px;
+    margin-top: 40px;
+    width: max-content;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-50%);
+  }
+
+  .graphLoadingBox {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    .loading {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

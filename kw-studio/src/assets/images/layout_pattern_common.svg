@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="70px" height="54px" viewBox="0 0 70 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 9</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="基本信息" transform="translate(-765.000000, -465.000000)">
+            <rect id="Rectangle" fill="#F5F5F5" x="0" y="107" width="1920" height="973"></rect>
+            <rect id="Rectangle" fill="#FFFFFF" x="35" y="135" width="1872" height="925"></rect>
+            <g id="编组-5" transform="translate(714.000000, 451.000000)">
+                <rect id="矩形备份" stroke-opacity="0.1" stroke="#000000" fill="#FFFFFF" x="0.5" y="0.5" width="171" height="107" rx="2"></rect>
+                <g id="编组-9" transform="translate(51.000000, 14.000000)">
+                    <rect id="矩形" stroke-opacity="0.15" stroke="#000000" transform="translate(25.464912, 23.132207) rotate(-9.000000) translate(-25.464912, -23.132207) " x="25.4608356" y="18.6322072" width="1" height="9"></rect>
+                    <rect id="矩形" stroke-opacity="0.2" stroke="#000000" transform="translate(32.374349, 38.400696) rotate(-219.000000) translate(-32.374349, -38.400696) " x="32.3702731" y="34.9006955" width="1" height="7"></rect>
+                    <rect id="矩形" stroke-opacity="0.3" stroke="#000000" transform="translate(34.040235, 28.262303) rotate(-294.000000) translate(-34.040235, -28.262303) " x="34.0361593" y="21.2623025" width="1" height="14"></rect>
+                    <rect id="矩形" stroke-opacity="0.2" stroke="#000000" transform="translate(21.148434, 39.908779) rotate(-144.000000) translate(-21.148434, -39.908779) " x="21.1443576" y="34.4087793" width="1" height="11"></rect>
+                    <path d="" id="矩形" stroke-opacity="0.15" stroke="#000000"></path>
+                    <rect id="矩形" stroke-opacity="0.2" stroke="#000000" transform="translate(52.464912, 29.132207) rotate(120.000000) translate(-52.464912, -29.132207) " x="52.4608356" y="24.6322072" width="1" height="9"></rect>
+                    <rect id="矩形" stroke-opacity="0.1" stroke="#000000" transform="translate(50.034581, 38.964376) rotate(60.000000) translate(-50.034581, -38.964376) " x="50.0305053" y="31.9643757" width="1" height="14"></rect>
+                    <circle id="椭圆形备份-4" fill="#8CBAF1" transform="translate(26.853716, 31.365346) rotate(21.000000) translate(-26.853716, -31.365346) " cx="26.853716" cy="31.3653462" r="6"></circle>
+                    <circle id="椭圆形" stroke="#FFE7CC" fill="#FFF8F0" transform="translate(61.751690, 33.751690) rotate(21.000000) translate(-61.751690, -33.751690) " cx="61.7516903" cy="33.7516903" r="5.5"></circle>
+                    <rect id="矩形" stroke-opacity="0.2" stroke="#000000" transform="translate(49.464912, 16.132207) rotate(30.000000) translate(-49.464912, -16.132207) " x="49.4608356" y="11.6322072" width="1" height="9"></rect>
+                    <circle id="椭圆形" stroke="#FFE7CC" fill="#FFF8F0" transform="translate(54.751690, 7.751690) rotate(21.000000) translate(-54.751690, -7.751690) " cx="54.7516903" cy="7.75169026" r="5.5"></circle>
+                    <circle id="椭圆形备份" stroke="#D0E3FA" fill="#F1F7FE" transform="translate(7.751690, 27.751690) rotate(21.000000) translate(-7.751690, -27.751690) " cx="7.75169026" cy="27.7516903" r="5.5"></circle>
+                    <circle id="椭圆形备份-3" stroke="#8CBAF1" fill="#D0E3FA" transform="translate(15.751690, 45.751690) rotate(21.000000) translate(-15.751690, -45.751690) " cx="15.7516903" cy="45.7516903" r="5.5"></circle>
+                    <circle id="椭圆形备份-5" stroke="#8CBAF1" fill="#D0E3FA" transform="translate(38.751690, 44.751690) rotate(21.000000) translate(-38.751690, -44.751690) " cx="38.7516903" cy="44.7516903" r="5.5"></circle>
+                    <circle id="椭圆形备份-2" stroke="#FFC484" fill="#FFE7CC" transform="translate(44.751690, 23.751690) rotate(21.000000) translate(-44.751690, -23.751690) " cx="44.7516903" cy="23.7516903" r="5.5"></circle>
+                    <circle id="椭圆形" stroke="#D0E3FA" fill="#F1F7FE" transform="translate(23.751690, 12.751690) rotate(21.000000) translate(-23.751690, -12.751690) " cx="23.7516903" cy="12.7516903" r="5.5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

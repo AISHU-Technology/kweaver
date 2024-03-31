@@ -1,0 +1,132 @@
+/* 火狐浏览器滚动条 */
+@scrollbar-width: thin;
+@scrollbar-thumb-color: rgb(184, 184, 184);
+@scrollbar-track-color: #ffffff;
+@scrollbar-thumb-border-radius: 50%;
+
+/* 定义mixin */
+.scrollbar-style() {
+  scrollbar-width: @scrollbar-width;
+  scrollbar-color: @scrollbar-thumb-color @scrollbar-track-color;
+}
+
+.scrollbar-style-rounded() {
+  .scrollbar-style();
+
+  /* 仅在Firefox浏览器中生效 */
+  @-moz-document url-prefix() {
+    // scrollbar-thumb-border-radius: @scrollbar-thumb-border-radius;
+    scrollbar-thumb {
+      border-radius: @scrollbar-thumb-border-radius;
+    }
+  }
+}
+
+.knw-card-entity-selector {
+  width: 100%;
+
+  .compos-input {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    text-overflow: ellipsis;
+
+    &::placeholder {
+      text-overflow: ellipsis;
+      color: var(--kw-text-color-secondary);
+    }
+  }
+}
+
+.knw-card-entity-selector-overlay {
+  padding-bottom: 4px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+  &.forceHidden {
+    display: none;
+  }
+
+  .dropdown-content {
+    position: relative;
+  }
+
+  .overlay-list {
+    max-height: 56px * 6;
+    overflow: auto;
+    overscroll-behavior: contain;
+    // .scrollbar-style-rounded();
+    // .scrollbar-style();
+  }
+
+  &.M .overlay-list {
+    max-height: 56px * 5;
+  }
+
+  &.S .overlay-list {
+    max-height: 56px * 3;
+  }
+
+  .entity-row {
+    height: 56px;
+    padding: 0 20px;
+
+    .e-name {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ant-btn {
+      display: none;
+
+      background: #fff !important;
+    }
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+
+      .ant-btn {
+        display: inline-block;
+      }
+    }
+
+    &.checked {
+      background: var(--kw-select-bg-color);
+    }
+  }
+
+  .drown-empty {
+    padding: 8px 20px;
+  }
+}
+
+.knw-card-entity-selector .select-input-wrap {
+  height: 32px;
+  padding-left: 12px;
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+
+  &:hover,
+  &.focused {
+    border-color: var(--kw-primary-color-hover);
+  }
+
+  .c-input {
+    flex: 1;
+    min-width: 0;
+    height: 30px;
+    line-height: 30px;
+    background-color: #fff;
+    background-image: none;
+  }
+
+  .clear-icon {
+    color: var(--kw-disabled-color);
+
+    &:hover {
+      color: var(--kw-text-color-secondary);
+    }
+  }
+}

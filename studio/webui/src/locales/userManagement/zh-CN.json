@@ -1,7 +1,0 @@
-{
-  "userManagement": {
-    "createTime": "创建时间",
-    "delete": "删除",
-    "total": "共{total}条"
-  }
-}

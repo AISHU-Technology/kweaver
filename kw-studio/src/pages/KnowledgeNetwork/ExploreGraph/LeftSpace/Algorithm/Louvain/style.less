@@ -1,0 +1,80 @@
+// index.tsx
+.louvainRoot {
+  height: 100%;
+  .louvainResultRoot {
+    height: 100%;
+    .tip {
+      display: flex;
+      margin: 0px -24px;
+      padding: 9px 20px 9px 13px;
+      color: rgba(0, 0, 0, 0.88);
+      border: 1px solid #fff1b8;
+      background-color: #fffbe6;
+      font-family: PingFangSC-Regular, PingFang SC;
+      .tipIcon {
+        font-size: 16px;
+        margin-top: 4px;
+        color: #faad14;
+        margin-right: 8px;
+      }
+    }
+    .operationIcon {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      cursor: pointer;
+      margin-left: 8px;
+      border-radius: 4px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--kw-border-color-base);
+      &:hover {
+        background-color: var(--kw-hover-bg-color);
+      }
+    }
+
+    .optionalColumTablePopover {
+      z-index: 1052;
+
+      // antd 样式覆盖
+      .ant-popover-arrow {
+        display: none;
+      }
+      .ant-popover-inner-content {
+        padding: 12px 0px;
+      }
+    }
+  }
+
+  // antd 样式覆盖
+  .ant-select,
+  .ant-input-number {
+    width: 100%;
+  }
+}
+
+// LouvainResultTable.tsx 结果图表的手风琴样式
+.louvainResultCollapse {
+  border: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #fff;
+  height: calc(100% - 250px);
+
+  // antd 样式覆盖
+  .ant-collapse-item {
+    border-bottom: var(--kw-border);
+  }
+  .ant-collapse-header {
+    padding: 12px;
+  }
+  .ant-collapse-content-box {
+    padding: 0px;
+  }
+  .ant-table-thead > tr > th {
+    border-top: none !important;
+  }
+  .ant-table-tbody > tr:last-child > td {
+    border-bottom: none !important;
+  }
+}

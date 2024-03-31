@@ -1,0 +1,61 @@
+.view-subgraph-modal-root {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  margin: 0;
+  padding: 0;
+
+  .ant-modal-content {
+    width: 100vw;
+    height: 100vh;
+    // background: #f6f7f9;
+
+    .m-content {
+      padding: 0;
+      max-height: none;
+    }
+  }
+
+  .ant-pagination-simple .ant-pagination-simple-pager input {
+    width: 41px;
+    border-radius: 6px;
+  }
+  .carousel-preview-item {
+    display: flex !important;
+    height: calc(100vh - 48px);
+    // padding: 0px 24px;
+
+    .rightCanvas {
+      position: relative;
+      width: calc(100vw - 440px);
+
+      img {
+        display: unset;
+      }
+
+      .graph-analysis-summary,
+      .graph-analysis-basicInfo {
+        top: 39px;
+        height: calc(100% - 39px);
+      }
+    }
+    .carousel-preview-info {
+      width: 440px;
+      // height: 835px;
+      // background: linear-gradient(180deg, #f0f5ff 0%, #fafcff 31%, #ffffff 100%);
+      // box-shadow: 0px 2px 9px 1px rgba(0, 0, 0, 0.06);
+      border-radius: 2px;
+      border-right: 1px solid var(--kw-line-color);
+    }
+
+    .TextInfoContainer {
+      height: calc(100% - 56px);
+      padding: 24px 24px 0;
+
+      .InfoContent {
+        height: calc(100% - 80px);
+      }
+    }
+  }
+}

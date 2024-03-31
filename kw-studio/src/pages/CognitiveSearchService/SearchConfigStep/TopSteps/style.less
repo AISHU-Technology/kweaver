@@ -1,0 +1,125 @@
+@wait-color: rgba(144, 147, 153, 1); // 未执行的步骤颜色
+@finish-color: var(--kw-text-color); // 完成的步骤颜色
+@progress-color: var(--kw-primary-color); // 进行中的步骤颜色
+@finish-icon-color: var(--kw-primary-color); // 完成的图标颜色
+@space-icon-color: rgba(192, 196, 204, 1); // 间隔图标颜色
+@min-screen-width: 1326px; // 最小屏幕宽度
+
+.cognitiveSearch-top-steps-root {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--kw-line-color);
+
+  // height: 54px;
+
+  // .left-extra {
+  //   flex-shrink: 0;
+  //   width: 294px;
+  //   padding: 0 20px 0 0;
+
+  //   .ant-btn-text:focus,
+  //   .ant-btn-text:hover {
+  //     background: #fff;
+  //   }
+
+  //   .t-name {
+  //     position: relative;
+  //     display: inline-block;
+  //     vertical-align: top;
+  //     max-width: 174px;
+  //     height: 32px;
+  //     padding-left: 14px;
+  //     line-height: 32px;
+
+  //     &::before {
+  //       content: '';
+  //       display: inline-block;
+  //       position: absolute;
+  //       left: 0;
+  //       top: 7px;
+  //       width: 1px;
+  //       height: 18px;
+  //       background: #e5e5e5;
+  //     }
+  //   }
+  // }
+
+  // .steps-box {
+  //   flex: 1;
+  //   min-width: 0;
+  //   width: 100%;
+  //   font-size: 16px;
+  //   color: @wait-color;
+  //   background-color: #fff;
+
+  //   .check-icon {
+  //     font-size: 14px;
+  //   }
+
+  //   .step-item {
+  //     position: relative;
+  //     min-width: 250px;
+  //     text-align: center;
+  //     transform: translateX(-294px / 2);
+
+  //     &:not(:last-child)::after {
+  //       content: '';
+  //       display: inline-block;
+  //       position: absolute;
+  //       right: 0px;
+  //       top: 5px;
+  //       height: 16px;
+  //       width: 16px;
+  //       border: 1px solid rgba(0, 0, 0, 0.25);
+  //       border-bottom: none;
+  //       border-left: none;
+  //       transform: rotate(45deg);
+  //     }
+  //   }
+  //   .step-item:nth-child(2) {
+  //     padding: 0px 40px;
+  //   }
+  //   .step-item:nth-child(3) {
+  //     text-align: left;
+  //     padding-left: 40px;
+  //   }
+
+  //   .en-step {
+  //     min-width: 270px;
+  //   }
+
+  //   @media screen and(max-width:1200px) {
+  //     .step-item {
+  //       transform: none;
+  //     }
+  //   }
+
+  //   .finish {
+  //     color: @finish-color;
+
+  //     .status-icon {
+  //       border-color: @finish-icon-color;
+  //     }
+  //   }
+
+  //   .progress {
+  //     color: @progress-color;
+
+  //     .status-icon {
+  //       border-color: @progress-color;
+  //     }
+  //   }
+
+  //   .status-icon {
+  //     display: inline-block;
+  //     width: 24px;
+  //     height: 24px;
+  //     margin-right: 14px;
+  //     font-size: 16px;
+  //     line-height: 20px;
+  //     border: 2px solid @wait-color;
+  //     text-align: center;
+  //     border-radius: 50%;
+  //     user-select: none;
+  //   }
+  // }
+}

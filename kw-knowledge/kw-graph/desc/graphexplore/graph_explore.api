@@ -1,0 +1,182 @@
+syntax = "v1"
+
+info(
+	title: "EngineServer服务"
+	desc: "引擎核心服务"
+	author: "Brooks.he"
+	email: "Brooks.he@aishu.cn"
+	version: "v1"
+)
+import(
+	"../basicsearch/basic_search.api"
+)
+
+type PathEdgeInfo {
+	ID         string   `json:"id"`
+	EdgeClass  string   `json:"edge_class"`
+	Alias      string   `json:"alias"`
+	Color      string   `json:"color"`
+	Name       string   `json:"name"`
+	OutV       string   `json:"out_v"`
+	InV        string   `json:"in_v"`
+	Properties []*Props `json:"properties"`
+}
+
+// 路径探索简略信息结构
+type PathsSimpleInfo {
+	Vertices []string `json:"vertices"`
+	Edges    []string `json:"edges"`
+}
+
+// 路径探索详细信息结构
+type PathDetailInfo {
+	Vertices []*Vertex       `json:"vertices"`
+	Edges    []*PathEdgeInfo `json:"edges"`
+}
+
+// 路径探索结果信息
+type PathInfo {
+	Paths      []*PathsSimpleInfo `json:"paths"`
+	PathDetail *PathDetailInfo    `json:"paths_detail"`
+}
+
+// 路径探索请求体
+type PathAlgRequest {
+	// 图谱id
+	KgID string `path:"kg_id"`
+	// 起始点vid
+	Source string `json:"startRid"`
+	// 终点vid
+	Target string `json:"endRid"`
+	// 路径方向，单选positive（正向）, reverse（反向）, bidirect（双向）
+	Direction string `json:"direction"`
+	// 路径类型，单选0，1，2，分别表示全部路径，最短路径，无环路径
+	PathType int64 `json:"path_type"`
+	// 最短路径决策依据，单选path_depth, weight_property, 只有选择最短路径时必选
+	PathDecision string `json:"path_decision,optional"`
+	// 关系类型，仅当选择最短路径且为weight_property时必选，只有一个
+	Edges string `json:"edges,optional"`
+	// 权重属性，当选择最短路径且weight_property时，必选且只能选择一种，此属性是字段edges中边类型中的一种
+	Property string `json:"property,optional"`
+	// 属性默认值，当选择最短路径且weight_property时必选，属性值为空时，用默认属性值参与路径长度计算
+	DefaultValue string `json:"default_value,optional"`
+	// 路径最长深度，默认为5
+	Steps int64 `json:"steps,optional"`
+	// 路径结果总数量,默认无上限
+	Limit int64 `json:"limit,optional"`
+	// 筛选规则
+	Filters []*Filter `json:"filters,optional"`
+}
+
+// 路径探索请求体
+type PathRequest {
+	// 图谱id
+	KgID string `path:"kg_id"`
+	// 起始点vid
+	Source string `json:"source"`
+	// 终点vid
+	Target string `json:"target"`
+	// 路径方向，单选positive（正向）, reverse（反向）, bidirect（双向）
+	Direction string `json:"direction"`
+	// 路径类型，单选0，1，2，分别表示全部路径，最短路径，无环路径
+	PathType int64 `json:"path_type"`
+	// 最短路径决策依据，单选path_depth, weight_property, 只有选择最短路径时必选
+	PathDecision string `json:"path_decision,optional"`
+	// 关系类型，仅当选择最短路径且为weight_property时必选，只有一个
+	Edges string `json:"edges,optional"`
+	// 权重属性，当选择最短路径且weight_property时，必选且只能选择一种，此属性是字段edges中边类型中的一种
+	Property string `json:"property,optional"`
+	// 属性默认值，当选择最短路径且weight_property时必选，属性值为空时，用默认属性值参与路径长度计算
+	DefaultValue string `json:"default_value,optional"`
+	// 路径最长深度，默认为5
+	Steps int64 `json:"steps,optional"`
+	// 路径结果总数量,默认无上限
+	Limit int64 `json:"limit,optional"`
+	// 筛选规则
+	Filters []*Filter `json:"filters,optional"`
+}
+
+// 路径探索响应体
+type PathResponse {
+	Res *PathInfo `json:"res"`
+}
+
+// 邻居查询请求体
+type NeighborsRequest {
+	KgID      string    `path:"kg_id"`
+	Vids      []string  `json:"vids"`
+	Direction string    `json:"direction,optional"`
+	Page      int       `json:"page,optional"`
+	Size      int       `json:"size,optional"`
+	Steps     int       `json:"steps,optional"`
+	Filters   []*Filter `json:"filters,optional"`
+	FinalStep bool      `json:"final_step,optional,default=false"`
+}
+
+//邻居查询响应体
+type NeighborsResponse {
+	VCount  int64                   `json:"v_count"`
+	ECount  int64                   `json:"e_count"`
+	VResult []*NeighborsVertexGroup `json:"v_result"`
+	EResult []*EdgeGroup            `json:"e_result"`
+}
+
+type OldNeighborsResopnse {
+	Res *NeighborsResponse `json:"res"`
+}
+
+type NeighborsVertexGroup {
+	Tag      string             `json:"tag"`
+	Vertices []*NeighborsVertex `json:"vertexes"`
+	Alias    string             `json:"alias"`
+	Color    string             `json:"color"`
+	Icon     string             `json:"icon"`
+}
+
+// 邻居查询的点信息结构
+type NeighborsVertex {
+	ID              string           `json:"id"`
+	Alias           string           `json:"alias"`
+	Tags            []string         `json:"tags"`
+	Color           string           `json:"color"`
+	Icon            string           `json:"icon"`
+	DefaultProperty *DefaultProperty `json:"default_property"`
+	Properties      []*Properties    `json:"properties"`
+	InEdges         []string         `json:"in_edges"`
+	OutEdges        []string         `json:"out_edges"`
+}
+
+// 查询点的进出边数量响应体,暂时只能查单个点,后面会改为列表
+type ExpandVResponse {
+	Res *ExpandVGroup `json:"res"`
+}
+
+type ExpandVGroup {
+	ID   string         `json:"id"`
+	OutE []*ExpandVEdge `json:"out_e"`
+	InE  []*ExpandVEdge `json:"in_e"`
+}
+
+type ExpandVEdge {
+	EdgeClass string `json:"edge_class"`
+	Count     int64  `json:"count"`
+	Color     string `json:"color"`
+	Alias     string `json:"alias"`
+}
+
+// 查询点的进出边数量请求体
+type ExpandVRequest {
+	KgID string `path:"kg_id"`
+	//Vids   []string `json:"vids"`
+	Vid string `form:"vid"`
+}
+
+type OldExpandVResponse {
+	Res *OldExpandVGroup `json:"res"`
+}
+
+type OldExpandVGroup {
+	ID   string         `json:"id"`
+	OutE []*ExpandVEdge `json:"outE"`
+	InE  []*ExpandVEdge `json:"inE"`
+}

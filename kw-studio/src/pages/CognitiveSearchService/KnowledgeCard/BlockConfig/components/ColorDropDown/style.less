@@ -1,0 +1,38 @@
+.knw-card-color-pick {
+  padding: 0 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+
+  &:not(.disabled) {
+    &:hover,
+    &.focused {
+      border-color: var(--kw-primary-color-hover);
+    }
+  }
+
+  &.disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+  }
+
+  // 取色器
+  .color-bg {
+    display: inline-block;
+    vertical-align: top;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #bfbfbf;
+    border-radius: 3px;
+  }
+
+  .arrow-icon {
+    font-size: 12px !important;
+    color: var(--kw-disabled-color);
+  }
+
+  &-overlay {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  }
+}

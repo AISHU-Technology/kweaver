@@ -1,0 +1,20 @@
+{
+  "homepage": {
+    "welcomeToKWeaver": "欢迎使用KWeaver",
+    "getStarted": "开始使用",
+    "getStarted2": "立即使用",
+    "modelFactory": "模型工厂",
+    "modelFactoryDec": "提供大模型的接入，提示词开发，以及模型效果评估",
+    "knowledgeNetwork": "知识网络",
+    "knowledgeNetwork2": "知识网络",
+    "knowledgeNetworkDec": "支持领域数据的接入和管理，实现知识图谱等领域知识的构建",
+    "cognitiveApplication": "认知应用",
+    "cognitiveApplicationDec": "基于大模型和领域知识网络的场景化应用开发与调试",
+    "pleaseContactAdministrator": "暂无可使用的知识网络，请联系管理员",
+    "selectKnowledgeNetwork": "选择知识网络",
+    "pleaseSelect": "请选择",
+    "pleaseSelectKnowledgeNetwork": "请选择知识网络",
+    "tips": "提示",
+    "noPermissionsOfThisModelFactory": "您当前暂无该模型工厂相关权限，请联系系统管理员开通。"
+  }
+}

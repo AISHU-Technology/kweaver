@@ -1,0 +1,131 @@
+.summary-graph-node-list-root {
+  height: 100%;
+
+  .search-wrap {
+    height: 72px;
+    padding: 20px 24px;
+  }
+
+  .list-scroll-wrap {
+    height: calc(100% - 72px);
+    overflow: auto;
+
+    .scroll-box {
+      width: 376px;
+      padding-left: 24px;
+    }
+
+    .list-item {
+      height: 54px;
+      border-bottom: 1px solid var(--kw-line-color);
+
+      &:hover {
+        background: var(--kw-hover-bg-color);
+
+        .delete-mask {
+          display: inline-block;
+        }
+      }
+
+      &.checked {
+        background: var(--kw-select-bg-color);
+      }
+
+      &.error {
+        background-color: rgba(var(--kw-error-color-rgb), 0.06);
+      }
+
+      &:first-of-type {
+        border-top: 1px solid var(--kw-line-color);
+      }
+    }
+
+    .list-item-readonly {
+      height: 54px;
+      border-bottom: 1px solid var(--kw-line-color);
+
+      &:hover {
+        background: var(--kw-hover-bg-color);
+
+        .delete-mask {
+          display: none;
+        }
+      }
+
+      &.checked {
+        background: var(--kw-select-bg-color);
+      }
+
+      &.error {
+        background-color: rgba(var(--kw-error-color-rgb), 0.06);
+      }
+
+      &:first-of-type {
+        border-top: 1px solid var(--kw-line-color);
+      }
+    }
+
+    .check-wrap {
+      width: 36px;
+      height: 100%;
+      line-height: 54px;
+      text-align: center;
+    }
+
+    .check-wrap-readonly {
+      display: none;
+    }
+
+    .info-wrap {
+      flex: 1;
+      height: 100%;
+      min-width: 0;
+    }
+
+    .delete-mask {
+      display: none;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+    }
+
+    .node-icon {
+      display: inline-block;
+      width: 14px;
+      height: 3px;
+      border-radius: 1px;
+      margin-right: 8px;
+      user-select: none;
+      cursor: default;
+
+      &.circle {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        border: 1px solid #e5e5e5;
+        border-radius: 50%;
+        text-align: center;
+      }
+
+      .icon-svg {
+        font-size: 16px;
+        color: #fff;
+      }
+    }
+
+    .node-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .start-node,
+    .end-node {
+      max-width: 100px;
+    }
+  }
+
+  .ant-pagination {
+    text-align: right;
+  }
+}

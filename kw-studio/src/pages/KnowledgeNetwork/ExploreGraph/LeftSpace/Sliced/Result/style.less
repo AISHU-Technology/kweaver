@@ -1,0 +1,33 @@
+.slice-result-panel {
+  height: 100%;
+  overflow-y: overlay;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .panel-header {
+    width: calc(100% - 24px);
+    .p-name {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  .slice-result-collapse {
+    border: none;
+    background-color: #fff;
+
+    // antd 样式覆盖
+    .ant-collapse-header {
+      padding: 12px;
+    }
+    .ant-collapse-content-box {
+      padding: 0px;
+    }
+    .ant-collapse-item {
+      border-color: var(--kw-line-color) !important;
+    }
+    .ant-collapse-content {
+      border-color: var(--kw-line-color) !important;
+    }
+  }
+}

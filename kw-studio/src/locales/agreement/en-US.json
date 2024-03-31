@@ -1,0 +1,172 @@
+{
+  "agreement": {
+    "lang": "Language"
+  },
+  "privacyPolicy": {
+    "p0": {
+      "title": "Privacy Statement",
+      "line0": "AISHU Technology Corp. and its global affiliates (hereinafter referred to as \"AISHU\") respect and protect your personal privacy, in order to provide you with more accurate and personalized user experience and services, and at the same time to ensure the confidentiality of your data, AISHU may collect and use your relevant data. Please read this \"Privacy Statement\" (hereinafter referred to as \"this Statement\") carefully. If you use the products and/or services of the AISHU website, it means that you have agreed to the content described in this statement."
+    },
+    "p1": {
+      "title": "This privacy statement will help you understand the following contents:",
+      "line0": "1.How AISHU Collects and Uses Your Personal Data",
+      "line1": "2.How AISHU Stores and Protects Your Personal Data",
+      "line2": "3.How AISHU Uses Cookies and Similar Technologies",
+      "line3": "4.How AISHU Shares Your Personal Data",
+      "line4": "5.How to Access or Control Your Personal Data",
+      "line5": "6.How AISHU Handles the Personal Data of Minors",
+      "line6": "7.How Your Personal Data Is Transferred Internationally",
+      "line7": "8.How This Statement Is Updated",
+      "line8": "9.How to Contact AISHU"
+    },
+    "p2": {
+      "title": "The Application Scope of This Statement",
+      "line0": "This statement applies to AISHU websites, products and services that display this privacy statement or link to this statement. If the service you use has other separate and specific privacy statements or agreements that are specifically applicable, please refer to the relevant privacy statement or agreement terms for the specific use. In the absence of the above specific circumstances, this statement shall apply."
+    },
+    "p3": {
+      "title": "How AISHU Collects and Uses Your Personal Data"
+    },
+    "p4": {
+      "title": "Personal Data Collection",
+      "line0": "Personal data means any data relating to an identified or identifiable natural person. Such data will be directly submitted to us by you when you use our website, products or services and interact with us, including network identification information (including system user names and passwords, IP addresses, domain, email addresses, etc.), Basic information (including name, nationality, position, company, contact data, etc.), personal use information (including file directory structure, file name, database name, instance name, etc.), common device information (including device MAC address, operating system type data) data describing the basic situation of personal commonly used equipment, etc.), etc. If you provide your personal data to achieve the above purpose, it means that you have understood and accepted the use of personal data, and you agree to use your personal data for this specific purpose. You can also choose not to provide the above-mentioned personal data to AISHU, but if you choose not to provide it, AISHU may not be able to provide you with related products or services, nor can it respond to or solve your problems.",
+      "line1": "Personal data legally obtained by AISHU from business partners or other third parties. ",
+      "line2": "To the extent permitted by applicable laws and regulations, AISHU may obtain your personal data from public and commercial channels and will confirm the legality of the source of personal data in accordance with the agreement with the third party, and then comply with relevant laws and regulations. Use your personal data under the premise of regulations."
+    },
+    "p5": {
+      "title": "Use of Personal Data",
+      "line0": "The personal data you provide may be used in the following situations, and it may also be used by a third party selected by AISHU in strict accordance with the method in this statement:",
+      "line1": "1. Get in touch with you;",
+      "line2": "2. Invite you to participate in satisfaction surveys and market research on AISHU products and services;",
+      "line3": "3. To send you the latest news about AISHU products or services, provide you with personalized recommendations and other promotional activities that may be of interest to you;",
+      "line4": "4. Use your personal data for the purpose of protecting the personal and property safety or legitimate rights and interests of you, AISHU, customers or the public, such as identity verification, security ",
+      "line5": "precautions, complaint handling, dispute coordination, fraud monitoring, archive backup, customer service, etc., When you use security functions or other similar services, AISHU will detect malicious programs or viruses, or identify fraudulent data for you. Of course, AISHU will narrow the scope of use of this situation as much as possible, and you should have foreseen and agreed to this situation when you provide your personal data;",
+      "line6": "5. Circumstances where AISHU has reason to believe that laws and regulations and other relevant regulations need to be complied with;",
+      "line7": "6. Circumstances that have been legally authorized by you."
+    },
+    "p6": {
+      "title": "Please note that in the following scenarios, the product operator of AISHU can collect your personal data without your consent or authorization:",
+      "line0": "1. Directly related to national security and national defense security;",
+      "line1": "2. Directly related to public safety, public health, and major public interests;",
+      "line2": "3. Directly related to criminal investigation, prosecution, trial, and execution of judgments;",
+      "line3": "4. In order to protect your or other individuals' life, property and other major legal rights and interests, but you cannot get your consent in advance;",
+      "line4": "5. The personal data collected is disclosed to the public by yourself;",
+      "line5": "6. Collect personal data from legally publicly disclosed data;",
+      "line6": "7. Necessary for signing and fulfilling the contract according to your requirements;",
+      "line7": "8. Necessary for maintaining the safe and stable operation of the provided products or services, such as discovering and disposing of product or service failures;",
+      "line8": "9. When it is necessary to carry out statistical or academic research in public interest, and when it provides the results of academic research or description to the outside, the personal data contained in the results is de-identified;",
+      "line9": "10. Other circumstances stipulated by laws and regulations.",
+      "line10": "If you are a partner of AISHU, AISHU will use the data you provide to manage and develop the business relationship between AISHU and you. Such as:",
+      "line11": "1. Send you the details of the AISHU partner program;",
+      "line12": "2. Under the premise of fulfilling confidentiality obligations, share some of your data with other partners or AISHU customers or expected customers;",
+      "line13": "3. Contact you when it comes to a specific transaction or plan as part of the AISHU customer satisfaction survey or market research."
+    },
+    "p7": {
+      "title": "How AISHU Stores and Protects Your Personal Data"
+    },
+    "p8": {
+      "title": "Data Storage",
+      "line0": "During your use of AISHU products and services, AISHU will continue to retain your personal data. AISHU will also retain your personal data for as long as necessary to comply with applicable legal obligations, resolve disputes, and implement agreements. For personal data beyond the period limit, AISHU will delete your personal data or anonymize it in accordance with the requirements of applicable laws. ",
+      "line1": "You can delete the above data by canceling your account or actively deleting. The cancellation or deletion cannot be restored. After you cancel your account, AISHU will stop providing you with products and services. Except as otherwise provided by laws and regulations, AISHU will delete your personal data."
+    },
+    "p9": {
+      "title": "Data Protection",
+      "line0": "AISHU attaches great importance to the security of your personal data. AISHU adopts appropriate physical, management and technical safeguards to protect your personal data, to ensure that the data held by AISHU is not lost, and is not subject to unauthorized access, public disclosure, use, modification, damage, loss or leakage, not to be abused and altered. These security measures include backing up data to other servers, encrypting user passwords, establishing strict management systems and procedures, strictly restricting data access personnel and requiring them to comply with confidentiality obligations.",
+      "line1": "However, please understand that due to technical limitations and various malicious methods that may exist, no measures can be impeccable under the Internet environment, and no products and services, websites, data transmission, computer systems, and network connections are absolute safe. Even if we do our best to strengthen security measures, AISHU cannot guarantee the absolute security of this data.",
+      "line2": "In order to deal with the possible risks of personal data leakage, damage and loss, AISHU has formulated a number of systems and control measures. Once the aforementioned risk problems occur, AISHU will initiate emergency plans to prevent the expansion of security incidents, and push notifications, announcements, Email and other forms to inform you."
+    },
+    "p10": {
+      "title": "How AISHU Uses Cookies and Similar Technologies",
+      "line0": "In order to ensure the normal operation of the website and make your visit experience easier, AISHU uses cookies on the \"site\" to ensure the integrity of the registration process and the personalization of the \"site\". A cookie is a small text file placed on your computer by a web server. It usually contains an identifier, a site name, and some numbers and characters. Cookies cannot be used to run programs, nor will they spread viruses to your computer. The cookie assigned to you is unique and can only be read by the web server of the domain that passed the cookie.",
+      "line1": "The main function of using cookies is to facilitate your use of website products and services. For example, cookies can help the site recall your specific personal data during subsequent visits to simplify the delivery of related content and facilitate site navigation. You can also retrieve the data provided by historical visits in the visits after the first visit to the website, so that you can easily use historical custom site functions.",
+      "line2": "You can accept or decline cookies. Most web browsers automatically accept cookies, but you can decline cookies by modifying your browser settings according to your preferences. If you choose to reject cookies, you may not be able to fully experience the interactive features of the Web site you visit.",
+      "line3": "The relevant data recorded by AISHU through cookies will strictly apply to this statement, and AISHU will not use cookies for any purpose other than those stated in this statement.The relevant data recorded by AISHU through cookies will strictly apply to this statement, and AISHU will not use cookies for any purpose other than those stated in this statement."
+    },
+    "p11": {
+      "title": "How AISHU Shares Your Personal Data",
+      "line0": "Sharing refers to the process in which AISHU provides personal data to a third party, and AISHU and the third party process the personal data independently. Unless you agree, AISHU will not share your personal data with third parties, except in the following situations or the situations specified in this statement:",
+      "line1": "1. Disclosure to a third party with your prior authorization;",
+      "line2": "2. To provide the products and services you need, you must share your personal data with third parties;",
+      "line3": "3. In order to comply with the requirements of laws and regulations, provide relevant data to relevant state agencies or their authorized units when inquiring;",
+      "line4": "4. You need to disclose to a third party due to your own relevant laws and regulations or service-related agreements and rules;",
+      "line5": "5. If you are a qualified intellectual property complaint and have filed a complaint, you should disclose it to the respondent at the request of the respondent to facilitate the settlement of disputes;",
+      "line6": "6. To avoid the imminent danger to your life, body or property, or to prevent major harm to the rights and interests of others, etc;",
+      "line7": "7. To share with affiliated companies and third parties for the purposes described in the \"Data Collection and Use\" section of this statement;",
+      "line8": "8. Other situations where AISHU has reason to believe that it complies with relevant laws and regulations.",
+      "line9": "AISHU will only share your personal data for legal, legitimate, necessary, specific and clear purposes, and will only share personal data necessary to provide product use and services. Personal data will only be processed by subjects formally designated as data processors or data controllers in advance for the purposes described in this statement. For third parties with whom AISHU shares personal data, AISHU will make reasonable commercial efforts to review the data security capabilities of the third parties, sign a confidentiality agreement with them, and require them to handle your personal data in accordance with this privacy statement and other relevant confidentiality and security measures.",
+      "line10": "AISHU may also hold AISHU for all or part of the merger or sale (including transfer as part of the insolvency or bankruptcy proceedings) or the reorganization of AISHU or the sale of shares or other changes in the control of AISHU. Any data about you about you as an asset is transferred to the proposed transferee, recipient, joint participant or transferee participant, the aforementioned subject will continue to perform the responsibilities and obligations of this privacy statement after the change. "
+    },
+    "p12": {
+      "title": "How to Access or Control Your Personal Data",
+      "line0": "You should ensure that all personal data submitted is accurate. AISHU will try its best to maintain the accuracy and completeness of your personal data and update your personal data in a timely manner based on the data you provide to AISHU.",
+      "line1": "According to applicable laws and regulations, with regard to your personal data, you may have the following rights:",
+      "line2": "1. The right to access your personal data we hold and obtain a copy;",
+      "line3": "2. The right to request us to update or correct your personal data;",
+      "line4": "3. The right to request us to delete your personal data;",
+      "line5": "4. The right to object to our processing of your personal data;",
+      "line6": "5. Restrict our right to process your personal data;",
+      "line7": "6. The right to cancel the previously registered account at any time;",
+      "line8": "7. The right to lodge a complaint and report to the competent personal data protection department.",
+      "line9": "Please note that these rights are not absolute and may be restricted in accordance with applicable laws. If you need AISHU to assist in exercising the above request or rights, please use the following \"contact AISHU\". Unless otherwise required by applicable laws and regulations, AISHU will respond to your request within one month."
+    },
+    "p13": {
+      "title": "How AISHU Handles the Personal Data of Minors",
+      "line0": "Minors are not the target audience of AISHU products, services and websites, and AISHU neither intends nor tries to collect data on minors. Considering that AISHU cannot distinguish the age of Internet visitors, if a minor provides personal data to AISHU without the consent of his parents or guardians, his parents or guardians can send an email to AISHU to remove Such data."
+    },
+    "p14": {
+      "title": "How Your Personal Data Is Transferred Internationally",
+      "line0": "AISHU provides products and services on a global scale, which means that your data collected by AISHU may be in the country/region where you use the product or service, in AISHU or its affiliates, subsidiaries or service providers, and business Other countries/regions where the partner has an organization to process, or receive visits from these countries/regions. The data protection laws of these countries may be different. For the purposes described in this privacy statement, the personal data you submit to AISHU in a certain country/region may be transmitted, used, processed and viewed in other countries around the world. Accepting the content of this privacy statement is deemed as your consent, and your personal data may be transferred to the aforementioned countries/regions.",
+      "line1": "In such cases, AISHU will take measures to ensure that the collected data is processed in accordance with the requirements of this statement and applicable laws. In addition, AISHU will conduct cross-border data transfer in accordance with this statement and applicable laws and regulations and use various channels to protect your personal data."
+    },
+    "p15": {
+      "title": "How This Statement Is Updated",
+      "line0": "AISHU reserves the right to update or modify this statement from time to time, and the updated content constitutes a part of this statement. If our privacy statement changes, we will post an updated privacy statement on our website. You can browse our website regularly to knowledge the latest content of this statement. AISHU hopes that you read carefully before using AISHU's products and services, also make it clear that you have fully understood and accepted the content of this statement, hope that you can make appropriate choices based on your understanding. If you do not agree to these changes, you can stop using AISHU products and services. If you continue to use our products and/or services, it means that you agree to be bound by this revised privacy statement."
+    },
+    "p16": {
+      "title": "How to Contact AISHU",
+      "line0": "AISHU welcomes your comments on this statement. If you have any questions, comments or suggestions about the privacy statement of the AISHU website, or if you have any privacy complaints, please contact AISHU by aishu_it@aishu.cn at any time.",
+      "line1": "If you are not satisfied with our response, especially if you think that our processing has harmed your legal rights and interests, you can also seek a solution by filing a lawsuit with the court with jurisdiction in the place where AISHU lives."
+    },
+    "p17": {
+      "title": "Miscellaneous",
+      "line0": "This statement is interpreted and revised by AISHU."
+    }
+  },
+  "legalNotice": {
+    "p0": {
+      "title": "Introduction",
+      "line0": "Shanghai AISHU Technology Corp. (hereinafter referred to as the \"AISHU\") website (the \"Site\") is the exclusive site set up by AISHU. Your accessing, browsing and using the website imply that you have read and understood this statement and consent to be bound. If you do not agree with any of the following terms, please stop using this website."
+    },
+    "p1": {
+      "title": "Rights Declaration",
+      "line0": "All information published on this website (including but not limited to text, data, graphics, images, sound or video, etc.), except for those are the special marked, copyrights and trademarks are all the property of AISHU, and will be protected by relevant laws and regulations and international treaties. Unless the written permission of AISHU, any content on this website shall not be reproduced, distributed, photocopied, played, linked or transmitted with super-links, loaded into other servers in \"mirroring method\", stored in information retrieval system, or otherwise used for any commercial purpose by any person by any means.",
+      "line1": "This website pays high attention to the protection of intellectual property rights, abides by China's intellectual property laws, regulations and binding normative documents, and   respects the legitimate rights of the obligee. According to the relevant provisions of Chinese law, when the obligee discovers that the content of this website infringes on his legitimate rights and interests, the obligee shall send a written right notice to AISHU in advance, and AISHU will take steps to remove the relevant content in accordance with the relevant provisions of Chinese laws and regulations. "
+    },
+    "p2": {
+      "title": "Links to Third Parties",
+      "line0": "Although links to third party websites may be contained in this site for your convenience, AISHU shall not be responsible for any content of any such websites. You might need to review and agree to applicable rules of use when using such websites. In addition, a link to third-party website does not imply that AISHU endorses the website or the products or services referenced therein."    
+    },
+    "p3": {
+      "title": "Disclaimer",
+      "line0": "The information contained on this website, and the links providing the information are solely for informational purposes, and AISHU will not guarantee the authenticity, validity, completeness, accuracy of the formation. For the behavior and consequences of visitors who take advantage of information on this website, as well as the loss in case of force majeure, we do not assume any responsibility."
+    },
+    "p4": {
+      "title": "Products & Services",
+      "line0": "The stated products, services and information are all for your reference. The availability of the products and services described on this website, and the descriptions of such products and services, may vary in your country or area. Please consult with AISHU's local sales representatives or agents for the detail information of specific products and/or services."
+    },
+    "p5": {
+      "title": "Privacy Policy",
+      "line0": "AISHU is committed to ensure your privacy. More information please read our Privacy Policy."
+    },
+    "p6": {
+      "title": "Applicable law",
+      "line0": "Any disputes led by this website, this statement, as well as the accessibility, browsing, using this website, will be applicable for the laws of People's Republic of China, under the jurisdiction of the court in the location of AISHU (Shanghai, China)."
+    },
+    "p7": {
+      "title": "Additional Information",
+      "line0": "AISHU will update this website and statement at any time without notice. Please be sure to periodically visit this page to get the latest content without notice.",
+      "line1": "This Website and its contents are provided for your convenience only. All information provided on this website is provided on “as is” basis without warranties, guarantees or representations of any kind. Although AISHU has attempted to provide accurate information on this website, it assumes no obligation or responsibility regarding the accuracy of the information whatsoever.",
+      "line2": "AISHU reserves all the right for the final explanation on all materials on this website.",
+      "line3": "If you have any questions, please Contact AISHU."
+    }
+  }
+}

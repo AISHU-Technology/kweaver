@@ -1,0 +1,11 @@
+{
+  "component": {
+    "tags": {
+      "labelRule": "Tag cannot contain ",
+      "labelExist": "The tag already exists，please re-enter",
+      "labelEnter": "Press enter to add a custom tag",
+      "placeInput": "Please input/select",
+      "addLabel": "Add tag(s)"
+    }
+  }
+}

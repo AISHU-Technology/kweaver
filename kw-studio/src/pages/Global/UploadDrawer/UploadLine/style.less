@@ -1,0 +1,48 @@
+.uploadLineRoot {
+  height: 44px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  align-items: center;
+  padding: 0px 0px 0px 12px;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  .progress {
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+    width: 100px;
+    height: 100%;
+    display: none;
+    position: absolute;
+    transition: width 1s;
+    background-color: rgba(18, 110, 227, 0.1);
+  }
+  .progressBack {
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    width: 60px;
+    height: 100%;
+    display: none;
+    position: absolute;
+    animation: move 2s infinite ease-out;
+    background: linear-gradient(to right, rgba(18, 110, 227, 0.02), rgba(18, 110, 227, 0.03), rgba(18, 110, 227, 0.04));
+  }
+  .isShow {
+    display: block;
+  }
+  .info {
+    display: flex;
+    align-items: center;
+  }
+}
+
+@keyframes move {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 100%;
+  }
+}

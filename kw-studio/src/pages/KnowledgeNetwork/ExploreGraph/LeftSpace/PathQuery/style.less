@@ -1,0 +1,47 @@
+.pathQueryRoot {
+  position: relative;
+  height: 100%;
+
+  .header {
+    height: 56px;
+    border-bottom: 1px solid var(--kw-line-color);
+  }
+
+  .searchBtn {
+    position: absolute;
+    bottom: 0;
+    height: 50px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .content {
+    height: calc(100% - 116px);
+    overflow: auto;
+
+    .circle-icon {
+      width: 10px;
+      height: 10px;
+      border: 2px solid #4caf51;
+      border-radius: 50%;
+    }
+
+    .red-bg {
+      border-color: #f5222d;
+    }
+
+    .dire-btn {
+      width: 33.3%;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .ant-radio-button-wrapper {
+      transition: none !important;
+    }
+
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):focus-within {
+      box-shadow: none;
+    }
+  }
+}

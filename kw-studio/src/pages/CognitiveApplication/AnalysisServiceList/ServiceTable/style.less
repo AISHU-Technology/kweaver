@@ -1,0 +1,89 @@
+.analysis-service-table-root {
+  .table-status {
+    align-items: center;
+    justify-content: left;
+
+    .status-color {
+      width: 6px;
+      height: 6px;
+      border-radius: 6px;
+    }
+  }
+
+  .text-color {
+    color: rgba(0, 0, 0, 0.25);
+  }
+
+  .noData-box {
+    margin: 36px 0;
+    text-align: center;
+
+    .noData-text {
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
+
+  .desc-color {
+    font-size: 12px;
+    color: var(--kw-text-color-secondary);
+    width: 296px;
+  }
+
+  .apiBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .desc-color {
+    font-size: 12px;
+    width: 296px;
+  }
+
+  .api-view {
+    .api-icon {
+      font-size: 12px;
+    }
+  }
+
+  .api-view:hover {
+    color: var(--kw-primary-color) !important;
+    text-decoration: underline;
+  }
+
+  .text-show {
+    max-width: 210px;
+    display: inline-block;
+    margin-right: 7px;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--kw-primary-color);
+    }
+  }
+
+  .main-table {
+    .serviceIdBox {
+      .copyIcon {
+        display: none;
+      }
+
+      &:hover {
+        .copyIcon {
+          display: block;
+        }
+      }
+    }
+
+    min-width: 1000px;
+  }
+
+  .ant-dropdown {
+    width: 88px;
+
+    .ant-dropdown-menu-item {
+      height: 40px;
+      // padding: 10px 16px;
+    }
+  }
+}

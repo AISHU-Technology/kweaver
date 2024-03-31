@@ -1,0 +1,53 @@
+.preTreeModalRoot {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none;
+  top: 0px;
+  left: 0px;
+  padding: 0px;
+  .ant-modal-content {
+    height: 100%;
+    .ant-modal-body {
+      height: 100%;
+      padding: 0px;
+      position: relative;
+      .header {
+        top: 72px;
+        left: 24px;
+        width: 360px;
+        z-index: 1052;
+        position: absolute;
+      }
+      .preContent {
+        width: 100%;
+        // height: 75vh;
+        height: 100%;
+        position: relative;
+      }
+      .kw-universal-modal-content {
+        padding: 0px;
+        max-height: none;
+        height: calc(100vh - 104px) !important;
+      }
+      .kw-universal-modal-footer {
+        position: unset;
+        .kw-space-between {
+          justify-content: center;
+        }
+      }
+      .footer {
+        left: 0px;
+        width: 100%;
+        bottom: 20px;
+        display: flex;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+.ant-select-dropdown {
+  z-index: 1052;
+}

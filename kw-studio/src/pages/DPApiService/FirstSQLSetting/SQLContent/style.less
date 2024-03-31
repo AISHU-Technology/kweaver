@@ -1,0 +1,43 @@
+.sql-content-wrapper {
+  width: 100%;
+  height: 100%;
+  min-width: 590px;
+  color: rgba(0, 0, 0, 0.85);
+
+  .content-empty-wapper {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    padding-top: 200px;
+  }
+
+  .content-sql-editor {
+    height: 100%;
+    padding: 6px 0px 0;
+
+    .ant-tabs,
+    .ant-tabs-content,
+    .ant-tabs-tabpane {
+      height: 100%;
+    }
+
+    .ant-tabs-tab {
+      padding: 6px 0;
+    }
+
+    .CodeMirror-wrap {
+      pre.CodeMirror-line {
+        padding-left: 0px !important;
+      }
+    }
+
+    &>.ant-tabs>.ant-tabs-nav {
+      padding-left: 20px;
+      margin-bottom: 0;
+    }
+  }
+
+  .dataSourceSqlquery {
+    border: none !important;
+  }
+}

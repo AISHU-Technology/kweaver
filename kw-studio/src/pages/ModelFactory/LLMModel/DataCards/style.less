@@ -1,0 +1,45 @@
+.llm-model-cards-root {
+  position: relative;
+
+  @media screen and(max-width:1500px) {
+    .llm-model-cards-item {
+      width: calc((100% - 2 * 20px) / 3);
+      &:nth-of-type(3n) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  @media screen and(min-width:1500px) {
+    .llm-model-cards-item {
+      width: calc((100% - 3 * 20px) / 4);
+      &:nth-of-type(4n) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .llm-model-cards-item {
+    margin: 0 20px 20px 0;
+    border: 1px solid var(--kw-line-color);
+    border-radius: 2px;
+    cursor: default;
+
+    .llm-op-bar-root {
+      &:hover,
+      &.focused {
+        background: var(--kw-hover-bg-color);
+      }
+    }
+
+    .api-btn {
+      display: inline-flex;
+      align-items: center;
+      height: 30px;
+      padding: 0 10px;
+      background: #f5f5f5;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+  }
+}

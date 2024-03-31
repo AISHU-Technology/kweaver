@@ -1,0 +1,73 @@
+@border: 1px solid var(--kw-border-color-base);
+
+.qa-adv-config-answer-organization-root {
+  flex-flow: column;
+
+  .config-content {
+    width: 592px;
+    height: calc(100% - 56px);
+    margin: 24px auto;
+    margin-bottom: 0px;
+
+    .text-title::before {
+      content: '*';
+      color: #ff4d4f;
+    }
+
+    .kw-required::before {
+      margin-right: 0px;
+      content: '*';
+    }
+
+    .card-wrap {
+      border-bottom: 1px dashed var(--kw-border-color-base);
+      margin-bottom: 23px;
+
+      .organization-card-box {
+        border: @border;
+        border-radius: 2px;
+        padding: 10px 12px;
+
+        .title-box {
+          border-bottom: @border;
+          padding-bottom: 10px;
+          margin-bottom: 10px;
+          overflow: hidden;
+
+          .title-left {
+            float: left;
+          }
+        }
+
+        .openAiTips {
+          margin-bottom: 10px;
+
+          p {
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: var(--kw-text-color);
+
+            .text-color {
+              color: #eeab31;
+            }
+          }
+        }
+      }
+
+      .organization-selected-box {
+        border-color: var(--kw-primary-color-hover);
+        background: rgba(var(--kw-primary-color-rgb), 0.06);
+      }
+
+      .errorBorder {
+        border-color: var(--kw-error-color);
+      }
+    }
+  }
+
+  .config-footer {
+    border-top: @border;
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+}

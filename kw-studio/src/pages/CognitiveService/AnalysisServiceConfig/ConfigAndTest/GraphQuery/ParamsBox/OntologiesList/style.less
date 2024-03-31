@@ -1,0 +1,121 @@
+.cog-service-onto-list {
+  .panel-buttons {
+    .title-btn {
+      height: 32px;
+      line-height: 32px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid #d9d9d9;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--kw-primary-color-hover);
+      }
+
+      &:first-of-type {
+        border-radius: 3px 0 0 3px;
+        &:not(.active) {
+          border-right-width: 0;
+        }
+      }
+
+      &:last-of-type {
+        border-radius: 0 3px 3px 0;
+        &:not(.active) {
+          border-left-width: 0;
+        }
+      }
+
+      &.active {
+        border-color: var(--kw-primary-color);
+        color: var(--kw-primary-color-hover);
+      }
+    }
+  }
+
+  .search-tool {
+    .ant-select {
+      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
+        display: inline-block;
+        width: 1px;
+        height: 20px;
+        top: 6px;
+        right: 0;
+        background: var(--kw-line-color);
+      }
+    }
+
+    .ant-input-suffix {
+      color: var(--kw-disabled-color);
+    }
+
+    .ant-input-affix-wrapper-focused {
+      .ant-input-suffix {
+        color: var(--kw-text-color);
+      }
+    }
+  }
+
+  .edge-panel > .ant-collapse-header {
+    align-items: center;
+  }
+
+  .node-padding {
+    padding: 12px 24px 0;
+    transform: translateY(2);
+  }
+
+  .edge-padding {
+    padding: 8px 24px 0;
+    transform: translateY(6px);
+  }
+
+  .header-icon {
+    width: 14px;
+    height: 2px;
+
+    &.circle {
+      height: 14px;
+      border-radius: 50%;
+    }
+  }
+
+  .edge-expand-icon {
+    width: 8px;
+    height: 1px;
+    margin: 0px 10px 0 2px;
+    background: var(--kw-heading-color);
+  }
+
+  .add-btn {
+    display: none;
+    color: var(--kw-primary-color);
+    white-space: nowrap;
+
+    &.disabled {
+      cursor: not-allowed;
+      color: var(--kw-disabled-color);
+    }
+  }
+
+  .pro-row {
+    line-height: 32px;
+
+    &:hover {
+      background: #f5f5f5;
+
+      .add-btn {
+        display: block;
+      }
+    }
+  }
+
+  .panel-header:hover {
+    .add-btn {
+      display: block;
+    }
+  }
+}

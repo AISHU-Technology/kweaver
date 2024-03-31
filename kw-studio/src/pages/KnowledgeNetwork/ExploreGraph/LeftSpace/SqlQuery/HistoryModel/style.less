@@ -1,0 +1,33 @@
+.sql-history-modal {
+  .history-content {
+    // height: 540px;
+    min-height: 120px;
+    max-height: 548px;
+
+    .historyItem {
+      min-height: 72px;
+      padding: 4px 24px 0px;
+
+      .itemContent {
+        min-height: inherit;
+        cursor: pointer;
+      }
+
+      .deleteQuery {
+        display: none;
+      }
+
+      &:hover {
+        background: var(--kw-hover-bg-color);
+
+        .deleteQuery {
+          display: block;
+        }
+      }
+    }
+
+    .empty-box {
+      // padding-top: 100px;
+    }
+  }
+}

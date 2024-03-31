@@ -1,0 +1,36 @@
+@border:1px solid var(--kw-line-color);
+.search-range-wrap-root {
+  .quest-icon {
+    opacity: 0.45;
+  }
+
+  .ant-modal-header {
+    height: 48px;
+    .ant-modal-title {
+      line-height: 16px;
+    }
+  }
+
+  .ant-modal-content {
+    height: 100%;
+    width: 100%;
+
+    .ant-modal-body {
+      padding: 0px;
+      height: 100%;
+      .kw-universal-modal-content {
+        height: calc(100% - 104px);
+        max-height: none;
+        padding: 0;
+      }
+    }
+  }
+  .range-box {
+    height: 100%;
+    flex-flow: column;
+  }
+  .footer-box {
+    border-top: @border;
+    text-align: right;
+  }
+}

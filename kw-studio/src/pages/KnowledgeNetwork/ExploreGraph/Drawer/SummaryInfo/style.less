@@ -1,0 +1,139 @@
+.graph-analysis-summary {
+  right: 0;
+  top: 86px;
+  width: 400px;
+  z-index: 1052;
+  padding: 0 20px;
+  position: absolute;
+  background: #fff;
+  height: calc(100% - 86px);
+  border-left: 1px solid var(--kw-line-color);
+
+  .title {
+    height: 48px;
+    border-bottom: 1px solid var(--kw-line-color);
+  }
+
+  .border-box {
+    width: 176px;
+    height: 36px;
+    cursor: pointer;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+  }
+
+  .box-checked {
+    background: rgba(18, 110, 227, 0.06);
+    border: 1px solid #126ee3;
+    color: #126ee3;
+  }
+
+  .right-border {
+    border-radius: 0px 3px 3px 0;
+  }
+
+  .left-border {
+    border-radius: 3px 0 0 3px;
+  }
+
+  .nodeIcon {
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 26px;
+    border-radius: 50%;
+
+    .icon-svg {
+      font-size: 16px;
+      color: #fff;
+    }
+  }
+
+  .nodeCircle {
+    border-radius: 50%;
+  }
+
+  .nodeRect {
+    border-radius: 3px;
+  }
+
+  .edgeIcon {
+    width: 14px;
+    height: 2px;
+  }
+
+  .pagination {
+    right: 0px;
+    bottom: 0px;
+    width: 100%;
+    padding: 16px;
+    position: absolute;
+    background-color: #fff;
+    border-top: 1px solid var(--kw-line-color);
+
+    &.hide {
+      display: none !important;
+    }
+  }
+
+  // antd 的样式
+  .ant-list-item {
+    padding: 0;
+
+    &:first-child {
+      border-top: 1px solid var(--kw-line-color);
+    }
+  }
+
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    padding: 0 16px;
+    align-items: center;
+  }
+
+  .ant-collapse-content > .ant-collapse-content-box {
+    padding: 0 16px;
+  }
+
+  .ant-collapse-borderless > .ant-collapse-item {
+    border-bottom: 1px solid var(--kw-line-color);
+  }
+
+  .name {
+    width: calc(100% - 80px);
+  }
+
+  .sub-name {
+    display: flex;
+    font-size: 12px;
+    align-items: center;
+
+    .arrow {
+      font-size: 12px;
+      margin: 0px 4px;
+      padding-top: 2px;
+      color: rgba(0, 0, 0, 0.25);
+    }
+
+    .sub1,
+    .sub2 {
+      max-width: 100px;
+      overflow: hidden;
+      white-space: nowrap;
+      color: rgba(0, 0, 0, 0.45);
+      text-overflow: ellipsis;
+    }
+  }
+
+  .number {
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .class-collapse {
+    background: #fff;
+  }
+
+  .selectBg {
+    background: var(--kw-select-bg-color);
+  }
+}

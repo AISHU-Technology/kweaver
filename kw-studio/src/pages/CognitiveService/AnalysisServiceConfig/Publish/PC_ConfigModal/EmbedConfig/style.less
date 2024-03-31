@@ -1,0 +1,135 @@
+.analysis-service-embed-config {
+  height: 100%;
+  padding: 0 4px 0 24px;
+
+  .scroll-wrap {
+    height: 100%;
+    padding: 0 16px 16px 0;
+    overflow: auto;
+  }
+
+  .t-header {
+    margin-bottom: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .p-title {
+    flex: 1;
+    margin: 0 0 16px 0;
+    font-weight: 600;
+
+    .ant-switch {
+      vertical-align: top;
+    }
+  }
+
+  .items-box {
+    margin-bottom: 16px;
+    padding-left: 12px;
+
+    .sub-title {
+      position: relative;
+      margin-bottom: 8px;
+      padding-left: 20px;
+
+      &::before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        left: 8px;
+        top: 3px;
+        width: 4px;
+        height: 16px;
+        background: var(--kw-primary-color);
+      }
+    }
+
+    .check-btn-bar:not(.disabled) {
+      .c-btn {
+        user-select: none;
+
+        &:hover {
+          color: var(--kw-primary-color) !important;
+        }
+      }
+    }
+
+    .disabled .c-btn {
+      cursor: not-allowed;
+    }
+  }
+
+  .items-list {
+    flex-wrap: wrap;
+
+    .children-item {
+      width: calc((100% - 16px) / 2);
+      height: 36px;
+      margin: 0 16px 4px 0;
+      padding: 0 8px;
+
+      &:nth-of-type(2n) {
+        margin-right: 0;
+      }
+
+      &:not(.add-item-btn):hover {
+        background: #f0f0f0;
+
+        .click-mask {
+          display: inline-block;
+        }
+      }
+
+      .i-name {
+        display: inline-block;
+        width: calc(100% - 24px * 2);
+        cursor: default;
+      }
+
+      .click-mask {
+        display: none;
+        width: 24px;
+        height: 22px;
+        line-height: 22px;
+        text-align: center;
+      }
+
+      .unEditable {
+        cursor: not-allowed;
+        color: var(--kw-disabled-color);
+      }
+    }
+
+    .add-item-btn {
+      user-select: none;
+      line-height: 36px;
+    }
+
+    .disabled-btn {
+      color: var(--kw-disabled-color);
+      cursor: not-allowed;
+    }
+  }
+
+  .error-border {
+    border-color: var(--kw-error-color) !important;
+  }
+
+  .error-msg {
+    min-height: 18px;
+    line-height: 18px;
+    font-size: 12px;
+    color: var(--kw-error-color);
+  }
+
+  .config-Collapse {
+    .ant-collapse-item-active {
+      padding-bottom: 10px;
+    }
+    .ant-collapse-content-box,
+    .ant-collapse-header {
+      padding: 0 !important;
+    }
+  }
+}

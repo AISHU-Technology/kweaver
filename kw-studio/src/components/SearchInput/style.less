@@ -1,0 +1,25 @@
+.kw-search-input {
+  &.input-w-272 {
+    width: 272px;
+  }
+
+  .ant-input-prefix {
+    margin-right: 8px;
+  }
+
+  .s-input-icon {
+    color: var(--kw-disabled-color);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--kw-heading-color);
+    }
+  }
+
+  &.ant-input-affix-wrapper-focused,
+  &.ant-input-affix-wrapper:focus {
+    .s-input-icon {
+      color: var(--kw-heading-color);
+    }
+  }
+}

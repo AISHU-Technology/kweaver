@@ -1,0 +1,85 @@
+.components-config-Sidebar-Two {
+  .test-content-tip {
+    align-items: center;
+    padding: 9px 12px;
+    background-color: #fffaeb;
+    width: 100%;
+  }
+  .config-title {
+    width: 240px;
+    margin-top: 14px;
+    height: 22px;
+    font-weight: 600;
+    position: relative;
+    padding-left: 10px;
+    &::before {
+      content: '';
+      width: 3px;
+      display: inline-block;
+      height: 16px;
+      background: #126ee3;
+      position: absolute;
+      left: 0px;
+      top: 3px;
+    }
+  }
+  .title-box {
+    align-items: center;
+  }
+  .config-children-title {
+    width: 310px;
+    overflow: hidden;
+    padding-right: 9px;
+    .icon-why {
+      opacity: 0.45;
+    }
+    .icon-warn {
+      float: right;
+      font-size: 16px;
+      padding-top: 3px;
+    }
+  }
+  .show-line {
+    margin-left: 20px;
+    align-items: center;
+    .config-children-title-switch {
+      width: 280px;
+    }
+    .config-children-title {
+      width: 288px;
+    }
+    .other-setting {
+      margin-left: 20px;
+      margin-top: 6px;
+      width: 318px;
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 2px;
+      padding: 9px 15px;
+      align-items: center;
+    }
+  }
+  .line {
+    width: 17px;
+    height: 1px;
+    margin-top: 11px;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .line-vertical {
+    position: relative;
+    width: 1px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 10px;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .child-name {
+    width: 256px;
+  }
+}

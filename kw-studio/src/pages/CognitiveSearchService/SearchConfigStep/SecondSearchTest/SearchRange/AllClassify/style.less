@@ -1,0 +1,47 @@
+@border: 1px solid var(--kw-line-color);
+
+.graph-under-certain-category {
+  .range-left-box {
+    width: 360px;
+    border-right: @border;
+
+    .classify-title {
+      align-items: center;
+      margin-bottom: 6px;
+      color: #000;
+
+      .source-classify {
+        margin-left: 6px;
+        font-weight: 500;
+      }
+    }
+
+    .file-message {
+      padding: 10px 12px 10px 24px;
+      align-items: center;
+
+      .file-icon {
+        width: 16px;
+        height: 16px;
+      }
+
+      .file-content {
+        margin-left: 6px;
+        width: 278px;
+        max-width: 278px;
+      }
+    }
+  }
+
+  .range-right-box {
+    width: calc(100% - 360px);
+
+    .full-tip {
+      flex-flow: column;
+
+      .tip-content {
+        line-height: 32px;
+      }
+    }
+  }
+}

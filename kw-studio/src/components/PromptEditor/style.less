@@ -1,0 +1,39 @@
+.c-prompt-editor {
+  position: relative;
+  .copy-btn {
+    position: absolute;
+    bottom: 15px;
+    right: 12px;
+    justify-content: right;
+    z-index: 10;
+  }
+  .CodeMirror {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif,
+      'Apple Color Emoji', 'Segoe UI Emoji';
+  }
+
+  .kw-prompt-highlight {
+    color: var(--kw-warning-color);
+  }
+
+  // 选中样式
+  .CodeMirror-focused .CodeMirror-selected {
+    background: #8cb8e6;
+  }
+
+  .CodeMirror-line::selection,
+  .CodeMirror-line > span::selection,
+  .CodeMirror-line > span > span::selection {
+    background: #8cb8e6;
+  }
+
+  .CodeMirror-line::-moz-selection,
+  .CodeMirror-line > span::-moz-selection,
+  .CodeMirror-line > span > span::-moz-selection {
+    background: #8cb8e6;
+  }
+
+  .CodeMirror-placeholder {
+    color: var(--kw-disabled-color) !important;
+  }
+}

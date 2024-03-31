@@ -1,0 +1,156 @@
+.headerTabsRoot {
+  width: 100%;
+  height: 100%;
+  background: #f0f0f3;
+
+  .tabsAddIcon {
+    width: 100%;
+    height: 38px;
+    padding: 0px;
+    min-width: 0px;
+    color: #7a7a7b;
+    line-height: 38px;
+    display: inline-block;
+  }
+
+  .tabsAddIcon:hover {
+    background-color: #eae9ed;
+    border-radius: 4px;
+  }
+
+  .ant-tabs {
+    height: 100%;
+
+    .ant-tabs-content {
+      height: 100%;
+    }
+  }
+
+  .ant-tabs-tab-remove {
+    width: 20px;
+
+    &:hover {
+      background-color: #eae9ed;
+      border-radius: 4px;
+    }
+  }
+
+  // antd 样式
+  .ant-tabs > .ant-tabs-nav {
+    margin: 0px;
+    padding-left: 8px;
+  }
+
+  .ant-tabs-tabpane {
+    //height: calc(100vh - 98px);
+  }
+
+  .ant-tabs-nav-wrap {
+    background-color: #f0f0f3;
+  }
+
+  .ant-tabs-tab-remove {
+    font-size: 14px;
+  }
+
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab {
+    display: flex;
+    min-width: 200px;
+    max-width: 200px;
+    user-select: none;
+    position: relative;
+    -moz-user-select: none;
+    justify-content: space-between;
+    border-radius: 8px 8px 0px 0px !important;
+
+    div {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .ant-tabs-tab-remove {
+      display: none !important;
+    }
+  }
+
+  // 选项卡
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab:hover {
+    color: var(--kw-heading-color) !important;
+
+    button {
+      display: block !important;
+    }
+
+    &:not(.ant-tabs-tab-active) {
+      background-color: rgba(255, 255, 255, 0.65);
+    }
+
+    .tabsDivider {
+      display: none;
+    }
+
+    & + .ant-tabs-tab {
+      .tabsDivider {
+        display: none;
+      }
+    }
+  }
+
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active {
+    background-color: #fff;
+
+    .ant-tabs-tab-remove {
+      display: block !important;
+    }
+
+    .tabsDivider {
+      display: none;
+    }
+
+    & + .ant-tabs-tab {
+      .tabsDivider {
+        display: none;
+      }
+    }
+  }
+
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    text-shadow: none;
+    color: var(--kw-heading-color) !important;
+  }
+
+  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
+    border-width: 0px;
+    background-color: #f0f0f3;
+  }
+
+  // 加号
+  .ant-tabs > .ant-tabs-nav .ant-tabs-nav-add {
+    border: none;
+    padding: 0px 4px;
+    background-color: #f0f0f3;
+  }
+
+  .ant-tabs > .ant-tabs-nav .ant-tabs-nav-add:hover {
+    color: var(--kw-heading-color) !important;
+  }
+
+  .ant-tabs > .ant-tabs-nav .ant-tabs-nav-add:focus {
+    color: var(--kw-heading-color) !important;
+  }
+}
+
+// 选项卡里的删除
+.ant-tabs-dropdown-menu-item-remove {
+  display: none !important;
+}
+
+.ant-tabs-dropdown-menu-item {
+  div {
+    width: 240px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

@@ -1,0 +1,47 @@
+.searchRulesListWrapper {
+  .ruleItem {
+    height: 48px;
+    width: 100%;
+
+    .ruleTool {
+      display: none;
+    }
+
+    .ruleName {
+      max-width: 310px;
+    }
+
+    .isError {
+      width: calc(328px - 22px);
+    }
+
+    .errorIcon {
+      margin-left: 24px;
+    }
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+
+      .ruleTool {
+        display: block;
+        min-width: 42px;
+      }
+
+      .errorIcon {
+        margin-left: 8px;
+      }
+
+      .isError {
+        max-width: calc(358px - 80px);
+      }
+    }
+  }
+
+  .error {
+    background: rgba(255, 77, 79, 0.1);
+
+    &:hover {
+      background: rgba(255, 77, 79, 0.1);
+    }
+  }
+}

@@ -1,0 +1,45 @@
+.custom-param-toolbar {
+  height: 40px;
+  border-bottom: 1px solid var(--kw-line-color);
+
+  .info-icon {
+    color: var(--kw-text-color-secondary);
+    &:hover {
+      color: var(--kw-primary-color);
+    }
+  }
+
+  .tool-btn {
+    display: inline-block;
+    vertical-align: middle;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 6px;
+    font-size: 16px;
+    color: var(--kw-text-color);
+    cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+      color: var(--kw-disabled-color);
+    }
+  }
+
+  .run-btn {
+    position: relative;
+    color: var(--kw-primary-color);
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      display: inline-block;
+      right: -9px;
+      top: 8px;
+      width: 1px;
+      height: 16px;
+      background: var(--kw-line-color);
+      pointer-events: none;
+    }
+  }
+}

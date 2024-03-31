@@ -1,0 +1,58 @@
+.entityInfoRoot {
+  padding: 12px 24px;
+  // 标题和tag
+  .titleAndTag {
+    .componentTitle {
+      height: 32px;
+      font-size: 20px;
+      line-height: 32px;
+    }
+    .titleTag {
+      height: 24px;
+      font-size: 12px;
+      margin-top: 8px;
+      max-width: 100%;
+      padding: 0px 8px;
+      line-height: 24px;
+      border-radius: 4px;
+      align-items: center;
+      display: inline-flex;
+      border: 1px solid #fff;
+      .tagIcon {
+        font-size: 18px;
+        margin-right: 6px;
+      }
+    }
+  }
+  // 描述
+  .description {
+    display: flex;
+    font-size: 14px;
+    margin-top: 24px;
+    line-height: 24px;
+    .ant-typography-expand {
+      pointer-events: all;
+    }
+    .paragraphButton {
+      cursor: pointer;
+      pointer-events: all;
+      color: var(--kw-primary-color);
+    }
+  }
+  // 属性
+  .properties {
+    font-size: 14px;
+    margin-top: 24px;
+    .propertyItem {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      .itemTitle {
+        color: rgba(0, 0, 0, 0.45);
+      }
+      .itemValue {
+        color: rgba(0, 0, 0, 0.85);
+      }
+    }
+  }
+}

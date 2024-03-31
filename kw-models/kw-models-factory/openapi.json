@@ -1,0 +1,1234 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "kw-models-factory",
+    "version": "1.0.0",
+    "description": "接入多种大模型，进行大模型提示词 ( prompt ) 的开发、评测、优化和服务发布。"
+  },
+  "paths": {
+    "/api/model-factory/v1/prompt-template-run": {
+      "post": {
+        "tags": [
+          "kw-models-factory"
+        ],
+        "parameters": [
+          {
+            "name": "appid",
+            "description": "AnyDATA账户的唯一标识,可通过/rbac/v1/user/appId获取",
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "appkey",
+            "description": "客户端使用特定的算法通过appid、时间戳和请求参数这三个参数生成的校验字符串，用于后端校验请求的合法性",
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "required": false
+          },
+          {
+            "name": "timestamp",
+            "description": "此时间戳的接受范围以AD的系统时间为基准，接受客户端的时间在AD的系统有效期为30分钟，误差时间15分钟",
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "required": false
+          }
+        ],
+        "summary": "使用创建的提示词模板调用大模型接口",
+        "operationId": "prompt_api_model_factory_v1_prompt_template_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromptTemplateRun"
+              },
+              "examples": {
+                "request": {
+                  "value": {
+                    "model_name": "AIshu-Reader-14B-v1.0",
+                    "model_para": {
+                        "temperature": 1,
+                        "top_p": 1,
+                        "presence_penalty": 0,
+                        "frequency_penalty": 0,
+                        "max_tokens": 200
+                    },
+                    "prompt_id": "1742737183012832489",
+                    "inputs": {
+                        "language": "英文",
+                        "text": "西瓜"
+                    },
+                    "history_dia": [
+                        {
+                            "role": "human",
+                            "message": "你好"
+                        },
+                        {
+                            "role": "ai",
+                            "message": "你好,您有什么问题?"
+                        }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {},
+                "examples": {
+                  "resp": {
+                    "value": {
+                      "res": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "resp": {
+                    "value": {
+                      "res": {
+                        "code": "ModelFactory.PromptController.PromptMove.ParameterError",
+                        "description": "参数不符合规范",
+                        "detail": "参数错误的详细信息",
+                        "solution": "请检查输入信息",
+                        "link": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "resp": {
+                    "value": {
+                      "res": {
+                        "code": "ModelFactory.Mydb.DataBase.ParameterError",
+                        "description": "数据库连接失败",
+                        "detail": "数据库异常",
+                        "solution": "请核对数据库的连接参数",
+                        "link": ""
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ServiceLlmAdd": {
+        "required": [
+          "model_series",
+          "model_type",
+          "model_config"
+        ],
+        "description": "使用服务请求体",
+        "type": "object",
+        "properties": {
+          "model_series": {
+            "description": "模型系列",
+            "type": "string"
+          },
+          "model_type": {
+            "description": "模型类型",
+            "type": "string"
+          },
+          "model_config": {
+            "description": "模型配置",
+            "type": "object",
+            "properties": {
+              "api_base": {
+                "description": "部署地址",
+                "type": "string"
+              },
+              "api_type": {
+                "description": "类型",
+                "type": "string"
+              },
+              "api_model": {
+                "description": "模型名称",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ServiceLlmTest": {
+        "description": "使用服务请求体",
+        "type": "object",
+        "properties": {
+          "model_series": {
+            "description": "模型系列",
+            "type": "string"
+          },
+          "model_id": {
+            "description": "模型id",
+            "type": "string"
+          },
+          "model_config": {
+            "description": "模型配置",
+            "type": "object",
+            "properties": {
+              "api_base": {
+                "description": "部署地址",
+                "type": "string"
+              },
+              "api_type": {
+                "description": "类型",
+                "type": "string"
+              },
+              "api_model": {
+                "description": "模型名称",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ServiceLlmEdit": {
+        "required": [
+          "model_series",
+          "model_id",
+          "model_name",
+          "model_config"
+        ],
+        "description": "使用服务请求体",
+        "type": "object",
+        "properties": {
+          "model_series": {
+            "description": "模型系列",
+            "type": "string"
+          },
+          "model_id": {
+            "description": "模型id",
+            "type": "string"
+          },
+          "model_name": {
+            "description": "模型名称",
+            "type": "string"
+          },
+          "model_config": {
+            "description": "模型配置",
+            "type": "object",
+            "properties": {
+              "api_base": {
+                "description": "部署地址",
+                "type": "string"
+              },
+              "api_type": {
+                "description": "类型",
+                "type": "string"
+              },
+              "api_model": {
+                "description": "模型名称",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ServiceLlmUsed": {
+        "description": "使用服务请求体",
+        "properties": {
+          "ai_system": {
+            "description": "系统角色",
+            "type": "string"
+          },
+          "ai_user": {
+            "description": "用户角色",
+            "type": "string"
+          },
+          "ai_assistant": {
+            "description": "助手角色",
+            "type": "string"
+          },
+          "ai_history": {
+            "description": "历史对话",
+            "type": "array",
+            "items": {}
+          },
+          "top_p": {
+            "description": "核采样",
+            "type": "number"
+          },
+          "temperature": {
+            "description": "随机性",
+            "type": "number"
+          },
+          "max_token": {
+            "description": "单次回复限制",
+            "type": "integer"
+          },
+          "frequency_penalty": {
+            "description": "频率惩罚度",
+            "type": "number"
+          },
+          "presence_penalty": {
+            "description": "话题新鲜度",
+            "type": "number"
+          }
+        }
+      },
+      "PromptTemplateRun": {
+        "description": "使用服务请求体",
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "description": "模型名称",
+            "type": "string"
+          },
+          "model_para": {
+            "description": "模型参数",
+            "type": "object",
+            "properties": {
+              "temperature": {
+                "description": "随机性",
+                "type": "number"
+              },
+              "top_p": {
+                "description": "核采样",
+                "type": "number"
+              },
+              "presence_penalty": {
+                "description": "话题新鲜度",
+                "type": "number"
+              },
+              "frequency_penalty": {
+                "description": "频率惩罚度",
+                "type": "number"
+              },
+              "max_tokens": {
+                "description": "单次回复限制",
+                "type": "number"
+              }
+            }
+          },
+          "prompt_id": {
+            "description": "提示词id",
+            "type": "string"
+          },
+          "inputs": {
+            "description": "变量值",
+            "type": "object"
+          },
+          "history_dia": {
+            "description": "历史对话",
+            "type": "array",
+            "items": {}
+          }
+        }
+      },
+      "BatchAdd": {
+        "description": "使用服务请求体",
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PromptList"
+        }
+      },
+      "PromptList": {
+        "description": "提示词列表",
+        "type": "object",
+        "properties": {
+          "prompt_item_name": {
+            "description": "提示词项目名称",
+            "type": "string"
+          },
+          "prompt_item_type_name": {
+            "description": "提示词分组名称",
+            "type": "string"
+          },
+          "prompt_list": {
+            "description": "提示词列表",
+            "type": "array",
+            "items": {}
+          }
+        }
+      },
+      "Body_res_api_model_factory_v1_prompt__service_id__used_post": {
+        "properties": {
+          "inputs": {
+            "title": "Inputs",
+            "default": ""
+          },
+          "history_dia": {
+            "title": "History Dia",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "Body_res_api_model_factory_v1_prompt__service_id__used_post"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "LlmAddResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "模型保存的结果",
+            "type": "boolean"
+          }
+        }
+      },
+      "LlmTestResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "模型测试的结果",
+            "type": "object",
+            "properties": {
+              "status": {
+                "description": "模型是否通过测试",
+                "type": "boolean"
+              },
+              "model_type": {
+                "description": "模型类型",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "LlmEditResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "模型编辑的结果",
+            "type": "boolean"
+          }
+        }
+      },
+      "LlmSourceResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "模型获取的结果",
+            "type": "object",
+            "properties": {
+              "total": {
+                "description": "模型总个数",
+                "type": "integer"
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "model_id": {
+                      "description": "模型总个数",
+                      "type": "integer"
+                    },
+                    "model_name": {
+                      "description": "模型名称",
+                      "type": "string"
+                    },
+                    "model_series": {
+                      "description": "模型系列",
+                      "type": "string"
+                    },
+                    "model": {
+                      "description": "模型本身名称",
+                      "type": "string"
+                    },
+                    "model_api": {
+                      "description": "RESTfulAPI文档",
+                      "type": "string"
+                    },
+                    "create_time": {
+                      "description": "创建时间",
+                      "type": "string"
+                    },
+                    "create_by": {
+                      "description": "创建人",
+                      "type": "string"
+                    },
+                    "update_time": {
+                      "description": "最终操作时间",
+                      "type": "string"
+                    },
+                    "update_by": {
+                      "description": "最终操作人",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "LlmUsedResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "调用大模型的结果",
+            "type": "object",
+            "properties": {
+              "time": {
+                "description": "总用时",
+                "type": "string"
+              },
+              "token_len": {
+                "description": "token数",
+                "type": "integer"
+              },
+              "data": {
+                "description": "调用结果",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "LlmCheckResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "查看大模型信息结果",
+            "type": "object",
+            "properties": {
+              "model_id": {
+                "description": "模型id",
+                "type": "string"
+              },
+              "model_series": {
+                "description": "模型系列",
+                "type": "string"
+              },
+              "model_name": {
+                "description": "模型名称",
+                "type": "string"
+              },
+              "model_config": {
+                "description": "模型配置",
+                "type": "object",
+                "properties": {
+                  "api_base": {
+                    "description": "部署地址",
+                    "type": "string"
+                  },
+                  "api_type": {
+                    "description": "类型",
+                    "type": "string"
+                  },
+                  "api_model": {
+                    "description": "模型",
+                    "type": "string"
+                  }
+                }
+              },
+              "model_url": {
+                "description": "模型url",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PromptItemSourceResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "获取提示词项目列表信息结果",
+            "type": "object",
+            "properties": {
+              "total": {
+                "description": "总个数",
+                "type": "integer"
+              },
+              "searchTotal": {
+                "description": "回复信息个数",
+                "type": "string"
+              },
+              "data": {
+                "description": "回复的信息",
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "prompt_item_id": {
+                      "description": "项目id",
+                      "type": "string"
+                    },
+                    "prompt_item_name": {
+                      "description": "项目名称",
+                      "type": "string"
+                    },
+                    "prompt_item_types": {
+                      "description": "项目分组",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "id": {
+                            "description": "分组id",
+                            "type": "string"
+                          },
+                          "name": {
+                            "description": "分组名称",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "create_time": {
+                "description": "创建时间",
+                "type": "string"
+              },
+              "create_by": {
+                "description": "创建人",
+                "type": "string"
+              },
+              "update_time": {
+                "description": "最终操作时间",
+                "type": "string"
+              },
+              "update_by": {
+                "description": "最终操作人",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "PromptSourceResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "获取提示词列表信息结果",
+            "type": "object",
+            "properties": {
+              "total": {
+                "description": "回复的信息个数",
+                "type": "integer"
+              },
+              "data": {
+                "description": "回复的信息",
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "prompt_item_id": {
+                      "description": "项目id",
+                      "type": "string"
+                    },
+                    "prompt_item_type_id": {
+                      "description": "分组id",
+                      "type": "string"
+                    },
+                    "prompt_id": {
+                      "description": "提示词id",
+                      "type": "string"
+                    },
+                    "prompt_name": {
+                      "description": "提示词名称",
+                      "type": "string"
+                    },
+                    "prompt_type": {
+                      "description": "提示词类型",
+                      "type": "string"
+                    },
+                    "model_name": {
+                      "description": "模型名称",
+                      "type": "string"
+                    },
+                    "model_id": {
+                      "description": "模型id",
+                      "type": "string"
+                    },
+                    "icon": {
+                      "description": "颜色配置",
+                      "type": "string"
+                    },
+                    "model_series": {
+                      "description": "模型系列",
+                      "type": "string"
+                    },
+                    "prompt_desc": {
+                      "description": "提示词描述",
+                      "type": "string"
+                    },
+                    "prompt_deploy": {
+                      "description": "提示词发布状态",
+                      "type": "string"
+                    },
+                    "create_time": {
+                      "description": "创建时间",
+                      "type": "string"
+                    },
+                    "create_by": {
+                      "description": "创建人",
+                      "type": "string"
+                    },
+                    "update_time": {
+                      "description": "最终操作时间",
+                      "type": "string"
+                    },
+                    "update_by": {
+                      "description": "最终操作人",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "PromptLlmSourceResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "获取提示词列表信息结果",
+            "type": "object",
+            "properties": {
+              "total": {
+                "description": "回复的信息个数",
+                "type": "integer"
+              },
+              "data": {
+                "description": "回复的信息",
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "model_id": {
+                      "description": "模型id",
+                      "type": "string"
+                    },
+                    "model_series": {
+                      "description": "模型系列",
+                      "type": "string"
+                    },
+                    "model_type": {
+                      "description": "模型类型",
+                      "type": "string"
+                    },
+                    "model_name": {
+                      "description": "模型名称",
+                      "type": "string"
+                    },
+                    "model": {
+                      "description": "模型名称",
+                      "type": "string"
+                    },
+                    "model_config": {
+                      "description": "模型配置",
+                      "type": "object",
+                      "properties": {
+                        "api_base": {
+                          "description": "部署地址",
+                          "type": "string"
+                        },
+                        "api_type": {
+                          "description": "类型",
+                          "type": "string"
+                        },
+                        "api_model": {
+                          "description": "模型",
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "model_para": {
+                      "description": "模型参数",
+                      "properties": {
+                        "top_p": {
+                          "description": "核采样上下限及默认值",
+                          "type": "array",
+                          "items": {}
+                        },
+                        "temperature": {
+                          "description": "随机性上下限及默认值",
+                          "type": "array",
+                          "items": {}
+                        },
+                        "max_token": {
+                          "description": "单次回复限制上下限及默认值",
+                          "type": "array",
+                          "items": {}
+                        },
+                        "frequency_penalty": {
+                          "description": "频率惩罚度上下限及默认值",
+                          "type": "array",
+                          "items": {}
+                        },
+                        "presence_penalty": {
+                          "description": "话题新鲜度上下限及默认值",
+                          "type": "array",
+                          "items": {}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "PromptTemplateSourceResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "获取提示词模板列表信息结果",
+            "type": "object",
+            "properties": {
+              "total": {
+                "description": "回复的信息个数",
+                "type": "integer"
+              },
+              "data": {
+                "description": "回复的信息",
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "prompt_id": {
+                      "description": "提示词id",
+                      "type": "string"
+                    },
+                    "prompt_name": {
+                      "description": "提示词名称",
+                      "type": "string"
+                    },
+                    "prompt_type": {
+                      "description": "提示词类型",
+                      "type": "string"
+                    },
+                    "prompt_desc": {
+                      "description": "提示词描述",
+                      "type": "string"
+                    },
+                    "icon": {
+                      "description": "颜色配置",
+                      "type": "string"
+                    },
+                    "messages": {
+                      "description": "提示词文本",
+                      "type": "string"
+                    },
+                    "open_remarks": {
+                      "description": "对话开场白",
+                      "type": "string"
+                    },
+                    "variables": {
+                      "description": "提示词变量",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "var_name": {
+                            "description": "变量名称",
+                            "type": "string"
+                          },
+                          "field_name": {
+                            "description": "字段名称",
+                            "type": "string"
+                          },
+                          "optional": {
+                            "description": "是否可选",
+                            "type": "boolean"
+                          },
+                          "field_type": {
+                            "description": "变量类型",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "PromptCheckResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "查看提示词结果",
+            "type": "object",
+            "properties": {
+              "total": {
+                "description": "回复的信息个数",
+                "type": "integer"
+              },
+              "data": {
+                "description": "回复的信息",
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "prompt_item_id": {
+                      "description": "提示词项目id",
+                      "type": "string"
+                    },
+                    "prompt_item_type_id": {
+                      "description": "提示词分组",
+                      "type": "string"
+                    },
+                    "prompt_id": {
+                      "description": "提示词id",
+                      "type": "string"
+                    },
+                    "prompt_service_id": {
+                      "description": "提示词服务id",
+                      "type": "string"
+                    },
+                    "prompt_name": {
+                      "description": "提示词名称",
+                      "type": "string"
+                    },
+                    "prompt_type": {
+                      "description": "提示词类型",
+                      "type": "string"
+                    },
+                    "model_id": {
+                      "description": "模型id",
+                      "type": "string"
+                    },
+                    "model_name": {
+                      "description": "模型名称",
+                      "type": "string"
+                    },
+                    "model_para": {
+                      "description": "模型参数",
+                      "properties": {
+                        "top_p": {
+                          "description": "核采样",
+                          "type": "number"
+                        },
+                        "temperature": {
+                          "description": "随机性",
+                          "type": "number"
+                        },
+                        "max_token": {
+                          "description": "单次回复限制",
+                          "type": "integer"
+                        },
+                        "frequency_penalty": {
+                          "description": "频率惩罚度",
+                          "type": "number"
+                        },
+                        "presence_penalty": {
+                          "description": "话题新鲜度",
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "prompt_desc": {
+                      "description": "提示词描述",
+                      "type": "string"
+                    },
+                    "icon": {
+                      "description": "颜色配置",
+                      "type": "string"
+                    },
+                    "messages": {
+                      "description": "提示词文本",
+                      "type": "string"
+                    },
+                    "open_remarks": {
+                      "description": "对话开场白",
+                      "type": "string"
+                    },
+                    "variables": {
+                      "description": "提示词变量",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "var_name": {
+                            "description": "变量名称",
+                            "type": "string"
+                          },
+                          "field_name": {
+                            "description": "字段名称",
+                            "type": "string"
+                          },
+                          "optional": {
+                            "description": "是否可选",
+                            "type": "boolean"
+                          },
+                          "field_type": {
+                            "description": "变量类型",
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "model_series": {
+                      "description": "模型系列",
+                      "type": "string"
+                    },
+                    "prompt_deploy": {
+                      "description": "提示词是否发布",
+                      "type": "string"
+                    },
+                    "create_time": {
+                      "description": "创建时间",
+                      "type": "string"
+                    },
+                    "create_by": {
+                      "description": "创建人",
+                      "type": "string"
+                    },
+                    "update_time": {
+                      "description": "最终操作时间",
+                      "type": "string"
+                    },
+                    "update_by": {
+                      "description": "最终操作人",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "LlmParamResp": {
+        "required": [
+          "res"
+        ],
+        "properties": {
+          "res": {
+            "description": "查看提示词配置结果",
+            "type": "array",
+            "items": {
+              "properties": {
+                "openai": {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "description": "模型系列名称",
+                      "type": "string"
+                    },
+                    "subTitle": {
+                      "description": "模型系列描述",
+                      "type": "string"
+                    },
+                    "icon": {
+                      "description": "前端配置信息",
+                      "type": "string"
+                    },
+                    "formData": {
+                      "description": "参数数据",
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "field": {
+                            "description": "参数名称",
+                            "type": "string"
+                          },
+                          "component": {
+                            "description": "前端输入框类型",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "输入框支持的数据类型",
+                            "type": "string"
+                          },
+                          "label": {
+                            "description": "标签名称",
+                            "type": "object",
+                            "properties": {
+                              "zh-CN": {
+                                "description": "中文",
+                                "type": "string"
+                              },
+                              "en-US": {
+                                "description": "英文",
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "placeholder": {
+                            "description": "缺醒水印",
+                            "type": "object",
+                            "properties": {
+                              "zh-CN": {
+                                "description": "中文",
+                                "type": "string"
+                              },
+                              "en-US": {
+                                "description": "英文",
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "rules": {
+                            "description": "校验信息",
+                            "type": "array",
+                            "items": {
+                              "properties": {
+                                "required": {
+                                  "description": "是否必填",
+                                  "type": "boolean"
+                                },
+                                "message": {
+                                  "description": "违反约束提示信息",
+                                  "type": "object",
+                                  "properties": {
+                                    "zh-CN": {
+                                      "description": "中文信息",
+                                      "type": "string"
+                                    },
+                                    "en-US": {
+                                      "description": "英文信息",
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "description": "接口调用错误信息基类，具体错误情况可查看字段ErrorDetails",
+        "required": [
+          "ErrorCode",
+          "Solution",
+          "Description",
+          "ErrorDetails",
+          "ErrorLink"
+        ],
+        "type": "object",
+        "properties": {
+          "Description": {
+            "description": "导致此错误的原因",
+            "type": "string"
+          },
+          "ErrorCode": {
+            "description": "业务错误码，'.' 字符前为微服务名， '.' 字符后为具体错误码",
+            "type": "string"
+          },
+          "Solution": {
+            "description": "解决错误办法",
+            "type": "string"
+          },
+          "ErrorLink": {
+            "description": "错误链接",
+            "type": "string"
+          },
+          "ErrorDetails": {
+            "description": "错误详情",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "details": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

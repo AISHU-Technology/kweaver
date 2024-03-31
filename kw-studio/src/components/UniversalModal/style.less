@@ -1,0 +1,75 @@
+.kw-universal-modal {
+  .ant-modal-close-x {
+    display: block;
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.65);
+    font-style: normal;
+    line-height: 48px;
+    text-align: center;
+    text-transform: none;
+    text-rendering: auto;
+  }
+
+  .ant-modal-content {
+    position: relative;
+  }
+
+  .ant-modal-body {
+    padding: 0;
+  }
+
+  .kw-universal-modal-header {
+    height: 48px !important;
+    border-bottom: 1px solid var(--kw-line-color);
+  }
+
+  .kw-universal-modal-content {
+    min-height: 120px;
+    max-height: 552px;
+    padding: 20px 24px 28px;
+  }
+
+  .kw-universal-modal-footer {
+    position: static !important;
+    text-align: right;
+    width: 100%;
+    height: 56px;
+    padding: 12px 24px;
+    border-top: 1px solid var(--kw-line-color);
+
+    button {
+      min-width: 72px;
+      height: 32px !important;
+      margin-left: 10px !important;
+    }
+  }
+
+  &.kw-modal-fullScreen {
+    height: 100%;
+    padding: 24px;
+    margin: 0;
+    top: 0;
+    max-width: unset;
+
+    .ant-modal-content {
+      height: 100%;
+
+      .ant-modal-body {
+        height: 100%;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        .kw-universal-modal-content {
+          flex: 1;
+          height: 0;
+          min-height: unset;
+          max-height: unset;
+          padding: 0;
+        }
+      }
+    }
+  }
+}

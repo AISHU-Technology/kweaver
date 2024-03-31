@@ -1,0 +1,25 @@
+{
+  "apiTrial": {
+    "interface": "{name} interface",
+    "searchPlace": "Please enter the interface name",
+    "openDoc": "Open API documents",
+    "send": "Send",
+    "sending": "Sending...",
+    "status": "Status：",
+    "emptyTip": "Click / select the interface on the left to start API call",
+    "jsonErr": "Operation failed. Please enter the correct values in the Body",
+    "jsonPlace": "Please enter a request in JSON format, for example:",
+    "jsonPlaceAny": "Enter any value and click send or click send directly",
+    "appidErr": "Please get appid",
+    "appidRun":"Please get appid and run it",
+    "fillAppidTip": "Successfully obtained, it has been automatically filled to value!",
+    "clickGet": "Click to get",
+    "noBodyTip": "Please input body first!",
+    "gidPlace": "Please enter the graph ID",
+    "gidErr": "Graph ID cannot be empty",
+    "run": "Run",
+    "running": "Running...",
+    "copyUrl": "Copy URL",
+    "copyCurl": "Copy cURL"
+  }
+}

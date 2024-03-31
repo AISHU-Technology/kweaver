@@ -1,0 +1,93 @@
+.dataSourceListRoot {
+  width: 400px;
+  min-width: 400px;
+  padding: 0 16px;
+  margin-right: 20px;
+
+  .treeWrapper {
+    padding: 12px 0px;
+    width: 100%;
+    position: relative;
+
+    .loadingBox {
+      background: #fff;
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      height: 98%;
+    }
+
+    .ant-tree {
+      white-space: nowrap;
+      color: var(--kw-header-color);
+
+      .ant-tree-title {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .titleWrapper {
+        height: 24px;
+        font-size: 14px;
+        width: 100%;
+
+        .source-icon {
+          width: 14px;
+          height: 14px;
+        }
+
+        .searchIcon {
+          margin-left: 4px;
+          color: var(--kw-header-color);
+          display: none;
+        }
+
+        .sourceName {
+          display: inline-block;
+          flex: 1;
+          min-width: 0;
+        }
+
+        &:hover {
+          .searchIcon {
+            display: inline-block;
+          }
+        }
+      }
+    }
+
+    .ant-tree-switcher-noop {
+      //display: none !important;
+      visibility: hidden;
+    }
+  }
+
+  .ant-tree-treenode-leaf-last {
+    display: none; //最后的空节点不显示 只是为了加竖线
+  }
+
+  .ant-tree.ant-tree-block-node .ant-tree-node-content-wrapper {
+    flex: 1;
+    min-width: 0;
+    padding-right: 10px;
+    align-items: center;
+  }
+
+  .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    background-color: var(--kw-select-bg-color);
+  }
+
+  // 下拉菜单
+  .ant-dropdown {
+    min-width: 132px !important;
+  }
+
+  .ant-menu {
+    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .ant-menu-vertical .ant-menu-item:not(:last-child) {
+    margin-bottom: 0px;
+  }
+}

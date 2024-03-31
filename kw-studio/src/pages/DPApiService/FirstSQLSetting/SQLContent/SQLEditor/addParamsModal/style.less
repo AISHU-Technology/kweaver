@@ -1,0 +1,24 @@
+.func-add-param-modal-root {
+  .m-content {
+    padding: 24px;
+  }
+  .half-row .ant-row {
+    width: calc((100% - 16px) / 2);
+  }
+
+  .method-row {
+    .ant-radio-wrapper {
+      color: var(--kw-text-color);
+    }
+
+    .required::before {
+      content: '*';
+      display: inline-block;
+      margin-right: 4px;
+      color: var(--kw-error-color);
+      font-size: 14px;
+      font-family: SimSun, sans-serif;
+      line-height: 1;
+    }
+  }
+}

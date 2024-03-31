@@ -1,0 +1,24 @@
+Name: kw-system
+Host: 0.0.0.0
+Port: 8001
+Mode: dev
+Timeout: 5000
+Middlewares:
+  Log: true
+
+RedisDb:
+  Addrs:
+  - redis:6379
+  Pass: Kw1ea2ver!3
+  DB: 0
+  Username: ""
+  MasterName: e
+  MaxRetries: 3
+DataSources:
+  Host: mysql
+  Port: 3306
+  Config: ""
+  DBName: kweaver
+  Username: root
+  Password: Kw1ea2ver!3
+  DriverName: mysql #mysql|sqlserver|dm8|mariadb|tidb

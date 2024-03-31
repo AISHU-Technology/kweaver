@@ -1,0 +1,89 @@
+@prefixCls: ontologyG6-search;
+
+.@{prefixCls} {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  &-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.25);
+    z-index: 10;
+  }
+
+  .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    padding-left: 34px;
+  }
+
+  .ant-select-single .ant-select-selector .ant-select-selection-search {
+    left: 35px;
+  }
+
+  .ant-tabs-nav {
+    margin-bottom: 0;
+
+    .ant-tabs-nav-wrap {
+      padding: 0 14px;
+    }
+  }
+
+  .ant-select-dropdown {
+    padding: 0;
+
+    .ant-tabs {
+      max-height: 240px;
+
+      .ant-tabs-content-holder {
+        overflow: auto;
+      }
+    }
+  }
+
+  &-result {
+    &-item {
+      height: 32px;
+      transition: all 0.3s;
+      cursor: pointer;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      &-active {
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      &-relation {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 52px;
+        transition: all 0.3s;
+        cursor: pointer;
+
+        .relation-node {
+          font-size: 12px;
+
+          & > div {
+            max-width: 45%;
+          }
+        }
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.04);
+        }
+      }
+    }
+  }
+
+  .kw-btn-icon {
+    &:hover {
+      background: rgba(0, 0, 0, 0.1) !important;
+    }
+  }
+}

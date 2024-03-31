@@ -1,0 +1,191 @@
+syntax = "v1"
+
+info(
+	title: "EngineServer服务"
+	desc: "引擎核心服务"
+	author: "Ervin.gong"
+	email: "Ervin.gong@aishu.cn"
+	version: "v1"
+)
+
+// CreateCanvasRequest 新增画布请求体
+type CreateCanvasRequest {
+	// 知识网络id
+	KnwID int64 `json:"knw_id,range=(0:)"`
+	// 知识图谱id
+	KgID int64 `json:"kg_id,range=(0:)"`
+	// 画布名称,不能包含特殊字符
+	CanvasName string `json:"canvas_name" validate:"min=1,max=50"`
+	// 画布描述
+	CanvasInfo string `json:"canvas_info,optional" validate:"min=1,max=255"`
+	// 画布内容
+	CanvasBody string `json:"canvas_body,optional"`
+	// 用户uuid
+	//Uuid string `header:"uuid,optional"`
+	// 用户名
+	UserName string `header:"username,optional"`
+	// 用户id
+	UserID string `header:"userId,optional"`
+	// 用户代理
+	UserAgent string `header:"User_Agent,optional"`
+	// ip
+	XForwardedFor string `header:"X_Forwarded_For,optional"`
+}
+
+// 通用结构获取path上的画布id(删和改)
+type CanvasIDRequestOnPath {
+	// 画布id
+	CID int64 `path:"c_id"`
+	// 用户名
+	UserName string `header:"username,optional"`
+	// 用户id
+	UserID string `header:"userId,optional"`
+	// 用户代理
+	UserAgent string `header:"User_Agent,optional"`
+	// ip
+	XForwardedFor string `header:"X_Forwarded_For,optional"`
+}
+
+// 更新画布请求体
+type UpdateCanvasRequest {
+	// 画布id
+	CID int64 `path:"c_id,range=(0:)"`
+	// 知识网络id
+	KnwID int64 `json:"knw_id,optional,range=(0:)"`
+	// 知识图谱id
+	KgID int64 `json:"kg_id,optional,range=(0:)"`
+	// 画布名称,不能包含特殊字符
+	CanvasName string `json:"canvas_name,optional" validate:"min=1,max=50"`
+	// 画布描述
+	CanvasInfo string `json:"canvas_info,optional" validate:"min=1,max==255"`
+	// 画布内容
+	CanvasBody string `json:"canvas_body,optional"`
+	// 用户uuid
+	//	Uuid string `header:"uuid,optional"`
+	// 用户名
+	UserName string `header:"username,optional"`
+	// 用户id
+	UserID string `header:"userId,optional"`
+	// 用户代理
+	UserAgent string `header:"User_Agent,optional"`
+	// ip
+	XForwardedFor string `header:"X_Forwarded_For,optional"`
+}
+
+// 图谱信息
+type KnowledgeGraph {
+	KgID int64  `json:"kg_id"`
+	Name string `json:"name"`
+}
+
+// 用户信息
+type User {
+	// 用户id
+	UserID string `json:"user_id"`
+	// 用户名
+	UserName string `json:"user_name"`
+	// 用户邮箱
+	//Email string `json:"email"`
+}
+
+// 根据图谱ids获取画布信息响应体
+type GetCanvasInfoResponse{
+	canvas Canvas `json:"res"`
+}
+type Canvas {
+	// 画布id
+	CID int64 `json:"c_id"`
+	// 知识网络id
+	KnwID int64 `json:"knw_id"`
+	// 画布名称
+	CanvasName string `json:"canvas_name"`
+	// 画布信息
+	CanvasInfo string `json:"canvas_info"`
+	// 图谱信息
+	Kg KnowledgeGraph `json:"kg"`
+	// 创建者
+	CreateUser User `json:"create_user"`
+	// 创建时间
+	CreateTime string `json:"create_time"`
+	// 编辑者
+	UpdateUser User `json:"update_user"`
+	// 编辑时间
+	UpdateTime string `json:"update_time"`
+	// 画布配置信息
+	CanvasBody string `json:"canvas_body"`
+}
+
+// 批量删除画布请求体
+type BatchDeleteCanvasesRequest {
+	// 画布id数组
+	CIDs []int64 `json:"c_ids"`
+	// 知识网络id 暂时不用,auth通过反查接口鉴权
+	KnwID int64 `path:"knw_id,range=(0:),optional"`
+	// 用户名
+	UserName string `header:"username,optional"`
+	// 用户id
+	UserID string `header:"userId,optional"`
+	// 用户代理
+	UserAgent string `header:"User_Agent,optional"`
+	// ip
+	XForwardedFor string `header:"X_Forwarded_For,optional"`
+}
+
+// 获取画布列表请求体
+type GetCanvasesListRequest {
+	// 知识网络id
+	KnwID int64 `path:"knw_id,optional,range=(0:)"`
+	// 知识图谱id
+	KgID int64 `form:"kg_id,range=(0:)"`
+	// 排序字段
+	OrderField string `form:"order_field,optional,default=update_time"`
+	// 排序规则，升序|降序
+	OrderType string `form:"order_type,optional,default=desc"`
+	// 分页，默认为1
+	Page int64 `form:"page,optional,default=1,range=(0:)"`
+	// 分页数量，默认为20
+	Size int64 `form:"size,optional,default=20,range=(0:)"`
+	//按画布名模糊匹配
+	Query string `form:"query,optional"`
+
+	// 鉴权后返回有权限的图谱id 已移除
+	//DataIds int64 `form:"dataIds,optional"`
+}
+
+// 根据图谱ids批量删除画布
+type BatchDeleteCanvasesByKgIdsRequest {
+	// 知识图谱数组
+	KgIds []int64 `json:"kg_ids"`
+}
+
+// 根据传入的画布id，分号分隔，返回一一对应的图谱id 请求体
+type GetKgidsByCIDRequest {
+	CIDs string `form:"c_ids"`
+}
+
+// 画布列表外层结构
+type CanvasesInfo {
+	Count    int64                   `json:"count"`
+	Canvases []Canvas `json:"canvases"`
+}
+
+// 获取画布列表
+type GetCanvasesListResponse {
+	// 画布id数组
+	Res CanvasesInfo `json:"res"`
+}
+
+// 根据画布id获取画布信息
+type GetCanvasInfoByCID {
+	Res GetCanvasInfoResponse `json:"res"`
+}
+
+// 通用结构，返回res字段的int数组
+type ReturnResIntListResponse {
+	Res []int64 `json:"res"`
+}
+
+// 通用结构，返回res字段的int值
+type ReturnResIntResponse {
+	Res int64 `json:"res"`
+}

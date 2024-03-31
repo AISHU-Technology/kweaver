@@ -1,0 +1,15 @@
+{
+  "enums": {
+    "leftToRight": "从左往右",
+    "rightToLeft": "从右往左",
+    "topToBottom": "从上到下",
+    "bottomToTop": "从下到上",
+    "horizontal": "水平对称布局",
+    "vertical": "垂直对称布局",
+    "alignMiddle": "中间对齐",
+    "alignUpLeft": "对齐到左上角",
+    "alignUpRight": "对齐到右上角",
+    "alignDownLeft": "对齐到左下角",
+    "alignDownRight": "对齐到右下角"
+  }
+}

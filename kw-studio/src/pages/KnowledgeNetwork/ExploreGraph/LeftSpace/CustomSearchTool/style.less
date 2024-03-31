@@ -1,0 +1,133 @@
+.canvas-search-tool-tip {
+  .ant-tooltip-inner {
+    width: 400px;
+    padding: 20px;
+    background: #fff;
+    color: var(--kw-text-color-secondary);
+  }
+
+  .ant-tooltip-arrow {
+    display: none;
+  }
+}
+
+.canvas-search-tool-single-root {
+  position: absolute;
+  left: 16px;
+  top: 40px + 16px;
+  width: 392px;
+
+  &.close {
+    width: auto;
+  }
+
+  .s-icon {
+    &.disabled {
+      color: var(--kw-disabled-color);
+      cursor: not-allowed;
+    }
+  }
+
+  .s-close {
+    height: 32px;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    padding: 0 12px;
+    line-height: 32px;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .ant-select-multiple .ant-select-selection-item-content {
+    max-width: 100px;
+  }
+}
+
+.canvas-search-tool-multiple-root {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  border-right: 1px solid var(--kw-line-color);
+
+  &.close {
+    width: 0 !important;
+
+    .content-wrap {
+      display: none !important;
+    }
+  }
+
+  .content-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .close-bar {
+    position: absolute;
+    right: -24px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 80px;
+    line-height: 80px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-left: none;
+    border-radius: 0 3px 3px 0;
+    background: #fff;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .t-header {
+    height: 56px;
+    width: calc(1005 - 24px * 2);
+    margin: 0 24px;
+    border-bottom: 1px solid var(--kw-line-color);
+
+    .close-mask {
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      font-size: 16px;
+      color: var(--kw-text-color-secondary);
+      transform: translateX((50px - 16px) / 2);
+
+      &:hover {
+        color: var(--kw-text-color);
+      }
+    }
+  }
+
+  .param-list {
+    max-height: calc(100% - 56px - 84px - 86px);
+    padding: 0 24px;
+    overflow: auto;
+    overflow: overlay;
+
+    .p-text {
+      display: inline-block;
+      vertical-align: top;
+      max-width: 333px;
+    }
+  }
+
+  .f-btn {
+    width: 100%;
+    height: 84px;
+    padding: 32px 24px 24px 24px;
+    background: #fff;
+
+    &.fixed {
+      position: absolute;
+      bottom: 0;
+    }
+  }
+
+  .ant-select-multiple .ant-select-selection-item-content {
+    max-width: 105px;
+  }
+}

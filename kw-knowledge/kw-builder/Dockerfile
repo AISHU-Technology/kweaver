@@ -1,0 +1,9 @@
+FROM python:3.9.19-slim-bullseye
+WORKDIR /app
+ADD . /app
+RUN sed -i "s@http://deb.debian.org@http://mirrors.aliyun.com@g" /etc/apt/sources.list \
+    && apt-get clean && apt-get update && apt-get install -y libpq-dev gcc && apt-get install -y unixodbc  \
+    && pip install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple/ && pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+EXPOSE 6475 6485 6488
+ENV PYTHONOPTIMIZE=1 ENABLE_SYSTEM_LOG=true
+CMD ["supervisord", "-c", "/app/supervisord.conf"]

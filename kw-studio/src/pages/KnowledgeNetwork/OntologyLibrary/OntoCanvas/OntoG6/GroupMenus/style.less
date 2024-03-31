@@ -1,0 +1,58 @@
+.graph-group-menus-root {
+  @topOffset: 54px + 40px + 32px;
+  user-select: none;
+
+  position: fixed;
+  left: 32px;
+  top: @topOffset;
+  width: 280px;
+  border: 1px solid #0000000f;
+  border-radius: 3px;
+  background: #fff;
+
+  &.menus-close {
+    width: auto;
+    box-shadow: 0px 6px 18px 1px rgba(29, 41, 57, 14%);
+
+    & > div:not(.header) {
+      display: none;
+    }
+
+    .header {
+      border-bottom: none;
+    }
+  }
+
+  .header {
+    height: 52px;
+    width: calc(100% - 8px * 2);
+    margin: 0 8px;
+    padding: 0 8px;
+    border-bottom: 1px solid var(--kw-line-color);
+
+    .h-icon-mask {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      text-align: center;
+    }
+
+    .t-text,
+    .c-question-icon {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+
+  .create-tool {
+    height: 48px;
+  }
+
+  .group-tree {
+    max-height: calc(100vh - @topOffset - 48px - 130px);
+    padding: 0 8px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}

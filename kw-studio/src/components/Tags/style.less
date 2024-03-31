@@ -1,0 +1,76 @@
+.componentTagsRoot {
+  position: relative;
+  .tagItem {
+    border: none;
+    height: 34px;
+    font-size: 14px;
+    user-select: none;
+    line-height: 34px;
+    margin-bottom: 8px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .addTagButton {
+    height: 34px;
+    font-size: 14px;
+    line-height: 34px;
+    background: #fff;
+  }
+
+  .tagInput {
+    width: 159px;
+    height: 34px;
+    margin-right: 8px;
+    border: 1px solid #d9d9d9;
+  }
+  .errorInput {
+    border-color: var(--ant-error-color);
+  }
+
+  .errorText {
+    bottom: -24px;
+    display: block;
+    position: absolute;
+    color: var(--ant-error-color);
+  }
+
+  .labelsSelectContent {
+    width: 160px;
+    font-size: 14px;
+    min-height: 36px;
+    overflow-y: auto;
+    max-height: 200px;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 2px 9px 1px rgba(0, 0, 0, 0.1);
+  }
+
+  .selectItem {
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+    }
+  }
+
+  // antd 样式覆盖
+  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border: none;
+  }
+  .ant-empty {
+    margin: -60px 0 0px 0;
+    .ant-empty-description {
+      font-size: 12px;
+      color: var(--kw-text-color);
+    }
+  }
+  .ant-tag {
+    border-radius: 3px;
+  }
+  .ant-tag-close-icon {
+    margin-left: 8px;
+  }
+}

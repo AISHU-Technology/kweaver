@@ -1,0 +1,68 @@
+.analysis-service-test-root {
+  .top-header {
+    height: 54px;
+    border-bottom: 1px solid var(--kw-line-color);
+
+    .t-line {
+      height: 24px;
+      border-left: 1px solid var(--kw-line-color);
+    }
+
+    .s-name {
+      height: 32px;
+    }
+
+    .ant-btn-text:focus,
+    .ant-btn-text:hover {
+      background: #fff;
+    }
+  }
+
+  .container-wrapper {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  // 画布
+  .canvas-box {
+    position: relative;
+    overflow: hidden;
+
+    .custom-search-tool-res {
+      border-right: 1px solid var(--kw-line-color);
+    }
+
+    &.has-toolbar {
+      .custom-search-tool-res {
+        top: 39px;
+        height: calc(100% - 39px);
+      }
+    }
+  }
+
+  .graph-analysis-basicInfo,
+  .graph-analysis-summary {
+    top: 40px;
+    height: calc(100% - 40px);
+  }
+
+  .canvas-search-tool-multiple-root {
+    width: 440px;
+    top: 39px;
+  }
+
+  .leftSpaceRoot .simple {
+    height: calc(100vh - 145px);
+  }
+
+  .leftSpaceDrawer .canvas-search-tool-multiple-root {
+    top: 0;
+  }
+}
+
+.kw-analysis-iframe-dropdown {
+  width: 220px;
+  max-height: 370px;
+  overflow-y: auto;
+}

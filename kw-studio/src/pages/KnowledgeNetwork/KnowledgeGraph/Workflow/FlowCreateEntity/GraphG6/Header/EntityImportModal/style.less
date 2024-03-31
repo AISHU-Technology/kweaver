@@ -1,0 +1,91 @@
+.flow-3-entity-import-modal {
+  .ant-modal-content {
+    min-width: 1000px;
+  }
+
+  .m-main {
+    position: relative;
+    height: 540px + 64px;
+    padding-bottom: 64px;
+  }
+
+  .data-box {
+    position: relative;
+    width: 400px;
+    padding: 0 24px 20px;
+    border-right: 1px solid var(--kw-line-color);
+
+    .source-icon {
+      width: 20px;
+      height: auto;
+    }
+
+    .ant-select-item-option-content {
+      .source-icon {
+        transform: translateY(11px);
+      }
+    }
+
+    .source-info {
+      flex: 1;
+      min-width: 0;
+
+      & > div {
+        width: 100%;
+      }
+    }
+
+    .rows {
+      &.tree-row {
+        flex: 1;
+        min-height: 0;
+
+        .row-content {
+          border: 1px solid #d9d9d9;
+          border-radius: 3px;
+        }
+      }
+
+      .row-label {
+        width: 70px;
+        margin-right: 8px;
+        color: var(--kw-heading-color);
+      }
+
+      .row-content {
+        flex: 1;
+        min-width: 0;
+      }
+    }
+  }
+
+  .preview-box {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    padding: 20px;
+
+    .view-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .hide-view {
+      position: absolute;
+      visibility: hidden;
+      z-index: -9;
+      top: 0;
+      left: 0;
+    }
+
+    .tip-container {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      padding-top: 70px;
+    }
+  }
+}

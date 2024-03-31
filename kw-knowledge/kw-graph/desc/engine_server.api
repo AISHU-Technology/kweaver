@@ -1,0 +1,387 @@
+syntax = "v1"
+
+info(
+	title: "EngineServer服务"
+	desc: "引擎上层对外服务"
+	author: "Ervin.gong"
+	email: "Ervin.gong@aishu.cn"
+	version: "v1"
+)
+
+import (
+	"basicsearch/basic_search.api"
+	"customsearch/custom_search.api"
+	"canvas/canvas.api"
+	"graphexplore/graph_explore.api"
+)
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 health 目录下
+	group: health
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/health
+)
+
+service engine_server {
+	@handler checkReadyHandler
+	get /ready
+
+	@handler checkAliveHandler
+	get /alive
+
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 basicsearch 目录下
+	group: graphsearch/basic
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/basic-search/kgs/:kg_id
+)
+
+service engine_server {
+	@handler fullTextSearchHandler
+	post /full-text(FullTextRequest) returns (UnitiveResponse)
+
+	@handler vidsSearchHandler
+	post /vids(VidsRequest) returns (UnitiveResponse)
+
+	@handler edgesSearchHandler
+	post /edges(EdgesRequest) returns (UnitiveResponse)
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 customsearch 目录下
+	group: graphsearch/custom
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/custom-search
+)
+
+service engine_server {
+	@handler CustomSearchHandler
+	post /kgs/:kg_id(CustomSearchRequest) returns (CustomSearchV1Response)
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 graphexplore 目录下
+	group: graphsearch/explore
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/graph-explore/kgs/:kg_id
+)
+
+service engine_server {
+	// 两点之间路径探索
+	@handler pathsExploreHandler
+	post /paths(PathRequest) returns (UnitiveResponse)
+
+	@handler neighborsSearchHandler
+	post /neighbors(NeighborsRequest) returns (UnitiveResponse)
+
+	//这个后续要改post
+	@handler expandVHandler
+	get /expandv(ExpandVRequest) returns (ExpandVResponse)
+
+}
+
+@server (
+	// 图查询 open接口
+	group: graphsearch/explore/open
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/open/graph-explore
+)
+
+service engine_server {
+	// 两点之间路径探索
+	@handler pathsExploreHandler
+	post /kgs/:kg_id/paths(PathRequest) returns (UnitiveResponse)
+
+	@handler neighborsSearchHandler
+	post /kgs/:kg_id/neighbors(NeighborsRequest) returns (UnitiveResponse)
+
+	//这个后续要改post
+	@handler expandVHandler
+	get /kgs/:kg_id/expandv(ExpandVRequest) returns (ExpandVResponse)
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 canvas 目录下
+	group: canvas
+	// 定义路由前缀为 "/v1"
+	prefix: /api/alg-server/v1/canvases
+)
+
+service engine_server {
+	// 创建画布
+	@handler createCanvasHandler
+	post /(CreateCanvasRequest) returns (ReturnResIntResponse)
+
+	// 删除画布
+	@handler deleteCanvasHandler
+	post /:c_id/delete(CanvasIDRequestOnPath) returns (ReturnResIntResponse)
+
+	// 更新画布
+	@handler updateCanvasHandler
+	post /:c_id/update(UpdateCanvasRequest) returns (ReturnResIntResponse)
+
+	// 批量删除画布
+	@handler batchDeleteCanvasesHandler
+	post /delete(BatchDeleteCanvasesRequest) returns (ReturnResIntListResponse)
+
+	// 获取画布列表
+	@handler getCanvasesListHandler
+	get /knws/:knw_id(GetCanvasesListRequest) returns (GetCanvasesListResponse)
+
+	// 根据图谱id批量删除画布(内部接口)
+	@handler batchDeleteCanvasesByKgIdsHandler
+	post /delete_by_kg(BatchDeleteCanvasesByKgIdsRequest) returns (ReturnResIntListResponse)
+
+	// 根据传入的画布id，分号分隔，返回一一对应的图谱id(内部接口，鉴权使用，对外不开放)
+	@handler getKgIDsByCIDHandler
+	get /kg_ids(GetKgidsByCIDRequest) returns (ReturnResIntListResponse)
+
+	// 获取指定画布的详细信息
+	@handler getCanvasInfoByCIDHandler
+	get /:c_id (CanvasIDRequestOnPath)returns(GetCanvasInfoResponse)
+}
+
+@server (
+	// 快照
+	group: snapshot
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/snapshots
+)
+
+service engine_server {
+	// 创建快照
+	@handler createSnapshotHandler
+	post / (CreateSnapshotRequest) returns (ReturnResIntResponse)
+
+	// 获取快照信息
+	@handler GetSnapshotHandler
+	get /:s_id (GetSnapshotRequest) returns (SnapshotResponse)
+
+	// 删除快照
+	@handler deleteSnapshotHandler
+	post /:s_id/delete (DeleteSnapshotRequest) returns (ReturnResIntListResponse)
+
+	// 更新快照
+	@handler updateSnapshotHandler
+	post /:s_id/update (UpdateSnapshotRequest) returns (ReturnResIntResponse)
+
+	// 获取快照列表
+	@handler GetSnapshotListHandler
+	get /list (GetSnapshotListRequest) returns (SnapshotListResponse)
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 oldopen 目录下
+	group: old/open
+	// 定义路由前缀为 "/v1"
+	prefix: /api/alg-server/v1/open
+)
+
+service engine_server {
+	// 兼容旧接口 /open/api/alg-server/v1/custom-search/kgs/:kg_id
+	@handler customSearchHandler
+	post /custom-search/kgs/:kg_id(CustomSearchRequest) returns (OldOpenCustomSearchResponse)
+
+	// 兼容旧接口 /open/api/alg-server/v1/graph-search/kgs/:kg_id/full-text
+	@handler fullTextSearchHandler
+	post /graph-search/kgs/:kg_id/full-text(FullTextRequest) returns (VerticesResponse)
+
+	// 兼容旧接口 /open/api/alg-server/v1/graph-search/kgs/:kg_id/vids
+	@handler vidsSearchHandler
+	post /graph-search/kgs/:kg_id/vids(VidsRequest) returns (VerticesResponse)
+
+	// 兼容旧接口 /open/api/alg-server/v1/explore/kgs/:kg_id/path
+	@handler pathsExploreHandler
+	post /explore/kgs/:kg_id/path(PathAlgRequest) returns (PathResponse)
+
+	// 兼容旧接口 /open/api/alg-server/v1/explore/kgs/:kg_id/edges
+	@handler edgesSearchHandler
+	post /explore/kgs/:kg_id/edges(EdgesRequest) returns (EdgesResponse)
+
+	//兼容旧接口 /open/api/alg-server/v1/explore/kgs/:kg_id/searche
+	@handler expandVHandler
+	get /explore/kgs/:kg_id/searche(ExpandVRequest) returns (ExpandVResponse)
+
+	//兼容旧接口 /open/api/alg-server/v1/explore/kgs/:kg_id/neighbors
+	@handler neighborsSearchHandler
+	post /explore/kgs/:kg_id/neighbors(NeighborsRequest) returns (NeighborsResponse)
+
+	//兼容旧接口 /open/api/alg-server/v1/graph-search/kgs/:kg_id/quick-search
+	@handler quickSearchHandler
+	get /graph-search/kgs/:kg_id/quick-search(QuickSearchRequest) returns (QuickSearchResponse)
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 graphanalysis 目录下
+	group: cogservices/graphanalysis
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/services/graph-analysis
+)
+
+service engine_server {
+	@handler testHandler
+	post /test returns (UnitiveResponse)
+
+	// 导出指定认知应用
+	@handler exportSvcHandler
+	get /:service_id/export-service(ExportServiceReq)
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 gaopen(graph analysis open) 目录下
+	group: cogservices/graphanalysis/open
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/open/services/graph-analysis
+)
+
+service engine_server {
+	@handler testHandler
+	post /test returns (UnitiveResponse)
+
+	// 导出指定认知应用
+	@handler exportSvcHandler
+	get /:service_id/export-service(ExportServiceReq)
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 graphanalysis 目录下
+	group: cogservices
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/services
+)
+
+service engine_server {
+	// 以文件方式导入认知应用
+	@handler importSvcByFileHandler
+	post /import-service/file returns (ImportServiceResp)
+
+	// 导出认知应用示例
+	@handler exportSvcTemplate
+	get /export-template
+
+	// 根据配置id获取认知应用解析内容
+	@handler getSvcInfoByConfigID
+	post /info(SvcInfoReq)
+}
+
+@server (
+	// 代表当前 service 代码块下的路由生成代码时都会被放到 graphanalysis 目录下
+	group: cogservices/open
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/open/services
+)
+
+service engine_server {
+	// 以文件方式导入认知应用
+	@handler importSvcByFileHandler
+	post /import-service/file returns (ImportServiceResp)
+}
+
+@server (
+	group: subscribe_account
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1
+)
+
+service engine_server {
+
+	@handler UpdateSubscribeAccountHandler
+	post /subscribe-account returns (ReturnResOKResponse)
+
+	@handler SubscribeAccountForwardHandler
+	post /subscribe-account/forward
+
+	@handler GetSubscribeAccountHandler
+	get /subscribe-account returns (SubscribeAccountResponse)
+}
+
+@server (
+	group: advsearch
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1
+)
+
+service engine_server {
+	// 添加知识网络策略配置
+	@handler AddAdvSearchConfHandler
+	post /adv-search-config (AddAdvSearchConfReq) returns (ConfReturnIDResp)
+
+	// 更新知识网络策略配置
+	@handler UpdateAdvSearchConfHandler
+	post /adv-search-config/update (UpdateAdvSearchConfReq) returns (ConfReturnStrResp)
+
+	// 删除知识网络策略配置
+	@handler DeleteAdvSearchConfHandler
+	delete /adv-search-config (DeleteAdvSearchConfReq) returns (DeleteAdvSearchConfResp)
+
+	// 获取指定知识网络策略配置
+	@handler GetAdvSearchConfHandler
+	get /adv-search-config/info/:confid (GetConfInfoReq) returns (GetConfInfoResp)
+
+	// 获取知识网络策略配置
+	@handler GetCustomAdvSearchConfHandler
+	get /adv-search-config (GetAdvSearchConf) returns (GetSearchConfResp)
+
+	// 反查接口
+	@handler KGIDBackwardHandler
+	post /adv-search-config/kglist-backward (KGListBackwardReq) returns (ConfReturnArrIntResp)
+
+	// 根据配置id进行高级搜索
+	@handler  AdvSearchHandler
+	get /adv-search/:confid (AdvSearchReq)
+
+	// 测试接口
+	@handler  AdvSearchTestHandler
+	post /adv-search/test (AdvSearchTestReq)
+
+	// 知识网络搜索(文档)
+	@handler  AdvSearchDocumentHandler
+	get /adv-search/document (AdvSearchDefaultReq)
+}
+
+@server (
+	group: advsearch/open
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/open
+)
+
+service engine_server {
+	// 获取知识网络策略配置
+	@handler GetCustomAdvSearchConfHandler
+	get /adv-search-config (GetAdvSearchConf) returns (GetSearchConfResp)
+
+	// 根据配置id进行高级搜索
+	@handler  AdvSearchHandler
+	get /adv-search/:confid (AdvSearchReq)
+
+	// 知识网络搜索(文档)
+	@handler  AdvSearchDocumentHandler
+	get /adv-search/document (AdvSearchDefaultReq)
+}
+
+@server(
+	group: openapi
+	prefix : /api
+)
+service engine_server {
+	// 获取知识网络策略配置
+	@handler GetOpenApiHandler
+	get /openapi
+
+}
+
+@server (
+	// opensearch相关接口
+	group: opensearch
+	// 定义路由前缀为 "/v1"
+	prefix: /api/engine/v1/opensearch
+)
+
+service engine_server {
+	// 自定义opensearch查询转发
+	@handler CustomOpenSearchHandler
+	post /custom(CustomOpenSearchRequest) returns (CustomOpenSearchResponse)
+
+}

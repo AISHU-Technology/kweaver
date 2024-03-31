@@ -1,0 +1,30 @@
+.flow-3-model-Panel {
+  display: flex;
+  flex-direction: column;
+
+  .p-title {
+    padding: 7px 0;
+    font-size: 16px;
+    border-bottom: 1px solid var(--kw-line-color);
+  }
+
+  .preview-box {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .p-canvas {
+    background: #f9f9f9;
+    border-radius: 3px;
+    border: 1px solid #e6e6e6;
+  }
+
+  .hide-view {
+    position: absolute;
+    visibility: hidden;
+    z-index: -9;
+    top: 0;
+    left: 0;
+  }
+}

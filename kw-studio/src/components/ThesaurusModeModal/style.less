@@ -1,0 +1,59 @@
+@border: 1px solid var(--kw-line-color);
+@color: rgba(0, 0, 0, 0.85);
+.create-thesaurus-model-root {
+  .kw-universal-modal-content {
+    padding: 0px;
+  }
+
+  .kw-table .ant-table-title {
+    padding: 0px;
+  }
+  .create-thesaurus-model-wrap-root {
+    flex-flow: column;
+    .create-thesaurus-modal-left {
+      background-color: #fff;
+      width: 400px;
+      border-right: @border;
+      max-height: 552px;
+      overflow-y: auto;
+      .radio-title {
+        color: @color;
+      }
+      .ant-radio-wrapper:not(:last-child) {
+        margin-bottom: 16px;
+      }
+    }
+
+    .create-thesaurus-modal-right {
+      background-color: #fff;
+      width: calc(100% - 400px);
+      .thesaurus-preview-title {
+        .template-title {
+          color: @color;
+          font-weight: 500;
+        }
+      }
+      .thesaurus-table {
+        .table-content {
+          max-width: 167px;
+        }
+
+        .ant-table .ant-table-tbody > tr.ant-table-row:hover > td,
+        .ant-table .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+          background-color: #fff;
+        }
+
+        .ant-table:not(.ant-table-bordered) .ant-table-thead > tr > th {
+          border-top: none;
+          background-color: #fff;
+        }
+      }
+    }
+    .footer-box {
+      border-top: @border;
+      text-align: right;
+      padding: 13px 24px;
+      background-color: #fff;
+    }
+  }
+}

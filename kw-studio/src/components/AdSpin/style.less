@@ -1,0 +1,24 @@
+.kw-spin {
+  display: inline-block;
+  text-align: center;
+
+  .spin-img {
+    height: auto;
+    animation: loading 1s linear infinite;
+    user-select: none;
+    @keyframes loading {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+  .spin-desc {
+    height: 22px;
+    margin-top: 12px;
+    line-height: 22px;
+    color: var(--kw-text-color-secondary);
+  }
+}

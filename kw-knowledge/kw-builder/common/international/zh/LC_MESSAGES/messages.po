@@ -1,0 +1,2473 @@
+# Chinese translations for PROJECT.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-10-17 13:27+0800\n"
+"PO-Revision-Date: 2022-12-28 13:28+0800\n"
+"Last-Translator: \n"
+"Language: zh\n"
+"Language-Team: zh <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
+
+msgid "graph being uploaded can not run. "
+msgstr "正在上传的图谱无法运行。"
+
+msgid "task cannot run, the graph is being uploaded. "
+msgstr "任务不可运行，当前图谱正在上传中。"
+
+msgid "task cannot run, the current knowledge graph is running or waiting."
+msgstr "任务不可运行，当前图谱状态为待运行或运行中"
+
+msgid "{} start running success."
+msgstr "{} 成功开始运行。"
+
+msgid "delete task success"
+msgstr "删除任务成功。"
+
+msgid "stop task success."
+msgstr "终止任务成功。"
+
+msgid "Please check your parameter again."
+msgstr "请重新检查输入参数。"
+
+msgid "Please contact the developers."
+msgstr "请联系开发人员"
+
+msgid "task_id [task_id] not exists."
+msgstr "任务id [task_id] 不存在。"
+
+msgid "graph id [graph_id] not exists."
+msgstr "图谱id [graph_id] 不存在。"
+
+msgid "subgraph id [subgraph_id] not exists."
+msgstr "子图id [subgraph_id] 不存在。"
+
+msgid "task cannot run, the storage address of this graph does not exist."
+msgstr "任务不可运行，图数据库地址不存在"
+
+msgid "invalid storage address."
+msgstr "无效的存储地址"
+
+msgid "Please config a valid graph_db address for this graph."
+msgstr "请重新配置图数据库。"
+
+msgid "task cannot run, the current knowledge graph has not been configured yet."
+msgstr "任务不可运行，当前图谱尚未完成配置"
+
+msgid "Please try again after configuration."
+msgstr "请在配置结束后重试"
+
+msgid "Please try again after the task ends."
+msgstr "请在任务结束后重试"
+
+msgid "Please try again after the uploading task ends."
+msgstr "请在上传任务结束后重试"
+
+msgid "task id must be integer."
+msgstr "任务id必须为正整数"
+
+msgid "task id [task_id] not exists."
+msgstr "任务id [task_id] 不存在。"
+
+msgid "task not exists. "
+msgstr "任务不存在。"
+
+msgid "task cannot stop, because the task status is not waiting or running."
+msgstr "任务不在运行在或等待中，无法终止。"
+
+msgid "you cannot stop a completed graph task."
+msgstr "不能终止已结束的任务。"
+
+msgid "ds_id [ds_id] not exists."
+msgstr "ds_id [ds_id] 不存在。"
+
+msgid "No permissions for ds_id [ds_id]."
+msgstr "没有数据源[ds_id]的权限. "
+
+msgid "No permissions for graph [graph_id]."
+msgstr "没有图谱[graph_id]的权限. "
+
+msgid "please check your data source again."
+msgstr "请重新检查数据源。"
+
+msgid "data source doesn't match."
+msgstr "数据源类型不匹配. "
+
+msgid "Failed to get database table structure. "
+msgstr "获取数据库表结构失败. "
+
+msgid "Data source type [data_source] does not support SQL statement. "
+msgstr "数据源类型 [data_source] 不支持SQL语句. "
+
+msgid "SQL statement execution error, please check your SQL statement. "
+msgstr "SQL语句执行错误，请检查你的SQL语句. "
+
+msgid "SQL statement execution timeout, please optimise your SQL statement. "
+msgstr "SQL语句执行超时，请优化你的SQL语句. "
+
+msgid "Failed to preview data. "
+msgstr "预览数据失败. "
+
+msgid "[cause]"
+msgstr "[cause]"
+
+msgid "knowledge network id [knw_id] not exists"
+msgstr "知识网络 [knw_id] 不存在"
+
+msgid "Duplicate function name"
+msgstr "函数名称重复"
+
+msgid "Function name [name] already exists and cannot be created repeatedly."
+msgstr "函数名称 [name] 已经存在，不可以重复"
+
+msgid "function id [function_id] not exists"
+msgstr "函数 id [function_id] 不存在"
+
+msgid "Parameter [arg] Error."
+msgstr "参数[arg]错误"
+
+msgid "graphid [graphid] not exists."
+msgstr "graphid [graphid] 不存在"
+
+msgid "key type error"
+msgstr "key类型错误"
+
+msgid "key should be list of string"
+msgstr "key应为字符串列表"
+
+msgid "graphdb id [graphdb_id] not exists"
+msgstr "图数据库id [graphdb_id] 不存在"
+
+msgid "please config your graphdb again."
+msgstr "请重新配置图数据库"
+
+msgid "these keys are not supported: [unsupported_key]"
+msgstr "这些字段不支持: [unsupported_key]"
+
+msgid "some keys are not supported."
+msgstr "key中有不支持的字段"
+
+msgid "please check your parameter key again."
+msgstr "请检查传入的参数key"
+
+msgid "argument [arg] error"
+msgstr "参数[arg]错误"
+
+msgid "graph id [graphid] not exists"
+msgstr "graph id [graphid] 不存在"
+
+msgid "ontology id [otl_id] not exists"
+msgstr "本体id [otl_id] 不存在"
+
+msgid "Please config the ontology."
+msgstr "请配置本体"
+
+msgid "[class_type] [name] not exists"
+msgstr "[class_type] [name] 不存在"
+
+msgid "parameter [arg] not exists or invalid"
+msgstr "参数 [arg] 不存在或者非法"
+
+msgid "please ensure parameter [arg] exists and valid"
+msgstr "请检查传入的参数 [arg] 存在且合法"
+
+msgid "Parameter [arg] too big please lower than [max]"
+msgstr "参数 [arg] 太大, 请选择小于 [max]"
+
+msgid "Parameter [arg] not allow, please choose [allowed]"
+msgstr "参数 [arg] 不被允许, 请选择 [allowed]"
+
+msgid "The parameter graph_id type must be int!"
+msgstr "参数graph_id的类型必须为整数"
+
+msgid "graph_id [graph_id] not exists."
+msgstr "graph_id [graph_id] 不存在"
+
+msgid "graph id [graph_id] not exists"
+msgstr "图谱id [graph_id] 不存在"
+
+msgid ""
+"Please check whether you have permission to delete or whther the graph is"
+" running."
+msgstr "请检查你是否有权限删除或图谱是否在运行中"
+
+msgid ""
+"Eceph not connected, upload function cannot be opened now, please contact"
+" the System OP Admin to configure it"
+msgstr "尚未接入Eceph无法开启上传功能，请联系系统运维管理员配置后使用"
+
+msgid "Please config ECeph again."
+msgstr "请重新配置ECeph"
+
+msgid "graph_id [graph_id] is running or waiting. "
+msgstr "图谱 [graph_id] 正在运行中或等待中。"
+
+msgid "Please wait until the task finishes. "
+msgstr "请在任务结束后重试"
+
+msgid "Nebula has some error."
+msgstr "Nebula有错误"
+
+msgid "graph is running or waiting."
+msgstr "图谱正在运行中或等待中。"
+
+msgid "ontology not exists"
+msgstr "本体不存在"
+
+msgid "Nebula space has not been created yet."
+msgstr "Nebula图空间尚未创建完毕。"
+
+msgid "Please wait for 20 seconds and try again."
+msgstr "请等待20s后重试。"
+
+msgid "Opensearch has some error."
+msgstr "Opensearch有错误"
+
+msgid "[name] not exist!"
+msgstr "[name] 不存在。"
+
+#, fuzzy
+msgid "schema creation failed."
+msgstr "获取抽取规则失败。"
+
+#, fuzzy
+msgid "Please create schema again."
+msgstr "请重新配置ECeph"
+
+msgid ""
+"the relation of start_entity, edge_name and end_entity is inconsistent "
+"with the ontology"
+msgstr "起点实体类、关系类名、终点实体类的关系与本体不一致。"
+
+msgid "Please check whether the OrientDB request information is correct."
+msgstr "请检查OrientDB请求信息是否正确"
+
+msgid "Please check whether the Nebula request information is correct."
+msgstr "请检查Nebula请求信息是否正确"
+
+msgid "Please check whether your GraphDB service is running normally."
+msgstr "请检查图数据库服务是否正常运行"
+
+msgid "Please check whether your DB name is correct."
+msgstr "请检查图数据库名称是否正确"
+
+msgid "knowledge graph is waiting build, please calculate after building"
+msgstr "知识图谱在等待运行中，构建完成后可进行计算。"
+
+msgid "Please check graph status"
+msgstr "请检查图谱状态"
+
+msgid "knowledge graph is building, please calculate after building"
+msgstr "知识图谱正在运行中，构建完成后可进行计算。"
+
+msgid "knowledge graph is configuring build, please calculate after building"
+msgstr "知识图谱正在配置中，构建完成后可进行计算。"
+
+msgid ""
+"knowledge graph store in NebulaGraph, if you need intelligence score, "
+"please calculate after building successfully"
+msgstr "知识图谱存储在nebula图数据库，如果你需要智商值，请在成功构建后计算。"
+
+msgid "call async task service error"
+msgstr "调用异步任务服务错误"
+
+msgid "[detail]"
+msgstr "[detail]"
+
+msgid "async task service internal error"
+msgstr "异步任务服务内部错误"
+
+msgid "cancel async task error, service internal error"
+msgstr "异步任务取消错误，服务内部错误"
+
+msgid "graph intelligence info query error"
+msgstr "图谱智商信息查询错误"
+
+msgid "network intelligence info query error"
+msgstr "知识网络智商信息查询错误"
+
+msgid ""
+"Knowledge graph status invalid, please calculate after building "
+"successfully"
+msgstr "知识图谱构建状态非法, 请构建后再计算"
+
+msgid "knowledge network [knw_id] not exists"
+msgstr "知识网络 [knw_id] 不存在"
+
+msgid "please config your knowledge network again."
+msgstr "请重新配置图数据库"
+
+msgid "knowledge graph [graph_id] not exists"
+msgstr "知识图谱 [graph_id] 不存在"
+
+msgid "Please check the database connection."
+msgstr "请检查数据库连接情况"
+
+msgid "Please improve your knowledge capacity."
+msgstr "请扩大知识容量。"
+
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, lexicon "
+"creation failed!"
+msgstr "指定的知识网络id [knowledge_id] 不存在，词库创建失败"
+
+msgid ""
+"Lexicon name [lexicon_name] already exists and cannot be created "
+"repeatedly."
+msgstr "词库名称 [lexicon_name] 已经存在，不可以重复创建"
+
+msgid "[ErrorDetails]"
+msgstr "[ErrorDetails]"
+
+msgid "Please check the type, size and content format of the uploaded file."
+msgstr "请核对上传文件的大小、类型以及内容格式"
+
+msgid "Only one file can be selected at most."
+msgstr "仅支持上传一个文件"
+
+msgid "Please select upload file again."
+msgstr "请重新选择上传文件"
+
+msgid "The file format only supports txt and CSV."
+msgstr "文件格式错误，仅支持txt、csv"
+
+msgid "File content format error."
+msgstr "文件内容格式错误"
+
+msgid ""
+"Please check the content and format of the document according to the "
+"template."
+msgstr "请按照模板核对文件内容格式"
+
+msgid "The file only supports UTF-8 encoding."
+msgstr "上传文件只支持UTF-8编码"
+
+msgid "Please confirm the file code and reselect the file."
+msgstr "请确认文件编码，重新选择文件"
+
+msgid "The amount of uploaded file data exceeds."
+msgstr "上传文件数据量超出"
+
+msgid ""
+"The uploaded file must be less than 10M and the number of lines must be "
+"less than 350000."
+msgstr "文件大小不可超过10M，且在35万行以内"
+
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, get labels "
+"failed!"
+msgstr "指定的知识网络id [knowledge_id] 不存在，获取标签失败"
+
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, get lexicon "
+"failed!"
+msgstr "指定的知识网络id [knowledge_id] 不存在，获取词库信息失败"
+
+msgid "The specified lexicon id [lexicon_id] does not exist, get lexicon failed!"
+msgstr "指定的词库id [lexicon_id] 不存在，获取词库信息失败"
+
+msgid "The specified lexicon id [lexicon_id] does not exist."
+msgstr "指定的词库id [lexicon_id] 不存在"
+
+msgid "The format of the new data [data] does not match the original data"
+msgstr "新数据 [data] 和词库中已有数据的格式不匹配"
+
+msgid "Please check lexicon format again."
+msgstr "请重新检查词库格式。"
+
+msgid "The newly added word [data] already exists."
+msgstr "新增的词汇[data]已经存在."
+
+msgid "lexicon [lexicon_id] status is running, cannot insert."
+msgstr "running状态的词库[lexicon_id]，无法新增词汇"
+
+msgid "lexicon status is running, please make sure lexicon status is correct."
+msgstr "词库状态running，请确保词库状态正确"
+
+msgid "The specified lexicon word [lexicon_word] does not exist."
+msgstr "指定的词库词汇 [lexicon_word] 不存在"
+
+msgid "New data [new_info] and original data [old_info] fields are inconsistent."
+msgstr "新数据 [new_info] 和 已有数据 [old_info] 的字段不一致"
+
+msgid "The modified word [lexicon_word] already exists."
+msgstr "修改后的词汇[lexicon_word]已经存在."
+
+msgid "lexicon [lexicon_id] status is running, cannot edit word."
+msgstr "running状态的词库[lexicon_id]，无法编辑词汇"
+
+msgid "There is no deleted data [delete_data] in the specified lexicon."
+msgstr "需要删除的词 [delete_data] 在指定的词库中不存在"
+
+msgid "lexicon [lexicon_id] status is running, cannot delete word."
+msgstr "running状态的词库[lexicon_id]，无法删除词汇"
+
+msgid "lexicon [lexicon_id] status is running, cannot export."
+msgstr "running状态的词库[lexicon_id]，无法导出"
+
+msgid "Please see the error prompt for details."
+msgstr "请查看详细的错误提示信息"
+
+msgid "Please check the type and size of the uploaded file."
+msgstr "请核对上传文件的大小、类型以及内容格式"
+
+msgid "New data and original data fields are inconsistent"
+msgstr "导入的数据和词库已有数据字段不一致"
+
+msgid "Select at least one file."
+msgstr "请至少选择一个文件"
+
+msgid "lexicon [lexicon_id] status is running, cannot import words."
+msgstr "running状态的词库[lexicon_id]，无法导入词汇"
+
+msgid "Parameters Error!"
+msgstr "参数错误！"
+
+msgid "Please check your parameters."
+msgstr "请重新检查输入参数。"
+
+msgid "[description]"
+msgstr "[description]"
+
+msgid "send async task failed."
+msgstr "异步任务请求失败."
+
+msgid "get extraction rules failed."
+msgstr "获取抽取规则失败。"
+
+msgid "data_source in the parameter is inconsistent with that of the database."
+msgstr "参数中的data_source与数据库中的不一致。"
+
+msgid "ds_id [ds_id] not in the data source selected for the graph."
+msgstr "ds_id [ds_id] 不在图谱选择的数据源中"
+
+msgid "get extract result failed."
+msgstr "获取抽取结果失败."
+
+msgid "the celery task id not exist."
+msgstr "celery 任务id不存在."
+
+msgid "preview data failed."
+msgstr "预览数据失败。"
+
+msgid "preview mysql data failed."
+msgstr "预览mysql数据失败。"
+
+msgid "preview kingbasees data failed."
+msgstr "预览kingbasees数据失败。"
+
+msgid "preview sqlserver data failed."
+msgstr "预览sqlserver数据失败。"
+
+msgid "preview postgresql data failed."
+msgstr "预览postgresql数据失败。"
+
+#, fuzzy
+msgid "preview ClickHouse data failed."
+msgstr "预览hive数据失败。"
+
+msgid "preview hive data failed."
+msgstr "预览hive数据失败。"
+
+msgid "show anyshare file failed."
+msgstr "展示anyshare文件失败。"
+
+msgid "files of this type is not supported."
+msgstr "不支持这种类型的文件。"
+
+msgid "only csv or json files can be previewed."
+msgstr "仅支持预览csv和json文件。"
+
+msgid "preview anyshare data failed."
+msgstr "预览anyshare数据失败"
+
+msgid "add new task failed."
+msgstr "添加新任务失败。"
+
+msgid ""
+"can't add new task because the number of task has reached the upper "
+"limitation."
+msgstr "不能添加新任务因为任务数量已达到上限。"
+
+msgid "Please try again later."
+msgstr "请稍后重试。"
+
+msgid "ontology_id [ontology_id] not exists."
+msgstr "本体id [ontology_id] 不存在"
+
+msgid "Duplicate ontology name."
+msgstr "本体名称重复"
+
+msgid "Ontology name [name] already exists, please modify it"
+msgstr "本体名称 [name] 已存在，请修改"
+
+msgid "ontology [otl_id] does not exist in knowledge network [knw_id]. "
+msgstr "本体[otl_id]不在知识网络[knw_id]中。"
+
+msgid "knw_id [knw_id] not exists"
+msgstr "knw_id [knw_id] 不存在。"
+
+msgid "celery_task_id [celery_task_id] not exists"
+msgstr "celery_task_id [celery_task_id] 不存在。"
+
+msgid "otl_id [otl_id] not exists. "
+msgstr "本体id [otl_id] 不存在"
+
+msgid "otl_id [otl_id] not in ontology library. "
+msgstr "otl_id [otl_id] 不在本体库中。"
+
+msgid "Data source type [data_source] does not support SQL extracting. "
+msgstr "数据源类型 [data_source] 不支持SQL抽取. "
+
+msgid "Duplicate field names exist in SQL extracting results. "
+msgstr "sql抽取结果中存在重复的字段名. "
+
+msgid ""
+"Data extracting is empty, please re-select the data table used in SQL "
+"statement or go database to add data"
+msgstr "数据抽取为空，请更换SQL语句中的数据表或者前往数据库补充数据"
+
+msgid "subgraph name [name] already exists."
+msgstr "子图名称 [name] 已存在."
+
+msgid "there are entity classes or edge classes not in the ontology. "
+msgstr "有实体类或边类不在本体中。"
+
+msgid "graph is running or waiting"
+msgstr "图谱正在运行中或等待中。"
+
+msgid "Please stop building graph or wait the graph finish building."
+msgstr "请等待图谱构建成功或停止构建。"
+
+msgid "subgraph_id [subgraph_id] not exists."
+msgstr "子图 [subgraph_id] 不存在."
+
+msgid "subgraph name already exists."
+msgstr "子图名称 [name] 已存在."
+
+msgid "names of these subgraphs are duplicate: [items]"
+msgstr "这些子图的名字有重复项：[items]"
+
+msgid "ungrouped subgraph [subgraph_id] cannot rename."
+msgstr "未分组的子图 [subgraph_id] 不能重命名."
+
+msgid "you cannot rename ungrouped."
+msgstr "不能对未分组重命名。"
+
+msgid "subgraph [subgraph_id] name cannot be 未分组 or ungrouped. "
+msgstr "子图 [subgraph_id] 的名称不能为 未分组 或 ungrouped."
+
+msgid "graph status is running, cannot delete subgraph."
+msgstr "图谱状态为运行中，无法删除子图 [subgraph_id]."
+
+msgid "graph status is waiting, cannot delete subgraph."
+msgstr "图谱状态为待构建，无法删除子图 [subgraph_id]."
+
+msgid "cannot delete ungrouped subgraph [subgraph_id]."
+msgstr "不可删除未分组的子图"
+
+msgid "Please change the subgraph to delete."
+msgstr "请更换要删除的子图"
+
+msgid "subgraph_id [subgraph_id] does not exist or does not match the graph_id."
+msgstr "子图 [subgraph_id] 不存在或与图谱id不符合."
+
+msgid "The parameter graph_id must be int!"
+msgstr "参数 graph_id 必须为整数。"
+
+msgid "parameters cannot be both graph_id and task_id."
+msgstr "参数不能同时为 graph_id 和 task_id 。"
+
+msgid "graph_id must be int."
+msgstr "graph_id 必须为正整数"
+
+msgid "graph_id must be larger than zero."
+msgstr "graph_id必须大于0."
+
+msgid "task_id must be int."
+msgstr "任务id必须为正整数"
+
+msgid "task_id must be larger than zero."
+msgstr "任务id必须为正整数"
+
+msgid "parameter must be graph_id or task_id."
+msgstr "参数必须为 graph_id 或 task_id。"
+
+msgid "parameter task_id must be int!"
+msgstr "任务id必须为正整数"
+
+msgid "parameter task_id cannot be 0!"
+msgstr "参数 task_id 不能为0."
+
+msgid "NO parameter %s. "
+msgstr "缺少参数 %s. "
+
+msgid " must be number！"
+msgstr "必须为数字！"
+
+msgid "ds_id must be int "
+msgstr "ds_id必须为正整数"
+
+msgid "The parameter graph id type must be int!"
+msgstr "参数graph_id的类型必须为整数"
+
+msgid "graph upload can not delete"
+msgstr "正在上传中的图谱不可删除"
+
+msgid "please wait upload finished"
+msgstr "请等待上传任务结束"
+
+msgid "Incorrect parameter format"
+msgstr "参数格式错误"
+
+msgid "graph task is not normal or graph status is not finish"
+msgstr "图谱最后一次构建失败或图谱构建未完成"
+
+msgid "Please check graph or task status"
+msgstr "请校验图谱或任务状态"
+
+#, python-format
+msgid "knw id %s not exists"
+msgstr "知识网络id %s 不存在"
+
+msgid "get file error"
+msgstr "获取文件失败"
+
+msgid "unexception error"
+msgstr "未知错误"
+
+msgid "parameter graph_id must be int!"
+msgstr "参数 graph_id 必须为整数。"
+
+msgid "parameter subgraph_id must be int!"
+msgstr "参数 subgraph_id 必须为整数。"
+
+msgid "parameter subgraph_id cannot be 0!"
+msgstr "参数 subgraph_id 不能为0."
+
+msgid "parameter graph_id cannot be empty. "
+msgstr "参数 graph_id 不能为空。"
+
+msgid "parameter graph_id must be integer. "
+msgstr "graph_id必须为正整数"
+
+msgid "parameter graph_id must be larger than zero. "
+msgstr "参数 graph_id 必须大于0."
+
+msgid "parameter subgraph_ids cannot be empty. "
+msgstr "参数 subgraph_ids不能为空。"
+
+msgid "parameter subgraph_ids must be a list. "
+msgstr "参数 subgraph_ids 必须为列表。"
+
+msgid "parameter subgraph_id {} must be int!"
+msgstr "参数 subgraph_id 必须为整数。"
+
+msgid "parameter subgraph_id must be larger than zero!"
+msgstr "参数 subgraph_id 必须大于0."
+
+msgid "parameter graph_ids must be a list. "
+msgstr "参数 graph_ids 必须为列表。"
+
+msgid "graph_id {} must be int. "
+msgstr "graph_id {} 必须为正整数"
+
+msgid "graph_id {} must be larger than zero. "
+msgstr "graph_id {} 必须大于0."
+
+msgid "parameter to_be_uploaded must be 0 or 1. "
+msgstr "参数 to_be_uploaded 必须为0或1."
+
+msgid "graph_id cannot be empty."
+msgstr "graph_id不能为空。"
+
+msgid "graph_id must be integer."
+msgstr "graph_id必须为正整数。"
+
+#, fuzzy
+msgid " cannot be empty. "
+msgstr "不能为空"
+
+#, fuzzy
+msgid " must be string. "
+msgstr "必须为字符串"
+
+msgid " must be in "
+msgstr "必须是"
+
+msgid " must be list "
+msgstr "必须为列表"
+
+msgid "length of graph_data cannot be larger than 100."
+msgstr "graph_data的长度不能超过100."
+
+msgid "item of graph_data must be dict. "
+msgstr "graph_data的项必须是dict"
+
+msgid "when data_type is edge, the graph_data must have start, end, edge_pros. "
+msgstr "当data_type是edge时，graph_data必须包含start、end和edge_pros"
+
+msgid "when data_type is edge, the graph_data must have start, end. "
+msgstr "当data_type是edge时，graph_data必须包含start和end"
+
+msgid "the start of graph_data must be dict. "
+msgstr "graph_data的start必须是dict"
+
+msgid "the start of graph_data must be have _start_entity. "
+msgstr "graph_data的start必须包含_start_entity"
+
+msgid "The start entity class type of multiple data should be consistent."
+msgstr "多条数据的起点实体类应该相同"
+
+msgid "the end of graph_data must be dict. "
+msgstr "graph_data的end必须是dict"
+
+msgid "the end of graph_data must be have _end_entity. "
+msgstr "graph_data的end必须包含_end_entity"
+
+msgid "The end entity class type of multiple data should be consistent."
+msgstr "多条数据的终点实体类应该相同"
+
+msgid "the edge_pros of graph_data must be dict. "
+msgstr "graph_data的edge_pros必须是dict"
+
+msgid " must be int, and more than zero!"
+msgstr " 必须是整型，并且大于0."
+
+msgid "failed to obtain the uploaded file. "
+msgstr "获取上传文件失败。"
+
+msgid "the number of uploaded files can only be 1. "
+msgstr "上传文件的数量只能为1."
+
+msgid "the type of uploaded file can only be xlsx or json. "
+msgstr "上传文件的类型只能为xlsx或json"
+
+msgid "the size of uploaded file can not be larger tha 10M. "
+msgstr "上传文件的大小不能大于10M。"
+
+msgid "parameter knw-id cannot be empty. "
+msgstr "参数 knw-id 不能为空。"
+
+msgid "parameter celery_task_id is missing! "
+msgstr "缺少参数 celery_task_id !"
+
+msgid "parameter knw_id is missing! "
+msgstr "缺少参数 knw_id !"
+
+msgid "parameter knw_id must be int. "
+msgstr "参数 knw_id 必须是 int 类型."
+
+msgid "parameter format is missing! "
+msgstr "缺少参数 format !"
+
+msgid "parameter format must be xlsx or json. "
+msgstr "参数format必须是xlsx或json."
+
+msgid "parameter otl_id is missing! "
+msgstr "缺少参数 otl_id !"
+
+msgid "parameter otl_id must be int. "
+msgstr "参数 otl_id 必须为正整数. "
+
+msgid "Anyshare 7 test connection fail"
+msgstr "Anyshare7连接测试失败"
+
+msgid "transform json file failed. "
+msgstr "转换json文件失败。"
+
+msgid "failed to get running task."
+msgstr "获取正在运行的任务失败。"
+
+msgid "get multi task name failed."
+msgstr "获取多个任务名称失败。"
+
+msgid "task start failed."
+msgstr "任务开始失败。"
+
+msgid " task start failed."
+msgstr "任务开始失败。"
+
+msgid "can`t get task information"
+msgstr "获取任务信息错误"
+
+msgid ""
+"File content error, please download the template and complete the "
+"document according to the format requirements."
+msgstr "文件内容错误，请下载模板，并按照格式填写。"
+
+msgid "Import failed! Ontology name is empty. Please modify and try again."
+msgstr "导入失败！本体名称为空，请修改后重试"
+
+msgid ""
+"Import failed! The format of the ontology name is incorrect. Please "
+"modify and try again."
+msgstr "导入失败！本体名称格式不正确，请修改后重试"
+
+msgid ""
+"Import failed! The ontology name already exists. Please modify and try "
+"again."
+msgstr "导入失败！本体名称已存在，请修改后重试"
+
+msgid ""
+"Import failed! The format of ontology description is incorrect. Please "
+"modify and try again."
+msgstr "导入失败！本体描述格式不正确，请修改后重试"
+
+msgid ""
+"Import failed! The format of ontology domain is incorrect. Please modify "
+"and try again."
+msgstr "导入失败！本体领域标签格式不正确，请修改后重试"
+
+msgid "Operation failed, importing entities in bulk, please try again later"
+msgstr "操作失败，正在批量导入实体，请稍后重试"
+
+msgid "Show table False"
+msgstr "展示表失败。"
+
+msgid "the username or password of mysql is incorrect."
+msgstr "mysql的用户名或密码不正确。"
+
+msgid "Mysql does not have this database or table."
+msgstr "mysql没有这个数据库或表。"
+
+msgid "the username or password of postgresql is incorrect."
+msgstr "postgresql的用户名或密码不正确。"
+
+msgid "PostgreSQL does not have this database or table."
+msgstr "PostgreSQL没有这个数据库或表。"
+
+msgid "the username or password of sqlserver is incorrect."
+msgstr "sqlserver的用户名或密码不正确。"
+
+msgid "sqlserver does not have this database or table."
+msgstr "sqlserver没有这个数据库或表。"
+
+msgid "the username or password of kingbasees is incorrect."
+msgstr "kingbasees的用户名或密码不正确。"
+
+msgid "kingbasees does not have this database or table."
+msgstr "kingbasees没有这个数据库或表。"
+
+#, fuzzy
+msgid "the username or password of ClickHouse is incorrect."
+msgstr "hive的用户名或密码不正确。"
+
+msgid "ClickHouse does not have this database or table."
+msgstr "ClickHouse没有这个数据库或表。"
+
+msgid "the username or password of hive is incorrect."
+msgstr "hive的用户名或密码不正确。"
+
+msgid "Hive dose not have this database or table."
+msgstr "hive没有这个数据库或表。"
+
+msgid "Anyshare dose not have this file."
+msgstr "anyshare没有这个文件。"
+
+msgid "can not get all of files of anyshare."
+msgstr "无法获取anyshare的全部文件。"
+
+msgid "Password decoding failed. "
+msgstr "密码解码失败. "
+
+msgid "Password encryption error"
+msgstr "密码解密错误"
+
+msgid "test connection success"
+msgstr "测试连接成功"
+
+msgid "User or Password in mysql have error"
+msgstr "mysql的用户名或密码不正确"
+
+#, fuzzy
+msgid "test connection fail, check your parameter again"
+msgstr "测试连接失败，请重新检查输入参数"
+
+msgid "Anyshare7 test connection success"
+msgstr "Anyshare7测试连接成功"
+
+msgid "User or password in hive has some error"
+msgstr "hive的用户名或密码错误"
+
+msgid "vhost error"
+msgstr "vhost错误"
+
+msgid "host error"
+msgstr "host错误"
+
+msgid "port error"
+msgstr "port错误"
+
+msgid "queue error"
+msgstr "queue错误"
+
+msgid "User or Password in sqlserver have error"
+msgstr "sqlserver的用户名或密码不正确"
+
+msgid "User or Password in kingbasees have error"
+msgstr "kingbasees的用户名或密码不正确"
+
+msgid "User or Password in PostgreSQL have error"
+msgstr "PostgreSQL的用户名或密码不正确"
+
+msgid "User or Password in ClickHouse have error"
+msgstr "ClickHouse的用户名或密码不正确"
+
+msgid "data_source no rule"
+msgstr "没有此类型数据源"
+
+#, python-format
+msgid "id %s not exist!"
+msgstr "id %s 不存在。"
+
+msgid "database already have the same name"
+msgstr "名字已存在"
+
+msgid "insert success"
+msgstr "添加成功"
+
+msgid "you have an error in your SQL!"
+msgstr "SQL出错"
+
+#, python-format
+msgid "id  %s not exist!"
+msgstr "id %s 不存在。"
+
+msgid "update fail"
+msgstr "更新失败"
+
+msgid "update dsId success"
+msgstr "更新成功。"
+
+#, python-format
+msgid "ds_id  %s not exist!"
+msgstr "ds_id %s 不存在。"
+
+#, fuzzy
+msgid "ds_id not exist!"
+msgstr "ds_id 不存在。"
+
+#, fuzzy
+msgid "data source isn't hive"
+msgstr "数据源类型不是hive"
+
+#, python-format
+msgid "Table '%s' or model '%s' doesn't exist. "
+msgstr "表 '%s' 或者模式 '%s' 不存在. "
+
+msgid ""
+"Eceph connection failed. Please turn off the upload function and contact "
+"the System OP Admin to check the relevant configuration"
+msgstr "Eceph连接失败。请先关闭上传功能并联系系统运维管理员检查相关配置"
+
+msgid " not exist!"
+msgstr "不存在。"
+
+#, python-format
+msgid "get %s fail"
+msgstr "获取%s失败"
+
+msgid "Failed to delete the graph, it is being used in domain cognitive service. "
+msgstr "删除图谱失败, 此图谱被领域认知服务使用. "
+
+msgid "delete graph failed, alg-server delete canvases error. "
+msgstr "删除图谱失败, alg-server删除画布错误. "
+
+msgid "delete fail "
+msgstr "删除失败"
+
+msgid "insert connection fail"
+msgstr "添加连接错误"
+
+#, python-format
+msgid "graph_id  %s not exist!"
+msgstr "图谱id %s 不存在！"
+
+msgid "graph_id error"
+msgstr "graph_id错误"
+
+msgid "get graph error: mysql connect error"
+msgstr "获取图谱错误：mysql连接错误"
+
+msgid "error"
+msgstr "错误"
+
+msgid "user does not have access to the knowledge network"
+msgstr "用户没有知识网络权限"
+
+msgid "user does not have access to the data source, ds_id:"
+msgstr "用户没有数据源权限，ds_id:"
+
+msgid "not a json structed"
+msgstr "不是json结构"
+
+msgid "check the file"
+msgstr "检查文件"
+
+msgid "content error in json file"
+msgstr "json文件中的内容错误"
+
+msgid "can not support the version of file"
+msgstr "无法支持当前文件版本"
+
+msgid "An error occurred during the upgrade process"
+msgstr "升级脚本发生异常"
+
+msgid "can not find version in json file"
+msgstr "无法获取json文件版本"
+
+msgid "graph_Name length cannot exceed 50"
+msgstr "图谱名称长度超过50"
+
+msgid "entity name \"{}\" does not consistent with ontology. "
+msgstr "实体类名\"{}\"与本体不一致"
+
+msgid "property of entity class \"{}\" does not consistent with ontology. "
+msgstr "实体类的属性\"{}\"与本体不一致"
+
+msgid ""
+"otl_prop \"{otl_prop}\" of entity class \"{entity_name}\" must config "
+"property mapping. "
+msgstr "实体类\"{entity_name}\"的otl_prop \"{otl_prop}\" 必须配置属性映射"
+
+msgid "missing entity {}"
+msgstr "缺少实体类{}"
+
+msgid "edge relation \"{}\" does not consistent with ontology. "
+msgstr "关系\"{}\"与本体不一致"
+
+msgid ""
+"edge_prop \"{edge_prop}\" of edge relation \"{edge_relation}\" must "
+"config property mapping. "
+msgstr "关系\"{edge_relation}\"的edge_prop \"{edge_prop}\"必须配置属性映射"
+
+msgid "missing relation {}"
+msgstr "缺少关系类{}"
+
+msgid "graph_data does not have merge property \"{}\": {}"
+msgstr "graph_data没有融合属性\"{}\": {}"
+
+msgid "data_type of graph_data \"{}\" is incorrect: {}"
+msgstr "graph_data\"{}\"的数据类型不正确: {}"
+
+msgid "graph_data start does not have _vid or merge property \"{}\": {}"
+msgstr "graph_data的start没有_vid或融合属性\"{}\": {}"
+
+msgid "graph_data end does not have _vid or merge property \"{}\": {}"
+msgstr "graph_data的end没有_vid或融合属性\"{}\": {}"
+
+msgid "data_type of graph_data edge_pros \"{}\" is incorrect: {}"
+msgstr "graph_data的edge_pros\"{}\"的数据类型不正确: {}"
+
+msgid "graph_data have property \"{}\" that do not exist in the ontology: {}"
+msgstr "graph_data的属性\"{}\"在本体中不存在: {}"
+
+msgid ""
+"graph_data edge_pros have property \"{}\" that do not exist in the "
+"ontology: {}"
+msgstr "graph_data的edge_pros的属性\"{}\"在本体中不存在: {}"
+
+msgid "entity {} not in the ontology. "
+msgstr "实体类 {} 不在本体中。"
+
+msgid "edge {} not in the ontology. "
+msgstr "边类 {} 不在本体中。"
+
+msgid "subgraph id {} has unexpected classes: "
+msgstr "子图 {} 有实体类或边类不在本体中："
+
+msgid "get task of otl fail"
+msgstr "获取本体任务失败。"
+
+msgid "get all otl task result  fail"
+msgstr "获取所有本体任务结果失败。"
+
+msgid "The url api/builder/v1/ds/dsid dsid type must be int!"
+msgstr "URL:api/builder/v1/ds/dsid 中 dsid 类型必须为整型"
+
+msgid ""
+" only support English and Chinese, numbers and underline, and the length "
+"is 0-50 digits."
+msgstr "长度应为0-50字符,且仅支持输入中英文、数字和下划线. "
+
+msgid "test connection fail"
+msgstr "测试连接错误"
+
+msgid "is None type ;"
+msgstr "为空；"
+
+msgid " must be int "
+msgstr "必须是正整数"
+
+msgid "`s value must more than one "
+msgstr "的值必须大于1"
+
+msgid " must be str "
+msgstr "必须为字符串"
+
+msgid " isn`t a valid parameter "
+msgstr "不是有效的参数"
+
+msgid " isn`t a valid parameter"
+msgstr "不是有效的参数"
+
+msgid "`s length must more than zero "
+msgstr "的长度必须大于0"
+
+msgid " must be string "
+msgstr "必须为字符串"
+
+msgid " must be  list ; "
+msgstr "必须为列表；"
+
+msgid "`s length can`t be zero"
+msgstr "的长度不能为零"
+
+msgid "has some error : "
+msgstr "有错误："
+
+msgid "These parameters :"
+msgstr "这些参数："
+
+msgid " are inexistence ; "
+msgstr "不存在；"
+
+msgid "  are exist but empty or have blankspace :"
+msgstr "存在但是为空或者有空格；"
+
+msgid "  are exist but name is reduplicative :"
+msgstr "存在但是重复了；"
+
+msgid "subgraph_ids cannot be empty."
+msgstr "subgraph_ids不能为空。"
+
+msgid "subgraph_ids must be a list."
+msgstr "subgraph_ids 必须为列表。"
+
+msgid "subgraph_ids have repeating items."
+msgstr "subgraph_ids 有重复项。"
+
+msgid "subgraph_id must be int and must be larger than zero."
+msgstr "subgraph_id必须大于0."
+
+msgid "write_mode cannot be empty."
+msgstr "参数 name 不能为空。"
+
+msgid "write_mode must be skip or overwrite."
+msgstr "write_mode必须为skip或overwrite。"
+
+msgid "flag must be full or increment."
+msgstr "flag必须为full或increment"
+
+#, python-format
+msgid "parameters: %s can not be empty!"
+msgstr "参数 %s 不能为空。"
+
+msgid "parameters: page must be int, and more than zero!"
+msgstr "参数 graph_id 必须大于0."
+
+msgid "parameters: order must be asc or desc!"
+msgstr "参数 return_all 只能为 False 或 True。"
+
+msgid ""
+"parameters: status must be in (normal, running, waiting, failed, stop, "
+"all)!"
+msgstr "参数 status 只能为 (normal, running, waiting, failed, stop, all) 之一。"
+
+msgid "parameters: graph_name Length over 50."
+msgstr "graph_id必须为正整数"
+
+msgid "parameters: size must be int, and more than zero!"
+msgstr "参数 subgraph_id 必须大于0."
+
+msgid "parameters: tas_type must be in (full,increment,all)"
+msgstr "参数 task_ids 的内容必须为整数。"
+
+msgid "parameters: trigger_type must be in (0,1,2,all)"
+msgstr "参数 graph_id 必须为整数。"
+
+#, python-format
+msgid "parameters: %s error!"
+msgstr "参数 %s 错误"
+
+#, python-format
+msgid "parameters: %s illegal!"
+msgstr "参数：%s 缺失！"
+
+#, python-format
+msgid "parameters: %s no rule!"
+msgstr "参数 %s 不能为空。"
+
+msgid "unknown error!"
+msgstr "未知错误！"
+
+#, python-format
+msgid " parameters: %s can not be empty !"
+msgstr " 参数 %s 不能为空！"
+
+msgid " parameters: "
+msgstr " 参数："
+
+msgid " must be ascend or descend!"
+msgstr " 必须为 ascend 或 descend。"
+
+msgid " must be in [normal, waiting, failed, stop, all]!"
+msgstr " 必须为 (normal, waiting, failed, stop, all) 之一。"
+
+msgid " must be 0, 1, 2!"
+msgstr " 必须是 (0,1,2) 之一；"
+
+msgid " must be full or increment!"
+msgstr " 必须为 full 或 increment"
+
+#, fuzzy
+msgid " must be structured!"
+msgstr "必须为字符串"
+
+#, python-format
+msgid " parameters:  %s  error!"
+msgstr " 参数 %s 错误！"
+
+#, python-format
+msgid " parameters: %s illegal!"
+msgstr " 参数：%s 非法！"
+
+#, python-format
+msgid " parameters: %s no rule!"
+msgstr " 参数 %s 不合规。"
+
+msgid " must be str！"
+msgstr "必须为字符串! "
+
+msgid " irregular！"
+msgstr "不规范！"
+
+msgid ""
+" only support English and Chinese, numbers and special symbols on the "
+"keyboard, and the length is 0-50 digits."
+msgstr "长度应为0-50字符,且仅支持输入中英文、数字和键盘上的特殊符号. "
+
+msgid "ds_auth must be str"
+msgstr "ds_auth必须为字符串"
+
+msgid " parameters: ds_auth must be number"
+msgstr " 参数：ds_auth必须是数字！"
+
+msgid " Characters are not _, Chinese, English！"
+msgstr "字符只支持下划线'_'，中，英文！"
+
+msgid " parameters: json_schema must be json_string; "
+msgstr " 参数：json_schema必须是json格式;"
+
+msgid " parameters: json_schema can't be empty; "
+msgstr " 参数: json_schema 不能为空; "
+
+msgid " parameters: json_schema can't be empty;"
+msgstr " 参数: json_schema 不能为空;"
+
+msgid " can not be 0！"
+msgstr "不能为0"
+
+msgid " do not have the connect type"
+msgstr "没有这个连接方式"
+
+msgid " must use odbc connect type"
+msgstr "必须使用odbc连接方式"
+
+msgid "connect_type must be 'odbc' or ''"
+msgstr "connect_type必须是'odbc'或者''"
+
+msgid " parameters: ds_port must be int"
+msgstr " 参数：ds_port必须是整型！"
+
+msgid " parameters: ds_port must in 1~65535"
+msgstr " 参数：ds_port必须介于1~65535！"
+
+msgid " parameters: dataType must be str"
+msgstr " 参数：dataType必须是字符串类型！"
+
+msgid " parameters: extract_type must be str"
+msgstr " 参数：extract_type必须是字符串类型！"
+
+msgid " parameters: data_source must be str"
+msgstr " 参数：data_source必须是字符串类型！"
+
+msgid ""
+" parameters:dataType is structured  parameters:extract_type must be "
+"standardExtraction!"
+msgstr ""
+" 参数:dataType 是 structured 参数:extract_type 必须是 standardExtraction!"
+
+msgid ""
+"parameters: dataType is unstructured  parameters: extract_type must be "
+"modelExtraction!"
+msgstr " 参数:dataType 是 unstructured 参数:extract_type 必须是 modelExtraction!"
+
+msgid ""
+" parameters:dataType is unstructured  parameters:data_source must be "
+"Anyshare!"
+msgstr " 参数:dataType 是 unstructured 参数:data_source 必须是 Anyshare!"
+
+msgid "parameters must be json"
+msgstr "参数必须是json格式"
+
+msgid ""
+" parameters: data_source must be [mysql, hive, "
+"sqlserver, kingbasees, postgresql]"
+msgstr ""
+" 参数:data_source 必须是 [mysql, hive sqlserver, "
+"kingbasees, postgresql] 之一"
+
+msgid " parameters: data_source can not be empty !"
+msgstr " 参数:data_source 不能为空！"
+
+msgid " parameters: ds_port must be int !"
+msgstr " 参数：ds_port必须是整型！"
+
+msgid " parameters: ds_port must in 1~65535 !"
+msgstr " 参数：ds_port必须介于1~65535！"
+
+msgid "parameters: ds_id must be int !"
+msgstr "参数：ds_id必须是整型！"
+
+msgid "parameters: ds_auth must be str !"
+msgstr "参数：ds_auth必须是字符串类型！"
+
+msgid " parameters: ds_auth must be number !"
+msgstr " 参数：ds_auth必须是数字！"
+
+msgid "parameters: {} must be str !"
+msgstr "参数：{} 必须为字符串。"
+
+msgid " Characters are not _, Chinese, English！ And can't be empty"
+msgstr "字符只支持下划线'_'，中，英文！并且不能为空"
+
+msgid " must be str"
+msgstr "必须为字符串"
+
+msgid "parameters:  %s  are not required!,"
+msgstr "参数：%s 不需要！"
+
+msgid "parameters:  %s  are Missing!,"
+msgstr "参数：%s 缺失！"
+
+msgid "parameters task_id must be list!"
+msgstr "task_id必须为列表"
+
+msgid "parameters: task_ids content must be int."
+msgstr "参数 task_ids 的内容必须为整数。"
+
+msgid "parameters: task_ids list can not be empty."
+msgstr "参数 task_ids 列表不能为空。"
+
+msgid " is not required. "
+msgstr " 多余"
+
+msgid " cannot be empty. "
+msgstr "不能为空"
+
+#, fuzzy
+msgid " must be number."
+msgstr "必须为数字！"
+
+msgid " less than 1."
+msgstr " 小于1"
+
+msgid " is required. "
+msgstr " 是需要的"
+
+msgid " must be dict."
+msgstr "必须是字典。"
+
+msgid " cannot be empty."
+msgstr "不能为空"
+
+msgid " parameters: partition_infos partition"
+msgstr " 参数: partition_infos的分区字段"
+
+#, fuzzy
+msgid "'s expression must be str"
+msgstr "的表达式必须为字符串"
+
+msgid "Parameter %s must be a int type. "
+msgstr "参数 %s 必须为 int 类型. "
+
+msgid "Parameter %s must be a string type. "
+msgstr "参数 %s 必须为 string 类型. "
+
+msgid "Parameter %s must be in %s. "
+msgstr "参数 %s 必须在 %s 中. "
+
+msgid "Parameter %s cannot be empty. "
+msgstr "参数 %s 不能为空. "
+
+msgid "Parameter sql only support entering a single statement. "
+msgstr "参数 sql 仅支持输入单条语句. "
+
+msgid "Parameter sql must be a query statement. "
+msgstr "参数 sql 必须为查询语句. "
+
+msgid "parameter knw_id must be larger than zero. "
+msgstr "参数 knw_id 必须大于零."
+
+msgid "parameter name must be string. "
+msgstr "参数 name 必须为 string 类型."
+
+msgid "parameter name cannot be empty. "
+msgstr "参数 name 不能为空。"
+
+msgid ""
+"parameter name cannot exceed 50 characters and characters must be "
+"numbers, _, chinese or english. "
+msgstr "参数 name 不能超过50个字符且只能由数字、下划线、中文和英文组成。"
+
+msgid "parameter language must be string. "
+msgstr "参数 language 必须为 string 类型."
+
+msgid "parameter language cannot be empty. "
+msgstr "参数 language 不能为空."
+
+msgid "parameter language must be in {}; "
+msgstr "参数 language 必须在{}; "
+
+msgid "parameter code must be string. "
+msgstr "参数 code 必须为 string 类型. "
+
+msgid "parameter code cannot be empty. "
+msgstr "参数 code 不能为空. "
+
+msgid "The number of code bytes must be less than 16M;"
+msgstr "参数 code 的字节数应小于16M;"
+
+msgid "the code only supports a single statement. "
+msgstr "图查询语言仅支持单条语句. "
+
+msgid "parameter description must be string. "
+msgstr "参数 description 必须为 string 类型."
+
+msgid ""
+" consists of Chinese, English, number and special symbols, and the length"
+" is 0-150 digits."
+msgstr "长度应为0-150，并且由中英文、数字及特殊字符组成."
+
+msgid "parameter function_id must be int. "
+msgstr "参数 function_id 必须为 int 类型."
+
+msgid "parameter function_id must be larger than zero. "
+msgstr "参数 function_id 必须大于零."
+
+msgid "parameter function_ids must be list. "
+msgstr "参数 function_ids 必须为列表."
+
+msgid "function_id must be int. "
+msgstr "function_id 必须为 int 类型."
+
+msgid "function_id must be larger than zero. "
+msgstr "function_id 必须大于零."
+
+msgid "parameter page must be int. "
+msgstr "参数 page 必须为 int 类型."
+
+msgid "parameter page must be larger than zero. "
+msgstr "参数 page 必须大于零."
+
+msgid "parameter size must be int. "
+msgstr "参数 size 必须为 int 类型."
+
+msgid "parameter size must be larger than zero. "
+msgstr "参数 size 必须大于零."
+
+msgid "parameter order_field must be string. "
+msgstr "参数 order_field 必须为 string 类型."
+
+msgid ""
+"parameter order_field must be in [\"update_time\", \"create_time\", "
+"\"name\"];"
+msgstr "参数 order_field 必须在 ['update_time', 'create_time', 'name'] 中;"
+
+msgid "parameter order_type must be string. "
+msgstr "参数 order_type 必须为 string 类型."
+
+msgid "parameter order_type must be in [\"desc\", \"asc\"];"
+msgstr "参数 order_type 必须在 ['desc', 'asc'] 中;"
+
+msgid "parameter search must be string. "
+msgstr "参数 search 必须为 string 类型."
+
+msgid "parameter parameters must be list. "
+msgstr "参数 parameters 必须为列表。"
+
+msgid "the content in the list must be a dict."
+msgstr "列表中内容必须为字典类型。"
+
+msgid "the name of function_param No.{} must be string. "
+msgstr "函数参数{}中的 name 必须为 string 类型。"
+
+msgid "the name of function_param No.{} cannot be empty. "
+msgstr "函数参数{}中的 name 不能为空。"
+
+msgid ""
+"the name of function_param No.{} cannot exceed 50 characters and "
+"characters must be lowercase english letters and _ . "
+msgstr "函数参数{}中的 name 长度不能超过50个字符，并且字符必须为_和小写英文字母。"
+
+msgid "the name of function_param No.{} cannot be created repeatedly;"
+msgstr "函数参数{}中的 name 不可重复;"
+
+msgid "the alias of function_param No.{} must be string. "
+msgstr "函数参数{}中的 alias 必须为 string 类型。"
+
+msgid "the alias of function_param No.{} cannot be empty. "
+msgstr "函数参数{}中的 alias 不能为空。"
+
+msgid ""
+"the alias of function_param No.{} cannot exceed 50 characters and "
+"characters must be numbers, _, chinese or english. "
+msgstr "函数参数{}中的 alias 长度不能超过50个字符，并且字符必须为_、中英文、数字。"
+
+msgid "the description of function_param No.{} must be string. "
+msgstr "函数参数{}中的 description 必须为 string 类型。"
+
+msgid ""
+"the description of function_param No.{} consists of Chinese, English, "
+"number and special symbols, and the length is 0-1000 digits."
+msgstr "函数参数{}中的 description 长度应为0-1000，并且由中英文、数字及特殊字符组成."
+
+msgid "the position of function_param No.{} must be a list;"
+msgstr "函数参数{}中的 position 必须为列表；"
+
+msgid "the information in position of function_param No.{} must be a dict ."
+msgstr "函数参数{}的position中的数据必须为dict类型. "
+
+msgid ""
+"the information in position of function_param No.{} not find key \"pos\" "
+"and \"example\" ."
+msgstr "函数参数{}的 position 中的数据中的 key 必须为 pos 和 example. "
+
+msgid ""
+"the pos in the position information of function_param No.{} must be a "
+"list;"
+msgstr "函数参数{}的位置信息中 pos 必须为 list;"
+
+msgid ""
+"the pos in the position information of function_param No.{} length must "
+"be 3;"
+msgstr "函数参数{}的位置信息中 pos 长度必须为 3;"
+
+msgid ""
+"the value in position of function_param No.{} must be int and cannot be "
+"less than zero; "
+msgstr "函数参数{}中 position 的值必须为 int 类型且不能小于零；"
+
+msgid ""
+"the value in position of function_param No.{} end_position must more than"
+" start_position;"
+msgstr "函数参数{}中 position 的值，终止位置必须大于起始位置；"
+
+msgid "the param_type of function_param No.{} must be string. "
+msgstr "函数参数{}中 param_type 必须为 string 类型. "
+
+msgid "the param_type of function_param No.{} must be in {}. "
+msgstr "函数参数{}中 param_type 必须在 {} 中. "
+
+msgid "the options of function_param No.{} must be string. "
+msgstr "函数参数{}中 options 必须为 string 类型. "
+
+msgid "the options of function_param No.{} must be in {}. "
+msgstr "函数参数{}中 options 必须在 {} 中. "
+
+#, python-format
+msgid "sql name %s repeats. "
+msgstr "sql名称 %s 重复. "
+
+#, fuzzy
+msgid "Parameter SQL must be a query statement. "
+msgstr "参数 sql 必须为查询语句. "
+
+msgid "entity_type of entity \"{}\" does not exists in entity_types of files. "
+msgstr "实体类\"{}\"的entity_type不在files的entity_type中"
+
+msgid ""
+"entity_prop \"{entity_prop}\" of entity \"{entity}\" does not exists in "
+"property_field of files. "
+msgstr "实体类\"{entity}\"的entity_prop \"{entity_prop}\"不在files的property_field中"
+
+msgid "entity_type of edge \"{}\" does not exists in entity_types of files. "
+msgstr "关系类\"{}\"的entity_type不在files的entity_type中"
+
+msgid ""
+"entity_prop \"{entity_prop}\" of edge \"{edge}\" does not exists in "
+"property_field of files. "
+msgstr "关系\"{edge}\"的entity_prop \"{entity_prop}\"不在files的property_field中"
+
+msgid "parameter name cannot be \"未分组\" or \"ungrouped\". "
+msgstr "参数 name 不能为 未分组 或 ungrouped."
+
+msgid "parameter graph_id cannot be empty."
+msgstr "参数 graph_id 不能为空。"
+
+msgid "parameter graph_id must be int. "
+msgstr "graph_id必须为正整数"
+
+msgid "parameter graph_id must be larger than zero."
+msgstr "参数 graph_id 必须大于0."
+
+msgid "parameter ontology_id cannot be empty."
+msgstr "参数 ontology_id 不能为空。"
+
+msgid "parameter ontology_id must be int. "
+msgstr "参数 ontology_id 必须为整数。"
+
+msgid "parameter ontology_id must be larger than zero."
+msgstr "参数 ontology_id 必须大于0."
+
+msgid "the parameter must be a list. "
+msgstr "参数 必须为列表。"
+
+msgid "parameter subgraph_id cannot be empty."
+msgstr "subgraph_id不能为空"
+
+msgid "parameter subgraph_id must be int. "
+msgstr "参数 subgraph_id 必须为整数。"
+
+msgid "parameter subgraph_id must be larger than zero."
+msgstr "参数 subgraph_id 必须大于0."
+
+msgid "subgraph id {} is duplicate. "
+msgstr "子图id {} 重复。"
+
+msgid ""
+"parameter name {} cannot exceed 50 characters and characters must be "
+"numbers, _, chinese or english. "
+msgstr "参数 name {} 不能超过50个字符且只能由数字、下划线、中文和英文组成。"
+
+msgid "name {} is duplicate."
+msgstr "名称 {} 重复。"
+
+msgid "parameter entity must be list. "
+msgstr "参数 entity 必须为列表。"
+
+msgid "parameter edge must be list. "
+msgstr "参数 edge 必须为列表。"
+
+msgid "parameter subgraph_name cannot be empty."
+msgstr "subgraph_name不能为空"
+
+msgid "parameter return_all must be False or True."
+msgstr "参数 return_all 只能为 False 或 True。"
+
+msgid "entity "
+msgstr "实体类"
+
+msgid "edge "
+msgstr "关系类"
+
+msgid " name"
+msgstr "的实体类名"
+
+msgid " Length over 50 or Characters are not _, English. "
+msgstr "长度大于50，或字符不是下划线、英文. "
+
+msgid " Length over 255 or Characters are not _, English. "
+msgstr "长度大于255，或字符不是下划线、英文. "
+
+msgid " alias"
+msgstr "的实体类显示名"
+
+msgid " Length over 50 or Characters are not _, Chinese, English！"
+msgstr "长度大于50，或字符不是下划线'_'，中，英文！"
+
+msgid " index_default_switch"
+msgstr ""
+
+#, fuzzy
+msgid " must be bool！"
+msgstr "必须为字符串! "
+
+msgid " index_main_switch"
+msgstr ""
+
+msgid " properties_index"
+msgstr "的索引"
+
+msgid " must have one properties_index."
+msgstr "至少有一个属性索引."
+
+msgid " must be an existing properties name. "
+msgstr "必须是存在的属性名."
+
+msgid " can not be empty."
+msgstr "不能为空."
+
+msgid " is not illegal ; "
+msgstr "不合法；"
+
+#, python-format
+msgid " must in %s. "
+msgstr "必须在 %s 中. "
+
+msgid " relations "
+msgstr "的关系"
+
+msgid " properties"
+msgstr "的属性"
+
+msgid " properties item must be dict. "
+msgstr " 属性中的元素必须为字典类型. "
+
+msgid " properties name"
+msgstr "的属性名"
+
+msgid " is dupulicated ; "
+msgstr " 重复; "
+
+msgid " properties description"
+msgstr "的属性描述"
+
+msgid ""
+" only support English and Chinese, numbers and special symbols on the "
+"keyboard, and the length is 0-150 digits."
+msgstr "长度应为0-150字符,且仅支持输入中英文、数字和键盘上的特殊符号. "
+
+msgid " properties alias"
+msgstr "的属性显示名"
+
+msgid ""
+" only support English and Chinese, numbers and underline, and the length "
+"is 0-50 digits."
+msgstr "长度应为0-50字符,且仅支持输入中英文、数字和下划线. "
+
+msgid " only support English and Chinese, numbers and underline, and the length is 0-255 digits."
+msgstr "长度应为0-255字符,且仅支持输入中英文、数字和下划线. "
+
+msgid " only support English and Chinese, numbers and special symbols on the keyboard, and the length is 0-255 digits."
+msgstr "长度应为0-255字符,且仅支持输入中英文、数字和键盘上的特殊符号. "
+
+msgid " properties data_type"
+msgstr "的属性类型"
+
+msgid " properties synonym"
+msgstr "的属性同义词"
+
+msgid "These properties parameters :"
+msgstr "属性参数："
+
+msgid " must have one property! "
+msgstr "至少有一个属性！"
+
+msgid "width"
+msgstr "粗细"
+
+msgid "icon"
+msgstr "的图标"
+
+msgid " default_tag"
+msgstr "的默认显示属性"
+
+msgid " primary_key"
+msgstr "融合属性"
+
+msgid " must have one primary_key."
+msgstr "必须有一条融合属性. "
+
+msgid " shape"
+msgstr "的图形"
+
+msgid "description"
+msgstr "的描述"
+
+msgid "synonym"
+msgstr "的同义词"
+
+msgid " size"
+msgstr "的大小"
+
+msgid " text_position"
+msgstr "的文本位置"
+
+msgid " icon_color"
+msgstr "的图标颜色"
+
+msgid " text_type"
+msgstr "的文本类型"
+
+msgid "delimiter"
+msgstr "分隔符"
+
+msgid "quotechar"
+msgstr "文本标识符"
+
+msgid "escapechar"
+msgstr "文本标识转义符"
+
+msgid "must be adaptive. "
+msgstr "必须为adaptive. "
+
+msgid " if entity is empty ,edge must be empty. "
+msgstr "如果实体类为空，关系类必须为空. "
+
+#, python-format
+msgid "The entity of edge %s's relationship is not in the entity list. "
+msgstr "关系类%s的起点或终点实体不在实体类列表中. "
+
+#, python-format
+msgid "Edge class %s's name does not match the relation. "
+msgstr "关系类%s的名称与关系中名称不匹配. "
+
+msgid "is None type;"
+msgstr "为空"
+
+msgid "if extract_type is labelExtraction, datasource must be as."
+msgstr "如果extract_type为标注抽取，数据源必须是as。"
+
+msgid "extract_type can not be "
+msgstr "extract_type不能为"
+
+msgid " must be  str ; "
+msgstr "必须为字符串；"
+
+msgid " must be  docid ; "
+msgstr "必须为docid；"
+
+msgid " must be  dir ; "
+msgstr "必须为目录；"
+
+msgid " must be >=1 ; "
+msgstr "必须大于等于1；"
+
+msgid " must be  number ; "
+msgstr "必须为数字；"
+
+msgid " must be >0 ; "
+msgstr "必须大于0；"
+
+msgid " must be in 1~65535 ; "
+msgstr "必须在1~65535之间；"
+
+msgid "as file_list  is not illegal "
+msgstr "as file_list不合法"
+
+msgid "`s size must be  only one ; "
+msgstr "的大小必须为1；"
+
+msgid "Add at least one entity class"
+msgstr "至少添加一个实体类"
+
+msgid " must be str ; "
+msgstr "必须为字符串；"
+
+msgid " must <= 150 ,and conclude letter number and special characters"
+msgstr "必须小于等于150，包括字母、数字和特殊字符"
+
+msgid " must in  "
+msgstr "必须为"
+
+msgid ""
+" must <= 50 ; and it is must be consisted of letter ,number and underline"
+" ; "
+msgstr "必须小于等于50，且必须包含字母、数字和下划线. "
+
+msgid "docid is not illegal "
+msgstr "docid不合法"
+
+msgid "max number of domain is 10. "
+msgstr "本体所属领域最大个数为10个. "
+
+msgid "the value in domain can not duplicate. "
+msgstr "本体所属领域中的值不可重复. "
+
+msgid "the value in domain must be string. "
+msgstr "本体所属领域中的值必须为字符串类型. "
+
+msgid "the value in domain only support English and Chinese, numbers and special symbols"
+" on the keyboard, and the length is 0-50 digits."
+msgstr "本体所属领域中的值长度应为0-50，并且仅支持中英文、数字及键盘上的特殊字符. "
+
+msgid "canvas must have background_color."
+msgstr ""
+
+msgid "canvas background_color must be in {}."
+msgstr ""
+
+msgid "canvas must have background_image."
+msgstr ""
+
+msgid "canvas background_image must be in {}."
+msgstr ""
+
+msgid "When the relationship name is the same, the alias must be the same"
+msgstr ""
+
+msgid "class name can't repeated !"
+msgstr "类名不能重复！"
+
+msgid "alias name can't repeated !"
+msgstr "别名不能重复！"
+
+msgid "The edge class name is already in use by the model, please modify it!"
+msgstr "关系类名已被模型占用，请修改!"
+
+msgid "relationships between the same entities can't have the same name !"
+msgstr "相同实体之间的关系不能重名！"
+
+msgid " must be int, and more than zero or equal to -1. "
+msgstr "必须为整数类型，并且大于零或等于-1. "
+
+msgid " must be True or False. "
+msgstr "必须为True或False. "
+
+#, python-format
+msgid "entity name %s is duplicate. "
+msgstr "实体类名称 %s 重复. "
+
+#, python-format
+msgid "entity alias name %s is duplicate. "
+msgstr "实体类别名 %s 重复. "
+
+#, python-format
+msgid "edge name %s is duplicate. "
+msgstr "关系类名称 %s 重复. "
+
+msgid "parameter otl_ids must be list. "
+msgstr "参数 otl_ids 必须为列表. "
+
+msgid "parameter otl_ids cannot be empty."
+msgstr "参数otl_ids不能为空。"
+
+msgid "ontology id must be int, and more than zero. "
+msgstr "本体 id 必须为整数类型且大于零. "
+
+msgid ""
+"Parameter sql_name only support English and Chinese, numbers and "
+"underline, and the length is 0-50 digits."
+msgstr "参数 sql_name 长度应为0-50字符,且仅支持输入中英文、数字和下划线. "
+
+msgid "Password decoding failed. "
+msgstr "密码解码失败. "
+
+msgid "SQL statement execution timeout, please optimise your SQL statement. "
+msgstr "SQL语句执行超时，请优化你的SQL语句. "
+
+msgid "SQL statement execution error, please check your SQL statement. "
+msgstr "SQL语句执行错误，请检查你的SQL语句. "
+
+msgid "Data source type [data_source] does not support SQL extracting. "
+msgstr "数据源类型 [data_source] 不支持SQL抽取. "
+
+msgid "User or Password in ClickHouse have error"
+msgstr "ClickHouse的用户名或密码不正确"
+
+msgid "ClickHouse have unknown error"
+msgstr "ClickHouse存在未知错误"
+
+msgid "sql name %s repeats. "
+msgstr "sql名称 %s 重复. "
+
+msgid "Duplicate field names exist in SQL extracting results. "
+msgstr "sql抽取结果中存在重复的字段名. "
+
+msgid "ds_id [ds_id] not in the data source selected for the graph."
+msgstr "ds_id [ds_id] 不在图谱选择的数据源中"
+
+msgid "entity name \"{}\" does not consistent with ontology. "
+msgstr "实体类名\"{}\"与本体不一致"
+
+msgid "property of entity class \"{}\" does not consistent with ontology. "
+msgstr "实体类的属性\"{}\"与本体不一致"
+
+msgid "otl_prop \"{otl_prop}\" of entity class \"{entity_name}\" must config property mapping. "
+msgstr "实体类\"{entity_name}\"的otl_prop \"{otl_prop}\" 必须配置属性映射"
+
+msgid "edge relation \"{}\" does not consistent with ontology. "
+msgstr "关系\"{}\"与本体不一致"
+
+msgid "property of edge relation \"{}\" does not consistent with ontology. "
+msgstr "关系\"{}\"的属性与本体不一致"
+
+msgid "edge_prop \"{edge_prop}\" of edge relation \"{edge_relation}\" must config property mapping. "
+msgstr "关系\"{edge_relation}\"的edge_prop \"{edge_prop}\"必须配置属性映射"
+
+msgid "entity_type of entity \"{}\" does not exists in entity_types of files. "
+msgstr "实体类\"{}\"的entity_type不在files的entity_type中"
+
+msgid "entity_prop \"{entity_prop}\" of entity \"{entity}\" does not exists in property_field of files. "
+msgstr "实体类\"{entity}\"的entity_prop \"{entity_prop}\"不在files的property_field中"
+
+msgid "entity_type of edge \"{}\" does not exists in entity_types of files. "
+msgstr "关系类\"{}\"的entity_type不在files的entity_type中"
+
+msgid "entity_prop \"{entity_prop}\" of edge \"{edge}\" does not exists in property_field of files. "
+msgstr "关系\"{edge}\"的entity_prop \"{entity_prop}\"不在files的property_field中"
+
+msgid "graph_id  %s not exist!"
+msgstr "图谱id %s 不存在！"
+
+msgid "get graph error: mysql connect error"
+msgstr "获取图谱错误：mysql连接错误"
+
+msgid "graph task is not normal or graph status is not finish"
+msgstr "图谱最后一次构建失败或图谱构建未完成"
+
+msgid "Please check graph or task status"
+msgstr "请校验图谱或任务状态"
+
+msgid "knw id %s not exists"
+msgstr "知识网络id %s 不存在"
+
+msgid "get file error"
+msgstr "获取文件失败"
+
+msgid "unexception error"
+msgstr "未知错误"
+
+msgid "user does not have access to the knowledge network"
+msgstr "用户没有知识网络权限"
+
+msgid "user does not have access to the data source, ds_id:"
+msgstr "用户没有数据源权限，ds_id:"
+
+msgid "content error in json file"
+msgstr "json文件中的内容错误"
+
+msgid "missing data source mapping information"
+msgstr "缺少数据源映射信息"
+
+msgid "ds id is not in ds_id_map"
+msgstr "数据源id不在ds_id_map中"
+
+msgid "not a json structed"
+msgstr "不是json结构"
+
+msgid "check the file"
+msgstr "检查文件"
+
+msgid "graph_Name length cannot exceed 50"
+msgstr "图谱名称长度超过50"
+
+msgid "Parameter %s must be in %s. "
+msgstr "参数 %s 必须在 %s 中. "
+
+msgid " Length over 50 or Characters are not _, ., Chinese, English！"
+msgstr "长度大于50，或字符不是下划线'_'，点'.'，中，英文！"
+
+msgid "Failed to get database table structure. "
+msgstr "获取数据库表结构失败. "
+
+msgid "No permissions for ds_id %s."
+msgstr "没有数据源%s的权限. "
+
+msgid "Failed to preview data. "
+msgstr "预览数据失败. "
+
+msgid "data source doesn't match."
+msgstr "数据源类型不匹配. "
+
+msgid "Data source type [data_source] does not support SQL statement. "
+msgstr "数据源类型 [data_source] 不支持SQL语句. "
+
+msgid "Table '%s' or model '%s' doesn't exist. "
+msgstr "表 '%s' 或者模式 '%s' 不存在. "
+
+msgid "only a single character is allowed for %s."
+msgstr "%s仅支持使用单个字符."
+
+msgid " only support English and Chinese, numbers and special symbols on the keyboard."
+msgstr "仅支持输入中英文、数字和键盘上的特殊符号."
+
+msgid "delimiter should not be the same as quotechar and escapechar."
+msgstr "分隔符不能与文本标识符和文本标识转义符相同."
+
+msgid "Data extracting is empty, please re-select the data table used in SQL statement or go database to add data"
+msgstr "数据抽取为空，请更换SQL语句中的数据表或者前往数据库补充数据"
+
+msgid "missing entity {}"
+msgstr "缺少实体类{}"
+
+msgid "missing relation {}"
+msgstr "缺少关系类{}"
+
+msgid "No permissions for taxonomy [id]."
+msgstr "没有术语库[id]的权限. "
+
+msgid "taxonomy id [taxonomy_id] not exists."
+msgstr "术语库id [taxonomy_id] 不存在"
+
+msgid "name [name] is duplicate."
+msgstr "名称 [name] 重复"
+
+msgid "word id [word_id] not exists"
+msgstr "词id [word_id] 不存在"
+
+msgid "[language] name [name] is duplicate."
+msgstr "[language]名称 [name] 重复"
+
+msgid "[language] information already exists."
+msgstr "[language]的基本信息已存在"
+
+msgid "[language] information does not exist."
+msgstr "[language]的基本信息不存在"
+
+msgid "The basic information of the last language cannot be deleted"
+msgstr "最后一项语言的基本信息不允许删除"
+
+msgid "Custom relationship does not exist, please modify"
+msgstr "自定义关系不存在，请修改"
+
+msgid "word cannot be moved to child level"
+msgstr "术语不能移动至子级"
+
+msgid "Name already exists, please modify"
+msgstr "名称已存在，请修改"
+
+msgid "Redis cache write failed."
+msgstr "Redis缓存写入失败"
+
+msgid "Redis cache read failed."
+msgstr "Redis缓存读取失败"
+
+msgid " parameter: "
+msgstr " 参数："
+
+msgid " is required!"
+msgstr "是必需的！"
+
+msgid " must be a string type!"
+msgstr "必须是字符串类型！"
+
+msgid " must be an int type!"
+msgstr "必须是整型！"
+
+msgid " must be a float type!"
+msgstr "必须是浮点数类型！"
+
+msgid " must be a list!"
+msgstr "必须是数组！"
+
+msgid " must be a dict!"
+msgstr "必须是字典！"
+
+msgid " must be a bool type!"
+msgstr "必须是布尔类型！"
+
+msgid " length is at least "
+msgstr "长度至少为"
+
+msgid " length must be "
+msgstr "长度只能为"
+
+msgid "!"
+msgstr "！"
+
+msgid " length is up to "
+msgstr "长度至多为"
+
+msgid " has duplicated items!"
+msgstr "有重复元素！"
+
+msgid " must be Chinese and English, numbers and special symbols on the keyboard!"
+msgstr "必须是中英文，数字和键盘字符！"
+
+msgid " must be a hexadecimal number within the range of 0-9 or a-f!"
+msgstr "必须是0-9或a-f范围内的十六进制的数字！"
+
+msgid "Nebula Internal Server Error"
+msgstr "nebula服务异常"
+
+msgid "Nebula Internal Server Error. Get child word failed"
+msgstr "nebula服务异常，获取下级词失败"
+
+msgid "opensearch connection error"
+msgstr "opensearch连接失败"
+
+msgid "The user does not have permission to create a lexicon."
+msgstr "用户没有创建词库的权限。"
+
+msgid "Lexicon name [name] already exists and cannot be created repeatedly."
+msgstr "词库名称[name]已存在,不可重复创建。"
+
+msgid "lexicon id [lexicon_id] not exists"
+msgstr "词库id [lexicon_id] 不存在"
+
+msgid "task cannot run, the current lexicon is running or waiting."
+msgstr "任务不可运行，当前词库状态为待运行或运行中。"
+
+msgid "lexicon id in the extract_info must be int."
+msgstr "抽取信息中的词库id必须为int类型。"
+
+msgid "lexicon id in the extract_info must more than zero."
+msgstr "抽取信息中的词库id必须大于零。"
+
+msgid "lexicon columns in the extract_info must be list."
+msgstr "抽取信息中的词库列名必须为列表。"
+
+msgid "lexicon columns in the extract_info cannot be empty."
+msgstr "抽取信息中的词库列名列表不能为空。"
+
+msgid "lexicon columns item in the extract_info must be str."
+msgstr "抽取信息中词库列名中的元素必须为字符串类型。"
+
+msgid "lexicon columns item in the extract_info cannot be empty."
+msgstr "抽取信息中词库列名列表中的元素不能为空。"
+
+msgid "lexicon separator in the extract_info must be list."
+msgstr "抽取信息中的词库分隔符必须为列表。"
+
+msgid "lexicon separator in the extract_info cannot be empty."
+msgstr "抽取信息中的词库分隔符列表不能为空。"
+
+msgid "lexicon separator item in the extract_info must be str."
+msgstr "抽取信息中词库分隔符列表中的元素必须为字符串。"
+
+msgid "the length of columns and separator don't match."
+msgstr "列名与分隔符列表的数量不匹配。"
+
+msgid "graph id in the extract_info must be int."
+msgstr "抽取信息中的图谱id必须为int类型。"
+
+msgid "lexicon in the extract_info must be list."
+msgstr "抽取信息中的词库必须为列表。"
+
+msgid "graph in the extract_info must be list."
+msgstr "抽取信息中的图谱必须为列表。"
+
+msgid "graph id in the extract_info must more than zero."
+msgstr "抽取信息中的图谱id必须大于零。"
+
+msgid "entity name must be str."
+msgstr "实体名称必须为字符串。"
+
+msgid "entity name cannot be empty."
+msgstr "实体名称不能为空。"
+
+msgid "entity prop must be list."
+msgstr "实体属性必须为列表。"
+
+msgid "entity prop cannot be empty."
+msgstr "实体属性列表不能为空。"
+
+msgid "entity prop item must be str."
+msgstr "实体属性列表中的元素必须为字符串。"
+
+msgid "entity prop item cannot be empty."
+msgstr "实体属性列表中的元素不能为空。"
+
+msgid "entity separator must be list."
+msgstr "实体属性分隔符必须为列表。"
+
+msgid "entity separator cannot be empty."
+msgstr "实体属性分隔符列表不能为空。"
+
+msgid "entity separator item must be str."
+msgstr "实体属性分隔符列表中的元素必须为字符串。"
+
+msgid "the length of prop and separator don't match."
+msgstr "属性和属性分隔符列表的数量不匹配。"
+
+msgid "Don't have permission to view lexicon [lexicon_ids]."
+msgstr "没有词库[lexicon_ids]的查看权限。"
+
+msgid "Don't have permission to view graph [graph_ids]."
+msgstr "没有图谱[graph_ids]的查看权限。"
+
+msgid "Only participle template support extract lexicon."
+msgstr "仅分词模板支持抽取词库信息。"
+
+msgid "Standard word attribute cannot set a separator."
+msgstr "标准词属性不可设置分隔符。"
+
+msgid "The lexicon id [ids] in the extract_info does not exist."
+msgstr "抽取信息中的词库 [ids] 不存在。"
+
+msgid "The graph id [ids] in the extract_info does not exist."
+msgstr "抽取信息中的图谱 [ids] 不存在。"
+
+msgid "the current lexicon is running or waiting."
+msgstr "当前词库正在运行中或等待中。"
+
+msgid "lexicon separator item in the extract_info only support single characters or \\n,\\t."
+msgstr "抽取信息中词库分隔符列表中的元素仅支持单个字符或\\n,\\t。"
+
+msgid "entity separator item only support single characters or \\n,\\t."
+msgstr "实体属性分隔符列表中的元素仅支持单个字符或\\n,\\t。"
+
+msgid "missing required parameter：{};"
+msgstr "缺少必要的参数：{};"
+
+msgid "The user don't have permission to build lexicon."
+msgstr "此用户没有构建词库的权限。"
+
+msgid "lexicon extract info is empty."
+msgstr "词库的抽取信息为空。"
+
+msgid "Insufficient available capacity;"
+msgstr "可用的知识量不足。"
+
+msgid "Insufficient capacity! available graph capacity: {}; used graph capacity: {};"
+msgstr "知识量不足! 可用知识量：{}; 已用知识量：{};"
+
+msgid "lexicon separator item in the extract_info only support English and Chinese, numbers and special symbols on the keyboard."
+msgstr "抽取信息中词库分隔符列表中的元素仅支持中英文、数字及键盘上的特殊字符。"
+
+msgid "entity separator item only support English and Chinese, numbers and special symbols on the keyboard."
+msgstr "实体属性分隔符列表中的元素仅支持中英文、数字及键盘上的特殊字符。"
+
+msgid "The knowledge network does not match the graph!"
+msgstr "知识图谱不在知识网络中！"
+
+msgid "File upload failed, file encoding error. The file only supports UTF-8 encoding."
+msgstr "文件导入失败，文件编码错误。文件仅支持UTF-8编码。"
+
+msgid "File upload failed, file content format error."
+msgstr "文件导入失败，文件格式错误。"
+
+msgid "New data and original data fields are inconsistent."
+msgstr "新数据与源数据属性不匹配。"
+
+msgid "File upload failed, data amount exceeds."
+msgstr "文件导入失败，数据量超额。"
+
+msgid "Only custom template support extract lexicon."
+msgstr "仅分词模板支持抽取词库。"
+
+msgid "compensation_cache must be bool"
+msgstr "compensation_cache必须为bool"
+
+msgid "Make sure the graph_id exists, and the graph_id should be a number"
+msgstr "请确保graph_id存在，且graph_id应为数字"
+
+msgid "compensation_cache can not be empty"
+msgstr "compensation_cache不得传空值"
+
+msgid "vertex name not exists."
+msgstr "该实体类名不存在"
+
+msgid "relation name not exists."
+msgstr "该关系类名不存在"
+
+msgid "vertex_name cannot be empty."
+msgstr "vertex_name 不能为空"
+
+msgid "relation_name cannot be empty."
+msgstr "relation_name 不能为空"
+
+msgid "vertex_data cannot be empty."
+msgstr "vertex_data 不能为空"
+
+msgid "An error occurred while deleting."
+msgstr "删除时发生错误"
+
+msgid "The knowledge network does not match the graph!"
+msgstr "知识图谱不在知识网络中！"
+
+msgid "Duplicate data source name"
+msgstr "数据源名称重复"
+
+msgid "The start time cannot be greater than the end time."
+msgstr "开始时间不能大于结束时间。"
+
+msgid "start_time must be in file_list."
+msgstr "start_time必须在file_list中。"
+
+msgid "end_time must be in file_list."
+msgstr "end_time必须在file_list中。"
+
+#~ msgid "File format conflict, all file structures need to be unified."
+#~ msgstr "字段格式冲突，所有文件的内容结构需要一致"
+
+#~ msgid "The file format only supports CSV and TXT."
+#~ msgstr "上传文件仅支持csv和txt."
+
+#~ msgid "The maximum number of uploaded file is 5;"
+#~ msgstr "上传文件个数最多为5个."
+
+#~ msgid "Failed to get file."
+#~ msgstr "获取文件失败"
+
+#~ msgid "Please check graph build status"
+#~ msgstr "请检查图谱构建状态"
+
+#~ msgid "parameter [arg] error"
+#~ msgstr "参数 [arg] 错误"
+
+#~ msgid "[class_type] [class_name] is not in ontology."
+#~ msgstr "[class_type] [class_name] 不在本体中."
+
+#~ msgid "[class_type] [class_name]  is not in ontology."
+#~ msgstr "[class_type] [class_name] 不在本体中."
+
+#~ msgid "caution! task not exists. "
+#~ msgstr "graphid [graphid] 不存在"
+
+#~ msgid "parameters:  %s  error!"
+#~ msgstr "参数错误"
+
+#~ msgid "parameters: %s no rule!"
+#~ msgstr "参数错误"
+
+#~ msgid "parameters: %s can not be empty !,"
+#~ msgstr "参数 %s 不能为空"
+
+#~ msgid "cancel async task service internal error"
+#~ msgstr "异步任务服务内部错误"
+
+#~ msgid "parameters must be json"
+#~ msgstr "参数必须是json格式"
+
+#~ msgid "parameter order_field cannot be empty. "
+#~ msgstr "参数 order_field 不能为空."
+
+#~ msgid "parameter order_type cannot be empty. "
+#~ msgstr "参数 order_type 不能为空."
+
+#~ msgid "function_param position contains parameterized values;"
+#~ msgstr "函数参数 position 中包含已参数化的值；"
+
+#~ msgid "the position of function_param No.{} length must be 3;"
+#~ msgstr "函数参数{}中的 position 长度必须为 3；"
+
+#~ msgid "kingbasees's path should be table/mode! "
+#~ msgstr "kingbasees的路径必须是 表名/模式名！ "
+
+#~ msgid "`s size cannot be larger than 20."
+#~ msgstr "的大小不能大于20."
+
+#~ msgid "parameter celery_task_id must be string."
+#~ msgstr "参数 celery_task_id 必须为字符串类型."
+
+#~ msgid "other importing ontology task is running."
+#~ msgstr "其他导入本体任务正在运行。"
+
+#~ msgid "Please retry after the task finishes."
+#~ msgstr "请在任务结束后重试"
+
+#~ msgid "parameter graph_id are missing! "
+#~ msgstr "缺少参数 graph_id !"
+
+#~ msgid "edge alias name %s is duplicate. "
+#~ msgstr "关系类别名 %s 重复. "
+
+#~ msgid "ClickHouse have unknown error"
+#~ msgstr "ClickHouse存在未知错误"
+
+#~ msgid " Length over 50 or Characters are not _, ., Chinese, English！"
+#~ msgstr "长度大于50，或字符不是下划线'_'，点'.'，中，英文！"
+
+#~ msgid "missing data source mapping information"
+#~ msgstr "缺少数据源映射信息"
+
+#~ msgid "ds id is not in ds_id_map"
+#~ msgstr "数据源id不在ds_id_map中"
+
+#~ msgid "property of edge relation \"{}\" does not consistent with ontology. "
+#~ msgstr "关系\"{}\"的属性与本体不一致"
+

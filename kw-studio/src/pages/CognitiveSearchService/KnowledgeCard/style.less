@@ -1,0 +1,43 @@
+.knowledgeCardRoot {
+  height: 100%;
+
+  &-modal {
+    position: fixed;
+    z-index: 201;
+    top: 52px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+  }
+
+  .knowledgeCardContainer {
+    position: relative;
+    display: flex;
+    height: calc(100% - 54px);
+  }
+
+  .config-op-btn {
+    position: absolute;
+    z-index: 9;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    button {
+      min-width: 88px;
+      height: 36px;
+      margin: 0 6px;
+    }
+  }
+
+  .empty-tip {
+    position: absolute;
+    z-index: 99;
+    left: 360px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: #fff;
+  }
+}

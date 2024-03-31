@@ -1,0 +1,25 @@
+{
+  "llmModel": {
+    "title": "Model integration",
+    "titleTwo": "LLM",
+    "smallModel": "Small Model",
+    "createTip": "Click | [Create] | button to add an large language model",
+    "colName": "Name",
+    "colSupplier": "Supplier",
+    "colModel": "Model",
+    "colDoc": "Document",
+    "updateOn": "Update on",
+    "searchPlace": "Search name/model ",
+    "listMode": "List",
+    "cardMode": "Card",
+    "testFailed": "Test connection failed, please recheck the information",
+    "titleCreate": "Access model",
+    "titleEdit": "Edit model",
+    "titleCheck": "Check model",
+    "modelSuffix": "Large Language Model name prefix",
+    "modelSuffixPlace": "Please enter Large Language Model name prefix",
+    "byCreate": "sort by created time",
+    "byUpdate": "sort by operated time",
+    "byName": "sort by name"
+  }
+}

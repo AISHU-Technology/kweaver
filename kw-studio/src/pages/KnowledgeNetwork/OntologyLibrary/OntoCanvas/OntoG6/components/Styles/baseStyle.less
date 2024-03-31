@@ -1,0 +1,43 @@
+.onto-styles-dropdown {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+
+  .iconContainer {
+    .scroll-wrap {
+      width: calc(100% - 4px);
+      max-height: 240px;
+      padding: 0 16px 8px 20px;
+      overflow: auto;
+    }
+
+    .icon-list-box {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .iconItem {
+      width: 20%;
+      height: 60px;
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+      .label {
+        width: 100%;
+        font-size: 12px;
+        padding: 0px 2px;
+        text-align: center;
+      }
+    }
+    .checked {
+      border-radius: 2px;
+      background-color: var(--kw-imitation-input-color);
+    }
+  }
+}

@@ -1,0 +1,38 @@
+.intentListRoot {
+  width: 100%;
+
+  .name {
+    height: 18px;
+  }
+
+  .desc {
+    height: 16px;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .intentItem {
+    width: 100%;
+    height: 46px;
+    padding: 4px 12px;
+
+    .more {
+      display: none;
+    }
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+
+      .more {
+        display: block;
+        width: 16px;
+        height: 16px;
+        background: #fff;
+      }
+    }
+  }
+
+  .selected {
+    background: var(--kw-hover-bg-color);
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "graphResult": {
+    "basicInfo": "基本信息",
+    "summaryInfo": "汇总信息",
+    "prompt": "鼠标滚轮缩放，单击查看实体基本信息及选择展开不同的关系",
+    "ok": "好的，知道了"
+  },
+
+  "atlasDetails": {
+    "basicInfo": {
+      "noBasicData": "点击画布上的实体类可查看基本信息详情",
+      "noTableData": "暂无内容"
+    },
+    "summaryInfo": {
+      "vertex": "实体类",
+      "edge": "关系类",
+      "openall": "一键开启",
+      "hideall": "一键隐藏"
+    }
+  }
+}

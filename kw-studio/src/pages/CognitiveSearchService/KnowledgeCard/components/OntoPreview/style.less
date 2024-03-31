@@ -1,0 +1,44 @@
+.knw-card-onto-preview {
+  position: absolute;
+  z-index: 99;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 440px;
+  background: #fff;
+
+  canvas {
+    display: block;
+  }
+
+  .close-mask {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    text-align: center;
+    transform: translateX(12px);
+    color: var(--kw-text-color-secondary);
+
+    &:hover {
+      color: var(--kw-text-color);
+    }
+  }
+
+  .toolbar-box {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 32px;
+    background: #fff;
+    .tool-icon-btn {
+      color: var(--kw-text-color);
+      min-width: 36px;
+      padding: 0;
+      &:hover {
+        background: #f5f5f5;
+      }
+    }
+  }
+}

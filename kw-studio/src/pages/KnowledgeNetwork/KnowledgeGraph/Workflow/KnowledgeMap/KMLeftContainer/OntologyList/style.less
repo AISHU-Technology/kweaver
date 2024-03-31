@@ -1,0 +1,112 @@
+@prefixCls: ontology-list;
+
+.@{prefixCls} {
+  background-color: #fff;
+
+  &-edge {
+    width: 10px;
+    height: 3px;
+    background: #000;
+  }
+
+  &-pass-sign {
+    color: var(--kw-primary-color);
+  }
+
+  &-error-sign {
+    color: var(--kw-error-color);
+  }
+
+  &-endNodeEntity {
+    &:hover {
+      color: #1677ff !important;
+    }
+  }
+
+  &-tab-text {
+    position: relative;
+
+    .anticon {
+      position: absolute;
+      right: -12px;
+      top: 0;
+      font-size: 12px;
+      color: var(--kw-warning-color);
+      margin-right: 0;
+    }
+  }
+
+  &-tree-search-value {
+    color: var(--kw-primary-color);
+  }
+
+  .ant-tabs {
+    height: 100%;
+
+    .ant-tabs-nav {
+      margin-bottom: 16px;
+      padding: 0 20px;
+      height: 40px;
+    }
+
+    .ant-tabs-content-holder {
+      overflow: auto;
+
+      .ant-tabs-content {
+        height: 100%;
+
+        .ant-tabs-tabpane {
+          display: flex;
+          flex-direction: column;
+
+          .ant-tree {
+            overflow: auto;
+          }
+
+          .@{prefixCls}-placeholder {
+            height: 0;
+            flex: 1;
+            min-height: 24px;
+
+            .kw-empty-box {
+              margin: 0 !important;
+              transform: translateY(-20%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    background: transparent;
+  }
+
+  .ant-tree .ant-tree-node-content-wrapper:hover {
+    background: transparent;
+  }
+
+  .ant-tree-treenode {
+    transition: all 0.3s;
+    padding: 0 20px;
+    min-height: 36px;
+    align-items: center;
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+    }
+
+    &.ant-tree-treenode-selected {
+      background: var(--kw-select-bg-color);
+    }
+
+    .ant-tree-switcher {
+      line-height: 36px;
+    }
+  }
+
+  .ant-tree.ant-tree-block-node .ant-tree-list-holder-inner .ant-tree-node-content-wrapper {
+    flex: 1;
+    width: 0;
+  }
+}

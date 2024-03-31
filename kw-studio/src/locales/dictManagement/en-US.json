@@ -1,0 +1,63 @@
+{
+  "dictManagement": {
+    "addTitle": "Click",
+    "btnDictDescTitle": " [New Dictionary Type] ",
+    "addDictDesc": " add dictionary type",
+    "btnValueDescTitle": " [Add] ",
+    "addValueDesc": " add data values",
+    "leftComponent": {
+      "searchPlaceHold": " Search dictionary type name",
+      "title": "Dictionary type",
+      "op_edit": "Edit",
+      "op_delete": "Delete"
+    },
+    "rightComponent": {
+      "clickToView": "Click on any dictionary type on the left",
+      "header_op_edit": "Edit",
+      "header_op_delete": "Delete",
+      "basicInfo_title": " Basic Information",
+      "basicInfo_dictType": "Dictionary Type:",
+      "basicInfo_desc": " Describe:",
+      "basicInfo_more": "More",
+      "basicInfo_less": "Collapse",
+      "value_title": "Data value",
+      "value_op_add": "Add",
+      "value_searchPlaceHold": " Search data value name",
+      "value_tb_valueName": "Data Value Name",
+      "value_tb_value": "Data Value",
+      "value_tb_valueDesc": "Describe",
+      "value_tb_op": "Operation",
+      "value_tb_op_edit": "Edit",
+      "value_tb_op_delete": "Delete",
+      "no_desc": "[No description]"
+    },
+    "modalComponent": {
+      "add_type_modal_title": "New Dictionary Type",
+      "add_value_modal_title": "Add data values",
+      "edit_modal_title": "Edit",
+      "c_name_title": "Chinese name",
+      "e_name_title": "English name",
+      "type_title": "Dictionary type",
+      "value_title": "Data value",
+      "describe_title": "Describe",
+      "c_name_placeHold": "Please enter a Chinese name",
+      "e_name_placeHold": "Please enter a English name",
+      "type_placeHold": "Please enter dictionary type",
+      "value_placeHold": "Please enter data values"
+    },
+    "errorMsg": {
+      "title": "Name",
+      "empty": "The value cannot be null",
+      "max": "Up to {len} characters",
+      "nameDesRegex": "Only Chinese and English, numbers and special symbols on the keyboard are supported",
+      "typeRegex": "Only Chinese and English, numbers and underscores are supported",
+      "exist": "{content} already exists, please modify it"
+    },
+    "waringMsg": {
+      "deleteTypeTitle": "Are you sure to delete dictionary type?",
+      "deleteTypeContent": "Dictionary types cannot be retrieved once deleted, please operate with caution.",
+      "deleteValueTitle": "Are you sure to delete data value?",
+      "deleteValueContent": "Data value cannot be retrieved once deleted, please operate with caution."
+    }
+  }
+}

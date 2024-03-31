@@ -1,0 +1,26 @@
+{
+  "searchStrategy": {
+    "advancedConfig": "高级搜索配置",
+    "delTitle": "确认要删除吗？",
+    "ok": "确定",
+    "cancel": "取消",
+    "deleteCount1": "共计",
+    "deleteCount2": "条数据",
+    "create": "新建",
+    "delete": "删除",
+    "relationGraph": "关联知识图谱",
+    "updateTime": "更新时间",
+    "operation": "操作",
+    "all": "全部",
+    "strategy": "策略名称",
+    "search_G_and_C": "搜索知识图谱/配置策略",
+    "search_G": "搜索知识图谱名称",
+    "search_C": "搜索配置策略名称",
+    "empty": "点击|【新建】|按钮对知识图谱创建高级搜索配置",
+    "noRes": "无匹配结果",
+    "asSmart": "文档知识模型",
+    "edit": "编辑",
+    "test": "测试",
+    "type": "类型"
+  }
+}

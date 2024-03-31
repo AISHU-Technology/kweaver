@@ -1,0 +1,69 @@
+.neighborQueryRoot {
+  position: relative;
+  // height: calc(100% - 128px);
+  height: 100%;
+
+  .header {
+    height: 56px;
+    border-bottom: 1px solid var(--kw-line-color);
+  }
+
+  .searchBtn {
+    // height: 60px;
+    width: 100%;
+    position: absolute;
+    bottom: 24px;
+  }
+
+  .content {
+    height: calc(100% - 122px); // 减去标题、底部按钮
+    overflow: auto;
+
+    .expandEntityBox {
+      max-height: 300px;
+      overflow-y: scroll;
+    }
+
+    .expandEntity {
+      width: 98%;
+      height: 48px;
+      padding-left: 12px;
+
+      .entityIcon {
+        min-width: 24px;
+        height: 24px;
+        text-align: center;
+        line-height: 26px;
+        border-radius: 50%;
+        .node-svg {
+          font-size: 16px;
+          color: #fff;
+        }
+      }
+
+      .removeIcon {
+        display: none;
+      }
+
+      &:hover {
+        .removeIcon {
+          display: block;
+        }
+      }
+    }
+
+    .dire-btn {
+      width: 33.3%;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .ant-radio-button-wrapper {
+      transition: none !important;
+    }
+
+    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):focus-within {
+      box-shadow: none;
+    }
+  }
+}

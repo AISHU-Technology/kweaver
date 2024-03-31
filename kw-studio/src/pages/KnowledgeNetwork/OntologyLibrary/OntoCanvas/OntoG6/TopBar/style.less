@@ -1,0 +1,71 @@
+@wait-color: rgba(144, 147, 153, 1); // 未执行的步骤颜色
+@finish-color: var(--kw-text-color); // 完成的步骤颜色
+@progress-color: var(--kw-primary-color); // 进行中的步骤颜色
+@finish-icon-color: var(--kw-primary-color); // 完成的图标颜色
+@space-icon-color: rgba(192, 196, 204, 1); // 间隔图标颜色
+@min-screen-width: 1326px; // 最小屏幕宽度
+
+.onto-flow-top-steps-root {
+  border-bottom: 1px solid var(--kw-line-color);
+
+  .left-extra {
+    flex-shrink: 0;
+    width: 100%;
+    padding: 0 16px;
+
+    .ant-btn-text:focus,
+    .ant-btn-text:hover {
+      background: #fff;
+    }
+
+    .g-name {
+      position: relative;
+      display: inline-block;
+      vertical-align: top;
+      max-width: 174px;
+      height: 32px;
+      padding-left: 14px;
+      line-height: 32px;
+
+      &::before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 1px;
+        height: 18px;
+        background: #e5e5e5;
+      }
+    }
+
+    .e-button {
+      position: relative;
+      display: inline-block;
+      height: 32px;
+      padding: 4px 12px;
+      vertical-align: top;
+
+      // line-height: 32px;
+      // display: flex;
+
+      // margin-left: 0px;
+      // vertical-align: middle;
+      // max-width: 174px;
+      // height: 32px;
+      // padding-left: 0px;
+      // line-height: 32px;
+    }
+  }
+
+  .steps-box {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    height: 44px;
+    font-size: 16px;
+    color: @wait-color;
+    background-color: #fff;
+    transition: all 0.3s;
+  }
+}

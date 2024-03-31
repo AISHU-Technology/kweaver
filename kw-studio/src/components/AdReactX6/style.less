@@ -1,0 +1,46 @@
+@prefixCls: kw-x6;
+
+.@{prefixCls} {
+  &-wrapper {
+    position: relative;
+
+    .@{prefixCls} {
+      // Edge hover style
+      .x6-edge:hover {
+        path:nth-child(2) {
+          stroke: #1890ff;
+          stroke-width: 1px;
+        }
+      }
+
+      // Edge selected style
+      .x6-edge-selected {
+        path:nth-child(2) {
+          stroke: #1890ff;
+          stroke-width: 1.5px !important;
+        }
+      }
+
+      g[data-shape='kw-x6-model-edge'] {
+        &.x6-edge:hover {
+          path:nth-child(2) {
+            stroke: #c2c8d5;
+            stroke-width: 1px;
+          }
+        }
+
+        // Edge selected style
+        &.x6-edge-selected {
+          path:nth-child(2) {
+            stroke: #c2c8d5;
+            stroke-width: 1 !important;
+          }
+        }
+      }
+
+      .x6-node .kw-x6-end-point-port {
+        cursor: inherit;
+      }
+    }
+  }
+}

@@ -1,0 +1,269 @@
+.sideRoot {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  transition: all 0.3s;
+
+  &:hover {
+    overflow-y: auto;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .dragLine {
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 10px;
+    cursor: col-resize;
+    position: absolute;
+    background: transparent;
+  }
+
+  &-menu.ant-menu {
+    width: 100%;
+    border: none;
+    //margin-top: 8px;
+    margin: 8px 0;
+    //min-height: 600px;
+    //height: calc(100% - 56px);
+    background-color: #ffffff;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .menuTitle {
+      display: flex;
+      align-items: center;
+
+      .menuTitleIcon {
+        //height: 36px;
+        //display: inline-block;
+
+        .anticon {
+          font-size: 16px;
+          color: rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      .menuTitleLabel {
+        margin-left: 10px;
+        white-space: nowrap; /* 防止换行 */
+        overflow: hidden; /* 隐藏超出部分 */
+        text-overflow: ellipsis; /* 显示省略号 */
+      }
+
+      .menuTitleLabelNotIcon {
+        margin-left: 4px;
+      }
+    }
+
+    // antd 样式覆盖
+    .ant-menu-submenu {
+      border-radius: 0px 4px 4px 0px;
+
+      .ant-menu-submenu-title {
+        color: #000000;
+        width: calc(100% - 5px);
+        border-radius: 0px 4px 4px 0px;
+
+        &:hover {
+          color: #000000;
+        }
+
+        &:active {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+
+      .ant-menu-sub {
+        background-color: #ffffff;
+      }
+
+      .ant-menu-submenu-arrow {
+        color: #000000;
+      }
+    }
+
+    .ant-menu-item {
+      width: calc(100% - 5px);
+      border-radius: 0px 4px 4px 0px;
+      margin-bottom: 4px;
+      margin-top: 0;
+
+      .anticon {
+        transition: none;
+      }
+
+      &:hover {
+        color: #000000;
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+
+      &:active {
+        color: #000000;
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    .ant-menu-submenu-selected:not(.ant-menu-submenu-open),
+    .ant-menu-submenu-vertical.ant-menu-submenu-selected {
+      .anticon {
+        color: #126ee3 !important;
+      }
+
+      .ant-menu-submenu-title {
+        color: var(--kw-primary-color);
+        background-color: rgba(18, 110, 227, 0.1);
+
+        &::before {
+          content: '';
+          top: 0;
+          left: 0;
+          bottom: 0;
+          position: absolute;
+          border-right: 3px solid var(--kw-primary-color);
+        }
+      }
+
+      &:hover {
+        .ant-menu-submenu-title {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+    }
+
+    .ant-menu-item-selected {
+      background-color: var(--kw-select-bg-color);
+
+      .anticon {
+        color: #126ee3 !important;
+      }
+
+      &:hover {
+        color: var(--kw-primary-color);
+      }
+
+      &::before {
+        content: '';
+        top: 0;
+        left: 0;
+        bottom: 0;
+        position: absolute;
+        border-right: 3px solid var(--kw-primary-color);
+      }
+
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  .sideMenuCollapsed {
+    .menuTitleIcon {
+      margin-right: 100px;
+    }
+  }
+
+  &-footer {
+    min-height: 40px;
+    //padding-top: 4px;
+    //position: relative;
+
+    .collapsedButton {
+      margin: 0px;
+      width: 32px;
+      height: 32px;
+      padding: 0px;
+      min-width: unset;
+
+      .buttonIcon {
+        font-size: 16px;
+        color: rgba(0, 0, 0, 0.85);
+      }
+
+      &:hover {
+        border-radius: 4px;
+        background-color: rgba(145, 151, 169, 0.2);
+      }
+    }
+
+    &-collapsed {
+    }
+  }
+
+  .ant-menu-item-group {
+    .ant-menu-item-group-title {
+      white-space: nowrap; /* 防止换行 */
+      overflow: hidden; /* 隐藏超出部分 */
+      text-overflow: ellipsis; /* 显示省略号 */
+    }
+  }
+
+  .ant-menu-submenu-arrow:after,
+  .ant-menu-submenu-arrow:before {
+    height: 0.5px;
+  }
+}
+
+// antd 样式覆盖
+.ant-menu-submenu-popup,
+.ant-menu-sub {
+  .ant-menu-item-group-title {
+    height: 32px;
+    font-size: 12px;
+    padding: 0px 16px;
+    line-height: 32px;
+  }
+
+  .ant-menu-item {
+    height: 32px;
+    line-height: 32px;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04) !important;
+    }
+  }
+
+  .menuTitleIcon {
+    .anticon {
+      font-size: 18px;
+      color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+  .menuTitleLabel {
+    margin-left: 10px;
+  }
+
+  .menuTitleLabelNotIcon {
+    margin-left: 4px;
+  }
+
+  .ant-menu-item-group-list .ant-menu-item,
+  .ant-menu-item-group-list .ant-menu-submenu-title {
+    padding: 0px 16px 0px 12px;
+  }
+
+  .ant-menu-vertical .ant-menu-item:not(:last-child) {
+    margin-bottom: 0px;
+  }
+}
+
+.ant-menu-submenu-popup .ant-menu-item-selected {
+  background-color: var(--kw-select-bg-color) !important;
+
+  .anticon {
+    color: #126ee3 !important;
+  }
+}
+
+.ant-tooltip-content {
+  .menuTitleLabel {
+    margin-left: 10px;
+  }
+}

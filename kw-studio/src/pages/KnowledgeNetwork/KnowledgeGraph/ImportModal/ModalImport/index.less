@@ -1,0 +1,50 @@
+.graph-import-modal-first-step-root {
+  position: relative;
+  .close-icon {
+    display: none;
+    width: 12px;
+    position: absolute;
+    top: 55%;
+    right: 40px;
+    z-index: 10;
+    &.show {
+      display: block;
+    }
+  }
+  .formContainer {
+    // margin-top: -15px;
+    // padding: 24px 24px 0px;
+    .ant-form-item {
+      margin: 0px;
+    }
+    .ant-form-item-label > label {
+      height: 22px;
+    }
+    .ant-form-item-control {
+      height: 54px;
+    }
+    .ant-upload {
+      width: 100%;
+    }
+    .extraBox {
+      // padding: 0px 24px;
+      .fileExtra {
+        font-size: 12px;
+        margin-top: 5px;
+        .extra-circle {
+          margin-right: 6px;
+        }
+      }
+    }
+    .methodOption {
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
+  .footer-box {
+    margin-top: 48px;
+    padding: 14px 24px;
+    align-items: center;
+    justify-content: right;
+    border-top: 1px solid var(--kw-line-color);
+  }
+}

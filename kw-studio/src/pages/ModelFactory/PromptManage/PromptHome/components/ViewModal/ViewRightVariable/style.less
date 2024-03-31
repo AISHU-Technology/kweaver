@@ -1,0 +1,28 @@
+@border:1px solid var(--kw-line-color);
+.prompt-modal-view-right-variable-root {
+  .CodeMirror pre.CodeMirror-line {
+    padding: 0px 8px;
+  }
+  .view-header-box {
+    overflow: hidden;
+    .view-header-title {
+      float: left;
+    }
+    .view-header-copy {
+      float: right;
+    }
+  }
+  .kw-prompt-highlight {
+    padding: 0 4px;
+    color: var(--kw-primary-color);
+    background: rgba(var(--kw-primary-color-rgb), 0.06);
+  }
+  .view-table-root {
+    .ant-table-thead > tr > th {
+      background-color: #fafafa;
+    }
+  }
+  .kw-table-header {
+    border-top: @border;
+  }
+}

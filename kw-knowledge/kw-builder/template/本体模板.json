@@ -1,0 +1,291 @@
+{
+  "ontology_name": "合同模型",
+  "ontology_des": "",
+  "domain": [],
+  "entity": [
+    {
+      "name": "contract",
+      "entity_id": 1,
+      "alias": "合同",
+      "description": "",
+      "synonym": "",
+      "shape": "circle",
+      "icon": "graph-model",
+      "size": "1x",
+      "fill_color": "",
+      "stroke_color": "",
+      "text_color": "",
+      "text_type": "adaptive",
+      "text_width": 14,
+      "x": 619,
+      "y": 494,
+      "text_position": "top",
+      "icon_color": "",
+      "properties": [
+        {
+          "name": "name",
+          "description": "",
+          "alias": "名称",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "id",
+          "description": "",
+          "alias": "合同id",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "number",
+          "description": "",
+          "alias": "合同编号",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "currency",
+          "description": "",
+          "alias": "合同金额",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "amount",
+          "description": "",
+          "alias": "币种",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "sign_date",
+          "description": "",
+          "alias": "签约日期",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "account_name",
+          "description": "",
+          "alias": "账户名称",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "bank",
+          "description": "",
+          "alias": "开户行",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "bank_number",
+          "description": "",
+          "alias": "账号",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "tac_rate",
+          "description": "",
+          "alias": "税率",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "tac_amount",
+          "description": "",
+          "alias": "税额",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "amount_without_tex",
+          "description": "",
+          "alias": "不含税金额",
+          "data_type": "string",
+          "synonym": ""
+        }
+      ],
+      "default_tag": "name",
+      "properties_index": [
+        "name",
+        "number",
+        "amount",
+        "sign_date",
+        "account_name",
+        "bank"
+      ],
+      "primary_key": [
+        "name"
+      ],
+      "vector_generation": [
+        "name"
+      ]
+    },
+    {
+      "name": "company",
+      "entity_id": 2,
+      "alias": "公司或人",
+      "description": "",
+      "synonym": "",
+      "shape": "circle",
+      "icon": "graph-model",
+      "size": "1x",
+      "fill_color": "",
+      "stroke_color": "",
+      "text_color": "",
+      "text_type": "adaptive",
+      "text_width": 14,
+      "x": 767,
+      "y": 463,
+      "text_position": "top",
+      "icon_color": "",
+      "properties": [
+        {
+          "name": "name",
+          "description": "",
+          "alias": "名称",
+          "data_type": "string",
+          "synonym": ""
+        }
+      ],
+      "default_tag": "name",
+      "properties_index": [
+        "name"
+      ],
+      "primary_key": [
+        "name"
+      ],
+      "vector_generation": [
+        "name"
+      ]
+    },
+    {
+      "name": "clause",
+      "entity_id": 3,
+      "alias": "条款",
+      "description": "",
+      "synonym": "",
+      "shape": "circle",
+      "icon": "graph-model",
+      "size": "1x",
+      "fill_color": "",
+      "stroke_color": "",
+      "text_color": "",
+      "text_type": "adaptive",
+      "text_width": 14,
+      "x": 762,
+      "y": 542,
+      "text_position": "top",
+      "icon_color": "",
+      "properties": [
+        {
+          "name": "name",
+          "description": "",
+          "alias": "名称",
+          "data_type": "string",
+          "synonym": ""
+        },
+        {
+          "name": "content",
+          "description": "",
+          "alias": "内容",
+          "data_type": "string",
+          "synonym": ""
+        }
+      ],
+      "default_tag": "name",
+      "properties_index": [
+        "name",
+        "content"
+      ],
+      "primary_key": [
+        "name"
+      ],
+      "vector_generation": [
+        "name"
+      ]
+    }
+  ],
+  "edge": [
+    {
+      "name": "contain",
+      "edge_id": 1,
+      "alias": "包含",
+      "relations": [
+        "contract",
+        "contain",
+        "clause"
+      ],
+      "description": "",
+      "synonym": "",
+      "colour": "rgba(0,0,0,0.8)",
+      "shape": "line",
+      "width": "0.5x",
+      "properties_index": [
+        "name"
+      ],
+      "default_tag": "name",
+      "properties": [{
+        "name": "name",
+        "description": "",
+        "alias": "名称",
+        "data_type": "string",
+        "synonym": ""
+      }]
+    },
+    {
+      "name": "ownerSubject",
+      "edge_id": 2,
+      "alias": "我方主体",
+      "relations": [
+        "contract",
+        "ownerSubject",
+        "company"
+      ],
+      "description": "",
+      "synonym": "",
+      "colour": "rgba(0,0,0,0.8)",
+      "shape": "line",
+      "width": "0.5x",
+      "properties_index": [
+        "name"
+      ],
+      "default_tag": "name",
+      "properties": [{
+        "name": "name",
+        "description": "",
+        "alias": "名称",
+        "data_type": "string",
+        "synonym": ""
+      }]
+    },
+    {
+      "name": "otherSubject",
+      "edge_id": 3,
+      "alias": "对方主体",
+      "relations": [
+        "contract",
+        "otherSubject",
+        "company"
+      ],
+      "description": "",
+      "synonym": "",
+      "colour": "rgba(0,0,0,0.8)",
+      "shape": "line",
+      "width": "0.5x",
+      "properties_index": [
+        "name"
+      ],
+      "default_tag": "name",
+      "properties": [{
+        "name": "name",
+        "description": "",
+        "alias": "名称",
+        "data_type": "string",
+        "synonym": ""
+      }]
+    }
+  ]
+}

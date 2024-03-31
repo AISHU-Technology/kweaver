@@ -1,0 +1,44 @@
+.createModalRoot {
+  font-size: 14px;
+
+  .createButton {
+    height: 40px;
+    padding: 0px 16px;
+    padding-top: 8px;
+    line-height: 40px;
+    margin-bottom: 16px;
+  }
+  .canvasList {
+    overflow-y: auto;
+    max-height: 400px;
+    .createModelEmpty {
+      display: flex;
+      padding: 0px 16px;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      .createModelEmptyImg {
+        width: 80px;
+        height: 80px;
+      }
+    }
+    .selectLine {
+      height: 40px;
+      cursor: pointer;
+      overflow: hidden;
+      padding: 0px 16px;
+      line-height: 40px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .selectLine:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  // antd 样式
+  .ant-modal-body {
+    padding: 0px;
+    padding-bottom: 16px;
+  }
+}

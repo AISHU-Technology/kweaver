@@ -1,0 +1,160 @@
+// 知识网络
+const KN_VIEW = 'KN_VIEW'; // 查看
+const KN_EDIT = 'KN_EDIT'; // 编辑
+const KN_EDIT_PERMISSION = 'KN_EDIT_PERMISSION'; // 权限配置
+const KN_ADD_KG = 'KN_ADD_KG'; // 添加图谱
+const KN_ADD_LEXICON = 'KN_ADD_LEXICON'; // 添加词库
+const KN_ADD_OTL = 'KN_ADD_OTL'; // 添加本体库
+const KN_ADD_MODEL = 'KN_ADD_MODEL'; // 添加模型仓库
+const KN_ADD_DS = 'KN_ADD_DS'; // 添加数据源
+const KN_ADD_ENGINE = 'KN_ADD_ENGINE'; // 添加认知引擎
+const KN_DELETE = 'KN_DELETE'; // 删除 知识网络的创建者拥有的权限
+const KN_ADD_FUNCTION = 'KN_ADD_FUNCTION'; // 添加函数
+const KN_ADD_SERVICE = 'KN_ADD_SERVICE'; // 创建领域认知服务
+const KN_ADD_GLOSSARY = 'KN_ADD_TAXONOMY'; // 创建术语库
+
+// 知识图谱
+const KG_VIEW = 'KG_VIEW'; // 查看
+const KG_EDIT = 'KG_EDIT'; // 编辑		包含编辑、导出、任务、定时任务
+const KG_DELETE = 'KG_DELETE'; // 删除
+const KG_UPLOAD = 'KG_UPLOAD'; // 上传
+const KG_EXPORT = 'KG_EXPORT'; // 导出		图谱导出
+const KG_USE = 'KG_USE'; // 使用		认知引擎使用
+const KG_EDIT_PERMISSION = 'KG_EDIT_PERMISSION'; // 权限配置
+
+// 本体
+const OTL_VIEW = 'OTL_VIEW'; // 查看
+const OTL_EDIT = 'OTL_EDIT'; // 编辑
+const OTL_DELETE = 'OTL_DELETE'; // 删除
+const OTL_EDIT_PERMISSION = 'OTL_EDIT_PERMISSION'; // 权限
+
+// 认知引擎
+const ENGINE_VIEW = 'ENGINE_VIEW'; // 查看
+const ENGINE_EDIT = 'ENGINE_EDIT'; // 编辑
+const ENGINE_DELETE = 'ENGINE_DELETE'; // 删除
+const ENGINE_EDIT_PERMISSION = 'ENGINE_EDIT_PERMISSION'; // 权限配置
+const ENGINE_USE = 'ENGINE_USE'; // 使用
+
+// 词库
+const LEXICON_VIEW = 'LEXICON_VIEW'; // 查看
+const LEXICON_EDIT = 'LEXICON_EDIT'; // 编辑
+const LEXICON_DELETE = 'LEXICON_DELETE'; // 删除
+const LEXICON_EDIT_PERMISSION = 'LEXICON_EDIT_PERMISSION'; // 权限配置
+const LEXICON_EXPORT = 'LEXICON_EXPORT'; // 导出
+
+// 数据源
+const DS_VIEW = 'DS_VIEW'; // 查看
+const DS_EDIT = 'DS_EDIT'; // 编辑
+const DS_DELETE = 'DS_DELETE'; // 删除
+const DS_USE = 'DS_USE'; // 使用		知识图谱构建使用
+const DS_EDIT_PERMISSION = 'DS_EDIT_PERMISSION'; // 权限配置
+
+// 分析画布
+const CANVAS_VIEW = 'CANVAS_VIEW'; // 查看
+const CANVAS_EDIT = 'CANVAS_EDIT'; // 编辑
+const CANVAS_DELETE = 'CANVAS_DELETE'; // 删除
+const CANVAS_EDIT_PERMISSION = 'CANVAS_EDIT_PERMISSION'; // 权限配置
+
+// 函数
+const FUNCTION_VIEW = 'FUNCTION_VIEW'; // 查看
+const FUNCTION_EDIT = 'FUNCTION_EDIT'; // 编辑
+const FUNCTION_DELETE = 'FUNCTION_DELETE'; // 删除
+const FUNCTION_EDIT_PERMISSION = 'FUNCTION_EDIT_PERMISSION'; // 权限配置
+
+// 模型仓库
+const MODEL_VIEW = 'MODEL_VIEW'; // 查看
+const MODEL_EDIT = 'MODEL_EDIT'; // 编辑
+const MODEL_DELETE = 'MODEL_DELETE'; // 删除
+const MODEL_EDIT_PERMISSION = 'MODEL_EDIT_PERMISSION'; // 权限配置
+
+// 领域认知服务
+const SERVICE_VIEW = 'SERVICE_VIEW'; // 查看
+const SERVICE_EDIT = 'SERVICE_EDIT'; // 编辑
+const SERVICE_DELETE = 'SERVICE_DELETE'; // 删除
+const SERVICE_EDIT_PERMISSION = 'SERVICE_EDIT_PERMISSION'; // 权限
+
+// 术语库
+const GLOSSARY_VIEW = 'TAXONOMY_VIEW'; // 查看
+const GLOSSARY_EDIT = 'TAXONOMY_EDIT'; // 编辑
+const GLOSSARY_DELETE = 'TAXONOMY_DELETE'; // 删除
+const GLOSSARY_EDIT_PERMISSION = 'TAXONOMY_EDIT_PERMISSION'; // 权限
+
+const TYPE_KN = 'kn'; // 知识网络
+const TYPE_KG = 'kg'; // 知识图谱
+const TYPE_LEXICON = 'lexicon'; // 词库
+const TYPE_GLOSSARY = 'taxonomy'; // 术语库
+const TYPE_ONTOLOGY = 'otl'; // 本体库
+const TYPE_DS = 'ds'; // 数据源
+const TYPE_CANVAS = 'canvas'; // 分析画布
+const TYPE_FUNCTION = 'function'; // 分析画布
+const TYPE_MODEL = 'model'; // 模型仓库
+const TYPE_SERVICE = 'service'; // 领域认知服务
+const TYPE_GRAPH_ANALYSIS = 'graphAnalSvc'; // 图分析服务
+const TYPE_COGNITIVE_SERVICE = 'cogSearchSvc'; // 认知搜索服务
+const TYPE_ALGORITHM_MODEL = 'algModelSvc'; // 算法模型服务
+
+// 知识网络
+const KN = {
+  KN_VIEW,
+  KN_EDIT,
+  KN_EDIT_PERMISSION,
+  KN_ADD_KG,
+  KN_ADD_LEXICON,
+  KN_ADD_MODEL,
+  KN_ADD_DS,
+  KN_ADD_ENGINE,
+  KN_DELETE,
+  KN_ADD_FUNCTION,
+  KN_ADD_SERVICE,
+  KN_ADD_OTL,
+  KN_ADD_GLOSSARY
+};
+const KG = { KG_VIEW, KG_EDIT, KG_DELETE, KG_UPLOAD, KG_EXPORT, KG_USE, KG_EDIT_PERMISSION }; // 知识图谱
+const OTL = { OTL_VIEW, OTL_EDIT, OTL_DELETE, OTL_EDIT_PERMISSION }; // 本体
+const ENGINE = { ENGINE_VIEW, ENGINE_EDIT, ENGINE_DELETE, ENGINE_EDIT_PERMISSION, ENGINE_USE }; // 认知引擎
+const LEXICON = { LEXICON_VIEW, LEXICON_EDIT, LEXICON_DELETE, LEXICON_EDIT_PERMISSION, LEXICON_EXPORT }; // 词库
+const DS = { DS_VIEW, DS_EDIT, DS_DELETE, DS_USE, DS_EDIT_PERMISSION }; // 数据源
+const CANVAS = { CANVAS_VIEW, CANVAS_EDIT, CANVAS_DELETE, CANVAS_EDIT_PERMISSION }; // 分析画布
+const FUNCTION = { FUNCTION_VIEW, FUNCTION_EDIT, FUNCTION_DELETE, FUNCTION_EDIT_PERMISSION }; // 函数
+const MODEL = { MODEL_VIEW, MODEL_EDIT, MODEL_DELETE, MODEL_EDIT_PERMISSION }; // 模型仓库
+const SERVICE = { SERVICE_VIEW, SERVICE_EDIT, SERVICE_DELETE, SERVICE_EDIT_PERMISSION }; // 领域认知服务
+const GLOSSARY = { GLOSSARY_VIEW, GLOSSARY_EDIT, GLOSSARY_DELETE, GLOSSARY_EDIT_PERMISSION }; // 术语库
+
+const PERMISSION_KEYS = {
+  KN,
+  KG,
+  OTL,
+  ENGINE,
+  LEXICON,
+  DS,
+  CANVAS,
+  FUNCTION,
+  MODEL,
+  SERVICE,
+  GLOSSARY,
+  TYPE_KN,
+  TYPE_KG,
+  TYPE_LEXICON,
+  TYPE_ONTOLOGY,
+  TYPE_DS,
+  TYPE_CANVAS,
+  TYPE_FUNCTION,
+  TYPE_MODEL,
+  TYPE_SERVICE,
+  TYPE_GRAPH_ANALYSIS,
+  TYPE_COGNITIVE_SERVICE,
+  TYPE_ALGORITHM_MODEL,
+  TYPE_GLOSSARY,
+  ...KN,
+  ...KG,
+  ...OTL,
+  ...ENGINE,
+  ...LEXICON,
+  ...DS,
+  ...CANVAS,
+  ...FUNCTION,
+  ...MODEL,
+  ...SERVICE,
+  ...GLOSSARY
+};
+export default PERMISSION_KEYS;

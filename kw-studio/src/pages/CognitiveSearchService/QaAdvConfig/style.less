@@ -1,0 +1,28 @@
+.qaAdvanceConfigRoot {
+  height: calc(100% - 52px);
+  width: 100%;
+  position: fixed;
+  top: 52px;
+  z-index: 201;
+  background: #fff;
+
+  .configRoot-container {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 52px);
+
+    .view-wrapper {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+
+      &.hide {
+        position: absolute;
+        z-index: -9;
+        visibility: hidden;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
+}

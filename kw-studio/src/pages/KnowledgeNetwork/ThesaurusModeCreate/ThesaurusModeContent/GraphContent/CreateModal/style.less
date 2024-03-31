@@ -1,0 +1,39 @@
+@border: 1px solid var(--kw-line-color);
+.thesaurus-graph-mode-create-UniversalModal-root {
+  .kw-universal-modal-content {
+    padding: 20px 24px 28px;
+  }
+
+  .title::before {
+    content: '*';
+    color: #f53640;
+    margin-right: 4px;
+  }
+  .select {
+    width: 100%;
+  }
+  .disposition-box {
+    border: @border;
+    border-radius: 3px;
+    height: 286px;
+    max-height: 286px;
+    overflow-y: auto;
+    .entity-tree {
+      .tree-title-box {
+        align-items: center;
+        .entity-circle {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+        }
+        .tree-title-text {
+          max-width: 238px;
+        }
+      }
+    }
+    .ant-tree-switcher-noop {
+      opacity: 0;
+      margin-right: 3px;
+    }
+  }
+}

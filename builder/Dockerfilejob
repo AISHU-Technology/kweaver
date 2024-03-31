@@ -1,3 +1,0 @@
-FROM xavierhuang/ubuntu:v1
-ADD ./db_migrate/dist/builder_table /root/
-CMD ["/root/builder_table"]

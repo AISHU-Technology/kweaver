@@ -1,0 +1,49 @@
+.kw-header-bar-content {
+  height: 52px;
+  padding: 0 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+  & * {
+    color: #000000;
+  }
+
+  .anticon.anticon-down {
+    font-size: 10px;
+  }
+
+  .kw-header-bar-content-logo {
+    float: left;
+    margin: 8px 0;
+    padding: 8px 8px;
+    border-radius: 4px;
+  }
+
+  .kw-header-bar-content-left-area {
+    display: flex;
+    float: left;
+    height: 100%;
+    margin-left: 8px;
+    align-items: center;
+  }
+
+  .kw-header-bar-content-right-area {
+    float: right;
+    display: flex;
+    height: 100%;
+    z-index: 1053;
+
+    .kw-header-bar-content-right-area-drop-down {
+      display: flex;
+      align-items: center;
+
+      .kw-header-bar-content-right-area-name {
+        margin-left: 10px;
+      }
+
+      .kw-header-bar-content-right-area-drop-down-arrow {
+        margin-left: 10px;
+      }
+    }
+  }
+}

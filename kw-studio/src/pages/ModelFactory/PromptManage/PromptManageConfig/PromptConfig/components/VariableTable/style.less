@@ -1,0 +1,75 @@
+.manage-mf-prompt-variable-table {
+  padding: 0 12px 8px;
+  background: #fafafa;
+  border-radius: 4px;
+
+  .table-title {
+    height: 40px;
+  }
+
+  .add-border {
+    border-top: 1px solid var(--kw-line-color);
+  }
+
+  .variable-table-box {
+    background: #fff;
+    border: 1px solid var(--kw-line-color);
+    border-radius: 3px;
+
+    .var-th {
+      height: 36px;
+      padding: 0 4px;
+      border-bottom: 1px solid var(--kw-line-color);
+      & > div {
+        padding: 0 0 0 16px;
+      }
+    }
+
+    .th-name,
+    .td-name,
+    .th-alias,
+    .td-alias {
+      flex: 1;
+    }
+
+    .th-switch,
+    .td-switch {
+      flex-shrink: 0;
+      width: 60px;
+    }
+
+    .th-op,
+    .td-op {
+      flex-shrink: 0;
+      width: 100px;
+    }
+
+    .tb-row {
+      padding: 6px 4px;
+      border-bottom: 1px solid var(--kw-line-color);
+      &:last-of-type {
+        border-bottom: none;
+      }
+      & > div {
+        padding: 0 0 0 16px;
+      }
+    }
+
+    .ant-input {
+      padding: 0px;
+      border-color: transparent;
+      &.ant-input-focused,
+      &:focus,
+      &:hover {
+        border-color: var(--kw-primary-color-hover);
+      }
+      &.err-input {
+        border-color: var(--kw-error-color);
+      }
+    }
+  }
+}
+.mf-prompt-manage-variable-table-root-other {
+  background-color: #fff;
+  padding: 0px;
+}

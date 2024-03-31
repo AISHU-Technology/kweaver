@@ -1,0 +1,32 @@
+.flow3-pro-list {
+  .attr-rows {
+    align-items: flex-start;
+    width: 100%;
+
+    .no-delete {
+      color: var(--kw-disabled-color);
+      cursor: not-allowed;
+    }
+
+    .attr-select {
+      width: 100px;
+    }
+  }
+
+  .err-input {
+    border: 1px solid var(--kw-error-color) !important;
+  }
+
+  .attr-input,
+  .alias-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .error-content {
+    display: inline-block;
+    font-size: 12px;
+    line-height: 20px;
+    color: var(--kw-error-color);
+  }
+}

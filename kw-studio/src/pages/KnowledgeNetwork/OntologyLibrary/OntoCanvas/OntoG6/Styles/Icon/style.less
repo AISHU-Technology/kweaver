@@ -1,0 +1,46 @@
+.iconRoot {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .iconContainer {
+    display: flex;
+    flex-wrap: wrap;
+    .iconItem {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+      .label {
+        width: 100%;
+        display: flex;
+        font-size: 12px;
+        padding: 0px 2px;
+        justify-content: center;
+      }
+    }
+    .checked {
+      border-radius: 2px;
+      background-color: var(--kw-imitation-input-color);
+    }
+  }
+  .selectColorFooter {
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 66px;
+    padding: 16px;
+    position: absolute;
+    border-top: 1px solid var(--kw-line-color);
+    .selectColorPanel {
+      top: -330px;
+      height: 320px;
+    }
+  }
+}

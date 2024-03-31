@@ -1,0 +1,144 @@
+.modal-branch-task {
+  // height: 828px;
+
+  .ant-modal,
+  .ant-modal-body {
+    padding: 0;
+  }
+
+  .ant-modal-content {
+    // min-width: 900px;
+    // .m-header {
+    //   height: 48px;
+    // }
+    .kw-universal-modal-content {
+      display: flex;
+      padding: 0px;
+      // max-height: none;
+      .sideRoot {
+        height: 552px;
+        min-width: 200px !important;
+        background-color: #fff;
+        .sideMenu {
+          margin-top: 4px;
+          background-color: #fff;
+          .ant-menu-item-selected {
+            background: rgba(18, 110, 227, 0.06);
+          }
+        }
+      }
+      .menuFooter {
+        display: none;
+      }
+    }
+    .kw-universal-modal-footer {
+      position: unset;
+    }
+  }
+
+  .ant-modal-header {
+    height: 52px;
+  }
+
+  .top-mode-box {
+    align-items: center;
+    // height: 100%;
+    // border-bottom: 1px solid var(--kw-line-color);
+
+    .run-type {
+      width: 320px;
+      padding-left: 24px;
+      margin: 24px 0px 32px;
+    }
+
+    .run-rule {
+      flex: 1;
+      min-width: 0;
+      padding-left: 24px;
+      border-left: 1px solid var(--kw-line-color);
+    }
+  }
+
+  .modal-content {
+    display: flex;
+    height: 100%;
+
+    .child-list {
+      width: 304px;
+      padding: 12px 8px;
+      border-right: 1px solid var(--kw-line-color);
+
+      .search-input {
+        width: 280px;
+        margin: 0 4px 16px;
+      }
+
+      .subgraph-item {
+        height: 46px;
+        padding: 0 8px;
+        cursor: pointer;
+
+        &:hover {
+          background: var(--kw-hover-bg-color);
+        }
+
+        .subgraph-name {
+          width: 168px;
+        }
+      }
+
+      .selected-bg {
+        background: var(--kw-select-bg-color);
+      }
+
+      .disabled-sub {
+        color: var(--kw-disabled-color);
+      }
+    }
+
+    .g-box {
+      width: 495px;
+      .childGraphRoot {
+        padding: 12px;
+      }
+    }
+
+    .search-none {
+      padding: 90px 0 0 0;
+      text-align: center;
+
+      .word {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--kw-text-color);
+        line-height: 20px;
+      }
+    }
+  }
+
+  .rightContent {
+    width: 100%;
+    .ant-radio-group {
+      display: block;
+      margin-top: 12px;
+      .ant-radio-wrapper {
+        display: block;
+      }
+    }
+  }
+
+  // .modal-footer {
+  //   height: 64px;
+  //   padding: 14px 24px;
+  //   border-top: 1px solid var(--kw-line-color);
+  //   text-align: right;
+
+  //   .btn {
+  //     height: 36px;
+  //   }
+
+  //   .ok-btn {
+  //     margin-left: 8px;
+  //   }
+  // }
+}

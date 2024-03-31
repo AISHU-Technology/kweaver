@@ -1,0 +1,82 @@
+.service-config-step1-root {
+  background: #f5f5f5;
+
+  .s-main {
+    max-width: 700px;
+    margin: 0 auto;
+    padding-top: 100px;
+  }
+
+  .form-row {
+    .form-label {
+      flex: 1;
+      min-width: 0;
+      text-align: right;
+    }
+
+    .form-content {
+      width: 570px;
+    }
+
+    .selectCustom {
+      width: 570px;
+
+      button {
+        height: 36px;
+      }
+
+      .ant-select-selector {
+        padding: 8px 12px;
+        height: 60px;
+      }
+    }
+    .graphType {
+      display: flex;
+      align-items: center;
+      .graphTypeCard {
+        width: 170px;
+        height: 100px;
+        cursor: pointer;
+        margin-right: 12px;
+        border-radius: 4px;
+        border: var(--kw-border);
+        &.selected {
+          border-width: 2px;
+          border-color: rgba(var(--kw-primary-color-rgb), 0.5);
+        }
+        &.disabled {
+          cursor: not-allowed;
+          background: var(--kw-imitation-input-color);
+        }
+        .graphTypeImage {
+          width: 100%;
+          height: 70px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .graphTypeTitle {
+          width: 100%;
+          height: 30px;
+          display: flex;
+          font-size: 12px;
+          align-items: center;
+          justify-content: center;
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+    }
+  }
+
+  .error-border {
+    .ant-select-selector {
+      border: 1px solid var(--kw-error-color) !important;
+    }
+  }
+
+  .err-msg {
+    position: absolute;
+    line-height: 20px;
+    color: var(--kw-error-color);
+  }
+}

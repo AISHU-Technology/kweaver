@@ -1,0 +1,71 @@
+.extract-rule-setting-modal {
+  .ant-modal-content {
+    min-width: 1000px;
+    .kw-universal-modal-content {
+      padding: 0;
+      .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+        background: var(--kw-select-bg-color) !important;
+      }
+    }
+  }
+  .ant-modal-body {
+    padding: 0px;
+  }
+  .m-box {
+    height: 604px;
+    padding: 0px;
+  }
+
+  .input-box {
+    margin: 0px 0 10px 0;
+  }
+
+  .check-box {
+    max-height: 380px;
+    overflow: auto;
+    .check-all {
+      height: 48px;
+      line-height: 48px;
+      padding: 0 8px;
+    }
+
+    .rule-list {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+
+      .rule-item {
+        height: 48px;
+      }
+
+      .pro-name,
+      .pro-text {
+        width: 42%;
+      }
+    }
+  }
+
+  .m-footer {
+    width: calc(100% - 199px);
+    border-top: none;
+    right: 0px;
+    left: 199px;
+  }
+
+  .ant-menu-inline .ant-menu-item-selected:after {
+    display: none;
+  }
+  .ant-menu-inline {
+    position: relative;
+  }
+  .ant-menu-inline > .ant-menu-item {
+    height: 36px;
+  }
+  .ant-menu-inline .ant-menu-item-selected::before {
+    content: '|';
+    position: absolute;
+    left: -5px;
+    z-index: 10;
+    font-size: 50px;
+  }
+}

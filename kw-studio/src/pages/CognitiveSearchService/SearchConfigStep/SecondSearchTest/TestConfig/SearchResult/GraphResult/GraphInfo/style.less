@@ -1,0 +1,88 @@
+.graph-info-subgraph-modal-root {
+  position: relative;
+  height: 100%;
+  .graphInfo-wrapper {
+    width: 338px;
+    height: 224px;
+    position: relative;
+    overflow: hidden;
+    .graph-operate-icon {
+      flex-flow: column;
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      .icon-box {
+        width: 24px;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 2px;
+        text-align: center;
+        .icon-img {
+          opacity: 0.65;
+        }
+      }
+      .add-reduce-box {
+        width: 24px;
+        border: 1px solid rgba(0, 0, 0, 0.25);
+        border-radius: 2px;
+        text-align: center;
+        .add-box {
+          border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+        }
+        .icon-img {
+          opacity: 0.65;
+        }
+      }
+    }
+    &.graphInfo-wrapper-preview {
+      width: 100%;
+      height: 100%;
+    }
+    .loading {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .graphContainer {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      // width: 1168px;
+      // height: 789px;
+      // background: #ffffff;
+      // margin: 24px 0px 0px 127px;
+    }
+  }
+  .operation-wrapper {
+    display: inline-block;
+    position: absolute;
+    z-index: 9;
+    left: 24px;
+    top: 24px;
+
+    > h3 {
+      width: 100%;
+      height: 14px;
+      font-size: 14px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.65);
+      line-height: 14px;
+    }
+    > p {
+      width: 100%;
+      height: 12px;
+      font-size: 12px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.45);
+      line-height: 12px;
+    }
+    .cursor-disable {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+}

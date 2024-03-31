@@ -1,0 +1,102 @@
+.sql-result-panel {
+  height: 100%;
+  overflow: auto;
+
+  // 单句样式特殊处理
+  &.not-statement {
+    .sliced-preview-graph-root {
+      border-top: 1px solid var(--kw-line-color);
+    }
+
+    .canvas-res-panel-texts {
+      padding: 0 12px;
+    }
+
+    .tab-panel {
+      & > .canvas-res-panel-table {
+        padding-top: 16px !important;
+      }
+
+      .sliced-preview-graph-root {
+        border-top: none;
+      }
+
+      .canvas-res-panel-texts {
+        padding: 24px 12px;
+      }
+
+      .path-result-collapse .ant-collapse-item .ant-collapse-header:first-of-type {
+        border-top: none;
+      }
+    }
+  }
+
+  .statement-collapse {
+    border: none;
+    background-color: #fff;
+
+    .statement-panel:first-of-type {
+      border-top: 1px solid var(--kw-line-color);
+    }
+
+    .panel-header {
+      width: calc(100% - 24px);
+    }
+
+    .p-name {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .icon-disabled {
+      cursor: not-allowed;
+    }
+
+    // antd 样式覆盖
+    .ant-collapse-header {
+      padding: 12px;
+      align-items: center;
+    }
+    .ant-collapse-content-box {
+      padding: 0px;
+    }
+    .ant-collapse-item {
+      border-color: var(--kw-line-color) !important;
+    }
+    .ant-collapse-content {
+      border-color: var(--kw-line-color) !important;
+    }
+
+    .statement-panel {
+      & > .ant-collapse-content {
+        max-height: 415px;
+        overflow: auto;
+      }
+
+      // 表格去掉最后一行底线
+      .ant-table-tbody > tr:last-child > td {
+        border-bottom-color: transparent;
+      }
+    }
+
+    // 路径
+    .path-result-collapse {
+      .ant-collapse-header,
+      .ant-collapse-content {
+        padding-left: 24px !important;
+      }
+
+      .ant-collapse-content-box {
+        padding-left: 16px;
+      }
+
+      .ant-collapse-header:first-of-type {
+        border-top: none;
+      }
+
+      .path-col-panel:last-of-type {
+        border-bottom: none;
+      }
+    }
+  }
+}

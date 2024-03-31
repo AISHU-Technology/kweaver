@@ -1,0 +1,108 @@
+@border:1px solid var(--kw-line-color);
+
+.default-prompt-modal {
+  .kw-universal-modal-content {
+    padding: 0px 4px 0px 12px;
+  }
+  .default-prompt-modal-content {
+    .default-prompt-left {
+      padding-top: 13px;
+      width: 279px;
+      border-right: @border;
+      .ant-tree {
+        max-height: 480px;
+        overflow-y: auto;
+      }
+      .ant-tree-treenode {
+        width: 100%;
+
+        .ant-tree-title {
+          width: 100%;
+        }
+        .ant-tree-node-content-wrapper {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0px;
+          overflow: hidden;
+        }
+        .ant-tree-node-selected {
+          background: transparent;
+        }
+        .ant-tree-switcher {
+          line-height: 44px;
+        }
+        .tree-title-box {
+          align-items: center;
+          .entity-circle {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+          }
+          .tree-title-text {
+            width: 100%;
+            padding: 10px;
+            .icon {
+              margin-right: 10px;
+            }
+            &.checked {
+              background-color: rgba(18, 110, 227, 0.06);
+            }
+          }
+          .tree-title-text:nth-child(:first) {
+            display: none;
+          }
+        }
+      }
+
+      .ant-tree-switcher-noop {
+        opacity: 0;
+        margin-right: 3px;
+      }
+    }
+    .default-prompt-right {
+      width: calc(100% - 280px);
+      max-height: 552px;
+      overflow-y: auto;
+
+      .prompt-item {
+        width: calc((100% - 24px) / 2);
+        padding: 8px 16px;
+        margin-bottom: 16px;
+        border: 1px solid var(--kw-line-color);
+        border-radius: 2px;
+
+        &.checked {
+          border-color: var(--kw-primary-color-hover);
+          background: rgba(var(--kw-primary-color-rgb), 0.06);
+        }
+      }
+
+      .prompt-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        background: rgba(18, 110, 227, 0.06);
+        border: 1px solid rgba(18, 110, 227, 0.1);
+        border-radius: 3px;
+      }
+
+      .prompt-desc {
+        height: 36px !important;
+        line-height: 18px;
+      }
+
+      .noDataBox {
+        height: calc(100% - 45px);
+        padding-top: 30px;
+        .noDataBox-div {
+          flex-flow: column;
+        }
+      }
+    }
+    .noData-box {
+      align-items: flex-start;
+      height: calc(100% - 171px);
+    }
+  }
+}

@@ -1,0 +1,68 @@
+.exploreGraphRulesList {
+  .hoverChange {
+    &:hover {
+      color: var(--kw-primary-color);
+    }
+  }
+
+  .empty-wrapper {
+    width: 100%;
+    // margin: 100px auto 0;
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .errBor {
+    .ant-select-selector {
+      border-color: var(--kw-error-color);
+    }
+  }
+
+  .valueInputBox {
+    margin-left: 14px;
+  }
+
+  .tagSelector {
+    // width: 220px;
+    width: calc(50% - 108px);
+  }
+
+  .nodeTag {
+    transform: translateY(4px);
+  }
+
+  .edgeTag {
+    transform: translateY(-2px);
+  }
+
+  .relationSelect {
+    background: rgba(18, 110, 227, 0.04);
+    color: #126ee3;
+
+    .ant-select-arrow {
+      color: #126ee3;
+    }
+  }
+
+  .classSelect {
+    position: relative;
+
+    .errorText {
+      position: absolute;
+      bottom: -20px;
+      left: 142px;
+    }
+  }
+
+  .dividerVerticalWrapper {
+    position: absolute;
+    background: rgba(18, 110, 227, 0.04);
+    color: #126ee3;
+    left: 64px;
+    margin-top: 2px;
+
+    .ant-select-arrow {
+      color: #126ee3;
+    }
+  }
+}

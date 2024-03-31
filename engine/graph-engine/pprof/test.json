@@ -1,3 +1,0 @@
-{"query":
-    "{\nkg(id:\"002\") {\nid\nname\nonto {\nv {\nclass\nname\ncount\nproperties {\nn\ndt\n}\nIndexes {\n  name\n  type\n  properties\n}\n}\ne {\nclass\nname\ncount\nproperties {\n  n\n  dt\n}\nIndexes {\n  name\n  type\n  properties\n}\nin {class}\nout{class}\n}\n}\n }\n}"
-}

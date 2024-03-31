@@ -1,0 +1,72 @@
+.functionCodeRoot {
+  height: 100%;
+  .disabledColor {
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+  }
+
+  .tool-bar {
+    height: 32px;
+    line-height: 32px;
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+    .tool-bar-tabs {
+      .ant-tabs-top > .ant-tabs-nav {
+        margin: 0;
+      }
+      .ant-tabs-tab {
+        padding: 6px 8px 0 16px;
+        border-radius: 8px 8px 0 0;
+      }
+      .ant-tabs-nav-add {
+        border-radius: 8px 8px 0 0;
+        background: #ffffff;
+      }
+    }
+
+    .tool-btn {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0 4px;
+      font-size: 16px;
+      color: var(--kw-text-color);
+      cursor: pointer;
+
+      &.disabled {
+        cursor: not-allowed;
+        color: var(--kw-disabled-color);
+      }
+    }
+  }
+
+  .tool-mode-simple {
+    padding-right: 8px;
+  }
+
+  .CodeMirror {
+    border-radius: 0 0 3px 3px;
+    .CodeMirror-sizer {
+      margin-left: 42px !important;
+    }
+  }
+  .code-editor-wrapper-hide {
+    display: none;
+  }
+  .code-editor-wrapper-show {
+    display: block;
+  }
+  .editable-function {
+    display: flex;
+    align-items: center;
+    .spa-line {
+      margin-left: 5px;
+      color: rgba(0, 0, 0, 0.1);
+    }
+  }
+  .params-list-wrapper {
+    overflow: auto;
+  }
+  .params-table-wrapper {
+    height: calc(100% - 280px);
+  }
+}

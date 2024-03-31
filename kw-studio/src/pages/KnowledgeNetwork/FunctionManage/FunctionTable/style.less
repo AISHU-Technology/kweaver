@@ -1,0 +1,70 @@
+.functionTableRoot {
+  .functionTable {
+    .ant-table-thead tr th {
+      height: 48px;
+      padding: 0 16px;
+    }
+    .ant-table-tbody tr td {
+      height: 64px;
+      padding: 0 16px;
+    }
+    .ant-table-row-selected > td {
+      background-color: #fff;
+    }
+    .ant-table-row-selected:hover > td {
+      background-color: #fff;
+    }
+  }
+  .function-desc {
+    font-size: 12px;
+  }
+
+  .functionName {
+    width: 190px;
+  }
+
+  .dropdown {
+    width: 32px;
+    height: 32px;
+    margin-left: 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background-color: rgba(145, 151, 169, 0.2);
+    }
+  }
+
+  .function-menu-select {
+    .ant-dropdown-menu-item {
+      padding: 5px 20px !important;
+      height: 40px;
+    }
+
+    .menuItem {
+      height: 40px;
+    }
+
+    .icon {
+      width: 24px;
+    }
+
+    .direction {
+      transform: rotate(180deg);
+    }
+
+    .menu-selected {
+      background: var(--kw-select-bg-color);
+    }
+  }
+
+  .op-column {
+    button {
+      padding: 0;
+      min-width: 30px;
+      margin-right: 20px;
+    }
+  }
+}

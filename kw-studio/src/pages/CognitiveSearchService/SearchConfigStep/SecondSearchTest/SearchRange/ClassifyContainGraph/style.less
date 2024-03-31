@@ -1,0 +1,168 @@
+@border: 1px solid var(--kw-line-color);
+
+.classify-contain-graph-root {
+  // height: calc(100% - 56px);
+  height: 100%;
+
+  .classify-contain-left {
+    width: 360px;
+    border-right: @border;
+    padding: 20px 0px;
+    position: relative;
+    // max-height: 758px;
+    overflow: hidden;
+
+    .left-top {
+      max-height: 576px;
+      overflow: auto;
+    }
+
+    .concrete-left-box {
+      align-items: center;
+      padding: 0px 24px 8px;
+      max-height: 334px;
+      overflow-y: auto;
+
+      .concrete-text {
+        font-weight: 500;
+        color: #000000;
+        max-width: 278px;
+      }
+    }
+
+    .dragLine {
+      left: 0;
+      right: 0;
+      z-index: 1;
+      height: 2px;
+      cursor: row-resize;
+      position: absolute;
+      background: transparent;
+      border-bottom: @border;
+    }
+
+    .switchName {
+      position: absolute;
+      display: block;
+      z-index: 1;
+      cursor: pointer;
+      left: 50%;
+      font-size: 12px;
+      opacity: 0.25;
+    }
+
+    .graph-left-box {
+      background-color: #fff;
+      max-height: 540px;
+
+      .graph-name {
+        overflow-y: auto;
+        max-height: 540px;
+        padding: 10px 24px;
+        align-items: center;
+
+        .graph-show-name {
+          max-width: 278px;
+        }
+
+        .graph-icon {
+          font-size: 20px;
+        }
+      }
+
+      .graph-name:hover {
+        background-color: #f5f5f5;
+      }
+
+      .click-background {
+        background-color: #eff5fc;
+      }
+    }
+
+    .graph-name-left-box {
+      overflow: auto;
+      // padding-bottom: 60px;
+
+      .alias-message {
+        .middle-checkbox {
+          padding: 10px 24px;
+        }
+
+        .middle-checkbox:hover {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        .checkbox-box {
+          padding: 10px 24px;
+
+          .checkbox-row {
+            margin-left: 10px;
+            align-items: center;
+
+            .middle-circle {
+              width: 14px;
+              height: 14px;
+              border-radius: 50%;
+            }
+
+            .entity-name {
+              margin-top: 2px;
+              max-width: 278px;
+            }
+          }
+
+          &.checkbox-padding {
+            padding: 10px 14px;
+          }
+        }
+
+        .checkbox-box:hover {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+
+      .entity-title {
+        overflow: hidden;
+        width: 310px;
+        margin: 12px 0px 12px 24px;
+
+        .entity-left {
+          float: left;
+          align-items: center;
+
+          .entity-img {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+          }
+
+          .entity-content {
+            color: #000000;
+          }
+        }
+
+        .count-right {
+          float: right;
+        }
+      }
+
+      .input-search {
+        width: 310px;
+        height: 32px;
+      }
+    }
+  }
+
+  .classify-contain-right {
+    width: calc(100% - 360px);
+    overflow-y: auto;
+
+    .full-tip {
+      flex-flow: column;
+
+      .tip-content {
+        line-height: 32px;
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+.answer-organization-config-root {
+  display: flex;
+  min-height: 300px;
+  max-height: 552px;
+  // max-height: 521px;
+  overflow: auto;
+  flex-direction: column;
+  padding: 0;
+  justify-content: space-between;
+  position: relative;
+  // loading
+  .loading-mask {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    text-align: center;
+
+    &.spinning {
+      display: block;
+    }
+
+    .spin-content-box {
+      position: absolute;
+      width: 100%;
+      height: 80px;
+      flex-flow: column;
+      justify-content: center;
+      top: 200px;
+      .kw-spin {
+        margin-bottom: 10px;
+      }
+      .loading-content {
+        color: rgba(0, 0, 0, 0.65);
+      }
+    }
+  }
+  .contentFrom {
+    .tip-text-box {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .ant-select-item-option-selected {
+      background-color: var(--kw-imitation-input-color);
+    }
+    .openAiTips {
+      margin-bottom: 10px;
+      p {
+        font-size: 12px;
+        margin-bottom: 4px;
+        color: var(--kw-text-color);
+        .text-color {
+          color: #eeab31;
+        }
+      }
+    }
+    .model-label {
+      align-items: center;
+    }
+  }
+}

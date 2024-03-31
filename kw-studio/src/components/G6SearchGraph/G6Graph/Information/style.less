@@ -1,0 +1,156 @@
+.information-tab {
+  width: 296px;
+  height: 448px;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 2px 6px 0px rgba(54, 69, 118, 0.2);
+  border-radius: 4px;
+  position: absolute;
+  z-index: 2;
+  //   display: none;
+
+  .title-fo {
+    font-size: 14px;
+    height: 42px;
+    color: var(--kw-heading-color);
+    font-weight: 600;
+    border-bottom: 1px solid rgba(244, 244, 244, 1);
+    line-height: 42px;
+    padding: 0 20px;
+  }
+
+  .in-out-loading-data {
+    width: 100%;
+    height: 376px;
+    background-color: #ffffff;
+    text-align: center;
+    padding: 130px 0 0 0;
+
+    .icon {
+      font-size: 40px;
+      color: var(--kw-primary-color);
+    }
+  }
+
+  .ant-tabs-nav-container {
+    display: table;
+    position: relative;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-bottom: -1px;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 1.5715;
+    white-space: nowrap;
+    -webkit-transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+
+  .ant-tabs-bar {
+    margin: 0;
+  }
+
+  .ant-tabs-nav .ant-tabs-tab {
+    width: 120px;
+    font-size: 14px;
+    color: var(--kw-heading-color);
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600 !important;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 12px 0;
+    margin: 0 7px;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+
+  .ant-tabs-nav .ant-tabs-tab-active {
+    font-size: 14px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600 !important;
+    color: var(--kw-primary-color);
+    outline: none;
+  }
+
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: var(--kw-primary-color);
+    font-weight: 600;
+  }
+
+  .ant-tabs-tab:hover {
+    font-size: 14px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600 !important;
+    color: var(--kw-primary-color);
+    outline: none;
+  }
+
+  .ant-tabs-ink-bar {
+    position: absolute;
+    bottom: 1px;
+    margin: 0 0 0 38px;
+    z-index: 1;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 46px !important;
+    height: 2px;
+    background-color: var(--kw-primary-color);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+  }
+
+  .edge-muster {
+    .edge-name {
+      height: 34px;
+      padding: 6px 20px;
+      cursor: pointer;
+
+      .edge-name-tooltip {
+        max-width: 140px;
+        float: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        .word {
+          font-size: 12px;
+          font-weight: 400;
+          color: var(--kw-text-color);
+          line-height: 17px;
+        }
+      }
+
+      .opened {
+        color: var(--kw-text-color-secondary);
+      }
+
+      .right-out {
+        visibility: hidden;
+      }
+
+      &:hover {
+        .right-out {
+          visibility: visible;
+          width: 14px;
+          height: 14px;
+          // color: var(--kw-primary-color);
+          float: right;
+          margin: 4px 0 0 0;
+        }
+      }
+    }
+
+    .edge-name:hover {
+      background: rgba(249, 249, 251, 1);
+    }
+
+    .edge-name-selected {
+      background: rgba(249, 249, 251, 1);
+    }
+  }
+}

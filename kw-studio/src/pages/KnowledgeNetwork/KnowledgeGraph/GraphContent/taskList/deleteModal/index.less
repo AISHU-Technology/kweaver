@@ -1,0 +1,57 @@
+.task-stop-modal {
+  .ant-modal-content {
+    width: 432px;
+    height: 192px;
+    position: relative;
+
+    .ant-modal-header {
+      display: none;
+    }
+
+    .ant-modal-body {
+      padding: 32px;
+
+      .stop-modal-title {
+        margin-bottom: 8px;
+
+        .title-icon {
+          color: var(--kw-error-color);
+          font-size: 22px;
+        }
+
+        .title-text {
+          display: inline-block;
+          margin-left: 16px;
+          vertical-align: top;
+          font-size: 16px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: var(--kw-heading-color);
+          line-height: 22px;
+        }
+      }
+
+      .stop-modal-body {
+        color: var(--kw-text-color-secondary);
+        padding-left: 38px;
+        line-height: 22px;
+      }
+
+      .stop-modal-footer {
+        box-sizing: border-box;
+
+        .stop-modal-cannal-button {
+          position: absolute;
+          right: 122px;
+          bottom: 24px;
+        }
+
+        .stop-modal-ok-button {
+          position: absolute;
+          right: 32px;
+          bottom: 24px;
+        }
+      }
+    }
+  }
+}

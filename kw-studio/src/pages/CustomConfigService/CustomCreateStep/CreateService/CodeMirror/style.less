@@ -1,0 +1,70 @@
+@border: 1px solid #d9d9d9;
+.code-mirror-wrap-root {
+  .c-param-editor .CodeMirror {
+    border-bottom: none;
+    border-radius: 0px;
+  }
+  .CodeMirror-scroll {
+    padding-bottom: 45px;
+  }
+  .content-operate-box {
+    padding: 5px 16px 4px;
+    overflow: hidden;
+    border-right: @border;
+    .title-left {
+      float: left;
+      height: 30px;
+      align-items: center;
+      font-weight: 600;
+    }
+    .icon-right {
+      float: right;
+      align-items: center;
+      .warning-box {
+        max-width: 156px;
+      }
+
+      .btn {
+        border: none;
+        min-width: 15px;
+        width: 15px;
+        padding: 0px;
+        .btn-icon {
+          font-size: 16px;
+        }
+      }
+      .disable {
+        cursor:not-allowed;
+        opacity: 0.45;
+      }
+      .ant-btn[disabled] {
+        background: transparent;
+      }
+      .btn:nth-child(1) {
+        padding-right: 23px;
+        border-right: @border;
+        height: 16px;
+        border-radius: 0px;
+        display: flex;
+      }
+      .btn:hover {
+        background: none;
+      }
+    }
+  }
+  .content-edit-code-box {
+    height: calc(100% - 39px);
+    position: relative;
+    border-bottom: @border;
+    .template-click {
+      z-index: 2;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background-color: #fff;
+    }
+    .functionCodeEditor {
+      height: 100%;
+    }
+  }
+}

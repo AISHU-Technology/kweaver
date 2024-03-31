@@ -1,0 +1,51 @@
+// 错误报告弹框
+.task-error-modal {
+  .ant-modal-content {
+    width: 800px;
+    height: 590px;
+
+    .ant-modal-header {
+      display: none;
+    }
+
+    .ant-modal-body {
+      padding: 0;
+
+      .error-modal-title {
+        box-sizing: border-box;
+        height: 56px;
+        padding: 16px 24px;
+        font-size: 18px;
+        font-family: PingFangSC-Medium, PingFang SC;
+        font-weight: 500;
+        color: var(--kw-heading-color);
+        line-height: 26px;
+        border-bottom: 1px solid var(--kw-line-color);
+      }
+
+      .error-modal-body {
+        padding: 20px 30px;
+        height: 470px;
+        overflow: auto;
+
+        .error-pre {
+          height: 100%;
+        }
+      }
+
+      .error-modal-footer {
+        box-sizing: border-box;
+        height: 64px;
+        border-top: 1px solid var(--kw-line-color);
+        position: relative;
+
+        .error-modal-button {
+          position: absolute;
+          right: 24px;
+          top: 14px;
+          height: 36px;
+        }
+      }
+    }
+  }
+}

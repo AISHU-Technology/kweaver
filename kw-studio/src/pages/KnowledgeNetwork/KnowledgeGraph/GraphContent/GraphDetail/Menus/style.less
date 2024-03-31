@@ -1,0 +1,107 @@
+.graphMenusRoot {
+  .infoList {
+    top: 240px;
+    right: 0;
+    z-index: 1;
+    width: 40px;
+    position: absolute;
+    background-color: #fff;
+    border-left: 1px solid var(--kw-line-color);
+    border-top: 1px solid var(--kw-line-color);
+    border-bottom: 1px solid var(--kw-line-color);
+    border-radius: 2px 0px 0px 2px;
+
+    .item {
+      height: 40px;
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        color: #000;
+      }
+
+      &:hover {
+        background: var(--kw-hover-bg-color);
+      }
+    }
+
+    .selected {
+      background-color: rgba(var(--kw-primary-color-rgb), 0.06);
+    }
+  }
+
+  .infoListOpen {
+    animation-name: infoListOpen;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+
+  .infoListClose {
+    animation-name: infoListClose;
+    animation-duration: 0.15s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+
+  .infoDrawer {
+    top: 0;
+    right: 0;
+    z-index: 1;
+    height: 100%;
+    position: absolute;
+    background-color: #fff;
+  }
+
+  .infoDrawerOpen {
+    animation-name: infoDrawerOpen;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+
+  .infoDrawerClose {
+    animation-name: infoDrawerClose;
+    animation-duration: 0.15s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes infoListOpen {
+  from {
+    right: 0;
+  }
+  to {
+    right: 320px;
+  }
+}
+
+@keyframes infoListClose {
+  from {
+    right: 320px;
+  }
+  to {
+    right: 0;
+  }
+}
+
+@keyframes infoDrawerOpen {
+  from {
+    width: 0px;
+  }
+  to {
+    width: 320px;
+  }
+}
+
+@keyframes infoDrawerClose {
+  from {
+    width: 320px;
+  }
+  to {
+    width: 0;
+  }
+}

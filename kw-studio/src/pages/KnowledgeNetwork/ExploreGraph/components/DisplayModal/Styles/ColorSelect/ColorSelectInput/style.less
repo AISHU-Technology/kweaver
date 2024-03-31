@@ -1,0 +1,45 @@
+.colorSelectInputRoot {
+  .vertical {
+    .label {
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+  }
+  .horizontal {
+    display: flex;
+    align-items: center;
+    .label {
+      min-width: 58px;
+      display: inline-block;
+    }
+  }
+  .colorSelectContainer {
+    height: 34px;
+    display: flex;
+    cursor: pointer;
+    padding: 0px 16px;
+    border-radius: 4px;
+    align-items: center;
+    border: 1px solid #d9d9d9;
+    justify-content: space-between;
+    .demo {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      border-radius: 3px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+  }
+  .box {
+    top: 35px;
+    left: 0px;
+    z-index: 10;
+    padding: 8px;
+    height: 320px;
+    overflow-y: auto;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.1);
+  }
+}

@@ -1,0 +1,23 @@
+@prefixCls: kw-x6-entity-node;
+
+.@{prefixCls} {
+  &-header {
+  }
+
+  &-required {
+    &::before {
+      display: block;
+      content: '*';
+      color: var(--kw-error-color);
+      position: absolute;
+    }
+  }
+
+  &-td-hover {
+    background: rgba(18, 110, 227, 0.05);
+  }
+
+  .ant-table-cell {
+    padding: 0 !important;
+  }
+}

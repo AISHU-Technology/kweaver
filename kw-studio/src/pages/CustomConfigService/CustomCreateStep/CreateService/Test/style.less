@@ -1,0 +1,165 @@
+@border: 1px solid #d9d9d9;
+.custom-test-wrap-root {
+  .CodeMirror-scroll {
+    padding-bottom: 0px;
+  }
+  .test-outline-box {
+    height: calc(100% - 21px);
+    overflow-x: hidden;
+    position: relative;
+    .dragLine {
+      position: absolute;
+      height: 5px;
+      width: 100%;
+      cursor: row-resize;
+      z-index: 10;
+      left: 0px;
+    }
+    .switchName {
+      position: absolute;
+      display: block;
+      z-index: 10;
+      cursor: pointer;
+      left: 50%;
+      font-size: 12px;
+      opacity: 0.25;
+    }
+
+    .input-result-box {
+      box-sizing: border-box;
+      height: calc(100% - 224px);
+      // max-height: 408px;
+      overflow-y: auto;
+      // overflow-x: hidden;
+      border-bottom: 2px solid #d9d9d9;
+      background-color: rgba(0, 0, 0, 0.02);
+      .in-title {
+        text-align: right;
+      }
+      .result-in-out-wrap {
+        border: @border;
+        width: calc(100% - 25px);
+        overflow-x: auto;
+        background-color: #fff;
+        .in-result-box {
+          position: relative;
+          border-bottom: @border;
+          width: 100%;
+          .icon-copy {
+            position: absolute;
+            top: 2px;
+            z-index: 10;
+            padding: 9px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            line-height: 15px;
+            border-radius: 2px;
+          }
+          .icon-copy:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+          }
+          .functionCodeEditor {
+            width: 100%;
+          }
+
+          .in-box {
+            width: 100%;
+            // max-height: 400px;
+            // max-height: 100px;
+            // overflow-y: auto;
+            background-color: #fff;
+          }
+          pre {
+            margin-bottom: 0px;
+          }
+        }
+        .in-result-box .kw-custom-scroll-thumb-y {
+          opacity: 0;
+        }
+
+        &:hover {
+          .in-result-box .kw-custom-scroll-thumb-y {
+            opacity: 1;
+          }
+        }
+        .out-result-box {
+          .functionCodeEditor {
+            width: 100%;
+          }
+          .CodeMirror-vscrollbar {
+            overflow-y: hidden;
+          }
+          &:hover {
+            .CodeMirror-vscrollbar {
+              overflow-y: scroll;
+            }
+          }
+          .c-param-editor .CodeMirror {
+            border: none;
+          }
+          .c-param-editor .CodeMirror {
+            border: none;
+          }
+          .in-title {
+            width: 80px;
+            text-align: right;
+          }
+          .result-box {
+            width: calc(100% - 46px);
+            background-color: rgba(0, 0, 0, 0.04);
+            border: @border;
+          }
+          .error-box {
+            border: 1px solid #ffccc7;
+            background-color: #fff2f0;
+            padding: 9px 13px;
+            border-radius: 2px;
+            width: 100%;
+          }
+          .param-code-editor-box {
+            position: relative;
+            .icon-copy {
+              position: absolute;
+              top: 2px;
+              z-index: 10;
+              padding: 9px;
+              right: 12px;
+              width: 32px;
+              height: 32px;
+              line-height: 15px;
+              border-radius: 2px;
+            }
+            .icon-copy:hover {
+              background-color: rgba(0, 0, 0, 0.04);
+            }
+          }
+        }
+      }
+    }
+    .test-input-box {
+      border: @border;
+      width: calc(100% - 48px);
+      height: calc(100% - 32px);
+      .functionCodeEditor {
+        height: calc(100% - 32px);
+      }
+      .c-param-editor .CodeMirror-gutters {
+        border-right: none;
+      }
+      .c-param-editor .CodeMirror {
+        border: none;
+        border-bottom: @border;
+      }
+      .icon-box {
+        border-bottom: @border;
+        padding: 5px 21px;
+        align-items: center;
+        .start-icon {
+          width: 27px;
+          border-right: @border;
+        }
+      }
+    }
+  }
+}

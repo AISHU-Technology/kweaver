@@ -1,0 +1,87 @@
+@border: 1px solid var(--kw-line-color);
+
+.component-tree {
+  .file-icon {
+    width: 16px;
+    height: 19px;
+    margin-right: 10px;
+  }
+
+  .title-tree {
+    padding: 13px 26px;
+    width: 100%;
+  }
+
+  .color-title {
+    background: rgba(18, 110, 227, 0.06);
+  }
+
+  // 左侧
+  .source-file {
+    align-items: center;
+    height: 49px;
+    padding: 0px 26px;
+  }
+
+  .source-file:hover {
+    background-color: #f5f5f5;
+  }
+
+  .ant-tree-draggable-icon {
+    display: none;
+  }
+
+  .input-first-left {
+    border: none;
+    border-bottom: @border;
+    width: 100%;
+  }
+
+  .ant-tree-switcher {
+    display: none;
+  }
+
+  .ant-tree-list-holder {
+    padding-top: 5px;
+  }
+
+  .ant-tree-node-content-wrapper-close {
+    width: 100%;
+  }
+
+  .ant-tree .ant-tree-treenode {
+    display: flex;
+    padding: 0px;
+    align-items: center;
+
+    &:hover {
+      background-color: #f5f5f5;
+
+      .delete-icon {
+        display: inline-block;
+      }
+    }
+  }
+
+  .delete-icon {
+    display: none;
+  }
+
+  .title-name {
+    display: inline-block;
+    // width: 240px;
+    flex: 1;
+  }
+
+  .ant-tree .ant-tree-node-content-wrapper {
+    padding: 0px;
+  }
+
+  .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    background-color: transparent;
+
+    .custom-tree-node.error-node {
+      background: var(--kw-select-bg-color);
+    }
+  }
+}

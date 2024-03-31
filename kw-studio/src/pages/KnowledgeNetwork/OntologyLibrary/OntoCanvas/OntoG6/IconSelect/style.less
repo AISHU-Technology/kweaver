@@ -1,0 +1,44 @@
+.flow-icon-select-root {
+  .ant-select-item-option-active {
+    background-color: #fff;
+  }
+
+  .ant-select-item {
+    padding: 0;
+  }
+
+  .icon-row {
+    padding: 0 20px;
+  }
+
+  .icon-item {
+    width: 20%;
+    height: 60px;
+    line-height: 60px;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+    }
+  }
+
+  .icon-svg {
+    vertical-align: middle;
+    font-size: 24px;
+    color: var(--kw-text-color);
+
+    &.checked {
+      color: var(--kw-primary-color);
+    }
+  }
+
+  .ant-empty-image {
+    height: 96px;
+  }
+
+  &:not(.ant-select-open) .s-icon {
+    color: var(--kw-primary-color);
+  }
+}

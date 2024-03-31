@@ -1,0 +1,51 @@
+// 只是为了覆盖oneUI的优先级
+body {
+  color: var(--kw-text-color);
+}
+
+.c-headerRoot {
+  .hasClick {
+    cursor: pointer;
+
+    &:hover {
+      background-color: hsla(0, 0%, 100%, 0.3);
+    }
+  }
+
+  .src-nav-HeadBar-styles---selectable {
+    display: flex;
+  }
+
+  .logoButton {
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+  }
+
+  .toHomeIcon {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .toHomeButton {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      margin-bottom: 2px;
+      border-radius: 3px;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+  }
+}
+
+.ant-dropdown {
+  z-index: 1053;
+}

@@ -1,0 +1,52 @@
+.search-query-know-modal {
+  .ant-modal-close-x {
+    display: block;
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.65);
+    font-style: normal;
+    line-height: 48px;
+    text-align: center;
+    text-transform: none;
+    text-rendering: auto;
+  }
+  .ant-modal-header {
+    height: 48px;
+    .ant-modal-title {
+      line-height: 16px;
+    }
+  }
+  .ant-modal-content {
+    width: 800px;
+    // height: 581px;
+  }
+  .ant-modal-body {
+    padding: 0px;
+    // height: 477px;
+    .m-content {
+      height: 100%;
+      // padding: 24px 24px 32px;
+      .intention-recognition-modal-table {
+        padding: 0px;
+      }
+    }
+  }
+
+  .ant-menu-inline .ant-menu-item-selected:after {
+    display: none;
+  }
+  .ant-menu-inline {
+    position: relative;
+  }
+  .ant-menu-inline > .ant-menu-item {
+    height: 36px;
+  }
+  .ant-menu-inline .ant-menu-item-selected::before {
+    content: '|';
+    position: absolute;
+    left: -5px;
+    z-index: 10;
+    font-size: 50px;
+  }
+}

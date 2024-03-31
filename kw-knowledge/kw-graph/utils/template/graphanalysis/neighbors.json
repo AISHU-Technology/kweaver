@@ -1,0 +1,38 @@
+{
+    "cognitive_svc_type": "graph-analysis",
+    "operation_type": "neighbors",
+    "kdb_name": "u9c80ac44c88a11ed8cc7ca2e3ac418ef",
+    "name": "查询企业关联机构",
+    "description": "restAPI",
+    "access_method": [
+        "restAPI"
+    ],
+    "permission": "appid_login",
+    "canvas_config": "{\"key\":\"dagre\",\"default\":{\"direction\":\"LR\",\"align\":\"MM\",\"nodesep\":20,\"ranksep\":50},\"dagre\":{\"direction\":\"LR\",\"align\":\"MM\",\"nodesep\":20,\"ranksep\":50}}",
+    "canvas_body": "",
+    "pc_configure_item": "",
+    "config_info": {
+        "tags": [
+            "enterprise"
+        ],
+        "filters": [
+            {
+                "e_filters": [
+                    {
+                        "relation": "and",
+                        "edge_class": "branch_is",
+                        "type": "satisfy_all",
+                        "property_filters": []
+                    },
+                    {
+                        "relation": "and",
+                        "edge_class": "shareholder_is_e",
+                        "type": "satisfy_all",
+                        "property_filters": []
+                    }
+                ],
+                "v_filters": []
+            }
+        ]
+    }
+}

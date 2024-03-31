@@ -1,0 +1,18 @@
+.extract-preview-json {
+  .ant-input-disabled {
+    border: none;
+    background: none;
+    color: var(--kw-text-color);
+    cursor: auto;
+  }
+
+  textarea {
+    overflow: hidden;
+  }
+
+  // 强制改变safari的disabled默认样式
+  textarea:disabled {
+    -webkit-text-fill-color: var(--kw-text-color) !important;
+    color: var(--kw-text-color) !important;
+  }
+}

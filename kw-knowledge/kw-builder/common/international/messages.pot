@@ -1,0 +1,2402 @@
+# Translations template for PROJECT.
+# Copyright (C) 2023 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2023.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2023-10-17 13:27+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
+
+msgid "graph being uploaded can not run. "
+msgstr ""
+
+msgid "task cannot run, the graph is being uploaded. "
+msgstr ""
+
+msgid "task cannot run, the current knowledge graph is running or waiting."
+msgstr ""
+
+msgid "{} start running success."
+msgstr ""
+
+msgid "delete task success"
+msgstr ""
+
+msgid "stop task success."
+msgstr ""
+
+msgid "Please check your parameter again."
+msgstr ""
+
+msgid "Please contact the developers."
+msgstr ""
+
+msgid "task_id [task_id] not exists."
+msgstr ""
+
+msgid "graph id [graph_id] not exists."
+msgstr ""
+
+msgid "subgraph id [subgraph_id] not exists."
+msgstr ""
+
+msgid "task cannot run, the storage address of this graph does not exist."
+msgstr ""
+
+msgid "invalid storage address."
+msgstr ""
+
+msgid "Please config a valid graph_db address for this graph."
+msgstr ""
+
+msgid "task cannot run, the current knowledge graph has not been configured yet."
+msgstr ""
+
+msgid "Please try again after configuration."
+msgstr ""
+
+msgid "Please try again after the task ends."
+msgstr ""
+
+msgid "Please try again after the uploading task ends."
+msgstr ""
+
+msgid "task id must be integer."
+msgstr ""
+
+msgid "task id [task_id] not exists."
+msgstr ""
+
+msgid "task not exists. "
+msgstr ""
+
+msgid "task cannot stop, because the task status is not waiting or running."
+msgstr ""
+
+msgid "you cannot stop a completed graph task."
+msgstr ""
+
+msgid "ds_id [ds_id] not exists."
+msgstr ""
+
+msgid "No permissions for ds_id [ds_id]."
+msgstr ""
+
+msgid "No permissions for graph [graph_id]."
+msgstr ""
+
+msgid "No permissions for ds_id %s."
+msgstr ""
+
+msgid "please check your data source again."
+msgstr ""
+
+msgid "data source doesn't match."
+msgstr ""
+
+msgid "Failed to get database table structure. "
+msgstr ""
+
+msgid "Data source type [data_source] does not support SQL statement. "
+msgstr ""
+
+msgid "SQL statement execution error, please check your SQL statement. "
+msgstr ""
+
+msgid "SQL statement execution timeout, please optimise your SQL statement. "
+msgstr ""
+
+msgid "Failed to preview data. "
+msgstr ""
+
+msgid "[cause]"
+msgstr ""
+
+msgid "knowledge network id [knw_id] not exists"
+msgstr ""
+
+msgid "Duplicate function name"
+msgstr ""
+
+msgid "Function name [name] already exists and cannot be created repeatedly."
+msgstr ""
+
+msgid "function id [function_id] not exists"
+msgstr ""
+
+msgid "Parameter [arg] Error."
+msgstr ""
+
+msgid "graphid [graphid] not exists."
+msgstr ""
+
+msgid "key type error"
+msgstr ""
+
+msgid "key should be list of string"
+msgstr ""
+
+msgid "graphdb id [graphdb_id] not exists"
+msgstr ""
+
+msgid "please config your graphdb again."
+msgstr ""
+
+msgid "these keys are not supported: [unsupported_key]"
+msgstr ""
+
+msgid "some keys are not supported."
+msgstr ""
+
+msgid "please check your parameter key again."
+msgstr ""
+
+msgid "argument [arg] error"
+msgstr ""
+
+msgid "graph id [graphid] not exists"
+msgstr ""
+
+msgid "ontology id [otl_id] not exists"
+msgstr ""
+
+msgid "Please config the ontology."
+msgstr ""
+
+msgid "[class_type] [name] not exists"
+msgstr ""
+
+msgid "parameter [arg] not exists or invalid"
+msgstr ""
+
+msgid "please ensure parameter [arg] exists and valid"
+msgstr ""
+
+msgid "Parameter [arg] too big please lower than [max]"
+msgstr ""
+
+msgid "Parameter [arg] not allow, please choose [allowed]"
+msgstr ""
+
+msgid "The parameter graph_id type must be int!"
+msgstr ""
+
+msgid "graph_id [graph_id] not exists."
+msgstr ""
+
+msgid "graph id [graph_id] not exists"
+msgstr ""
+
+msgid ""
+"Please check whether you have permission to delete or whther the graph is"
+" running."
+msgstr ""
+
+msgid ""
+"Eceph not connected, upload function cannot be opened now, please contact"
+" the System OP Admin to configure it"
+msgstr ""
+
+msgid "Please config ECeph again."
+msgstr ""
+
+msgid "graph_id [graph_id] is running or waiting. "
+msgstr ""
+
+msgid "Please wait until the task finishes. "
+msgstr ""
+
+msgid "Nebula has some error."
+msgstr ""
+
+msgid "graph is running or waiting."
+msgstr ""
+
+msgid "ontology not exists"
+msgstr ""
+
+msgid "Nebula space has not been created yet."
+msgstr ""
+
+msgid "Please wait for 20 seconds and try again."
+msgstr ""
+
+msgid "Opensearch has some error."
+msgstr ""
+
+msgid "[name] not exist!"
+msgstr ""
+
+msgid "schema creation failed."
+msgstr ""
+
+msgid "Please create schema again."
+msgstr ""
+
+msgid ""
+"the relation of start_entity, edge_name and end_entity is inconsistent "
+"with the ontology"
+msgstr ""
+
+msgid "Please check whether the OrientDB request information is correct."
+msgstr ""
+
+msgid "Please check whether the Nebula request information is correct."
+msgstr ""
+
+msgid "Please check whether your GraphDB service is running normally."
+msgstr ""
+
+msgid "Please check whether your DB name is correct."
+msgstr ""
+
+msgid "knowledge graph is waiting build, please calculate after building"
+msgstr ""
+
+msgid "Please check graph status"
+msgstr ""
+
+msgid "knowledge graph is building, please calculate after building"
+msgstr ""
+
+msgid "knowledge graph is configuring build, please calculate after building"
+msgstr ""
+
+msgid ""
+"knowledge graph store in NebulaGraph, if you need intelligence score, "
+"please calculate after building successfully"
+msgstr ""
+
+msgid "call async task service error"
+msgstr ""
+
+msgid "[detail]"
+msgstr ""
+
+msgid "async task service internal error"
+msgstr ""
+
+msgid "cancel async task error, service internal error"
+msgstr ""
+
+msgid "graph intelligence info query error"
+msgstr ""
+
+msgid "network intelligence info query error"
+msgstr ""
+
+msgid ""
+"Knowledge graph status invalid, please calculate after building "
+"successfully"
+msgstr ""
+
+msgid "knowledge network [knw_id] not exists"
+msgstr ""
+
+msgid "please config your knowledge network again."
+msgstr ""
+
+msgid "knowledge graph [graph_id] not exists"
+msgstr ""
+
+msgid "Please check the database connection."
+msgstr ""
+
+msgid "Please improve your knowledge capacity."
+msgstr ""
+
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, lexicon "
+"creation failed!"
+msgstr ""
+
+msgid ""
+"Lexicon name [lexicon_name] already exists and cannot be created "
+"repeatedly."
+msgstr ""
+
+msgid "[ErrorDetails]"
+msgstr ""
+
+msgid "Please check the type, size and content format of the uploaded file."
+msgstr ""
+
+msgid "Only one file can be selected at most."
+msgstr ""
+
+msgid "Please select upload file again."
+msgstr ""
+
+msgid "The file format only supports txt and CSV."
+msgstr ""
+
+msgid "File content format error."
+msgstr ""
+
+msgid ""
+"Please check the content and format of the document according to the "
+"template."
+msgstr ""
+
+msgid "The file only supports UTF-8 encoding."
+msgstr ""
+
+msgid "Please confirm the file code and reselect the file."
+msgstr ""
+
+msgid "The amount of uploaded file data exceeds."
+msgstr ""
+
+msgid ""
+"The uploaded file must be less than 10M and the number of lines must be "
+"less than 350000."
+msgstr ""
+
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, get labels "
+"failed!"
+msgstr ""
+
+msgid ""
+"The specified knowledge_id [knowledge_id] does not exist, get lexicon "
+"failed!"
+msgstr ""
+
+msgid "The specified lexicon id [lexicon_id] does not exist, get lexicon failed!"
+msgstr ""
+
+msgid "The specified lexicon id [lexicon_id] does not exist."
+msgstr ""
+
+msgid "The format of the new data [data] does not match the original data"
+msgstr ""
+
+msgid "Please check lexicon format again."
+msgstr ""
+
+msgid "The newly added word [data] already exists."
+msgstr ""
+
+msgid "lexicon [lexicon_id] status is running, cannot insert."
+msgstr ""
+
+msgid "lexicon status is running, please make sure lexicon status is correct."
+msgstr ""
+
+msgid "The specified lexicon word [lexicon_word] does not exist."
+msgstr ""
+
+msgid "New data [new_info] and original data [old_info] fields are inconsistent."
+msgstr ""
+
+msgid "The modified word [lexicon_word] already exists."
+msgstr ""
+
+msgid "lexicon [lexicon_id] status is running, cannot edit word."
+msgstr ""
+
+msgid "There is no deleted data [delete_data] in the specified lexicon."
+msgstr ""
+
+msgid "lexicon [lexicon_id] status is running, cannot delete word."
+msgstr ""
+
+msgid "lexicon [lexicon_id] status is running, cannot export."
+msgstr ""
+
+msgid "Please see the error prompt for details."
+msgstr ""
+
+msgid "Please check the type and size of the uploaded file."
+msgstr ""
+
+msgid "New data and original data fields are inconsistent"
+msgstr ""
+
+msgid "Select at least one file."
+msgstr ""
+
+msgid "lexicon [lexicon_id] status is running, cannot import words."
+msgstr ""
+
+msgid "Parameters Error!"
+msgstr ""
+
+msgid "Please check your parameters."
+msgstr ""
+
+msgid "[description]"
+msgstr ""
+
+msgid "send async task failed."
+msgstr ""
+
+msgid "get extraction rules failed."
+msgstr ""
+
+msgid "data_source in the parameter is inconsistent with that of the database."
+msgstr ""
+
+msgid "ds_id [ds_id] not in the data source selected for the graph."
+msgstr ""
+
+msgid "get extract result failed."
+msgstr ""
+
+msgid "the celery task id not exist."
+msgstr ""
+
+msgid "preview data failed."
+msgstr ""
+
+msgid "preview mysql data failed."
+msgstr ""
+
+msgid "preview kingbasees data failed."
+msgstr ""
+
+msgid "preview sqlserver data failed."
+msgstr ""
+
+msgid "preview postgresql data failed."
+msgstr ""
+
+msgid "preview ClickHouse data failed."
+msgstr ""
+
+msgid "preview hive data failed."
+msgstr ""
+
+msgid "show anyshare file failed."
+msgstr ""
+
+msgid "files of this type is not supported."
+msgstr ""
+
+msgid "only csv or json files can be previewed."
+msgstr ""
+
+msgid "preview anyshare data failed."
+msgstr ""
+
+msgid "add new task failed."
+msgstr ""
+
+msgid ""
+"can't add new task because the number of task has reached the upper "
+"limitation."
+msgstr ""
+
+msgid "Please try again later."
+msgstr ""
+
+msgid "ontology_id [ontology_id] not exists."
+msgstr ""
+
+msgid "Duplicate ontology name."
+msgstr ""
+
+msgid "Ontology name [name] already exists, please modify it"
+msgstr ""
+
+msgid "ontology [otl_id] does not exist in knowledge network [knw_id]. "
+msgstr ""
+
+msgid "knw_id [knw_id] not exists"
+msgstr ""
+
+msgid "celery_task_id [celery_task_id] not exists"
+msgstr ""
+
+msgid "otl_id [otl_id] not exists. "
+msgstr ""
+
+msgid "otl_id [otl_id] not in ontology library. "
+msgstr ""
+
+msgid "Data source type [data_source] does not support SQL extracting. "
+msgstr ""
+
+msgid "Duplicate field names exist in SQL extracting results. "
+msgstr ""
+
+msgid ""
+"Data extracting is empty, please re-select the data table used in SQL "
+"statement or go database to add data"
+msgstr ""
+
+msgid "subgraph name [name] already exists."
+msgstr ""
+
+msgid "there are entity classes or edge classes not in the ontology. "
+msgstr ""
+
+msgid "graph is running or waiting"
+msgstr ""
+
+msgid "Please stop building graph or wait the graph finish building."
+msgstr ""
+
+msgid "subgraph_id [subgraph_id] not exists."
+msgstr ""
+
+msgid "subgraph name already exists."
+msgstr ""
+
+msgid "names of these subgraphs are duplicate: [items]"
+msgstr ""
+
+msgid "ungrouped subgraph [subgraph_id] cannot rename."
+msgstr ""
+
+msgid "you cannot rename ungrouped."
+msgstr ""
+
+msgid "subgraph [subgraph_id] name cannot be 未分组 or ungrouped. "
+msgstr ""
+
+msgid "graph status is running, cannot delete subgraph."
+msgstr ""
+
+msgid "graph status is waiting, cannot delete subgraph."
+msgstr ""
+
+msgid "cannot delete ungrouped subgraph [subgraph_id]."
+msgstr ""
+
+msgid "Please change the subgraph to delete."
+msgstr ""
+
+msgid "subgraph_id [subgraph_id] does not exist or does not match the graph_id."
+msgstr ""
+
+msgid "The parameter graph_id must be int!"
+msgstr ""
+
+msgid "parameters cannot be both graph_id and task_id."
+msgstr ""
+
+msgid "graph_id must be int."
+msgstr ""
+
+msgid "graph_id must be larger than zero."
+msgstr ""
+
+msgid "task_id must be int."
+msgstr ""
+
+msgid "task_id must be larger than zero."
+msgstr ""
+
+msgid "parameter must be graph_id or task_id."
+msgstr ""
+
+msgid "parameter task_id must be int!"
+msgstr ""
+
+msgid "parameter task_id cannot be 0!"
+msgstr ""
+
+msgid "NO parameter %s. "
+msgstr ""
+
+msgid " must be number！"
+msgstr ""
+
+msgid "ds_id must be int "
+msgstr ""
+
+msgid "The parameter graph id type must be int!"
+msgstr ""
+
+msgid "graph upload can not delete"
+msgstr ""
+
+msgid "please wait upload finished"
+msgstr ""
+
+msgid "Incorrect parameter format"
+msgstr ""
+
+msgid "graph task is not normal or graph status is not finish"
+msgstr ""
+
+msgid "Please check graph or task status"
+msgstr ""
+
+#, python-format
+msgid "knw id %s not exists"
+msgstr ""
+
+msgid "get file error"
+msgstr ""
+
+msgid "unexception error"
+msgstr ""
+
+msgid "parameter graph_id must be int!"
+msgstr ""
+
+msgid "parameter subgraph_id must be int!"
+msgstr ""
+
+msgid "parameter subgraph_id cannot be 0!"
+msgstr ""
+
+msgid "parameter graph_id cannot be empty. "
+msgstr ""
+
+msgid "parameter graph_id must be integer. "
+msgstr ""
+
+msgid "parameter graph_id must be larger than zero. "
+msgstr ""
+
+msgid "parameter subgraph_ids cannot be empty. "
+msgstr ""
+
+msgid "parameter subgraph_ids must be a list. "
+msgstr ""
+
+msgid "parameter subgraph_id {} must be int!"
+msgstr ""
+
+msgid "parameter subgraph_id must be larger than zero!"
+msgstr ""
+
+msgid "parameter graph_ids must be a list. "
+msgstr ""
+
+msgid "graph_id {} must be int. "
+msgstr ""
+
+msgid "graph_id {} must be larger than zero. "
+msgstr ""
+
+msgid "parameter to_be_uploaded must be 0 or 1. "
+msgstr ""
+
+msgid "graph_id cannot be empty."
+msgstr ""
+
+msgid "graph_id must be integer."
+msgstr ""
+
+msgid " cannot be empty. "
+msgstr ""
+
+msgid " must be string. "
+msgstr ""
+
+msgid " must be in "
+msgstr ""
+
+msgid " must be list "
+msgstr ""
+
+msgid "length of graph_data cannot be larger than 100."
+msgstr ""
+
+msgid "item of graph_data must be dict. "
+msgstr ""
+
+msgid "when data_type is edge, the graph_data must have start, end, edge_pros. "
+msgstr ""
+
+msgid "when data_type is edge, the graph_data must have start, end. "
+msgstr ""
+
+msgid "the start of graph_data must be dict. "
+msgstr ""
+
+msgid "the start of graph_data must be have _start_entity. "
+msgstr ""
+
+msgid "The start entity class type of multiple data should be consistent."
+msgstr ""
+
+msgid "the end of graph_data must be dict. "
+msgstr ""
+
+msgid "the end of graph_data must be have _end_entity. "
+msgstr ""
+
+msgid "The end entity class type of multiple data should be consistent."
+msgstr ""
+
+msgid "the edge_pros of graph_data must be dict. "
+msgstr ""
+
+msgid " must be int, and more than zero!"
+msgstr ""
+
+msgid "failed to obtain the uploaded file. "
+msgstr ""
+
+msgid "the number of uploaded files can only be 1. "
+msgstr ""
+
+msgid "the type of uploaded file can only be xlsx or json. "
+msgstr ""
+
+msgid "the size of uploaded file can not be larger tha 10M. "
+msgstr ""
+
+msgid "parameter knw-id cannot be empty. "
+msgstr ""
+
+msgid "parameter celery_task_id is missing! "
+msgstr ""
+
+msgid "parameter knw_id is missing! "
+msgstr ""
+
+msgid "parameter knw_id must be int. "
+msgstr ""
+
+msgid "parameter format is missing! "
+msgstr ""
+
+msgid "parameter format must be xlsx or json. "
+msgstr ""
+
+msgid "parameter otl_id is missing! "
+msgstr ""
+
+msgid "parameter otl_id must be int. "
+msgstr ""
+
+msgid "Anyshare 7 test connection fail"
+msgstr ""
+
+msgid "transform json file failed. "
+msgstr ""
+
+msgid "failed to get running task."
+msgstr ""
+
+msgid "get multi task name failed."
+msgstr ""
+
+msgid "task start failed."
+msgstr ""
+
+msgid " task start failed."
+msgstr ""
+
+msgid "can`t get task information"
+msgstr ""
+
+msgid ""
+"File content error, please download the template and complete the "
+"document according to the format requirements."
+msgstr ""
+
+msgid "Import failed! Ontology name is empty. Please modify and try again."
+msgstr ""
+
+msgid ""
+"Import failed! The format of the ontology name is incorrect. Please "
+"modify and try again."
+msgstr ""
+
+msgid ""
+"Import failed! The ontology name already exists. Please modify and try "
+"again."
+msgstr ""
+
+msgid ""
+"Import failed! The format of ontology description is incorrect. Please "
+"modify and try again."
+msgstr ""
+
+msgid ""
+"Import failed! The format of ontology domain is incorrect. Please modify "
+"and try again."
+msgstr ""
+
+msgid "Operation failed, importing entities in bulk, please try again later"
+msgstr ""
+
+msgid "Show table False"
+msgstr ""
+
+msgid "the username or password of mysql is incorrect."
+msgstr ""
+
+msgid "Mysql does not have this database or table."
+msgstr ""
+
+msgid "the username or password of postgresql is incorrect."
+msgstr ""
+
+msgid "PostgreSQL does not have this database or table."
+msgstr ""
+
+msgid "the username or password of sqlserver is incorrect."
+msgstr ""
+
+msgid "sqlserver does not have this database or table."
+msgstr ""
+
+msgid "the username or password of kingbasees is incorrect."
+msgstr ""
+
+msgid "kingbasees does not have this database or table."
+msgstr ""
+
+msgid "the username or password of ClickHouse is incorrect."
+msgstr ""
+
+msgid "ClickHouse does not have this database or table."
+msgstr ""
+
+msgid "the username or password of hive is incorrect."
+msgstr ""
+
+msgid "Hive dose not have this database or table."
+msgstr ""
+
+msgid "Anyshare dose not have this file."
+msgstr ""
+
+msgid "can not get all of files of anyshare."
+msgstr ""
+
+msgid "Password decoding failed. "
+msgstr ""
+
+msgid "Password encryption error"
+msgstr ""
+
+msgid "test connection success"
+msgstr ""
+
+msgid "User or Password in mysql have error"
+msgstr ""
+
+msgid "test connection fail, check your parameter again"
+msgstr ""
+
+msgid "Anyshare7 test connection success"
+msgstr ""
+
+msgid "User or password in hive has some error"
+msgstr ""
+
+msgid "User or password in rabbitmq has some error"
+msgstr ""
+
+msgid "vhost error"
+msgstr ""
+
+msgid "host error"
+msgstr ""
+
+msgid "port error"
+msgstr ""
+
+msgid "queue error"
+msgstr ""
+
+msgid "User or Password in sqlserver have error"
+msgstr ""
+
+msgid "User or Password in kingbasees have error"
+msgstr ""
+
+msgid "User or Password in PostgreSQL have error"
+msgstr ""
+
+msgid "User or Password in ClickHouse have error"
+msgstr ""
+
+msgid "data_source no rule"
+msgstr ""
+
+#, python-format
+msgid "id %s not exist!"
+msgstr ""
+
+msgid "database already have the same name"
+msgstr ""
+
+msgid "insert success"
+msgstr ""
+
+msgid "you have an error in your SQL!"
+msgstr ""
+
+#, python-format
+msgid "id  %s not exist!"
+msgstr ""
+
+msgid "update fail"
+msgstr ""
+
+msgid "update dsId success"
+msgstr ""
+
+#, python-format
+msgid "ds_id  %s not exist!"
+msgstr ""
+
+msgid "ds_id not exist!"
+msgstr ""
+
+msgid "data source isn't hive"
+msgstr ""
+
+#, python-format
+msgid "Table '%s' or model '%s' doesn't exist. "
+msgstr ""
+
+msgid ""
+"Eceph connection failed. Please turn off the upload function and contact "
+"the System OP Admin to check the relevant configuration"
+msgstr ""
+
+msgid " not exist!"
+msgstr ""
+
+#, python-format
+msgid "get %s fail"
+msgstr ""
+
+msgid "Failed to delete the graph, it is being used in domain cognitive service. "
+msgstr ""
+
+msgid "delete graph failed, alg-server delete canvases error. "
+msgstr ""
+
+msgid "delete fail "
+msgstr ""
+
+msgid "insert connection fail"
+msgstr ""
+
+#, python-format
+msgid "graph_id  %s not exist!"
+msgstr ""
+
+msgid "graph_id error"
+msgstr ""
+
+msgid "get graph error: mysql connect error"
+msgstr ""
+
+msgid "error"
+msgstr ""
+
+msgid "user does not have access to the knowledge network"
+msgstr ""
+
+msgid "user does not have access to the data source, ds_id:"
+msgstr ""
+
+msgid "not a json structed"
+msgstr ""
+
+msgid "check the file"
+msgstr ""
+
+msgid "content error in json file"
+msgstr ""
+
+msgid "can not support the version of file"
+msgstr ""
+
+msgid "An error occurred during the upgrade process"
+msgstr ""
+
+msgid "can not find version in json file"
+msgstr ""
+
+msgid "graph_Name length cannot exceed 50"
+msgstr ""
+
+msgid "entity name \"{}\" does not consistent with ontology. "
+msgstr ""
+
+msgid "property of entity class \"{}\" does not consistent with ontology. "
+msgstr ""
+
+msgid ""
+"otl_prop \"{otl_prop}\" of entity class \"{entity_name}\" must config "
+"property mapping. "
+msgstr ""
+
+msgid "missing entity {}"
+msgstr ""
+
+msgid "edge relation \"{}\" does not consistent with ontology. "
+msgstr ""
+
+msgid ""
+"edge_prop \"{edge_prop}\" of edge relation \"{edge_relation}\" must "
+"config property mapping. "
+msgstr ""
+
+msgid "missing relation {}"
+msgstr ""
+
+msgid "graph_data does not have merge property \"{}\": {}"
+msgstr ""
+
+msgid "data_type of graph_data \"{}\" is incorrect: {}"
+msgstr ""
+
+msgid "graph_data start does not have _vid or merge property \"{}\": {}"
+msgstr ""
+
+msgid "graph_data end does not have _vid or merge property \"{}\": {}"
+msgstr ""
+
+msgid "data_type of graph_data edge_pros \"{}\" is incorrect: {}"
+msgstr ""
+
+msgid "graph_data have property \"{}\" that do not exist in the ontology: {}"
+msgstr ""
+
+msgid ""
+"graph_data edge_pros have property \"{}\" that do not exist in the "
+"ontology: {}"
+msgstr ""
+
+msgid "entity {} not in the ontology. "
+msgstr ""
+
+msgid "edge {} not in the ontology. "
+msgstr ""
+
+msgid "subgraph id {} has unexpected classes: "
+msgstr ""
+
+msgid "get task of otl fail"
+msgstr ""
+
+msgid "get all otl task result  fail"
+msgstr ""
+
+msgid "The url api/builder/v1/ds/dsid dsid type must be int!"
+msgstr ""
+
+msgid ""
+" only support English and Chinese, numbers and underline, and the length "
+"is 0-50 digits."
+msgstr ""
+
+msgid "test connection fail"
+msgstr ""
+
+msgid "is None type ;"
+msgstr ""
+
+msgid " must be int "
+msgstr ""
+
+msgid "`s value must more than one "
+msgstr ""
+
+msgid " must be str "
+msgstr ""
+
+msgid " isn`t a valid parameter "
+msgstr ""
+
+msgid " isn`t a valid parameter"
+msgstr ""
+
+msgid "`s length must more than zero "
+msgstr ""
+
+msgid " must be string "
+msgstr ""
+
+msgid " must be  list ; "
+msgstr ""
+
+msgid "`s length can`t be zero"
+msgstr ""
+
+msgid "has some error : "
+msgstr ""
+
+msgid "These parameters :"
+msgstr ""
+
+msgid " are inexistence ; "
+msgstr ""
+
+msgid "  are exist but empty or have blankspace :"
+msgstr ""
+
+msgid "  are exist but name is reduplicative :"
+msgstr ""
+
+msgid "subgraph_ids cannot be empty."
+msgstr ""
+
+msgid "subgraph_ids must be a list."
+msgstr ""
+
+msgid "subgraph_ids have repeating items."
+msgstr ""
+
+msgid "subgraph_id must be int and must be larger than zero."
+msgstr ""
+
+msgid "write_mode cannot be empty."
+msgstr ""
+
+msgid "write_mode must be skip or overwrite."
+msgstr ""
+
+msgid "flag must be full or increment."
+msgstr ""
+
+#, python-format
+msgid "parameters: %s can not be empty!"
+msgstr ""
+
+msgid "parameters: page must be int, and more than zero!"
+msgstr ""
+
+msgid "parameters: order must be asc or desc!"
+msgstr ""
+
+msgid ""
+"parameters: status must be in (normal, running, waiting, failed, stop, "
+"all)!"
+msgstr ""
+
+msgid "parameters: graph_name Length over 50."
+msgstr ""
+
+msgid "parameters: size must be int, and more than zero!"
+msgstr ""
+
+msgid "parameters: tas_type must be in (full,increment,all)"
+msgstr ""
+
+msgid "parameters: trigger_type must be in (0,1,2,all)"
+msgstr ""
+
+#, python-format
+msgid "parameters: %s error!"
+msgstr ""
+
+#, python-format
+msgid "parameters: %s illegal!"
+msgstr ""
+
+#, python-format
+msgid "parameters: %s no rule!"
+msgstr ""
+
+msgid "unknown error!"
+msgstr ""
+
+#, python-format
+msgid " parameters: %s can not be empty !"
+msgstr ""
+
+msgid " parameters: "
+msgstr ""
+
+msgid " must be ascend or descend!"
+msgstr ""
+
+msgid " must be in [normal, waiting, failed, stop, all]!"
+msgstr ""
+
+msgid " must be 0, 1, 2!"
+msgstr ""
+
+msgid " must be full or increment!"
+msgstr ""
+
+msgid " must be structured!"
+msgstr ""
+
+#, python-format
+msgid " parameters:  %s  error!"
+msgstr ""
+
+#, python-format
+msgid " parameters: %s illegal!"
+msgstr ""
+
+#, python-format
+msgid " parameters: %s no rule!"
+msgstr ""
+
+msgid " must be str！"
+msgstr ""
+
+msgid " irregular！"
+msgstr ""
+
+msgid ""
+" only support English and Chinese, numbers and special symbols on the "
+"keyboard, and the length is 0-50 digits."
+msgstr ""
+
+msgid "ds_auth must be str"
+msgstr ""
+
+msgid " parameters: ds_auth must be number"
+msgstr ""
+
+msgid " Characters are not _, Chinese, English！"
+msgstr ""
+
+msgid " parameters: json_schema must be json_string; "
+msgstr ""
+
+msgid " parameters: json_schema can't be empty; "
+msgstr ""
+
+msgid " parameters: json_schema can't be empty;"
+msgstr ""
+
+msgid " can not be 0！"
+msgstr ""
+
+msgid " do not have the connect type"
+msgstr ""
+
+msgid " must use odbc connect type"
+msgstr ""
+
+msgid "connect_type must be 'odbc' or ''"
+msgstr ""
+
+msgid " parameters: ds_port must be int"
+msgstr ""
+
+msgid " parameters: ds_port must in 1~65535"
+msgstr ""
+
+msgid " parameters: dataType must be str"
+msgstr ""
+
+msgid " parameters: extract_type must be str"
+msgstr ""
+
+msgid " parameters: data_source must be str"
+msgstr ""
+
+msgid ""
+" parameters:dataType is structured  parameters:extract_type must be "
+"standardExtraction!"
+msgstr ""
+
+msgid ""
+"parameters: dataType is unstructured  parameters: extract_type must be "
+"modelExtraction!"
+msgstr ""
+
+msgid ""
+" parameters:dataType is unstructured  parameters:data_source must be "
+"Anyshare!"
+msgstr ""
+
+msgid "parameters must be json"
+msgstr ""
+
+msgid ""
+" parameters: data_source must be [mysql, hive, rabbitmq, "
+"sqlserver, kingbasees, postgresql]"
+msgstr ""
+
+msgid " parameters: data_source can not be empty !"
+msgstr ""
+
+msgid " parameters: ds_port must be int !"
+msgstr ""
+
+msgid " parameters: ds_port must in 1~65535 !"
+msgstr ""
+
+msgid "parameters: ds_id must be int !"
+msgstr ""
+
+msgid "parameters: ds_auth must be str !"
+msgstr ""
+
+msgid " parameters: ds_auth must be number !"
+msgstr ""
+
+msgid "parameters: {} must be str !"
+msgstr ""
+
+msgid " Characters are not _, Chinese, English！ And can't be empty"
+msgstr ""
+
+msgid " must be str"
+msgstr ""
+
+msgid "parameters:  %s  are not required!,"
+msgstr ""
+
+msgid "parameters:  %s  are Missing!,"
+msgstr ""
+
+msgid "parameters task_id must be list!"
+msgstr ""
+
+msgid "parameters: task_ids content must be int."
+msgstr ""
+
+msgid "parameters: task_ids list can not be empty."
+msgstr ""
+
+msgid " is not required. "
+msgstr ""
+
+msgid " must be number."
+msgstr ""
+
+msgid " less than 1."
+msgstr ""
+
+msgid " is required. "
+msgstr ""
+
+msgid " must be dict."
+msgstr ""
+
+msgid " cannot be empty."
+msgstr ""
+
+msgid " parameters: partition_infos partition"
+msgstr ""
+
+msgid "'s expression must be str"
+msgstr ""
+
+msgid "Parameter %s must be a int type. "
+msgstr ""
+
+msgid "Parameter %s must be a string type. "
+msgstr ""
+
+msgid "Parameter %s must be in %s. "
+msgstr ""
+
+msgid "Parameter %s cannot be empty. "
+msgstr ""
+
+msgid "Parameter sql only support entering a single statement. "
+msgstr ""
+
+msgid "Parameter sql must be a query statement. "
+msgstr ""
+
+msgid "parameter knw_id must be larger than zero. "
+msgstr ""
+
+msgid "parameter name must be string. "
+msgstr ""
+
+msgid "parameter name cannot be empty. "
+msgstr ""
+
+msgid ""
+"parameter name cannot exceed 50 characters and characters must be "
+"numbers, _, chinese or english. "
+msgstr ""
+
+msgid "parameter language must be string. "
+msgstr ""
+
+msgid "parameter language cannot be empty. "
+msgstr ""
+
+msgid "parameter language must be in {}; "
+msgstr ""
+
+msgid "parameter code must be string. "
+msgstr ""
+
+msgid "parameter code cannot be empty. "
+msgstr ""
+
+msgid "The number of code bytes must be less than 16M;"
+msgstr ""
+
+msgid "the code only supports a single statement. "
+msgstr ""
+
+msgid "parameter description must be string. "
+msgstr ""
+
+msgid ""
+" consists of Chinese, English, number and special symbols, and the length"
+" is 0-150 digits."
+msgstr ""
+
+msgid "parameter function_id must be int. "
+msgstr ""
+
+msgid "parameter function_id must be larger than zero. "
+msgstr ""
+
+msgid "parameter function_ids must be list. "
+msgstr ""
+
+msgid "function_id must be int. "
+msgstr ""
+
+msgid "function_id must be larger than zero. "
+msgstr ""
+
+msgid "parameter page must be int. "
+msgstr ""
+
+msgid "parameter page must be larger than zero. "
+msgstr ""
+
+msgid "parameter size must be int. "
+msgstr ""
+
+msgid "parameter size must be larger than zero. "
+msgstr ""
+
+msgid "parameter order_field must be string. "
+msgstr ""
+
+msgid ""
+"parameter order_field must be in [\"update_time\", \"create_time\", "
+"\"name\"];"
+msgstr ""
+
+msgid "parameter order_type must be string. "
+msgstr ""
+
+msgid "parameter order_type must be in [\"desc\", \"asc\"];"
+msgstr ""
+
+msgid "parameter search must be string. "
+msgstr ""
+
+msgid "parameter parameters must be list. "
+msgstr ""
+
+msgid "the content in the list must be a dict."
+msgstr ""
+
+msgid "the name of function_param No.{} must be string. "
+msgstr ""
+
+msgid "the name of function_param No.{} cannot be empty. "
+msgstr ""
+
+msgid ""
+"the name of function_param No.{} cannot exceed 50 characters and "
+"characters must be lowercase english letters and _ . "
+msgstr ""
+
+msgid "the name of function_param No.{} cannot be created repeatedly;"
+msgstr ""
+
+msgid "the alias of function_param No.{} must be string. "
+msgstr ""
+
+msgid "the alias of function_param No.{} cannot be empty. "
+msgstr ""
+
+msgid ""
+"the alias of function_param No.{} cannot exceed 50 characters and "
+"characters must be numbers, _, chinese or english. "
+msgstr ""
+
+msgid "the description of function_param No.{} must be string. "
+msgstr ""
+
+msgid ""
+"the description of function_param No.{} consists of Chinese, English, "
+"number and special symbols, and the length is 0-1000 digits."
+msgstr ""
+
+msgid "the position of function_param No.{} must be a list;"
+msgstr ""
+
+msgid "the information in position of function_param No.{} must be a dict ."
+msgstr ""
+
+msgid ""
+"the information in position of function_param No.{} not find key \"pos\" "
+"and \"example\" ."
+msgstr ""
+
+msgid ""
+"the pos in the position information of function_param No.{} must be a "
+"list;"
+msgstr ""
+
+msgid ""
+"the pos in the position information of function_param No.{} length must "
+"be 3;"
+msgstr ""
+
+msgid ""
+"the value in position of function_param No.{} must be int and cannot be "
+"less than zero; "
+msgstr ""
+
+msgid ""
+"the value in position of function_param No.{} end_position must more than"
+" start_position;"
+msgstr ""
+
+msgid "the param_type of function_param No.{} must be string. "
+msgstr ""
+
+msgid "the param_type of function_param No.{} must be in {}. "
+msgstr ""
+
+msgid "the options of function_param No.{} must be string. "
+msgstr ""
+
+msgid "the options of function_param No.{} must be in {}. "
+msgstr ""
+
+#, python-format
+msgid "sql name %s repeats. "
+msgstr ""
+
+msgid "Parameter SQL must be a query statement. "
+msgstr ""
+
+msgid "entity_type of entity \"{}\" does not exists in entity_types of files. "
+msgstr ""
+
+msgid ""
+"entity_prop \"{entity_prop}\" of entity \"{entity}\" does not exists in "
+"property_field of files. "
+msgstr ""
+
+msgid "entity_type of edge \"{}\" does not exists in entity_types of files. "
+msgstr ""
+
+msgid ""
+"entity_prop \"{entity_prop}\" of edge \"{edge}\" does not exists in "
+"property_field of files. "
+msgstr ""
+
+msgid "parameter name cannot be \"未分组\" or \"ungrouped\". "
+msgstr ""
+
+msgid "parameter graph_id cannot be empty."
+msgstr ""
+
+msgid "parameter graph_id must be int. "
+msgstr ""
+
+msgid "parameter graph_id must be larger than zero."
+msgstr ""
+
+msgid "parameter ontology_id cannot be empty."
+msgstr ""
+
+msgid "parameter ontology_id must be int. "
+msgstr ""
+
+msgid "parameter ontology_id must be larger than zero."
+msgstr ""
+
+msgid "the parameter must be a list. "
+msgstr ""
+
+msgid "parameter subgraph_id cannot be empty."
+msgstr ""
+
+msgid "parameter subgraph_id must be int. "
+msgstr ""
+
+msgid "parameter subgraph_id must be larger than zero."
+msgstr ""
+
+msgid "subgraph id {} is duplicate. "
+msgstr ""
+
+msgid ""
+"parameter name {} cannot exceed 50 characters and characters must be "
+"numbers, _, chinese or english. "
+msgstr ""
+
+msgid "name {} is duplicate."
+msgstr ""
+
+msgid "parameter entity must be list. "
+msgstr ""
+
+msgid "parameter edge must be list. "
+msgstr ""
+
+msgid "parameter subgraph_name cannot be empty."
+msgstr ""
+
+msgid "parameter return_all must be False or True."
+msgstr ""
+
+msgid "entity "
+msgstr ""
+
+msgid "edge "
+msgstr ""
+
+msgid " name"
+msgstr ""
+
+msgid " Length over 50 or Characters are not _, English. "
+msgstr ""
+
+msgid " alias"
+msgstr ""
+
+msgid " Length over 50 or Characters are not _, Chinese, English！"
+msgstr ""
+
+msgid " index_default_switch"
+msgstr ""
+
+msgid " must be bool！"
+msgstr ""
+
+msgid " index_main_switch"
+msgstr ""
+
+msgid " properties_index"
+msgstr ""
+
+msgid " must have one properties_index."
+msgstr ""
+
+msgid " must be an existing properties name. "
+msgstr ""
+
+msgid " can not be empty."
+msgstr ""
+
+msgid " is not illegal ; "
+msgstr ""
+
+msgid " must be str ; "
+msgstr ""
+
+msgid " must <= 150 ,and conclude letter number and special characters"
+msgstr ""
+
+msgid " must in  "
+msgstr ""
+
+msgid " must <= 50 ; and it is must be consisted of letter ,number and underline ; "
+msgstr ""
+
+msgid "Import failed! The format of the ontology name is incorrect. Please modify and try again."
+msgstr ""
+
+msgid "docid is not illegal "
+msgstr ""
+
+msgid "class name can't repeated !"
+msgstr ""
+
+msgid "alias name can't repeated !"
+msgstr ""
+
+msgid "relationships between the same entities can't have the same name !"
+msgstr ""
+
+msgid "Failed to delete the graph, it is being used in domain cognitive service. "
+msgstr ""
+
+msgid "delete graph failed, alg-server delete canvases error. "
+msgstr ""
+
+msgid " must be True or False. "
+msgstr ""
+
+msgid "the value in domain must be string. "
+msgstr ""
+
+msgid "the value in domain can not empty. "
+msgstr ""
+
+msgid "the value in domain only support English and Chinese, numbers and special symbols"
+" on the keyboard, and the length is 0-50 digits."
+msgstr ""
+
+msgid "Duplicate ontology name."
+msgstr ""
+
+msgid "Import failed! Ontology name is empty. Please modify and try again."
+msgstr ""
+
+msgid "Ontology name [name] already exists, please modify it"
+msgstr ""
+
+msgid "parameter otl_ids must be list. "
+msgstr ""
+
+msgid "ontology id must be int, and more than zero. "
+msgstr ""
+
+msgid " must be int, and more than zero or equal to -1. "
+msgstr ""
+
+msgid " must in %s. "
+msgstr ""
+
+msgid "the value in domain can not duplicate. "
+msgstr ""
+
+msgid " Length over 50 or Characters are not _, English. "
+msgstr ""
+
+msgid " Length over 255 or Characters are not _, English. "
+msgstr ""
+
+msgid " must have one properties_index."
+msgstr ""
+
+msgid " properties item must be dict. "
+msgstr ""
+
+msgid " is dupulicated ; "
+msgstr ""
+
+msgid "These properties parameters :"
+msgstr ""
+
+msgid " are inexistence ; "
+msgstr ""
+
+msgid " must have one property! "
+msgstr ""
+
+msgid "max number of domain is 10. "
+msgstr ""
+
+msgid "entity name %s is duplicate. "
+msgstr ""
+
+msgid "entity alias name %s is duplicate. "
+msgstr ""
+
+msgid "edge name %s is duplicate. "
+msgstr ""
+
+msgid "edge alias name %s is duplicate. "
+msgstr ""
+
+msgid "must be adaptive. "
+msgstr ""
+
+msgid " must have one primary_key."
+msgstr ""
+
+msgid " must be an existing properties name. "
+msgstr ""
+
+msgid " only support English and Chinese, numbers and special symbols on the keyboard, and the length is 0-150 digits."
+msgstr ""
+
+msgid " only support English and Chinese, numbers and special symbols on the keyboard, and the length is 0-50 digits."
+msgstr ""
+
+msgid "Import failed! The format of ontology description is incorrect. Please modify and try again."
+msgstr ""
+
+msgid "Import failed! The format of ontology domain is incorrect. Please modify and try again."
+msgstr ""
+
+msgid " only support English and Chinese, numbers and special symbols on the keyboard, and the length is 0-50 digits."
+msgstr ""
+
+msgid " only support English and Chinese, numbers and underline, and the length is 0-50 digits."
+msgstr ""
+
+msgid " only support English and Chinese, numbers and underline, and the length is 0-255 digits."
+msgstr ""
+
+msgid " only support English and Chinese, numbers and special symbols on the keyboard, and the length is 0-255 digits."
+msgstr ""
+
+msgid "The entity of edge %s's relationship is not in the entity list. "
+msgstr ""
+
+msgid "Edge class %s's name does not match the relation. "
+msgstr ""
+
+msgid " if entity is empty ,edge must be empty. "
+msgstr ""
+
+msgid "entity "
+msgstr ""
+
+msgid "edge "
+msgstr ""
+
+msgid "icon"
+msgstr ""
+
+msgid "synonym"
+msgstr ""
+
+msgid "description"
+msgstr ""
+
+msgid " name"
+msgstr ""
+
+msgid " alias"
+msgstr ""
+
+msgid " properties_index"
+msgstr ""
+
+msgid "fill_color"
+msgstr ""
+
+msgid "stroke_color"
+msgstr ""
+
+msgid "text_color"
+msgstr ""
+
+msgid " relations "
+msgstr ""
+
+msgid " properties"
+msgstr ""
+
+msgid " properties item must be dict. "
+msgstr ""
+
+msgid " properties name"
+msgstr ""
+
+msgid " is dupulicated ; "
+msgstr ""
+
+msgid " properties description"
+msgstr ""
+
+msgid ""
+" only support English and Chinese, numbers and special symbols on the "
+"keyboard, and the length is 0-150 digits."
+msgstr ""
+
+msgid " properties alias"
+msgstr ""
+
+msgid " properties data_type"
+msgstr ""
+
+msgid " properties synonym"
+msgstr ""
+
+msgid "These properties parameters :"
+msgstr ""
+
+msgid " must have one property! "
+msgstr ""
+
+msgid "width"
+msgstr ""
+
+msgid "icon"
+msgstr ""
+
+msgid " default_tag"
+msgstr ""
+
+msgid " primary_key"
+msgstr ""
+
+msgid " must have one primary_key."
+msgstr ""
+
+msgid " shape"
+msgstr ""
+
+msgid "description"
+msgstr ""
+
+msgid "synonym"
+msgstr ""
+
+msgid " size"
+msgstr ""
+
+msgid " text_position"
+msgstr ""
+
+msgid " icon_color"
+msgstr ""
+
+msgid " text_type"
+msgstr ""
+
+msgid "delimiter"
+msgstr ""
+
+msgid "quotechar"
+msgstr ""
+
+msgid "escapechar"
+msgstr ""
+
+msgid "must be adaptive. "
+msgstr ""
+
+msgid "parameter otl_ids cannot be empty."
+msgstr ""
+
+msgid " if entity is empty ,edge must be empty. "
+msgstr ""
+
+#, python-format
+msgid "The entity of edge %s's relationship is not in the entity list. "
+msgstr ""
+
+#, python-format
+msgid "Edge class %s's name does not match the relation. "
+msgstr ""
+
+msgid "is None type;"
+msgstr ""
+
+msgid "if extract_type is labelExtraction, datasource must be as."
+msgstr ""
+
+msgid "extract_type can not be "
+msgstr ""
+
+msgid " must be  str ; "
+msgstr ""
+
+msgid " must be  docid ; "
+msgstr ""
+
+msgid " must be  dir ; "
+msgstr ""
+
+msgid " must be >=1 ; "
+msgstr ""
+
+msgid " must be  number ; "
+msgstr ""
+
+msgid " must be >0 ; "
+msgstr ""
+
+msgid " must be in 1~65535 ; "
+msgstr ""
+
+msgid "as file_list  is not illegal "
+msgstr ""
+
+msgid "`s size must be  only one ; "
+msgstr ""
+
+msgid "Add at least one entity class"
+msgstr ""
+
+msgid " must be str ; "
+msgstr ""
+
+msgid " must <= 150 ,and conclude letter number and special characters"
+msgstr ""
+
+msgid " must in  "
+msgstr ""
+
+msgid ""
+" must <= 50 ; and it is must be consisted of letter ,number and underline"
+" ; "
+msgstr ""
+
+msgid "docid is not illegal "
+msgstr ""
+
+msgid "max number of domain is 10. "
+msgstr ""
+
+msgid "the value in domain can not duplicate. "
+msgstr ""
+
+msgid "the value in domain must be string. "
+msgstr ""
+
+msgid ""
+"the value in domain only supports Chinese, English, number and the length"
+" is 0-50 digits."
+msgstr ""
+
+msgid "canvas must have background_color."
+msgstr ""
+
+msgid "canvas background_color must be in {}."
+msgstr ""
+
+msgid "canvas must have background_image."
+msgstr ""
+
+msgid "canvas background_image must be in {}."
+msgstr ""
+
+msgid "When the relationship name is the same, the alias must be the same"
+msgstr ""
+
+msgid "class name can't repeated !"
+msgstr ""
+
+msgid "alias name can't repeated !"
+msgstr ""
+
+msgid "The edge class name is already in use by the model, please modify it!"
+msgstr ""
+
+msgid "relationships between the same entities can't have the same name !"
+msgstr ""
+
+msgid " must be int, and more than zero or equal to -1. "
+msgstr ""
+
+msgid " must be True or False. "
+msgstr ""
+
+#, python-format
+msgid "entity name %s is duplicate. "
+msgstr ""
+
+#, python-format
+msgid "entity alias name %s is duplicate. "
+msgstr ""
+
+#, python-format
+msgid "edge name %s is duplicate. "
+msgstr ""
+
+msgid "parameter otl_ids must be list. "
+msgstr ""
+
+msgid "parameter otl_ids cannot be empty."
+msgstr ""
+
+msgid "only a single character is allowed for %s."
+msgstr ""
+
+msgid " only support English and Chinese, numbers and special symbols on the keyboard."
+msgstr ""
+
+msgid "delimiter should not be the same as quotechar and escapechar."
+msgstr ""
+
+msgid "ontology id must be int, and more than zero. "
+msgstr ""
+
+msgid ""
+"Parameter sql_name only support English and Chinese, numbers and "
+"underline, and the length is 0-50 digits."
+msgstr ""
+
+msgid "No permissions for taxonomy [id]."
+msgstr ""
+
+msgid "taxonomy id [taxonomy_id] not exists."
+msgstr ""
+
+msgid "name [name] is duplicate."
+msgstr ""
+
+msgid "word id [word_id] not exists"
+msgstr ""
+
+msgid "[language] name [name] is duplicate."
+msgstr ""
+
+msgid "[language] information already exists."
+msgstr ""
+
+msgid "[language] information does not exist."
+msgstr ""
+
+msgid "The basic information of the last language cannot be deleted"
+msgstr ""
+
+msgid "Custom relationship does not exist, please modify"
+msgstr ""
+
+msgid "word cannot be moved to child level"
+msgstr ""
+
+msgid "Name already exists, please modify"
+msgstr ""
+
+msgid "Redis cache write failed."
+msgstr ""
+
+msgid "Redis cache read failed."
+msgstr ""
+
+msgid " parameter: "
+msgstr ""
+
+msgid " is required!"
+msgstr ""
+
+msgid " must be a string type!"
+msgstr ""
+
+msgid " must be an int type!"
+msgstr ""
+
+msgid " must be a float type!"
+msgstr ""
+
+msgid " must be a list!"
+msgstr ""
+
+msgid " must be a dict!"
+msgstr ""
+
+msgid " must be a bool type!"
+msgstr ""
+
+msgid " length is at least "
+msgstr ""
+
+msgid " length must be "
+msgstr ""
+
+msgid "!"
+msgstr ""
+
+msgid " length is up to "
+msgstr ""
+
+msgid " has duplicated items!"
+msgstr ""
+
+msgid " must be Chinese and English, numbers and special symbols on the keyboard!"
+msgstr ""
+
+msgid " must be a hexadecimal number within the range of 0-9 or a-f!"
+msgstr ""
+
+msgid "Nebula Internal Server Error"
+msgstr ""
+
+msgid "Nebula Internal Server Error. Get child word failed"
+msgstr ""
+
+msgid "opensearch connection error"
+msgstr ""
+
+msgid "The user does not have permission to create a lexicon."
+msgstr ""
+
+msgid "Lexicon name [name] already exists and cannot be created repeatedly."
+msgstr ""
+
+msgid "lexicon id [lexicon_id] not exists"
+msgstr ""
+
+msgid "task cannot run, the current lexicon is running or waiting."
+msgstr ""
+
+msgid "lexicon id in the extract_info must be int."
+msgstr ""
+
+msgid "lexicon id in the extract_info must more than zero."
+msgstr ""
+
+msgid "lexicon columns in the extract_info must be list."
+msgstr ""
+
+msgid "lexicon columns in the extract_info cannot be empty."
+msgstr ""
+
+msgid "lexicon columns item in the extract_info must be str."
+msgstr ""
+
+msgid "lexicon columns item in the extract_info cannot be empty."
+msgstr ""
+
+msgid "lexicon separator in the extract_info must be list."
+msgstr ""
+
+msgid "lexicon separator in the extract_info cannot be empty."
+msgstr ""
+
+msgid "lexicon separator item in the extract_info must be str."
+msgstr ""
+
+msgid "the length of columns and separator don't match."
+msgstr ""
+
+msgid "graph id in the extract_info must be int."
+msgstr ""
+
+msgid "lexicon in the extract_info must be list."
+msgstr ""
+
+msgid "graph in the extract_info must be list."
+msgstr ""
+
+msgid "graph id in the extract_info must more than zero."
+msgstr ""
+
+msgid "entity name must be str."
+msgstr ""
+
+msgid "entity name cannot be empty."
+msgstr ""
+
+msgid "entity prop must be list."
+msgstr ""
+
+msgid "entity prop cannot be empty."
+msgstr ""
+
+msgid "entity prop item must be str."
+msgstr ""
+
+msgid "entity prop item cannot be empty."
+msgstr ""
+
+msgid "entity separator must be list."
+msgstr ""
+
+msgid "entity separator cannot be empty."
+msgstr ""
+
+msgid "entity separator item must be str."
+msgstr ""
+
+msgid "the length of prop and separator don't match."
+msgstr ""
+
+msgid "Don't have permission to view lexicon [lexicon_ids]."
+msgstr ""
+
+msgid "Don't have permission to view graph [graph_ids]."
+msgstr ""
+
+msgid "Only participle template support extract lexicon."
+msgstr ""
+
+msgid "Standard word attribute cannot set a separator."
+msgstr ""
+
+msgid "The lexicon id [ids] in the extract_info does not exist."
+msgstr ""
+
+msgid "The graph id [ids] in the extract_info does not exist."
+msgstr ""
+
+msgid "the current lexicon is running or waiting."
+msgstr ""
+
+msgid "lexicon separator item in the extract_info only support single characters or \\n,\\t."
+msgstr ""
+
+msgid "entity separator item only support single characters or \\n,\\t."
+msgstr ""
+
+msgid "missing required parameter：{};"
+msgstr ""
+
+msgid "The user don't have permission to build lexicon."
+msgstr ""
+
+msgid "lexicon extract info is empty."
+msgstr ""
+
+msgid "Insufficient available capacity;"
+msgstr ""
+
+msgid "Insufficient capacity! available graph capacity: {}; used graph capacity: {};"
+msgstr ""
+
+msgid "lexicon separator item in the extract_info only support English and Chinese, numbers and special symbols on the keyboard."
+msgstr ""
+
+msgid "entity separator item only support English and Chinese, numbers and special symbols on the keyboard."
+msgstr ""
+
+msgid "The knowledge network does not match the graph!"
+msgstr ""
+
+msgid "File upload failed, file encoding error. The file only supports UTF-8 encoding."
+msgstr ""
+
+msgid "File upload failed, file content format error."
+msgstr ""
+
+msgid "New data and original data fields are inconsistent."
+msgstr ""
+
+msgid "File upload failed, data amount exceeds."
+msgstr ""
+
+msgid "Only custom template support extract lexicon."
+msgstr ""
+
+msgid "compensation_cache must be bool"
+msgstr ""
+
+msgid "Make sure the graph_id exists, and the graph_id should be a number"
+msgstr ""
+
+msgid "compensation_cache can not be empty"
+msgstr ""
+
+msgid "The knowledge network does not match the graph!"
+msgstr ""
+
+msgid "vertex name not exists."
+msgstr ""
+
+msgid "relation name not exists."
+msgstr ""
+
+msgid "vertex_name cannot be empty."
+msgstr ""
+
+msgid "relation_name cannot be empty."
+msgstr ""
+
+msgid "vertex_data cannot be empty."
+msgstr ""
+
+msgid "An error occurred while deleting."
+msgstr ""
+
+msgid "Duplicate data source name"
+msgstr ""
+
+msgid "The start time cannot be greater than the end time."
+msgstr ""
+
+msgid "start_time must be in file_list."
+msgstr ""
+
+msgid "end_time must be in file_list."
+msgstr ""

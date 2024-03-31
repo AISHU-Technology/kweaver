@@ -1,0 +1,171 @@
+.ontoG6HeaderRoot {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  background-color: #fff;
+  user-select: none;
+
+  &.disabled {
+    .operation {
+      cursor: not-allowed;
+      opacity: 0.45;
+
+      &:hover {
+        background: none;
+      }
+    }
+    .operation-percent {
+      cursor: not-allowed;
+      opacity: 0.45;
+
+      &:hover {
+        background: none;
+      }
+    }
+  }
+
+  .data-op-box {
+    position: absolute;
+    left: 16px;
+    // left: 50%;
+    // transform: translateX(-50%);
+    height: 100%;
+  }
+
+  .graph-op-box {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+  }
+
+  .info-box {
+    position: absolute;
+    right: 16px;
+    height: 100%;
+  }
+
+  .operation {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 3px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+    }
+
+    .arrow-icon {
+      font-size: 6px;
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+    }
+  }
+
+  .operation-other {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 3px;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+    }
+
+    .arrow-icon {
+      font-size: 6px;
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+    }
+  }
+
+  .operation-other-disabled {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 3px;
+    font-size: 16px;
+    text-align: center;
+    cursor: not-allowed;
+    color: #cfd0d3;
+
+    .arrow-icon {
+      font-size: 6px;
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+    }
+  }
+
+  .operation-percent {
+    position: relative;
+    width: 55px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+    }
+
+    .arrow-icon {
+      font-size: 6px;
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+    }
+  }
+
+  .operation-percent-other {
+    position: relative;
+    width: 55px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--kw-hover-bg-color);
+    }
+
+    .arrow-icon {
+      font-size: 6px;
+      position: absolute;
+      right: 4px;
+      bottom: 4px;
+    }
+  }
+
+  .operationSelected {
+    background: var(--kw-hover-bg-color);
+  }
+
+  .ant-divider-vertical {
+    height: 24px;
+    border-left: 1px solid #e5e5e5;
+  }
+}
+
+.graphHeaderOperationItem {
+  padding: 0px;
+  z-index: 1053;
+  .ant-popover-inner-content {
+    padding: 0px;
+  }
+}
