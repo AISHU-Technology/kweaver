@@ -198,7 +198,7 @@ services:
       - KWeaver-net
 
   kw-builder:
-    image: kw-builder:v0.2.0-arm64
+    image: kweaverai/kw-builder:v0.2.0
     container_name: kw-builder
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/config/kw-builder/config.py:/app/config/config.py
@@ -262,7 +262,7 @@ services:
       - "nebula-graphd"
 
   kw-models-factory:
-    image: kw-models-factory:v0.2.0-arm64
+    image: kweaverai/kw-models-factory:v0.2.0
     container_name: kw-models-factory
     ports:
       - "9898:9898"
@@ -280,7 +280,7 @@ services:
       - "mysql"
 
   kw-graph:
-    image: kw-graph:v0.2.0-arm64
+    image: kweaverai/kw-graph:v0.2.0
     container_name: kw-graph
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/config/kw-graph/config.yaml:/app/kw-graph/etc/config.yaml
@@ -299,7 +299,7 @@ services:
       - "redis"
 
   kw-system:
-    image: kw-system:v0.2.0-arm64
+    image: kweaverai/kw-system:v0.2.0
     container_name: kw-system
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/config/kw-system/config-dev.yaml:/app/kw-system/etc/config-dev.yaml
@@ -316,7 +316,7 @@ services:
       - "redis"
 
   kw-studio:
-    image: kw-studio:v0.2.0-arm64
+    image: kweaverai/kw-studio:v0.2.0
     container_name: kw-studio
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/nginx/nginx.conf:/etc/nginx/nginx.conf
