@@ -40,7 +40,7 @@ GRANT ROLE ADMIN ON kweaver TO kweaver;
 ```
 - 向量模型: 图谱构建时添加通过模型生成文本向量检索的索引
   - 外连模型：添加kw-builder环境变量VECTOR_URL向量模型（M3E）地址
-  - 内置模型：使用kw-models-m3e镜像或在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
+  - 内置模型：使用kw-models-m3e镜像(支持GPU、CPU)或在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
 
 访问地址
 - 本地访问地址： http://localhost:3001
