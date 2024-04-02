@@ -31,11 +31,13 @@ KWeaver 项目基于容器化方式，项目提供了 docker-compose 来启动�
 
 初始化脚本
 - 初始化mysql数据库脚本: mysql_init.sql
-- 外接向量模型: 添加kw-builder环境变量VECTOR_URL向量模型（M3E）地址，在图谱构建时添加大模型向量检索的索引。
+- 向量模型: 图谱构建时添加通过模型生成文本向量检索的索引
+  - 外连：添加kw-builder环境变量VECTOR_URL向量模型（M3E）地址
+  - 内置：使用kw-models-m3e镜像或在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
 
 访问地址
 - 本地访问地址： http://localhost:3001
-- 演示地址： http://10.4.10.3:3001
+- 演示地址： http://10.4.108.161:3001
 
 依赖中间件
 - Mysql ：系统配置持久化

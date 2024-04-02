@@ -5,7 +5,6 @@ from app.utils.stand_log import StandLogger
 
 app = create_app()
 
-
 @app.get("/")
 async def root():
     json = {"ans": "服务连接成功"}

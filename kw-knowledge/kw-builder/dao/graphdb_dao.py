@@ -5,7 +5,6 @@ import logging
 import math
 import multiprocessing
 import os
-import pprint
 import random
 import re
 import sys
@@ -15,7 +14,6 @@ import traceback
 from functools import partial
 
 import requests
-import yaml
 from circuitbreaker import circuit, CircuitBreakerError
 from flask_babel import gettext as _l
 from nebula3.Config import Config as NebulaConfig
