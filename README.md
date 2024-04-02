@@ -31,9 +31,16 @@ KWeaver 项目基于容器化方式，项目提供了 docker-compose 来启动�
 
 初始化脚本
 - 初始化mysql数据库脚本: mysql_init.sql
+- 创建nebula用户和授权:
+```
+登录http://xx.xx.xx.xx:7001 并执行创建用户脚本:
+CREATE SPACE kweaver(partition_num=10, replica_factor=1, vid_type=FIXED_STRING(30));
+CREATE USER IF NOT EXISTS kweaver WITH PASSWORD 'Kw1ea2ver!3';
+GRANT ROLE ADMIN ON kweaver TO kweaver;
+```
 - 向量模型: 图谱构建时添加通过模型生成文本向量检索的索引
-  - 外连：添加kw-builder环境变量VECTOR_URL向量模型（M3E）地址
-  - 内置：使用kw-models-m3e镜像或在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
+  - 外连模型：添加kw-builder环境变量VECTOR_URL向量模型（M3E）地址
+  - 内置模型：使用kw-models-m3e镜像或在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
 
 访问地址
 - 本地访问地址： http://localhost:3001

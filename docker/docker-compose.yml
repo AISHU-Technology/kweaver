@@ -40,6 +40,7 @@ services:
       - "27017:27017"
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/mongodb/data:/data/db
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
     command: mongod --dbpath /data/db --oplogSize 128 --auth
     restart: always
     networks:
@@ -71,6 +72,8 @@ services:
         hard: 65536
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/opensearch/data:/usr/share/opensearch/data
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/opensearch/plugins/analysis-hanlp:/usr/share/opensearch/plugins/analysis-hanlp
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/opensearch/config/analysis-hanlp:/usr/share/opensearch/config/analysis-hanlp
     healthcheck:
         test: [ "CMD-SHELL", "curl --silent --fail localhost:9200 || exit 1" ]
         interval: 30s
@@ -216,15 +219,15 @@ services:
       - GRAPHDB_PASSWORD=Kw1ea2ver!3
       - GRAPHDB_PORT=9669
       - GRAPHDB_READ_ONLY_PASSWORD=Kw1ea2ver!3
-      - GRAPHDB_READ_ONLY_USER=root
+      - GRAPHDB_READ_ONLY_USER=kweaver
       - GRAPHDB_TYPE=nebulaGraph
-      - GRAPHDB_USER=root
+      - GRAPHDB_USER=kweaver
       - MONGODBAUTHSOURCE=admin
       - MONGODBHOST=mongo
       - MONGODBPASS=Kw1ea2ver
       - MONGODBPORT=27017
-      - MONGODBUSER=root
-      - MONGODBNAME=admin
+      - MONGODBUSER=kweaver
+      - MONGODBNAME=kweaver
       - OPENSEARCH_HOST=opensearch
       - OPENSEARCH_PASS=Kw1ea2ver!3
       - OPENSEARCH_PORT=9200
@@ -250,7 +253,7 @@ services:
       - SENTINELMASTER=mymaster
       - SENTINELPASS=
       - SENTINELUSER=
-      - VECTOR_URL=http://10.4.118.205:8302/v1/embeddings #向量模型接入
+      - VECTOR_URL=http://kw-models-m3e:9897/v1/embeddings #向量模型
     restart: always
     networks:
       - KWeaver-net
@@ -323,6 +326,17 @@ services:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/nginx/conf.d:/etc/nginx/conf.d
     ports:
       - "3001:3001"
+    environment:
+      - TZ=Asia/Shanghai
+    restart: always
+    networks:
+      - KWeaver-net
+
+  kw-models-m3e:
+    image: kw-models-m3e:v0.2.0
+    container_name: kw-models-m3e
+    ports:
+      - "9897:9897"
     environment:
       - TZ=Asia/Shanghai
     restart: always
