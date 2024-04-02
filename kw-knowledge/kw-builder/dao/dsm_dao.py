@@ -397,10 +397,12 @@ class DsmDao(object):
         values_list.append(params_json["knw_id"])
         values_list.append(params_json.get("connect_type", ""))
 
-        values_list.append(params_json.get("ds_auth", ""))
-        sql = """INSERT INTO data_source_table (create_user,update_user , create_time,update_time, dsname, dataType,
-                        data_source,ds_address,ds_port,ds_path,extract_type,vhost, queue, json_schema, knw_id, connect_type,ds_auth) 
-                        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        values_list.append(params_json.get("ds_user", ""))
+        values_list.append(params_json.get("ds_password", ""))
+
+        sql = """INSERT INTO data_source_table (create_user,update_user ,create_time,update_time, dsname, dataType,
+                       data_source,ds_address,ds_port,ds_path,extract_type,vhost, queue, json_schema, knw_id, connect_type, ds_user,ds_password) 
+                       VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
         Logger.log_info(sql % tuple(values_list))
         self.lastrowid = rdsdriver.process_last_row_id(cursor.lastrowid)
@@ -652,8 +654,9 @@ class DsmDao(object):
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(params_json["dsname"])
 
-        values_list.append(str(params_json["ds_port"]))
-        values_list.append(params_json["ds_auth"])
+        values_list.append(params_json.get("json_schema", ""))
+        values_list.append(params_json.get("ds_user", ""))
+        values_list.append(params_json.get("ds_password", ""))
 
         values_list.append(id)
         sql = """UPDATE data_source_table SET update_user=%s, update_time=%s, dsname=%s, json_schema=%s,
