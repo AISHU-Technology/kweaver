@@ -152,6 +152,7 @@ const OperateModal = (props: OperateModalProps) => {
           body.model_config.api_type = 'openai';
         }
         const serviceFunc = action === 'create' ? servicesLLMModel.llmModelAdd : servicesLLMModel.llmModelEdit;
+        if (action === 'create') body.model_type = testRes.model_type;
         if (action === 'edit') body.model_id = data.model_id;
         const { res: savedRes } = (await serviceFunc(body)) || {};
         setLoading(pre => ({ ...pre, [type]: false }));
