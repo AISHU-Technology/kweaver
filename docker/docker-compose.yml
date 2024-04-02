@@ -332,16 +332,16 @@ services:
     networks:
       - KWeaver-net
 
-  kw-models-m3e:
-    image: kw-models-m3e:v0.2.0
-    container_name: kw-models-m3e
-    ports:
-      - "9897:9897"
-    environment:
-      - TZ=Asia/Shanghai
-    restart: always
-    networks:
-      - KWeaver-net
+#  kw-models-m3e:
+#    image: kw-models-m3e:v0.2.0
+#    container_name: kw-models-m3e
+#    ports:
+#      - "9897:9897"
+#    environment:
+#      - TZ=Asia/Shanghai
+#    restart: always
+#    networks:
+#      - KWeaver-net
 
 networks:
   KWeaver-net:
