@@ -1,6 +1,4 @@
 
-![LOGO](./images/kw-logo.png)
-
 KWeaver 是开源的认知智能开发框架，为数据科学家、应用开发者和领域专家提供具有**快速的开发**能力、全面的 **开放性** 和 **高性能** 的知识网络生成及认知智能大模型框架。
 
 ## 快速入门
@@ -38,9 +36,11 @@ CREATE SPACE kweaver(partition_num=10, replica_factor=1, vid_type=FIXED_STRING(3
 CREATE USER IF NOT EXISTS kweaver WITH PASSWORD 'Kw1ea2ver!3';
 GRANT ROLE ADMIN ON kweaver TO kweaver;
 ```
-- 向量模型: 图谱构建时添加通过模型生成文本向量检索的索引
-  - 外连模型：添加kw-builder环境变量VECTOR_URL向量模型（M3E）地址
-  - 内置模型：使用kw-models-m3e镜像(支持GPU、CPU)或在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
+- 向量模型: 图谱构建时结合向量模型构建本地知识库
+  - 外连模型：添加kw-builder环境变量VECTOR_URL向量模型（M3E）连接地址
+  - 内置模型，如下两种方式：
+    - 1、使用kw-models-m3e镜像(支持GPU、CPU)，下载镜像地址：docker pull kweaverai/kw-models-m3e:v0.2.0-arm64或docker pull kweaverai/kw-models-m3e:v0.2.0-amd64
+    - 2、在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
 
 访问地址
 - 本地访问地址： http://localhost:3001

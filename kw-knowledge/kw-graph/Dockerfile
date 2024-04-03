@@ -1,8 +1,7 @@
-FROM  golang:1.20.13-alpine3.19 AS gomake
+FROM golang:1.20.13-alpine3.19 AS gomake
 WORKDIR /app/kw-graph/
 COPY . .
-RUN go env -w GO111MODULE=on \
-    && go env -w GOPROXY=https://goproxy.cn
+RUN go env -w GO111MODULE=on && go env -w GOPROXY=https://goproxy.cn
 RUN go build -o kw-graph ./main.go
 
 FROM  ubuntu:20.04

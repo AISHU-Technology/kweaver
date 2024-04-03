@@ -333,7 +333,7 @@ services:
       - KWeaver-net
 
 #  kw-models-m3e:
-#    image: kw-models-m3e:v0.2.0
+#    image: kweaverai/kw-models-m3e:v0.2.0-arm64
 #    container_name: kw-models-m3e
 #    ports:
 #      - "9897:9897"
