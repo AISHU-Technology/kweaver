@@ -14,7 +14,6 @@ if torch.cuda.is_available():
     print('====本次加载模型的设备为GPU:====', torch.cuda.get_device_name(0))
 else:
     print('===本次加载模型的设备为CPU.===')
-parent_dir = os.path.abspath(os.path.join(os.getcwd(), ".."))
 embeddings_model = SentenceTransformer('models/m3e-base', device=device)
 
 
