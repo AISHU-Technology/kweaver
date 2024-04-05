@@ -36,10 +36,10 @@ CREATE SPACE kweaver(partition_num=10, replica_factor=1, vid_type=FIXED_STRING(3
 CREATE USER IF NOT EXISTS kweaver WITH PASSWORD 'Kw1ea2ver!3';
 GRANT ROLE ADMIN ON kweaver TO kweaver;
 ```
-- 向量模型: 图谱构建时结合向量模型构建本地知识库
+- 向量模型: 图谱构建时结合向量模型构建本地知识库，用于大模型记忆和向量相似检索
   - 外连模型：添加kw-builder环境变量VECTOR_URL向量模型（M3E）连接地址
   - 内置模型，如下两种方式：
-    - 1、使用kw-models-m3e镜像(支持GPU、CPU)，下载镜像地址：docker pull kweaverai/kw-models-m3e:v0.2.0-arm64或docker pull kweaverai/kw-models-m3e:v0.2.0-amd64
+    - 1、使用kw-models-m3e镜像中微调后的模型(支持GPU、CPU),GPU支持类型cuda和mps。下载镜像地址：docker pull kweaverai/kw-models-m3e:v0.2.0-arm64或docker pull kweaverai/kw-models-m3e:v0.2.0-amd64
     - 2、在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
 
 访问地址

@@ -1,4 +1,3 @@
-import os.path
 from typing import List
 import numpy as np
 from fastapi import APIRouter
@@ -10,10 +9,14 @@ import torch
 router = APIRouter()
 # 检测是否有GPU可用，如果有则使用cuda设备，否则使用cpu设备
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-if torch.cuda.is_available():
-    print('====本次加载模型的设备为GPU:====', torch.cuda.get_device_name(0))
+if torch.backends.mps.is_available() & torch.backends.mps.is_built():
+    device = torch.device('mps')
+    print('====本次加载模型的设备为MAC=GPU:==mps==', torch.ones(1, device=device))
+elif torch.cuda.is_available():
+    print('====本次加载模型的设备为GPU:==cuda==', torch.cuda.get_device_name(0))
 else:
-    print('===本次加载模型的设备为CPU.===')
+    print('===本次加载模型的设备为CPU===')
+
 embeddings_model = SentenceTransformer('models/m3e-base', device=device)
 
 
