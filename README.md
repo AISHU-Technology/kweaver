@@ -50,7 +50,7 @@ GRANT ROLE ADMIN ON kweaver TO kweaver;
 - Mysql ：系统配置持久化
 - MongoDB ：中间数据存储
 - Redis：全局缓存
-- OpenSearch: 知识图谱搜索、大模型向量搜索和本地知识库
+- OpenSearch: 知识图谱检索、大模型向量检索和本地知识库
 - Nebula: 图数据存储
 - Nginx: 反向代理和负载均衡
 
