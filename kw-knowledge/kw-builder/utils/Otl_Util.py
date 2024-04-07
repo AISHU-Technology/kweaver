@@ -2,12 +2,8 @@
 # @Time    : 2020/10/17 17:41
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
-import requests
-import json
-from utils.common_response_status import CommonResponseStatus
-# from dao.otl_dao import otl_dao
-from utils.log_info import Logger
 
+from utils.log_info import Logger
 import re
 
 

@@ -1,5 +1,4 @@
 import json
-from ctypes import sizeof
 
 from utils.ConnectUtil import mongoConnect
 import pymongo

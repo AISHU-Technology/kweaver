@@ -2,8 +2,6 @@
 # @Time    : 2020/11/2 13:54
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
-import os
-
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
 import arrow
 import pandas as pd

@@ -4,7 +4,6 @@
 # @Email   : Lowe.li@aishu.cn
 from typing import Tuple
 
-import pika
 from common.errorcode import codes
 from common.errorcode.gview import Gview as Gview2
 from dao.otl_dao import otl_dao

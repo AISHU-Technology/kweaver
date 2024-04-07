@@ -9,8 +9,6 @@ import logging
 import json
 import datetime
 import math
-import sys
-import os
 
 REMOVE_ATTR = ["process", "processName", "threadName", "thread", "funcName", "lineno", "pathname", "levelno", "name",
                "filename", "module", "exc_text", "stack_info", "created", "msecs", "relativeCreated",

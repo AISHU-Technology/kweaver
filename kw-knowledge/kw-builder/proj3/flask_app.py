@@ -7,7 +7,7 @@ import sys
 import os
 
 from flask_apscheduler import APScheduler
-from redis.sentinel import Sentinel
+
 
 sys.path.insert(0, os.path.abspath("../"))
 from flask import Flask

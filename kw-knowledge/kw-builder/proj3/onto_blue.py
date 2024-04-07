@@ -3,12 +3,7 @@
 # @Author  : Lowe.li
 # @Email   : Lowe.li@aishu.cn
 
-import pandas as pd
-import sys
-import os
-import re
-import json
-import datetime
+
 from task import *
 
 from flask import jsonify, request
