@@ -1,9 +1,23 @@
 
 KWeaver 是开源的认知智能开发框架，为数据科学家、应用开发者和领域专家提供具有**快速的开发**能力、全面的 **开放性** 和 **高性能** 的知识网络生成及认知智能大模型框架。
 
-## 快速入门
+## 🎉 Features
+- 知识图谱构建自动化、可视化（实体识别、关系抽取、实体关系链接、实体关系抽取）
+- 知识图谱数据可视化分析（实体关系分析、实体关系可视化、实体关系挖掘）
+- 知识图谱数据导入导出
+- 知识图谱数据质量管理
+- 知识图谱资源管理（本体库、术语库、词库）
+- 大模型提示词工程
+- 大模型提示词可视化调试
+- 大模型接入可视化
 
-### 安装
+##  🚀 快速入门
+- [Start with Docker](docker/README.md)
+- [Start with Kubernetes](helm/README.md)
+
+Click [Document](https://876812297.github.io/) for more information
+
+### 🔨 安装
 
 KWeaver 项目基于容器化方式，项目提供了 docker-compose 来启动。启动方式如下:
 
@@ -12,8 +26,8 @@ KWeaver 项目基于容器化方式，项目提供了 docker-compose 来启动�
  cd kweaver/docker
  docker-compose up -d
 ```
-
-开发语言
+## 🤝  Contribution
+### 开发语言
 - Python >= 3.9
 - Go >= 1.20
 - Node >= 18.12.1
@@ -22,7 +36,7 @@ KWeaver 项目基于容器化方式，项目提供了 docker-compose 来启动�
 - G6 >= 4.8.7
 - Webpack >= 5.5.0
 
-开发环境支持
+### 开发环境支持
 - Windows 10
 - Linux (AMD64、ARM64)
 - Docker 24.0.6
