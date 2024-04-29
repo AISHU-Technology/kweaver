@@ -17,7 +17,7 @@ KWeaver 是开源的认知智能开发框架，为数据科学家、应用开发
 
 Click [Document](https://876812297.github.io/) for more information
 
-### 🔨 安装
+## 🔨 安装
 
 KWeaver 项目基于容器化方式，项目提供了 docker-compose 来启动。启动方式如下:
 
@@ -27,7 +27,7 @@ KWeaver 项目基于容器化方式，项目提供了 docker-compose 来启动�
  docker-compose up -d
 ```
 ## 🤝  Contribution
-### 开发语言
+### 1、 开发语言
 - Python >= 3.9
 - Go >= 1.20
 - Node >= 18.12.1
@@ -36,12 +36,13 @@ KWeaver 项目基于容器化方式，项目提供了 docker-compose 来启动�
 - G6 >= 4.8.7
 - Webpack >= 5.5.0
 
-### 开发环境支持
+### 2、 开发环境支持
 - Windows 10
 - Linux (AMD64、ARM64)
 - Docker 24.0.6
 
-初始化脚本
+### 3、初始化脚本
+
 - 初始化mysql数据库脚本: mysql_init.sql
 - 创建nebula用户和授权:
 ```
@@ -56,11 +57,13 @@ GRANT ROLE ADMIN ON kweaver TO kweaver;
     - 1、使用kw-models-m3e镜像中微调后的模型(支持GPU、CPU),GPU支持类型cuda和mps。下载镜像地址：docker pull kweaverai/kw-models-m3e:v0.2.0-arm64或docker pull kweaverai/kw-models-m3e:v0.2.0-amd64
     - 2、在modelscope、huggingface.co中下载M3E模型放入kw-models-m3e/models下进行使用
 
-访问地址
+### 4、访问地址
+
 - 本地访问地址： http://localhost:3001
 - 演示地址： http://10.4.108.161:3001
 
-依赖中间件
+### 5、依赖中间件
+
 - Mysql ：系统配置持久化
 - MongoDB ：中间数据存储
 - Redis：全局缓存
