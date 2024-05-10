@@ -11,10 +11,11 @@ KWeaver 是开源的认知智能开发框架，为数据科学家、应用开发
 - 大模型接入可视化
 
 ##  🚀 快速入门
-- [Start with Docker](docker/README.md)
-- [Start with Kubernetes](helm/README.md)
+- [Start with Docker](https://docs.kweaver.ai/0.2.0/deploy/docker/)
 
-Click [Document](https://876812297.github.io/) for more information
+- [Start with Kubernetes](https://docs.kweaver.ai/0.2.0/deploy/docker/)
+
+Click [Document](https://docs.kweaver.ai/) for more information
 
 ## 🔨 安装
 
