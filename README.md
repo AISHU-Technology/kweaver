@@ -4,7 +4,7 @@ KWeaver 是开源的认知智能开发框架，为数据科学家、应用开发
 ## 🎉 Features
 - 知识图谱构建自动化、可视化（实体识别、关系抽取、实体关系链接、实体关系抽取）
 - 知识图谱数据可视化分析（实体关系分析、实体关系可视化、实体关系挖掘）
-- 知识图谱数据导入导出
+- 知识图谱数据集成（数据集成、数据共享、数据分析）
 - 知识图谱资源管理（本体库、术语库、词库）
 - 大模型提示词(prompt)工程和调试
 - 大模型接入可视化配饰
@@ -70,3 +70,6 @@ GRANT ROLE ADMIN ON kweaver TO kweaver;
 - Nebula: 图数据存储
 - Nginx: 反向代理和负载均衡
 
+💬 Social Media（微信社区交流群）
+
+  <img src="https://docs.kweaver.ai/images/wx_qr_code.png" alt="Join the Group" height="350px"><br>
