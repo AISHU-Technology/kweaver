@@ -70,6 +70,6 @@ GRANT ROLE ADMIN ON kweaver TO kweaver;
 - Nebula: 图数据存储
 - Nginx: 反向代理和负载均衡
 
-💬 Social Media（微信社区交流群）
+## 💬 Social Media（微信社区交流群）
 
   <img src="https://docs.kweaver.ai/images/wx_qr_code.png" alt="Join the Group" height="350px"><br>
