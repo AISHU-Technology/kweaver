@@ -447,7 +447,7 @@ CREATE TABLE IF NOT EXISTS "t_menu" (
   "f_del_flag" smallint DEFAULT '0'
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS uk_menu_code ON t_menu("f_code");
+CREATE INDEX IF NOT EXISTS idx_menu_code ON t_menu("f_code");
 CREATE INDEX IF NOT EXISTS idx_menu_pid ON t_menu("f_pid");
 
 
