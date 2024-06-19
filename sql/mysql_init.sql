@@ -440,7 +440,7 @@ CREATE TABLE IF NOT EXISTS `t_menu` (
   `f_create_time` datetime NOT NULL,
   `f_update_time` datetime NOT NULL,
   `f_del_flag` smallint DEFAULT '0',
-  UNIQUE KEY `uk_menu_code` (`f_code`),
+  KEY `idx_menu_code` (`f_code`),
   KEY `idx_menu_pid` (`f_pid`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
