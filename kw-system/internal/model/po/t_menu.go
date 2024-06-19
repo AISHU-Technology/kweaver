@@ -12,7 +12,7 @@ type TMenu struct {
 	Id           int64                 `gorm:"column:f_id;type:bigint(20) not null"`                               //菜单id
 	CName        string                `gorm:"column:f_c_name;type:varchar(128) not null"`                         //中文名称
 	EName        string                `gorm:"column:f_e_name;type:varchar(128) not null"`                         //英文名称
-	Code         string                `gorm:"column:f_code;type:varchar(255) not null;index:uk_menu_code,unique"` //菜单标识
+	Code         string                `gorm:"column:f_code;type:varchar(255) not null;index:idx_menu_code"`       //菜单标识
 	Icon         string                `gorm:"column:f_icon;type:varchar(128)"`                                    //常规图标
 	SelectedIcon string                `gorm:"column:f_selected_icon;type:varchar(128)"`                           //选中图标
 	Path         string                `gorm:"column:f_path;type:varchar(128)"`                                    //路由地址
