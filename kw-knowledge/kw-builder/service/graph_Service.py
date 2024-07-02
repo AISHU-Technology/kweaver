@@ -1466,6 +1466,8 @@ class GraphService():
                 graph_config["status"] = "edit"
 
                 new_ids = graph_dao.input_data(graph_config, ontology, subgraph_config, knw_id)
+                
+                graph_ids.append(new_ids['graph_config_id'])
 
 
         return graph_ids, 200
