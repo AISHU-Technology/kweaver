@@ -123,6 +123,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/delete",
 				Handler: menu.DeleteMenu(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/tree",
+				Handler: menu.GetMenuTree(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/eventStats/v1/menu"),
 	)

@@ -63,3 +63,7 @@ type ReqUpdateMenu struct {
 type ReqDeleteMenu struct {
 	Ids []string `json:"ids"`
 }
+
+type ReqGetMenuTree struct {
+	Pid string `form:"pid,optional,default=0"`
+}

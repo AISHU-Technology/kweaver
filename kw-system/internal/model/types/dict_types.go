@@ -23,7 +23,7 @@ type RespDict struct {
 }
 
 type ReqAddDict struct {
-	UserId   string `header:"userId"`
+	UserId   string `header:"userId,optional"`
 	CName    string `json:"cName"`
 	EName    string `json:"eName"`
 	Remark   string `json:"remark,optional"`
@@ -31,7 +31,7 @@ type ReqAddDict struct {
 }
 
 type ReqUpdateDict struct {
-	UserId string `header:"userId"`
+	UserId string `header:"userId,optional"`
 	Id     string `json:"id"`
 	CName  string `json:"cName"`
 	EName  string `json:"eName"`
@@ -39,7 +39,7 @@ type ReqUpdateDict struct {
 }
 
 type ReqDeleteDict struct {
-	UserId string   `header:"userId"`
+	UserId string   `header:"userId,optional"`
 	Ids    []string `json:"ids"`
 }
 
@@ -65,7 +65,7 @@ type RespDictItem struct {
 }
 
 type ReqAddDictItem struct {
-	UserId    string `header:"userId"`
+	UserId    string `header:"userId,optional"`
 	CName     string `json:"cName"`
 	EName     string `json:"eName"`
 	Remark    string `json:"remark,optional"`
@@ -74,7 +74,7 @@ type ReqAddDictItem struct {
 }
 
 type ReqUpdateDictItem struct {
-	UserId    string `header:"userId"`
+	UserId    string `header:"userId,optional"`
 	Id        string `json:"id"`
 	CName     string `json:"cName"`
 	EName     string `json:"eName"`
