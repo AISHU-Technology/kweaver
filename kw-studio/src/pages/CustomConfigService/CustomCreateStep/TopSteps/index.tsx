@@ -5,8 +5,8 @@
 import React, { memo } from 'react';
 import intl from 'react-intl-universal';
 import HOOKS from '@/hooks';
-import AdSteps from '@/components/AdSteps';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import KwSteps from '@/components/KwSteps';
+import KwExitBar from '@/components/KwExitBar';
 
 import './style.less';
 
@@ -39,16 +39,16 @@ const TopSteps = (props: TopStepsProps) => {
     //     </div>
     //   </div>
     //   <div className="kw-flex-item-full-width kw-center kw-pr-5">
-    //     <AdSteps items={titleList} current={step} />
+    //     <KwSteps items={titleList} current={step} />
     //   </div>
 
     // </div>
     <div className="kw-border-b">
-      <AdExitBar
+      <KwExitBar
         style={{ height: 48, border: 0 }}
         onExit={onExit}
         title={title}
-        extraContent={<AdSteps items={titleList} current={step} />}
+        extraContent={<KwSteps items={titleList} current={step} />}
       />
     </div>
   );

@@ -9,11 +9,10 @@ import { useHistory } from 'react-router-dom';
 import HOOKS from '@/hooks';
 import HELPER from '@/utils/helper';
 import Format from '@/components/Format';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import IconFont from '@/components/IconFont';
 import SearchInput from '@/components/SearchInput';
 import { numToThousand } from '@/utils/handleFunction';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 
 import noResultImg from '@/assets/images/noResult.svg';
@@ -141,47 +140,29 @@ const ThesaurusTable = (props: any) => {
       render: (_: any, record: { key: React.Key }) => {
         return (
           <div className="kw-flex">
-            <ContainerIsVisible
-              isVisible={
-                HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-                  userType: PERMISSION_KEYS.LEXICON_EDIT,
-                  userTypeDepend: selectedThesaurus?.__codes
-                }) && !['entity_link', 'std'].includes(selectedThesaurus?.mode)
-              }
+            <Button
+              type="link"
+              className="opButton kw-pr-8"
+              onClick={() => editWords(record)}
+              // disabled={!hasAuthorEdit || ['entity_link', 'std'].includes(selectedThesaurus?.mode)}
             >
-              <Button
-                type="link"
-                className="opButton kw-pr-8"
-                onClick={() => editWords(record)}
-                // disabled={!hasAuthorEdit || ['entity_link', 'std'].includes(selectedThesaurus?.mode)}
-              >
-                {intl.get('datamanagement.edit')}
-              </Button>
-            </ContainerIsVisible>
+              {intl.get('datamanagement.edit')}
+            </Button>
 
-            <ContainerIsVisible
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-                userType: PERMISSION_KEYS.LEXICON_DELETE,
-                userTypeDepend: selectedThesaurus?.__codes
-              })}
+            <Button
+              type="link"
+              className="opButton"
+              onClick={() => {
+                if (selectedThesaurus?.status === 'running') {
+                  message.warning(intl.get('ThesaurusManage.editwordsError'));
+                  return;
+                }
+                openDeleteModal(record, 'one');
+              }}
+              // disabled={!hasAuthorEdit}
             >
-              <Button
-                type="link"
-                className="opButton"
-                onClick={() => {
-                  if (selectedThesaurus?.status === 'running') {
-                    message.warning(intl.get('ThesaurusManage.editwordsError'));
-                    return;
-                  }
-                  openDeleteModal(record, 'one');
-                }}
-                // disabled={!hasAuthorEdit}
-              >
-                {intl.get('datamanagement.delete')}
-              </Button>
-            </ContainerIsVisible>
+              {intl.get('datamanagement.delete')}
+            </Button>
           </div>
         );
       }
@@ -253,44 +234,25 @@ const ThesaurusTable = (props: any) => {
         <div className={showInfo ? 'small-table' : ''}>
           <div className={'kw-space-between wordsList-op kw-mt-4 kw-pl-6 kw-pr-6 kw-mb-2'} id="wordsList-op">
             <div className="kw-align-center">
-              <ContainerIsVisible
-                isVisible={
-                  HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-                    userType: PERMISSION_KEYS.LEXICON_EDIT,
-                    userTypeDepend: selectedThesaurus?.__codes
-                  }) && !['entity_link', 'std'].includes(selectedThesaurus?.mode)
-                }
+              <Button
+                className="kw-mr-3"
+                type="primary"
+                // disabled={
+                //   _.isEmpty(selectedThesaurus?.columns) || ['entity_link', 'std'].includes(selectedThesaurus?.mode)
+                // }
+                onClick={addWords}
               >
-                <Button
-                  className="kw-mr-3"
-                  type="primary"
-                  // disabled={
-                  //   _.isEmpty(selectedThesaurus?.columns) || ['entity_link', 'std'].includes(selectedThesaurus?.mode)
-                  // }
-                  onClick={addWords}
-                >
-                  <IconFont type="icon-Add" />
-                  {intl.get('ThesaurusManage.add')}
-                </Button>
-              </ContainerIsVisible>
-              <ContainerIsVisible
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-                  userType: PERMISSION_KEYS.LEXICON_DELETE,
-                  userTypeDepend: selectedThesaurus?.__codes
-                })}
+                <IconFont type="icon-Add" />
+                {intl.get('ThesaurusManage.add')}
+              </Button>
+              <Button
+                className="kw-mr-4 delete-btn"
+                disabled={!selectedRowKeys.length}
+                onClick={() => openDeleteModal('', 'more')}
               >
-                <Button
-                  className="kw-mr-4 delete-btn"
-                  disabled={!selectedRowKeys.length}
-                  onClick={() => openDeleteModal('', 'more')}
-                >
-                  <IconFont type="icon-lajitong" />
-                  {intl.get('datamanagement.delete')}
-                </Button>
-              </ContainerIsVisible>
-
+                <IconFont type="icon-lajitong" />
+                {intl.get('datamanagement.delete')}
+              </Button>
               {!_.isEmpty(selectedThesaurus?.columns) ? (
                 <>
                   <div
@@ -338,7 +300,7 @@ const ThesaurusTable = (props: any) => {
           </div>
           <div className={classNames('wordsList-table kw-pl-6 kw-pr-6')}>
             {!_.isEmpty(selectedThesaurus?.columns) ? (
-              <ADTable
+              <KwTable
                 className="kw-table-root"
                 showHeader={false}
                 dataSource={showData}
@@ -372,11 +334,7 @@ const ThesaurusTable = (props: any) => {
                                 <>
                                   <div className="kw-c-text-lower">{intl.get('graphDetail.noContent')}</div>
                                 </>
-                              ) : HELPER.getAuthorByUserInfo({
-                                  roleType: PERMISSION_CODES.ADF_KN_LEXICON_CREATE,
-                                  userType: PERMISSION_KEYS.KN_ADD_LEXICON,
-                                  userTypeDepend: knowledge?.__codes
-                                }) ? (
+                              ) : (
                                 <>
                                   {selectedThesaurus?.mode ? (
                                     <div className="kw-c-text-lower">{intl.get('graphDetail.noContent')}</div>
@@ -397,7 +355,7 @@ const ThesaurusTable = (props: any) => {
                                     </div>
                                   )}
                                 </>
-                              ) : null}
+                              )}
                             </div>
                           </>
                         ) : selectedThesaurus?.status === 'failed' ? (
@@ -460,14 +418,7 @@ const ThesaurusTable = (props: any) => {
                   className="nodata-img"
                 />
                 <div className="noWords-text kw-c-text-lower">
-                  <ContainerIsVisible
-                    placeholder={intl.get('ThesaurusManage.noWord')}
-                    isVisible={HELPER.getAuthorByUserInfo({
-                      roleType: PERMISSION_CODES.ADF_KN_LEXICON_CREATE,
-                      userType: PERMISSION_KEYS.KN_ADD_LEXICON,
-                      userTypeDepend: knowledge?.__codes
-                    })}
-                  >
+                  <ContainerIsVisible placeholder={intl.get('ThesaurusManage.noWord')}>
                     <React.Fragment>
                       <div className="kw-c-text-lower">
                         {selectedThesaurus?.status !== 'success' && intl.get('ThesaurusManage.importError')}

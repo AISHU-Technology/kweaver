@@ -43,7 +43,7 @@ const Configs = (props: any) => {
 
   const onVariableChange = (data: TVariables, changedKey: keyof TVariables[number], changedIndex: number) => {
     setConfigStore(pre => ({ ...pre, variables: data }));
-    changedKey === 'var_name' && editorRef.current?.updateVariable(data[changedIndex]); // 改名需要更新编辑器
+    changedKey === 'var_name' && editorRef.current?.updateVariable(data[changedIndex]);
   };
 
   const onVariableDelete = (data: TVariables[number], index: number) => {

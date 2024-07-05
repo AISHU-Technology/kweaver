@@ -193,7 +193,7 @@ const MultipleFileTree = ({ data, closeMultipleFileModal }: any) => {
   };
   return (
     <UniversalModal
-      visible
+      open
       title={intl.get('global.detail')}
       className="MultipleFileTree"
       onCancel={closeMultipleFileModal}

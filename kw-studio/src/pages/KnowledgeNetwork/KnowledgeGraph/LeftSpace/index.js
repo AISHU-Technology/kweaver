@@ -6,12 +6,11 @@ import { Input, Button, Dropdown, Menu, Tooltip, message, Avatar } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
 
 import HOOKS from '@/hooks';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import HELPER from '@/utils/helper';
 import { sessionStore, wrapperTitle } from '@/utils/handleFunction';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 
 import noResult from '@/assets/images/noResult.svg';
@@ -136,44 +135,22 @@ const LeftSpace = props => {
 
   const buttonCreateAndImport = (
     <div className="btn-wrap">
-      <ContainerIsVisible
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_KG_CREATE,
-          userType: PERMISSION_KEYS.KN_ADD_KG,
-          userTypeDepend: selectedKnowledge?.__codes
-        })}
+      <Dropdown
+        placement="bottomRight"
+        overlay={menuImportOrExport}
+        getPopupContainer={triggerNode => triggerNode.parentElement}
       >
-        <Dropdown
-          placement="bottomRight"
-          overlay={menuImportOrExport}
-          getPopupContainer={triggerNode => triggerNode.parentElement}
-        >
-          <Button className="operate-btn" type="primary">
-            <IconFont type="icon-Add" />
-            {intl.get('knowledge.create')}
-            <CaretDownOutlined />
-          </Button>
-        </Dropdown>
-      </ContainerIsVisible>
-      <ContainerIsVisible
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_KG_CREATE,
-          userType: PERMISSION_KEYS.KN_ADD_KG,
-          userTypeDepend: selectedKnowledge?.__codes
-        })}
-      >
-        <div style={{ width: 15 }} />
-      </ContainerIsVisible>
-      <ContainerIsVisible
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_KG_EXPORT
-        })}
-      >
-        <Button className="operate-btn" onClick={onExport}>
-          <IconFont type="icon-daochu" />
-          {intl.get('knowledge.export')}
+        <Button className="operate-btn" type="primary">
+          <IconFont type="icon-Add" />
+          {intl.get('knowledge.create')}
+          <CaretDownOutlined />
         </Button>
-      </ContainerIsVisible>
+      </Dropdown>
+      <div style={{ width: 15 }} />
+      <Button className="operate-btn" onClick={onExport}>
+        <IconFont type="icon-daochu" />
+        {intl.get('knowledge.export')}
+      </Button>
     </div>
   );
 
@@ -206,45 +183,23 @@ const LeftSpace = props => {
               {intl.get('configSys.graph')}
             </span>
             <span>
-              <ContainerIsVisible
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_KG_CREATE,
-                  userType: PERMISSION_KEYS.KN_ADD_KG,
-                  userTypeDepend: selectedKnowledge?.__codes
-                })}
-              >
-                <Format.Button onClick={openModalImport} type="icon" size="small" tip={intl.get('knowledge.import')}>
-                  <IconFont type="icon-daoru" style={{ fontSize: 14 }} />
-                </Format.Button>
-              </ContainerIsVisible>
+              <Format.Button onClick={openModalImport} type="icon" size="small" tip={intl.get('knowledge.import')}>
+                <IconFont type="icon-daoru" style={{ fontSize: 14 }} />
+              </Format.Button>
 
-              <ContainerIsVisible
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_KG_EXPORT
-                })}
+              <Format.Button
+                disabled={_.isEmpty(graphList)}
+                onClick={onExport}
+                type="icon"
+                size="small"
+                tip={intl.get('knowledge.export')}
               >
-                <Format.Button
-                  disabled={_.isEmpty(graphList)}
-                  onClick={onExport}
-                  type="icon"
-                  size="small"
-                  tip={intl.get('knowledge.export')}
-                >
-                  <IconFont type="icon-daochu" style={{ fontSize: 14 }} />
-                </Format.Button>
-              </ContainerIsVisible>
+                <IconFont type="icon-daochu" style={{ fontSize: 14 }} />
+              </Format.Button>
 
-              <ContainerIsVisible
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_KG_CREATE,
-                  userType: PERMISSION_KEYS.KN_ADD_KG,
-                  userTypeDepend: selectedKnowledge?.__codes
-                })}
-              >
-                <Format.Button onClick={createGraph} type="icon" size="small" tip={intl.get('knowledge.create')}>
-                  <IconFont type="icon-Add" style={{ fontSize: 14 }} />
-                </Format.Button>
-              </ContainerIsVisible>
+              <Format.Button onClick={createGraph} type="icon" size="small" tip={intl.get('knowledge.create')}>
+                <IconFont type="icon-Add" style={{ fontSize: 14 }} />
+              </Format.Button>
             </span>
           </div>
           {!_.isEmpty(graphList) ? (

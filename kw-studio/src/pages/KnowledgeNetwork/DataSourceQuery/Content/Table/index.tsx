@@ -8,7 +8,7 @@ import intl from 'react-intl-universal';
 import emptyImg from '@/assets/images/empty.svg';
 
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 type TypeTable = {
   className?: string;
@@ -33,7 +33,7 @@ const MyTable = (props: TypeTable) => {
         key: item,
         width: width < 200 ? 200 : width,
         ellipsis: true,
-        render: (text: string, record: any) => (
+        render: (text: string) => (
           <div className={classNames('my-col kw-ellipsis', { selectRow: item === activeCol })}>{text || '--'}</div>
         )
       };
@@ -85,7 +85,7 @@ const MyTable = (props: TypeTable) => {
           <div className="kw-c-text-lower">{intl.get('domainData.dataEmpty')}</div>
         </div>
       ) : (
-        <ADTable
+        <KwTable
           showHeader={false}
           dataSource={tableData}
           columns={columns}

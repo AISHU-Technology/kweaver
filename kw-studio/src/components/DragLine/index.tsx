@@ -1,23 +1,16 @@
-/**
- * 拖拽拉伸线条(可选择按钮是否需要)
- */
 import React, { useRef } from 'react';
-import IconFont from '../IconFont';
+import IconFont from '@/components/IconFont';
 
 export interface DragLineProps {
-  className?: string; // dragLine name
-  switchName?: string; // switch name
+  className?: string;
+  switchName?: string;
   style?: React.CSSProperties;
   onStart?: () => void;
   onEnd?: (x: number, y: number) => void;
-  /**
-   * 位置发生变化的回调
-   * x, y 是 拖拽结束时 相对于 拖拽起始位置 的偏移量
-   */
   onChange?: (x: number, y: number) => void;
-  showIcon?: boolean; // Whether to display the drag icon, hidden by default
-  onDragOperate?: () => void; // drag Operation
-  switchStyle?: React.CSSProperties; // Collapse | Expand button style
+  showIcon?: boolean;
+  onDragOperate?: () => void;
+  switchStyle?: React.CSSProperties;
 }
 
 const DragLine = (props: DragLineProps) => {
@@ -43,7 +36,7 @@ const DragLine = (props: DragLineProps) => {
     onChange?.(offsetX, offsetY);
   };
 
-  const onDragEnd = (e: MouseEvent) => {
+  const onDragEnd = () => {
     document.removeEventListener('mousemove', onDragging);
     document.removeEventListener('mouseup', onDragEnd);
     onEnd?.(currentPosition.current.x, currentPosition.current.y);

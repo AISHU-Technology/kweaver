@@ -28,7 +28,7 @@ const RelateModal = (props: any) => {
     <UniversalModal
       className="function-relate-modal"
       title={intl.get('exploreAnalysis.select')}
-      visible={visible}
+      open={visible}
       width={480}
       zIndex={1052}
       onOk={handleOk}

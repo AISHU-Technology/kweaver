@@ -6,7 +6,7 @@ import intl from 'react-intl-universal';
 import _ from 'lodash';
 
 import IconFont from '@/components/IconFont';
-import { Header } from '@/components/ADTable';
+import { Header } from '@/components/KwTable';
 import Format from '@/components/Format';
 import { DESCEND, ASCEND, offsetY } from '@/enums';
 

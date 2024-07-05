@@ -16,10 +16,8 @@ const NumberInput = (props: NumberInputProps) => {
     setValue(props.value);
   }, [props.value]);
 
-  // 初始化输入框的值
   const [value, setValue] = useState<any>(_value || defaultValue);
 
-  // 格式化输入框的值，只允许输入整数
   const formatNumber = useCallback((value?: any) => {
     if (value) {
       const intValue = parseInt(String(value), 10);
@@ -30,7 +28,6 @@ const NumberInput = (props: NumberInputProps) => {
     return '';
   }, []);
 
-  // 解析输入框的值，转换为整数
   const parseNumber = useCallback((value?: any) => {
     if (value) {
       const intValue = parseInt(String(value), 10);
@@ -41,7 +38,6 @@ const NumberInput = (props: NumberInputProps) => {
     return undefined;
   }, []);
 
-  // 处理输入框值改变事件
   const handleChange = useCallback(
     (value?: number | string) => {
       if (typeof value === 'number') {
@@ -54,7 +50,6 @@ const NumberInput = (props: NumberInputProps) => {
     [onChange]
   );
 
-  // 处理输入框失去焦点事件
   const handleBlur = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
@@ -73,7 +68,6 @@ const NumberInput = (props: NumberInputProps) => {
           onBlur(newValue);
         }
       } else {
-        // 输入不合法时恢复为默认值或最小值
         const value: any = isDef(defaultValue) ? defaultValue : isDef(min) ? min : props.value;
         setValue(value);
         onChange?.(value);

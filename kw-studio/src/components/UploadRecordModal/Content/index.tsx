@@ -12,17 +12,17 @@ import './style.less';
 
 const TABLE = 'table';
 const DETAIL = 'detail';
-const PAGE_SIZE = 10; // 分页数
-let requestId = 0; // 标记请求
+const PAGE_SIZE = 10;
+let requestId = 0;
 const initState: TableState = {
-  loading: false, // 加载中
-  keyword: '', // 搜索关键字
-  page: 1, // 当前页码
-  total: 0, // 总数
-  order: 'created', // 排序方式
-  reverse: 1, // 升降序, 0(升序), 1(降序)
-  kId: 0, // 过滤的知识网络
-  finished: 'True' // 过滤上传中和上传完成
+  loading: false,
+  keyword: '',
+  page: 1,
+  total: 0,
+  order: 'created',
+  reverse: 1,
+  kId: 0,
+  finished: 'True'
 };
 type ContentProps = {
   isIq: boolean;
@@ -31,12 +31,12 @@ const reducer = (state: TableState, action: Partial<TableState>) => ({ ...state,
 
 const Content = (props: ContentProps) => {
   const { isIq } = props;
-  const [viewType, setViewType] = useState(TABLE); // 界面显示
-  const [tableState, dispatchTableState] = useReducer(reducer, initState); // 表格状态
-  const [tableData, setTableData] = useState<any>([]); // 表格数据
-  const [detailData, setDetailData] = useState<any>({}); // 查看详情的数据
+  const [viewType, setViewType] = useState(TABLE);
+  const [tableState, dispatchTableState] = useReducer(reducer, initState);
+  const [tableData, setTableData] = useState<any>([]);
+  const [detailData, setDetailData] = useState<any>({});
   const [tabsKey, setTabsKey] = useState('uploading');
-  const [filterKgData, setFilterKgData] = useState<any>([]); // 筛选的知识网络
+  const [filterKgData, setFilterKgData] = useState<any>([]);
   const kwId = getParam('id');
 
   useEffect(() => {
@@ -64,14 +64,7 @@ const Content = (props: ContentProps) => {
    * @param isTimer 是否由定时器触发, 此时不添加loading
    */
   const getData: Function = async (
-    {
-      page = 1, // 页码
-      keyword = '', // 搜索关键字
-      order = 'created', // 排序方式
-      reverse = 1, // 升降序
-      kId = 0 // 过滤的知识网络id
-    }: // finished = 'False' // 上传中
-    Partial<TableState>,
+    { page = 1, keyword = '', order = 'created', reverse = 1, kId = 0 }: Partial<TableState>,
     isTimer = false
   ) => {
     const signId = ++requestId;
@@ -105,7 +98,6 @@ const Content = (props: ContentProps) => {
     }
   };
 
-  // 获取关联知识网络
   const getRelationKg = async () => {
     const { res } = (await serviceUploadKnowledge.taskGetRelationKN()) || {};
     res && setFilterKgData(res);

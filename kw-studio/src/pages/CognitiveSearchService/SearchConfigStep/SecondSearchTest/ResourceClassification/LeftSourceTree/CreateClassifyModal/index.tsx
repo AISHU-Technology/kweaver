@@ -189,7 +189,7 @@ const CreateClassifyModal = (props: any) => {
     <>
       <UniversalModal
         className="search-create-edit-modal"
-        visible={visible}
+        open={visible}
         onCancel={onHandleCancel}
         title={
           operateType === 'create'

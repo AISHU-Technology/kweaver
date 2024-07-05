@@ -83,8 +83,7 @@ class ForceFree {
   /** 初始化力导布局图谱 */
   init(props: any) {
     const { container } = props;
-    const isIframe = window !== window.parent;
-    const Graph = isIframe ? IframeGraph : G6.Graph;
+    const Graph = G6.Graph;
     this.graph = new Graph({
       container,
       animate: true,
@@ -129,9 +128,6 @@ class ForceFree {
       }
     });
     this.graph.__tickIndex = 0;
-    if (isIframe) {
-      this.interactiveToIframe = new InteractiveToIframe(this.graph, this.changeData);
-    }
     this.graph.graphStack = new GraphStack(this.graph);
 
     this.graph.get('canvas').set('localRefresh', false);

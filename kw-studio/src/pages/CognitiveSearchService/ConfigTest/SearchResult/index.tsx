@@ -3,7 +3,7 @@ import { Pagination, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import IconFont from '@/components/IconFont';
 import HOOKS from '@/hooks';
 import { numToThousand } from '@/utils/handleFunction';
@@ -109,17 +109,7 @@ const SearchResult: React.FC<SearchResultProps> = forwardRef((props, ref: any) =
     onCatChange(e.key);
   };
 
-  const isIframe = () => location.pathname.includes('iframe');
-
-  // 除了卡片和推荐之外的配置是否为空
   const isOtherEmpty = () => {
-    if (isIframe()) {
-      return (
-        (!kgqaResData?.count || _.isEmpty(kgqaResData)) &&
-        (_.isEmpty(resData) || !resData?.count) &&
-        (!_.isEmpty(allResData.knowledge_card) || !_.isEmpty(allResData.related_knowledge))
-      );
-    }
     return (!kgqaResData?.count || _.isEmpty(kgqaResData)) &&
       (_.isEmpty(resData) || !resData?.count) &&
       _.isEmpty(allResData?.query_understand) &&
@@ -165,13 +155,13 @@ const SearchResult: React.FC<SearchResultProps> = forwardRef((props, ref: any) =
           {viewType === 'list' && !_.isEmpty(kgqaResData) && !selfState.loading ? (
             <GraphResult res={kgqaResData} basicData={basicData} advGaConfig={advGaConfig} />
           ) : null}
-          {viewType === 'json' && !isIframe() ? <JsonResult resData={allResData} /> : null}
+          {viewType === 'json' && <JsonResult resData={allResData} />}
           {!_.isEmpty(resData) && viewType === 'list' ? (
             <>
               <div className="image-text-search-container">
                 <h4 className="full-text-title">
                   {intl.get('cognitiveSearch.classify.resources')}
-                  {isIframe() ? null : <span>（{intl.get('cognitiveSearch.graphResults')}）</span>}
+                  {<span>（{intl.get('cognitiveSearch.graphResults')}）</span>}
                 </h4>
                 <div className="full-text-menu">
                   <Menu
@@ -238,7 +228,7 @@ const SearchResult: React.FC<SearchResultProps> = forwardRef((props, ref: any) =
                     className={_.isEmpty(kgqaResData) || !kgqaResData?.count ? 'res-wrapper' : 'res-wrapper-no-qa'}
                     ref={wrapperRef}
                   >
-                    <ScrollBar isshowx="false" className="res-scroll" ref={resScrollRef}>
+                    <KwScrollBar isShowX={false} className="res-scroll" ref={resScrollRef}>
                       <ListResult resData={resData?.vertexs} />
                       <div className={'pagination-box'}>
                         <Pagination
@@ -251,12 +241,12 @@ const SearchResult: React.FC<SearchResultProps> = forwardRef((props, ref: any) =
                           showSizeChanger={false}
                         />
                       </div>
-                    </ScrollBar>
+                    </KwScrollBar>
                   </div>
                 </>
               ) : (
                 <div className="no-complete-search-small kw-flex">
-                  <NoDataBox.NO_RESULT />
+                  <NoDataBox type="NO_RESULT" />
                   {!kgqaResData?.openai_status && !_.isEmpty(kgqaResData) && (
                     <div className="sorry-tip">
                       {kgqaResData.model_type === 'private_llm'
@@ -269,10 +259,10 @@ const SearchResult: React.FC<SearchResultProps> = forwardRef((props, ref: any) =
             </>
           ) : null}
           {/* 图全文展示 */}
-          {_.isEmpty(resData) && _.isEmpty(kgqaResData) && !_.isEmpty(allResData.query_understand) && !isIframe() && (
-            <ScrollBar isshowx="false" className="res-scroll-query" ref={resScrollRef}>
+          {_.isEmpty(resData) && _.isEmpty(kgqaResData) && !_.isEmpty(allResData.query_understand) && (
+            <KwScrollBar isShowX={false} className="res-scroll-query" ref={resScrollRef}>
               <JsonResult resData={allResData} />
-            </ScrollBar>
+            </KwScrollBar>
           )}
         </div>
       </div>

@@ -33,7 +33,7 @@ const ScoreThresholdModal = (props: ScoreThresholdModalProps) => {
       title={intl.get('cognitiveSearch.configuration')}
       okText={intl.get('global.save')}
       width={480}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       onOk={handleOk}
       footerData={[

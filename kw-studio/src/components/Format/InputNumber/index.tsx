@@ -1,19 +1,11 @@
-import React, { useRef, useEffect, useState } from 'react';
 import classnames from 'classnames';
 import { Input as AntInputNumber } from 'antd';
-
+import React, { useEffect, useState } from 'react';
 import { InputType } from '../type';
-
 import './style.less';
 
-const SIZE = {
-  large: 'kw-format-input-large',
-  middle: 'kw-format-input-middle',
-  small: 'kw-format-input-small'
-};
-
 const InputNumber = (props: InputType) => {
-  const { min, max, size = 'middle', value, className, ...othersProps } = props;
+  const { min, max, value, className, ...othersProps } = props;
 
   const [number, setNumber] = useState<any>(null);
   useEffect(() => {

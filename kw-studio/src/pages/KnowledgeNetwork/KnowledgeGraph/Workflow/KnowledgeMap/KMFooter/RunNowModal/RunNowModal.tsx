@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, ConfigProvider, Radio, Button, message } from 'antd';
+import { Button, message } from 'antd';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 import { CheckCircleFilled } from '@ant-design/icons';
 import serviceWorkflow from '@/services/workflow';
 import { useKnowledgeMapContext } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/KnowledgeMapContext';
 import LoadingMask from '@/components/LoadingMask';
-import serviceLicense from '@/services/license';
 import { graphTipModal } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/GraphTipModal';
 import { useHistory } from 'react-router-dom';
 import UniversalModal from '@/components/UniversalModal';
-import Format from '@/components/Format';
-import serviceGraphDetail from '@/services/graphDetail';
 import './styles.less';
 import BuildGraphModel from '@/components/BuildGraphModel';
 
@@ -30,7 +26,7 @@ interface RunNowModalProps {
  */
 const RunNowModal: React.FC<RunNowModalProps> = props => {
   const {
-    knowledgeMapStore: { graphId, graphName }
+    knowledgeMapStore: { graphId }
   } = useKnowledgeMapContext();
   const history = useHistory();
   const { closeModal, isImmediately, taskModalType, setTaskModalType, firstBuild } = props;
@@ -50,49 +46,6 @@ const RunNowModal: React.FC<RunNowModalProps> = props => {
       setUpdateType('increment');
     }
   }, [firstBuild]);
-
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res && res !== undefined) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          // message.warning(intl.get('license.remaining'));
-          message.warning({
-            content: intl.get('license.remaining'),
-            className: 'custom-class',
-            style: {
-              marginTop: '6vh'
-            }
-          });
-          return;
-        }
-        if (knowledge_limit - all_knowledge < 0) {
-          // message.error(intl.get('license.operationFailed'));
-          message.error({
-            content: intl.get('license.operationFailed'),
-            className: 'custom-class',
-            style: {
-              marginTop: '6vh'
-            }
-          });
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || {};
-      // Description && message.error(Description);
-      Description &&
-        message.error({
-          content: Description,
-          className: 'custom-class',
-          style: {
-            marginTop: '6vh'
-          }
-        });
-    }
-  };
 
   const handleError = (res: any) => {
     if (res) {
@@ -158,9 +111,8 @@ const RunNowModal: React.FC<RunNowModalProps> = props => {
 
   const updateTask = async (type?: string) => {
     const tasktype = type || updateType;
-    onCalculate();
     setLoading(true);
-    const taskRes = await serviceWorkflow.performTask(graphId, { tasktype });
+    const taskRes = await serviceWorkflow.performTask(graphId!, { tasktype });
     setLoading(false);
     if (taskRes && taskRes.res) {
       // @ts-ignore
@@ -170,17 +122,6 @@ const RunNowModal: React.FC<RunNowModalProps> = props => {
     if (taskRes && taskRes.Code) {
       handleError(taskRes);
     }
-  };
-
-  /**
-   * @description 点击权限管理
-   */
-  const onAuthManagerClick = () => {
-    const knw_id =
-      window.sessionStorage.getItem('selectedKnowledgeId') &&
-      parseInt(window.sessionStorage.getItem('selectedKnowledgeId') as string);
-    history.push(`/knowledge/graph-auth?knId=${knw_id}&graphId=${graphId}&graphName=${graphName}`);
-    // setAuthKnowledgeData({ id: graphId, name: graphName });
   };
 
   /**
@@ -210,7 +151,7 @@ const RunNowModal: React.FC<RunNowModalProps> = props => {
         />
       ) : (
         <UniversalModal
-          visible
+          open
           title={null}
           className={'mix-modal'}
           width={480}

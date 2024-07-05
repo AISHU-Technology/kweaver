@@ -6,7 +6,6 @@ import { Spin, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import apiService from '@/utils/axios-http/oldIndex';
-import { PERMISSION_KEYS } from '@/enums';
 import serviceWorkflow from '@/services/workflow';
 import servicesCreateEntity from '@/services/createEntity';
 import servicesPermission from '@/services/rbacPermission';
@@ -65,7 +64,6 @@ const Workflow = ({ knData }) => {
       ?.split('&')
       ?.filter(item => item?.includes('knId'))?.[0]
       ?.split('=')[1];
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds: [String(knId)] };
     // servicesPermission.dataPermission(postData).then(result => {
     //   if (_.isEmpty(result?.res?.[0]?.codes)) {
     //     window.location.replace('/home');
@@ -532,7 +530,7 @@ const Workflow = ({ knData }) => {
 
       <TipModal
         closable
-        visible={quitVisible}
+        open={quitVisible}
         onClose={() => setQuitVisible(false)}
         onCancel={handleCancel}
         onOk={handleSave}

@@ -82,7 +82,7 @@ const CategoryOperateModal = (props: CategoryOperateModalProps) => {
     <UniversalModal
       className={classNames(className, 'manage-prompt-category-operate-modal')}
       title={action === 'create' ? intl.get('prompt.createGroup') : intl.get('prompt.editGroup')}
-      visible={visible}
+      open={visible}
       width={480}
       zIndex={2000}
       onCancel={onCancel}

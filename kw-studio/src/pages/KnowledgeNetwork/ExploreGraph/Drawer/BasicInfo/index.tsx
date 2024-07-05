@@ -8,7 +8,7 @@ import IconFont from '@/components/IconFont';
 
 import './style.less';
 import _ from 'lodash';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import intl from 'react-intl-universal';
 const { textMap } = ANALYSIS_PROPERTIES;
 const Line = (props: any) => {
@@ -82,14 +82,14 @@ const BasicInfo = (props: BasicInfoProps) => {
         <CloseOutlined classID="kw-pointer" onClick={onChangeDrawerKey} />
       </div>
       <div className="content kw-mt-3">
-        <ScrollBar style={{ maxHeight: 'calc(100% - 10px)' }}>
+        <KwScrollBar style={{ maxHeight: 'calc(100% - 10px)' }}>
           {_.map(basicInfo?.showLabels, item => {
             const { key, value, alias } = item;
             let _alias = alias;
             if (a?.[type]?.[key]) _alias = a[type][key];
             return <Line key={item?.key} label={_alias || key} value={value} />;
           })}
-        </ScrollBar>
+        </KwScrollBar>
       </div>
     </div>
   );

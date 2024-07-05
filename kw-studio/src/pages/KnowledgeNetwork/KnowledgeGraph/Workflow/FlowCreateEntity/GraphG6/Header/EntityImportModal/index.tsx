@@ -202,7 +202,7 @@ const EntityImportModal = (props: EntityImportModalProps) => {
     <TemplateModal
       title={intl.get('createEntity.importNodeBatchT')}
       className="flow-3-entity-import-modal"
-      visible={visible}
+      open={visible}
       // visible
       width={1000}
       onOk={onHandleOk}

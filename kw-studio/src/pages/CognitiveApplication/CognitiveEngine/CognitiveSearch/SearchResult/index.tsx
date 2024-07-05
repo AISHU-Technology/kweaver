@@ -1,14 +1,7 @@
-/**
- * 认知搜索结果
- * @author Jason.ji
- * @date 2022/05/16
- *
- */
-
 import React, { memo, useState, useRef, useEffect } from 'react';
 import { Pagination, Drawer } from 'antd';
 import intl from 'react-intl-universal';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import HOOKS from '@/hooks';
 import { numToThousand } from '@/utils/handleFunction';
 import PathGraph, { handlePathData } from '../PathGraph';
@@ -117,7 +110,7 @@ const SearchResult: React.FC<SearchResultProps> = props => {
 
           {resData.res?.search && (
             <div className="res-wrapper">
-              <ScrollBar isshowx="false" className="res-scroll" ref={resScrollRef}>
+              <KwScrollBar isShowX={false} className="res-scroll" ref={resScrollRef}>
                 {viewType === 'list' ? (
                   <ListResult resData={resData.res.search} selectedRow={selectedRow} onRowClick={handleRowClick} />
                 ) : (
@@ -135,13 +128,13 @@ const SearchResult: React.FC<SearchResultProps> = props => {
                     showSizeChanger={false}
                   />
                 </div>
-              </ScrollBar>
+              </KwScrollBar>
             </div>
           )}
         </div>
       </div>
       <Drawer
-        visible={isDrawer}
+        open={isDrawer}
         placement="right"
         width={widthScreen !== 0 && widthScreen <= 1335 ? 'calc(100% - 213px)' : '1100px'}
         className="search-result-drawer"

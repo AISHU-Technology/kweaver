@@ -25,7 +25,6 @@ import ResultPanel, { RESULT_TYPE, parseCommonResult, getInitResState } from '..
 import AddTypeSelector, { ADD_TYPES } from '../components/AddTypeSelector';
 
 const { ADD_IMMEDIATELY, ADD_SELECT, COVER_IMMEDIATELY, COVER_SELECT } = ADD_TYPES;
-const isIframe = () => window.location.pathname.includes('iframe');
 const PathQuery = (props: TypePathProps) => {
   const { leftDrawerKey, selectedItem, classData } = props;
   const { onChangeData, onCloseLeftDrawer, setSelectNodes, onCloseRightDrawer } = props;
@@ -51,7 +50,7 @@ const PathQuery = (props: TypePathProps) => {
     });
   }, [filter?.edges, filter.searchScope, edgesClass]); // 可配规则的类
 
-  const authorKgView = isIframe() ? true : selectedItem?.detail?.authorKgView;
+  const authorKgView = selectedItem?.detail?.authorKgView;
   useEffect(() => {
     onChangeFilter({ selectorProps: authorKgView ? 'graph' : 'canvas' });
   }, [authorKgView]);
@@ -422,7 +421,7 @@ const PathQuery = (props: TypePathProps) => {
           </span>
         </div>
         <div className="content kw-pt-4">
-          {/* <ScrollBar isshowx="false" > */}
+          {/* <KwScrollBar isShowX={false} > */}
           <div className="kw-align-center">
             <div className="kw-pt-3 kw-mr-3">
               <div className="circle-icon kw-mb-2" />
@@ -596,7 +595,7 @@ const PathQuery = (props: TypePathProps) => {
                 onCheckRule={(name, checked) => onCheckRule(name, checked)}
               />
             </div>
-            {/* </ScrollBar> */}
+            {/* </KwScrollBar> */}
           </div>
         </div>
 

@@ -45,7 +45,7 @@ const RelatedDocument2 = (props: RelatedDocumentProps) => {
   }, [nodes, config]);
   const { title, documents } = source || {};
   const [items, setItems] = useState<any>([]);
-  const [failImg, setFailImg] = useState<string[]>([]); // 加载失败的图片
+  const [failImg, setFailImg] = useState<string[]>([]);
 
   useEffect(() => {
     if (_.isEmpty(documents)) return;

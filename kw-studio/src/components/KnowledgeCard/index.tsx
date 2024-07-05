@@ -1,7 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import useComponents from './useComponents';
-import { UseComponentsType } from './types';
 
 import './style.less';
 

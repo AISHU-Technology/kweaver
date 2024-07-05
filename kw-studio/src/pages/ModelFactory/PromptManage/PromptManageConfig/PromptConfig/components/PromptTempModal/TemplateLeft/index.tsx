@@ -213,7 +213,7 @@ const TemplateLeft = (props: any) => {
       </div>
       {_.isEmpty(matchTreeData) ? (
         <div className="noData-box kw-content-center kw-w-100">
-          <NoDataBox.NO_RESULT />
+          <NoDataBox type="NO_RESULT" />
         </div>
       ) : (
         <Tree

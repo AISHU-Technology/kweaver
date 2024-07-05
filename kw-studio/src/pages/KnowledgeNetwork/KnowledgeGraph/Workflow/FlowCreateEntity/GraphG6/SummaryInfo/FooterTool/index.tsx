@@ -88,7 +88,7 @@ const FooterTool = (props: FooterToolProps) => {
           placement="topRight"
           trigger={['click']}
           disabled={disabled || !groupList.length}
-          onVisibleChange={onVisibleChange}
+          onOpenChange={onVisibleChange}
           overlay={
             <div className="group-dropdown-content">
               <div className="kw-p-2">

@@ -76,7 +76,7 @@ const ImportModal = (props: any) => {
   return (
     <UniversalModal
       wrapClassName="modalImportRoot"
-      visible={visible}
+      open={visible}
       title={titleContent()}
       maskClosable={false}
       destroyOnClose={true}

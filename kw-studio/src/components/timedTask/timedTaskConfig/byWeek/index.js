@@ -14,8 +14,8 @@ import './style.less';
 
 class ByWeek extends Component {
   state = {
-    selectWeek: [], // 每周几运行
-    runTime: '' // 运行时间
+    selectWeek: [],
+    runTime: ''
   };
 
   week = [
@@ -26,8 +26,7 @@ class ByWeek extends Component {
     intl.get('graphList.Fri'),
     intl.get('graphList.Sat'),
     intl.get('graphList.Sun')
-  ]; // 星期国际化
-
+  ];
   componentDidMount() {
     this.props.onByWeekRef(this);
 

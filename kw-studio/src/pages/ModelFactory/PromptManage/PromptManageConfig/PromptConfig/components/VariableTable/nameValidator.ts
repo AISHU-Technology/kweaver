@@ -3,10 +3,8 @@ import _ from 'lodash';
 import { FormValidator } from '@/utils/handleFunction';
 import { TVariables } from '../../../types';
 
-// 校验器
 const validator = new FormValidator();
 
-// 表格仅校验变量名称和别名
 const getRules = () => {
   return {
     var_name: [

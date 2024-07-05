@@ -6,13 +6,11 @@ import { Table, Button, Popover, message, Dropdown, Tooltip } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 
 import HELPER from '@/utils/helper';
-import { PERMISSION_CODES } from '@/enums';
 import serviceModelLibrary from '@/services/modelLibrary';
 
 import Format from '@/components/Format';
 import PaginationCommon from '@/components/PaginationCommon';
-import ContainerEmptyOrResultType from '@/components/ContainerEmptyOrResult';
-import { ITable } from '@/components/ADTable';
+import { ITable } from '@/components/KwTable';
 import { TYPE_CREATE, TYPE_EDIT } from '../enums';
 
 import createSvg from '@/assets/images/create.svg';
@@ -130,9 +128,7 @@ const ModelTable = (props: ModelTableType) => {
             <Button
               className="operationButton"
               type="link"
-              disabled={
-                data.id === coverId || !HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_MODEL_EDIT })
-              }
+              disabled={data.id === coverId}
               onClick={() => onOpenCreateModel(TYPE_EDIT, data)}
             >
               {intl.get('modelLibrary.edit')}
@@ -143,9 +139,7 @@ const ModelTable = (props: ModelTableType) => {
             <Button
               className="operationButton"
               type="link"
-              disabled={
-                data.id === coverId || !HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_MODEL_DELETE })
-              }
+              disabled={data.id === coverId}
               onClick={() => onDelete([Number(data.id)])}
             >
               {intl.get('modelLibrary.delete')}

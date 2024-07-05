@@ -40,7 +40,7 @@ const GaConfigModel = (props: any) => {
   return (
     <UniversalModal
       title={intl.get('cognitiveSearch.qaAdvConfig.graphConfig')}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       width={480}
       footerData={[

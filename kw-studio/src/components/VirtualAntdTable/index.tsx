@@ -10,7 +10,7 @@ type VirtualOptions = {
 
 const defaultOptions = {
   itemHeight: 48,
-  overscan: 6 // 缓冲个数
+  overscan: 6
 };
 
 const defaultScroll = {
@@ -30,7 +30,6 @@ const VirtualAntdTable = <RecordType extends object>(
    * 1.记录分割的索引, 在Table内部暴露出来的render children方法中截断, 不确定Table内部是否会有针对dataSource的计算性能消耗
    * 2.直接截断dataSource, 让Table不断rerender, dataSource很少, 有Table频繁更新的性能消耗
    */
-  // const [list, setList] = useState<any[]>([]);
   const [points, setPoints] = useState<number[]>([0, 0]);
 
   useEffect(() => {
@@ -54,7 +53,6 @@ const VirtualAntdTable = <RecordType extends object>(
     return Math.floor(scrollTop / virtualOptions.itemHeight) + 1;
   };
 
-  // 获取上部高度
   const getDistance = (index: number) => {
     const height = index * virtualOptions.itemHeight;
     return height;
@@ -79,7 +77,6 @@ const VirtualAntdTable = <RecordType extends object>(
           height: offsetBottom + 'px'
         }
       });
-      // setList(_.slice(dataSource, start, end));
       setPoints([start, end]);
     }
   };
@@ -90,12 +87,11 @@ const VirtualAntdTable = <RecordType extends object>(
       {...other}
       className="virtual-table"
       dataSource={dataSource}
-      // dataSource={list}
       scroll={scroll}
       pagination={false}
       components={{
         body: {
-          wrapper: ({ className, children, ...o }: any, ...arg: any) => {
+          wrapper: ({ className, children }: any) => {
             return (
               <tbody className={className}>
                 {children[0]}

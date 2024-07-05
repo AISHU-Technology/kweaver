@@ -82,8 +82,7 @@ class LayoutDagre {
   init(props: any) {
     const { container, config } = props;
     const { direction, align, nodesep, ranksep } = config || {};
-    const isIframe = window !== window.parent;
-    const Graph = isIframe ? IframeGraph : G6.Graph;
+    const Graph = G6.Graph;
 
     const snapLine = new G6.SnapLine();
     this.graph = new Graph({
@@ -118,9 +117,6 @@ class LayoutDagre {
       }
     });
     this.setFitViewDirection(direction);
-    if (isIframe) {
-      this.interactiveToIframe = new InteractiveToIframe(this.graph, this.changeData);
-    }
     this.graph.graphStack = new GraphStack(this.graph);
 
     this.graph.get('canvas').set('localRefresh', false);

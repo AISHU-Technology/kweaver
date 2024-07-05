@@ -4,8 +4,6 @@ import _ from 'lodash';
 import ColorSelect from '../ColorSelect';
 import ColorFillAndStroke from './ColorFillAndStroke';
 
-import './style.less';
-
 const Color = (props: any) => {
   const { modalType, fillColor, strokeColor, isFillAndStroke } = props || {};
   const { onChange } = props;

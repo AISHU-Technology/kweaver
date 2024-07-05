@@ -56,7 +56,7 @@ const AddProperty = (props: any) => {
   return (
     <UniversalModal
       title={intl.get('glossary.addAttribute')}
-      visible={visible}
+      open={visible}
       width={640}
       onCancel={onCancel}
       footerData={[

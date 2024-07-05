@@ -1,6 +1,3 @@
-/**
- * tip解释
- */
 import React from 'react';
 import BaseTip, { BaseTipProps } from './BaseTip';
 import {
@@ -12,21 +9,20 @@ import {
   RepeatRateTip
 } from './DomainIQExplain';
 
-type ExplainTipInterface = React.FC<BaseTipProps> & {
-  KNW_SOURCE: Function;
-  KNW_TOTAL_SOURCE: Function;
-  QUALITY_SOURCE: Function;
-  DOMAIN_IQ: Function;
-  MISSING: Function;
-  REPEAT_RATE: Function;
-};
+const ExplainTip: React.FC<BaseTipProps> = ({ type = 'DEFAULT', ...props }) => {
+  const ComponentMap: { [key: string]: React.ComponentType<any> } = {
+    KNW_SOURCE: KnowledgeSource,
+    KNW_TOTAL_SOURCE: KnowledgeTotalSource,
+    QUALITY_SOURCE: QualitySource,
+    DOMAIN_IQ: DomainIQTip,
+    MISSING: MissingTip,
+    REPEAT_RATE: RepeatRateTip,
+    DEFAULT: BaseTip
+  };
 
-const ExplainTip = BaseTip as ExplainTipInterface;
-ExplainTip.KNW_SOURCE = KnowledgeSource;
-ExplainTip.KNW_TOTAL_SOURCE = KnowledgeTotalSource;
-ExplainTip.QUALITY_SOURCE = QualitySource;
-ExplainTip.DOMAIN_IQ = DomainIQTip;
-ExplainTip.MISSING = MissingTip;
-ExplainTip.REPEAT_RATE = RepeatRateTip;
+  const ComponentToRender = ComponentMap[type] || BaseTip;
+
+  return <ComponentToRender {...props} />;
+};
 
 export default ExplainTip;

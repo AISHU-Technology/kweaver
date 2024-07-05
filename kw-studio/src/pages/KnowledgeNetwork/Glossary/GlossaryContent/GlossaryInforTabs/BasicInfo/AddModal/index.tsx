@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { Button, Form, Input, message, Select } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import TemplateModal from '@/components/TemplateModal';
 import IconFont from '@/components/IconFont';
 import './style.less';
@@ -88,7 +88,7 @@ const AddLanguageModal = (props: any) => {
     <UniversalModal
       title={editData ? intl.get('glossary.editTranslateAndSynonym') : intl.get('glossary.addTranslateAndSynonym')}
       className={prefixCls}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footerData={[
         {

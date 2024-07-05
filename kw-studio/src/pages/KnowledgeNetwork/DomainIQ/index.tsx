@@ -7,7 +7,7 @@ import KnowledgeInfo from './KnowledgeInfo';
 import IQTable from './IQTable';
 import { KgInfo, ListItem, TableState } from './types';
 import './style.less';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 import intl from 'react-intl-universal';
 
 interface DomainIQProps {

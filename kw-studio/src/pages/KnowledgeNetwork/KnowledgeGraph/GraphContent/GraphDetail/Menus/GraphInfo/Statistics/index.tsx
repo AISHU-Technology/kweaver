@@ -28,9 +28,9 @@ interface DataRowProps {
 const KEY_INTL: Record<string, { field: string; tip?: React.ReactNode }> = {
   entity_count: { field: intl.get('graphList.entityCount') },
   edge_count: { field: intl.get('graphList.relationshipCount') },
-  total_knowledge: { field: intl.get('intelligence.totalKnw'), tip: <ExplainTip.KNW_TOTAL_SOURCE /> }, // 总计知识量
-  data_repeat_C1: { field: intl.get('intelligence.repeatRate'), tip: <ExplainTip.REPEAT_RATE /> }, // 重复率
-  data_empty_C2: { field: intl.get('intelligence.missRate'), tip: <ExplainTip.MISSING /> } // 缺失率
+  total_knowledge: { field: intl.get('intelligence.totalKnw'), tip: <ExplainTip type="KNW_TOTAL_SOURCE" /> }, // 总计知识量
+  data_repeat_C1: { field: intl.get('intelligence.repeatRate'), tip: <ExplainTip type="REPEAT_RATE" /> }, // 重复率
+  data_empty_C2: { field: intl.get('intelligence.missRate'), tip: <ExplainTip type="MISSING" /> } // 缺失率
 };
 const SOURCE_KEYS = ['entity_count', 'edge_count', 'total_knowledge'];
 const QUALITY_KEYS = ['data_repeat_C1', 'data_empty_C2'];
@@ -170,7 +170,7 @@ const Statistics = (props: StatisticsProps) => {
           title={
             <>
               {intl.get('intelligence.knwSource')}
-              <ExplainTip.KNW_SOURCE />
+              <ExplainTip type="KNW_SOURCE" />
             </>
           }
           score={detail.data_quality_B}
@@ -188,7 +188,7 @@ const Statistics = (props: StatisticsProps) => {
           title={
             <>
               {intl.get('intelligence.qualitySource')}
-              <ExplainTip.QUALITY_SOURCE />
+              <ExplainTip type="QUALITY_SOURCE" />
             </>
           }
           score={detail.data_quality_score}

@@ -3,8 +3,6 @@ import { Dropdown, Button, Table, Menu, Tooltip, Switch, message } from 'antd';
 import { ArrowDownOutlined, LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
-import HELPER from '@/utils/helper';
 
 import { getParam } from '@/utils/handleFunction';
 import SearchInput from '@/components/SearchInput';
@@ -12,7 +10,6 @@ import IconFont from '@/components/IconFont';
 import TipModal from '@/components/TipModal';
 import uploadService from '@/services/uploadKnowledge';
 import serverKnowledgeNetwork from '@/services/knowledgeNetwork';
-import servicesPermission from '@/services/rbacPermission';
 import kongImg from '@/assets/images/kong.svg';
 import noResultImg from '@/assets/images/noResult.svg';
 import ErrorModel from './UploadErrorModal';
@@ -32,12 +29,12 @@ type TableState = {
   upload_graph?: boolean;
 };
 const initState: TableState = {
-  loading: false, // 加载中
-  name: '', // 搜索关键字
-  page: 1, // 当前页码
-  total: 0, // 总数
-  rule: 'create', // 排序方式
-  order: 'desc' // 升降序, 0(升序), 1(降序)
+  loading: false,
+  name: '',
+  page: 1,
+  total: 0,
+  rule: 'create',
+  order: 'desc'
 };
 
 const reducer = (state: TableState, action: Partial<TableState>) => ({ ...state, ...action });
@@ -46,11 +43,11 @@ const PAGE_SIZE = 10;
 
 const UploadSetting = (props: { tabsKey: string }) => {
   const { tabsKey } = props;
-  const [tableState, dispatchTableState] = useReducer(reducer, initState); // 表格状态
+  const [tableState, dispatchTableState] = useReducer(reducer, initState);
   const [selectedRowKeys, setSelectedRowKeys] = useState<any>();
-  const [selectedRows, setSelectedRows] = useState<any>(); // 保存勾选 的数据
+  const [selectedRows, setSelectedRows] = useState<any>();
   const [tableData, setTableData] = useState<any>([]);
-  const [modalVisible, setModelVisible] = useState<any>({}); // 控制弹窗 type: open | close;
+  const [modalVisible, setModelVisible] = useState<any>({});
   const [errorModel, setErrorModel] = useState<any>({ visible: false, successids: [], errors: [] });
   useEffect(() => {
     if (tabsKey === 'setting') {
@@ -59,18 +56,7 @@ const UploadSetting = (props: { tabsKey: string }) => {
   }, [tabsKey]);
 
   const getPromiss = (list: any) => {
-    // 获取列表权限, 判断权限
     if (_.isEmpty(list)) return setTableData([]);
-    const dataIds = _.map(list, item => String(item.id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
-    // servicesPermission.dataPermission(postData).then(result => {
-    //   const codesData = _.keyBy(result?.res, 'dataId');
-    //   const newTableData = _.map(list, item => {
-    //     item.__codes = codesData?.[item.id]?.codes;
-    //     return item;
-    //   });
-    //   setTableData(newTableData);
-    // });
     setTableData(list);
   };
 
@@ -103,7 +89,6 @@ const UploadSetting = (props: { tabsKey: string }) => {
     getTableData({ ...tableState, ...(state || {}) });
   };
 
-  // 点击表头排序
   const sortOrderChange = (_: any, __: any, sorter: any, extra: any) => {
     if (extra.action !== 'sort') return;
     const rules: Record<string, string> = { updateTime: 'update', create_time: 'create' };
@@ -124,7 +109,6 @@ const UploadSetting = (props: { tabsKey: string }) => {
    */
   const onChangeStatus = async (type: 1 | 0, opId?: any) => {
     let ids: any[] = [];
-    // 开启单个
     if (opId) {
       ids = [opId];
     } else {
@@ -278,13 +262,6 @@ const UploadSetting = (props: { tabsKey: string }) => {
       render: (_: string, record: any) => {
         return (
           <Switch
-            disabled={
-              !HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-                userType: PERMISSION_KEYS.KG_EDIT,
-                userTypeDepend: record?.__codes
-              })
-            }
             checked={record?.to_be_uploaded === 1}
             onChange={e => {
               onChangeOneStatus(e, record?.kgconfid);
@@ -307,20 +284,7 @@ const UploadSetting = (props: { tabsKey: string }) => {
       setSelectedRowKeys(rowKeys);
     },
 
-    preserveSelectedRowKeys: true,
-    getCheckboxProps: (record: any) => {
-      if (
-        !HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-          userType: PERMISSION_KEYS.KG_EDIT,
-          userTypeDepend: record?.__codes
-        })
-      ) {
-        return { disabled: true };
-      }
-
-      return {};
-    }
+    preserveSelectedRowKeys: true
   };
 
   return (
@@ -417,7 +381,7 @@ const UploadSetting = (props: { tabsKey: string }) => {
       </div>
       {/* 关闭二次确认弹窗 */}
       <TipModal
-        visible={modalVisible?.type === 'close'}
+        open={modalVisible?.type === 'close'}
         closable={false}
         title={intl.get('uploadService.closeTitle')}
         content={

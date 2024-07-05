@@ -125,7 +125,6 @@ const ProjectList = forwardRef<ProjectListRef, ProjectListProps>((props: Project
     return node.key === selectedCategory?.prompt_item_id;
   };
 
-  // 自定义树节点
   const titleRender = (node: any) => {
     const { key, type, name, isLeaf, sourceData } = node;
     const isShowOperateIcon = visibleInfo.key === key && visibleInfo.type === 'op';
@@ -149,8 +148,8 @@ const ProjectList = forwardRef<ProjectListRef, ProjectListProps>((props: Project
           placement="bottomRight"
           trigger={['click']}
           destroyPopupOnHide
-          visible={isShowOperateIcon}
-          onVisibleChange={visible => setVisibleInfo({ key: visible ? key : '', type: visible ? 'op' : '' })}
+          open={isShowOperateIcon}
+          onOpenChange={visible => setVisibleInfo({ key: visible ? key : '', type: visible ? 'op' : '' })}
           overlay={
             <Menu style={{ minWidth: 120 }} onClick={info => clickOpIconMenu(info, type, sourceData)}>
               <Menu.Item key="edit">{intl.get('global.edit')}</Menu.Item>
@@ -177,8 +176,8 @@ const ProjectList = forwardRef<ProjectListRef, ProjectListProps>((props: Project
             placement="bottomRight"
             destroyPopupOnHide
             trigger={['click']}
-            visible={isShowAddIcon}
-            onVisibleChange={visible => setVisibleInfo({ key: visible ? key : '', type: visible ? 'add' : '' })}
+            open={isShowAddIcon}
+            onOpenChange={visible => setVisibleInfo({ key: visible ? key : '', type: visible ? 'add' : '' })}
             overlay={
               <Menu style={{ minWidth: 120 }} onClick={info => clickAddIconMenu(info, sourceData)}>
                 <Menu.Item key="create">{intl.get('prompt.createGroup')}</Menu.Item>

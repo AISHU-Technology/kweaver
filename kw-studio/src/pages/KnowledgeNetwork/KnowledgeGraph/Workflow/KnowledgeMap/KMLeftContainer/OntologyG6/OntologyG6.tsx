@@ -6,7 +6,7 @@ import _ from 'lodash';
 import G6, { G6GraphEvent } from '@antv/g6';
 import type { Graph, INode, GraphData, NodeConfig, EdgeConfig, NodeEventType } from '@antv/g6';
 import useDeepCompareEffect from '@/hooks/useDeepCompareEffect';
-import AdResizeObserver, { ResizeProps } from '@/components/AdResizeObserver/AdResizeObserver';
+import KwResizeObserver, { ResizeProps } from '@/components/KwResizeObserver';
 import {
   initGraphByEdit,
   constructGraphData
@@ -30,7 +30,7 @@ import {
   G6NodeData
 } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/types';
 import registerRelationClassEdge from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/KMLeftContainer/OntologyG6/registerRelationClassEdge';
-import AdG6ToolBar from '@/components/AdReactG6/AdG6ToolBar/AdG6ToolBar';
+import AdG6ToolBar from '@/components/KwReactG6/KwG6ToolBar';
 import intl from 'react-intl-universal';
 import { getRepeatMapProps } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/assistant';
 
@@ -952,7 +952,7 @@ const OntologyG6 = forwardRef((props, ref) => {
   };
 
   return (
-    <AdResizeObserver onResize={g6GraphResize}>
+    <KwResizeObserver onResize={g6GraphResize}>
       <div className="ontologyG6 kw-w-100 kw-h-100">
         <OntologyG6Search
           data={graphG6Data}
@@ -964,7 +964,7 @@ const OntologyG6 = forwardRef((props, ref) => {
         <div className="kw-w-100 kw-h-100" ref={g6Container} />
         {graph.current && <AdG6ToolBar style={{ bottom: 89, right: 38 }} graph={graph.current} />}
       </div>
-    </AdResizeObserver>
+    </KwResizeObserver>
   );
 });
 

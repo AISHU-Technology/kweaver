@@ -5,9 +5,8 @@ import intl from 'react-intl-universal';
 import { Dropdown, Menu, Button, Input } from 'antd';
 
 import HELPER from '@/utils/helper';
-import { PERMISSION_CODES } from '@/enums';
 import IconFont from '@/components/IconFont';
-import { Header } from '@/components/ADTable';
+import { Header } from '@/components/KwTable';
 import Format from '@/components/Format';
 
 import { TYPE_CREATE, TYPE_OVER } from '../enums';
@@ -55,18 +54,10 @@ const ModelLibraryHeader = (props: HeaderType) => {
   /** 创建模型选项 */
   const createMenu = (
     <Menu className="menus" onClick={(e: any) => onOpenCreateModel(e?.key)}>
-      <Menu.Item
-        key={TYPE_CREATE}
-        className="menusItem"
-        disabled={disabledImport || !HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_MODEL_IMPORT })}
-      >
+      <Menu.Item key={TYPE_CREATE} className="menusItem" disabled={disabledImport}>
         {intl.get('modelLibrary.asANewModel')}
       </Menu.Item>
-      <Menu.Item
-        key={TYPE_OVER}
-        className="menusItem"
-        disabled={disabledOver || !HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_MODEL_EDIT })}
-      >
+      <Menu.Item key={TYPE_OVER} className="menusItem" disabled={disabledOver}>
         {intl.get('modelLibrary.asACoverModel')}
       </Menu.Item>
     </Menu>
@@ -121,7 +112,7 @@ const ModelLibraryHeader = (props: HeaderType) => {
         <Button
           className="kw-ml-2"
           icon={<IconFont type="icon-lajitong" />}
-          disabled={disabledDelete || !HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_MODEL_DELETE })}
+          disabled={disabledDelete}
           onClick={onDeleteBatch}
         >
           {intl.get('modelLibrary.delete')}
@@ -179,13 +170,10 @@ const ModelLibraryHeader = (props: HeaderType) => {
               <Format.Button
                 type="default"
                 className={classnames('kw-ml-3', {
-                  'delete-btn':
-                    disabledDelete || !HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_MODEL_DELETE })
+                  'delete-btn': disabledDelete
                 })}
                 icon={<IconFont type="icon-lajitong" />}
-                disabled={
-                  disabledDelete || !HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_MODEL_DELETE })
-                }
+                disabled={disabledDelete}
                 onClick={onDeleteBatch}
               >
                 {intl.get('modelLibrary.delete')}

@@ -1,11 +1,7 @@
 import apiService from '@/utils/axios-http/engineServer';
-import tjApiService from '@/utils/axios-http/subscriptionTJ';
-import Cookie from 'js-cookie';
 
 import { API } from '@/services/api';
-import { kwCookie } from '@/utils/handleFunction';
 
-// ad接口
 /**
  *
  * @param data 知识网络id

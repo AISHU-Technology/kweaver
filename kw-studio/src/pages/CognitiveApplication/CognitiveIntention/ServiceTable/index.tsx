@@ -11,7 +11,6 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import HOOKS from '@/hooks';
 import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 
 import { useHistory } from 'react-router-dom';
 import ErrorModal from '../ErrorModal';
@@ -28,7 +27,7 @@ import noResImg from '@/assets/images/noResult.svg';
 import NoDataBox from '@/components/NoDataBox';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 import IconFont from '@/components/IconFont';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import GraphModal from './graphModal';
 
 import { DESC, ASC, PAGE_SIZE, STATUS_COLOR, STATUS_SHOW, INIT_STATE } from '../enum';
@@ -334,67 +333,22 @@ const ServiceTable = (props: ServiceTableProps) => {
   const items = (record: any) => {
     return (
       <Menu onClick={({ key }) => onOperate(key, record)} style={{ width: 120 }}>
-        <Menu.Item
-          key={'edit'}
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_COGSEARCH_EDIT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            }) || record.status === 1
-          }
-        >
+        <Menu.Item key={'edit'} disabled={record.status === 1}>
           {intl.get('cognitiveService.analysis.edit')}
         </Menu.Item>
         <Menu.Item key={'test'} disabled={isDataAdmin}>
           {intl.get('cognitiveService.analysis.test')}
         </Menu.Item>
-        <Menu.Item
-          key={record.status === 1 ? 'cancel' : 'publish'}
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_COGSEARCH_EDIT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            })
-          }
-        >
+        <Menu.Item key={record.status === 1 ? 'cancel' : 'publish'}>
           {record.status === 1
             ? intl.get('cognitiveService.analysis.unPublish')
             : intl.get('cognitiveService.analysis.publish')}
         </Menu.Item>
-        <Menu.Item
-          key={'copy'}
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_COGSEARCH_EDIT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            })
-          }
-        >
-          {intl.get('cognitiveSearch.copy')}
-        </Menu.Item>
-        <Menu.Item
-          key={'delete'}
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_COGSEARCH_DELETE,
-              userType: PERMISSION_KEYS.SERVICE_DELETE,
-              userTypeDepend: record?.__codes
-            }) || record.status === 1
-          }
-        >
+        <Menu.Item key={'copy'}>{intl.get('cognitiveSearch.copy')}</Menu.Item>
+        <Menu.Item key={'delete'} disabled={record.status === 1}>
           {intl.get('cognitiveService.analysis.delete')}
         </Menu.Item>
-        <ContainerIsVisible
-          placeholder={<span style={{ height: 32 }} />}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_APP_COGSEARCH_MEMBER,
-            userType: PERMISSION_KEYS.SERVICE_EDIT_PERMISSION,
-            userTypeDepend: record?.__codes
-          })}
-        >
+        <ContainerIsVisible placeholder={<span style={{ height: 32 }} />}>
           <Menu.Item onClick={() => setAuthData?.(record)}>{intl.get('graphList.authorityManagement')}</Menu.Item>
         </ContainerIsVisible>
       </Menu>
@@ -475,7 +429,7 @@ const ServiceTable = (props: ServiceTableProps) => {
   return (
     <div className="analysis-search-service-table-root">
       <div className="main-table" ref={containRef}>
-        <ADTable
+        <KwTable
           showHeader={false}
           className="searchTable"
           dataSource={data}
@@ -504,14 +458,7 @@ const ServiceTable = (props: ServiceTableProps) => {
             isSearching ? (
               intl.get('global.noResult')
             ) : (
-              <ContainerIsVisible
-                placeholder={<div className="kw-c-text">{intl.get('graphList.noContent')}</div>}
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_APP_COGSEARCH_CREATE,
-                  userType: PERMISSION_KEYS.KN_ADD_SERVICE
-                  // userTypeDepend: knData?.__codes
-                })}
-              >
+              <ContainerIsVisible placeholder={<div className="kw-c-text">{intl.get('graphList.noContent')}</div>}>
                 <span>{intl.get('cognitiveSearch.noService').split('|')[0]}</span>
                 <span className="kw-c-primary kw-pointer" onClick={onCreate}>
                   {intl.get('cognitiveSearch.noService').split('|')[1]}

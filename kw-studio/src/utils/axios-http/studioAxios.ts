@@ -1,14 +1,8 @@
 import axios from 'axios';
-
-import _ from 'lodash';
-import Cookie from 'js-cookie';
 import intl from 'react-intl-universal';
 import { message } from 'antd';
-import { API } from '@/services/api';
+import { kwCookie } from '@/utils/handleFunction';
 
-import { kwCookie, localStore, sessionStore } from '@/utils/handleFunction';
-
-// 取消请求的信号数据
 const requestCancelToken: Record<string, Function> = {};
 const { CancelToken } = axios;
 
@@ -18,9 +12,9 @@ service.interceptors.request.use(
   config => {
     const kwLang = kwCookie.get('kwLang');
 
-    // 登录接口，不需要加token
     config.headers['Content-Type'] = 'application/json; charset=utf-8';
     config.headers['Accept-Language'] = kwLang === 'en-US' ? 'en-US' : 'zh-CN';
+    config.headers['userId'] = 'admin';
 
     config.cancelToken = new CancelToken(cancel => {
       requestCancelToken[config.url!] = cancel;

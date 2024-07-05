@@ -1,5 +1,4 @@
 import _ from 'lodash';
-// 自定义序列化参数函数
 const customParamsSerializer = (params: any) => {
   if (_.isEmpty(params)) return '';
   return _.map(Object.entries(params), ([key, value]: any) => {

@@ -47,7 +47,7 @@ const PreviewView = (props: any) => {
   return (
     <TemplateModal
       title={intl.get('cognitiveSearch.graphQA.viewSub')}
-      visible={isVisiblePreview}
+      open={isVisiblePreview}
       onCancel={handleCancel}
       footer={null}
       className="view-subgraph-modal-root"

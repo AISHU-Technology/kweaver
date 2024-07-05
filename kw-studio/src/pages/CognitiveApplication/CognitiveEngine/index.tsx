@@ -6,10 +6,9 @@ import _ from 'lodash';
 import classnames from 'classnames';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 import servicesPermission from '@/services/rbacPermission';
-import { PERMISSION_KEYS } from '@/enums';
 
 import Format from '@/components/Format';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
 import CognitiveSearch from './CognitiveSearch';
 import './style.less';
 
@@ -26,7 +25,6 @@ const CognitiveEngine: React.FC<any> = props => {
       const params = { size: 1000, page: 1, rule: 'update', order: 'desc' };
       const { res = {}, ErrorCode = '' } = (await servicesKnowledgeNetwork.knowledgeNetGet(params)) || {};
       const dataIds = _.map(res?.df, item => String(item.id));
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds };
       // servicesPermission.dataPermission(postData).then((result: any) => {
       //   const codesData = _.keyBy(result?.res, 'dataId');
       //   const authData = _.filter(res?.df, item => {
@@ -60,7 +58,7 @@ const CognitiveEngine: React.FC<any> = props => {
             onClick={() => onChangeSelectKn(item)}
           >
             <div className="kw-ellipsis kw-align-center" style={{ width: 170 }} title={knw_name}>
-              <AdKnowledgeNetIcon style={{ marginRight: 6 }} type={color} />
+              <KwKNIcon style={{ marginRight: 6 }} type={color} />
               <div className="kw-flex-item-full-width kw-ellipsis">{knw_name}</div>
             </div>
           </Menu.Item>
@@ -81,7 +79,7 @@ const CognitiveEngine: React.FC<any> = props => {
             getPopupContainer={e => e.parentElement!}
           >
             <div className="kw-align-center">
-              <AdKnowledgeNetIcon style={{ marginRight: 6 }} type={knData?.color} />
+              <KwKNIcon style={{ marginRight: 6 }} type={knData?.color} />
               <Tooltip placement="right" title={knData?.knw_name}>
                 <div className="kw-ellipsis" style={{ maxWidth: 154 }}>
                   {knData?.knw_name}

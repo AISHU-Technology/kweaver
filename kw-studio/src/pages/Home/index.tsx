@@ -1,7 +1,6 @@
 import React from 'react';
-import _ from 'lodash';
 
-import CHeader from '@/components/Header';
+import KwHeader from '@/components/KwHeader';
 
 import Navigation from './Navigation';
 
@@ -10,7 +9,7 @@ import './style.less';
 const Homepage = () => {
   return (
     <div className="homepageRoot">
-      <CHeader />
+      <KwHeader />
       <div className="homepageContent">
         <Navigation />
       </div>

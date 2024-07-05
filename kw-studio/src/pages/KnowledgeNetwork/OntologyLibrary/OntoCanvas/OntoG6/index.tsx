@@ -1,10 +1,9 @@
 /* eslint-disable max-lines */
 import _ from 'lodash';
-import { Modal, message } from 'antd';
+import { message } from 'antd';
 import { DoubleRightOutlined, DoubleLeftOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import React, { useState, useEffect, useRef, useReducer } from 'react';
-import HOOKS from '@/hooks';
 import servicesSubGraph from '@/services/subGraph';
 import { getParam, triggerEvent } from '@/utils/handleFunction';
 import servicesCreateEntity from '@/services/createEntity';
@@ -38,7 +37,6 @@ import {
   initGraphByEdit,
   changeBrushClickData,
   mergeBrushSelect,
-  generateGraphBody,
   generateGroupBody,
   handleMultipleSelectionData
 } from '../OntoG6/assistant';
@@ -56,12 +54,10 @@ import { GraphPattern, OperationKey } from '../OntoG6/types/keys';
 import { ItemAdd, ItemDelete, ItemUpdate, UpdateGraphData, ItemSelected } from '../OntoG6/types/update';
 
 import './style.less';
-import moment from 'moment';
 import { DataFileType, GraphKMapType } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/types';
 import { convertToRules } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/assistant';
 import serviceWorkflow from '@/services/workflow';
-import { DS_SOURCE, DS_TYPE } from '@/enums';
-import classNames from 'classnames';
+import { DS_SOURCE } from '@/enums';
 import { useLocation } from 'react-router-dom';
 
 const OntoGraphG6 = (props: any) => {
@@ -82,10 +78,7 @@ const OntoGraphG6 = (props: any) => {
     prev,
     onSave,
     showQuitTip,
-    setSaveOntoData,
     setOtlId,
-    // setParsingFileSet,
-    // parsingFileSet,
     defaultParsingRule,
     setDefaultParsingRule,
     sourceFileType,

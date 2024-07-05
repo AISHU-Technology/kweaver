@@ -14,7 +14,7 @@ import servicesSearchConfig from '@/services/searchConfig';
 import SearchInput from '@/components/SearchInput';
 import IconFont from '@/components/IconFont';
 import TipModal from '@/components/TipModal';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import ConfigModal from '../ConfigModal';
 import { ERROR_CODE } from '../StrategyConfig';
 import { convertData, initConfig } from '../assistFunction';
@@ -310,7 +310,7 @@ const SavedConfig: React.ForwardRefRenderFunction<unknown, SavedConfigProps> = (
           overlayStyle={selfState.dropId !== conf_id ? { display: 'none' } : undefined}
           overlayClassName="saved-config-drop"
           getPopupContainer={triggerNode => triggerNode.parentElement!}
-          onVisibleChange={v => onDropChange(v, configItem)}
+          onOpenChange={v => onDropChange(v, configItem)}
         >
           <span className="ellipsis-btn">
             <EllipsisOutlined className="e-icon" />
@@ -336,7 +336,7 @@ const SavedConfig: React.ForwardRefRenderFunction<unknown, SavedConfigProps> = (
       </div>
 
       <div className="saved-config-scroll-wrap">
-        <ScrollBar isshowx="false">
+        <KwScrollBar isShowX={false}>
           <div className="config-list-box">
             <Collapse
               className="config-collapse"
@@ -405,7 +405,7 @@ const SavedConfig: React.ForwardRefRenderFunction<unknown, SavedConfigProps> = (
               <p className="desc">{intl.get('global.noResult')}</p>
             </div>
           </div>
-        </ScrollBar>
+        </KwScrollBar>
 
         {/* 加载loading */}
         <div className={`pane-loading ${selfState.maskLoading && 'spanning'} `}>
@@ -415,7 +415,7 @@ const SavedConfig: React.ForwardRefRenderFunction<unknown, SavedConfigProps> = (
 
       {/* 删除二次确认弹窗 */}
       <TipModal
-        visible={deleteInfo.visible}
+        open={deleteInfo.visible}
         closable={false}
         title={intl.get('searchConfig.delTip')}
         content={intl.get('searchConfig.delContent')}

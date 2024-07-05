@@ -24,7 +24,7 @@ const ModalFeedback = (props: ModalFeedbackType) => {
   const failMessage = message === undefined ? intl.get('license.operationFailed') : message;
   return (
     <Modal
-      visible={isVisible}
+      open={isVisible}
       width={460}
       footer={null}
       keyboard={false}

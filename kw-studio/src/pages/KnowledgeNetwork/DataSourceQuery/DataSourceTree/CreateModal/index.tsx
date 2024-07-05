@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import { Button, Form, Input, Select, message, Modal } from 'antd';
+import { Form, Input, Select, message } from 'antd';
 import { ExclamationCircleFilled, DownOutlined, RightOutlined, LoadingOutlined } from '@ant-design/icons';
 import apiService from '@/utils/axios-http/oldIndex';
-import TemplateModal from '@/components/TemplateModal';
 import UniversalModal from '@/components/UniversalModal';
 import servicesDataSource from '@/services/dataSource';
 import TrimmedInput from '@/components/TrimmedInput';
@@ -38,7 +37,7 @@ const CreateModal = (props: TypeCreateModal) => {
   const ipv6Reg =
     /^([\da-fA-F]{1,4}:){7}[\da-fA-F]{1,4}|:((:[\da−fA−F]1,4)1,6|:)|:((:[\da−fA−F]1,4)1,6|:)|^[\da-fA-F]{1,4}:((:[\da-fA-F]{1,4}){1,5}|:)|([\da−fA−F]1,4:)2((:[\da−fA−F]1,4)1,4|:)|([\da−fA−F]1,4:)2((:[\da−fA−F]1,4)1,4|:)|^([\da-fA-F]{1,4}:){3}((:[\da-fA-F]{1,4}){1,3}|:)|([\da−fA−F]1,4:)4((:[\da−fA−F]1,4)1,2|:)|([\da−fA−F]1,4:)4((:[\da−fA−F]1,4)1,2|:)|^([\da-fA-F]{1,4}:){5}:([\da-fA-F]{1,4})?|([\da−fA−F]1,4:)6:|([\da−fA−F]1,4:)6:/;
 
-  const onFormChange = (e: any) => {
+  const onFormChange = () => {
     if (!loading.save && !loading.test) return;
 
     Object.keys(apiService.sources).forEach(key => {
@@ -51,7 +50,7 @@ const CreateModal = (props: TypeCreateModal) => {
   /**
    * 选择源
    */
-  const onSourceSelect = (value: any, option: any) => {
+  const onSourceSelect = (value: any) => {
     if (value === 'odbc') {
       if (allOptions.length > 6) {
         setAllOptions(defaultOption);
@@ -170,7 +169,7 @@ const CreateModal = (props: TypeCreateModal) => {
           ERROR_CODE[ErrorCode] ? message.error(ERROR_CODE[ErrorCode]) : message.error(Description);
         } catch (err) {}
       })
-      .catch(err => {
+      .catch(() => {
         return false;
       });
   };
@@ -235,7 +234,7 @@ const CreateModal = (props: TypeCreateModal) => {
 
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       className="uploadSettingErrorModal"
       title={intl.get('domainData.addDataSource')}
       width={640}

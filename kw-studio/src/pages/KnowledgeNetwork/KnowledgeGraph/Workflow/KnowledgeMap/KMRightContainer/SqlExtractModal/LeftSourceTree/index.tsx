@@ -220,7 +220,6 @@ const LeftSourceTree = (props: any) => {
         });
       }
       if (_.isArray(res?.output)) {
-        // 表
         newNodes = _.map(res?.output, item => {
           return { title: item?.name || item, key: _.uniqueId(), type: SHEET, isLeaf: false, origin };
         });

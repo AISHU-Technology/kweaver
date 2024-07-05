@@ -18,8 +18,8 @@ export type TableState = {
   page: number;
   total: number;
   order: 'created' | 'updated' | string;
-  reverse: 0 | 1 | number; // 升序 | 降序
-  kId: number; // 过滤的知识网络,
+  reverse: 0 | 1 | number;
+  kId: number;
   finished?: any;
 };
 

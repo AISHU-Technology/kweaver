@@ -11,7 +11,7 @@ import './style.less';
 import SaveOntologyModal, { SaveOntoModalRef } from '../OntoFooter/SaveOntoModal';
 import servicesCreateEntity from '@/services/createEntity';
 import Format from '@/components/Format';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 
 const checkIcon = <CheckOutlined className="check-icon" />;
 

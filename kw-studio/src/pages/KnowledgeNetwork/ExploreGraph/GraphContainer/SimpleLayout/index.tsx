@@ -239,7 +239,7 @@ const SimpleLayout = (props: SimpleLayoutType) => {
               trigger={['click']}
               placement="bottomLeft"
               overlay={renderMenus(item)}
-              onVisibleChange={onVisibleChange}
+              onOpenChange={onVisibleChange}
             >
               <div
                 key={key}

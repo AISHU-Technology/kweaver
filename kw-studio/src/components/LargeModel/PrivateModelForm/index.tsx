@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { Form, Input } from 'antd';
 import { ONLY_KEYBOARD } from '@/enums';
@@ -8,8 +7,7 @@ export interface PrivateModelFormProps {
   defaultPrompt?: string;
 }
 
-const PrivateModelForm = (props: PrivateModelFormProps) => {
-  const { defaultPrompt } = props;
+const PrivateModelForm = () => {
   return (
     <>
       <Form.Item

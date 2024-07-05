@@ -1,12 +1,8 @@
-import React, { useMemo, useState } from 'react';
-import { Dropdown, Button, Table, Menu } from 'antd';
+import React, { useMemo } from 'react';
+import { Dropdown, Menu } from 'antd';
 import { EllipsisOutlined, LoadingOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import HOOKS from '@/hooks';
-import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
-import IconFont from '@/components/IconFont';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 
 import noResImg from '@/assets/images/noResult.svg';
@@ -15,22 +11,21 @@ import './style.less';
 import PaginationCommon from '@/components/PaginationCommon';
 import { languageOptions } from '@/pages/KnowledgeNetwork/Glossary/constants';
 import { useGlossaryStore } from '@/pages/KnowledgeNetwork/Glossary/GlossaryContext';
-import NoDataBox from '@/components/NoDataBox';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import Format from '@/components/Format';
 
 const GlossaryTable = (props: any) => {
   const { setGlossaryStore } = useGlossaryStore();
   const prefixLocale = 'glossary';
-  const { tableProps, pagination, knData } = props;
   const {
+    tableProps,
+    pagination,
     onRowChecked,
     onSortChange,
     openCreateModal,
     openDeleteModal,
     openDetailPage,
-    onChangePagination,
-    openAuthPage
+    onChangePagination
   } = props;
   const { count } = pagination;
   const prefixCls = 'glossary-table';
@@ -88,29 +83,18 @@ const GlossaryTable = (props: any) => {
       sortOrder: getSortOrder('name'),
       sortDirections: ['ascend', 'descend', 'ascend'],
       render: (text: string, record: any) => {
-        const disabled = !HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_GLOSSARY_VIEW,
-          userType: PERMISSION_KEYS.GLOSSARY_VIEW,
-          userTypeDepend: record?.__codes
-        });
         return (
           <div>
-            {disabled ? (
-              <div className="kw-ellipsis" title={text}>
-                {text}
-              </div>
-            ) : (
-              <div
-                className="kw-ellipsis kw-c-text-link kw-pointer"
-                title={text}
-                onClick={e => {
-                  e.stopPropagation();
-                  jumpDetailPage('view', record);
-                }}
-              >
-                {text}
-              </div>
-            )}
+            <div
+              className="kw-ellipsis kw-c-text-link kw-pointer"
+              title={text}
+              onClick={e => {
+                e.stopPropagation();
+                jumpDetailPage('view', record);
+              }}
+            >
+              {text}
+            </div>
 
             <div
               style={{ fontSize: 12 }}
@@ -138,64 +122,34 @@ const GlossaryTable = (props: any) => {
             trigger={['click']}
             overlay={
               <Menu>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_GLOSSARY_VIEW,
-                    userType: PERMISSION_KEYS.GLOSSARY_VIEW,
-                    userTypeDepend: record?.__codes
-                  })}
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    jumpDetailPage('view', record);
+                  }}
+                  key="view"
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      jumpDetailPage('view', record);
-                    }}
-                    key="view"
-                  >
-                    {intl.get('global.view')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_GLOSSARY_EDIT,
-                    userType: PERMISSION_KEYS.GLOSSARY_EDIT,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('global.view')}
+                </Menu.Item>
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    jumpDetailPage('edit', record);
+                  }}
+                  key="edit"
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      jumpDetailPage('edit', record);
-                    }}
-                    key="edit"
-                  >
-                    {intl.get('global.edit')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_GLOSSARY_DELETE,
-                    userType: PERMISSION_KEYS.GLOSSARY_DELETE,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('global.edit')}
+                </Menu.Item>
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    openDeleteModal([record]);
+                  }}
+                  key="delete"
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      openDeleteModal([record]);
-                    }}
-                    key="delete"
-                  >
-                    {intl.get('global.delete')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                {/* <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_GLOSSARY_MEMBER,
-                    userType: PERMISSION_KEYS.GLOSSARY_EDIT_PERMISSION,
-                    userTypeDepend: record?.__codes
-                  })}
-                >
+                  {intl.get('global.delete')}
+                </Menu.Item>
+                {/* 
                   <Menu.Item
                     onClick={({ domEvent }) => {
                       domEvent.stopPropagation();
@@ -205,7 +159,7 @@ const GlossaryTable = (props: any) => {
                   >
                     {intl.get('adminManagement.authorityManagement')}
                   </Menu.Item>
-                </ContainerIsVisible> */}
+                 */}
               </Menu>
             }
           >
@@ -275,7 +229,7 @@ const GlossaryTable = (props: any) => {
 
   return (
     <div className={prefixCls}>
-      <ADTable
+      <KwTable
         lastColWidth={170}
         showHeader={false}
         loading={
@@ -307,14 +261,7 @@ const GlossaryTable = (props: any) => {
         emptyImage={!tableProps.searchValue ? emptyImg : noResImg}
         emptyText={
           !tableProps.searchValue ? (
-            <ContainerIsVisible
-              placeholder={<div className="kw-c-text">{intl.get('global.noContent')}</div>}
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_GLOSSARY_CREATE,
-                userType: PERMISSION_KEYS.KN_ADD_GLOSSARY,
-                userTypeDepend: knData?.__codes
-              })}
-            >
+            <ContainerIsVisible placeholder={<div className="kw-c-text">{intl.get('global.noContent')}</div>}>
               <div>
                 {createTip[0]}
                 <span className="kw-c-primary kw-pointer" onClick={() => openCreateModal()}>

@@ -3,7 +3,7 @@ import { Dropdown, Select } from 'antd';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
 import IconFont from '@/components/IconFont';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
 
 import './style.less';
 
@@ -56,9 +56,9 @@ const ResourceDropdown: React.FC<ResourceDropdownType> = props => {
         <div className="kw-center" style={{ width: 20, height: 20 }}>
           {type === KNW ? (
             color ? (
-              <AdKnowledgeNetIcon type={color} />
+              <KwKNIcon type={color} />
             ) : (
-              <AdKnowledgeNetIcon type="icon-color-zswl8" />
+              <KwKNIcon type="icon-color-zswl8" />
             )
           ) : (
             <IconFont type="icon-color-zhishitupu11" style={{ fontSize: 16 }} />
@@ -147,10 +147,10 @@ const ResourceDropdown: React.FC<ResourceDropdownType> = props => {
     <div className="resourceDropdownRoot">
       <Dropdown
         overlay={resourceOptions}
-        visible={visible}
+        open={visible}
         trigger={['click']}
         getPopupContainer={e => e.parentElement!}
-        onVisibleChange={isOpen => setVisible(isOpen)}
+        onOpenChange={isOpen => setVisible(isOpen)}
       >
         <div className="kw-align-center">
           <span className="kw-ellipsis kw-mr-2" title={intl.get('cognitiveService.analysis.associated')}>

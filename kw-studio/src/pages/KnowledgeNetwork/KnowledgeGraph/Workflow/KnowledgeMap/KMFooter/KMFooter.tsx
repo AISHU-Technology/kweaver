@@ -9,7 +9,7 @@ import RunNowModal from './RunNowModal/RunNowModal';
 import { DS_SOURCE } from '@/enums';
 import ModalBranchTask from '@/components/ModalBranchTask';
 import { useHistory } from 'react-router-dom';
-import TimedTask from '@/components/timedTask';
+import TimedTask from '@/components/TimedTask';
 import serviceGraphDetail from '@/services/graphDetail';
 import { G6EdgeData, G6NodeData } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/types';
 
@@ -96,7 +96,7 @@ const KMFooter = forwardRef<KMButtonRefProps, KMButtonProps>(({ onPrev, onSave }
         graph_step: 'graph_KMap',
         graph_process: getGraphKMapParam()
       };
-      const res = await serviceWorkflow.graphEdit(knowledgeMapStore.graphId, params);
+      const res = await serviceWorkflow.graphEdit(knowledgeMapStore.graphId!, params);
       if (!res?.res) {
         // message.error(res.message);
         message.error({

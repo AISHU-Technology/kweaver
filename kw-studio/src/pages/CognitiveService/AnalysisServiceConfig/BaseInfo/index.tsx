@@ -8,7 +8,7 @@ import intl from 'react-intl-universal';
 import { Button, Select, ConfigProvider, Empty, message, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
-import { PERMISSION_KEYS, ANALYSIS_SERVICES, GRAPH_LAYOUT_PATTERN } from '@/enums';
+import { ANALYSIS_SERVICES, GRAPH_LAYOUT_PATTERN } from '@/enums';
 import serviceGraphDetail from '@/services/graphDetail';
 import servicesPermission from '@/services/rbacPermission';
 import cognitiveSearchService from '@/services/cognitiveSearch';
@@ -199,7 +199,6 @@ const BaseInfo = (props: BaseInfoProps) => {
   useEffect(() => {
     if (!basicData.knw_id || action === 'create') return;
     const dataIds = [String(basicData?.kg_id)];
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
     // servicesPermission.dataPermission(postData).then(result => {
     //   const codesData = _.keyBy(result?.res, 'dataId');
     //   const newGraphData = _.filter(graphList, item => _.includes(codesData?.[item.id]?.codes, 'KG_VIEW'));
@@ -209,7 +208,6 @@ const BaseInfo = (props: BaseInfoProps) => {
 
   useEffect(() => {
     const dataIds = _.map(graphList, item => String(item.id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
     // servicesPermission.dataPermission(postData).then(result => {
     //   const codesData = _.keyBy(result?.res, 'dataId');
     //   const newGraphData = _.filter(graphList, item => _.includes(codesData?.[item.id]?.codes, 'KG_VIEW'));
@@ -224,7 +222,6 @@ const BaseInfo = (props: BaseInfoProps) => {
       const params = { size: 1000, page: 1, rule: 'update', order: 'desc' };
       const { res = {} } = (await servicesKnowledgeNetwork.knowledgeNetGet(params)) || {};
       const dataIds = _.map(res?.df, item => String(item.id));
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds };
       // servicesPermission.dataPermission(postData).then(result => {
       //   const codesData = _.keyBy(result?.res, 'dataId');
       //   const authData = _.filter(res?.df, item => _.includes(codesData?.[item.id]?.codes, 'KN_VIEW'));

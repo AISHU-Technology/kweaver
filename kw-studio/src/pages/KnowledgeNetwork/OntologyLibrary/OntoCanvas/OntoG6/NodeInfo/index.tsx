@@ -2,7 +2,7 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle, useEffect } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import { Form, Input, Tabs, Popconfirm, message, Alert } from 'antd';
+import { Form, Input, Tabs, Popconfirm, message, Alert, InputRef } from 'antd';
 
 import IconFont from '@/components/IconFont';
 
@@ -125,7 +125,7 @@ const OntoNodeInfo: React.ForwardRefRenderFunction<NodeInfoRef, NodeInfoProps> =
   const StyleRef = useRef<EntityStyleRef>(null);
   const initNum = useRef(0);
 
-  const inputFirst = useRef<Input>(null);
+  const inputFirst = useRef<InputRef>(null);
 
   const [selTabKey, setSelTabKey] = useState('EntityClassDetail'); // 选择的tab键
 

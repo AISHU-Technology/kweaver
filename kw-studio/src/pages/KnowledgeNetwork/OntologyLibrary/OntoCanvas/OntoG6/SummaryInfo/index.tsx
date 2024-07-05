@@ -293,7 +293,7 @@ const OntoSummaryInfo = (props: SummaryInfoProps) => {
                 ontoLibType={ontoLibType}
               />
             ) : (
-              <NoDataBox.NO_CONTENT />
+              <NoDataBox type="NO_CONTENT" />
             )}
           </TabPane>
           <TabPane
@@ -326,7 +326,7 @@ const OntoSummaryInfo = (props: SummaryInfoProps) => {
                 ontoLibType={ontoLibType}
               />
             ) : (
-              <NoDataBox.NO_CONTENT />
+              <NoDataBox type="NO_CONTENT" />
             )}
           </TabPane>
         </Tabs>

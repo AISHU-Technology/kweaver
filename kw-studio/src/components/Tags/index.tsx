@@ -2,7 +2,7 @@ import React, { useEffect, memo, useRef, useState, useMemo } from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
 import intl from 'react-intl-universal';
-import { Tag, Dropdown, Input, message } from 'antd';
+import { Tag, Dropdown, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
 import IconFont from '@/components/IconFont';
@@ -16,7 +16,6 @@ export interface LabelsProps {
   onChange: (tag: Array<string>) => void;
 }
 
-// const TEST = /(^[\u4e00-\u9fa5_a-zA-Z0-9=~!@$&%^&()_+`'{}[\];,.~！@￥%…&· （）—+。={}【】：；‘’“”、《》？，]+$)|-/;
 const Tags = (props: LabelsProps) => {
   const { value, selectOption } = props;
   const { onChange } = props;
@@ -27,7 +26,6 @@ const Tags = (props: LabelsProps) => {
   const [dropVisible, setDropVisible] = useState(false);
   const inputRef = useRef<any>(null);
 
-  // 过滤下拉选项
   const filteredOptions = useMemo(() => {
     if (inputValue) {
       const options = _.filter(selectOption, o => !value?.includes(o));
@@ -87,7 +85,6 @@ const Tags = (props: LabelsProps) => {
     setInputValue(undefined);
   };
 
-  // 监听输入的变化
   const changeInputValue = (e: any) => {
     const _value = e.target.value;
     setDropVisible(true);
@@ -147,12 +144,12 @@ const Tags = (props: LabelsProps) => {
       {inputVisible && (
         <React.Fragment>
           <Dropdown
-            visible={dropVisible}
+            open={dropVisible}
             overlay={inputOptions}
             trigger={['click']}
-            placement="bottomCenter"
+            placement="bottom"
             getPopupContainer={triggerNode => triggerNode.parentElement!}
-            onVisibleChange={isOpen => {
+            onOpenChange={isOpen => {
               setDropVisible(isOpen);
               if (!isOpen) handleInputConfirm(null);
             }}

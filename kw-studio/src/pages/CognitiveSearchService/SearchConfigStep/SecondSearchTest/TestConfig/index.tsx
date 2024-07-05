@@ -277,7 +277,7 @@ const TestConfig = (props: any) => {
                   </div>
                 ) : (
                   <div className="no-complete-search">
-                    <NoDataBox.NO_RESULT />
+                    <NoDataBox type="NO_RESULT" />
                     {/* OPEN AI */}
                     {!kgqaResData?.openai_status && !_.isEmpty(kgqaResData) && (
                       <div className="sorry-tip">

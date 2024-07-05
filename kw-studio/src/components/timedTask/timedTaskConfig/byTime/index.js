@@ -14,7 +14,7 @@ import './style.less';
 
 class ByTime extends Component {
   state = {
-    selectTime: moment().add('1', 'H') // 默认时间为当前时间的后一个小时
+    selectTime: moment().add('1', 'H')
   };
 
   componentDidMount() {

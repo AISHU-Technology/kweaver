@@ -7,8 +7,8 @@ const getBrowserLanguage = () => {
     'zh-cn': 'zh-CN',
     en: 'en-US',
     'en-us': 'en-US',
-    'zh-tw': 'zh-TW', // 繁体中文(台湾)
-    'zh-hk': 'zh-TW' // 繁体中文(香港)
+    'zh-tw': 'zh-TW',
+    'zh-hk': 'zh-TW'
   };
   return keyMap[window.navigator.language.toLocaleLowerCase()];
 };
@@ -22,6 +22,6 @@ export default function useCardLanguage(props: any) {
   const { language: propsLanguage } = props;
   const urlLanguage = getParam('language');
   const ADLanguage = HOOKS.useLanguage();
-  const browserLanguage = getBrowserLanguage(); // 浏览器语言不等于用户设备系统语言
+  const browserLanguage = getBrowserLanguage();
   return propsLanguage || urlLanguage || ADLanguage || browserLanguage || 'zh-CN';
 }

@@ -55,7 +55,6 @@ type GraphG6Type = {
   onOpenRightDrawer: (key: string) => void;
   onCloseRightDrawer: (key: string) => void;
 };
-const isIframe = () => window.location.pathname.includes('iframe');
 const GraphG6 = (props: GraphG6Type) => {
   const {
     configMenu,
@@ -79,7 +78,7 @@ const GraphG6 = (props: GraphG6Type) => {
   // 挂载, 把权限挂载到graph上
   if (graph.current) {
     graph.current.__hideTip = !!menuConfig;
-    graph.current.__authorKgView = isIframe() ? true : selectedItem?.detail?.authorKgView;
+    graph.current.__authorKgView = selectedItem?.detail?.authorKgView;
   }
 
   /** 挂载属性和方法 */

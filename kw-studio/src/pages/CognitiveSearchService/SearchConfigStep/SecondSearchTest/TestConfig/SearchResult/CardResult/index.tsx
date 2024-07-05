@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import _ from 'lodash';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import useComponents from '@/components/KnowledgeCard/useComponents';
 import './style.less';
 
@@ -31,9 +31,9 @@ const CardResult = (props: CardResultProps) => {
   const prefix = 'kg-search-card-res';
   return (
     <div className={classNames(className, 'kg-search-card-res kw-h-100', { [`${prefix}-lg`]: size === 'large' })}>
-      <ScrollBar isshowx="false">
+      <KwScrollBar isShowX={false}>
         <div className="card-component-wrap">{_.map(knowledgeCardComponent.source, c => c.dom)}</div>
-      </ScrollBar>
+      </KwScrollBar>
     </div>
   );
 };

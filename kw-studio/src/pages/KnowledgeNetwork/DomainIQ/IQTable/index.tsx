@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Table, Button, Dropdown, Menu, message } from 'antd';
+import { Dropdown, Menu, message } from 'antd';
 import type { TableProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table/interface';
 import { LoadingOutlined, ArrowDownOutlined, EllipsisOutlined } from '@ant-design/icons';
@@ -7,14 +7,12 @@ import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
 import HOOKS from '@/hooks';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
-import { CALCULATE_STATUS, PERMISSION_CODES, GRAPH_DB_TYPE, PERMISSION_KEYS } from '@/enums';
-import HELPER from '@/utils/helper';
+import { CALCULATE_STATUS } from '@/enums';
 import { formatID, formatIQNumber, sessionStore } from '@/utils/handleFunction';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
 import SearchInput from '@/components/SearchInput';
 import ExplainTip from '@/components/ExplainTip';
-import ContainerIsVisible from '@/components/ContainerIsVisible';
 import UploadRecordModal from '@/components/UploadRecordModal';
 import UploadKnowledgeModal from '@/components/UploadKnowledgeModal';
 
@@ -22,7 +20,7 @@ import { ListItem, TableState, RecordOperation, KgInfo } from '../types';
 import noResImg from '@/assets/images/noResult.svg';
 import emptyImg from '@/assets/images/empty.svg';
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import serviceGraphDetail from '@/services/graphDetail';
 
 const PAGE_SIZE = 10;
@@ -274,7 +272,7 @@ const IQTable: React.FC<QTableProps> = ({ kgInfo, data, tableState, knData, onCh
       title: (
         <>
           {intl.get('intelligence.knwSource')}
-          <ExplainTip.KNW_SOURCE />
+          <ExplainTip type="KNW_SOURCE" />
         </>
       ),
       dataIndex: 'data_quality_B',
@@ -288,7 +286,7 @@ const IQTable: React.FC<QTableProps> = ({ kgInfo, data, tableState, knData, onCh
       title: (
         <>
           {intl.get('intelligence.qualitySource')}
-          <ExplainTip.QUALITY_SOURCE />
+          <ExplainTip type="QUALITY_SOURCE" />
         </>
       ),
       dataIndex: 'data_quality_score',
@@ -317,12 +315,7 @@ const IQTable: React.FC<QTableProps> = ({ kgInfo, data, tableState, knData, onCh
             <ContainerIsVisible
               isVisible={
                 knData?.__isCreator
-                  ? true
-                  : HELPER.getAuthorByUserInfo({
-                      roleType: PERMISSION_CODES.ADF_KN_KG_CREATE_IMPORT,
-                      userType: PERMISSION_KEYS.KG_UPLOAD,
-                      userTypeDepend: knData?.__codes
-                    })
+                  
               }
             >
               <Button className="kw-mr-2" type="primary" onClick={onUpload}>
@@ -339,16 +332,10 @@ const IQTable: React.FC<QTableProps> = ({ kgInfo, data, tableState, knData, onCh
           <SearchInput ref={inputRef} placeholder={intl.get('knowledge.search')} onPressEnter={onSearch} />
           {/* 上传管理屏蔽掉 */}
           {/* {uploadable?.ad_graph_db_type === GRAPH_DB_TYPE?.NEBULA && (
-            <ContainerIsVisible
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_UPLOAD_RECORD
-              })}
-            >
               <Button className="kw-ml-3 kw-pl-4 kw-pr-4"
               icon={<IconFont type="icon-fabu" />} onClick={onViewRecords}>
                 {intl.get('uploadService.uploadManage')}
               </Button>
-            </ContainerIsVisible>
           )} */}
           <Dropdown
             placement="bottomLeft"
@@ -378,7 +365,7 @@ const IQTable: React.FC<QTableProps> = ({ kgInfo, data, tableState, knData, onCh
         </div>
       </div>
       <div className="main-table">
-        <ADTable
+        <KwTable
           showHeader={false}
           lastColWidth={170}
           dataSource={data}

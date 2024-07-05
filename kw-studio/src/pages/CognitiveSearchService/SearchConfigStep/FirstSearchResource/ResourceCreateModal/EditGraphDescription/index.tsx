@@ -78,7 +78,7 @@ const EditGraphDescription = (props: any) => {
   return (
     <UniversalModal
       width={480}
-      visible={visible}
+      open={visible}
       title={intl.get('cognitiveSearch.resource.editResource')}
       destroyOnClose={true}
       maskClosable={false}

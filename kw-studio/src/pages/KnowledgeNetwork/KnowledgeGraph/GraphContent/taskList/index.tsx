@@ -9,13 +9,12 @@ import { connect } from 'react-redux';
 
 import HOOKS from '@/hooks';
 import serviceTaskManagement from '@/services/taskManagement';
-import serviceLicense from '@/services/license';
 import TipModal from '@/components/TipModal';
 import IconFont from '@/components/IconFont';
 import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES, GRAPH_DB_TYPE } from '@/enums';
+import { GRAPH_DB_TYPE } from '@/enums';
 import { getParam } from '@/utils/handleFunction';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import ErrorModal from './errorModal';
 import DeleteModal from './deleteModal';
 import ScheduleModal from './scheduleModal';
@@ -29,7 +28,7 @@ import './style.less';
 import Format from '@/components/Format';
 import { ad_onChangeGraphStatus } from '@/reduxConfig/action/knowledgeGraph';
 import TaskDetailModal from './TaskDetailModal/TaskDetailModal';
-import AdResizeObserver from '@/components/AdResizeObserver/AdResizeObserver';
+import KwResizeObserver from '@/components/KwResizeObserver';
 
 const { Option } = Select;
 const pageSize = 20;
@@ -270,32 +269,11 @@ const TaskList = forwardRef((props: any, ref: any) => {
   };
 
   /**
-   * 获取知识量
-   */
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res && res !== undefined) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          message.warning(intl.get('license.remaining'));
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || {};
-      Description && message.error(Description);
-    }
-  };
-
-  /**
    * 立即运行
    * @param id 图谱id
    * @param type rabbitmq 不弹弹窗直接传入 full 全量更新
    */
   const handleRunNow = async (id: any, type: string) => {
-    onCalculate();
     if (runSingal) return;
     const runBtn = document.getElementsByClassName('runBg')?.[0] as any;
     runBtn && (runBtn.focus = false);
@@ -394,13 +372,6 @@ const TaskList = forwardRef((props: any, ref: any) => {
                 {(record.task_status === 'running' || record.task_status === 'waiting') && (
                   <Menu.Item
                     key="termination"
-                    disabled={
-                      !HELPER.getAuthorByUserInfo({
-                        roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-                        userType: PERMISSION_KEYS.KG_EDIT,
-                        userTypeDepend: selectedGraph?.__codes
-                      })
-                    }
                     onClick={({ domEvent }) => {
                       domEvent.stopPropagation();
                       handleStop('one', record?.task_id);
@@ -429,13 +400,6 @@ const TaskList = forwardRef((props: any, ref: any) => {
 
                 <Menu.Item
                   key="delete"
-                  disabled={
-                    !HELPER.getAuthorByUserInfo({
-                      roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-                      userType: PERMISSION_KEYS.KG_EDIT,
-                      userTypeDepend: selectedGraph?.__codes
-                    })
-                  }
                   onClick={({ domEvent }) => {
                     domEvent.stopPropagation();
                     clickDelete(record);
@@ -637,9 +601,9 @@ const TaskList = forwardRef((props: any, ref: any) => {
   }, 300);
 
   return (
-    <AdResizeObserver onResize={onResize}>
+    <KwResizeObserver onResize={onResize}>
       <div className="new-task-list-box kw-flex-item-full-height">
-        <ADTable
+        <KwTable
           showFilter={true}
           showSearch={false}
           filterToolsOptions={[
@@ -700,13 +664,6 @@ const TaskList = forwardRef((props: any, ref: any) => {
               position: 'left',
               itemDom: (
                 <RunButton
-                  disabled={
-                    !HELPER.getAuthorByUserInfo({
-                      roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-                      userType: PERMISSION_KEYS.KG_EDIT,
-                      userTypeDepend: selectedGraph?.__codes
-                    })
-                  }
                   handleRunNow={handleRunNow}
                   selectedGraph={selectedGraph}
                   isRunning={isRunning()}
@@ -783,7 +740,7 @@ const TaskList = forwardRef((props: any, ref: any) => {
         />
         {/* 终止任务弹窗 */}
         <TipModal
-          visible={stopModal}
+          open={stopModal}
           closable={false}
           title={stopNum === 'one' ? intl.get('task.stopTask') : intl.get('task.stopAllTask')}
           content={intl.get('task.stoTaskText')}
@@ -794,7 +751,7 @@ const TaskList = forwardRef((props: any, ref: any) => {
           <TaskDetailModal taskData={taskDetailModalProps.taskData} closeTaskDetailModal={closeTaskDetailModal} />
         )}
       </div>
-    </AdResizeObserver>
+    </KwResizeObserver>
   );
 });
 

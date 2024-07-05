@@ -3,7 +3,6 @@ import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { Select, message } from 'antd';
 
-import { PERMISSION_KEYS } from '@/enums';
 import serviceModelLibrary from '@/services/modelLibrary';
 import servicesPermission from '@/services/rbacPermission';
 

@@ -248,7 +248,7 @@ const EntitySelector = (props: EntitySelectorProps) => {
       overlayStyle={{ width: selectorDOM?.clientWidth }}
       trigger={['click']}
       // visible
-      visible={visible}
+      open={visible}
       overlay={
         <div className="dropdown-content" onMouseDown={onPreventMouseDown}>
           <div

@@ -4,7 +4,6 @@
 */
 
 /****************************** 根据变量统一样式 ******************************/
-// 统一字体颜色
 .ant-input,
 .ant-select,
 .ant-tabs,
@@ -22,7 +21,6 @@
   color: var(--kw-text-color);
 }
 
-// primary 禁用
 .ant-btn-primary[disabled],
 .ant-btn-primary[disabled]:focus,
 .ant-btn-primary[disabled]:hover {
@@ -32,7 +30,6 @@
   opacity: 0.45;
 }
 
-// 统一圆角
 .ant-btn,
 .ant-input,
 .ant-input-affix-wrapper,
@@ -42,7 +39,6 @@
 }
 
 /****************************** button按钮 ******************************/
-// 约束宽度和padding
 button.ant-btn {
   min-width: 72px;
   padding: 4px 12px;
@@ -60,7 +56,6 @@ button.ant-btn-lg {
   font-size: 14px;
 }
 
-// 定制button, default 类型
 .ant-btn-default {
 
   &:focus,
@@ -71,7 +66,6 @@ button.ant-btn-lg {
   }
 }
 
-// 定制button, default 类型
 .ant-btn-default {
   &:hover {
     background-color: var(--kw-hover-bg-color);
@@ -97,13 +91,11 @@ button.ant-btn-lg {
 }
 
 /****************************** input输入框 ******************************/
-// input禁用字体颜色, 保持主文本色
 .ant-input[disabled],
 .ant-input-number-disabled {
   color: var(--kw-text-color);
 }
 
-// 去除阴影
 .ant-input:focus,
 .ant-input-focused,
 .ant-input-affix-wrapper-focused,
@@ -133,28 +125,23 @@ textarea.ant-input {
 }
 
 /****************************** select下拉框 ******************************/
-// 取消阴影
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
   box-shadow: none !important;
 }
 
-// 禁用字体颜色, 保持主文本色
 .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
   color: var(--kw-text-color);
 }
 
-// 选中的背景颜色
 .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
   background-color: var(--kw-select-bg-color);
 }
 
-// 悬停时出现滚动条
 .ant-select-tree-list:hover .ant-select-tree-list-scrollbar-show,
 .ant-tree-list:hover .ant-tree-list-scrollbar-show {
   display: block !important;
 }
 
-// 滚动条颜色
 .ant-tree-list-scrollbar-thumb {
   background: #b8b8b8 !important;
 }
@@ -163,7 +150,6 @@ textarea.ant-input {
   display: block !important;
 }
 
-// antd@4.16.7 兼容性bug, 多选框padding-inline、margin-inline在edge浏览器不生效
 .ant-select-multiple .ant-select-selection-item {
   -webkit-margin-end: 0;
   margin-inline-end: 0;
@@ -204,7 +190,6 @@ textarea.ant-input {
 /****************************** pagination分页器 ******************************/
 .ant-pagination {
 
-  //每一页
   .ant-pagination-item {
     &:not(.ant-pagination-item-active):hover {
       border-color: var(--kw-primary-color);
@@ -215,7 +200,6 @@ textarea.ant-input {
     }
   }
 
-  // 上下页
   .ant-pagination-prev,
   .ant-pagination-next {
     &:not(.ant-pagination-disabled) {
@@ -235,7 +219,6 @@ textarea.ant-input {
     }
   }
 
-  // 显示下几页
   .ant-pagination-jump-prev,
   .ant-pagination-jump-next {
     .ant-pagination-item-container {

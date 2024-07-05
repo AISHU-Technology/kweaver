@@ -21,8 +21,8 @@ const ColorDropDown = (props: IconDropdownProps) => {
   return (
     <Dropdown
       trigger={['click']}
-      visible={visible}
-      onVisibleChange={v => !disabled && setVisible(v)}
+      open={visible}
+      onOpenChange={v => !disabled && setVisible(v)}
       overlay={
         <div className="knw-card-color-pick-overlay kw-p-3" style={{ width: 350 }}>
           <ColorSelect value={color} onChangeColor={onChange} />

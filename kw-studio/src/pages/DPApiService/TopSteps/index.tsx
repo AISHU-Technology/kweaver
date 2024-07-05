@@ -7,7 +7,7 @@ import { Button } from 'antd';
 import { CheckOutlined, LeftOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
-import AdSteps from '@/components/AdSteps';
+import KwSteps from '@/components/KwSteps';
 
 import HOOKS from '@/hooks';
 import './style.less';
@@ -41,7 +41,7 @@ const TopSteps = (props: TopStepsProps) => {
         </div>
       </div>
       <div className="kw-flex-item-full-width kw-center kw-pr-5" style={{ marginRight: 294 }}>
-        <AdSteps items={titleList} current={step} />
+        <KwSteps items={titleList} current={step} />
       </div>
     </div>
   );

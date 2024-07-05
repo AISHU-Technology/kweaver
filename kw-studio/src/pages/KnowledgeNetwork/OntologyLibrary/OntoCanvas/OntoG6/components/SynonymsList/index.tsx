@@ -2,7 +2,7 @@
  * 同义词列表组件
  */
 import React, { forwardRef, useImperativeHandle, useRef, useEffect } from 'react';
-import { Input } from 'antd';
+import { Input, InputRef } from 'antd';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import _ from 'lodash';
@@ -61,7 +61,7 @@ export interface SynonymsListProps {
 const SynonymsList = (props: SynonymsListProps, ref: any) => {
   const { className, style, type = 'node', data, readOnly, onChange } = props;
 
-  const inputFirst = useRef<Input>(null);
+  const inputFirst = useRef<InputRef>(null);
 
   useImperativeHandle(ref, () => ({
     /**

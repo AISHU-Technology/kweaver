@@ -45,7 +45,7 @@ const TestSModel = (props: any) => {
       if (!intentpoolId) return message.error(intl.get('cognitiveSearch.qaAdvConfig.noIntentError'));
       // 先加载模型
       if (loadError) await loadModel();
-      const query_text = inputRef?.current?.state?.value;
+      const query_text = inputRef?.current?.input?.value;
       const body = { query_text, intentpool_id: intentpoolId };
       setLoading(true);
       setResult('');
@@ -93,9 +93,9 @@ const TestSModel = (props: any) => {
         ) : (
           <div className="no-query-box kw-center">
             <div>
-              <img src={inputRef?.current?.state?.value ? noResImg : configChange} alt="" />
+              <img src={inputRef?.current?.input?.value ? noResImg : configChange} alt="" />
               <div style={{ width: 152, textAlign: 'center' }}>
-                {inputRef?.current?.state?.value
+                {inputRef?.current?.input?.value
                   ? intl.get('global.noResult')
                   : intl.get('cognitiveSearch.qaAdvConfig.enterQuery')}
               </div>

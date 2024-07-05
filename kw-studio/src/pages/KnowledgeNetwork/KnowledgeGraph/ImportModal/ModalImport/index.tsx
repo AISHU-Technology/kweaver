@@ -1,18 +1,13 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import UniversalModal from '@/components/UniversalModal';
-
-import serviceLicense from '@/services/license';
 
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import { getParam } from '@/utils/handleFunction';
-import { PERMISSION_KEYS } from '@/enums';
-import servicesPermission from '@/services/rbacPermission';
 
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 
-import { Form, Upload, Input, message, Tooltip, Radio, Select, Spin } from 'antd';
+import { Form, Upload, Input, Tooltip, Radio, Select, Spin } from 'antd';
 import { FolderOpenOutlined, LoadingOutlined } from '@ant-design/icons';
 
 import IconFont from '@/components/IconFont';
@@ -32,7 +27,6 @@ const ModalImport = forwardRef((props: any, ref) => {
     setModalFeedbackData,
     fileData,
     setFileData,
-    btnContent,
     setBtnContent,
     fileReName,
     setFileReName,
@@ -70,22 +64,6 @@ const ModalImport = forwardRef((props: any, ref) => {
       setLoading(true);
       const { res } = (await servicesKnowledgeNetwork.graphGetByKnw(data)) || {};
       if (res) {
-        const dataIds = _.map(res?.df, item => String(item?.id));
-        const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
-        // servicesPermission
-        //   .dataPermission(postData)
-        //   .then((result: any) => {
-        //     const codesData = _.keyBy(result?.res, 'dataId');
-        //     const newGraphData = _.filter(
-        //       res?.df,
-        //       item =>
-        //         _.includes(codesData?.[item.id]?.codes, 'KG_EDIT') && !['running', 'waiting'].includes(item?.taskstatus)
-        //     );
-        //     setGraphList(newGraphData);
-        //   })
-        //   .finally(() => {
-        //     setLoading(false);
-        //   });
         setLoading(false);
         setGraphList(res?.df);
       }
@@ -169,30 +147,9 @@ const ModalImport = forwardRef((props: any, ref) => {
   };
 
   /**
-   * 获取知识量
-   */
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          message.warning(intl.get('license.remaining'));
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || error?.data || error || {};
-      Description && message.error(Description);
-    }
-  };
-
-  /**
    * 提交导入数据
    */
   const onSubmit = () => {
-    onCalculate();
     form
       .validateFields()
       .then(async (values: any) => {

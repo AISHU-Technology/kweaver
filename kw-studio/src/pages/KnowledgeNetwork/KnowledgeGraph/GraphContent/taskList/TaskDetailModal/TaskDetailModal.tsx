@@ -3,7 +3,7 @@ import './style.less';
 import { SplitBox } from '@antv/x6-react-components';
 import '@antv/x6-react-components/es/split-box/style/index.css';
 import UniversalModal from '@/components/UniversalModal';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import Format from '@/components/Format';
@@ -12,7 +12,7 @@ import { Dropdown, Menu, Form, Select, message } from 'antd';
 import serviceTaskManagement from '@/services/taskManagement';
 import _ from 'lodash';
 import FileIcon from '@/components/FileIcon';
-import AdReactG6, { AdBackEndOntologyDataProps } from '@/components/AdReactG6';
+import KwReactG6, { KwBackEndOntologyDataProps } from '@/components/KwReactG6';
 import { getParam } from '@/utils/handleFunction';
 import serviceGraphDetail from '@/services/graphDetail';
 import { EXTRACT_TYPE } from '@/enums';
@@ -49,7 +49,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ closeTaskDetailModal,
     minSize: 0,
     maxSize: 0
   });
-  const [ontoData, setOntoData] = useState<AdBackEndOntologyDataProps>({ entity: [], edge: [] });
+  const [ontoData, setOntoData] = useState<KwBackEndOntologyDataProps>({ entity: [], edge: [] });
   const [errorModal, setErrorModal] = useState({ visible: false, error: '' });
   const graphId = useMemo(() => getParam('graphId'), []);
   const [multipleFileModal, setMultipleFileModal] = useState({ visible: false, data: null });
@@ -335,7 +335,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ closeTaskDetailModal,
   };
 
   return (
-    <UniversalModal fullScreen title={intl.get('task.taskDetail')} visible onCancel={closeTaskDetailModal}>
+    <UniversalModal fullScreen title={intl.get('task.taskDetail')} open onCancel={closeTaskDetailModal}>
       <div className="TaskDetail kw-w-100 kw-h-100 kw-flex">
         <span className="TaskDetail-count">
           {collapseStatistic ? (
@@ -364,7 +364,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ closeTaskDetailModal,
           maxSize={sizeState.maxSize}
           onResizeEnd={onResizeEnd}
         >
-          <AdReactG6 data={ontoData} />
+          <KwReactG6 data={ontoData} />
           <div className="TaskDetail-table">
             <div className="kw-space-between kw-mb-4">
               <span style={{ fontWeight: 600 }}>{taskData.task_name}</span>
@@ -449,7 +449,7 @@ const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ closeTaskDetailModal,
                 </FormItem>
               </Form>
             </div>
-            <ADTable
+            <KwTable
               scroll={{ y: tableProps.dataSource.length === 0 ? undefined : tableProps.scrollY }}
               lastColWidth={170}
               showHeader={false}

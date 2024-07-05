@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { Divider } from 'antd';
 import intl from 'react-intl-universal';
-import CHeader from '@/components/Header';
+import KwHeader from '@/components/KwHeader';
 import IconFont from '@/components/IconFont';
 
 export interface TopHeaderProps {
@@ -26,7 +26,7 @@ const TopHeader = (props: TopHeaderProps) => {
     )
   };
 
-  return <CHeader breadcrumb={breadcrumb} onClickLogo={() => setKnwStudio('studio')} />;
+  return <KwHeader breadcrumb={breadcrumb} onClickLogo={() => setKnwStudio('studio')} />;
 };
 
 export default TopHeader;

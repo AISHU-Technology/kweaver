@@ -61,7 +61,7 @@ const QuoteModal = (props: QuoteModalProps) => {
       className="function-quote-modal"
       title={intl.get('function.referenceBtn')}
       width={1000}
-      visible={visible}
+      open={visible}
       // visible
       onOk={handleOk}
       onCancel={onCancel}

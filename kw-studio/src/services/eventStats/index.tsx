@@ -1,5 +1,4 @@
 import studioAxios from '@/utils/axios-http/studioAxios';
-
 import { API } from '../api';
 
 /**
@@ -100,8 +99,8 @@ const deleteDict = async (data: deleteDictDataType) => {
  * @param size 每页显示数
  */
 export type getDictListItemDataType = {
-  fieldType: number; // 前端固定传1（字典id：1，字典类型：2）
-  fieldValue: string; // 前端固定传字典id（与fieldType匹配，字典id/字典类型）
+  fieldType: number;
+  fieldValue: string;
   key?: string;
   page: number;
   size: number;
@@ -246,14 +245,14 @@ export type addMenuDataType = {
   cName: string;
   eName: string;
   code: string;
-  icon: string;
-  selectedIcon: string;
-  path: string;
-  component: string;
+  icon?: string;
+  selectedIcon?: string;
+  path?: string;
+  component?: string;
   menuType: number;
-  pid: string;
-  sortOrder: number;
-  visible: number;
+  pid?: string;
+  sortOrder?: number;
+  visible?: number;
 };
 /**
  * 添加菜单入参
@@ -281,14 +280,14 @@ export type updateMenuDataType = {
   id: string;
   cName: string;
   eName: string;
-  icon: string;
-  selectedIcon: string;
-  path: string;
-  component: string;
+  icon?: string;
+  selectedIcon?: string;
+  path?: string;
+  component?: string;
   menuType: number;
-  pid: string;
-  sortOrder: number;
-  visible: number;
+  pid?: string;
+  sortOrder?: number;
+  visible?: number;
 };
 /**
  * 更新菜单入参

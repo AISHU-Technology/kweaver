@@ -245,7 +245,7 @@ const OperateModal = (props: OperateModalProps) => {
       <UniversalModal
         className={classNames(className, 'llm-operate-modal-root')}
         title={renderTitle()}
-        visible={visible}
+        open={visible}
         onCancel={onCancel}
         footerData={
           action === 'check' ? null : (

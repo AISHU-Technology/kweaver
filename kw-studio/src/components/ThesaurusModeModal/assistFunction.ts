@@ -1,5 +1,3 @@
-import { getParam } from '@/utils/handleFunction';
-import THESAURUS_TEXT from '@/enums/thesaurus_mode';
 import _ from 'lodash';
 
 /**
@@ -14,7 +12,6 @@ export const onFormatTableData = (tableData: any, thesaurusTableData: any, mode:
     }
   };
   let lexiconResult: any = [];
-  // 选择模板为分词时才传lexicon参数
   if (mode === 'custom') {
     lexiconResult = onHandleLexicon(thesaurusTableData);
     result.extract_info.lexicon = lexiconResult;
@@ -37,7 +34,6 @@ const onHandleGraphData = (data: any, mode: any) => {
     {}
   );
 
-  // 模板为近义词(std)时，prop第一个值为标准词，对应separator第一个值为空
   let reduceGraphData: any = {};
   if (mode === 'std') {
     reduceGraphData = _.reduce(

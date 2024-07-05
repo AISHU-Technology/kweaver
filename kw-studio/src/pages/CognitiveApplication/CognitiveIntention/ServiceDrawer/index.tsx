@@ -26,7 +26,7 @@ function ServiceDrawer(props: ServiceDrawerType) {
 
   return (
     <Drawer
-      visible={isDrawer}
+      open={isDrawer}
       closable={false}
       className="service-drawer"
       title={

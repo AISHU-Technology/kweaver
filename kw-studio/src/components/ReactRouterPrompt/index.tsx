@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import _ from 'lodash';
 import { Prompt, useHistory } from 'react-router-dom';
 import { Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';

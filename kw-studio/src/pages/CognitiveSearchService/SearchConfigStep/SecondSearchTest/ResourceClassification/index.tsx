@@ -2,7 +2,6 @@ import React, { useState, useReducer, useEffect, useRef } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import servicesPermission from '@/services/rbacPermission';
-import { PERMISSION_KEYS } from '@/enums';
 import LeftSourceTree from './LeftSourceTree';
 import IconFont from '@/components/IconFont';
 import fileGraph from '@/assets/images/fileGraph.svg';
@@ -53,7 +52,6 @@ const ResourceClassification = (props: any) => {
   useEffect(() => {
     // 资源分类弹窗校验权限;
     const dataIds = _.map(testData?.props?.data_source_scope, item => String(item.kg_id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
     let error = false;
     // servicesPermission.dataPermission(postData).then(result => {
     //   const codesData = _.keyBy(result?.res, 'dataId');

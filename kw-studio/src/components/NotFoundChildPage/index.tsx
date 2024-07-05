@@ -1,7 +1,6 @@
 /**
  * 模块内子页面路由404页面
  */
-
 import React from 'react';
 import intl from 'react-intl-universal';
 import NotFoundImg from '@/assets/images/404.svg';

@@ -66,7 +66,7 @@ const EditConfigModal = (props: any) => {
       width={480}
       className="add-canvas-config-modal"
       title={action === 'edit' ? intl.get('global.edit') : intl.get('analysisService.changeEvt')}
-      visible={visible}
+      open={visible}
       onOk={handleOk}
       onCancel={onCancel}
       footerData={[

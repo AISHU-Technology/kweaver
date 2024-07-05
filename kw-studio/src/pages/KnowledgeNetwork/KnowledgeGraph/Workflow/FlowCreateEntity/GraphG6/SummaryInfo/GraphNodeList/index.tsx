@@ -164,7 +164,7 @@ const GraphNodeList: React.ForwardRefRenderFunction<ListRef, GraphNodeListProps>
             showSizeChanger={false}
           />
 
-          {!data.length && <NoDataBox.NO_RESULT />}
+          {!data.length && <NoDataBox type="NO_RESULT" />}
         </div>
       </div>
     </div>

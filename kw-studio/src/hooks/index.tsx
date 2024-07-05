@@ -13,7 +13,6 @@ import useDeepCompareEffect from './useDeepCompareEffect';
 import useLatestState from './useLatestState';
 import useSafeState from './useSafeState';
 import useImmerState from './useImmerState';
-import { usePermission } from './usePermission';
 import useAdHistory from './useAdHistory';
 import useRouteCache from './useRouteCache/index';
 
@@ -33,7 +32,6 @@ const HOOKS = {
   useLatestState,
   useSafeState,
   useImmerState,
-  usePermission,
   useAdHistory,
   useRouteCache
 };

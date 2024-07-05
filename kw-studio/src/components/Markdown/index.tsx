@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it';
 import mdKatex from '@traptitech/markdown-it-katex';
 import mdLink from 'markdown-it-link-attributes';
 import highlightJS from 'highlight.js';
-import './highlight.less';
+import './style.less';
 
 import React, { useEffect, useRef, useState, memo } from 'react';
 import classNames from 'classnames';

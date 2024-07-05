@@ -1,7 +1,6 @@
 import React from 'react';
-import _ from 'lodash';
 import intl from 'react-intl-universal';
-import { Form, Input, Divider, Tooltip } from 'antd';
+import { Form, Input, Tooltip } from 'antd';
 
 import IconFont from '@/components/IconFont';
 import { ONLY_KEYBOARD } from '@/enums';
@@ -15,7 +14,7 @@ export interface OpenAIFormProps {
 }
 
 const OpenAIForm = (props: OpenAIFormProps) => {
-  const { isVersionEndPoint, defaultPrompt, onInputChange } = props;
+  const { isVersionEndPoint, onInputChange } = props;
   return (
     <div className="first-step-openai-model-root">
       <div className="kw-flex">

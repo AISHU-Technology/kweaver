@@ -1,8 +1,6 @@
-// Fonts
 @kw-font: PingFangSC-Regular, 'PingFang SC', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Helvetica,
   Arial, 'Hiragino Sans GB', 'Source Han Sans', 'Noto Sans CJK Sc', 'Microsoft YaHei', 'Microsoft Jhenghei', sans-serif;
 
-// Clear browser default styles
 html,
 body,
 h1,
@@ -184,7 +182,6 @@ body {
   font-size: 14px;
 }
 
-// Hide scroll bar
 .hidden-scroll {
   overflow: hidden;
 }
@@ -224,26 +221,22 @@ button[ant-click-animating-without-extra-node]:after {
   background-color: var(--kw-primary-color);
 }
 
-// Create new text label
 .create-span {
   cursor: pointer;
   color: var(--kw-link-color);
   user-select: none;
 }
 
-// Single line text omitted
 .ellipsis-one {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-// Virtual scroll bar color style
 .rc-virtual-list .rc-virtual-list-scrollbar-thumb {
   background: rgb(184, 184, 184) !important;
 }
 
-// Analysis report pop-up window
 .modal-multlist-anlys {
   height: calc(100% - 40px);
   margin: -80px auto 0 auto !important;
@@ -282,9 +275,7 @@ button[ant-click-animating-without-extra-node]:after {
   }
 }
 
-// Controlled pager for large data volumes
 .controlled-pagination {
-  // Hide last page number when searching
   &.infinite {
     .ant-pagination-jump-next + .ant-pagination-item {
       display: none;
@@ -300,7 +291,6 @@ button[ant-click-animating-without-extra-node]:after {
   }
 }
 
-// Pop-up window title
 .ant-modal-title {
   color: var(--kw-heading-color);
   font-weight: 600;

@@ -9,7 +9,7 @@ import intl from 'react-intl-universal';
 import _ from 'lodash';
 
 import './style.less';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
 import ExplainTip from '@/components/ExplainTip';
 
 export const SORTER_MENU = [
@@ -101,7 +101,7 @@ const ResourceHead = (props: any) => {
         <Format.Title>{intl.get('cognitiveSearch.dataResource')}</Format.Title>
         <div className="kw-align-center">
           <span>{`${intl.get('global.kgNet')}：`}</span>
-          <AdKnowledgeNetIcon className="kw-mr-2" type={knwData?.color} />
+          <KwKNIcon className="kw-mr-2" type={knwData?.color} />
           <div className="kw-ellipsis" style={{ maxWidth: 300 }}>
             {knwData?.knw_name}
           </div>

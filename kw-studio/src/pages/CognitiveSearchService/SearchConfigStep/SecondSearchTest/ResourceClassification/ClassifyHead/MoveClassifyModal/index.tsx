@@ -120,7 +120,7 @@ const MoveClassifyModal = (props: any) => {
   const MoveClassifyContentRef = useRef(null);
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       title={intl.get('cognitiveSearch.classify.move')}
       width={'480px'}
       destroyOnClose={true}

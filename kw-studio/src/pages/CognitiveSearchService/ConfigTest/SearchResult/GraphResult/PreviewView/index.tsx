@@ -44,7 +44,7 @@ const PreviewView = (props: any) => {
       title={intl.get('cognitiveSearch.graphQA.viewSub')}
       width={'1000px'}
       bodyStyle={{ height: '720px', padding: 0 }}
-      visible={isVisiblePreview}
+      open={isVisiblePreview}
       onCancel={handleCancel}
       footer={null}
       className="view-subgraph-modal-root"

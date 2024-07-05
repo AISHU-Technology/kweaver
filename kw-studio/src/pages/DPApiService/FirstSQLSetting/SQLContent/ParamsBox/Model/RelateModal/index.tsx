@@ -27,7 +27,7 @@ const RelateModal = (props: any) => {
     <UniversalModal
       className="function-relate-modal"
       title={intl.get('dpapiService.select')}
-      visible={visible}
+      open={visible}
       width={640}
       zIndex={1049}
       onOk={handleOk}

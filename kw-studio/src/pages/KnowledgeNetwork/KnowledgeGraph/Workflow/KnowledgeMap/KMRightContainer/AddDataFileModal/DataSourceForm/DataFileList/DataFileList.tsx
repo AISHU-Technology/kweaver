@@ -38,7 +38,7 @@ const DataFileList: React.FC<DataFileListProps> = props => {
     errors
   } = props;
   const [keyword, setKeyword] = useState('');
-  const searchInputRef = useRef<any>();
+  const searchInputRef = useRef<any>(null);
   const [selectedData, setSelectedData] = useState<string[] | string>('');
 
   const isControlled = 'value' in props; // 是否受控
@@ -48,7 +48,7 @@ const DataFileList: React.FC<DataFileListProps> = props => {
    */
   useEffect(() => {
     setKeyword('');
-    searchInputRef.current!.state!.value = ''; // 清空搜索框显示的数据
+    searchInputRef.current?.setValue('');
   }, [dataSource]);
 
   const onSearch = _.debounce(e => {
@@ -133,7 +133,7 @@ const DataFileList: React.FC<DataFileListProps> = props => {
             </div>
           );
         })}
-        {(dataSource.length === 0 || showData.length === 0) && <NoDataBox.NO_RESULT />}
+        {(dataSource.length === 0 || showData.length === 0) && <NoDataBox type="NO_RESULT" />}
       </div>
     </div>
   );

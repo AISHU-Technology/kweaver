@@ -1,11 +1,3 @@
-/**
- * 按月配置任务
- *
- * @author Eden
- * @date 2021/12/22
- *
- */
-
 import React, { Component } from 'react';
 import { Checkbox, TimePicker } from 'antd';
 import intl from 'react-intl-universal';
@@ -14,9 +6,9 @@ import './style.less';
 
 class ByMonth extends Component {
   state = {
-    day: [], // 1-31号日期
-    selectedDay: [], // 选择点日期
-    runTime: '' // 运行时间
+    day: [],
+    selectedDay: [],
+    runTime: ''
   };
 
   componentDidMount() {

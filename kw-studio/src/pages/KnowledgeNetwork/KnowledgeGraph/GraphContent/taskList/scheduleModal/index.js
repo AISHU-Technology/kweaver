@@ -109,7 +109,7 @@ const Schedulemodal = props => {
 
   return (
     <Modal
-      visible={scheduleModal}
+      open={scheduleModal}
       onCancel={handleCancel}
       wrapClassName="task-schedule-modal"
       focusTriggerAfterClose={false}

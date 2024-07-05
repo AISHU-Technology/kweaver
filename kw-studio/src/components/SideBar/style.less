@@ -52,9 +52,9 @@
 
       .menuTitleLabel {
         margin-left: 10px;
-        white-space: nowrap; /* 防止换行 */
-        overflow: hidden; /* 隐藏超出部分 */
-        text-overflow: ellipsis; /* 显示省略号 */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .menuTitleLabelNotIcon {
@@ -62,7 +62,6 @@
       }
     }
 
-    // antd 样式覆盖
     .ant-menu-submenu {
       border-radius: 0px 4px 4px 0px;
 
@@ -198,9 +197,9 @@
 
   .ant-menu-item-group {
     .ant-menu-item-group-title {
-      white-space: nowrap; /* 防止换行 */
-      overflow: hidden; /* 隐藏超出部分 */
-      text-overflow: ellipsis; /* 显示省略号 */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -210,7 +209,6 @@
   }
 }
 
-// antd 样式覆盖
 .ant-menu-submenu-popup,
 .ant-menu-sub {
   .ant-menu-item-group-title {
@@ -265,5 +263,26 @@
 .ant-tooltip-content {
   .menuTitleLabel {
     margin-left: 10px;
+  }
+}
+
+.sub-menu-content {
+  .menuTitleIconCollapsed {
+    margin-left: 0;
+  }
+  .menuTitleIcon {
+    margin-left: 5px;
+  }
+  .menuTitleLabel {
+    margin-left: 10px;
+  }
+  .menuTitleLabelCollapsed {
+    margin-left: 100px;
+  }
+}
+
+.sideMenuSub {
+  .ant-menu-item-group-title {
+    height: 10px;
   }
 }

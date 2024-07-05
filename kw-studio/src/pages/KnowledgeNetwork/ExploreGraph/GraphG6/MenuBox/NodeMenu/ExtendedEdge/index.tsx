@@ -9,7 +9,7 @@ import { GRAPH_LAYOUT_PATTERN } from '@/enums';
 import { getParam } from '@/utils/handleFunction';
 import servicesExplore from '@/services/explore';
 
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import NoDataBox from '@/components/NoDataBox';
 
 import { parseCommonResult } from '@/pages/KnowledgeNetwork/ExploreGraph/LeftSpace/components/ResultPanel';
@@ -150,7 +150,7 @@ const ExtendEdge = (props: any) => {
         </div>
       </div>
       <div className="extendEdges">
-        <ScrollBar autoHeight autoHeightMax={360} isshowx="false">
+        <KwScrollBar autoHeight autoHeightMax={360} isShowX={false}>
           <div>
             {loading ? (
               <div className="loading-box">
@@ -177,10 +177,10 @@ const ExtendEdge = (props: any) => {
                 );
               })
             ) : (
-              <NoDataBox.NO_CONTENT />
+              <NoDataBox type="NO_CONTENT" />
             )}
           </div>
-        </ScrollBar>
+        </KwScrollBar>
       </div>
     </div>
   );

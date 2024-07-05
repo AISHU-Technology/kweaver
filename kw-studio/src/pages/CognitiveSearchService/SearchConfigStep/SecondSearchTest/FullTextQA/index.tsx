@@ -9,7 +9,6 @@ import HOOKS from '@/hooks';
 import intl from 'react-intl-universal';
 import UniversalModal from '@/components/UniversalModal';
 import servicesPermission from '@/services/rbacPermission';
-import { PERMISSION_KEYS } from '@/enums';
 import AnswerOrganizationConfig from './AnswerOrganizationConfig';
 
 import './style.less';
@@ -58,7 +57,6 @@ const FullTextQA = (props: any) => {
   useEffect(() => {
     if (qaStep === 2) {
       const dataIds = _.map(kgqaData?.props?.data_source_scope, item => String(item.kg_id));
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
       let error = false;
       // servicesPermission.dataPermission(postData).then(result => {
       //   const codesData = _.keyBy(result?.res, 'dataId');
@@ -173,7 +171,7 @@ const FullTextQA = (props: any) => {
   return (
     <UniversalModal
       className={classNames('full-text-qa-wrapper', { 'full-text-qa-wrapper-padding-bottom-root': qaStep === 3 })}
-      visible={visible}
+      open={visible}
       title={titleModal()}
       okText={intl.get('createEntity.save')}
       destroyOnClose={true}

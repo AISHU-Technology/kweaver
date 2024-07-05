@@ -82,7 +82,7 @@ const ParamsList = (props: ParamsListProps) => {
         );
       })}
 
-      {!paramsList.length && <NoDataBox.NO_CONTENT />}
+      {!paramsList.length && <NoDataBox type="NO_CONTENT" />}
     </Collapse>
   );
 };

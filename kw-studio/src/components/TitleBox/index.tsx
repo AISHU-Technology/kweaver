@@ -4,13 +4,12 @@ import { Divider } from 'antd';
 import './style.less';
 
 type TypeTitleBox = {
-  text: string; // 文本
-  // 其他自定义参数
+  text: string;
   [key: string]: any;
 };
 
 const TitleBox: React.FC<TypeTitleBox> = props => {
-  const { text, bgColor = 'rgba(18, 110, 227, 0.06)', className, ...others } = props;
+  const { text, className, ...others } = props;
   return (
     <Divider
       className={classNames(className)}

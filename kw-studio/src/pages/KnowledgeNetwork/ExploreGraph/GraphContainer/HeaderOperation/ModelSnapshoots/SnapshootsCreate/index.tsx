@@ -55,7 +55,7 @@ const SnapshootsCreate = (props: any) => {
   return (
     <UniversalModal
       className="snapshootsCreateRoot"
-      visible={true}
+      open={true}
       width={640}
       zIndex={2000}
       title={

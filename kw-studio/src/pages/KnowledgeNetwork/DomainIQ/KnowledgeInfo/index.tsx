@@ -8,7 +8,7 @@ import ScorePanel from './ScorePanel';
 import { formatID, sessionStore } from '@/utils/handleFunction';
 import { KgInfo } from '../types';
 import './style.less';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
 
 interface KnowledgeInfoProps {
   kgInfo: KgInfo;
@@ -32,7 +32,7 @@ const KnowledgeInfo: React.FC<KnowledgeInfoProps> = ({ kgInfo, onEditSuccess }) 
         <div className="kw-c-subtext">{intl.get('graphList.knoNetworkname')}</div>
         <div className="kw-space-between" style={{ height: 40 }}>
           <span className="kw-flex-item-full-width kw-align-center">
-            <AdKnowledgeNetIcon type={color} />
+            <KwKNIcon type={color} />
             <span className="kw-ml-3 kw-ellipsis kw-flex-item-full-width" title={knw_name}>
               {knw_name || '--'}
             </span>

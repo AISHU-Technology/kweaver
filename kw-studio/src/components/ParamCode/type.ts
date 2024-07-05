@@ -13,7 +13,7 @@ export type ParamItem = {
   position?: any[];
   param_type?: 'entity' | 'string' | string;
   options?: 'single' | 'multiple' | string;
-  entity_classes?: any[]; // 分析服务配置实体类需要选择类
+  entity_classes?: any[];
   [key: string]: any;
 };
 

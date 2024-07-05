@@ -607,7 +607,7 @@ class EdgesModal extends Component {
         className="batch-add-edge-modal"
         title={<Format.Title style={{ fontSize: 16 }}>{intl.get('createEntity.bulikR')}</Format.Title>}
         width={1000}
-        visible={isVisibleEdges}
+        open={isVisibleEdges}
         footer={null}
         destroyOnClose
         maskClosable={false}

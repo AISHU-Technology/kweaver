@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table/interface';
 import emptyImg from '@/assets/images/empty.svg';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 
 import _ from 'lodash';
 import intl from 'react-intl-universal';
@@ -76,7 +76,7 @@ const IntentionTable = (props: any) => {
       {isVisible ? (
         <>
           <div className={`loading-mask ${loading && 'spinning'}`}>
-            <AdSpin />
+            <KwSpin />
           </div>
           <Table
             columns={columns}

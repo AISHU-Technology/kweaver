@@ -46,7 +46,7 @@ const DeleteModal = (props: DeleteModalProps) => {
     <UniversalModal
       className={classNames(className, 'mf-prompt-delete-modal')}
       title={info!.title}
-      visible={visible}
+      open={visible}
       width={480}
       zIndex={2000}
       onCancel={onCancel}

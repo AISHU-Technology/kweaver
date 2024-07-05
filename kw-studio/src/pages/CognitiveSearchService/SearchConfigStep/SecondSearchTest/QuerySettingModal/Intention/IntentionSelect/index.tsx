@@ -1,6 +1,6 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { Form, Select } from 'antd';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 
 import { getParam } from '@/utils/handleFunction';
 import HOOKS from '@/hooks';
@@ -121,7 +121,7 @@ const IntentionSelect: React.ForwardRefRenderFunction<any, any> = (
     <>
       <div className={language === 'zh-CN' ? 'intention-recognition-modal-table' : 'intention-recognition-us-table'}>
         <div className={`loading-mask ${loadingQuery && 'spinning'}`}>
-          <AdSpin />
+          <KwSpin />
         </div>
         <Form form={form}>
           <Form.Item

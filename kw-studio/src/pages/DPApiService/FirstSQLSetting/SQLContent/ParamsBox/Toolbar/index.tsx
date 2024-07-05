@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import servicesPermission from '@/services/rbacPermission';
 import IconFont from '@/components/IconFont';
-import { PERMISSION_KEYS, PERMISSION_CODES, ANALYSIS_SERVICES } from '@/enums';
+import { ANALYSIS_SERVICES } from '@/enums';
 import { BasicData } from '../../../../SecondPublishAPI/types';
 import { EditorStatus } from '../../index';
 import './style.less';

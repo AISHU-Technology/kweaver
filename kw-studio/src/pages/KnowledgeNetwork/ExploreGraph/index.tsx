@@ -9,7 +9,7 @@ import { sqlQueryHistory } from '@/reduxConfig/action/sqlQueryHistory';
 
 import HOOKS from '@/hooks';
 import { getParam, localStore } from '@/utils/handleFunction';
-import { PERMISSION_KEYS, GRAPH_CONFIG, GRAPH_LAYOUT, GRAPH_LAYOUT_DAGRE_DIR } from '@/enums';
+import { GRAPH_CONFIG, GRAPH_LAYOUT, GRAPH_LAYOUT_DAGRE_DIR } from '@/enums';
 import servicesExplore from '@/services/explore';
 import servicesPermission from '@/services/rbacPermission';
 import servicesVisualAnalysis from '@/services/visualAnalysis';
@@ -22,7 +22,7 @@ import SaveAnalysisGraph from './SaveAnalysisGraph';
 import { parseCommonResult } from './LeftSpace/components/ResultPanel';
 
 import './style.less';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
 type InitialItemsType = {
@@ -30,7 +30,6 @@ type InitialItemsType = {
   ad_sqlHistory: any;
   ad_updateSqlHistory: any;
 };
-const isIframe = () => window.location.pathname.includes('iframe');
 const ExploreGraph = (props: InitialItemsType) => {
   const forceUpdate = HOOKS.useForceUpdate();
   const { ad_sqlHistory, onChangeHasUnsaved, ad_updateSqlHistory } = props;
@@ -77,7 +76,6 @@ const ExploreGraph = (props: InitialItemsType) => {
   }, [location?.pathname]);
 
   useEffect(() => {
-    if (isIframe()) return;
     if (!selectedItem?.detail?.canvas_name) return;
     const getGraphPermission = async () => {
       // DATA-354277 dataPermission 入参dataIds kg_conf_id -> id

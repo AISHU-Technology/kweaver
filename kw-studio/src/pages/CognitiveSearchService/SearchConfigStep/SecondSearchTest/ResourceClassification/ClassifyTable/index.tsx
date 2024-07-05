@@ -12,7 +12,7 @@ import noResImg from '@/assets/images/noResult.svg';
 import createImg from '@/assets/images/create.svg';
 import ClassifyConfigModal from './ClassifyConfigModal';
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 const PAGE_SIZE = 10;
 const sorter2sorter = (key: string) => SORTER_MAP[key] || key;
@@ -219,7 +219,7 @@ const ClassifyTable: React.ForwardRefRenderFunction<any, any> = (
 
   return (
     <div className="source-for-classify-table-wrap">
-      <ADTable
+      <KwTable
         className="search-table"
         showHeader={false}
         lastColWidth={170}

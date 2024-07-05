@@ -15,8 +15,8 @@ type CreateUpdateEffect = (hook: EffectHookType) => DeepCompareEffectType;
 const createDeepCompareEffect: CreateUpdateEffect =
   hook =>
   (effect, deps, deep = true) => {
-    const lastDepsRef = useRef<DependencyList>(); // 缓存上一次的依赖项
-    const signalRef = useRef<number>(0); // 用于触发useEffect的基本数据类型
+    const lastDepsRef = useRef<DependencyList>();
+    const signalRef = useRef<number>(0);
 
     if (deps === undefined || !isEqual(lastDepsRef.current, deps)) {
       lastDepsRef.current = deep ? cloneDeep(deps) : deps;

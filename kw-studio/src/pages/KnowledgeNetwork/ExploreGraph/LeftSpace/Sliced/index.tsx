@@ -258,8 +258,10 @@ const Sliced = (props: any) => {
             </div>
           )}
           <div className="list-wrap">
-            {!showedList.length && !searchValue && <NoDataBox.NO_CONTENT text={intl.get('exploreGraph.notSlice')} />}
-            {!showedList.length && searchValue && <NoDataBox.NO_RESULT />}
+            {!showedList.length && !searchValue && (
+              <NoDataBox type="NO_CONTENT" desc={intl.get('exploreGraph.notSlice')} />
+            )}
+            {!showedList.length && searchValue && <NoDataBox type="NO_RESULT" />}
             {_.map(showedList, item => {
               const checked = _.includes(selectedKeys, item.id);
               return (

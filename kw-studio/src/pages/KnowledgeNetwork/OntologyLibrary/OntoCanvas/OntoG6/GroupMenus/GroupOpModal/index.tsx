@@ -40,7 +40,7 @@ const OntoGroupOpModal = (props: OntoGroupOpModalProps) => {
     <UniversalModal
       width={480}
       className="graph-group-op-modal"
-      visible={visible}
+      open={visible}
       title={intl.get(`createEntity.${type === 'edit' ? 'updateGroupBtn' : 'createGroupBtn'}`)}
       onOk={handleOk}
       onCancel={onCancel}

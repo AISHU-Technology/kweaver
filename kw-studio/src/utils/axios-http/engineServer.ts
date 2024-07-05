@@ -1,11 +1,7 @@
 import axios from 'axios';
-import _ from 'lodash';
-import Cookie from 'js-cookie';
 import intl from 'react-intl-universal';
 import { message } from 'antd';
-import { API } from '@/services/api';
-
-import { kwCookie, localStore, sessionStore } from '@/utils/handleFunction';
+import { kwCookie } from '@/utils/handleFunction';
 import customParamsSerializer from './customParamsSerializer';
 
 const { CancelToken } = axios;
@@ -41,7 +37,7 @@ const request = ({ url, data, config, method }: RequestType): any => {
       })
       .catch(error => {
         const { data = {}, config: __config, status } = error.response || {};
-        const { ErrorCode, Description } = data || {};
+        const { Description } = data || {};
         if (error.message === '取消请求') return;
         if (data?.Description?.includes('timeout') || error.message.includes('timeout')) {
           message.error(intl.get('exploreGraph.timeoutTip'));

@@ -442,7 +442,7 @@ const ClassifyContainGraph: React.ForwardRefRenderFunction<any, any> = (
 
                 {/* 实体类名相关操作及展示 */}
                 {searchQuery && _.isEmpty(matchEntityName) ? (
-                  <NoDataBox.NO_RESULT />
+                  <NoDataBox type="NO_RESULT" />
                 ) : (
                   <div className="alias-message" style={{ height: `calc(100% - ${scalingHeight + 118})` }}>
                     {searchQuery && _.isEmpty(matchEntityName) ? null : (

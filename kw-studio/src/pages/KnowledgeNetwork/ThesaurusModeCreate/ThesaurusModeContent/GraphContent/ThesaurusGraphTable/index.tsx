@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import { ONLY_KEYBOARD } from '@/enums';
 import THESAURUS_TEXT from '@/enums/thesaurus_mode';
 import { onDeleteTableData, onGetListTable } from './assistFunction';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 import HOOKS from '@/hooks';
 import { getParam } from '@/utils/handleFunction';
@@ -265,7 +265,7 @@ const ThesaurusGraphTable = (props: any, ref: any) => {
 
   return (
     <div className="thesaurus-mode-create-graph-table-root">
-      <ADTable
+      <KwTable
         showHeader={false}
         className={classNames('thesaurus-table-root', { 'thesaurus-table-root-empty': _.isEmpty(searchTableData) })}
         columns={mode === 'std' ? columns : [...columns.slice(0, 2), ...columns.slice(3, 6)]}

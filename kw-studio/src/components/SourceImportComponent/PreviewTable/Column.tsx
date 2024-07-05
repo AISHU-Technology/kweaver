@@ -20,20 +20,20 @@ export interface ColumnProps {
   partitionMes?: any;
 }
 
-const WIDTH1 = 160; // 默认宽度, 窄
-const WIDTH2 = 280; // 默认宽度
-const MIN_WIDTH = 100; // 最小宽度
+const WIDTH1 = 160;
+const WIDTH2 = 280;
+const MIN_WIDTH = 100;
 
 const Column = (props: ColumnProps) => {
   const { data, shouldCheck, checked, isLast, selectFile, partitionMes, showLess, averageWidth, onCheck } = props;
 
   const startX = useRef(0);
   const [width, setWidth] = useState(() => (showLess ? WIDTH1 : WIDTH2));
-  const [tableName, setTableName] = useState<any>([]); // 分区的表名
+  const [tableName, setTableName] = useState<any>([]);
   const forceUpdate = HOOKS.useForceUpdate();
   const setWidthThrottle = _.throttle(w => setWidth(w), 100);
   const [isShow, setIsShow] = useState(false);
-  const [isUsePartition, setIsUsePartition] = useState(true); // true-使用selectFile(编辑传的信息) false-partition
+  const [isUsePartition, setIsUsePartition] = useState(true);
 
   useEffect(() => {
     if (_.isEmpty(partitionMes)) return;

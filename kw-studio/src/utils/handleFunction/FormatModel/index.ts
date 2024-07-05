@@ -1,10 +1,10 @@
 import intl from 'react-intl-universal';
 
-const GENERAL_MODEL = 'Generalmodel'; // 百科知识模型
-const AI_MODEL = 'AImodel'; // AI模型
-const AS_MODEL = 'Anysharedocumentmodel'; // 文档知识模型
-const CONTRACT_MODEL = 'Contractmodel'; // 合同模型
-const OPERATION = 'OperationMaintenanceModel'; // 软件文档知识模型
+const GENERAL_MODEL = 'Generalmodel';
+const AI_MODEL = 'AImodel';
+const AS_MODEL = 'Anysharedocumentmodel';
+const CONTRACT_MODEL = 'Contractmodel';
+const OPERATION = 'OperationMaintenanceModel';
 
 export const formatModel = (model: string) => {
   switch (model) {

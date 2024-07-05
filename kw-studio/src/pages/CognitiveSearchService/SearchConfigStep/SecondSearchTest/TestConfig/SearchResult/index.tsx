@@ -3,7 +3,7 @@ import { Pagination, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import HOOKS from '@/hooks';
 import { numToThousand } from '@/utils/handleFunction';
 import NoDataBox from '@/components/NoDataBox';
@@ -218,7 +218,7 @@ const SearchResult: React.FC<SearchResultProps> = forwardRef((props, ref: any) =
                     className={_.isEmpty(kgqaResData) || !kgqaResData?.count ? 'res-wrapper' : 'res-wrapper-no-qa'}
                     ref={wrapperRef}
                   >
-                    <ScrollBar isshowx="false" className="res-scroll" ref={resScrollRef}>
+                    <KwScrollBar isShowX={false} className="res-scroll" ref={resScrollRef}>
                       <ListResult resData={resData.vertexs} />
                       <div className="pagination-box">
                         <Pagination
@@ -231,12 +231,12 @@ const SearchResult: React.FC<SearchResultProps> = forwardRef((props, ref: any) =
                           showSizeChanger={false}
                         />
                       </div>
-                    </ScrollBar>
+                    </KwScrollBar>
                   </div>
                 </>
               ) : (
                 <div className="no-complete-search-small kw-flex">
-                  <NoDataBox.NO_RESULT />
+                  <NoDataBox type="NO_RESULT" />
                   {!kgqaResData?.openai_status && !_.isEmpty(kgqaResData) && (
                     <div className="sorry-tip">
                       {kgqaResData.model_type === 'private_llm'
@@ -250,9 +250,9 @@ const SearchResult: React.FC<SearchResultProps> = forwardRef((props, ref: any) =
           ) : null}
           {/* 图全文展示 */}
           {_.isEmpty(resData) && _.isEmpty(kgqaResData) && !_.isEmpty(allResData.query_understand) ? (
-            <ScrollBar isshowx="false" className="res-scroll-query" ref={resScrollRef}>
+            <KwScrollBar isShowX={false} className="res-scroll-query" ref={resScrollRef}>
               <JsonResult resData={allResData} />
-            </ScrollBar>
+            </KwScrollBar>
           ) : null}
         </div>
       </div>

@@ -253,7 +253,7 @@ const NodeList = (props: NodeListProps) => {
         title={intl.get('knowledgeCard.changedTipTitle')}
         content={intl.get('knowledgeCard.changedTip')}
         okText={intl.get('global.save')}
-        visible={changedTip.visible}
+        open={changedTip.visible}
         onOk={() => changeNode(changedTip.node, true)}
         onCancel={() => setChangedTip({ visible: false, node: {} })}
         extractBtn={<Button onClick={() => changeNode(changedTip.node)}>{intl.get('global.notSave')}</Button>}

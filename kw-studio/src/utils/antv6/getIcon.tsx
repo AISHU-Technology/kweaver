@@ -4,22 +4,18 @@ import { IconFontProps } from '@ant-design/icons/lib/components/IconFont';
 import iconJS from '@/assets/graphIcons/iconfont.js';
 import fonts from '@/assets/graphIcons/iconfont.json';
 
-// 添加名称显示组件的入口
-export { default as GraphIconName, getIconName } from '@/components/GraphIconName';
+export { default as GraphIconName, getIconName } from './GraphIconName';
 
-// 前缀
 export const ICON_FIX = fonts.css_prefix_text;
 
-// 模型icon
 export const MODEL_ICON = `${ICON_FIX}model`;
 
-// 所有icon
 export const TOTAL_ICONS = fonts.glyphs.reduce((res, icon) => {
   const font_class = `${ICON_FIX}${icon.font_class}`;
   res[font_class] = {
     name: icon.name,
     font_class,
-    unicode: String.fromCodePoint(icon.unicode_decimal) // `\\u${icon.unicode}`,
+    unicode: String.fromCodePoint(icon.unicode_decimal)
   };
   return res;
 }, {} as Record<string, { name: string; font_class: string; unicode: string }>);

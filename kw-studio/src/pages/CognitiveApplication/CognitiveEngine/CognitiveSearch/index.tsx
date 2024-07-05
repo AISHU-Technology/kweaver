@@ -9,7 +9,7 @@ import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import servicesSearchConfig from '@/services/searchConfig';
 import IconFont from '@/components/IconFont';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import { tipModalFunc, knowModalFunc } from '@/components/TipModal';
 import { getParam } from '@/utils/handleFunction';
 import StrategyConfig, { ERROR_CODE } from './StrategyConfig';
@@ -503,7 +503,7 @@ const CognitiveSearch: React.FC<CognitiveSearchProps> = ({ knData }) => {
 
             {/* 搜索loading */}
             <div className={`loading-mask ${selfState.loading && 'spinning'}`}>
-              <AdSpin />
+              <KwSpin />
             </div>
           </div>
         </div>

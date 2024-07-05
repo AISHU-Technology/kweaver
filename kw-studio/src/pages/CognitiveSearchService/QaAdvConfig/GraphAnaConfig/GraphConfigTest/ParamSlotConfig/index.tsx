@@ -6,7 +6,7 @@ import { Button, Select } from 'antd';
 import { ParamEmpty } from '../../../components/EmptyBox';
 
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 const ParamSlotConfig = (props: any) => {
   const { currentIntention, onChangeBindSlot, clearSlotConfig } = props;
 
@@ -71,7 +71,7 @@ const ParamSlotConfig = (props: any) => {
       </div>
       {currentIntention?.graph_info?.params?.length > 0 ? (
         <div>
-          <ADTable
+          <KwTable
             showHeader={false}
             scroll={{ x: '100%', y: 300 }}
             rowKey={(record: any) => record?.param}

@@ -63,7 +63,6 @@ const TimePickerSetting = (props: any) => {
   const onMatchTimeToSelectedKey = (name: any) => {
     const isExit = selectedFileRef.current[name];
     if (!_.isEmpty(isExit)) {
-      // 两者都为空默认不填 否则填入已选择的
       if (!isExit?.start_time && !isExit?.end_time) {
         setTimeValue('');
       } else {

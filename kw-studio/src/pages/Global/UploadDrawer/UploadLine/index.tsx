@@ -7,7 +7,6 @@ import { Button, Tooltip, message } from 'antd';
 import { FileZipOutlined, CheckCircleFilled } from '@ant-design/icons';
 
 import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import { PENDING, UPLOADING, SUCCESS, FAIL } from '@/reduxConfig/reducers/uploadFile';
 import IconFont from '@/components/IconFont';
 import servicesPermission from '@/services/rbacPermission';
@@ -108,24 +107,6 @@ const UploadLine = (props: UploadLineType) => {
           };
           if (source?.model_id) {
             postData.model_id = source?.model_id;
-            // 判断权限
-            const postDataPermission = { dataType: PERMISSION_KEYS.TYPE_MODEL, dataIds: [String(source.model_id)] };
-            // servicesPermission.dataPermission(postDataPermission).then(result => {
-            //   const codes = result?.res?.[0]?.codes || [];
-            //   const hasEdit = HELPER.getAuthorByUserInfo({
-            //     roleType: PERMISSION_CODES.ADF_KN_MODEL_EDIT,
-            //     userType: PERMISSION_KEYS.MODEL_EDIT,
-            //     userTypeDepend: codes
-            //   });
-            //   if (!hasEdit) {
-            //     uploadController.current.cancel = true;
-            //     onChangeUploadStatus({ status: FAIL });
-            //     onHandelCancel();
-            //     if (source?.file?.uid) {
-            //       onChangeFileStatus(source?.file?.uid, 'fail');
-            //     }
-            //   }
-            // });
             uploadController.current.cancel = true;
             onChangeUploadStatus({ status: FAIL });
             onHandelCancel();

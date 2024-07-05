@@ -57,8 +57,8 @@ const IconDropdown = (props: IconDropdownProps) => {
   return (
     <Dropdown
       trigger={['click']}
-      visible={visible}
-      onVisibleChange={v => !readOnly && setVisible(v)}
+      open={visible}
+      onOpenChange={v => !readOnly && setVisible(v)}
       overlay={
         <div className="onto-styles-dropdown" style={{ width: DOM?.clientWidth }}>
           <div className="iconContainer">

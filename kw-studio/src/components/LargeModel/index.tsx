@@ -11,15 +11,14 @@ import cognitiveSearchService from '@/services/cognitiveSearch';
 
 import OpenAIForm from './OpenAIForm';
 import PrivateModelForm from './PrivateModelForm';
-import { isCorrectPrompt } from '@/components/PromptConfig';
 
 import './style.less';
 
 export type LargeModelType = {
   visible: boolean;
-  data?: any; // 编辑时数据
-  onHandleCancel: (data?: any) => void; // 关闭弹窗
-  onCreateLargeModel: (data: any) => void; // 新增|编辑保存函数;
+  data?: any;
+  onHandleCancel: (data?: any) => void;
+  onCreateLargeModel: (data: any) => void;
   onUpdateTableForLarge?: (data: any) => void;
 };
 
@@ -27,12 +26,12 @@ const FORM_ITEM_NAME = ['model', 'api_endpoint', 'api_version', 'api_version', '
 const LargeModel = (props: LargeModelType) => {
   const { visible, data, onHandleCancel, onCreateLargeModel, onUpdateTableForLarge } = props;
   const [form] = Form.useForm();
-  const [testDisable, setTestDisable] = useState(false); // 测试链接
-  const [saveDisable, setSaveDisable] = useState(false); // 保存
-  const [formData, setFormData] = useState<any>({}); // 表单信息
-  const [loading, setLoading] = useState(false); // 加载loading
+  const [testDisable, setTestDisable] = useState(false);
+  const [saveDisable, setSaveDisable] = useState(false);
+  const [formData, setFormData] = useState<any>({});
+  const [loading, setLoading] = useState(false);
   const prevSubTypeRef = useRef<any>();
-  const [isVersionEndPoint, setIsVersionEndPoint] = useState(false); // version | endpoint是否必填报错
+  const [isVersionEndPoint, setIsVersionEndPoint] = useState(false);
   const QA_TYPE = useRef([
     { value: 'openai', label: 'OpenAI', sub: intl.get('cognitiveSearch.answersOrganization.feedbackAnswers') },
     {
@@ -61,7 +60,6 @@ const LargeModel = (props: LargeModelType) => {
           } else {
             setSaveDisable(true);
           }
-          // 请求测试接口
           setLoading(true);
           let data: any = {};
           _.map(_.cloneDeep(values), (item: any, index: any) => {
@@ -178,7 +176,7 @@ const LargeModel = (props: LargeModelType) => {
           ? intl.get('cognitiveSearch.resource.addResource')
           : intl.get('cognitiveSearch.resource.editResource')
       }
-      visible={visible}
+      open={visible}
       destroyOnClose={true}
       onCancel={onHandleCancel}
       width={640}

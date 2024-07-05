@@ -5,7 +5,6 @@ import { isDef } from '@/utils/handleFunction';
 const constructGraphData = (graphData: any): any => {
   const { entity, edge } = graphData;
 
-  // 处理点
   const nodes = _.reduce(
     entity,
     (res: any, item: any) => {
@@ -30,7 +29,6 @@ const constructGraphData = (graphData: any): any => {
     []
   );
 
-  // 处理边
   const edges = _.reduce(
     edge,
     (res: any, item: any) => {
@@ -41,7 +39,7 @@ const constructGraphData = (graphData: any): any => {
 
       const id = relationFlag.join('-');
       const [source, , target] = relationFlag;
-      const isLoop = source === target; // 是否是 自闭环
+      const isLoop = source === target;
       const edge = {
         edge_id,
         name,
@@ -71,7 +69,6 @@ const constructGraphData = (graphData: any): any => {
 
   G6.Util.processParallelEdges(edges);
 
-  // 两节点多条边的处理
   const offsetDiff = 20;
   const multiEdgeType = 'quadratic';
   const singleEdgeType = 'line';

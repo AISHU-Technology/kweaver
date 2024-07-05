@@ -15,7 +15,7 @@ const BatchDeleteModalTips: React.FC<BatchDeleteTipsProps> = props => {
   const language = HOOKS.useLanguage();
   const prefixCls = 'BatchDeleteModalTips';
   return (
-    <UniversalModal visible className={prefixCls} title={intl.get('global.tip')} onCancel={closeBatchDeleteModalTips}>
+    <UniversalModal open className={prefixCls} title={intl.get('global.tip')} onCancel={closeBatchDeleteModalTips}>
       {language === 'en-US' ? (
         <div>
           Deleted<span className="kw-c-primary kw-pl-1 kw-pr-1">{successDataCount}</span>term Library(s) and the other

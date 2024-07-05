@@ -5,9 +5,9 @@
 import React, { memo } from 'react';
 import { LeftOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
-import AdSteps from '@/components/AdSteps';
+import KwSteps from '@/components/KwSteps';
 import ExplainTip from '@/components/ExplainTip';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import KwExitBar from '@/components/KwExitBar';
 
 import './style.less';
 
@@ -21,23 +21,23 @@ const TopSteps = (props: TopStepsProps) => {
 
   // 所有步骤条标题
   const titleList = [
-    { title: intl.get('cognitiveSearch.qaAdvConfig.intentConfig') },
-    { title: intl.get('cognitiveSearch.qaAdvConfig.graphConfig') },
+    { title: intl.get('cognitiveSearch.qaKwvConfig.intentConfig') },
+    { title: intl.get('cognitiveSearch.qaKwvConfig.graphConfig') },
     { title: intl.get('cognitiveSearch.answersOrganization.answersOrganization') }
   ];
   return (
-    <div className="qaAdvancedConfigStep">
-      <AdExitBar
+    <div className="qaKwvancedConfigStep">
+      <KwExitBar
         style={{ height: 48, border: 0 }}
         onExit={onExit}
         exitText={intl.get('global.back')}
         title={
-          <div className="t-name kw-c-header kw-ellipsis" title={intl.get('cognitiveSearch.qaAdvConfig.qaAdvConfig')}>
-            {intl.get('cognitiveSearch.qaAdvConfig.qaAdvConfig')}
-            <ExplainTip title={intl.get('cognitiveSearch.qaAdvConfig.tip')} />
+          <div className="t-name kw-c-header kw-ellipsis" title={intl.get('cognitiveSearch.qaKwvConfig.qaKwvConfig')}>
+            {intl.get('cognitiveSearch.qaKwvConfig.qaKwvConfig')}
+            <ExplainTip title={intl.get('cognitiveSearch.qaKwvConfig.tip')} />
           </div>
         }
-        extraContent={<AdSteps items={titleList} current={step} />}
+        extraContent={<KwSteps items={titleList} current={step} />}
       />
     </div>
   );

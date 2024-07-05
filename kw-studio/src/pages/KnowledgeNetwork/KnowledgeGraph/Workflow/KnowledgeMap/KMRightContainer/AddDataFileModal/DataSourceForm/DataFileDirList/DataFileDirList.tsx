@@ -3,7 +3,7 @@ import './style.less';
 import classNames from 'classnames';
 import { Radio, Breadcrumb } from 'antd';
 import type { RadioChangeEvent } from 'antd';
-import AdBreadcrumbDir, { AdBreadcrumbDirRef, BreadcrumbDataProps } from '@/components/AdBreadcrumbDir/AdBreadcrumbDir';
+import BreadcrumbDir, { BreadcrumbDirRef, BreadcrumbDataProps } from './BreadcrumbDir';
 import useDeepCompareEffect from '@/hooks/useDeepCompareEffect';
 import { DS_SOURCE, DS_TYPE, EXTRACT_TYPE } from '@/enums';
 import servicesCreateEntity from '@/services/createEntity';
@@ -41,7 +41,7 @@ const DataFileDirList = forwardRef<DataFileDirListRefProps, DataFileDirListProps
     fileType: 'json', // 文件类型
     forceRefreshData: ['1'] as string[] // 触发AdBreadcrumbDir强制卸载并再加载的属性
   });
-  const adBreadcrumbDirRef = useRef<AdBreadcrumbDirRef | null>(null);
+  const adBreadcrumbDirRef = useRef<BreadcrumbDirRef | null>(null);
   const cacheSelectedDirKey = useRef<string>('');
 
   useImperativeHandle(ref, () => ({
@@ -191,7 +191,7 @@ const DataFileDirList = forwardRef<DataFileDirListRefProps, DataFileDirListProps
       <div className="kw-flex-item-full-height kw-flex-column">
         {/* forceRefreshData起到控制AdBreadcrumbDir组件先卸载再重新加载的作用*/}
         {dataFileDirProps.forceRefreshData.map(item => (
-          <AdBreadcrumbDir
+          <BreadcrumbDir
             key={item}
             loading={dataFileDirProps.loading}
             data={[...dataFileDirProps.dataFileList]}

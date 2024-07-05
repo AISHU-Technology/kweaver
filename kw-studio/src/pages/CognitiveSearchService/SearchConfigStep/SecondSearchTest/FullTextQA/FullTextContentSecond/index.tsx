@@ -579,7 +579,7 @@ export const FullTextContentSecond = forwardRef((props: any, ref) => {
                       className="input-second-middle kw-mt-2 kw-pb-1 kw-mb-2 kw-ml-5"
                     />
                     {searchQuery && _.isEmpty(entityAll) ? (
-                      <NoDataBox.NO_RESULT />
+                      <NoDataBox type="NO_RESULT" />
                     ) : (
                       <div className="middle-height">
                         {(searchQuery && _.isEmpty(entityAll)) || _.isEmpty(entityAll) ? null : (

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Table, Select, Tooltip, Button, Dropdown, Menu, Progress, message } from 'antd';
 import { LoadingOutlined, ArrowDownOutlined, CloseCircleFilled } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import { UPLOAD_RECORD_STATUS } from '@/enums';
-import _ from 'lodash';
 import uploadService from '@/services/uploadKnowledge';
 import Format from '@/components/Format';
 import SearchInput from '@/components/SearchInput';
@@ -23,13 +22,13 @@ type UploadingTableProps = {
   data: any[];
   detailData: any;
   tableState: any;
-  isIq?: true | false; // 是否是领域智商进来的
-  filterKgData: any[]; // 知识网络列表
+  isIq?: true | false;
+  filterKgData: any[];
   onChange: (state?: any, isloading?: any) => void;
   onDetail: (item: any) => void;
 };
 
-const { WAIT, PROGRESS, COMPLETE, FAILED } = UPLOAD_RECORD_STATUS;
+const { FAILED } = UPLOAD_RECORD_STATUS;
 const SORTER_MENU = [
   { key: 'created', text: intl.get('knowledge.byCreate') },
   { key: 'started', text: intl.get('uploadService.byStartTime') },
@@ -43,7 +42,7 @@ const sort2Reverse = (sort: string) => (sort === 'descend' ? 1 : 0);
 const reverse2Sort = (reverse: number) => (reverse ? 'descend' : 'ascend');
 const UploadingTable = (props: UploadingTableProps) => {
   const { data, tableState, isIq, detailData, filterKgData, pageSize, onDetail, onChange } = props;
-  const [detailVisible, setDetailVisible] = useState<boolean>(false); // 详情弹窗
+  const [detailVisible, setDetailVisible] = useState<boolean>(false);
 
   /**
    * 触发排序
@@ -312,9 +311,7 @@ const UploadingTable = (props: UploadingTableProps) => {
       fixed: 'right',
       render: (_: string, record: any) => {
         const { transferState, transferStatus } = record;
-        // 当导出失败后，则仅支持用户【重新上传】 0-开始 1-导出 2-传输 3-导入 4-完成
         const reUpDis = transferStatus !== FAILED || transferState === '0';
-        // 当传输失败/导入失败后，则支持用户【继续上传】【重新上传】
         const contineDis = transferStatus !== FAILED || transferState === '0' || transferState === '1';
         return (
           <div className="op-column">
@@ -427,7 +424,7 @@ const UploadingTable = (props: UploadingTableProps) => {
           </div>
         }
         width={800}
-        visible={detailVisible}
+        open={detailVisible}
         onCancel={onCloseDetail}
         footer={null}
       >

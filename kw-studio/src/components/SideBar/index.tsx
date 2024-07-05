@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
 import intl from 'react-intl-universal';
-import { Menu, Button, Tooltip } from 'antd';
+import { Menu, Tooltip, Divider } from 'antd';
 import type { SelectEventHandler } from 'rc-menu/lib/interface';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Format from '@/components/Format';
@@ -15,7 +15,7 @@ const initWidth = 220;
 const minWidth = 56;
 const maxWidth = 420;
 const smallWidth = 150;
-const Divider = (props: any) => {
+const LocalDivider = (props: any) => {
   return (
     <Tooltip title={props.label} placement="right">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', height: 22 }}>
@@ -35,15 +35,15 @@ export interface SideBarItemProps {
 
 export interface SideBarProps {
   style?: React.CSSProperties;
-  className?: string; // 类名
-  extraFooter?: React.ReactNode; // 额外的footer
-  items: SideBarItemProps[]; // 菜单配置项
-  openKeys?: string[]; // 展开的菜单key
-  selectedKeys: string[]; // 选中的菜单key
-  onSelectedKeysChange: SelectEventHandler; // 菜单选中的值变化事件
-  onCollapsedChange?: (collapsed: boolean) => void; // 菜單欄展开收起值变化事件
-  collapseBtnVisible?: boolean; // 折叠按钮是否显示
-  draggable?: boolean; // 是否允许拖动改变宽度
+  className?: string;
+  extraFooter?: React.ReactNode;
+  items: SideBarItemProps[];
+  openKeys?: string[];
+  selectedKeys: string[] | undefined;
+  onSelectedKeysChange: SelectEventHandler;
+  onCollapsedChange?: (collapsed: boolean) => void;
+  collapseBtnVisible?: boolean;
+  draggable?: boolean;
 }
 
 const SideBar: React.FC<SideBarProps> = props => {
@@ -111,9 +111,8 @@ const SideBar: React.FC<SideBarProps> = props => {
 
   const renderItems = (item: any, isLast: boolean, collapsed: boolean) => {
     const { key, icon, selectedIcon, type, label, children } = item;
-    const activeKey = selectedKeys[0] ?? '';
+    const activeKey = selectedKeys ? selectedKeys[0] : '';
     const hasIcon = !!icon && !!selectedIcon;
-    const subMenuCollapsed = openKeys.length === 0;
     const recursionChildren = (children: any, subItem?: any) => {
       const menuItems = _.map(children, child => {
         const { key, icon, selectedIcon, label } = child;
@@ -122,34 +121,37 @@ const SideBar: React.FC<SideBarProps> = props => {
           return recursionChildren(child.children, child);
         }
         return (
-          <Menu.Item key={key}>
-            <span>
-              {hasIcon && <span className="menuTitleIcon">{activeKey === key ? selectedIcon : icon}</span>}
-              <span className={hasIcon ? 'menuTitleLabel' : 'menuTitleLabelNotIcon'}>{label}</span>
+          <Menu.Item key={key} title={collapsed ? label : undefined}>
+            <span className="sub-menu-content">
+              {hasIcon && (
+                <span className={collapsed ? 'menuTitleIconCollapsed' : 'menuTitleIcon'}>
+                  {activeKey === key ? selectedIcon : icon}
+                </span>
+              )}
+              <span
+                className={
+                  hasIcon ? (collapsed ? 'menuTitleLabelCollapsed' : 'menuTitleLabel') : 'menuTitleLabelNotIcon'
+                }
+              >
+                {collapsed ? undefined : label}
+              </span>
             </span>
           </Menu.Item>
         );
       });
       return (
-        <Menu.SubMenu
+        <Menu.ItemGroup
           key={subItem?.key || key}
-          className="sideMenuSub"
-          title={
-            <span className="menuTitle">
-              {hasIcon && (
-                <span className="menuTitleIcon">{activeKey === key && subMenuCollapsed ? selectedIcon : icon}</span>
-              )}
-              <span className={hasIcon ? 'menuTitleLabel' : 'menuTitleLabelNotIcon'}>{subItem?.label || label}</span>
-            </span>
-          }
+          className={classnames({ sideMenuSub: collapsed })}
+          title={collapsed ? <Divider style={{ margin: 0 }} /> : label}
         >
-          {collapsed ? <Menu.ItemGroup title={label}>{menuItems}</Menu.ItemGroup> : menuItems}
-        </Menu.SubMenu>
+          {menuItems}
+        </Menu.ItemGroup>
       );
     };
     if (type === 'group') {
       return (
-        <Menu.ItemGroup key={key} title={collapsed ? <Divider label={label} /> : label}>
+        <Menu.ItemGroup key={key} title={collapsed ? <LocalDivider label={label} /> : label}>
           {_.map(children, (child, index) => renderItems(child, children.length === index + 1, collapsed))}
           {!isLast && !collapsed && <Menu.Divider style={{ margin: '0 16px', borderColor: 'rgba(0,0,0,.10)' }} />}
         </Menu.ItemGroup>

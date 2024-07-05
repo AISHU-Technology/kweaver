@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import Format from '@/components/Format';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import emptyImg from '@/assets/images/empty.svg';
 import HOOKS from '@/hooks';
 
@@ -39,7 +39,7 @@ const IntentTable = (props: any) => {
       <Format.Title className="kw-mb-3">{intl.get('cognitiveSearch.qaAdvConfig.datapreview')}</Format.Title>
 
       {!_.isEmpty(slotsList) ? (
-        <ADTable
+        <KwTable
           showHeader={false}
           scroll={{ x: '100%', y: tableHeight }}
           columns={columns}

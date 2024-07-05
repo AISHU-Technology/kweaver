@@ -9,34 +9,35 @@ import './style.less';
 import { sessionStore } from '@/utils/handleFunction';
 const ERROR_CODE: Record<string, string> = {
   'Builder.LexiconController.DeleteLexicon.LexiconIdNotExist': 'ThesaurusManage.nullThesaurusId'
-}
+};
 const DeleteThesaurus = (props: any) => {
   const { isVisible, closeModal, thesaId, getThesaurusList, onClearInput } = props;
 
   // 取消
-  const onCancel = () => { closeModal() }
+  const onCancel = () => {
+    closeModal();
+  };
 
   // 确定
   const onOk = async () => {
-    const data = { id_list: [thesaId] }
+    const data = { id_list: [thesaId] };
     try {
       const response = await serverThesaurus.thesaurusDelete(data);
       const { ErrorCode, Description } = response || {};
       if (ErrorCode) {
-        ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode]))
-          : message.error(response?.ErrorDetails);
+        ERROR_CODE[ErrorCode] ? message.error(intl.get(ERROR_CODE[ErrorCode])) : message.error(response?.ErrorDetails);
         closeModal();
         return;
       }
       closeModal();
       onClearInput();
-      sessionStore.remove('thesaurusSelectedId')
-      getThesaurusList({ page: 1, word: ''});
+      sessionStore.remove('thesaurusSelectedId');
+      getThesaurusList({ page: 1, word: '' });
       message.success(intl.get('global.deleteSuccess'));
     } catch (err) {
       closeModal();
     }
-  }
+  };
 
   return (
     <Modal
@@ -44,7 +45,7 @@ const DeleteThesaurus = (props: any) => {
       footer={null}
       closable={false}
       maskClosable={false}
-      visible={isVisible}
+      open={isVisible}
       focusTriggerAfterClose={false}
       wrapClassName="thesaurus-delete-modal"
     >
@@ -63,6 +64,6 @@ const DeleteThesaurus = (props: any) => {
         </Button>
       </div>
     </Modal>
-  )
-}
+  );
+};
 export default DeleteThesaurus;

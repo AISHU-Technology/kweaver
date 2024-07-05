@@ -21,10 +21,10 @@ import servicesPermission from '@/services/rbacPermission';
 
 import IconFont from '@/components/IconFont';
 import { tipModalFunc, knowModalFunc } from '@/components/TipModal';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import createImg from '@/assets/images/create.svg';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
-import { PERMISSION_KEYS, PERMISSION_CODES, ANALYSIS_SERVICES } from '@/enums';
+import { ANALYSIS_SERVICES } from '@/enums';
 
 import { DESC, ASC, PAGE_SIZE, STATUS_COLOR, STATUS_SHOW, INIT_STATE } from '../enum';
 import { ListItem, TableState, kgData } from '../types';
@@ -265,67 +265,22 @@ const ServiceTable = (props: ServiceTableProps) => {
   const moreOverlay = (record: any) => {
     return (
       <Menu onClick={({ key }) => onOperate(key, record)} style={{ width: 120 }}>
-        <Menu.Item
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_GRAPHANAL_EDIT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            }) || record.status === 1
-          }
-          key="edit"
-        >
+        <Menu.Item disabled={record.status === 1} key="edit">
           {intl.get('cognitiveService.analysis.edit')}
         </Menu.Item>
         <Menu.Item disabled={isDataAdmin} key="test">
           {intl.get('cognitiveService.analysis.test')}
         </Menu.Item>
-        <Menu.Item
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_GRAPHANAL_EDIT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            })
-          }
-          key={`${record.status === 1 ? 'cancel' : 'publish'}`}
-        >
+        <Menu.Item key={`${record.status === 1 ? 'cancel' : 'publish'}`}>
           {record.status === 1
             ? intl.get('cognitiveService.analysis.unPublish')
             : intl.get('cognitiveService.analysis.publish')}
         </Menu.Item>
-        <Menu.Item
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_GRAPHANAL_EXPORT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            })
-          }
-          key={'export'}
-        >
-          {intl.get('modelLibrary.export')}
-        </Menu.Item>
-        <Menu.Item
-          key={'delete'}
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_GRAPHANAL_DELETE,
-              userType: PERMISSION_KEYS.SERVICE_DELETE,
-              userTypeDepend: record?.__codes
-            }) || record.status === 1
-          }
-        >
+        <Menu.Item key={'export'}>{intl.get('modelLibrary.export')}</Menu.Item>
+        <Menu.Item key={'delete'} disabled={record.status === 1}>
           {intl.get('global.delete')}
         </Menu.Item>
-        <ContainerIsVisible
-          placeholder={<span style={{ height: 32 }} />}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_APP_GRAPHANAL_MEMBER,
-            userType: PERMISSION_KEYS.SERVICE_EDIT_PERMISSION,
-            userTypeDepend: record?.__codes
-          })}
-        >
+        <ContainerIsVisible placeholder={<span style={{ height: 32 }} />}>
           <Menu.Item onClick={() => setAuthData(record)}>{intl.get('graphList.authorityManagement')}</Menu.Item>
         </ContainerIsVisible>
       </Menu>
@@ -374,15 +329,6 @@ const ServiceTable = (props: ServiceTableProps) => {
         onEdit?.(record, 'edit');
         break;
       case 'export':
-        permissionExport = !HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_APP_GRAPHANAL_EXPORT,
-          userType: PERMISSION_KEYS.SERVICE_EDIT,
-          userTypeDepend: record?.__codes
-        });
-        if (permissionExport) {
-          message.error(intl.get('license.serAuthError'));
-          return;
-        }
         onGetPermission(record);
         break;
       default:
@@ -396,7 +342,6 @@ const ServiceTable = (props: ServiceTableProps) => {
   const onGetPermission = (record: any) => {
     const dataIds = [String(record?.id)];
     let codesData: any = {};
-    const postData = { dataType: PERMISSION_KEYS.TYPE_SERVICE, dataIds, subDataType: 'graphAnalSvc' };
     // servicesPermission.dataPermission(postData).then(result => {
     //   codesData = _.keyBy(result?.res, 'dataId');
     //   if (!_.isEmpty(codesData) && !_.includes(codesData?.[record?.id]?.codes, 'SERVICE_EDIT')) {
@@ -459,7 +404,7 @@ const ServiceTable = (props: ServiceTableProps) => {
   return (
     <div className="analysis-service-table-root">
       <div className="main-table kw-pt-4">
-        <ADTable
+        <KwTable
           className="serviceTable"
           showHeader={false}
           dataSource={data}
@@ -488,13 +433,7 @@ const ServiceTable = (props: ServiceTableProps) => {
             isSearching ? (
               intl.get('global.noResult')
             ) : (
-              <ContainerIsVisible
-                placeholder={<div className="kw-c-text">{intl.get('graphList.noContent')}</div>}
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_APP_GRAPHANAL_CREATE,
-                  userType: PERMISSION_KEYS.KN_ADD_SERVICE
-                })}
-              >
+              <ContainerIsVisible placeholder={<div className="kw-c-text">{intl.get('graphList.noContent')}</div>}>
                 <span>{intl.get('cognitiveService.analysis.noService').split('|')[0]}</span>
                 <span className="kw-c-primary kw-pointer" onClick={onCreate}>
                   {intl.get('cognitiveService.analysis.noService').split('|')[1]}

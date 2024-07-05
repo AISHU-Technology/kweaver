@@ -55,13 +55,11 @@
       height: 2px;
     }
 
-    // 使用渐变来模拟虚线
     .dashed-step .ant-steps-item-tail:after {
       background: linear-gradient(to right, var(--kw-primary-color) 50%, #fff 50%);
       background-size: 8px 100%;
     }
 
-    // 失败 红色虚线
     .error-step .ant-steps-item-tail:after {
       background: linear-gradient(to right, var(--kw-error-color) 50%, #fff 50%);
       background-size: 8px 100%;
@@ -79,7 +77,6 @@
     .ant-steps-item-description {
       position: absolute;
       right: 184px;
-      // bottom: 0;
       transform: translateY(50px);
       display: inline-block;
       color: var(--kw-primary-color) !important;
@@ -118,35 +115,6 @@
   .scrollWrapper {
     min-height: 50px !important;
   }
-
-  // .fail-box {
-  //   padding: 80px 32px 20px;
-  //   text-align: center;
-
-  //   .fail-icon {
-  //     font-size: 64px;
-  //     color: var(--kw-error-color);
-  //   }
-
-  //   .fail-title {
-  //     height: 22px;
-  //     margin: 12px 0 6px;
-  //     font-size: 16px;
-  //     color: var(--kw-heading-color);
-  //     line-height: 22px;
-  //   }
-
-  //   .fail-cause {
-  //     min-height: 20px;
-  //     line-height: 20px;
-  //   }
-
-  //   .cause-detail {
-  //     max-height: 150px;
-  //     overflow: auto;
-  //     color: var(--kw-text-color-secondary);
-  //   }
-  // }
 
   .m-footer {
     position: absolute;

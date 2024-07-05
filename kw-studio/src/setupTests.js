@@ -11,7 +11,6 @@ import locales from '@/locales';
 import '@/tests/mockModules';
 import '@/tests/window';
 
-// Default language: Simplified Chinese
 intl.init({
   currentLocale: 'zh-CN',
   locales

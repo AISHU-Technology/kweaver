@@ -31,7 +31,6 @@ export const getDefaultModelOptions = (modelParam: Record<string, number[]>) => 
   }, {} as TModelParams);
 };
 
-// 后端可能返回null
 export const formatNumber = (num: any) => (isDef(num) ? num : undefined);
 
 export const generateTimestamp = () => {

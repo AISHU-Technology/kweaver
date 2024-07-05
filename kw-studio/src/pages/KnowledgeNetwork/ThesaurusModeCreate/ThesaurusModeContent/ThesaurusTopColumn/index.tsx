@@ -7,7 +7,7 @@ import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
 import ThesaurusModeModal from '@/components/ThesaurusModeModal';
 import THESAURUS_TEXT from '@/enums/thesaurus_mode';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 import './style.less';
 
 const ThesaurusTopColumn = (props: any) => {

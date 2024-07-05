@@ -96,7 +96,7 @@ const AddRelationShip: React.FC<AddRelationShipProps> = props => {
   return (
     <UniversalModal
       title={editData ? intl.get('glossary.editCustomRelation') : intl.get('glossary.addCustomRelation')}
-      visible={visible}
+      open={visible}
       width={640}
       onCancel={onCancel}
       footerData={[

@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-import { Form, Input, Radio, Table, Button, message } from 'antd';
+import { Form, Input, Radio, Button, message } from 'antd';
 import type { RadioChangeEvent } from 'antd';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 
 import servicesThesaurus from '@/services/thesaurus';
+import KwTable from '@/components/KwTable';
 
-import THESAURUS_TEXT from '@/enums/thesaurus_mode';
 import { getParam } from '@/utils/handleFunction';
 import { ONLY_KEYBOARD } from '@/enums';
 import UniversalModal from '@/components/UniversalModal';
-import { onFormatTableData } from './assistFunction';
 import { SYNONYM_ENTITY_LINK, SYNONYM_STD, SYNONYM_CUSTOM, columnsData } from './template';
-import ADTable from '../ADTable';
 
 import './style.less';
 
@@ -41,10 +39,10 @@ const TEMPLATE_DATA: Record<any, any> = {
 
 const { TextArea } = Input;
 const ThesaurusModeModalContent = (props: any) => {
-  const { onHandleCancel, editRecord, onHandleOk, isChange, thesaurusTableData, tableData } = props;
+  const { onHandleCancel, editRecord, onHandleOk } = props;
   const history = useHistory();
   const [form] = Form.useForm();
-  const [value, setValue] = useState('entity_link'); // 单选框(默认选中第一个)
+  const [value, setValue] = useState('entity_link');
 
   useEffect(() => {
     if (!_.isEmpty(editRecord)) {
@@ -79,16 +77,14 @@ const ThesaurusModeModalContent = (props: any) => {
    */
   const onOk = () => {
     form.validateFields().then(async values => {
-      const { id, thesaurus_id, mode } = getParam(['id', 'thesaurus_id', 'mode']);
+      const { id, thesaurus_id } = getParam(['id', 'thesaurus_id', 'mode']);
       let data: any = {};
       if (!_.isEmpty(editRecord)) {
-        const { extract_info } = onFormatTableData(tableData, thesaurusTableData, mode);
         data = {
           id: Number(thesaurus_id),
           name: values?.name,
           description: values?.description || '',
           extract_info: editRecord?.message || {}
-          // extract_info: isChange ? extract_info : editRecord?.message
         };
       } else {
         data = {
@@ -110,14 +106,12 @@ const ThesaurusModeModalContent = (props: any) => {
           } else {
             history.push(
               `/knowledge/knowledge-thesaurus-create?action=create&mode=${values?.mode}&thesaurus_name=${
-                // `/thesaurus?action=create&mode=${values?.mode}&thesaurus_name=${
                 values?.name
               }&type=create&thesaurus_id=${res}&knw_id=${id}&description=${values?.description || ''}`
             );
           }
           return;
         }
-        // Builder.LexiconService.CreateTemplateLexicon.DuplicatedName
         if (
           [
             'Builder_LexiconService_EditLexicon_DuplicatedName',
@@ -204,7 +198,7 @@ const ThesaurusModeModalContent = (props: any) => {
             <span className="kw-c-subtext">{intl.get('ThesaurusManage.createMode.preview').split('|')[1]}</span>
           </div>
           {value ? (
-            <ADTable
+            <KwTable
               showHeader={false}
               className="thesaurus-table"
               rowKey={record => record?.id}
@@ -234,7 +228,7 @@ const ThesaurusModeModal = (props: any) => {
   const { visible, onHandleCancel, onHandleOk, editRecord = {}, isChange, thesaurusTableData, tableData } = props;
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       className="create-thesaurus-model-root"
       width={'1000px'}
       title={

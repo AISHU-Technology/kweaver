@@ -44,7 +44,6 @@ type FilterType = {
   final_step: boolean; // 严格深度。值为true, 仅返回=steps的邻居; 值为false, 返回深度<=steps的邻居
 };
 
-const isIframe = () => window.location.pathname.includes('iframe');
 const NeighborQuery = (props: NeighborQueryProps) => {
   const { selectedItem, classData, isLayoutTree, leftDrawerKey } = props;
   const { setSelectNodes, onChangeData, onCloseLeftDrawer, onCloseRightDrawer } = props;
@@ -80,7 +79,7 @@ const NeighborQuery = (props: NeighborQueryProps) => {
   const onChangeResultPanelDisplay = (value: string) => setResultPanelDisplay(value);
 
   const { searchScope, expandClass, io, steps, final_step } = filter;
-  const authorKgView = isIframe() ? true : selectedItem?.detail?.authorKgView;
+  const authorKgView = selectedItem?.detail?.authorKgView;
   // --start 树图有特殊的搜索功能
   const _isLayoutTree = isLayoutTree && filter.searchScope === 'graph';
   useEffect(() => {
@@ -334,7 +333,7 @@ const NeighborQuery = (props: NeighborQueryProps) => {
           </span>
         </div>
         <div className="content kw-pt-6">
-          {/* <ScrollBar isshowx="false" style={{ maxHeight: '100%' }}> */}
+          {/* <KwScrollBar isShowX={false} style={{ maxHeight: '100%' }}> */}
           <Format.Title strong={4}>
             {intl.get('exploreGraph.selectEntity')}
             <span className="kw-c-primary kw-ml-2">{formatNumberWithComma(selectedNodes()?.length || 0)}</span>
@@ -466,7 +465,7 @@ const NeighborQuery = (props: NeighborQueryProps) => {
             }}
             onOk={onConfigRules}
           />
-          {/* </ScrollBar> */}
+          {/* </KwScrollBar> */}
         </div>
         <div className="searchBtn">
           <Button className="kw-w-100" type="primary" disabled={isEmpty()} onClick={() => onSearch()}>

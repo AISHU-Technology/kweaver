@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect, useImperativeHandle, forwardRef } f
 import _ from 'lodash';
 import G6, { type Graph as G6Graph } from '@antv/g6';
 
-import IconPaint from '@/components/IconPaint';
+import IconPaint from './IconPaint';
 import HOOKS from '@/hooks';
 import { isDef } from '@/utils/handleFunction';
 import { registerCheckedEdge, registerToolTip } from '@/utils/antv6';

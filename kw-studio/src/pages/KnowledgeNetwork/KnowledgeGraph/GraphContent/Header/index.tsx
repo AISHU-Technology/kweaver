@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Menu, message, Tooltip, Dropdown, Divider, Modal, Radio, Popover, Button } from 'antd';
 import { QuestionCircleOutlined, EllipsisOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 
-import { GRAPH_STATUS, PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
+import { GRAPH_STATUS } from '@/enums';
 import HELPER from '@/utils/helper';
 import serverKnowledgeNetwork from '@/services/knowledgeNetwork';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
@@ -13,7 +13,7 @@ import RunNowTask from './RunNowTask/RunNowTask';
 
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
-import TimedTask from '@/components/timedTask';
+import TimedTask from '@/components/TimedTask';
 
 import ModalDelete from './ModalDelete';
 
@@ -264,14 +264,7 @@ const Header = (props: HeaderInterface) => {
   // 操作下拉框选项
   const menu = (
     <Menu className="operator-menu">
-      <ContainerIsVisible
-        key="2"
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-          userType: PERMISSION_KEYS.KG_EDIT,
-          userTypeDepend: graphBasicData?.__codes
-        })}
-      >
+      <ContainerIsVisible key="2">
         {graphBasicData.status === GRAPH_STATUS.NORMAL && graphBasicData?.export && (
           <Menu.Item disabled={isRunning} key="export" style={{ height: 40 }} onClick={onExportGraph}>
             {intl.get('knowledge.export')}
@@ -281,14 +274,7 @@ const Header = (props: HeaderInterface) => {
       {/* <Menu.Item key="save" style={{ height: 40 }} onClick={() => {}}>*/}
       {/*  {intl.get('knowledge.ontoSaveToOntoLibrary')}*/}
       {/* </Menu.Item>*/}
-      <ContainerIsVisible
-        key="1"
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-          userType: PERMISSION_KEYS.KG_EDIT,
-          userTypeDepend: graphBasicData?.__codes
-        })}
-      >
+      <ContainerIsVisible key="1">
         <Menu.Item
           disabled={graphBasicData.step_num < 3}
           key="timedTask"
@@ -316,13 +302,7 @@ const Header = (props: HeaderInterface) => {
           {intl.get('graphList.taskRecord')}
         </Menu.Item>
       </ContainerIsVisible>
-      {/* <ContainerIsVisible
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_KG_MEMBER,
-          userType: PERMISSION_KEYS.KG_EDIT_PERMISSION,
-          userTypeDepend: graphBasicData?.__codes
-        })}
-      >
+      {/* 
         <Menu.Item
           key="3"
           style={{ height: 40 }}
@@ -334,19 +314,12 @@ const Header = (props: HeaderInterface) => {
         >
           {intl.get('knowledge.authorityManagement')}
         </Menu.Item>
-      </ContainerIsVisible> */}
+       */}
 
       <Menu.Item key="refresh" style={{ height: 40 }} onClick={onRefresh}>
         {intl.get('global.refresh')}
       </Menu.Item>
-      <ContainerIsVisible
-        key="4"
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_KG_DELETE,
-          userType: PERMISSION_KEYS.KG_DELETE,
-          userTypeDepend: graphBasicData?.__codes
-        })}
-      >
+      <ContainerIsVisible key="4">
         <Menu.Item key="delete" style={{ height: 40 }} onClick={onOpenModalDelete}>
           {intl.get('knowledge.delete')}
         </Menu.Item>
@@ -422,64 +395,34 @@ const Header = (props: HeaderInterface) => {
         )}
       </div>
       <div className="right">
-        <ContainerIsVisible
-          isVisible={HELPER.getAuthorByUserInfo({
-            userType: PERMISSION_KEYS.KG_VIEW,
-            userTypeDepend: graphBasicData?.__codes
-          })}
+        <Format.Button className="kw-align-center" type="icon-text" onClick={viewGraph}>
+          <IconFont type="icon-wendang-xianxing" />
+          {intl.get('global.view')}
+        </Format.Button>
+        <Format.Button className="kw-align-center" type="icon-text" onClick={editGraph}>
+          <IconFont type="icon-edit" />
+          {intl.get('graphList.edit')}
+        </Format.Button>
+        <Format.Button
+          disabled={graphBasicData?.status === 'edit'}
+          // disabled={graphBasicData?.status === 'edit' || isRunning}
+          className="kw-align-center"
+          type="icon-text"
+          onClick={debugGraph}
         >
-          <Format.Button className="kw-align-center" type="icon-text" onClick={viewGraph}>
-            <IconFont type="icon-wendang-xianxing" />
-            {intl.get('global.view')}
-          </Format.Button>
-        </ContainerIsVisible>
-        <ContainerIsVisible
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_KG_EDIT_EDIT,
-            userType: PERMISSION_KEYS.KG_EDIT,
-            userTypeDepend: graphBasicData?.__codes
-          })}
+          <IconFont type="icon-tuputiaoshi" />
+          {intl.get('global.analysis')}
+        </Format.Button>
+        <Format.Button
+          // disabled={graphBasicData.step_num < 4}
+          disabled={graphBasicData.step_num < 3 || isRunning}
+          onClick={runNow}
+          className="kw-align-center"
+          type="icon-text"
         >
-          <Format.Button className="kw-align-center" type="icon-text" onClick={editGraph}>
-            <IconFont type="icon-edit" />
-            {intl.get('graphList.edit')}
-          </Format.Button>
-        </ContainerIsVisible>
-        <ContainerIsVisible
-          isVisible={HELPER.getAuthorByUserInfo({
-            userType: PERMISSION_KEYS.KG_VIEW,
-            userTypeDepend: graphBasicData?.__codes
-          })}
-        >
-          <Format.Button
-            disabled={graphBasicData?.status === 'edit'}
-            // disabled={graphBasicData?.status === 'edit' || isRunning}
-            className="kw-align-center"
-            type="icon-text"
-            onClick={debugGraph}
-          >
-            <IconFont type="icon-tuputiaoshi" />
-            {intl.get('global.analysis')}
-          </Format.Button>
-        </ContainerIsVisible>
-        <ContainerIsVisible
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-            userType: PERMISSION_KEYS.KG_EDIT,
-            userTypeDepend: graphBasicData?.__codes
-          })}
-        >
-          <Format.Button
-            // disabled={graphBasicData.step_num < 4}
-            disabled={graphBasicData.step_num < 3 || isRunning}
-            onClick={runNow}
-            className="kw-align-center"
-            type="icon-text"
-          >
-            <IconFont type="icon-qidong" />
-            {intl.get('global.run')}
-          </Format.Button>
-        </ContainerIsVisible>
+          <IconFont type="icon-qidong" />
+          {intl.get('global.run')}
+        </Format.Button>
         <Dropdown
           overlay={menu}
           trigger={['click']}

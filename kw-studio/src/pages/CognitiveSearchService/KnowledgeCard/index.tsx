@@ -18,7 +18,7 @@ import KNOWLEDGE_CARD from './enums';
 import { getSortedComponents, isConfigChanged } from './utils';
 import { verifyComponents } from './validator';
 import { initState, cardReduce, CardProvider } from './useCard';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 
 export interface KnowledgeCardProps {
   type: 'card' | 'recommend' | string;
@@ -218,7 +218,7 @@ const KnowledgeCard = (props: KnowledgeCardProps) => {
         title={intl.get('knowledgeCard.changedTipTitle')}
         content={intl.get('knowledgeCard.changedTip')}
         okText={intl.get('global.save')}
-        visible={existVisible}
+        open={existVisible}
         onOk={() => confirmExist(false)}
         onCancel={() => setExistVisible(false)}
         extractBtn={<Button onClick={() => onExit?.()}>{intl.get('global.notSave')}</Button>}

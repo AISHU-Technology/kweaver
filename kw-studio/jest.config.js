@@ -49,10 +49,7 @@ module.exports = {
   },
   moduleFileExtensions: ['web.js', 'js', 'web.ts', 'ts', 'web.tsx', 'tsx', 'json', 'web.jsx', 'jsx', 'node'],
   watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
-
-  // ignore test files
   coveragePathIgnorePatterns: [
-    '<rootDir>/src/pages/IframeBase/*',
     '<rootDir>/src/assets/*',
     '<rootDir>/src/components/*',
     '<rootDir>/src/downLoad/*',
@@ -66,7 +63,6 @@ module.exports = {
     '<rootDir>/src/pages/CognitiveSearchService/*',
     '<rootDir>/src/pages/DPApiService/*',
     '<rootDir>/src/pages/Home/Workflow/KnowledgeMap/*',
-    '<rootDir>/src/pages/IframeBase/*',
     '<rootDir>/src/pages/KnowledgeNetwork/ExploreGraph/*',
     '<rootDir>/src/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/*',
     '<rootDir>/src/pages/KnowledgeNetwork/OntologyLibrary/*',

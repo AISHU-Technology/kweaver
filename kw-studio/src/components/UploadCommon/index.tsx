@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { Button, Upload } from 'antd';
 
@@ -22,8 +22,8 @@ const constructFileUid = (fileList: { name: string; size: number; lastModified: 
  * 上传组件
  * @param {Boolean} disabled - 是否禁用, 默认为: false
  * @param {String} accept - 上传文件类型
- * @param {Number} limitSize - 单个文件上传大小限制, 104857600, // 1024 * 1024 * 100 // 100M
- * @param {Number} limitSizeAll - 总文件上传大小限制 104857600, // 1024 * 1024 * 100 // 100M
+ * @param {Number} limitSize - 单个文件上传大小限制, 104857600
+ * @param {Number} limitSizeAll - 总文件上传大小限制 104857600
  * @param {Boolean} multiple - 是否可以多选, 默认为: true
  * @param {Number} largestFileCount - 最大文件数量, 5
  * @param {Object} uploadDraggerStyle - 上传组件的style样式
@@ -37,8 +37,8 @@ const UploadCommon = (props: any) => {
   const {
     disabled,
     accept = '',
-    limitSize = 1024 * 1024 * 1000, // 100M,
-    limitSizeAll = 1024 * 1024 * 1000, // 100M,
+    limitSize = 1024 * 1024 * 1000,
+    limitSizeAll = 1024 * 1024 * 1000,
     multiple = true,
     largestFileCount,
     uploadDraggerStyle = {},
@@ -77,7 +77,6 @@ const UploadCommon = (props: any) => {
     const isOverMaxFilesCount = currentFilesLength > largestFileCount;
     const isOverAllFilesSize = allFilesSize > limitSizeAll;
 
-    // 限制 上传输和总文件大小
     if (isOverMaxFilesCount && isOverAllFilesSize) {
       onError([
         {
@@ -88,13 +87,11 @@ const UploadCommon = (props: any) => {
       return false;
     }
 
-    // 限制 上传文件个数
     if (isOverMaxFilesCount) {
       onError([{ type: OVER_MAX_FILES_COUNT, message: `上传文件不能超过${largestFileCount}个` }]);
       return false;
     }
 
-    // 限制 上传总文件大小
     if (isOverAllFilesSize) {
       onError([{ type: OVER_ALL_FILES_SIZE, message: `上传总文件不能超过${HELPER.formatFileSize(limitSizeAll)}` }]);
       return false;
@@ -108,7 +105,6 @@ const UploadCommon = (props: any) => {
    * @returns false
    */
   const beforeUpload = (file: any, fileList: any) => {
-    // 限制 上传单个文件大小
     if (props.limitSize) {
       const isOverSingleFileSize = file.size > limitSize;
       if (isOverSingleFileSize) {

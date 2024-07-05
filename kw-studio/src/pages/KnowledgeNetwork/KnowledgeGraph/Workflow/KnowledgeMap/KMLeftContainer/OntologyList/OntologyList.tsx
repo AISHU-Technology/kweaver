@@ -798,9 +798,10 @@ const OntologyList: React.FC<OntologyListProps> = ({ onCancelSelected }) => {
               selectedKeys={treeProps[item.value].selectedKeys}
               blockNode
               switcherIcon={<DownOutlined />}
-            >
-              {renderTreeNode(treeProps[item.value].treeData, treeProps[item.value].searchValue)}
-            </Tree>
+              treeData={renderTreeNode(treeProps[item.value].treeData, treeProps[item.value].searchValue)}
+            />
+            {/* {renderTreeNode(treeProps[item.value].treeData, treeProps[item.value].searchValue)}
+            </Tree> */}
             <div onClick={cancelSelect} className={`${prefixCls}-placeholder`}>
               {treeProps[item.value].treeData.length === 0 && (
                 <div className="kw-w-100 kw-h-100 kw-center">

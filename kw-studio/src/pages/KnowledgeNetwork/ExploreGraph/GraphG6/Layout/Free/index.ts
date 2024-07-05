@@ -81,8 +81,7 @@ class LayoutFree {
   /** 初始化自由布局图谱 */
   init(props: any) {
     const { container } = props;
-    const isIframe = window !== window.parent;
-    const Graph = isIframe ? IframeGraph : G6.Graph;
+    const Graph = G6.Graph;
     this.graph = new Graph({
       container,
       linkCenter: true,
@@ -122,9 +121,6 @@ class LayoutFree {
         }
       }
     });
-    if (isIframe) {
-      this.interactiveToIframe = new InteractiveToIframe(this.graph, this.changeData);
-    }
     this.graph.graphStack = new GraphStack(this.graph);
 
     this.graph.get('canvas').set('localRefresh', false);

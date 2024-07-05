@@ -108,7 +108,7 @@ const VariableModal = (props: VariableModalProps) => {
       className={classNames(className, 'mf-prompt-variable-modal')}
       title={intl.get('prompt.varSetting')}
       width={480}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footerData={[
         { label: intl.get('global.cancel'), onHandle: onCancel },

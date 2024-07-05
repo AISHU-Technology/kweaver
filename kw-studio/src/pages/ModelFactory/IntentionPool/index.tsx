@@ -7,10 +7,9 @@ import { ArrowDownOutlined } from '@ant-design/icons';
 
 import HOOKS from '@/hooks';
 import HELPER from '@/utils/helper';
-import { PERMISSION_CODES } from '@/enums';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
-import { Header } from '@/components/ADTable';
+import { Header } from '@/components/KwTable';
 
 import { INIT_STATE, SELECT_STATUS, SORTER_MENU } from './enum';
 import { TableState } from './types';
@@ -157,15 +156,7 @@ const IntentionPool = (props: any) => {
             key: 'button-one',
             position: 'left',
             itemDom: (
-              <Format.Button
-                type="primary"
-                disabled={
-                  !HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_INTENT_POOL_CREATE
-                  })
-                }
-                onClick={() => onCreateEdit('create')}
-              >
+              <Format.Button type="primary" onClick={() => onCreateEdit('create')}>
                 <IconFont type="icon-Add" style={{ color: '#fff' }} />
                 {intl.get('intention.create')}
               </Format.Button>
@@ -238,11 +229,6 @@ const IntentionPool = (props: any) => {
       {/* <div className="intention-head">
           <Format.Button
             type="primary"
-            disabled={
-              !HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_INTENT_POOL_CREATE
-              })
-            }
             onClick={() => onCreateEdit('create')}
           >
             <IconFont type="icon-Add" style={{ color: '#fff' }} />

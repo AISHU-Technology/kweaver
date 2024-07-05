@@ -16,7 +16,6 @@ import { ListItem, TableState, KnwItem } from './types';
 import ServiceTable from './ServiceTable';
 
 import { ArrowDownOutlined } from '@ant-design/icons';
-import { PERMISSION_CODES, PERMISSION_KEYS } from '@/enums';
 import { ASC, DESC, PAGE_SIZE, FILTER_OPTION, SORTER_MENU, QUERY_OPTION, INIT_STATE } from './enum';
 
 import './style.less';
@@ -89,7 +88,6 @@ const SearchConfig = (props: any) => {
         }
         // 获取权限
         const dataIds = _.map(results, item => String(item.id));
-        const postData = { dataType: PERMISSION_KEYS.TYPE_SERVICE, dataIds, subDataType: 'cogSearchSvc' };
         // const authCode = await servicesPermission.dataPermission(postData);
         // const codesData = _.keyBy(authCode?.res, 'dataId');
         // const newTableData = _.map(results, item => {

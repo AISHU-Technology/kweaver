@@ -63,7 +63,7 @@ const CodeModal = (props: CodeModalProps) => {
     <UniversalModal
       className={classNames(className, 'mf-prompt-code-modal')}
       title="查看代码"
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
     >
       <div>

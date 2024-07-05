@@ -1,31 +1,20 @@
-import _ from 'lodash';
-import classNames from 'classnames';
-import intl from 'react-intl-universal';
-import { message, Tooltip } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import React, { useMemo, useState, useEffect, useRef } from 'react';
 
 import HOOKS from '@/hooks';
-import Format from '@/components/Format';
 import SideBar from '@/components/SideBar';
 import IconFont from '@/components/IconFont';
-import serviceLicense from '@/services/license';
-import servicesPermission from '@/services/rbacPermission';
-import servicesEventStats, { listMenuDataType } from '@/services/eventStats';
-import { formatIQNumber, sessionStore } from '@/utils/handleFunction';
+import servicesEventStats from '@/services/eventStats';
+import { sessionStore } from '@/utils/handleFunction';
 
 import './style.less';
 
-const ADF_KN_CODE = 'adf-kn';
-
 const Sidebar = props => {
-  const { score, kwLang, setDefaultSelectRoute } = props;
+  const { setDefaultSelectRoute } = props;
   const history = useHistory();
   const language = HOOKS.useLanguage();
   const location = useLocation();
-  const { pathname, search } = location;
-  const [lang, setLang] = useState('zh');
-  const [collapsed, setCollapsed] = useState(false);
+  const { pathname } = location;
   const [sideBarItems, setSideBarItems] = useState([]);
   const keyToRoute = useRef({});
   const selectedKeys = useMemo(() => {
@@ -41,14 +30,6 @@ const Sidebar = props => {
   useEffect(() => {
     fetchSideBarItems();
   }, []);
-
-  useEffect(() => {
-    if (kwLang === 'zh-CN') {
-      setLang('zh');
-    } else {
-      setLang('en');
-    }
-  }, [kwLang]);
 
   // 获取侧边栏
   const fetchSideBarItems = async () => {
@@ -118,47 +99,6 @@ const Sidebar = props => {
     }
   };
 
-  /**
-   * 根据类型和状态返回
-   */
-  const deliveryList = data => {
-    // 主产品 激活
-    const newListMain = _.filter(data, item => {
-      if (item.type !== 10 && item.type !== 14 && item.status === 1) {
-        return item;
-      }
-    });
-    // 测试 到期
-    const expireTrail = _.filter(data, item => {
-      if (item.type === 14 && item.status === 2) {
-        return item;
-      }
-    });
-    return { expireTrail, newListMain };
-  };
-
-  /**
-   * 获取列表
-   */
-  // const getLicenseList = async data => {
-  //   try {
-  //     const res = await serviceLicense.getLicenseList({ status: -1, service: -1, lang, ...data });
-  //     if (res?.res?.data) {
-  //       const licenseList = deliveryList(res.res.data);
-  //       if (licenseList?.newListMain.length !== 0) return false;
-  //       if (licenseList?.expireTrail.length !== 0) {
-  //         return true;
-  //       }
-  //     }
-  //     return false;
-  //   } catch (error) {
-  //     if (!error.type) return;
-  //     const { Description, description } = error.response || {};
-  //     const curDesc = description || Description;
-  //     curDesc && message.error(curDesc);
-  //   }
-  // };
-
   const recursionOpenKeys = (barItem, pathName) => {
     if (keyToRoute.current[barItem.key] === pathName) {
       return [barItem.key];
@@ -225,55 +165,16 @@ const Sidebar = props => {
     const key = data?.keyPath[0];
     // history.push(`${key}?id=${id}`);
     sessionStore.remove('thesaurusSelectedId');
-
     history.push(`${keyToRoute.current[key]}?id=${sessionStore.get('selectedKnowledgeId')}`);
   };
-
-  const onCollapsedChange = collapsed => {
-    setCollapsed(collapsed);
-  };
-
-  const card = useMemo(() => {
-    return (
-      <div
-        className={classNames('knowledgeNetworkSideBarRoot-iqCard kw-mb-5', {
-          'kw-pl-4 kw-pr-4': !collapsed
-        })}
-        onClick={() => {
-          history.push(`/knowledge/studio-iq?id=${sessionStore.get('selectedKnowledgeId')}`);
-        }}
-      >
-        {collapsed ? (
-          <Format.Button type="icon" tip={intl.get('global.domainIQ')} tipPosition={'right'}>
-            <IconFont className="kw-c-primary" style={{ fontSize: 18 }} type="icon-color-lingyuzhishang" />
-          </Format.Button>
-        ) : (
-          <div className="knowledgeNetworkSideBarRoot-iqCard-content kw-border kw-center">
-            <img src={require('@/assets/images/DomainIQ.svg').default} alt="" />
-            <span className="kw-flex-column kw-ml-2">
-              <span style={{ lineHeight: 1 }} className="kw-c-subtext kw-ellipsis">
-                {intl.get('global.domainIQScore')}
-              </span>
-              <span style={{ fontSize: 20, lineHeight: 1, textAlign: 'left' }} className="kw-c-header">
-                {formatIQNumber(score)}
-              </span>
-            </span>
-          </div>
-        )}
-      </div>
-    );
-  }, [collapsed, score]);
 
   return (
     <SideBar
       className="knowledgeNetworkSideBarRoot"
-      // extraFooter={card}
-      // items={items}
       items={sideBarItems}
       openKeys={openKeys}
       selectedKeys={selectedKeys}
       onSelectedKeysChange={onSelectedKeysChange}
-      onCollapsedChange={onCollapsedChange}
       draggable={false}
     />
   );

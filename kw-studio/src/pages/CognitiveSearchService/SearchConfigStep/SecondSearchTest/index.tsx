@@ -3,7 +3,7 @@ import React, { useState, useReducer, useEffect, useRef, useMemo } from 'react';
 import { Button, message } from 'antd';
 import { getParam } from '@/utils/handleFunction';
 import HOOKS from '@/hooks';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import classnames from 'classnames';
 import cognitiveSearchService from '@/services/cognitiveSearch';
 import intl from 'react-intl-universal';
@@ -638,7 +638,7 @@ const SecondSearchTest = (props: any) => {
         {selfState.loading && (
           <div className={`loading-mask ${selfState.loading && 'spinning'}`}>
             <div className="spin-content-box kw-flex">
-              <AdSpin />
+              <KwSpin />
               {selfState.textLoading && (
                 <div className="loading-content">
                   {intl.get('cognitiveSearch.loading')}

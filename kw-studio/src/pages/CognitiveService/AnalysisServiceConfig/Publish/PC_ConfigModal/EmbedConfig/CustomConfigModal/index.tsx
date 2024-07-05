@@ -88,7 +88,7 @@ const AddConfigModal = (props: any) => {
           ? _.capitalize(intl.get('analysisService.editConfig'))
           : _.capitalize(intl.get('analysisService.addConfig'))
       }
-      visible={visible}
+      open={visible}
       onOk={handleOk}
       onCancel={onCancel}
       footerData={[

@@ -12,7 +12,7 @@ import { useGlossaryStore } from '@/pages/KnowledgeNetwork/Glossary/GlossaryCont
 import { GlossaryDataType, TermType } from '@/pages/KnowledgeNetwork/Glossary/types';
 import { getTermNameByLanguage } from '@/pages/KnowledgeNetwork/Glossary/assistant';
 import NoDataBox from '@/components/NoDataBox';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import Format from '@/components/Format';
 
 export default function index({ setSelectedNodeByTerm }: any) {
@@ -226,7 +226,7 @@ export default function index({ setSelectedNodeByTerm }: any) {
       </div>
 
       <div className="kw-mt-4">
-        <ADTable
+        <KwTable
           showHeader={false}
           rowKey="id"
           loading={

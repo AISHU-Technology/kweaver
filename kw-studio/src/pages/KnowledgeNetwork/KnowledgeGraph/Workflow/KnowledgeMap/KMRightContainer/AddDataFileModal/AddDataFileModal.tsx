@@ -1399,7 +1399,7 @@ const AddDataFileModal: React.FC<AddDataFileModalProps> = props => {
     <>
       <TemplateModal
         className={`${prefixCls}-modal`}
-        visible
+        open
         title={
           editData.length > 0
             ? intl.get(`${prefixClsLocale}.editDataFileBtn`)
@@ -1496,7 +1496,7 @@ const AddDataFileModal: React.FC<AddDataFileModalProps> = props => {
         </SplitBox>
       </TemplateModal>
       <TipModal
-        visible={tipsModalVisible}
+        open={tipsModalVisible}
         onClose={() => setTipsModalVisible(false)}
         onCancel={() => setTipsModalVisible(false)}
         onOk={() => {

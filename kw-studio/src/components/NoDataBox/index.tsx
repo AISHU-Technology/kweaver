@@ -1,18 +1,22 @@
-/**
- * 无内容提示
- */
 import React from 'react';
 import NoData, { NoDataProps } from './NoData';
 import NoResult from './NoResult';
 import NoContent from './NoContent';
 
-type NoDataInterface = React.MemoExoticComponent<React.FC<NoDataProps>> & {
-  NO_RESULT: Function;
-  NO_CONTENT: Function;
-};
+interface ExtendedNoDataProps extends Partial<NoDataProps> {
+  type?: 'NO_RESULT' | 'NO_CONTENT' | 'DEFAULT';
+}
 
-const NoDataBox = NoData as NoDataInterface;
-NoDataBox.NO_RESULT = NoResult;
-NoDataBox.NO_CONTENT = NoContent;
+const NoDataBox: React.FC<ExtendedNoDataProps> = ({ type = 'DEFAULT', ...props }) => {
+  const ComponentMap: { [key: string]: React.ComponentType<any> } = {
+    NO_RESULT: NoResult,
+    NO_CONTENT: NoContent,
+    DEFAULT: NoData
+  };
+
+  const ComponentToRender = ComponentMap[type] || NoData;
+
+  return <ComponentToRender {...props} />;
+};
 
 export default NoDataBox;

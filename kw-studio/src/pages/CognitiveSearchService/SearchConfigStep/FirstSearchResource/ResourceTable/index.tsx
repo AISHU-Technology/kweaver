@@ -8,8 +8,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Menu, message, Dropdown, Tooltip } from 'antd';
 
 import HOOKS from '@/hooks';
-import { PERMISSION_KEYS } from '@/enums';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import IconFont from '@/components/IconFont';
 import createImg from '@/assets/images/create.svg';
 import noResImg from '@/assets/images/noResult.svg';
@@ -66,7 +65,6 @@ const ResourceTable: React.ForwardRefRenderFunction<any, any> = (
 
     // 查询权限
     const dataIds = _.map(tableData, item => String(item?.kg_id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
     // servicesPermission.dataPermission(postData).then(result => {
     //   const codesData = _.keyBy(result?.res, 'dataId');
     //   const newGraphData = _.filter(tableData, item => {
@@ -301,7 +299,7 @@ const ResourceTable: React.ForwardRefRenderFunction<any, any> = (
 
   return (
     <div className="source-graph-table-wrap">
-      <ADTable
+      <KwTable
         className="search-table kw-mt-6"
         showHeader={false}
         columns={columns}

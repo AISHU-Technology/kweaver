@@ -88,7 +88,7 @@ const ModalContent = memo((props: any) => {
               <div>{JSON.stringify(searchData)}</div>
             ) : name && !searchData ? (
               <div className="empty-data-box">
-                <NoDataBox.NO_RESULT />
+                <NoDataBox type="NO_RESULT" />
               </div>
             ) : (
               !name && (
@@ -111,7 +111,7 @@ const TestIntentionModal = (props: any) => {
   const { isTestModal, handleCancel, testId, testSuccess, name, setName, setIsAgain, isAgain } = props;
   return (
     <Modal
-      visible={isTestModal}
+      open={isTestModal}
       onCancel={handleCancel}
       wrapClassName="task-test-modal"
       focusTriggerAfterClose={false}

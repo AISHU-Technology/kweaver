@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import useLatestState from '@/hooks/useLatestState';
 
 const InitPagination = { page: 1, pageSize: 10, count: 0 };

@@ -61,7 +61,7 @@ const CheckTaskGraph = (props: any) => {
       maskClosable={false}
       width={'100vw'}
       // style={{ left: 0, margin: 0, padding: 0, maxWidth: '100vw' }}
-      visible={visible}
+      open={visible}
       onCancel={handleCancel}
     >
       <div className="modal-content">

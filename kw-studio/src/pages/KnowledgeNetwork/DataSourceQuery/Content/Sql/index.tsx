@@ -66,7 +66,7 @@ const Sql = (props: any, ref: any) => {
       setErrorMsg('');
       setTableTitle([]);
       const param = { ds_id: selectedData?.origin?.id, sql };
-      const { res, Description, ErrorDetails } = await servicesDataSource.dataSourceSql(param);
+      const { res, ErrorDetails } = await servicesDataSource.dataSourceSql(param);
       if (res?.content) {
         const columns = res.content?.[0];
         const tableData = _.map(res.content?.slice(1), (item, index: number) => {

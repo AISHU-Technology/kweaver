@@ -211,8 +211,8 @@ const ParsingRuleSettingModal = (props: any) => {
 
   return (
     <Popover
-      visible={visible}
-      onVisibleChange={visible => onVisibleChange(visible)}
+      open={visible}
+      onOpenChange={visible => onVisibleChange(visible)}
       placement="topLeft"
       overlayClassName="parsing-setting-modal-root"
       content={confirm}

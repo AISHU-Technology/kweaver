@@ -1,31 +1,21 @@
 import React, { memo, useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Input, Form, ConfigProvider, message, Radio, Switch } from 'antd';
+import { Button, Input, Form, ConfigProvider, message } from 'antd';
 import UniversalModal from '@/components/UniversalModal';
-import { CheckOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
 import { GRAPH_DB_TYPE, ONLY_KEYBOARD } from '@/enums';
 
-// import UniversalModal from '@/components/UniversalModal';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
 import { sessionStore } from '@/utils/handleFunction';
 import TrimmedInput from '../TrimmedInput';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 import './style.less';
-import AdKnowledgeNetIcon, { KnowledgeNetIconList } from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon, { KNIconList } from '@/components/KwKNIcon';
 import classnames from 'classnames';
 
-const COLOR_LIST: { id: string; color: string }[] = [
-  { id: 'a', color: '#126EE3' },
-  { id: 'b', color: '#7CBE00' },
-  { id: 'c', color: '#FF8600' },
-  { id: 'd', color: '#019688' },
-  { id: 'e', color: '#8c8c8c' }
-];
 const ERROR_CODE: Record<string, string> = {
-  'Builder.service.knw_service.knwService.editKnw.RequestError': 'graphList.errorEdit', // 编辑失败
+  'Builder.service.knw_service.knwService.editKnw.RequestError': 'graphList.errorEdit',
   'Builder.controller.knowledgeNetwork_controller.editKnw.PermissionError': 'graphList.editperMissionError',
-  'Builder.service.knw_service.knwService.knowledgeNetwork_save.RequestError': 'graphList.errorCreate', // 创建失败
+  'Builder.service.knw_service.knwService.knowledgeNetwork_save.RequestError': 'graphList.errorCreate',
   'Builder.controller.knowledgeNetwork_controller.save_knowledgenetwork.PermissonError': 'graphList.perMissionError',
   'Builder.third_party_service.managerUtils.ManagerUtils.create_knw_resource.RequestError': 'graphList.perMissionError',
   'Builder.controller.knowledgeNetwork_controller.save_knowledgenetwork.AddPermissionError': 'knowledge.noAuth'
@@ -41,15 +31,14 @@ type ModalContentType = {
   onCancel: () => void;
   onToPageNetwork?: (knId?: string | number) => void;
 };
-// 弹窗内容
+
 const ModalContent = memo(
   forwardRef((props: ModalContentType, ref) => {
     const { source, optionType, onSuccess, onCancel, onToPageNetwork } = props;
     const [form] = Form.useForm();
-    const history = useHistory();
-    const [selectColor, setSelectColor] = useState(KnowledgeNetIconList[0].icon); // 默认选择第一个颜色
-    const graphDbType = sessionStore.get('graph_db_type'); // 图数据库类型
-    const eceph_available = sessionStore.get('ECeph_available'); // ECeph是否可用
+    const [selectColor, setSelectColor] = useState(KNIconList[0].icon);
+    const graphDbType = sessionStore.get('graph_db_type');
+    const eceph_available = sessionStore.get('ECeph_available');
 
     useImperativeHandle(ref, () => ({
       onOk
@@ -61,7 +50,6 @@ const ModalContent = memo(
         const to_be_uploaded = !!source?.to_be_uploaded;
         form.setFieldsValue({ to_be_uploaded });
       } else {
-        // 未接入eceph 不能上传
         const to_be_uploaded = eceph_available ? graphDbType === GRAPH_DB_TYPE?.NEBULA : 0;
         form.setFieldsValue({ to_be_uploaded });
       }
@@ -74,7 +62,7 @@ const ModalContent = memo(
       form
         .validateFields()
         .then(async values => {
-          const { name, des, color, to_be_uploaded } = values;
+          const { name, des, to_be_uploaded } = values;
           let isUpLoad: any;
           if (to_be_uploaded !== undefined) {
             isUpLoad = to_be_uploaded ? 1 : 0;
@@ -82,7 +70,6 @@ const ModalContent = memo(
           const data: any = {
             knw_name: name,
             knw_des: des?.trim(),
-            // knw_color: color || '#126EE3',
             knw_color: selectColor,
             to_be_uploaded: isUpLoad
           };
@@ -102,7 +89,6 @@ const ModalContent = memo(
               }
             }
 
-            // 新建知识网络
             if (optionType === 'add') {
               const result = await servicesKnowledgeNetwork.knowledgeNetCreate(data);
               if (result?.message === 'success') {
@@ -115,16 +101,19 @@ const ModalContent = memo(
                 return form.setFields([{ name: 'name', errors: [intl.get('graphList.repeatName')] }]);
               }
             }
-          } catch (error) {}
+          } catch (error) {
+            /* empty */
+          }
           onCancel();
         })
-        .catch(err => {});
+        .catch(() => {
+          /* empty */
+        });
     };
 
-    // 选择显色回调函数
     const changeColor = (value: string) => {
       const color = value;
-      const selected = _.filter(KnowledgeNetIconList, item => item.icon === color)?.[0] || {};
+      const selected = _.filter(KNIconList, item => item.icon === color)?.[0] || {};
       if (selected?.icon) {
         setSelectColor(selected.icon);
       } else {
@@ -180,7 +169,7 @@ const ModalContent = memo(
               rules={[{ required: true, message: intl.get('graphList.cannotEmpty') }]}
             >
               <div className="kw-flex" style={{ gap: 8 }}>
-                {KnowledgeNetIconList.map(item => (
+                {KNIconList.map(item => (
                   <div
                     key={item.icon}
                     className={classnames('color-icon kw-center', {
@@ -190,12 +179,12 @@ const ModalContent = memo(
                       changeColor(item.icon);
                     }}
                   >
-                    <AdKnowledgeNetIcon key={item.icon} type={item.icon} size={32} fontSize={16} />
+                    <KwKNIcon key={item.icon} type={item.icon} size={32} fontSize={16} />
                   </div>
                 ))}
               </div>
               {/* <Radio.Group onChange={e => changeColor(e?.target?.value)} className="group">*/}
-              {/*  {_.map(KnowledgeNetIconList, item => {*/}
+              {/*  {_.map(KNIconList, item => {*/}
               {/*    const { icon, color } = item;*/}
               {/*    const isSelected = selectColor === icon;*/}
               {/*    return (*/}
@@ -222,7 +211,6 @@ const ModalContent = memo(
   })
 );
 
-// 弹窗
 type KnowledgeModalType = {
   visible: boolean;
   source: { type: string; data: any };
@@ -239,7 +227,7 @@ const KnowledgeModal = (props: KnowledgeModalType) => {
   if (!visible) return null;
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       title={title}
       className="add-netWork-modal"
       destroyOnClose

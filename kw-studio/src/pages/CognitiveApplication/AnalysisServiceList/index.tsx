@@ -8,7 +8,6 @@ import Format from '@/components/Format';
 import ServiceTable from './ServiceTable';
 import analysisService from '@/services/analysisService';
 import servicesPermission from '@/services/rbacPermission';
-import { PERMISSION_KEYS } from '@/enums';
 import FilterHeader from './Header';
 import ImportModal from './ImportModal';
 
@@ -77,7 +76,6 @@ const ServiceList = (props: any) => {
         }
         // 获取权限
         const dataIds = _.map(results, item => String(item.id));
-        const postData = { dataType: PERMISSION_KEYS.TYPE_SERVICE, dataIds, subDataType: 'graphAnalSvc' };
         // const authCode = await servicesPermission.dataPermission(postData);
         // const codesData = _.keyBy(authCode?.res, 'dataId');
         // const newTableData = _.map(results, item => {

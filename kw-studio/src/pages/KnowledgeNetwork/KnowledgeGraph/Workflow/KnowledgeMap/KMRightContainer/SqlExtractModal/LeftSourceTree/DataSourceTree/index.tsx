@@ -162,9 +162,9 @@ const DataSourceTree = (props: DataSourceTreeType) => {
         <Dropdown
           overlay={<CustomMenu node={node} />}
           trigger={['click']}
-          placement="bottomCenter"
-          visible={dropOpen === node?.key}
-          onVisibleChange={e => {
+          placement="bottom"
+          open={dropOpen === node?.key}
+          onOpenChange={e => {
             if (!e) setDropOpen('');
           }}
           getPopupContainer={e => (document.getElementsByClassName('dataSourceListRoot')?.[0] as any) || document.body}

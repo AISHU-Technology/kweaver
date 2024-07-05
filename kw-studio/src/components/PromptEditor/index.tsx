@@ -4,7 +4,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 
 import CodeMirror from 'codemirror';
-import 'codemirror/mode/meta'; // 提供所有模式的元信息, 可使用findModeByName、findModeByExtension、findModeByFileName
+import 'codemirror/mode/meta';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/display/placeholder.js';
 import 'codemirror/addon/display/autorefresh';
@@ -29,10 +29,9 @@ export interface PromptEditorProps {
   readOnly?: boolean;
   options?: Record<string, any>;
   onValueChange?: (value: string) => void;
-  // onVariableChange?: (variable: Array<Pick<TVariables[number], 'id' | 'var_name'>>) => void;
   onFocus?: (value: string) => void;
   onBlur?: (value: string) => void;
-  onUsedVarChange?: (ids: string[]) => void; // 返回已使用的变量id
+  onUsedVarChange?: (ids: string[]) => void;
 }
 export interface PromptEditorRef {
   codemirrorRef: React.MutableRefObject<CodeMirror.Editor | undefined>;
@@ -61,7 +60,7 @@ const PromptEditor: React.ForwardRefRenderFunction<PromptEditorRef, PromptEditor
     height,
     options: customOptions
   } = props;
-  const selfProps = useRef<PromptEditorProps>(props); // 引用props解决hook闭包问题
+  const selfProps = useRef<PromptEditorProps>(props);
   selfProps.current = props;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const editorRef = useRef<TEditor>();
@@ -105,14 +104,12 @@ const PromptEditor: React.ForwardRefRenderFunction<PromptEditorRef, PromptEditor
   const renderCodeMirror = () => {
     if (editorRef.current) return;
     const defaultOptions = {
-      mode: 'custom', // 默认custom不是内置mode, 覆盖掉默认样式
-      // theme,
+      mode: 'custom',
       tabSize: 2,
       fontSize: '14px',
       placeholder,
-      showCursorWhenSelecting: true, // 选中文字时是否显示光标
-      lineWrapping: true, // 是否自动换行
-      // lineNumbers: true, // 是否显示行号
+      showCursorWhenSelecting: true,
+      lineWrapping: true,
       ...customOptions
     };
     editorRef.current = CodeMirror.fromTextArea(textareaRef.current!, defaultOptions);
@@ -188,9 +185,8 @@ const PromptEditor: React.ForwardRefRenderFunction<PromptEditorRef, PromptEditor
       if (existedMarks?.length) return;
       editorRef.current?.markText(pos.from, pos.to, {
         className: 'kw-prompt-highlight',
-        atomic, // 当涉及到光标移动时，原子范围充当单个单元——即不可能将光标放在它们内部
-        // readOnly: true, // 设为true则mark不能删除
-        attributes: { _type: 'prompt', _variable: pos.match, _id: pos.id } // 自定义一个type字段, 标记它是`prompt变量`
+        atomic,
+        attributes: { _type: 'prompt', _variable: pos.match, _id: pos.id }
       });
     });
     varChangedCallback();
@@ -212,7 +208,6 @@ const PromptEditor: React.ForwardRefRenderFunction<PromptEditorRef, PromptEditor
     const promptMark = _.filter(allMark, mark => {
       if (atomic) return mark?.attributes?._type === 'prompt';
 
-      // 如果设置 atomic = false, 需要判断变量是否被更改
       try {
         if (mark?.attributes?._type === 'prompt') {
           const markText = getMarkVar(mark);
@@ -230,7 +225,6 @@ const PromptEditor: React.ForwardRefRenderFunction<PromptEditorRef, PromptEditor
     });
 
     if (positions.length !== promptMark.length || changed) {
-      // promptMark.forEach(mark => mark.clear());
       addVariables(positions);
     }
     varChangedCallback();

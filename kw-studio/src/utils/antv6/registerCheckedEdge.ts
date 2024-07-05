@@ -1,5 +1,4 @@
 import G6 from '@antv/g6';
-import _ from 'lodash';
 
 /**
  * 注册选中的边, 从3种内置边继承

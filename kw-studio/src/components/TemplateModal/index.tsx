@@ -8,12 +8,12 @@ import './style.less';
 
 export interface TemplateModalProps extends ModalProps {
   children?: React.ReactNode;
-  title?: string | React.ReactNode; // 标题
-  header?: React.ReactNode; // 自定义渲染标题dom
-  footerExtra?: React.ReactNode; // 底部左侧额外元素
-  isDisabled?: boolean; // 按钮是否灰置
-  fullScreen?: boolean; // 是否全屏
-  footerAlign?: 'left' | 'center' | 'right'; // 按钮对其方式
+  title?: string | React.ReactNode;
+  header?: React.ReactNode;
+  footerExtra?: React.ReactNode;
+  isDisabled?: boolean;
+  fullScreen?: boolean;
+  footerAlign?: 'left' | 'center' | 'right';
 }
 
 /**

@@ -1,4 +1,4 @@
-import { kwCookie, sessionStore } from '@/utils/handleFunction';
+import { kwCookie } from '@/utils/handleFunction';
 
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 
@@ -20,8 +20,6 @@ const postStream = async (url: any, data: any, setAbortController: any, config: 
   setAbortController(controller);
   const signal = controller.signal;
   let error: any = {};
-  // get请求可用EventSource，post可用fetchEventSource或fetch
-  // 相对于fetch来讲，在onmessage中获取到的数据不需要再进行解析
   await fetchEventSource(url, {
     ...requestInterceptors({
       url,

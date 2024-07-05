@@ -20,7 +20,7 @@ import {
   CHANGE_SELECTED_KN_USER_INFO_VALUE,
   DpapiDataContext
 } from '@/pages/DPApiService/dpapiData';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
 
 type DataSourceTreeType = {
   treeData: any[];
@@ -193,7 +193,7 @@ const DataSourceTree = (props: DataSourceTreeType) => {
                   return (
                     <Menu.Item key={item.id} style={{ height: 40 }}>
                       <div className="kw-align-center" style={{ width: 220 }}>
-                        <AdKnowledgeNetIcon type={item?.color} />
+                        <KwKNIcon type={item?.color} />
                         <div
                           className="kw-flex-item-full-width kw-ellipsis"
                           style={{ marginLeft: 6 }}
@@ -214,7 +214,7 @@ const DataSourceTree = (props: DataSourceTreeType) => {
             {selectedKnUserInfo !== null ? (
               <span className="knInfoDropdownItem">
                 {/* <IconFont type="icon-color-renzhiyingyong" /> */}
-                <AdKnowledgeNetIcon type={selectedKnUserInfo?.color} />
+                <KwKNIcon type={selectedKnUserInfo?.color} />
 
                 <span className="kw-flex-item-full-width kw-ellipsis" style={{ marginLeft: 6 }}>
                   {selectedKnUserInfo.knw_name}111111111111111111111111122222222222222222222222222222222

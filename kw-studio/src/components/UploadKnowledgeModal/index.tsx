@@ -3,7 +3,7 @@
  */
 
 import React, { memo, useState, useEffect, useRef } from 'react';
-import { ConfigProvider, Modal, Button, Form, Select, Checkbox, message, Empty, Input, Tooltip } from 'antd';
+import { ConfigProvider, Modal, Button, Form, Select, Checkbox, message, Empty, Tooltip } from 'antd';
 import { LoadingOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import VirtualList from 'rc-virtual-list';
@@ -14,21 +14,20 @@ import serverKnowledgeNetwork from '@/services/knowledgeNetwork';
 import kongImg from '@/assets/images/kong.svg';
 import noResult from '@/assets/images/noResult.svg';
 import './style.less';
-import _ from 'lodash';
 
 export interface UploadKnowledgeModalProps {
-  kgData: Record<string, any>; // 上传的知识网络
-  visible: boolean; // 弹窗是否可见
-  onOk?: Function; // 点击确定后的回调
-  onCancel: Function; // 关闭弹窗
+  kgData: Record<string, any>;
+  visible: boolean;
+  onOk?: Function;
+  onCancel: Function;
 }
 
 const FormItem = Form.Item;
 const { Option } = Select;
-const MAX_SIZE = 3000; // 一次性拿取数据
-const defaultIpParams = { page: 1, keyword: '', order: 'created', reverse: 1 }; // 获取所有ip地址
-const defaultGraphParams = { page: 1, order: 'desc', rule: 'update', filter: 'upload' }; // 获取所有图谱
-let requestId = 0; // 标记网络请求
+const MAX_SIZE = 3000;
+const defaultIpParams = { page: 1, keyword: '', order: 'created', reverse: 1 };
+const defaultGraphParams = { page: 1, order: 'desc', rule: 'update', filter: 'upload' };
+let requestId = 0;
 
 const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; setGraphData: Function }> = ({
   kgData,
@@ -37,18 +36,17 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
   graphData,
   setGraphData
 }) => {
-  const listRef = useRef<any>(); // 图谱列表
-  const searchInputRef = useRef<any>(); // 搜索框
+  const listRef = useRef<any>();
+  const searchInputRef = useRef<any>();
   const [form] = Form.useForm();
-  const [ipData, setIpData] = useState<any[]>([]); // ip地址列表
-  const [selectedTarget, setSelectedTarget] = useState<any>({}); // 选择的目标地址数据
-  const [selectedGraph, setSelectedGraph] = useState<any[]>([]); // 选择的图谱
-  // const [ellipsisDesc, setEllipsisDesc] = useState(''); // 描述折叠时显示的文本
-  const [descBtnStatus, setDescBtnStatus] = useState<null | { isOpen: boolean }>(null); // 描述多行展开按钮
-  const [ipLoading, setIpLoading] = useState(false); // 加载ip地址
-  const [graphLoading, setGraphLoading] = useState(false); // 加载图谱
-  const [virtualHeight, setVirtualHeight] = useState(0); // 虚拟列表高度
-  const [keyword, setKeyword] = useState(''); // 搜索关键字
+  const [ipData, setIpData] = useState<any[]>([]);
+  const [selectedTarget, setSelectedTarget] = useState<any>({});
+  const [selectedGraph, setSelectedGraph] = useState<any[]>([]);
+  const [descBtnStatus, setDescBtnStatus] = useState<null | { isOpen: boolean }>(null);
+  const [ipLoading, setIpLoading] = useState(false);
+  const [graphLoading, setGraphLoading] = useState(false);
+  const [virtualHeight, setVirtualHeight] = useState(0);
+  const [keyword, setKeyword] = useState('');
 
   const ERROR_CODE: Record<string, string> = {
     'DataIO.Common.KgNotFoundException': intl.get('uploadService.graphNotFount'),
@@ -60,7 +58,6 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
     initDesc(kgData.knw_description);
   }, [kgData]);
 
-  // 描述展开收起时重新设置虚拟列表高度
   useEffect(() => {
     setVirtualHeight(listRef.current?.clientHeight);
   }, [descBtnStatus]);
@@ -70,11 +67,7 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
    */
   const initDesc = (desc = '') => {
     const expectLen = countText(desc);
-
-    // 原样展示
     if (expectLen === desc.length) return;
-
-    // setEllipsisDesc(desc.slice(0, expectLen));
     setDescBtnStatus({ isOpen: false });
   };
 
@@ -91,14 +84,11 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
     node.innerHTML = text;
     document.body.appendChild(node);
 
-    // 两行足够显示
     if (node.clientHeight / 22 <= 2) {
       node.remove();
-
       return text.length;
     }
 
-    // 逐个减少字数计算
     while (node.clientHeight / 22 > 2) {
       curText = curText.slice(0, -1);
       node.innerHTML = `${curText}...<span>${intl.get('global.expand')}</span>`;
@@ -127,7 +117,6 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
 
       setIpData(data);
 
-      // 只有一个地址时直接选中
       if (total === 1) {
         setSelectedTarget(data[0]);
         form.setFieldsValue({ ip: data[0].ip });
@@ -162,7 +151,6 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
     setGraphLoading(false);
   };
 
-  // 选择上传地址回调
   const onIpChange = (value: string, option: any) => {
     setSelectedTarget(option.data);
   };
@@ -187,7 +175,6 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
     checked ? setSelectedGraph(graphData.map(item => item.kgconfid)) : setSelectedGraph([]);
   };
 
-  // 上传
   const onUpload = async (values: any) => {
     if (!selectedGraph.length) {
       message.error(intl.get('uploadService.tipSelectGraph'));
@@ -214,14 +201,13 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
     }
   };
 
-  // 点击上传
-  const onHandleOk = (e: React.MouseEvent) => {
+  const onHandleOk = () => {
     form
       .validateFields()
       .then((values: any) => {
         onUpload(values);
       })
-      .catch((err: any) => {});
+      .catch(() => {});
   };
 
   const onSearchChange = (e: any) => {
@@ -325,7 +311,7 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
             <div className="scroll-wrap" ref={listRef}>
               {graphData.length ? (
                 <VirtualList className="v-list" data={graphData} itemKey="id" height={virtualHeight} itemHeight={48}>
-                  {(item, index) => {
+                  {item => {
                     const { kgconfid, name, kgDesc } = item;
 
                     return (
@@ -390,10 +376,9 @@ const ModalContent: React.FC<UploadKnowledgeModalProps & { graphData: any[]; set
 
 const UploadKnowledgeModal: React.FC<UploadKnowledgeModalProps> = props => {
   const { visible, onCancel, kgData } = props;
-  const [graphData, setGraphData] = useState<any[]>([]); // 全部图谱
-  const [selfVisible, setSelfVisible] = useState(false); // 内部弹窗控制
+  const [graphData, setGraphData] = useState<any[]>([]);
+  const [selfVisible, setSelfVisible] = useState(false);
 
-  // 先判断图谱数量, 图谱为空不打开弹窗
   useEffect(() => {
     if (!visible || !kgData.id) {
       !visible && setSelfVisible(false);
@@ -428,7 +413,7 @@ const UploadKnowledgeModal: React.FC<UploadKnowledgeModalProps> = props => {
   return (
     <Modal
       className="upload-knowledge-network-modal"
-      visible={visible && selfVisible}
+      open={visible && selfVisible}
       focusTriggerAfterClose={false}
       destroyOnClose
       maskClosable={false}

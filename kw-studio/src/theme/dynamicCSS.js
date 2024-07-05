@@ -2,8 +2,8 @@
  * 动态css主题
  */
 
-const containerCache = new Map(); // 容器缓存
-const MARK_KEY = 'kw-theme-ky'; // 样式节点标记
+const containerCache = new Map();
+const MARK_KEY = 'kw-theme-ky';
 
 /**
  * 添加css, 插入head标签
@@ -27,7 +27,6 @@ const injectCSS = css => {
 function updateCSS(css, key = MARK_KEY) {
   const container = document.querySelector('head') || document.body;
 
-  // 初次设置css
   if (!containerCache.has(container)) {
     const placeholderStyle = injectCSS('');
     const { parentNode } = placeholderStyle;

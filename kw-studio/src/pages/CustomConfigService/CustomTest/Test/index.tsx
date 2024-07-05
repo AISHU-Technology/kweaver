@@ -1,18 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Input, Tooltip, message } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Tooltip, message } from 'antd';
 import './style.less';
 import intl from 'react-intl-universal';
-import ParamCodeEditor, { ParamEditorRef, paramPolyfill } from '@/components/ParamCode';
+import ParamCodeEditor from '@/components/ParamCode';
 import IconFont from '@/components/IconFont';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import DragLine from '@/components/DragLine';
 import _ from 'lodash';
 import customService from '@/services/customService';
-import ScrollBar from '@/components/ScrollBar';
-import { getParam, copyToBoardArea } from '@/utils/handleFunction';
+import KwScrollBar from '@/components/KwScrollBar';
+import { copyToBoardArea } from '@/utils/handleFunction';
 import classNames from 'classnames';
 
-const { TextArea } = Input;
 /**
  * 各类型参数对应初始值
  */
@@ -55,7 +54,7 @@ const Test = (props: any) => {
    * @param value
    * @param existedParams
    */
-  const onChange = (value: string, existedParams?: any[]) => {
+  const onChange = (value: string, params?: any[]) => {
     setInputValue(value);
   };
 
@@ -110,7 +109,7 @@ const Test = (props: any) => {
         setLoading(false);
       }
     } catch (err) {
-      const { ErrorDetails, ErrorCode, Description } = err?.response || err?.data || err || {};
+      const { ErrorDetails } = err?.response || err?.data || err || {};
 
       const errorTip =
         typeof ErrorDetails?.[0]?.detail === 'object'
@@ -185,7 +184,7 @@ const Test = (props: any) => {
             {loading && (
               <div className={`loading-mask ${loading && 'spinning'}`}>
                 <div className="spin-content-box kw-flex">
-                  <AdSpin />
+                  <KwSpin />
                 </div>
               </div>
             )}
@@ -194,14 +193,14 @@ const Test = (props: any) => {
                 <div key={index} className="kw-flex">
                   <div className="in-title kw-mr-2 kw-c-primary kw-ml-2">{`[${item?.key}]`}</div>
                   <div className="result-in-out-wrap kw-mb-6">
-                    <ScrollBar className="in-result-box" autoHeight autoHeightMax={400}>
+                    <KwScrollBar className="in-result-box" autoHeight autoHeightMax={400}>
                       {/* <div className="in-result-box kw-flex kw-pb-6"> */}
                       <div className="icon-copy kw-pointer kw-w-100" onClick={() => onCopy(item?.in)}>
                         <IconFont type="icon-copy" style={{ fontSize: '14px' }} />
                       </div>
                       <pre className="in-box">{item?.in}</pre>
                       {/* </div> */}
-                    </ScrollBar>
+                    </KwScrollBar>
                     <div className="out-result-box kw-flex">
                       <div className={classNames('param-code-editor-box kw-w-100', item?.error ? 'kw-p-3' : undefined)}>
                         {item?.error ? (

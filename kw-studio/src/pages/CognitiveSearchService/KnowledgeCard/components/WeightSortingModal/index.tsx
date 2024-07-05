@@ -188,7 +188,7 @@ const WeightSortingModal = (props: WeightSortingModalProps) => {
       title={intl.get('exploreAnalysis.sort')}
       okText={intl.get('global.save')}
       width={800}
-      visible={visible}
+      open={visible}
       // footerExtra={
       //   <div>
       //     {!!weightList.length && (

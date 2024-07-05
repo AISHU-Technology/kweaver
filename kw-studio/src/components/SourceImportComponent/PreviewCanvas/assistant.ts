@@ -56,15 +56,15 @@ export const handleParallelEdges = (edges: any[]) => {
  * @param isGetProperty 是否提取属性
  */
 type ModelOtl = {
-  entity_list: string[][]; // 点
-  entity_relation_set: string[][][]; // 边信息
+  entity_list: string[][];
+  entity_relation_set: string[][][];
   entity_property_dict: {
     entity: string;
     primary_key: string[];
     property: Record<string, any>;
     property_index: string[];
-  }[]; // 点属性
-  relation_property_dict: { edge: string; property: Record<string, any>; property_index: string[] }[]; // 边属性
+  }[];
+  relation_property_dict: { edge: string; property: Record<string, any>; property_index: string[] }[];
 };
 export const parseModelGraph = (modelOtl: ModelOtl, isGetProperty = false, extendProperty?: any) => {
   const { entity_list, entity_relation_set, entity_property_dict, relation_property_dict } = modelOtl;
@@ -121,17 +121,6 @@ export const parseModelGraph = (modelOtl: ModelOtl, isGetProperty = false, exten
         }
       ]
     };
-    // const restNode = {
-    //   id,
-    //   name,
-    //   alias,
-    //   label: alias,
-    //   size: '1x',
-    //   colour: color,
-    //   icon: MODEL_ICON,
-    //   ...proInfo,
-    //   style: { fill: color }
-    // };
     return {
       ...restNode,
       _sourceData: { ...restNode }
@@ -176,19 +165,6 @@ export const parseModelGraph = (modelOtl: ModelOtl, isGetProperty = false, exten
       target,
       source
     };
-    // const restEdge = {
-    //   id,
-    //   name: edge[0],
-    //   alias: edge[1],
-    //   label: edge[1],
-    //   color,
-    //   size: '0.25x',
-    //   relations,
-    //   ...proInfo,
-    //   source,
-    //   target,
-    //   style: { endArrow: { fill: color, path: G6.Arrow.triangle(8, 10, source === target ? 0 : 10) } }
-    // };
     return {
       ...restEdge,
       _sourceData: { ...restEdge }
@@ -201,8 +177,6 @@ export const parseModelGraph = (modelOtl: ModelOtl, isGetProperty = false, exten
 
 export const constructGraphData = (_data: any): any => {
   const data = initGraphByEdit({ entity: _data.nodes || _data.entity, edge: _data.edges || _data.edge });
-  // const data = _.cloneDeep(_data);
-  // 构建nodes
   const theNodes: any[] = _.map(data.nodes || [], (d: NodeType) => {
     const item: any = d;
     const { uid, type, alias, color, icon, x, y, fx, fy, default_tag, properties, name } = item;
@@ -232,13 +206,11 @@ export const constructGraphData = (_data: any): any => {
       _sourceData: Object.assign(item, resetData)
     };
 
-    // 力导向布局会分配位置, 使用fx、fy固定
     if (isDef(x)) nodeData.fx = isDef(fx) ? fx : x;
     if (isDef(y)) nodeData.fy = isDef(fy) ? fy : y;
 
     return nodeData;
   });
-  // 构建edges
   const theEdges = _.map(data.edges || [], (d: EdgeType) => {
     const item: any = d;
     if (d.colour) item.color = d.colour;
@@ -260,7 +232,6 @@ export const constructGraphData = (_data: any): any => {
     };
   });
 
-  // 两节点多条边的处理
   handleParallelEdges(theEdges);
   return { nodes: theNodes, edges: theEdges };
 };
@@ -270,12 +241,11 @@ export const constructGraphData = (_data: any): any => {
  * @param otl 后端返回的模型预测数据
  */
 type Otl = {
-  entity: any[]; // 点
-  edge: any[]; // 边信息
+  entity: any[];
+  edge: any[];
   [key: string]: any;
 };
 export const parseOntoGraph = (otl: Otl) => {
-  // 构建nodes
   const nodes = _.map(otl.entity, d => {
     if (d.colour) d.color = d.colour;
     const { name, alias, color, icon, x, y } = d;
@@ -289,18 +259,16 @@ export const parseOntoGraph = (otl: Otl) => {
       _sourceData: d
     };
 
-    // 力导向布局会分配位置, 使用fx、fy固定
     if (isDef(x)) nodeData.fx = x;
     if (isDef(y)) nodeData.fy = y;
 
     return nodeData;
   });
 
-  // 构建edges
   const edges = _.map(otl.edge || [], d => {
     if (d.colour) d.color = d.colour;
-    const { name, relations, alias, color } = d;
-    const [source, _, target] = relations;
+    const { relations, alias, color } = d;
+    const [source, target] = relations;
 
     return {
       color,
@@ -312,7 +280,6 @@ export const parseOntoGraph = (otl: Otl) => {
     };
   });
 
-  // 两节点多条边的处理
   handleParallelEdges(edges);
   return { nodes, edges };
 };

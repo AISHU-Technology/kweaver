@@ -1,11 +1,9 @@
-import React, { useState, useRef, useEffect, useReducer, useImperativeHandle, forwardRef, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useReducer, useImperativeHandle, forwardRef } from 'react';
 import { Tooltip, message } from 'antd';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
 import classNames from 'classnames';
 import serviceFunction from '@/services/functionManage';
-import HELPER from '@/utils/helper';
-import { PERMISSION_CODES } from '@/enums';
 import IconFont from '@/components/IconFont';
 import ParamCodeEditor, {
   ParamEditorRef,
@@ -70,10 +68,6 @@ const CodeEditor = (props: CodeEditorProps, ref: any) => {
   const [saveVisible, setSaveVisible] = useState(false); // 保存弹窗
   const [shouldSave, setShouldSave] = useState(false); // 是否可保存
   const [refreshQuoteFlag, dispatchRefreshQuoteFlag] = useReducer(x => x + 1, 0); // 触发刷新函数引用列表
-  // 有新建权限才能保存
-  const savePermission = useMemo(() => {
-    return HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_FUNCTION_CREATE });
-  }, []);
 
   // 转发编辑器ref
   useImperativeHandle(ref, () => editorRef.current);
@@ -122,7 +116,7 @@ const CodeEditor = (props: CodeEditorProps, ref: any) => {
    * 打开保存弹窗
    */
   const onClickSave = () => {
-    if (!savePermission || !shouldSave) return;
+    if (!shouldSave) return;
     setSaveVisible(true);
   };
 
@@ -328,7 +322,7 @@ const CodeEditor = (props: CodeEditorProps, ref: any) => {
               <QuoteBar knwId={knwId} refreshFlag={refreshQuoteFlag} onSelect={handleQuote} />
               <Tooltip title={intl.get('function.saveBtn')}>
                 <span
-                  className={classNames('tool-btn kw-mr-2', { disabled: !savePermission || !shouldSave })}
+                  className={classNames('tool-btn kw-mr-2', { disabled: !shouldSave })}
                   style={{ fontSize: 14 }}
                   onClick={onClickSave}
                 >

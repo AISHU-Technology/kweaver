@@ -54,7 +54,6 @@ const VariableTable = (props: VariableTableProps) => {
     const newItem = { ...variables[index], [key]: value };
     newVar[index] = newItem;
 
-    // 因为要校验重名 所以要校验所有的
     if (['var_name', 'field_name'].includes(key)) {
       newVar = verifyVariables(newVar);
     }

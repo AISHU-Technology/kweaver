@@ -3,8 +3,7 @@ import intl from 'react-intl-universal';
 import _ from 'lodash';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
-import ConfigurationTypeOne from '@/components/ConfigurationTypeOne';
-import ConfigurationTypeTwo from '@/components/ConfigurationTypeTwo';
+import ConfigurationTypeTwo from './ConfigurationTypeTwo';
 import ExplainTip from '@/components/ExplainTip';
 
 import './style.less';

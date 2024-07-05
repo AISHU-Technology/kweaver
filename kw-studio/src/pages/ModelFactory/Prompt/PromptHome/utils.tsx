@@ -17,7 +17,7 @@ export const parseToTreeData = (source: ProjectItem[]) => {
         key: id,
         pKey: prompt_item_id,
         type: 'category',
-        title: '', // 显示设置为空, 否则浏览器tip会显示 --
+        title: '',
         name,
         isLeaf: true,
         sourceData: {

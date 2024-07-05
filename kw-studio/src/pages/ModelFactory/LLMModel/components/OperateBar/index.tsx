@@ -29,12 +29,12 @@ const OperateBar = (props: OperateBarProps) => {
 
   return (
     <Dropdown
-      visible={visible}
+      open={visible}
       placement="bottomLeft"
       destroyPopupOnHide
       trigger={['click']}
       getPopupContainer={getPopupContainer}
-      onVisibleChange={setVisible}
+      onOpenChange={setVisible}
       overlay={
         <Menu style={{ minWidth: 120 }} onClick={handleClick}>
           {_.map(items, item => (

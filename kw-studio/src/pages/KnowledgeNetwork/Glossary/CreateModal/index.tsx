@@ -104,7 +104,7 @@ const CreateModal = (props: any) => {
   return (
     <UniversalModal
       title={editData ? intl.get(`${prefixLocale}.editGlossaryTitle`) : intl.get(`${prefixLocale}.createGlossaryTitle`)}
-      visible
+      open
       width={640}
       onCancel={closeModal}
       footerData={[

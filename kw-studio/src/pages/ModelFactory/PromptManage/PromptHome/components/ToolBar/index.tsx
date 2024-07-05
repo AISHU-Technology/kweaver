@@ -8,7 +8,7 @@ import _ from 'lodash';
 import { DESCEND, ASCEND, offsetY } from '@/enums';
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
-import { Header } from '@/components/ADTable';
+import { Header } from '@/components/KwTable';
 
 import { PROMPT_TYPE_OPTION, SORTER_MENU } from '../../enums';
 import { PromptState } from '../../types';

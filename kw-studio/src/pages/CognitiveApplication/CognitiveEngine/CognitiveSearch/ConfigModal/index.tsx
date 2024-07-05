@@ -12,7 +12,7 @@ import intl from 'react-intl-universal';
 import _ from 'lodash';
 import { fuzzyMatch } from '@/utils/handleFunction';
 import SearchInput from '@/components/SearchInput';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import { tipModalFunc } from '@/components/TipModal';
 import ConfigGraph from '../ConfigGraph';
 import BaseInfo from './BaseInfo';
@@ -463,7 +463,7 @@ const ModalContent = forwardRef(
                     </div>
 
                     <div className="scroll-wrap">
-                      <ScrollBar isshowx="false" className="list-scroll" ref={entityScrollRef}>
+                      <KwScrollBar isShowX={false} className="list-scroll" ref={entityScrollRef}>
                         <div className="list-box">
                           {showNodes.length ? (
                             showNodes.map(item => {
@@ -513,7 +513,7 @@ const ModalContent = forwardRef(
                             </div>
                           )}
                         </div>
-                      </ScrollBar>
+                      </KwScrollBar>
                     </div>
 
                     <div className={`footer-pagination ${!selfState.nodeTotal && 'hide'}`}>
@@ -567,7 +567,7 @@ const ModalContent = forwardRef(
                     </div>
 
                     <div className="scroll-wrap">
-                      <ScrollBar isshowx="false" className="list-scroll" ref={edgeScrollRef}>
+                      <KwScrollBar isShowX={false} className="list-scroll" ref={edgeScrollRef}>
                         <div className="list-box">
                           {showEdges.length ? (
                             showEdges.map(item => {
@@ -603,7 +603,7 @@ const ModalContent = forwardRef(
                             </div>
                           )}
                         </div>
-                      </ScrollBar>
+                      </KwScrollBar>
                     </div>
 
                     <div className={`footer-pagination ${!selfState.edgeTotal && 'hide'}`}>
@@ -669,7 +669,7 @@ const ConfigModal: React.FC<ConfigModalProps> = props => {
     <Modal
       className="kg-strategy-config-modal"
       destroyOnClose
-      visible={visible}
+      open={visible}
       width={'auto'}
       footer={null}
       focusTriggerAfterClose={false}

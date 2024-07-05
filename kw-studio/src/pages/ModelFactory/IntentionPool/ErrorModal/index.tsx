@@ -28,7 +28,7 @@ const ErrorModal = (props: any) => {
   const { isErrorModal, handleCancel, errorDes } = props;
   return (
     <Modal
-      visible={isErrorModal}
+      open={isErrorModal}
       onCancel={handleCancel}
       wrapClassName="task-error-modal"
       focusTriggerAfterClose={false}

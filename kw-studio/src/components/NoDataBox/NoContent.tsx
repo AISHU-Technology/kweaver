@@ -3,8 +3,8 @@ import intl from 'react-intl-universal';
 import NoData from './NoData';
 import emptyImg from '@/assets/images/empty.svg';
 
-export default function NoContent(props: { text: string }) {
-  const { text = intl.get('global.noContent') } = props;
+export default function NoContent(props: { desc: string }) {
+  const { desc = intl.get('global.noContent') } = props;
 
-  return <NoData imgSrc={emptyImg} desc={text} />;
+  return <NoData imgSrc={emptyImg} desc={desc} />;
 }

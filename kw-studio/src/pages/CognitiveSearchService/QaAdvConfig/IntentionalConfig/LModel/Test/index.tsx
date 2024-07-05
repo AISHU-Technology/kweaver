@@ -50,7 +50,7 @@ const TestLModel = (props: any) => {
         };
       }
       const body = {
-        query: inputRef?.current?.state.value,
+        query: inputRef?.current?.input.value,
         llm_config,
         intent_prompt: data?.intent_prompt,
         entity_prompt: data?.entity_prompt,
@@ -105,9 +105,9 @@ const TestLModel = (props: any) => {
           </div>
         ) : (
           <div className="no-query-box kw-center">
-            <img src={inputRef?.current?.state?.value ? noResImg : configChange} alt="" />
+            <img src={inputRef?.current?.input?.value ? noResImg : configChange} alt="" />
             <div style={{ width: 152, textAlign: 'center' }}>
-              {inputRef?.current?.state?.value
+              {inputRef?.current?.input?.value
                 ? intl.get('global.noResult')
                 : intl.get('cognitiveSearch.qaAdvConfig.enterQuery')}
             </div>

@@ -683,7 +683,7 @@ class OntoEdgesModal<T> extends Component<Props<T>, OntoEdgesModalStates> {
         className="batch-add-edge-modal"
         title={intl.get('createEntity.bulikR')}
         width={1000}
-        visible={isVisibleEdges}
+        open={isVisibleEdges}
         footer={null}
         destroyOnClose
         maskClosable={false}

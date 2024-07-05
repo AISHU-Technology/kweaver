@@ -10,7 +10,6 @@ import Empty from '@/assets/images/empty.svg';
 import fullTip from '@/assets/images/fullTip.svg';
 import UniversalModal from '@/components/UniversalModal';
 import servicesPermission from '@/services/rbacPermission';
-import { PERMISSION_KEYS } from '@/enums';
 import './style.less';
 
 export const SearchRangeContent = forwardRef((props: any, ref) => {
@@ -40,7 +39,6 @@ export const SearchRangeContent = forwardRef((props: any, ref) => {
   useEffect(() => {
     // 资源分类弹窗校验权限
     const dataIds = _.map(testData?.props?.data_source_scope, item => String(item.kg_id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
     let error = false;
     // servicesPermission.dataPermission(postData).then(result => {
     //   const codesData = _.keyBy(result?.res, 'dataId');
@@ -163,7 +161,7 @@ const SearchRange = (props: any) => {
   return (
     <UniversalModal
       className="search-range-wrap-root"
-      visible={visible}
+      open={visible}
       title={titleModal()}
       okText={intl.get('cognitiveSearch.save')}
       destroyOnClose={true}

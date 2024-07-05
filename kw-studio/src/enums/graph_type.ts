@@ -3,5 +3,5 @@
  */
 export const GRAPH_DB_TYPE = {
   NEBULA: 'nebulaGraph',
-  ORIENTDB: 'orientDB' // 非结构化
+  ORIENTDB: 'orientDB'
 };

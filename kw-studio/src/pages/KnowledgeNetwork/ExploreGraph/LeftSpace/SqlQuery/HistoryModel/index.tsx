@@ -11,7 +11,7 @@ import kongImg from '@/assets/images/kong.svg';
 import './style.less';
 import { Button } from 'antd';
 import IconFont from '@/components/IconFont';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 const HistoryModal = (props: any) => {
   const { visible, onClose, sqlHistory, sqlKey, selectedItem, updateHistory, onClickHistory } = props;
   const [dataList, setDataList] = useState<any>([]);
@@ -42,7 +42,7 @@ const HistoryModal = (props: any) => {
   return (
     <UniversalModal
       className="sql-history-modal"
-      visible={visible}
+      open={visible}
       title={intl.get('exploreGraph.history')}
       width={640}
       zIndex={2000}
@@ -65,7 +65,7 @@ const HistoryModal = (props: any) => {
               <NoDataBox imgSrc={kongImg} desc={intl.get('exploreGraph.DataEmpty')} />
             </div>
           ) : (
-            <ScrollBar style={{ height: 497 }} isshowx="false">
+            <KwScrollBar style={{ height: 497 }} isShowX={false}>
               {_.map(dataList, (item: any, index: number) => {
                 return (
                   <div key={index} className="historyItem">
@@ -88,7 +88,7 @@ const HistoryModal = (props: any) => {
                   </div>
                 );
               })}
-            </ScrollBar>
+            </KwScrollBar>
           )}
         </div>
       </div>

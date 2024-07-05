@@ -23,7 +23,7 @@ import TrimmedInput from '@/components/TrimmedInput';
 
 import apiService from '@/utils/axios-http/oldIndex';
 import servicesDataSource from '@/services/dataSource';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import UniversalModal from '@/components/UniversalModal';
 
 import './style.less';
@@ -646,7 +646,7 @@ const SourceModal = props => {
     <UniversalModal
       title={intl.get(`datamanagement.${operation}`) + intl.get('datamanagement.dataSourceTitle')}
       className="data-source-modal"
-      visible={visible}
+      open={visible}
       destroyOnClose
       focusTriggerAfterClose={false}
       width={640}
@@ -695,9 +695,9 @@ const SourceModal = props => {
             marginBottom: sourceType !== 'AnyRobot' && 28
           }}
         >
-          <ScrollBar
+          <KwScrollBar
             ref={scrollRef}
-            isshowx="false"
+            isShowX={false}
             color="rgb(184,184,184)"
             className={classNames({ 'scroll-box': sourceType === 'AnyRobot' })}
           >
@@ -1047,7 +1047,7 @@ const SourceModal = props => {
                 )}
               </Form>
             </div>
-          </ScrollBar>
+          </KwScrollBar>
         </div>
 
         {/* 底部按钮 */}

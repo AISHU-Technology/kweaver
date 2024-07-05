@@ -20,7 +20,7 @@ import { verifyVariables } from '../components/VariableTable/nameValidator';
 import './style.less';
 
 import useConfigStore from '../useConfigStore';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 
 export interface HeaderProps {
   className?: string;
@@ -108,7 +108,6 @@ const Header = (props: HeaderProps) => {
     try {
       const { res } = (await promptServices.promptEdit(body)) || {};
       res && !hideMessage && message.success(intl.get('global.saveSuccess'));
-      // 可能换了分类, 更新记住的url
       if (res) {
         const search = getRememberParams(body);
         const url =
@@ -220,7 +219,7 @@ const Header = (props: HeaderProps) => {
       {/* <CodeModal visible={codeVisible} onCancel={() => setCodeVisible(false)} /> */}
 
       <TipModal
-        visible={exitVisible}
+        open={exitVisible}
         title={intl.get('prompt.exitTitle')}
         content={intl.get('prompt.exitContent')}
         okText={intl.get('prompt.saveClose')}

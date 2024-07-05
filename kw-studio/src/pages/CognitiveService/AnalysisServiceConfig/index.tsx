@@ -13,7 +13,7 @@ import cognitiveSearchService from '@/services/cognitiveSearch';
 import servicesPermission from '@/services/rbacPermission';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 
-import { GRAPH_LAYOUT, ANALYSIS_SERVICES, PERMISSION_KEYS, GRAPH_LAYOUT_PATTERN } from '@/enums';
+import { GRAPH_LAYOUT, ANALYSIS_SERVICES, GRAPH_LAYOUT_PATTERN } from '@/enums';
 import { tipModalFunc } from '@/components/TipModal';
 import LoadingMask from '@/components/LoadingMask';
 import { getParam } from '@/utils/handleFunction';
@@ -216,7 +216,6 @@ const AnalysisServiceConfig = (props: AnalysisServiceConfigProps) => {
 
       if (res?.df) {
         const dataIds = _.map(res?.df, item => String(item.id));
-        const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
         // servicesPermission.dataPermission(postData).then(result => {
         //   const codesData = _.keyBy(result?.res, 'dataId');
         //   const newGraphData = _.filter(res?.df, item => {

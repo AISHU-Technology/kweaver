@@ -67,7 +67,6 @@ const toolTipWorkFlow = (maxWidth = 320) =>
     }
   });
 
-// 自带的plugin tooltip 不带延时
 const attrToolTipOntoLib = (isNodeCopyBehavior: any) =>
   new G6.Tooltip({
     className: 'onto_lib_attr_tooltip',
@@ -77,10 +76,8 @@ const attrToolTipOntoLib = (isNodeCopyBehavior: any) =>
       const NODE_HALO_CLASS = 'node-halo-class';
       if (e.target.get('className') !== NODE_HALO_CLASS && !isNodeCopyBehavior.current) {
         const sourceData = e?.item?.getModel()?._sourceData;
-        // const item = e?.item?.getModel();
         if (_.isEmpty(sourceData)) return '';
         const properties = sourceData?.attributes;
-        // const isEdge = !!sourceData?.relations;
         const outDiv = `
           <div style="background-color: rgba(255,255,255); border-radius: 4px; font-size: 14px; color: #000;
             box-shadow: 0px 2px 12px 0px rgba(0,0,0,0.06); width: 320px;" 
@@ -187,7 +184,6 @@ const updateToolTip = (graph: any, data: any, isNodeCopyBehavior: any) => {
 
   if (model._sourceData?.relations) {
     const edgeGroup = data?.item?._cfg?.group;
-    // const shape = edgeGroup.get('children')[4];
     const shape = _.filter(edgeGroup.get('children'), item => item.cfg.name === 'edge-line')[0];
     const midPoint = shape.getPoint(0.5);
     position = graph.current.getCanvasByPoint(midPoint.x, midPoint.y);
@@ -209,7 +205,6 @@ const clearShowTimer = (graph: any) => {
   }
 };
 
-// 实现的tooltip 带延时功能
 const registerToolTip = (graph: any, isNodeCopyBehavior: any) => {
   if (!graph || !graph.current || !graph.current.on) return;
   const container = graph.current.getContainer();
@@ -228,7 +223,7 @@ const registerToolTip = (graph: any, isNodeCopyBehavior: any) => {
   graph.current.on('node:drag', () => {
     clearShowTimer(graph);
   });
-  graph.current.on('node:click', (data: any) => {
+  graph.current.on('node:click', () => {
     clearShowTimer(graph);
   });
   graph.current.on('node:mouseover', (data: any) => {
@@ -243,7 +238,7 @@ const registerToolTip = (graph: any, isNodeCopyBehavior: any) => {
       clearShowTimer(graph);
     }, 50);
   });
-  graph.current.on('edge:click', (data: any) => {
+  graph.current.on('edge:click', () => {
     clearShowTimer(graph);
   });
   graph.current.on('edge:mouseover', (data: any) => {

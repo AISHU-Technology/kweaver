@@ -24,8 +24,8 @@ const ColorDropDown = (props: IconDropdownProps) => {
   return (
     <Dropdown
       trigger={['click']}
-      visible={visible}
-      onVisibleChange={v => !readOnly && setVisible(v)}
+      open={visible}
+      onOpenChange={v => !readOnly && setVisible(v)}
       overlay={
         <div className="onto-styles-dropdown kw-p-3" style={{ width: DOM?.clientWidth }}>
           <ColorSelect value={color} onChangeColor={onChange} />

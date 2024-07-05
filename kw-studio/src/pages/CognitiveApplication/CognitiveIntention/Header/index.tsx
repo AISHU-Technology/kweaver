@@ -13,7 +13,6 @@ import _ from 'lodash';
 import HELPER from '@/utils/helper';
 
 import ContainerIsVisible from '@/components/ContainerIsVisible';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import Format from '@/components/Format';
 
 import { DESC, FILTER_OPTION, SORTER_MENU, INIT_STATE } from '../enum';
@@ -59,14 +58,7 @@ export default function FilterHeader(props: any) {
   return (
     <div>
       <div className="kw-space-between">
-        <ContainerIsVisible
-          placeholder={<span style={{ height: 32, display: 'inline-block' }} />}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_APP_COGSEARCH_CREATE,
-            userType: PERMISSION_KEYS.KN_ADD_SERVICE
-            // userTypeDepend: knData?.__codes
-          })}
-        >
+        <ContainerIsVisible placeholder={<span style={{ height: 32, display: 'inline-block' }} />}>
           <Button type="primary" onClick={() => onCreate()}>
             <IconFont type="icon-Add" style={{ color: '#fff' }} />
             {intl.get('exploreAnalysis.create')}

@@ -1012,7 +1012,7 @@ const GlossaryTree = forwardRef<GlossaryTreeRefType, GlossaryTreeType>((props, r
       </div>
       <UniversalModal
         title={intl.get('glossary.deleteTerm')}
-        visible={deleteModalProps.confirmVisible}
+        open={deleteModalProps.confirmVisible}
         onCancel={() => {
           setDeleteModalProps(prevState => ({
             ...prevState,
@@ -1056,7 +1056,7 @@ const GlossaryTree = forwardRef<GlossaryTreeRefType, GlossaryTreeType>((props, r
       <TipModal
         title={intl.get('glossary.deleteTermTipsTitle')}
         content={intl.get('glossary.deleteTermTipsContent')}
-        visible={deleteModalProps.tipsVisible}
+        open={deleteModalProps.tipsVisible}
         onCancel={() => {
           setDeleteModalProps(prevState => ({
             ...prevState,

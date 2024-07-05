@@ -9,7 +9,6 @@ import UniversalModal from '@/components/UniversalModal';
 import HELPER from '@/utils/helper';
 import servicesThesaurus from '@/services/thesaurus';
 import servicesPermission from '@/services/rbacPermission';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import { getParam } from '@/utils/handleFunction';
 import kongImage from '@/assets/images/kong.svg';
 
@@ -50,28 +49,6 @@ const CreateThesaurusModal = (props: any) => {
         return;
       }
       setThesaurusList(res?.df);
-      // if (res?.df?.length) {
-      //   const dataIds = _.map(res?.df, (item: any) => String(item.id));
-      //   const postData = { dataType: PERMISSION_KEYS.TYPE_LEXICON, dataIds };
-      //   servicesPermission.dataPermission(postData).then(result => {
-      //     const codesData = _.keyBy(result?.res, 'dataId');
-      //     const newTableData = _.map(res?.df, (item: any) => {
-      //       const codes = codesData?.[item.id]?.codes;
-      //       item.__codes = codes;
-      //       item.isDisable = !HELPER.getAuthorByUserInfo({
-      //         roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-      //         userType: PERMISSION_KEYS.LEXICON_EDIT,
-      //         userTypeDepend: codes
-      //       });
-      //       return item;
-      //     });
-      //     const filterList = _.filter(
-      //       newTableData,
-      //       (item: any) => item?.status === 'success' && item?.id !== Number(thesaurus_id)
-      //     );
-      //     setThesaurusList(filterList);
-      //   });
-      // }
     } catch (err) {
       //
     }
@@ -221,7 +198,7 @@ const CreateThesaurusModal = (props: any) => {
       className="thesaurus-mode-create-UniversalModal-root"
       title={intl.get('ThesaurusManage.add')}
       width={'640px'}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footerData={[
         { label: intl.get('global.cancel'), onHandle: onCancel },

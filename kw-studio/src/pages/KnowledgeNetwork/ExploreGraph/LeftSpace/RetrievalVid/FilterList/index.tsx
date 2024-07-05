@@ -135,7 +135,7 @@ const FilterList = (props: any) => {
           </Tooltip>
         </div>
       </div>
-      {/* <ScrollBar isshowx="false" style={{ maxHeight: 'calc(100% - 74px)' }}> */}
+      {/* <KwScrollBar isShowX={false} style={{ maxHeight: 'calc(100% - 74px)' }}> */}
       <div style={{ overflow: 'auto', maxHeight: 'calc(100% - 74px)' }}>
         {_.isEmpty(searchConfig) ? (
           <div className="kw-c-subtext kw-mt-6 kw-center">{intl.get('exploreGraph.noFilter')}</div>
@@ -288,7 +288,7 @@ const FilterList = (props: any) => {
           })
         )}
       </div>
-      {/* </ScrollBar> */}
+      {/* </KwScrollBar> */}
     </div>
   );
 };

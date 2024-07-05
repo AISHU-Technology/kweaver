@@ -7,7 +7,7 @@ import { LoadingOutlined, ArrowDownOutlined, EllipsisOutlined } from '@ant-desig
 
 import servicesPermission from '@/services/rbacPermission';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
-import { PERMISSION_KEYS, PERMISSION_CODES, GRAPH_DB_TYPE } from '@/enums';
+import { GRAPH_DB_TYPE } from '@/enums';
 
 import HELPER from '@/utils/helper';
 import { formatIQNumber, sessionStore } from '@/utils/handleFunction';
@@ -20,13 +20,13 @@ import UploadRecordModal from '@/components/UploadRecordModal';
 import UploadKnowledgeModal from '@/components/UploadKnowledgeModal';
 
 import DeleteModal from './deleteModal';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 import NoResult from '@/assets/images/noResult.svg';
 import addContentImg from '@/assets/images/create.svg';
 import './index.less';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import AdExitBar from '@/components/KwExitBar';
+import KwKNIcon from '@/components/KwKNIcon';
 import LoadingMask from '@/components/LoadingMask';
 import useRouteCache from '@/hooks/useRouteCache';
 import useAdHistory from '@/hooks/useAdHistory';
@@ -83,7 +83,6 @@ const GraphList = ({ onToPageNetwork }: any) => {
     // 获取列表权限, 判断权限
     if (_.isEmpty(tableData)) return;
     const dataIds = _.map(tableData, (item: any) => String(item.id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds };
     // servicesPermission.dataPermission(postData).then(result => {
     //   const codesData = _.keyBy(result?.res, 'dataId');
     //   const newTableData = _.map(tableData, (item: any) => {
@@ -221,83 +220,51 @@ const GraphList = ({ onToPageNetwork }: any) => {
         trigger={['click']}
         overlay={
           <Menu>
-            <ContainerIsVisible
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_EDIT,
-                userType: PERMISSION_KEYS.KN_EDIT,
-                userTypeDepend: record?.__codes
-              })}
+            <Menu.Item
+              key="edit"
+              onClick={({ domEvent }) => {
+                domEvent.stopPropagation();
+                onOperation('edit', record);
+              }}
             >
-              <Menu.Item
-                key="edit"
-                onClick={({ domEvent }) => {
-                  domEvent.stopPropagation();
-                  onOperation('edit', record);
-                }}
-              >
-                {intl.get('graphList.edit')}
-              </Menu.Item>
-            </ContainerIsVisible>
+              {intl.get('graphList.edit')}
+            </Menu.Item>
 
-            {/* {uploadable?.type === GRAPH_DB_TYPE?.NEBULA ? (*/}
-            {/*  <Menu.Item*/}
-            {/*    key="upload"*/}
-            {/*    disabled={*/}
-            {/*      record?.__isCreator*/}
-            {/*        ? false*/}
-            {/*        : !HELPER.getAuthorByUserInfo({*/}
-            {/*            roleType: PERMISSION_CODES.ADF_KN_KG_CREATE_IMPORT,*/}
-            {/*            userType: PERMISSION_KEYS.KG_UPLOAD,*/}
-            {/*            userTypeDepend: record?.__codes*/}
-            {/*          })*/}
-            {/*    }*/}
-            {/*    onClick={({ domEvent }) => {*/}
-            {/*      domEvent.stopPropagation();*/}
-            {/*      onOperation('upload', record);*/}
-            {/*    }}*/}
-            {/*  >*/}
-            {/*    {intl.get('graphList.upload')}*/}
-            {/*  </Menu.Item>*/}
-            {/* ) : null}*/}
-            <ContainerIsVisible
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_DELETE,
-                userType: PERMISSION_KEYS.KN_DELETE,
-                userTypeDepend: record?.__codes
-              })}
-            >
+            {/* {uploadable?.type === GRAPH_DB_TYPE?.NEBULA ? (
               <Menu.Item
-                key="delete"
+                key="upload"
+                disabled={!record?.__isCreator}
                 onClick={({ domEvent }) => {
                   domEvent.stopPropagation();
-                  onOpenDelete(record);
+                  onOperation('upload', record);
                 }}
               >
-                {intl.get('graphList.delete')}
+                {intl.get('graphList.upload')}
               </Menu.Item>
-            </ContainerIsVisible>
-            <ContainerIsVisible
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_MEMBER,
-                userType: PERMISSION_KEYS.KN_EDIT_PERMISSION,
-                userTypeDepend: record?.__codes
-              })}
+            ) : null} */}
+            <Menu.Item
+              key="delete"
+              onClick={({ domEvent }) => {
+                domEvent.stopPropagation();
+                onOpenDelete(record);
+              }}
             >
-              <Menu.Item
-                key="authorityManagement"
-                onClick={({ domEvent }) => {
-                  domEvent.stopPropagation();
-                  setRouteCache({
-                    showType,
-                    searchValue,
-                    sorter
-                  });
-                  history.push(`/knowledge/knowledge-net-auth?knId=${record.id}&knName=${record.knw_name}`);
-                }}
-              >
-                {intl.get('graphList.authorityManagement')}
-              </Menu.Item>
-            </ContainerIsVisible>
+              {intl.get('graphList.delete')}
+            </Menu.Item>
+            <Menu.Item
+              key="authorityManagement"
+              onClick={({ domEvent }) => {
+                domEvent.stopPropagation();
+                setRouteCache({
+                  showType,
+                  searchValue,
+                  sorter
+                });
+                history.push(`/knowledge/knowledge-net-auth?knId=${record.id}&knName=${record.knw_name}`);
+              }}
+            >
+              {intl.get('graphList.authorityManagement')}
+            </Menu.Item>
           </Menu>
         }
       >
@@ -328,7 +295,7 @@ const GraphList = ({ onToPageNetwork }: any) => {
         const { id = '', color = '', knw_description = '' } = record;
         return (
           <div className="columnKnwName" style={{ width: 250 }} onClick={() => onToPageNetwork(id)}>
-            <AdKnowledgeNetIcon size={32} type={color} fontSize={16} />
+            <KwKNIcon size={32} type={color} fontSize={16} />
             <div className="name-text" title={text}>
               <div className="name kw-ellipsis">{text}</div>
               {knw_description ? (
@@ -420,12 +387,10 @@ const GraphList = ({ onToPageNetwork }: any) => {
         {/* <Format.Title className="kw-mb-3">{intl.get('graphList.mygraph')}</Format.Title>*/}
         <div className="kw-space-between kw-mb-4">
           <div>
-            <ContainerIsVisible isVisible={HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_CREATE })}>
-              <Button type="primary" onClick={() => onOperation('add')}>
-                <IconFont type="icon-Add" style={{ color: '#fff' }} />
-                {intl.get('graphList.create')}
-              </Button>
-            </ContainerIsVisible>
+            <Button type="primary" onClick={() => onOperation('add')}>
+              <IconFont type="icon-Add" style={{ color: '#fff' }} />
+              {intl.get('graphList.create')}
+            </Button>
           </div>
 
           <div className="kw-align-center">
@@ -438,11 +403,6 @@ const GraphList = ({ onToPageNetwork }: any) => {
               debounce
             />
             {/* {uploadable?.type === GRAPH_DB_TYPE?.NEBULA && (
-              <ContainerIsVisible
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_UPLOAD_RECORD
-                })}
-              >
                 <Button
                   className="kw-ml-3 kw-pl-4 kw-pr-4"
                   icon={<IconFont type="icon-fabu" />}
@@ -451,7 +411,6 @@ const GraphList = ({ onToPageNetwork }: any) => {
                 >
                   {intl.get('uploadService.uploadManage')}
                 </Button>
-              </ContainerIsVisible>
             )} */}
             <Dropdown
               placement="bottomLeft"
@@ -507,7 +466,7 @@ const GraphList = ({ onToPageNetwork }: any) => {
                   >
                     <div className="kw-align-center kw-mb-4" title={item.knw_name}>
                       <span className="kw-flex-item-full-width kw-align-center">
-                        <AdKnowledgeNetIcon size={32} type={item.color} fontSize={16} />
+                        <KwKNIcon size={32} type={item.color} fontSize={16} />
                         <span
                           style={{ fontWeight: 500 }}
                           className="kw-ml-2 kw-c-header kw-flex-item-full-width kw-ellipsis"
@@ -549,7 +508,7 @@ const GraphList = ({ onToPageNetwork }: any) => {
               </div>
             </>
           ) : (
-            <ADTable
+            <KwTable
               lastColWidth={170}
               showHeader={false}
               columns={columns}
@@ -575,12 +534,7 @@ const GraphList = ({ onToPageNetwork }: any) => {
                   <div className="nodata-box">
                     <img src={addContentImg} alt="nodata" />
                     <div className="nodata-text">
-                      <ContainerIsVisible
-                        placeholder={<div>{intl.get('graphList.noContent')}</div>}
-                        isVisible={HELPER.getAuthorByUserInfo({
-                          roleType: PERMISSION_CODES.ADF_KN_CREATE
-                        })}
-                      >
+                      <ContainerIsVisible placeholder={<div>{intl.get('graphList.noContent')}</div>}>
                         <span>{intl.get('graphList.click')}</span>
                         <span className="create-span" onClick={() => onOperation('add')}>
                           {intl.get('global.emptyTableCreate')}

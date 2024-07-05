@@ -6,7 +6,7 @@ import { Menu, Tooltip, Dropdown } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getParam } from '@/utils/handleFunction';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
-import CHeader from '@/components/Header';
+import KwHeader from '@/components/KwHeader';
 import AvatarName from '@/components/Avatar';
 
 export interface TopHeaderProps {
@@ -106,7 +106,7 @@ const TopHeader = (props: TopHeaderProps) => {
   };
 
   return (
-    <CHeader
+    <KwHeader
       // breadcrumb={knwId ? breadcrumb : ''}
       onClickLogo={() => {
         setKnwStudio('studio');

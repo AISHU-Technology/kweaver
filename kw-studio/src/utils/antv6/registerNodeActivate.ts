@@ -1,4 +1,4 @@
-import _, { lte } from 'lodash';
+import _ from 'lodash';
 import G6 from '@antv/g6';
 
 import HELPER from '@/utils/helper';
@@ -18,7 +18,7 @@ const registerNodeActivate = (name: string) => {
       (this as any).removeState();
       const node = e.item.getModel();
 
-      const boundary: string[] = []; // 与被点击节点相连的的节点，边界
+      const boundary: string[] = [];
       _.forEach(graph.getEdges(), d => {
         const edge = d.getModel();
 
@@ -52,7 +52,6 @@ const registerNodeActivate = (name: string) => {
     },
     removeState() {
       const graph: any = this.graph;
-      if (graph?.cfg?.states?._active?.length === 0) return;
       _.forEach(graph.getNodes(), item => {
         graph.clearItemStates(item, ['_active', '_inactive']);
       });

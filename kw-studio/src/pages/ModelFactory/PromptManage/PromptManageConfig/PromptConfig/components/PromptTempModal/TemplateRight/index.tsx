@@ -36,7 +36,7 @@ const TemplateRight = (props: any) => {
     setSelectedPrompt
   } = props;
 
-  const [searchQuery, setSearchQuery] = useState(''); // 搜索内容
+  const [searchQuery, setSearchQuery] = useState('');
 
   /**
    * 提示词模板名称搜索
@@ -158,7 +158,7 @@ const TemplateRight = (props: any) => {
 
       {!showData.length && searchQuery ? (
         <div className="noData-box kw-content-center kw-w-100">
-          <NoDataBox.NO_RESULT />
+          <NoDataBox type="NO_RESULT" />
         </div>
       ) : null}
     </div>

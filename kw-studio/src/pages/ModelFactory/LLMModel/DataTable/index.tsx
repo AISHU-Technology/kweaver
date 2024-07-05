@@ -12,7 +12,7 @@ import IconFont from '@/components/IconFont';
 
 import ModelIcon from '../components/ModelIcon';
 import OperateBar from '../components/OperateBar';
-import { ITable } from '@/components/ADTable';
+import { ITable } from '@/components/KwTable';
 import { TableState, DataItem } from '../types';
 import { OPERATE_ITEMS, MODEL_SUPPLIER } from '../enums';
 import './style.less';

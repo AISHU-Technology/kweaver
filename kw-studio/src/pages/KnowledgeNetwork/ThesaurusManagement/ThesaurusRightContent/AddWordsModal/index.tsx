@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { Modal, Form, Input, message } from 'antd';
+import { Form, Input, message } from 'antd';
 import intl from 'react-intl-universal';
 import UniversalModal from '@/components/UniversalModal';
 
-import serviceLicense from '@/services/license';
 import serverThesaurus from '@/services/thesaurus';
 import './style.less';
 
@@ -30,30 +29,9 @@ const AddWordsModal = (props: any) => {
   }, [type, editRecord, isVisible]);
 
   /**
-   * 获取知识量
-   */
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          message.warning(intl.get('license.remaining'));
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || {};
-      Description && message.error(Description);
-    }
-  };
-
-  /**
    * 确认提交
    */
   const onSubmit = () => {
-    onCalculate();
     form.validateFields().then(async values => {
       // 去掉首尾空格
       _.forIn(values, (value, key) => {
@@ -125,7 +103,7 @@ const AddWordsModal = (props: any) => {
   };
   // 设置错误状态
   const setFormError = () => {
-    _.forEach(columns, (item: any, index: number) => {
+    _.forEach(columns, (item: any) => {
       form.setFields([
         {
           name: item.dataIndex,
@@ -144,7 +122,7 @@ const AddWordsModal = (props: any) => {
   };
   return (
     <UniversalModal
-      visible={isVisible}
+      open={isVisible}
       width={480}
       keyboard={false}
       forceRender={true}

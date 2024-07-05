@@ -9,10 +9,10 @@ import RelatedDocument2 from './components/RelatedDocument2';
 
 import './style.less';
 
-const ENTITY_INFO = 'entity_info' as const; // 实体信息
-const RELATED_LABEL = 'related_label'; // 相关词条
-const RELATED_DOCUMENT_1 = 'related_document_1'; // 相关文档1
-const RELATED_DOCUMENT_2 = 'related_document_2'; // 相关文档2
+const ENTITY_INFO = 'entity_info' as const;
+const RELATED_LABEL = 'related_label';
+const RELATED_DOCUMENT_1 = 'related_document_1';
+const RELATED_DOCUMENT_2 = 'related_document_2';
 
 const COMPONENT: any = {
   [ENTITY_INFO]: (data: any) => {

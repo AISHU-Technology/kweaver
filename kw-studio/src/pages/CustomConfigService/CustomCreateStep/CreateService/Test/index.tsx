@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Tooltip, message } from 'antd';
 import './style.less';
 import intl from 'react-intl-universal';
-import ScrollBar from '@/components/ScrollBar';
-import AdSpin from '@/components/AdSpin';
+import KwScrollBar from '@/components/KwScrollBar';
+import KwSpin from '@/components/KwSpin';
 import { copyToBoardArea, getParam } from '@/utils/handleFunction';
 import ParamCodeEditor from '@/components/ParamCode';
 import IconFont from '@/components/IconFont';
@@ -194,7 +194,7 @@ const Test = (props: any) => {
             {loading && (
               <div className={`loading-mask ${loading && 'spinning'}`}>
                 <div className="spin-content-box kw-flex">
-                  <AdSpin />
+                  <KwSpin />
                 </div>
               </div>
             )}
@@ -203,14 +203,14 @@ const Test = (props: any) => {
                 <div key={index} ref={inputRef} className={`input_${index} kw-flex kw-pr-6 kw-pl-6`}>
                   <div className="in-title kw-mr-2 kw-c-primary">{`[${item?.key}]`}</div>
                   <div className="result-in-out-wrap kw-mb-6">
-                    <ScrollBar className="in-result-box" autoHeight autoHeightMax={400}>
+                    <KwScrollBar className="in-result-box" autoHeight autoHeightMax={400}>
                       {/* <div className="in-result-box kw-flex kw-pb-6"> */}
                       <div className="icon-copy kw-pointer kw-w-100" onClick={() => onCopy(item?.in)}>
                         <IconFont type="icon-copy" style={{ fontSize: '14px' }} />
                       </div>
                       <pre className="in-box">{item?.in}</pre>
                       {/* </div> */}
-                    </ScrollBar>
+                    </KwScrollBar>
                     <div className="out-result-box kw-flex">
                       <div className={classNames('param-code-editor-box kw-w-100', item?.error ? 'kw-p-3' : undefined)}>
                         {item?.error ? (

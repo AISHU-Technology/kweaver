@@ -46,7 +46,7 @@ const SaveAnalysisGraph = (props: any) => {
       className="saveAnalysisRoot"
       okText={intl.get('exploreGraph.save')}
       title={intl.get('exploreGraph.saveAnalysis')}
-      visible={true}
+      open={true}
       zIndex={1052}
       onOk={onOK}
       onCancel={onClose}

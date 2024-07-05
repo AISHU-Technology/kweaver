@@ -2,10 +2,9 @@
  * antd组件中 Tree 可调整顺序
  */
 import React, { useState, useEffect } from 'react';
-import { Tree, Popover, Button, Popconfirm } from 'antd';
-import { ExclamationCircleOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { Tree, Popconfirm } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
-import _ from 'lodash';
 import type { DataNode, TreeProps } from 'antd/es/tree';
 import intl from 'react-intl-universal';
 import classNames from 'classnames';
@@ -16,11 +15,11 @@ import './style.less';
 import ExplainTip from '../ExplainTip';
 
 type TreeAdjustType = {
-  onClassifySelect: (name: string) => void; // 分类选择
-  onDelete: (state: any) => void; // 删除
-  treeData: any; // Tree数据
-  selectMes: any; // 选择的分类名
-  onChangePosition: (state: any) => void; // 位置变化后更新数据
+  onClassifySelect: (name: string) => void;
+  onDelete: (state: any) => void;
+  treeData: any;
+  selectMes: any;
+  onChangePosition: (state: any) => void;
   onAddEdit: (type: string, state?: string, id?: any) => void;
 };
 
@@ -68,7 +67,6 @@ const TreeAdjust = (props: TreeAdjustType) => {
             e.preventDefault();
           }}
           onConfirm={(e: any) => {
-            // 点击会触发两次行点击事件，因此要阻止冒泡
             e.stopPropagation();
             onHandleOk(node);
           }}
@@ -115,7 +113,6 @@ const TreeAdjust = (props: TreeAdjustType) => {
     };
     const data = [...treeData];
 
-    // Find dragObject
     let dragObj: DataNode;
     loop(data, dragKey, (item, index, arr) => {
       arr.splice(index, 1);

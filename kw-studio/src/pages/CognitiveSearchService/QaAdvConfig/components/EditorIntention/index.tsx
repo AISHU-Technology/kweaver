@@ -100,7 +100,7 @@ const EditorIntention = (props: EditorIntentionType) => {
     <div className="editorIntentionRoot kw-align-center">
       <Dropdown
         overlay={overlay}
-        visible={!!errorText || !!errorDesc}
+        open={!!errorText || !!errorDesc}
         getPopupContainer={e => e?.parentElement || document?.body}
       >
         <div

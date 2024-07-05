@@ -11,7 +11,7 @@ import { ONLY_KEYBOARD } from '@/enums';
 import NoDataBox from '@/components/NoDataBox';
 import createImg from '@/assets/images/create.svg';
 import noResult from '@/assets/images/noResult.svg';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 import { onDeleteTableData, onGetListTable } from './assistFunction';
 import ErrorTip from '../../ErrorTip';
@@ -202,7 +202,7 @@ const ThesaurusTable = (props: any, ref: any) => {
 
   return (
     <div className="thesaurus-mode-create-table-root">
-      <ADTable
+      <KwTable
         showHeader={false}
         columns={columns}
         className={classNames('thesaurus-table-root', { 'thesaurus-table-root-empty': _.isEmpty(searchTableData) })}

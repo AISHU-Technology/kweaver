@@ -72,7 +72,6 @@ const KnowledgeGraph = (props: any) => {
         if (_.isEmpty(list)) return;
         let search: any = getParam() || {};
         search.gid = list?.[0]?.id;
-        // params增加kgconfigid ==> DATA-354277 解决历史遗留问题
         search.gcid = list?.[0]?.id;
         search.tab = 'detail';
         search = HELPER.formatQueryString(search);
@@ -98,9 +97,7 @@ const KnowledgeGraph = (props: any) => {
           setSelectedGraph(graph || list?.[0]);
 
           search.gid = graph.id;
-          // params增加kgconfigid ==> DATA-354277 解决历史遗留问题
           search.gcid = graph.id;
-          // 清除掉 url 上的 isConfig
           if (isConfig) delete search.isConfig;
           const _search = HELPER.formatQueryString(search);
 
@@ -125,7 +122,6 @@ const KnowledgeGraph = (props: any) => {
     setSelectedGraph(data);
     let search: any = _.pick(getParam() || {}, 'id');
     search.gid = data?.id;
-    // params增加kgconfigid ==> DATA-354277 解决历史遗留问题
     search.gcid = data?.id;
     search.tab = 'detail';
     search = HELPER.formatQueryString(search);

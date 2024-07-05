@@ -177,7 +177,7 @@ const CreateAttributesModal = (props: EdgeModalAttributesProps) => {
           ? intl.get('ontoLib.canvasEdge.editEdgeAttrTitle')
           : intl.get('ontoLib.canvasEdge.createEdgeAttrTitle')
       }
-      visible={showCreateAttributesModal}
+      open={showCreateAttributesModal}
       onCancel={closeCreateAttributesModal}
       onOk={modalOkFunc}
     >

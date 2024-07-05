@@ -51,8 +51,8 @@ const ErrorTip = (props: any) => {
       content={errorText}
       placement="bottomLeft"
       destroyTooltipOnHide
-      visible={visible}
-      onVisibleChange={onVisibleChange}
+      open={visible}
+      onOpenChange={onVisibleChange}
     >
       {element}
     </Popover>

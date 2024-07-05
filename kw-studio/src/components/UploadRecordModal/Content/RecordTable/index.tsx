@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import intl from 'react-intl-universal';
 import { Table, Select, Button, Tooltip, Dropdown, Menu } from 'antd';
 import { LoadingOutlined, CheckCircleFilled, ArrowDownOutlined } from '@ant-design/icons';
 import { UPLOAD_RECORD_STATUS } from '@/enums';
-import _ from 'lodash';
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
 import SearchInput from '@/components/SearchInput';
 import AvatarName from '@/components/Avatar';
 import kongImg from '@/assets/images/kong.svg';
 import noResultImg from '@/assets/images/noResult.svg';
-import { RecordItem, TableState, RelationKnw } from '../types';
+import { RecordItem, TableState } from '../types';
 import './style.less';
 
 interface RecordTableProps {
@@ -20,15 +19,15 @@ interface RecordTableProps {
   pageSize: number;
   data: RecordItem[];
   tableState: any;
-  isIq?: true | false; // 是否是领域智商进来的
-  filterKgData: any[]; // 知识网络列表
+  isIq?: true | false;
+  filterKgData: any[];
   onChange: (state?: Partial<TableState>) => void;
 }
 
-const { WAIT, PROGRESS, COMPLETE, FAILED } = UPLOAD_RECORD_STATUS;
-const CREATED = 'created'; // 按开始时间排序
-const UPDATED = 'updated'; // 按结束时间排序
-const START = 'started'; // 按开始时间
+const { FAILED } = UPLOAD_RECORD_STATUS;
+const CREATED = 'created';
+const UPDATED = 'updated';
+const START = 'started';
 const { Option } = Select;
 
 const SORTER_MENU = [
@@ -40,8 +39,8 @@ const sort2Reverse = (sort: string) => (sort === 'descend' ? 1 : 0);
 const reverse2Sort = (reverse: number) => (reverse ? 'descend' : 'ascend');
 
 const RecordTable = (props: RecordTableProps) => {
-  const { className, tabsKey, pageSize, data, isIq, tableState, filterKgData, onChange } = props;
-  const preTotal = useRef(0); // 标记总数, 总数变更时刷新关联的知识网络
+  const { className, pageSize, data, isIq, tableState, filterKgData, onChange } = props;
+  const preTotal = useRef(0);
 
   useEffect(() => {
     if (preTotal.current === tableState.total) return;
@@ -85,7 +84,6 @@ const RecordTable = (props: RecordTableProps) => {
     onChange({ page: 1, order: key });
   };
 
-  // 定义表格列
   const columns: any = [
     {
       title: intl.get('uploadService.graphName'),
@@ -114,7 +112,7 @@ const RecordTable = (props: RecordTableProps) => {
       dataIndex: 'progress',
       ellipsis: true,
       width: 180,
-      render: (_: any, record: RecordItem) => {
+      render: () => {
         return (
           <div>
             <CheckCircleFilled className="kw-c-success kw-mr-2" />
@@ -218,7 +216,7 @@ const RecordTable = (props: RecordTableProps) => {
               </Select>
             </>
           )}
-          <SearchInput placeholder={intl.get('knowledge.search')} onChange={onSearch} debounce/>
+          <SearchInput placeholder={intl.get('knowledge.search')} onChange={onSearch} debounce />
           <Dropdown
             placement="bottomLeft"
             overlay={
