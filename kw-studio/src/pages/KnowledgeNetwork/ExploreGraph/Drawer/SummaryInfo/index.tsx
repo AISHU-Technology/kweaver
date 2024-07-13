@@ -164,10 +164,11 @@ const SummaryInfo = (props: SummaryInfoProps) => {
    */
   const customizeRenderEmpty = () =>
     searchValue ? (
-      <NoDataBox.NO_RESULT text={intl.get('global.noResult')} />
+      <NoDataBox type="NO_RESULT" desc={intl.get('global.noResult')} />
     ) : (
-      <NoDataBox.NO_CONTENT
-        text={
+      <NoDataBox
+        type="NO_CONTENT"
+        desc={
           selectedItem?.graph?.current?.__isGroup
             ? intl.get('exploreGraph.noClassStatistics')
             : intl.get('global.noContent')

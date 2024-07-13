@@ -169,7 +169,7 @@ const ModalOntoImport = (props: any) => {
 
   return (
     <UniversalModal
-      visible={isVisible}
+      open={isVisible}
       width={480}
       keyboard={false}
       forceRender={true}
@@ -190,7 +190,7 @@ const ModalOntoImport = (props: any) => {
         {
           label: intl.get('ontoLib.canvasEdge.cancelDelete'),
           onHandle: onCancel,
-          disabled: openText === intl.get('ontoLib.isOpening')
+          isDisabled: openText === intl.get('ontoLib.isOpening')
         },
         { label: openText, type: 'primary', onHandle: onSubmit }
       ]}

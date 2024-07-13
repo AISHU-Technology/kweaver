@@ -9,7 +9,6 @@ import SearchInput from '@/components/SearchInput';
 import './style.less';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 import HELPER from '@/utils/helper';
-import { PERMISSION_CODES, PERMISSION_KEYS } from '@/enums';
 import Format from '@/components/Format';
 
 const Header = (props: any) => {
@@ -64,30 +63,17 @@ const Header = (props: any) => {
   return (
     <div className="glossaryHeader kw-space-between">
       <div>
-        <ContainerIsVisible
-          placeholder={<span style={{ height: 32, display: 'inline-block' }} />}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_GLOSSARY_CREATE,
-            userType: PERMISSION_KEYS.KN_ADD_GLOSSARY,
-            userTypeDepend: knData?.__codes
-          })}
-        >
+        <ContainerIsVisible placeholder={<span style={{ height: 32, display: 'inline-block' }} />}>
           <Button type="primary" onClick={() => openCreateModal()}>
             <IconFont type="icon-Add" />
             {intl.get('global.create')}
           </Button>
         </ContainerIsVisible>
 
-        <ContainerIsVisible
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_GLOSSARY_DELETE
-          })}
-        >
-          <Button className="kw-ml-3" disabled={delDisabled} onClick={() => openDeleteModal()}>
-            <IconFont type="icon-lajitong" />
-            {intl.get('global.delete')}
-          </Button>
-        </ContainerIsVisible>
+        <Button className="kw-ml-3" disabled={delDisabled} onClick={() => openDeleteModal()}>
+          <IconFont type="icon-lajitong" />
+          {intl.get('global.delete')}
+        </Button>
       </div>
       <div className="kw-align-center">
         <SearchInput

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, lazy } from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
 import intl from 'react-intl-universal';
@@ -6,29 +6,25 @@ import { Route, Switch, Redirect, useHistory, useLocation } from 'react-router-d
 import { Spin, Menu, Tooltip, Dropdown, Divider } from 'antd';
 import { DownOutlined, LoadingOutlined } from '@ant-design/icons';
 
-import { PERMISSION_KEYS } from '@/enums';
 import { getParam } from '@/utils/handleFunction';
 import servicesPermission from '@/services/rbacPermission';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 
 import IconFont from '@/components/IconFont';
-import CHeader from '@/components/Header';
+import KwHeader from '@/components/KwHeader';
 import AvatarName from '@/components/Avatar';
-import asyncComponent from '@/components/AsyncComponent';
 import AuthChildRoute from '@/components/AuthChildRoute';
-
 import Sidebar from './Sidebar';
-
-const ServiceList = asyncComponent(() => import('./AnalysisServiceList'));
-const CognitiveIntention = asyncComponent(() => import('./CognitiveIntention'));
-const CustomService = asyncComponent(() => import('./CustomService'));
-const DBApi = asyncComponent(() => import('./DPApi/index'));
-const CognitiveEngine = asyncComponent(() => import('./CognitiveEngine'));
-const NotFound = asyncComponent(() => import('@/components/NotFoundChildPage'));
-
 import './style.less';
 
-const CognitiveApplication = () => {
+const ServiceList = lazy(() => import('./AnalysisServiceList'));
+const CognitiveIntention = lazy(() => import('./CognitiveIntention'));
+const CustomService = lazy(() => import('./CustomService'));
+const DBApi = lazy(() => import('./DPApi/index'));
+const CognitiveEngine = lazy(() => import('./CognitiveEngine'));
+const NotFound = lazy(() => import('@/components/NotFoundChildPage'));
+
+const CognitiveApplication = (props: any) => {
   const history = useHistory();
   const location = useLocation();
 
@@ -79,7 +75,7 @@ const CognitiveApplication = () => {
 
   return (
     <div className="cognitiveApplicationRoot">
-      <CHeader breadcrumb={breadcrumb} onClickLogo={() => setTimeout(() => history.push('/home'))} />
+      <KwHeader breadcrumb={breadcrumb} onClickLogo={() => setTimeout(() => history.push('/home'))} />
       <Switch>
         <div className="l-layout">
           <Sidebar setDefaultSelectRoute={setDefaultSelectRoute} />

@@ -1,4 +1,3 @@
-// 计算滚动条宽度
 export const getScrollWidth = () => {
   const outDiv = document.createElement('div');
   const innerDiv = document.createElement('div');

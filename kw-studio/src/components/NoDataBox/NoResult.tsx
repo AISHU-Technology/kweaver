@@ -1,7 +1,6 @@
 import React from 'react';
 import intl from 'react-intl-universal';
 import NoData, { NoDataProps } from './NoData';
-import noResImg from '@/assets/images/noResult.svg';
 import emptyImg from '@/assets/images/empty.svg';
 
 export default function NoResult(props: NoDataProps) {

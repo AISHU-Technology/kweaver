@@ -84,7 +84,7 @@ const OntoModelImportModal = (props: ModelImportModalProps) => {
       width={1000}
       maskClosable={false}
       destroyOnClose={true}
-      visible={visible}
+      open={visible}
       // visible
       onCancel={onCancel}
       footerData={

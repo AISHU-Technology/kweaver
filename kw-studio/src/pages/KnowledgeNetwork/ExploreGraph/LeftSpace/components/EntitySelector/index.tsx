@@ -394,7 +394,7 @@ const EntitySelector = (props: EntitySelectorProps) => {
       overlayStyle={{ width: selectorDOM?.clientWidth }}
       trigger={['click']}
       // visible
-      visible={true}
+      open={true}
       overlay={
         <div className="dropdown-content" onMouseDown={onPreventMouseDown}>
           <Tabs activeKey={tabKey} onChange={setTabKey}>

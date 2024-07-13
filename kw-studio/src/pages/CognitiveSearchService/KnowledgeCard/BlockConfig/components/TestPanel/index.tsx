@@ -109,7 +109,7 @@ const TestPanel = (props: TestPanelProps) => {
           </div>
         ) : null}
 
-        {status === 'ready' && !result?.[0]?.nodes?.length && <NoDataBox.NO_RESULT />}
+        {status === 'ready' && !result?.[0]?.nodes?.length && <NoDataBox type="NO_RESULT" />}
       </div>
     </div>
   );

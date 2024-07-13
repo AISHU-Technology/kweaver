@@ -52,7 +52,7 @@ const RenderItem = (props: RenderIntentItemType) => {
         <Dropdown
           overlay={overlay}
           trigger={['click']}
-          onVisibleChange={e => {
+          onOpenChange={e => {
             onSelected(e ? data?.id : '');
           }}
         >

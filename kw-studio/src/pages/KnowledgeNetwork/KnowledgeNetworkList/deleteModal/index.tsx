@@ -41,7 +41,7 @@ const DelNetworkModal = (props: DelNetworkModalType) => {
 
   return (
     <Modal
-      visible={visible}
+      open={visible}
       className="network-delete-modal"
       width={432}
       footer={null}

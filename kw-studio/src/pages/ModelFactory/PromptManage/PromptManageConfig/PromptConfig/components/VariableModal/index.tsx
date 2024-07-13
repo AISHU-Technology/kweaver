@@ -21,7 +21,7 @@ export interface VariableModalProps {
   action?: 'create' | 'editor' | string;
   visible?: boolean;
   variables?: TVariables;
-  data?: TVariables[number]; // 编辑的数据
+  data?: TVariables[number];
   onOk?: (data: TVariables[number], action: string) => void;
   onCancel?: () => void;
 }
@@ -108,7 +108,7 @@ const VariableModal = (props: VariableModalProps) => {
       className={classNames(className, 'mf-prompt-variable-modal')}
       title={intl.get('prompt.varSetting')}
       width={480}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footerData={[
         { label: intl.get('global.cancel'), onHandle: onCancel },

@@ -89,7 +89,7 @@ const PromptTempModal = (props: PromptTempModalProps) => {
     <UniversalModal
       className={classNames(className, 'default-prompt-modal')}
       title={intl.get('prompt.template')}
-      visible={visible}
+      open={visible}
       width={1000}
       onCancel={onCancel}
       footerData={[

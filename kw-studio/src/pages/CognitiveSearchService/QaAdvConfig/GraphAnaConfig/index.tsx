@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, message } from 'antd';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import { PERMISSION_KEYS } from '@/enums';
 
 import servicesPermission from '@/services/rbacPermission';
 
@@ -49,7 +48,6 @@ const GraphAnaConfig = (props: any) => {
     // 查询权限
     const uniqId = _.uniq(_.filter(dataIds, item => !!item));
     const resourceId = _.map(graphSources, item => item?.kg_id);
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds: uniqId };
     // const result = await servicesPermission.dataPermission(postData);
     // if (result?.res) {
     //   const codesData = _.keyBy(result?.res, 'dataId');

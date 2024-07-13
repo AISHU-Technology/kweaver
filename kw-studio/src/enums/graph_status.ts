@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 
-const NORMAL = 'normal'; // 正常
-const WAITING = 'waiting'; // 等待中
-const RUNNING = 'running'; // 运行中
-const FAIL = 'failed'; // 失败
-const CONFIGURATION = 'edit'; // 配置中
-const STOP = 'stop'; // 配置中
+const NORMAL = 'normal';
+const WAITING = 'waiting';
+const RUNNING = 'running';
+const FAIL = 'failed';
+const CONFIGURATION = 'edit';
+const STOP = 'stop';
 
 const LIST = [NORMAL, WAITING, RUNNING, FAIL, CONFIGURATION, STOP];
 

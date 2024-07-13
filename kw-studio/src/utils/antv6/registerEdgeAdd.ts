@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import G6 from '@antv/g6';
 
 let index = 9000;

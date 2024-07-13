@@ -1,26 +1,19 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import _ from 'lodash';
-import intl from 'react-intl-universal';
-import { message } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import HOOKS from '@/hooks';
-import serviceLicense from '@/services/license';
 import servicesEventStats, { listMenuDataType } from '@/services/eventStats';
 import IconFont from '@/components/IconFont';
 import SideBar from '@/components/SideBar';
 
 import './style.less';
 
-const ADF_MODEL_FACTORY_CODE = 'adf-model-factory';
-
 const Sidebar = (props: any) => {
-  const { kwLang, setDefaultSelectRoute } = props;
+  const { setDefaultSelectRoute } = props;
   const history = useHistory();
   const language = HOOKS.useLanguage();
   const location = useLocation();
   const { pathname } = location;
-  const [lang, setLang] = useState('zh');
   const [sideBarItems, setSideBarItems] = useState<any[]>([]);
   const keyToRoute = useRef<Record<string, any>>({});
   const selectedKeys = useMemo(() => {
@@ -34,14 +27,6 @@ const Sidebar = (props: any) => {
   useEffect(() => {
     fetchSideBarItems();
   }, []);
-
-  useEffect(() => {
-    if (kwLang === 'zh-CN') {
-      setLang('zh');
-    } else {
-      setLang('en');
-    }
-  }, [kwLang]);
 
   const findTrueDefaultSelectRoute = (itemArr: any[]) => {
     for (const item of itemArr) {
@@ -60,7 +45,6 @@ const Sidebar = (props: any) => {
     }
   };
 
-  // 获取侧边栏
   const fetchSideBarItems = async () => {
     const data: listMenuDataType = { isTree: 1, menuType: 1, pid: '293', page: 1, size: -1 };
     const result = (await servicesEventStats.newMenuList(data)) || {};
@@ -75,7 +59,6 @@ const Sidebar = (props: any) => {
     }
   };
 
-  // 处理后端返回数据
   const handlingRecursiveData = (processedTreeData: any, fetchedTreeData: any) => {
     if (fetchedTreeData.level === 1) {
       const groupChildren: any[] = [];
@@ -111,47 +94,6 @@ const Sidebar = (props: any) => {
     }
   };
 
-  /**
-   * 根据类型和状态返回
-   */
-  const deliveryList = (data: any) => {
-    // 主产品 激活
-    const newListMain = _.filter(data, item => {
-      if (item.type !== 10 && item.type !== 14 && item.status === 1) {
-        return item;
-      }
-    });
-    // 测试 到期
-    const expireTrail = _.filter(data, item => {
-      if (item.type === 14 && item.status === 2) {
-        return item;
-      }
-    });
-    return { expireTrail, newListMain };
-  };
-
-  /**
-   * 获取列表
-   */
-  // const getLicenseList = async (data: any) => {
-  //   try {
-  //     const res = await serviceLicense.getLicenseList({ status: -1, service: -1, lang, ...data });
-  //     if (res?.res?.data) {
-  //       const licenseList = deliveryList(res.res.data);
-  //       if (licenseList?.newListMain.length !== 0) return false;
-  //       if (licenseList?.expireTrail.length !== 0) {
-  //         return true;
-  //       }
-  //     }
-  //     return false;
-  //   } catch (error) {
-  //     if (!error.type) return;
-  //     const { Description, description } = error.response || {};
-  //     const curDesc = description || Description;
-  //     curDesc && message.error(curDesc);
-  //   }
-  // };
-
   const recursionOpenKeys = (barItem: any, pathName: any) => {
     if (keyToRoute.current[barItem.key] === pathName) {
       return [barItem.key];
@@ -167,20 +109,16 @@ const Sidebar = (props: any) => {
     let path: any[] = [];
     let isBreak = false;
     const dfs = (node: any) => {
-      // 找到目标节点，结束搜索
       if (node.key === targetValue) {
         isBreak = true;
         return isBreak;
       }
-      // 将当前节点添加到路径中
       path.push(node.key);
       if (node.children) {
         for (const child of node.children) {
           if (isBreak) return;
-          // 递归遍历子节点
           dfs(child);
         }
-        // 如果一组children没有找到targetValue，清空已存储的key
         if (!isBreak) {
           path = path.filter(item => item !== node.key);
         }
@@ -188,9 +126,7 @@ const Sidebar = (props: any) => {
         path = path.filter(item => item !== node.key);
       }
     };
-    // 从根节点开始搜索
     dfs(node);
-    // 返回路径或undefined
     return path.length > 0 ? path : undefined;
   };
 
@@ -211,19 +147,13 @@ const Sidebar = (props: any) => {
   }, [pathname, sideBarItems]);
 
   const onSelectedKeysChange = async (data: any) => {
-    // const isTip = await getLicenseList({});
-    // if (isTip) {
-    //   message.error(intl.get('license.productExpired'));
-    // }
     const key = data?.keyPath[0];
-    // history.push(key);
     history.push(keyToRoute.current[key]);
   };
 
   return (
     <SideBar
       className="knowledgeNetworkSideBarRoot"
-      // items={items}
       items={sideBarItems}
       openKeys={openKeys}
       selectedKeys={selectedKeys}

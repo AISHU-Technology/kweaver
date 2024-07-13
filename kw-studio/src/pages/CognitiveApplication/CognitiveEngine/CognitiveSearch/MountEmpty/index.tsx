@@ -3,9 +3,8 @@ import { useHistory } from 'react-router-dom';
 import intl from 'react-intl-universal';
 
 import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 
 import knowledgeEmpty from '@/assets/images/kgEmpty.svg';
@@ -24,7 +23,7 @@ const MountEmpty: React.FC<MountEmptyProps> = ({ kgData, initLoading, isNotGraph
   if (initLoading) {
     return (
       <div className="loading-mask spinning">
-        <AdSpin />
+        <KwSpin />
       </div>
     );
   }
@@ -34,14 +33,7 @@ const MountEmpty: React.FC<MountEmptyProps> = ({ kgData, initLoading, isNotGraph
     return (
       <div className="empty-content kw-c-text">
         <img src={knowledgeEmpty} alt="empty" />
-        <ContainerIsVisible
-          placeholder={intl.get('knowledge.noKnowledgeGraphs')}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_KG_CREATE,
-            userType: PERMISSION_KEYS.KN_ADD_KG,
-            userTypeDepend: kgData?.__codes
-          })}
-        >
+        <ContainerIsVisible placeholder={intl.get('knowledge.noKnowledgeGraphs')}>
           <p className="empty-tip">
             {intl.get('searchConfig.noGraphTip').split('|')[0]}
             <span className="create-span" onClick={() => history.push(`/knowledge/workflow/create?knId=${kgData?.id}`)}>

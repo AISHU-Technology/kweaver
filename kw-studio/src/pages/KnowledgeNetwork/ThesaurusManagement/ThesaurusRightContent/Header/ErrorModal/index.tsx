@@ -27,7 +27,7 @@ const ErrorModal = (props: any) => {
   const { isErrorModal, handleCancel, errorDes } = props;
   return (
     <UniversalModal
-      visible={isErrorModal}
+      open={isErrorModal}
       onCancel={handleCancel}
       title={intl.get('ThesaurusManage.failInfo')}
       wrapClassName="thesaurus-error-modal"

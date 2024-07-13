@@ -4,7 +4,7 @@ import Format from '@/components/Format';
 
 export interface HeaderModalProps {
   children?: React.ReactNode;
-  title: string | React.ReactNode; // 标题
+  title: string | React.ReactNode;
   className?: string;
 }
 

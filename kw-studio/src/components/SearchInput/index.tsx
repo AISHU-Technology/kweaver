@@ -1,24 +1,18 @@
-/**
- * 基于antd再封装的搜索框
- * 中文输入时默认劫持onChange事件, 中文输入结束才触发onChange
- *
- */
-
-import React, { useRef, forwardRef, useImperativeHandle, useCallback, useMemo } from 'react';
-import { Input } from 'antd';
+import React, { forwardRef, useEffect, useState, useImperativeHandle, useRef } from 'react';
 import type { InputProps } from 'antd';
+import { Input } from 'antd';
 import classNames from 'classnames';
 import IconFont from '@/components/IconFont';
 import './style.less';
 import _ from 'lodash';
 
 export interface SearchInputProps extends InputProps {
-  onIconClick?: Function; // 点击icon回调
-  onClear?: Function; // 清空搜索框回调
-  autoWidth?: boolean; // width: 100%
-  iconPosition?: 'start' | 'end'; // 搜索图标的位置, 前 | 后
-  debounce?: boolean; // 是否启用防抖， 默认不启用
-  debounceWait?: number; // 防抖的延迟时间，默认 300 ms
+  onIconClick?: Function;
+  onClear?: Function;
+  autoWidth?: boolean;
+  iconPosition?: 'start' | 'end';
+  debounce?: boolean;
+  debounceWait?: number;
 }
 
 const SearchInputFunc: React.ForwardRefRenderFunction<unknown, SearchInputProps> = (props, ref) => {
@@ -32,13 +26,27 @@ const SearchInputFunc: React.ForwardRefRenderFunction<unknown, SearchInputProps>
     onClear,
     debounce = false,
     debounceWait = 300,
+    value,
     ...otherProps
   } = props;
   const inputRef = useRef<any>();
   const isCompos = useRef(false); // 标记键盘输入法
 
+  const [inputValue, setInputValue] = useState<string | number | readonly string[]>('');
+
+  useEffect(() => {
+    if (value) {
+      setInputValue(value);
+    }
+  }, []);
+
   // 转发ref
-  useImperativeHandle(ref, () => inputRef.current);
+  useImperativeHandle(ref, () => ({
+    input: inputRef.current.input,
+    setValue: (value: any) => {
+      setInputValue(value);
+    }
+  }));
 
   const onDebounceChange = _.debounce((e: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(e);
@@ -58,17 +66,6 @@ const SearchInputFunc: React.ForwardRefRenderFunction<unknown, SearchInputProps>
     }
   };
 
-  // 输入开始开始
-  const handleStart = () => {
-    isCompos.current = true;
-  };
-
-  // 输入法结束
-  const handleEnd = (e: any) => {
-    isCompos.current = false;
-    onChange?.(e);
-  };
-
   // 点击前缀搜索图标, 默认触发回车搜索
   const onPrefixClick = (e: any) => {
     onIconClick ? onIconClick(e) : onPressEnter?.(e);
@@ -86,18 +83,15 @@ const SearchInputFunc: React.ForwardRefRenderFunction<unknown, SearchInputProps>
   };
   return (
     <Input
-      ref={inputRef}
       allowClear
+      ref={inputRef}
+      value={inputValue}
       className={classNames('kw-search-input', className, { 'input-w-272': !autoWidth })}
       onChange={e => {
-        // 在react 16中事件会进入事件池，事件执行完毕，会从事件池中移除绑定的事件，导致异步函数中获取不到e, 故使用e.persist()，阻止事件被移除的行为
-        // 这个缺点在react 17中已被优化，故未来升级到react 17 + 的话，就无需再调用e.persist()了
-        debounce && e.persist();
         handleChange(e);
+        setInputValue(e.target.value);
       }}
       onPressEnter={onPressEnter}
-      onCompositionStart={handleStart}
-      onCompositionEnd={handleEnd}
       {...iconConfig}
       {...otherProps}
     />

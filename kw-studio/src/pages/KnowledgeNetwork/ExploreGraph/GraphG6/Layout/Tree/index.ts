@@ -85,8 +85,7 @@ class LayoutTree {
   init(props: any) {
     const { container, config } = props;
     const { hGap, vGap, direction } = config;
-    const isIframe = window !== window.parent;
-    const Graph = isIframe ? IframeTree : G6.TreeGraph;
+    const Graph = G6.TreeGraph;
     this.graph = new Graph({
       container,
       modes: {
@@ -162,9 +161,6 @@ class LayoutTree {
         }
       }
     });
-    if (isIframe) {
-      this.interactiveToIframe = new InteractiveToIframe(this.graph, this.changeData);
-    }
     this.graph.graphStack = new GraphStack(this.graph);
 
     this.graph.get('canvas').set('localRefresh', false);

@@ -15,7 +15,7 @@ import { getParam } from '@/utils/handleFunction';
 import IntentionTable from './IntentionTable';
 import IntentionInfo from './IntentionInfo';
 import './style.less';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 
 const IntentionCreate = (props: any) => {
   const { knwData, knwStudio } = props;

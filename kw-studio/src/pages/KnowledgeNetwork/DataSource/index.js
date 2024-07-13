@@ -2,15 +2,11 @@
 import React, { useState, useEffect, useImperativeHandle, useCallback, useMemo, useRef } from 'react';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import { Table, Button, Modal, message, Checkbox, Tooltip, Dropdown, Menu } from 'antd';
+import { Button, Modal, message, Checkbox, Tooltip, Dropdown, Menu } from 'antd';
 import { EllipsisOutlined, ExclamationCircleFilled, LoadingOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
-import HELPER from '@/utils/helper';
 import apiService from '@/utils/axios-http/oldIndex';
-import { localStore, formatDataSource, sessionStore } from '@/utils/handleFunction';
+import { localStore, formatDataSource } from '@/utils/handleFunction';
 import servicesDataSource from '@/services/dataSource';
-import servicesPermission from '@/services/rbacPermission';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
 import SearchInput from '@/components/SearchInput';
@@ -21,52 +17,46 @@ import noResult from '@/assets/images/noResult.svg';
 import createImg from '@/assets/images/create.svg';
 
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import useLatestState from '@/hooks/useLatestState';
-import useRouteCache from '@/hooks/useRouteCache';
-import useAdHistory from '@/hooks/useAdHistory';
 
 const antIcon = <LoadingOutlined style={{ fontSize: 14 }} spin />;
 const antIconBig = <LoadingOutlined style={{ fontSize: 24, top: '200px' }} spin />;
 
-const ALL = 'all'; // 列表类型 所有数据
-const SEARCH = 'search'; // 列表类型 搜索数据
+const ALL = 'all';
+const SEARCH = 'search';
 const pageSize = 10;
 const WORKFLOW_URL = '/home/workflow';
 const MQ = 'rabbitmq';
 
 const DataSource = props => {
-  const [routeCache, setRouteCache] = useRouteCache();
   const { dataSourceData, setDataSourceData, useDs = [], dataSourceRef, graphId, selectedKnowledge } = props;
-  const triggerSelectAll = useRef(false); // 标记触发全选
-  const [sourceVisible, setSourceVisible] = useState(false); // 数据源弹窗
-  const [deleteVisible, setdeleteVisible] = useState(false); // 删除弹框
-  const [operation, setOperation] = useState('create'); // 弹框操作类型。
-  const [formInfo, setFormInfo] = useState({}); // 编辑数据源时表单回填信息
-  const [listType, setListType] = useState(ALL); // 列表类型。
-  const [searchName, setSearchName] = useState(routeCache.searchName ?? ''); // 模糊搜索
+  const triggerSelectAll = useRef(false);
+  const [sourceVisible, setSourceVisible] = useState(false);
+  const [deleteVisible, setdeleteVisible] = useState(false);
+  const [operation, setOperation] = useState('create');
+  const [formInfo, setFormInfo] = useState({});
+  const [listType, setListType] = useState(ALL);
+  const [searchName, setSearchName] = useState('');
   // eslint-disable-next-line max-len
-  const [selectedRowKeys, setSelectedRowKeys, getSelectedRowKeys] = useLatestState(routeCache.tableSelectedKey ?? []); // 多选框选中的数据的key
-  const [selectedRowsList, setSelectedRowsList] = useState([]); // 多选框选中的数据
-  const [deleteData, setDeleteData] = useState([]); // 要删除的数据
-  const [total, setTotal] = useState(0); // 数据总数
-  const [current, setCurrent, getCurrent] = useLatestState(routeCache.page ?? 1); // 当前页码
-  const [tableData, setTableData] = useState([]); // 表格数据
-  const [sortOrder, setSortOrder] = useState('descend'); // 表格排序
+  const [selectedRowKeys, setSelectedRowKeys] = useLatestState([]);
+  const [selectedRowsList, setSelectedRowsList] = useState([]);
+  const [deleteData, setDeleteData] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [current, setCurrent] = useLatestState(1);
+  const [tableData, setTableData] = useState([]);
+  const [sortOrder, setSortOrder] = useState('descend');
   const [listSearch, setListSearch] = useState('');
   const [selectKey, setSelectKey] = useState('');
   const [checked, setChecked] = useState(false);
-  const [currentSelected, setCurrentSelected] = useState(1);
-  const [checkedSort, setCheckedSort] = useState('descend'); // 选中数据排序
+  const [checkedSort, setCheckedSort] = useState('descend');
   const [tableTest, setTableTest] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [deleteOperate, setDeleteOperate] = useState(''); // dropdown-下拉删除 btn-按钮多选删除
-  const [lockMqId, setLockMqId] = useState(0); // 锁定的rabbitMQ数据源id, 0正常, >0禁用其他, -1禁用MQ
-  const usedID = useMemo(() => useDs.map(d => d.id), [useDs]); // 已使用的数据源id
-  const isWorkflow = useMemo(() => window.location.pathname.includes(WORKFLOW_URL), []); // 是否是在构建流程中
-  const history = useAdHistory();
+  const [deleteOperate, setDeleteOperate] = useState('');
+  const [lockMqId, setLockMqId] = useState(0);
+  const usedID = useMemo(() => useDs.map(d => d.id), [useDs]);
+  const isWorkflow = useMemo(() => window.location.pathname.includes(WORKFLOW_URL), []);
 
-  // 含有rabbitMQ数据源时禁用全选
   const isUnCheckAll = useMemo(() => {
     if (!isWorkflow) return false;
     return [...tableData, ...selectedRowsList].some(d => d.data_source === MQ);
@@ -82,7 +72,6 @@ const DataSource = props => {
     }
   }));
 
-  // 数据管理界面调用
   useEffect(() => {
     if (isWorkflow) return;
 
@@ -93,7 +82,6 @@ const DataSource = props => {
     }
   }, [selectedKnowledge]);
 
-  // 图谱构建流程中调用
   useEffect(() => {
     if (!graphId) return;
 
@@ -112,22 +100,10 @@ const DataSource = props => {
   }, [dataSourceData, usedID]);
 
   useEffect(() => {
-    // 获取列表权限, 判断权限
     if (_.isEmpty(tableData)) return;
-    const dataIds = _.map(tableData, item => String(item.id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_DS, dataIds };
-    // servicesPermission.dataPermission(postData).then(result => {
-    //   const codesData = _.keyBy(result?.res, 'dataId');
-    //   const newTableData = _.map(tableData, item => {
-    //     item.__codes = codesData?.[item.id]?.codes;
-    //     return item;
-    //   });
-    //   setTableData(newTableData);
-    // });
     setTableData(tableData);
   }, [JSON.stringify(tableData)]);
 
-  // 获取初始数据
   const getData = async (page, order) => {
     let res;
 
@@ -153,16 +129,12 @@ const DataSource = props => {
     setLoading(false);
   };
 
-  /**
-   * 新建后刷新
-   */
   const refreshData = useCallback(() => {
     setTimeout(() => {
-      if (getData) getData(1, sortOrder); // 因为是异步任务，所以需要延迟查询
+      if (getData) getData(1, sortOrder);
     }, 100);
   }, [sortOrder, graphId]);
 
-  // 获取模糊搜索数据
   const getDatabyName = async (page, order, seach) => {
     setCurrent(page);
     setLoading(true);
@@ -183,9 +155,6 @@ const DataSource = props => {
     setLoading(false);
   };
 
-  /**
-   * 关闭弹框
-   */
   const handleCancel = useCallback(() => {
     Object.keys(apiService.sources).forEach(key => {
       apiService.sources[key]('取消请求');
@@ -196,26 +165,17 @@ const DataSource = props => {
     setdeleteVisible(false);
   }, []);
 
-  /**
-   * 新建按钮， 打开弹框并设置默认项
-   */
   const onCreate = () => {
     setOperation('create');
     setSourceVisible(true);
   };
 
-  /**
-   * 删除按钮，将选择的项加入待删除list 打开弹框
-   */
   const onDelete = () => {
     setDeleteOperate('btn');
     setdeleteVisible(true);
     setDeleteData(selectedRowKeys);
   };
 
-  /**
-   * 确认删除，提交删除请求
-   */
   const submitDelete = async () => {
     const res = await servicesDataSource.dataSourceDelete(deleteData);
 
@@ -261,16 +221,10 @@ const DataSource = props => {
     setdeleteVisible(false);
   };
 
-  /**
-   * 模糊查询输入框
-   */
   const searchChange = e => {
     setSearchName(e.target.value);
   };
 
-  /**
-   * 模糊查询
-   */
   const onSeach = async (isClear = false) => {
     setChecked(false);
     setSelectedRowKeys([]);
@@ -295,9 +249,6 @@ const DataSource = props => {
     }
   };
 
-  /**
-   * 页码切换
-   */
   const currentChange = async page => {
     if (listType === ALL) {
       getData(page, sortOrder);
@@ -306,7 +257,6 @@ const DataSource = props => {
     }
   };
 
-  // 表格排序
   const sortOrderChange = (pagination, filters, sorter) => {
     if (checked) {
       setCheckedSort(sorter.order);
@@ -324,19 +274,12 @@ const DataSource = props => {
     }
   };
 
-  /**
-   * 流程中需要对MQ数据源特殊限制, Table组件内部全选优于先于onChange事件且冒泡
-   * 这里增加标记, 事件冒泡到onChange时中断(css已添加pointer-events: none)
-   */
   const onSelectAll = () => {
     if (!isUnCheckAll) return;
 
     triggerSelectAll.current = true;
   };
 
-  /**
-   * 多选框
-   */
   const selectedRowKeysChange = (rowKeys, rowsData) => {
     if (isUnCheckAll && triggerSelectAll.current) {
       triggerSelectAll.current = false;
@@ -351,7 +294,6 @@ const DataSource = props => {
     setSelectedRowKeys(selectKeys);
     setDataSourceData && setDataSourceData(selectedRows);
 
-    // 流程中MQ数据源与其他数据源互斥
     if (isWorkflow) {
       const mqSource = selectedRows.find(d => d.data_source === MQ);
 
@@ -359,17 +301,12 @@ const DataSource = props => {
     }
   };
 
-  /**
-   * @description 查看已选项
-   */
   const checkedChange = e => {
     setChecked(e.target.checked);
 
     if (e.target.checked) {
-      // 过滤可能重复存在的已使用数据
       const repData = selectedRowsList.filter(d => !usedID.includes(d.id));
 
-      setCurrentSelected(1);
       setCheckedSort(sortOrder);
 
       setSelectedRowsList(
@@ -383,7 +320,6 @@ const DataSource = props => {
       );
     }
 
-    // 模拟屏幕缩放事件
     const doResize = () => {
       if (document.createEvent) {
         const event = document.createEvent('HTMLEvents');
@@ -542,88 +478,45 @@ const DataSource = props => {
             trigger={['click']}
             overlay={
               <Menu>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_DS_EDIT_EDIT,
-                    userType: PERMISSION_KEYS.DS_EDIT,
-                    userTypeDepend: record?.__codes
-                  })}
+                <Menu.Item
+                  key="datamanagement.edit"
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    onEdit(record);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      onEdit(record);
-                    }}
-                  >
-                    {intl.get('datamanagement.edit')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_DS_CREATE,
-                    userType: PERMISSION_KEYS.DS_VIEW,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('datamanagement.edit')}
+                </Menu.Item>
+                <Menu.Item
+                  key="datamanagement.copy"
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    onCopy(record);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      onCopy(record);
-                    }}
-                  >
-                    {intl.get('datamanagement.copy')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_DS_DELETE,
-                    userType: PERMISSION_KEYS.DS_DELETE,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('datamanagement.copy')}
+                </Menu.Item>
+                <Menu.Item
+                  key="datamanagement.delete"
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    onOperationDel(record);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      onOperationDel(record);
-                    }}
-                  >
-                    {intl.get('datamanagement.delete')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                {/* <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_DS_MEMBER,
-                    userType: PERMISSION_KEYS.DS_EDIT_PERMISSION,
-                    userTypeDepend: record?.__codes
-                  })}
-                >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      setRouteCache({
-                        tableSelectedKey: getSelectedRowKeys(),
-                        page: getCurrent(),
-                        searchName
-                      });
-                      history.push(`/knowledge/dataSource-auth?dsId=${record.id}&dsName=${record.dsname}`);
-                    }}
-                  >
-                    {intl.get('datamanagement.authorityManagement')}
-                  </Menu.Item>
-                </ContainerIsVisible> */}
+                  {intl.get('datamanagement.delete')}
+                </Menu.Item>
 
-                <ContainerIsVisible isVisible={HELPER.getAuthorByUserInfo()}>
-                  {isWorkflow && (
-                    <Menu.Item
-                      onClick={({ domEvent }) => {
-                        domEvent.stopPropagation();
-                        onOperationTest(record);
-                      }}
-                    >
-                      {tableTest ? `${antIcon} ${intl.get('datamanagement.testing')}` : intl.get('datamanagement.test')}
-                    </Menu.Item>
-                  )}
-                </ContainerIsVisible>
+                {isWorkflow && (
+                  <Menu.Item
+                    key="datamanagement.test"
+                    onClick={({ domEvent }) => {
+                      domEvent.stopPropagation();
+                      onOperationTest(record);
+                    }}
+                  >
+                    {tableTest ? `${antIcon} ${intl.get('datamanagement.testing')}` : intl.get('datamanagement.test')}
+                  </Menu.Item>
+                )}
               </Menu>
             }
           >
@@ -714,18 +607,6 @@ const DataSource = props => {
     getCheckboxProps: record => {
       const { id, data_source } = record;
 
-      // if (
-      //   !HELPER.getAuthorByUserInfo({
-      //     roleType: PERMISSION_CODES.ADF_KN_DS_DELETE,
-      //     userType: PERMISSION_KEYS.DS_DELETE,
-      //     userTypeDepend: record?.__codes
-      //   })
-      // ) {
-      //   return { disabled: true };
-      // }
-      // if (usedID.includes(id)) return { disabled: true };
-
-      // MQ数据源与其他数据源互斥
       if (lockMqId) {
         const disabled = lockMqId > 0 ? lockMqId !== id : data_source === MQ;
         return { disabled };
@@ -747,53 +628,27 @@ const DataSource = props => {
     showSizeChanger: false
   };
 
-  const paginationSelected = {
-    current: currentSelected,
-    total: selectedRowsList.length,
-    pageSize,
-    onChange: page => {
-      setCurrentSelected(page);
-    },
-    className: 'data-table-pagination',
-    showTotal: () => intl.get('datamanagement.dataTotal', { total: selectedRowsList.length }),
-    showTitle: false,
-    showSizeChanger: false
-  };
-
   return (
     <div className="dataSource">
       <Format.Title className="kw-c-header" style={{ marginBottom: 18 }}>
         {intl.get('datamanagement.datamanagement')}
       </Format.Title>
       <div className="dataSource-toolbox kw-mb-4 kw-align-center">
-        <ContainerIsVisible
-          placeholder={<span style={{ height: 32, display: 'inline-block' }} />}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_DS_CREATE,
-            userType: PERMISSION_KEYS.KN_ADD_DS,
-            userTypeDepend: selectedKnowledge?.__codes
-          })}
-        >
+        <ContainerIsVisible placeholder={<span style={{ height: 32, display: 'inline-block' }} />}>
           <Button type="primary" style={{ marginRight: 12 }} onClick={onCreate}>
             <IconFont type="icon-Add" style={{ color: '#fff' }} />
             {intl.get('datamanagement.create')}
           </Button>
         </ContainerIsVisible>
-        <ContainerIsVisible
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_DS_DELETE
-          })}
+        <Button
+          className="ant-btn-default delete-botton"
+          onClick={onDelete}
+          disabled={selectedRowKeys.length <= 0}
+          style={isWorkflow ? { display: 'none' } : null}
         >
-          <Button
-            className="ant-btn-default delete-botton"
-            onClick={onDelete}
-            disabled={selectedRowKeys.length <= 0}
-            style={isWorkflow ? { display: 'none' } : null}
-          >
-            <IconFont type="icon-lajitong" />
-            {intl.get('datamanagement.delete')}
-          </Button>
-        </ContainerIsVisible>
+          <IconFont type="icon-lajitong" />
+          {intl.get('datamanagement.delete')}
+        </Button>
 
         <span className="kw-ml-5" style={isWorkflow ? null : { display: 'none' }}>
           {intl.get('workflow.datasource.checkedNumH')}
@@ -833,7 +688,7 @@ const DataSource = props => {
         </span>
       </div>
 
-      <ADTable
+      <KwTable
         showHeader={false}
         lastColWidth={170}
         dataSource={tableData}
@@ -848,14 +703,7 @@ const DataSource = props => {
         emptyImage={listType === 'all' ? createImg : noResult}
         emptyText={
           listType === 'all' ? (
-            <ContainerIsVisible
-              placeholder={intl.get('datamanagement.noContent')}
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_DS_CREATE,
-                userType: PERMISSION_KEYS.KN_ADD_DS,
-                userTypeDepend: selectedKnowledge?.__codes
-              })}
-            >
+            <ContainerIsVisible placeholder={intl.get('datamanagement.noContent')}>
               <span>
                 {intl.get('datamanagement.noDataF').split('|')[0]}
                 <span className="create-span" onClick={onCreate}>
@@ -870,13 +718,6 @@ const DataSource = props => {
         }
         onChange={sortOrderChange}
         scroll={{ x: '100%' }}
-        // onRow={() => {
-        //   return {
-        //     onClick: e => {
-        //       e.currentTarget.getElementsByClassName('ant-checkbox-wrapper')[0].click();
-        //     }
-        //   };
-        // }}
       />
 
       {/* 新建/编辑弹窗 */}
@@ -891,7 +732,7 @@ const DataSource = props => {
 
       {/* 删除弹窗 */}
       <Modal
-        visible={deleteVisible}
+        open={deleteVisible}
         onCancel={handleCancel}
         wrapClassName="dataSource-delete-modal"
         focusTriggerAfterClose={false}

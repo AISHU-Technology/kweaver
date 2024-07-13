@@ -4,7 +4,6 @@ import type { ColumnsType } from 'antd/es/table';
 import classNames from 'classnames';
 import intl from 'react-intl-universal';
 import { ParamItem } from '@/components/ParamCodeEditor/type';
-import './style.less';
 
 const ParamTable = (props: any) => {
   const { data = [], disabled, readonly, onEdit, onDelete } = props;

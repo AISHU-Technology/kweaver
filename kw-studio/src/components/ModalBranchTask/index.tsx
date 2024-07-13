@@ -1,9 +1,9 @@
 import React, { useEffect, useState, memo } from 'react';
-import { Button, Checkbox, Modal, Radio, message, Tooltip } from 'antd';
+import { Checkbox, Radio, message, Tooltip } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import classNames from 'classnames';
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
@@ -14,8 +14,6 @@ import SideBar from '@/components/SideBar';
 
 import { numToThousand } from '@/utils/handleFunction';
 import servicesSubGraph from '@/services/subGraph';
-import serviceLicense from '@/services/license';
-import servicesCreateEntity from '@/services/createEntity';
 import serviceGraphDetail from '@/services/graphDetail';
 
 import noResult from '@/assets/images/noResult.svg';
@@ -27,18 +25,18 @@ const ModalBranchTask = (props: {
   ontoId?: any;
   handleCancel: () => void;
   goToTask: () => void;
-  firstBuild?: boolean; // 是否是首次构建
+  firstBuild?: boolean;
 }) => {
-  const { visible, graphId, goToTask, handleCancel, ontoId, firstBuild } = props;
+  const { visible, graphId, goToTask, handleCancel } = props;
   const [graphData, setGraphData] = useState({});
   const [subgraphList, setsubgraphList] = useState<Array<any>>([]);
-  const [runMode, setrunMode] = useState('skip'); // 写入模式 默认跳过
-  const [selected, setSelected] = useState(-1); // 选中展示的子图
-  const [subgraphIds, setSubgraphIds] = useState<Array<any>>([]); // 构建子图列表id
-  const [ontoData, setOntoData] = useState<Array<any>>([]); // 本体数据
+  const [runMode, setrunMode] = useState('skip');
+  const [selected, setSelected] = useState(-1);
+  const [subgraphIds, setSubgraphIds] = useState<Array<any>>([]);
+  const [ontoData, setOntoData] = useState<Array<any>>([]);
   const [searchValue, setSearchValue] = useState('');
-  const [errorIds, setErrorIds] = useState<Array<any>>([]); // 不存在的子图
-  const [runType, setRunType] = useState('full'); // 运行方式
+  const [errorIds, setErrorIds] = useState<Array<any>>([]);
+  const [runType, setRunType] = useState('full');
   const [selectBar, setSelectBar] = useState('runType');
 
   useEffect(() => {
@@ -62,14 +60,8 @@ const ModalBranchTask = (props: {
       if (res?.res) {
         setOntoData(res?.res);
       }
-      // const res = await servicesCreateEntity.getEntityInfo(decodeURI(ontoId));
-      // if (res?.res) {
-      //   setOntoData(res?.res?.df?.[0]);
-      // }
       res?.ErrorCode && message.error(res?.Description);
-    } catch (err) {
-      //
-    }
+    } catch (err) {}
   };
 
   /**
@@ -84,9 +76,7 @@ const ModalBranchTask = (props: {
         setsubgraphList(res?.res);
       }
       res?.Description && message.error(res?.Description);
-    } catch (err) {
-      //
-    }
+    } catch (err) {}
   };
 
   /**
@@ -154,29 +144,6 @@ const ModalBranchTask = (props: {
   };
 
   /**
-   * 获取知识量
-   */
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res && res !== undefined) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          message.warning(intl.get('license.remaining'));
-        }
-        if (knowledge_limit - all_knowledge < 0) {
-          message.error(intl.get('license.operationFailed'));
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || {};
-      Description && message.error(Description);
-    }
-  };
-
-  /**
    * 确定运行
    */
   const runTask = async () => {
@@ -184,7 +151,6 @@ const ModalBranchTask = (props: {
       message.error('请先选择分组');
       return;
     }
-    onCalculate();
     try {
       const graph_id = graphId;
       const data = {
@@ -246,7 +212,7 @@ const ModalBranchTask = (props: {
   return (
     <UniversalModal
       title={intl.get('task.groupRun')}
-      visible={visible}
+      open={visible}
       wrapClassName="modal-branch-task"
       footer={null}
       destroyOnClose={true}
@@ -295,7 +261,7 @@ const ModalBranchTask = (props: {
                 >
                   {intl.get('global.checkAll')}
                 </Checkbox>
-                <ScrollBar isshowx="false" autoHeight autoHeightMax={400}>
+                <KwScrollBar isShowX={false} autoHeight autoHeightMax={400}>
                   <div className="kw-pr-5">
                     {_.map(subgraphList, item => {
                       return (
@@ -344,7 +310,7 @@ const ModalBranchTask = (props: {
                       );
                     })}
                   </div>
-                </ScrollBar>
+                </KwScrollBar>
               </div>
             ) : searchValue ? (
               <div className="search-none">
@@ -415,7 +381,7 @@ const ModalBranchTask = (props: {
                   >
                     {intl.get('global.checkAll')}
                   </Checkbox>
-                  <ScrollBar isshowx="false" autoHeight autoHeightMax={400}>
+                  <KwScrollBar isShowX={false} autoHeight autoHeightMax={400}>
                     <div>
                       {_.map(subgraphList, item => {
                         return (
@@ -464,7 +430,7 @@ const ModalBranchTask = (props: {
                         );
                       })}
                     </div>
-                  </ScrollBar>
+                  </KwScrollBar>
                 </div>
               ) : searchValue ? (
                 <div className="search-none">

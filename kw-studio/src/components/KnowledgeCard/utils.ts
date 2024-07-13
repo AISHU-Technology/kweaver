@@ -1,5 +1,3 @@
-import { TitleObj } from './types';
-
 /**
  * 获取显示的标题, 当前语言为空, 则从剩余的语言中取
  * @param title 标题数据

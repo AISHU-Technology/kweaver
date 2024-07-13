@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import _ from 'lodash';
-import { Input, Tooltip, Dropdown, Menu, Button, Pagination, Checkbox, message, Spin } from 'antd';
-import { LoadingOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Tooltip, Dropdown, Menu, Checkbox, message, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
-import classNames from 'classnames';
 
-import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import { sessionStore, wrapperTitle } from '@/utils/handleFunction';
 import serverThesaurus from '@/services/thesaurus';
-import serviceLicense from '@/services/license';
 import IconFont from '@/components/IconFont';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 import Format from '@/components/Format';
@@ -20,7 +16,6 @@ import noResult from '@/assets/images/noResult.svg';
 import './style.less';
 import SearchInput from '@/components/SearchInput';
 
-const PAGESIZE = 20;
 const ORDER_MENU = [
   { id: 'name', intlText: intl.get('cognitiveService.analysis.byName') },
   { id: 'create_time', intlText: intl.get('cognitiveService.analysis.byCreate') },
@@ -31,9 +26,7 @@ const ThesaurusLeftList = (props: any, ref: any) => {
   const {
     thesaurusList,
     selectedThesaurus,
-    thesaurusListCount,
     knowledge,
-    createModalVisible,
     listPage,
     importModalVisible,
     setImportModalVisible,
@@ -42,7 +35,7 @@ const ThesaurusLeftList = (props: any, ref: any) => {
     selectedLeftId,
     setSelectedLeftId
   } = props;
-  const { setCreateModalVisible, getThesaurusById, getThesaurusList, onImportAndCreateModal } = props;
+  const { getThesaurusById, getThesaurusList, onImportAndCreateModal } = props;
   const [name, setName] = useState<string>(''); // 搜索词库名
   const [order, setOrder] = useState<string>('desc'); // 新旧排序
   const [rule, setRule] = useState<string>('create_time'); // 筛选方式
@@ -75,26 +68,6 @@ const ThesaurusLeftList = (props: any, ref: any) => {
   };
 
   /**
-   * 获取知识量
-   */
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res && res !== undefined) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          message.warning(intl.get('license.remaining'));
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || {};
-      Description && message.error(Description);
-    }
-  };
-
-  /**
    * 搜索词库
    */
   const searchThesaurus = (value: any) => {
@@ -109,14 +82,6 @@ const ThesaurusLeftList = (props: any, ref: any) => {
   const selectMenu = (e: any) => {
     if (e.key === rule) return setOrder(order === 'desc' ? 'asc' : 'desc');
     setRule(e.key);
-  };
-
-  /**
-   * 换页
-   */
-  const changePage = (page: number) => {
-    setPage(page);
-    getThesaurusList({ page, order, rule });
   };
 
   /**
@@ -248,23 +213,17 @@ const ThesaurusLeftList = (props: any, ref: any) => {
     </Menu>
   );
 
-  const hasCreate = HELPER.getAuthorByUserInfo({
-    roleType: PERMISSION_CODES.ADF_KN_LEXICON_CREATE,
-    userType: PERMISSION_KEYS.KN_ADD_LEXICON,
-    userTypeDepend: knowledge?.__codes
-  });
-
   /**
    * 鼠标移入
    */
-  const onMouseOver = (e: any) => {
+  const onMouseOver = () => {
     setIsShowClose(true);
   };
 
   /**
    * 鼠标移出
    */
-  const onMouseLeave = (e: any) => {
+  const onMouseLeave = () => {
     setIsShowClose(false);
   };
 
@@ -335,7 +294,7 @@ const ThesaurusLeftList = (props: any, ref: any) => {
                   <IconFont type="icon-daochu" style={{ fontSize: 14 }} />
                 </Format.Button>
 
-                <ContainerIsVisible isVisible={hasCreate}>
+                <ContainerIsVisible isVisible={true}>
                   <Format.Button
                     className="kw-align-center"
                     type="icon"
@@ -346,10 +305,9 @@ const ThesaurusLeftList = (props: any, ref: any) => {
                     <IconFont type="icon-daoru" style={{ fontSize: 14 }} />
                   </Format.Button>
                 </ContainerIsVisible>
-                <ContainerIsVisible isVisible={hasCreate}>
+                <ContainerIsVisible isVisible={true}>
                   <Format.Button
                     onClick={() => {
-                      onCalculate();
                       onImportAndCreateModal('create');
                     }}
                     tip={intl.get('cognitiveSearch.create')}
@@ -366,8 +324,6 @@ const ThesaurusLeftList = (props: any, ref: any) => {
         )}
         {!_.isEmpty(thesaurusList) ? (
           <div className="kw-h-100">
-            {/* 全选 */}
-            {/* {HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_LEXICON_EXPORT }) && ( */}
             <div className="select-all kw-flex kw-pl-2">
               <Checkbox
                 onChange={e => onChangeAll(e)}
@@ -378,7 +334,6 @@ const ThesaurusLeftList = (props: any, ref: any) => {
                 {intl.get('ThesaurusManage.allThesaurus')}
               </Checkbox>
             </div>
-            {/* )} */}
             <div className="kw-h-100">
               <div className="lists-wrap">
                 {_.map(thesaurusList, (item: any, index: number) => {
@@ -387,13 +342,11 @@ const ThesaurusLeftList = (props: any, ref: any) => {
                       key={item.id}
                       className={Number(selectedLeftId) === item?.id ? 'line-selected  list-item' : 'list-item'}
                     >
-                      {/* {HELPER.getAuthorByUserInfo({ roleType: PERMISSION_CODES.ADF_KN_LEXICON_EXPORT }) && ( */}
                       <Checkbox
                         disabled={item?.isDisable || _.isEmpty(item?.columns) || item?.status === 'running'}
                         onChange={e => onChange(e, item)}
                         checked={selectedIds.includes(item.id)}
                       />
-                      {/* )} */}
                       <div
                         className={'line kw-align-center'}
                         onClick={() => {

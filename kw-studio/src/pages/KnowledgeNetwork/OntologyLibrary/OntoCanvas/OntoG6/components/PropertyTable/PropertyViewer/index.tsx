@@ -39,7 +39,7 @@ const PropertyViewer = (props: any) => {
       placement="bottomRight"
       trigger={['click']}
       destroyTooltipOnHide
-      onVisibleChange={onVisibleChange}
+      onOpenChange={onVisibleChange}
       content={
         <div>
           {/* <div className="node-title">

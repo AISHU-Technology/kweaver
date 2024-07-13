@@ -2,11 +2,11 @@ import React, { useState, useRef } from 'react';
 import { Button, Tabs, message } from 'antd';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
-import { PERMISSION_KEYS, PERMISSION_CODES, ANALYSIS_SERVICES } from '@/enums';
+import { ANALYSIS_SERVICES } from '@/enums';
 
 import ParamCodeEditor, { ParamEditorRef, paramPolyfill } from '@/components/ParamCodeEditor';
 import IconFont from '@/components/IconFont';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import servicesPermission from '@/services/rbacPermission';
 import cognitiveSearchService from '@/services/cognitiveSearch';
 import ViewActuator from './ViewActuator';
@@ -145,7 +145,6 @@ const CreateService = (props: any) => {
     if (!_.isEmpty(ids)) {
       // 图谱权限
 
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds: [...new Set([...ids])] };
       // servicesPermission.dataPermission(postData).then(result => {
       //   const codesData = _.keyBy(result?.res, 'dataId');
       //   const newGraphData = _.filter(ids, item => {
@@ -198,7 +197,7 @@ const CreateService = (props: any) => {
           {loading && (
             <div className={`loading-mask ${loading && 'spinning'}`}>
               <div className="spin-content-box kw-flex">
-                <AdSpin />
+                <KwSpin />
                 {
                   <div className="loading-content">
                     {intl.get('cognitiveSearch.loading')}

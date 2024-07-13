@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import intl from 'react-intl-universal';
 import { Divider } from 'antd';
-import moment from 'moment';
 import { Editor } from '@wangeditor/editor-for-react';
 import { defaultEditorConfig } from '@/components/WangEditor/defaultConfig';
-import '@wangeditor/editor/dist/css/style.css'; // 引入编辑器css
+import '@wangeditor/editor/dist/css/style.css';
 import IconFont from '@/components/IconFont';
-import HOOKS from '@/hooks';
 import { onGoLang, onPython, onPythonExample, onJava, onDocument } from './assistFunction';
 import './style.less';
 
@@ -18,7 +16,6 @@ type ServiceDesType = {
 
 const ServiceDescription = (props: ServiceDesType) => {
   const { setIsDrawer, serviceData, apiDrawer } = props;
-  const { width: widthScreen } = HOOKS.useWindowSize(); // 屏幕宽度
   const [tabKey, setTabKey] = useState<'go' | 'python' | 'java'>('go');
   const onChange = (key: any) => {
     setTabKey(key);

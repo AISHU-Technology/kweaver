@@ -9,9 +9,9 @@ import intl from 'react-intl-universal';
 type GetIntentPoolListType = {
   page: number;
   size: number;
-  order: string; // desc | asc
-  search_name?: string; // 默认不填返回所有数据
-  rule?: string; // create-创建时间 update-更新时间 name-名字
+  order: string;
+  search_name?: string;
+  rule?: string;
   filter_status?: string;
 };
 const getIntentPoolList = async (data: GetIntentPoolListType) => {
@@ -71,7 +71,7 @@ const deleteIntentPool = async (data: DeleteIntentPoolType) => {
 /**
  * 上传文件
  */
-const uploadFile = async (data: any, knId: any) => {
+const uploadFile = async (data: any) => {
   return await apiService.axiosPost(API.uploadFile, { type: 'file', ...data });
 };
 

@@ -5,7 +5,6 @@ import { message } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import HOOKS from '@/hooks';
-import serviceLicense from '@/services/license';
 import servicesEventStats, { listMenuDataType } from '@/services/eventStats';
 
 import { getParam } from '@/utils/handleFunction';
@@ -132,28 +131,6 @@ const Sidebar = (props: any) => {
     });
     return { expireTrail, newListMain };
   };
-
-  /**
-   * 获取列表
-   */
-  // const getLicenseList = async (data: any) => {
-  //   try {
-  //     const res = await serviceLicense.getLicenseList({ status: -1, service: -1, lang, ...data });
-  //     if (res?.res?.data) {
-  //       const licenseList = deliveryList(res.res.data);
-  //       if (licenseList?.newListMain.length !== 0) return false;
-  //       if (licenseList?.expireTrail.length !== 0) {
-  //         return true;
-  //       }
-  //     }
-  //     return false;
-  //   } catch (error) {
-  //     if (!error.type) return;
-  //     const { Description, description } = error.response || {};
-  //     const curDesc = description || Description;
-  //     curDesc && message.error(curDesc);
-  //   }
-  // };
 
   const recursionOpenKeys = (barItem: any, pathName: any) => {
     if (keyToRoute.current[barItem.key] === pathName) {

@@ -4,32 +4,31 @@ import intl from 'react-intl-universal';
 import _ from 'lodash';
 
 import { Steps, Spin } from 'antd';
-import { CloseCircleOutlined, EllipsisOutlined, CheckOutlined, LoadingOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, EllipsisOutlined, LoadingOutlined } from '@ant-design/icons';
 import { UPLOAD_RECORD_STATUS } from '@/enums';
 import { RecordItem } from '../types';
 import './style.less';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 
 export interface RecordDetailProps {
   className?: string;
   loading: boolean;
   record: Partial<RecordItem>;
-  onCancel: Function; // 关闭弹窗
-  onRefresh: Function; // 点击刷新
+  onCancel: Function;
+  onRefresh: Function;
 }
 
-const { PROGRESS, COMPLETE, FAILED } = UPLOAD_RECORD_STATUS;
+const { COMPLETE, FAILED } = UPLOAD_RECORD_STATUS;
 const { Step } = Steps;
 const WaitIcon = () => <div className="step-wait-icon" />;
 
 const STEPS = [
-  { step: 0, title: intl.get('uploadService.startUpload') }, // 开始上传
-  { step: 1, title: intl.get('uploadService.localExport') }, // 本地导出
-  { step: 2, title: intl.get('uploadService.transferData') }, // 写入数据 transferState : 2,3
-  { step: 3, title: intl.get('uploadService.finish') } // 完成上传
+  { step: 0, title: intl.get('uploadService.startUpload') },
+  { step: 1, title: intl.get('uploadService.localExport') },
+  { step: 2, title: intl.get('uploadService.transferData') },
+  { step: 3, title: intl.get('uploadService.finish') }
 ];
 
-// 后端约定符号分割错误原因和详情
 const decodeError = (cause?: string) => {
   try {
     return cause?.split('----+++++----');
@@ -37,16 +36,14 @@ const decodeError = (cause?: string) => {
     return null;
   }
 };
-// 失败步骤
 const ERRORSTEP: Record<any, any> = {
-  1: intl.get('uploadService.exportFailed'), // 导出图谱失败
-  2: intl.get('uploadService.transFailed'), // 传输图谱失败
-  3: intl.get('uploadService.importFailed') // 导入图谱失败
+  1: intl.get('uploadService.exportFailed'),
+  2: intl.get('uploadService.transFailed'),
+  3: intl.get('uploadService.importFailed')
 };
 
 const RecordDetail = (props: RecordDetailProps) => {
   const { className, record, loading } = props;
-  // const curStep = parseInt(record.transferState || '0');
   const curStep = useMemo(() => {
     if (record.transferState === '2' || record.transferState === '3') return 2;
     if (record.transferState === '4') return 4;
@@ -134,10 +131,10 @@ const RecordDetail = (props: RecordDetailProps) => {
           </Steps>
 
           {decodeError(record.cause) && (
-            <ScrollBar
+            <KwScrollBar
               autoHeight
               autoHeightMax={260}
-              isshowx="false"
+              isShowX={false}
               color="rgb(184,184,184)"
               className="scrollWrapper kw-mt-9"
             >
@@ -146,7 +143,7 @@ const RecordDetail = (props: RecordDetailProps) => {
                 {': '}
                 {decodeError(record.cause)?.[1] || record.cause || '- -'}
               </div>
-            </ScrollBar>
+            </KwScrollBar>
           )}
         </div>
       ) : (

@@ -6,6 +6,7 @@ export interface AvatarNameProps {
   style?: React.CSSProperties;
   color?: string;
   size?: number;
+  children?: any;
 }
 
 const AvatarName: React.FC<AvatarNameProps> = ({ str = '', color, size = 40, style = {}, children }) => {

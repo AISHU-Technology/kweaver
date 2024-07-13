@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import _ from 'lodash';
-import Cookie from 'js-cookie';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
-import { Row, message, Modal } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Row, message } from 'antd';
 
-import HELPER from '@/utils/helper';
-import { PERMISSION_CODES } from '@/enums';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 
 import Format from '@/components/Format';
@@ -16,8 +12,6 @@ import KnowledgeModal from '@/components/KnowledgeModal';
 
 import BootstrapCard from './BootstrapCard';
 import { kwCookie, sessionStore } from '@/utils/handleFunction';
-
-import serviceLicense, { SERVICE_LICENSE_TYPE } from '@/services/license';
 
 const DATA: any = [
   {
@@ -46,56 +40,14 @@ const DATA: any = [
   // }
 ];
 
-const matchKeyToServiceType = (key: string): SERVICE_LICENSE_TYPE => {
-  switch (key) {
-    case 'knowledgeNetwork':
-      return SERVICE_LICENSE_TYPE.KNOWLEDGE_NETWORK_STUDIO;
-    case 'cognitiveApplication':
-      return SERVICE_LICENSE_TYPE.COGNITIVE_APPLICATION_STUDIO;
-    case 'modelFactory':
-      return SERVICE_LICENSE_TYPE.MODEL_FACTORY;
-    default:
-      return SERVICE_LICENSE_TYPE.APP_FACTORY;
-  }
-};
-
-const validateServiceStatus = async (key: string) => {
-  try {
-    const res = await serviceLicense.getServiceLicenseStatus(matchKeyToServiceType(key));
-
-    if (res?.res) {
-      if (res?.res === '0') {
-        message.warning(intl.get('license.licenseInvalidWaring'));
-      }
-    }
-  } catch (error) {
-    if (!error.type) return;
-    const { Description, description } = error.response || {};
-    const curDesc = Description | description;
-    curDesc && message.error(curDesc);
-  }
-};
-
 const Homepage = () => {
   const history = useHistory();
   const [operation, setOperation] = useState<any>({ type: '', visible: false, data: {} });
 
-  const onClick = (key: string, url: string) => async () => {
-    // validateServiceStatus(key);
+  const onClick = (key: string) => async () => {
     try {
       if (key === 'modelFactory') {
-        // const hasModelFactory = HELPER.getAuthorByUserInfo({
-        //   roleType: PERMISSION_CODES.ADF_MODEL_FACTORY
-        // });
-        // if (hasModelFactory) {
         onToPageModelFactory();
-        // } else {
-        //   Modal.error({
-        //     title: intl.get('homepage.tips'),
-        //     icon: <ExclamationCircleFilled />,
-        //     content: intl.get('homepage.noPermissionsOfThisModelFactory')
-        //   });
-        // }
         return;
       }
       const postData = { size: 1000, page: 1, rule: 'update', order: 'desc' };
@@ -162,8 +114,8 @@ const Homepage = () => {
           </div>
           <Row gutter={[16, 16]} justify="space-between" wrap className="kw-mt-3">
             {_.map(DATA, item => {
-              const { id, url } = item;
-              return <BootstrapCard key={item.id} {...item} onClick={onClick(id, url)} />;
+              const { id } = item;
+              return <BootstrapCard key={item.id} {...item} onClick={onClick(id)} />;
             })}
           </Row>
         </div>

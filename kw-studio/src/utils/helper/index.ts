@@ -1,7 +1,6 @@
 import constructListFromKeysAndLabel from './constructListFromKeysAndLabel';
 import { isNumberAndParseInt, formatFileSize, formatNumberWithComma, formatNumberWithSuffix } from './formatNumber';
 import formatQueryString from './formatQueryString';
-import getAuthorByUserInfo from './getAuthorByUserInfo';
 import getBrowserType from './getBrowserType';
 import getLabelFromShowLabels from './getLabelFromShowLabels';
 import getLengthFromString from './getLengthFromString';
@@ -19,7 +18,6 @@ const HELPER = {
   formatNumberWithComma,
   formatNumberWithSuffix,
   formatQueryString,
-  getAuthorByUserInfo,
   getBrowserType,
   getLabelFromShowLabels,
   getLengthFromString,

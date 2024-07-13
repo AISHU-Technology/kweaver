@@ -29,6 +29,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -558,6 +559,14 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean)
     },
     plugins: [
+      new CompressionPlugin({
+        // 配置选项
+        algorithm: 'gzip', // 压缩算法，默认为gzip，还可以选择brotli等
+        test: /\.(js|css|html|svg)$/, // 匹配需要压缩的文件类型
+        threshold: 10240, // 只处理大于该大小的文件，默认为10kb
+        minRatio: 0.8, // 最小压缩比率，只有压缩后的文件大小比原始大小小于此比率时才会被压缩
+        deleteOriginalAssets: false // 是否删除原文件，默认为false，即保留原文件并额外生成压缩文件
+      }),
       new NodePolyfillPlugin(),
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(

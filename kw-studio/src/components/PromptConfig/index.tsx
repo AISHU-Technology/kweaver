@@ -6,7 +6,6 @@ import HOOKS from '@/hooks';
 import classNames from 'classnames';
 import DragLine from '@/components/DragLine';
 import PromptEditor, { PromptEditorRef, getVariablesPosition } from '@/components/PromptEditor';
-import Format from '@/components/Format';
 import './style.less';
 import ExplainTip from '@/components/ExplainTip';
 
@@ -37,7 +36,6 @@ export const isCorrectPrompt = (value?: string) => {
   return VARIABLES.every(item => positionsMap[item.var_name]);
 };
 
-// 渲染提示词解释
 export const PromptTip = memo(() => {
   const tip = intl.get('cognitiveSearch.promptTip');
   const elements: any[] = [];
@@ -62,8 +60,8 @@ const PromptConfig = (props: PromptConfigProps) => {
   const { className, defaultPrompt, onChange, type, alreadyExitLargeData } = props;
   const editorRef = useRef<PromptEditorRef>(null);
   const [scaleHeight, setScaleHeight] = useState(214);
-  const maxHeight = useRef(0); // 最大高度
-  const screenHeightRef = useRef<any>(null); // 屏幕上一次的高度
+  const maxHeight = useRef(0);
+  const screenHeightRef = useRef<any>(null);
   const { height: screenHeight } = HOOKS.useWindowSize();
 
   useEffect(() => {

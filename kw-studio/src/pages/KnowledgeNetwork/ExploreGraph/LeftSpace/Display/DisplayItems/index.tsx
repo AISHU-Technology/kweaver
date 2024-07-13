@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import { Input, Radio, Checkbox, Button } from 'antd';
 import { SearchOutlined, SettingOutlined } from '@ant-design/icons';
 
-import ContainerEmptyOrResult from '@/components/ContainerEmptyOrResult';
+import ContainerEmptyOrResult from './ContainerEmptyOrResult';
 
 import './style.less';
 

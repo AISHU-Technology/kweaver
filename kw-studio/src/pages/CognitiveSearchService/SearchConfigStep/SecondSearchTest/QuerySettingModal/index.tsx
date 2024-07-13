@@ -183,7 +183,7 @@ const QuerySettingModal = (props: any) => {
   return (
     <UniversalModal
       className="search-query-know-modal"
-      visible={visible}
+      open={visible}
       title={intl.get('cognitiveSearch.recognition')}
       okText={intl.get('cognitiveSearch.save')}
       width={'800px'}

@@ -17,7 +17,7 @@ export interface FooterModalSourceType {
   style?: string;
   isDisabled?: boolean;
   btnProps?: Record<string, any>;
-  onHandle: () => void;
+  onHandle?: () => void;
 }
 
 const Footer = (props: FooterModalProps) => {

@@ -102,7 +102,7 @@ const LeftList = forwardRef<any, any>(({ onTermDataSourceChange }, ref) => {
                 selectedTerm: [data]
               }));
               await glossaryTreeRef.current?.setSelectedNodeByTerm([data.id]);
-              searchInput.current.state.value = '';
+              searchInput.current?.setValue('');
               setSearchProps(prevState => ({
                 ...prevState,
                 value: ''

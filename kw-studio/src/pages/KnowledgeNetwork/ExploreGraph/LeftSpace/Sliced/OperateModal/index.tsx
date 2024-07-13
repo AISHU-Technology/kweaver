@@ -96,7 +96,7 @@ const OperateModal = (props: OperateModalProps) => {
       className="sliced-op-modal"
       title={type === 'save' ? intl.get('exploreGraph.sliceSave') : intl.get('exploreGraph.sliceEdit')}
       zIndex={2000}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       onOk={handleOk}
       footerData={[

@@ -3,7 +3,7 @@ import intl from 'react-intl-universal';
 import _ from 'lodash';
 import TemplateModal from '@/components/TemplateModal';
 import IconFont from '@/components/IconFont';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
 // import kgImg from '@/assets/images/knGraph.svg';
 
 type GraphModalType = {
@@ -17,7 +17,7 @@ const GraphModal = (props: GraphModalType) => {
 
   return (
     <TemplateModal
-      visible={visible}
+      open={visible}
       className="corGraphModal"
       title={intl.get('exploreAnalysis.corGraphTitle')}
       width={480}
@@ -30,7 +30,7 @@ const GraphModal = (props: GraphModalType) => {
           title={data?.[0]?.name}
           style={{ height: 40, borderBottom: 'none' }}
         >
-          <AdKnowledgeNetIcon style={{ marginRight: 6 }} type={data?.[0]?.color} />
+          <KwKNIcon style={{ marginRight: 6 }} type={data?.[0]?.color} />
           <div title={data?.[0]?.name} className="kw-ellipsis">
             {data?.[0]?.name}
           </div>

@@ -260,7 +260,7 @@ class TaskList extends Component {
         <Modal
           className="task-modal-detail-signal-mark-new"
           title=""
-          visible={modalVisible}
+          open={modalVisible}
           footer={null}
           width={'atuo'}
           height={'calc(100% - 40px)'}

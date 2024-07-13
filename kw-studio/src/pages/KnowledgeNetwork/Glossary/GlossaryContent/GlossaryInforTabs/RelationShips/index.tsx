@@ -11,7 +11,7 @@ import { useGlossaryStore } from '@/pages/KnowledgeNetwork/Glossary/GlossaryCont
 import { deleteCustomRelationByTerm, getCustomRelationListByTerm } from '@/services/glossaryServices';
 import { getTermNameByLanguage } from '@/pages/KnowledgeNetwork/Glossary/assistant';
 import NoDataBox from '@/components/NoDataBox';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import Format from '@/components/Format';
 
 const RelationShips = ({ openCustomRelationModal, setSelectedNodeByTerm }: any) => {
@@ -300,7 +300,7 @@ const RelationShips = ({ openCustomRelationModal, setSelectedNodeByTerm }: any) 
               </Format.Button>
             </div>
           </div>
-          <ADTable
+          <KwTable
             showHeader={false}
             rowKey="relation_id"
             loading={

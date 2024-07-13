@@ -21,7 +21,7 @@ import { constructGraphData } from '@/components/SourceImportComponent';
 import { ItemUpdate } from '../types/update';
 
 import './style.less';
-import { DS_SOURCE, PERMISSION_CODES, PERMISSION_KEYS } from '@/enums';
+import { DS_SOURCE } from '@/enums';
 import { useLocation } from 'react-router-dom';
 import HELPER from '@/utils/helper';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
@@ -720,24 +720,16 @@ const Header: React.ForwardRefRenderFunction<OntoHeaderRef, HeaderProps> = (prop
               </Popover>
             </Tooltip>
           )}
-          <ContainerIsVisible
-            isVisible={HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_CREATE,
-              userType: PERMISSION_KEYS.KN_ADD_OTL,
-              userTypeDepend: knData?.__codes
-            })}
-          >
-            {ontoLibType === '' && !viewMode && (
-              <div className="kw-align-center kw-h-100">
-                <Divider type="vertical" />
-                <Tooltip placement="bottomRight" title={intl.get('ontoLib.saveTo')}>
-                  <div className="operation" onClick={() => clickWrap(onChangeOperationKey)('saveToOnto')}>
-                    <IconFont type="icon-baocun" />
-                  </div>
-                </Tooltip>
-              </div>
-            )}
-          </ContainerIsVisible>
+          {ontoLibType === '' && !viewMode && (
+            <div className="kw-align-center kw-h-100">
+              <Divider type="vertical" />
+              <Tooltip placement="bottomRight" title={intl.get('ontoLib.saveTo')}>
+                <div className="operation" onClick={() => clickWrap(onChangeOperationKey)('saveToOnto')}>
+                  <IconFont type="icon-baocun" />
+                </div>
+              </Tooltip>
+            </div>
+          )}
         </div>
       </div>
 

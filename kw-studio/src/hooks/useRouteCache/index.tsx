@@ -38,8 +38,8 @@ const useRouteCache: UseRouteCacheFunc = initialCache => {
         const source = `${location.pathname}${location.search}`;
         const target = `${window.location.pathname}${decodeURIComponent(window.location.search)}`;
         sessionStore.set(cacheKey, {
-          source, // 缓存数据的页面
-          target, // 跳转的目标页面
+          source,
+          target,
           ...cacheRef.current
         });
       }

@@ -1,12 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import TaskList from '../taskList';
 import _ from 'lodash';
-import { PERMISSION_KEYS } from '@/enums';
 import servicesPermission from '@/services/rbacPermission';
 import serviceGraphDetail from '@/services/graphDetail';
 import { message } from 'antd';
 import { getParam } from '@/utils/handleFunction';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 import intl from 'react-intl-universal';
 import { useHistory } from 'react-router-dom';
 import { ad_onChangeGraphStatus } from '@/reduxConfig/action/knowledgeGraph';
@@ -28,7 +27,6 @@ const GraphTaskRecord = ({ ad_onChangeGraphStatus }: any) => {
       const getData = { is_all: true, graph_id: graphId };
       const result = await serviceGraphDetail.graphGetInfoBasic(getData);
       const data = result?.res || {};
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds: [String(graphId)] };
       // servicesPermission.dataPermission(postData).then(result => {
       //   setGraphBasicData({ ...data, __codes: result?.res?.[0]?.codes || [] });
       // });

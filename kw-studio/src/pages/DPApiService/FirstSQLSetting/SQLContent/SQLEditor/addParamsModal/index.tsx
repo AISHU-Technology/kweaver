@@ -62,7 +62,7 @@ const AddParamsModal = (props: any) => {
       className="func-add-param-modal-root"
       title={intl.get('function.parameter')}
       width={800}
-      visible={visible}
+      open={visible}
       zIndex={1052}
       onOk={onOk}
       onCancel={onCancel}

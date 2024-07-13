@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Tabs, Modal, Tooltip, message } from 'antd';
 import { ExclamationCircleFilled, PlusOutlined } from '@ant-design/icons';
 
-import { PERMISSION_KEYS, GRAPH_CONFIG, GRAPH_LAYOUT, GRAPH_LAYOUT_DAGRE_DIR } from '@/enums';
+import { GRAPH_CONFIG, GRAPH_LAYOUT, GRAPH_LAYOUT_DAGRE_DIR } from '@/enums';
 import { getParam } from '@/utils/handleFunction';
 import servicesPermission from '@/services/rbacPermission';
 import TabsPane from './TabsPane';
@@ -199,7 +199,6 @@ const HeaderTabs = (props: HeaderTabsType) => {
   const onEdit = async (targetKey: any, action: 'add' | 'remove') => {
     if (action === 'add') {
       // DATA-354277 dataPermission 入参dataIds kg_conf_id -> id
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds: [String(getParam('graphConfId'))] };
       // const result = await servicesPermission.dataPermission(postData);
       // const codes = result?.res?.[0]?.codes || [];
       // if (!_.includes(codes, PERMISSION_KEYS.KG_VIEW)) {

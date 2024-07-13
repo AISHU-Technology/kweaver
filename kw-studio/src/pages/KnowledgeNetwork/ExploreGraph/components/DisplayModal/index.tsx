@@ -74,7 +74,7 @@ const DisplayModal = (props: DisplayModalType) => {
   return (
     <Modal
       wrapClassName="displayModalRoot"
-      visible={true}
+      open={true}
       mask={false}
       title={<div />}
       footer={false}

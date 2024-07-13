@@ -19,14 +19,13 @@ const ERROR: Record<string, string> = {
   'EngineServer.VProErr': 'exploreGraph.entityAttribute',
   'EngineServer.VIDLengthErr': 'exploreGraph.inputCorrect'
 };
-const isIframe = () => window.location.pathname.includes('iframe');
 const VidSearch = (props: any) => {
   const { classData, searchConfig, selectedItem, isLayoutTree, leftDrawerKey, resultPanelDisplay } = props;
   const { onChangeData, onCloseLeftDrawer, setSearchConfig, onResultVisibleChange } = props;
   const [searchScope, setSearchScope] = useState('graph'); // 搜索范围
   const [vids, setVids] = useState('');
   const [isError, setIsError] = useState<any>('');
-  const authorKgView = isIframe() ? true : selectedItem?.detail?.authorKgView;
+  const authorKgView = selectedItem?.detail?.authorKgView;
   const [results, setResults] = useState(() => getInitResState()); // 结果面板数据
   const [addType, setAddType] = useState(ADD_IMMEDIATELY); // 添加方式
 

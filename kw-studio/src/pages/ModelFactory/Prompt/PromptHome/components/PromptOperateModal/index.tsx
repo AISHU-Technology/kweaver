@@ -38,7 +38,7 @@ const PromptOperateModal = (props: PromptOperateModalProps) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [modelData, setModelData] = useState({ chat: [], completion: [] } as Record<string, any[]>);
-  const [formData, setFormData] = useState({ prompt_type: 'completion', icon: '5' }); // 部分字段单独控制
+  const [formData, setFormData] = useState({ prompt_type: 'completion', icon: '5' });
   const [ID, setID] = useState('');
 
   useEffect(() => {
@@ -161,7 +161,7 @@ const PromptOperateModal = (props: PromptOperateModalProps) => {
     <UniversalModal
       className={classNames(className, 'prompt-operate-modal-root')}
       title={action === 'create' ? intl.get('prompt.createPromptTwo') : intl.get('prompt.editPromptTwo')}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footerData={[
         { label: intl.get('global.cancel'), onHandle: onCancel },

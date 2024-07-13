@@ -3,15 +3,11 @@ import { Tree, Spin, Menu, Dropdown } from 'antd';
 import { LoadingOutlined, DownOutlined } from '@ant-design/icons';
 import HOOKS from '@/hooks';
 import _ from 'lodash';
-import classNames from 'classnames';
 
 import intl from 'react-intl-universal';
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
-import ExplainTip from '@/components/ExplainTip';
 import { copyToBoard } from '@/utils/handleFunction';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
-import HELPER from '@/utils/helper';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 
 import { NODE_TYPE } from '../enums';
@@ -38,7 +34,7 @@ const ICON: Record<string, any> = {
 };
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
-const { SHEET, FIELD, BASE, ROOT, MODE } = NODE_TYPE;
+const { SHEET, FIELD, BASE, ROOT } = NODE_TYPE;
 const DataSourceTree = (props: DataSourceTreeType) => {
   const {
     treeData,
@@ -146,13 +142,13 @@ const DataSourceTree = (props: DataSourceTreeType) => {
         <Dropdown
           overlay={<CustomMenu node={node} />}
           trigger={['click']}
-          placement="bottomCenter"
+          placement="bottom"
           // disabled={![SHEET, FIELD, ROOT, MODE].includes(type)}
-          visible={dropOpen === node?.key}
-          onVisibleChange={e => {
+          open={dropOpen === node?.key}
+          onOpenChange={e => {
             if (!e) setDropOpen('');
           }}
-          getPopupContainer={e => (document.getElementsByClassName('dataSourceListRoot')?.[0] as any) || document.body}
+          getPopupContainer={() => (document.getElementsByClassName('dataSourceListRoot')?.[0] as any) || document.body}
         >
           <span className="kw-pl-2 kw-ellipsis sourceName" title={tip}>
             {title}
@@ -242,17 +238,11 @@ const DataSourceTree = (props: DataSourceTreeType) => {
             disabled={!selectNode?.key}
             tip={intl.get('domainData.sqlQuery')}
             type="icon"
-            onClick={e => onClickSql()}
+            onClick={() => onClickSql()}
           >
             <IconFont type="icon-SQLchaxun" style={{ fontSize: 14 }} />
           </Format.Button>
-          <ContainerIsVisible
-            placeholder={<span style={{ height: 32, display: 'inline-block' }} />}
-            isVisible={HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_KN_DS_CREATE,
-              userType: PERMISSION_KEYS.KN_ADD_DS
-            })}
-          >
+          <ContainerIsVisible placeholder={<span style={{ height: 32, display: 'inline-block' }} />}>
             <Format.Button
               size="small"
               tip={intl.get('global.create')}

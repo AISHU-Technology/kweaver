@@ -1,11 +1,8 @@
 import React from 'react';
-import _ from 'lodash';
+import { Tooltip } from 'antd';
 import classnames from 'classnames';
 import * as _intl from 'react-intl-universal';
-import { Tooltip } from 'antd';
-
 import { TextInterface } from '../type';
-
 import './style.less';
 
 const TEXT_ALIGN = {

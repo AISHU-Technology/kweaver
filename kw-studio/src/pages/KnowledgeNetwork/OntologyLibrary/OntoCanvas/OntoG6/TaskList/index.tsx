@@ -308,7 +308,7 @@ class OntoTaskList<T> extends Component<Props<T>, OntoTaskListState> {
         <UniversalModal
           className="task-modal-detail-signal-mark-new"
           title={intl.get('ontoLib.clickI')}
-          visible={modalVisible}
+          open={modalVisible}
           footer={null}
           maskClosable={false}
           destroyOnClose={true}

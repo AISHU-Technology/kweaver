@@ -198,7 +198,7 @@ const DataSourceQuery = (props: any) => {
       let newNodes: any[] = [];
       if (_.isObject(res?.output)) {
         // 模式
-        const filterData = _.filter(Object.entries(res?.output), ([mode, data]: any) => !_.isEmpty(data));
+        const filterData = _.filter(Object.entries(res?.output), ([data]: any) => !_.isEmpty(data));
         newNodes = _.map(filterData, ([mode, tables]: any) => {
           const children: any = _.map(tables, tableName => ({
             title: tableName,

@@ -649,7 +649,7 @@ const OntoEntityImportModal = (props: EntityImportModalProps, ref: any) => {
     <UniversalModal
       title={intl.get('createEntity.importNodeBatchT')}
       className="flow-3-entity-import-modal"
-      visible={visible}
+      open={visible}
       width={1000}
       onOk={onHandleOk}
       onCancel={() => {

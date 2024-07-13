@@ -1,11 +1,9 @@
 import axios from 'axios';
 import _ from 'lodash';
-import Cookie from 'js-cookie';
 import intl from 'react-intl-universal';
 import { message } from 'antd';
-import { API } from '@/services/api';
 
-import { kwCookie, localStore, sessionStore } from '@/utils/handleFunction';
+import { kwCookie } from '@/utils/handleFunction';
 
 const service = axios.create({ baseURL: '/', timeout: 20000 });
 
@@ -14,7 +12,6 @@ service.interceptors.request.use(
     const kwLang = kwCookie.get('kwLang');
     config.headers['Content-Type'] = 'application/json; charset=utf-8';
     config.headers['Accept-Language'] = kwLang === 'en-US' ? 'en-US' : 'zh-CN';
-    // 上传文件配置，必传 type：file
     if (config?.data?.type === 'file') {
       config.headers['Content-Type'] = 'multipart/form-data';
       const formData = new FormData();
@@ -39,13 +36,11 @@ service.interceptors.request.use(
   }
 );
 
-// 响应拦截处理
 service.interceptors.response.use(
   response => {
     return response;
   },
   error => {
-    // 取消请求
     if (axios.isCancel(error)) {
       return { Code: -200, message: '取消请求', cause: '取消请求' };
     }

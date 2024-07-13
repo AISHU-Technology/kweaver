@@ -14,12 +14,12 @@ interface ResizeDrawerType extends DrawerProps {
   title: string;
   isOpen: boolean | undefined;
   height: number;
-  minHeight: number; // 可拖拽的最低高度
-  titleExtraContent?: React.ReactNode; // 表头额外的内容
-  minWidth?: number; // 可拖拽的最小宽度
-  maxWidth?: number; // 可拖拽的最大宽度
+  minHeight: number;
+  titleExtraContent?: React.ReactNode;
+  minWidth?: number;
+  maxWidth?: number;
   onClose: () => void;
-  maxClientHeight?: any; // 距离浏览器顶部的距离
+  maxClientHeight?: any;
   zIndex?: number;
 }
 const resetLine: any = {
@@ -40,12 +40,10 @@ const ResizeDrawer = (props: ResizeDrawerType) => {
     titleExtraContent,
     minWidth,
     maxWidth,
-    onClose,
     ...otherProps
   } = props;
 
   useEffect(() => {
-    // 每次打开是初始化高度
     if (isOpen) {
       const maxHeight = height > 0 ? height : document.body.clientHeight - maxClientHeight;
       const antDrawer = document.getElementsByClassName('ant-drawer') as any;
@@ -57,13 +55,12 @@ const ResizeDrawer = (props: ResizeDrawerType) => {
         }
       }
       drawer[0].style.height = `${maxHeight}px`;
-      antDrawer[0].style.height = `${maxHeight}px`; // 改变drawer的高度
+      antDrawer[0].style.height = `${maxHeight}px`;
     }
   }, [isOpen]);
 
-  const onmousedown = (e: any) => {
+  const onmousedown = () => {
     let isDown = false;
-    // 开关打开
     isDown = true;
 
     window.onmousemove = e => {
@@ -77,7 +74,7 @@ const ResizeDrawer = (props: ResizeDrawerType) => {
 
         document.getElementById('resizeLine')!.style.bottom = `${0}px`;
         drawer.style.height = `${document.body.clientHeight - e.pageY}px`;
-        antDrawer[0].style.height = `${document.body.clientHeight - e.pageY}px`; // 改变drawer的高度
+        antDrawer[0].style.height = `${document.body.clientHeight - e.pageY}px`;
         drawer.style.maxHeight = `${maxHeight}px`;
         drawer.style.minHeight = `${minHeight}px`;
       }
@@ -133,11 +130,11 @@ const ResizeDrawer = (props: ResizeDrawerType) => {
       mask={false}
       placement={placement}
       destroyOnClose={true}
-      visible={isOpen}
+      open={isOpen}
       height={height}
       {...otherProps}
     >
-      <div id="resizeLine" onMouseDown={e => onmousedown(e)} className={resetLine?.[placement]}></div>
+      <div id="resizeLine" onMouseDown={onmousedown} className={resetLine?.[placement]}></div>
       {children}
     </Drawer>
   );

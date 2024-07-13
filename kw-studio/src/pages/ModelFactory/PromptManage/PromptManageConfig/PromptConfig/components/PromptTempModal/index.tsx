@@ -43,9 +43,9 @@ const PromptTempModal = (props: PromptTempModalProps) => {
   const { className, visible, templates, onOk, onCancel, promptManageList, formData } = props;
   const [selectedPrompt, setSelectedPrompt] = useState<TTemplates[number]>({} as any);
   const [showData, setShowData] = useState<TTemplates>([...templates]);
-  const [showTreeSelect, setShowTreeSelect] = useState<any>([]); // 树选择的分组模板
-  const [isTemplate, setIsTemplate] = useState(false); // 预制模板是否显示
-  const [selectGroup, setSelectGroup] = useState<any>(''); // 选择的分组名
+  const [showTreeSelect, setShowTreeSelect] = useState<any>([]);
+  const [isTemplate, setIsTemplate] = useState(false);
+  const [selectGroup, setSelectGroup] = useState<any>('');
 
   /**
    * 获取分词管理列表
@@ -88,7 +88,7 @@ const PromptTempModal = (props: PromptTempModalProps) => {
     <UniversalModal
       className={classNames(className, 'manage-default-prompt-modal')}
       title={intl.get('prompt.template')}
-      visible={visible}
+      open={visible}
       width={1000}
       onCancel={onCancel}
       footerData={[
@@ -127,8 +127,8 @@ const PromptTempModal = (props: PromptTempModalProps) => {
 
 export default (props: Omit<PromptTempModalProps, 'templates'>) => {
   const { type, formData } = props;
-  const [templates, setTemplates] = useState<TTemplates>([]); // 提示词模板
-  const [promptManageList, setPromptManageList] = useState<any>([]); // 提示词管理列表
+  const [templates, setTemplates] = useState<TTemplates>([]);
+  const [promptManageList, setPromptManageList] = useState<any>([]);
 
   useEffect(() => {
     getData(type);

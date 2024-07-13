@@ -9,7 +9,7 @@ import IconFont from '@/components/IconFont';
 import Labels from './Labels';
 import servicesCreateEntity from '@/services/createEntity';
 import { getParam } from '@/utils/handleFunction';
-import { ONLY_KEYBOARD, PERMISSION_KEYS } from '@/enums';
+import { ONLY_KEYBOARD } from '@/enums';
 import TrimmedInput from '@/components/TrimmedInput';
 import type { FormInstance } from 'antd/es/form/Form';
 import LoadingMask from '@/components/LoadingMask';
@@ -26,7 +26,7 @@ export interface SaveOntoDataType {
 
 export interface SaveOntoDataProps {
   showSaveOntologyModal: boolean;
-  closeSaveOntologyModal: (e: any) => void;
+  closeSaveOntologyModal: () => void;
   modalOkSave: Function;
   initData: SaveOntoDataType;
   modalTitle: string;
@@ -87,7 +87,6 @@ const SaveToOnto: React.ForwardRefRenderFunction<SaveToOntoRef, SaveOntoDataProp
     if (res?.count) {
       const otlList = res.otls;
       const dataIds = res.otls.map((item: any) => String(item?.otl_id));
-      const postData = { dataType: PERMISSION_KEYS.TYPE_ONTOLOGY, dataIds };
       // const result = await servicesPermission.dataPermission(postData);
       // const codesData = _.keyBy(result?.res, 'dataId');
       // const newOtlList = otlList.map((item: any) => {
@@ -167,7 +166,7 @@ const SaveToOnto: React.ForwardRefRenderFunction<SaveToOntoRef, SaveOntoDataProp
       className="create-saveOnto-content"
       width={'640px'}
       title={modalTitle}
-      visible={showSaveOntologyModal}
+      open={showSaveOntologyModal}
       destroyOnClose={true}
       maskClosable={false}
       onCancel={closeSaveOntologyModal}

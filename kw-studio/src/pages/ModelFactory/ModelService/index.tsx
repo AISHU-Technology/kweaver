@@ -8,7 +8,7 @@ import HOOKS from '@/hooks';
 import SearchInput from '@/components/SearchInput';
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
-import { Header, FilterOperationContainer } from '@/components/ADTable';
+import { Header, FilterOperationContainer } from '@/components/KwTable';
 import ModelTable from './ModelTable';
 import { M_TYPE, STATUS } from './enum';
 

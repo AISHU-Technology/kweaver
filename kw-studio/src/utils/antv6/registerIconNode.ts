@@ -18,7 +18,7 @@ export const registerIconNode = (name = 'icon-node') => {
             attrs: {
               x: 0,
               y: 0,
-              fontFamily: 'iconfont', // 对应css里面的font-family: "iconfont";
+              fontFamily: 'iconfont',
               textAlign: 'center',
               textBaseline: 'middle',
               text,

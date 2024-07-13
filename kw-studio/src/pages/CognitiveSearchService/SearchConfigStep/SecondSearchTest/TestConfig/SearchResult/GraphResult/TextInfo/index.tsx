@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import intl from 'react-intl-universal';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import cs from 'classnames';
 
 import './style.less';
@@ -45,9 +45,9 @@ const TextInfo = (props: any) => {
       </div>
 
       <div className="InfoContent kw-pr-1">
-        <ScrollBar isshowx="false" className="res-scroll kw-mb-5" ref={resScrollRef}>
+        <KwScrollBar isShowX={false} className="res-scroll kw-mb-5" ref={resScrollRef}>
           {subTitle}
-        </ScrollBar>
+        </KwScrollBar>
       </div>
 
       <div className="InfoExtra kw-flex">

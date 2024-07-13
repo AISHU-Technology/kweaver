@@ -159,11 +159,11 @@ const Labels = (props: LabelsProps) => {
       {inputVisible && (
         <React.Fragment>
           <Dropdown
-            visible={dropVisible}
+            open={dropVisible}
             overlay={menu}
             trigger={['click']}
-            placement="bottomCenter"
-            onVisibleChange={isOpen => {
+            placement="bottom"
+            onOpenChange={isOpen => {
               setDropVisible(isOpen);
               if (!isOpen) handleInputConfirm(null);
             }}

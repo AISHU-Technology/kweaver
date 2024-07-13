@@ -42,7 +42,6 @@ const registerEdgeActivate = (name: string) => {
     },
     removeState() {
       const graph: any = this.graph;
-      if (graph?.cfg?.states?._active?.length === 0) return;
       _.forEach(graph.getNodes(), item => {
         graph.clearItemStates(item, ['_active', '_inactive']);
       });

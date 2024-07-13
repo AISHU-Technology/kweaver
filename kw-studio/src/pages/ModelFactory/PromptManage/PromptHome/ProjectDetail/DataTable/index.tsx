@@ -10,7 +10,7 @@ import HOOKS from '@/hooks';
 import { copyToBoard, formatTime } from '@/utils/handleFunction';
 import { DESCEND, ASCEND } from '@/enums';
 import IconFont from '@/components/IconFont';
-import { ITable } from '@/components/ADTable';
+import { ITable } from '@/components/KwTable';
 
 import PromptIcon from '../../components/PromptIcon';
 import OperateBar from '@/pages/ModelFactory/LLMModel/components/OperateBar';
@@ -29,7 +29,7 @@ export interface DataTableProps {
 const DataTable = (props: DataTableProps) => {
   const { className, tableState, tableData, onStateChange, onOperate } = props;
   const containerDOM = useRef<HTMLDivElement>(null);
-  HOOKS.useSize(containerDOM.current?.parentElement); // 取值无意义，只是为了触发组件刷新
+  HOOKS.useSize(containerDOM.current?.parentElement);
 
   /**
    * 表格变化回调
@@ -161,7 +161,7 @@ const DataTable = (props: DataTableProps) => {
   const getScrollY = () => {
     if (!containerDOM.current) return '100%';
     const containerHeight = containerDOM.current.parentElement!.clientHeight;
-    return containerHeight - 60; // 60 = 表头高度 + 边距
+    return containerHeight - 60;
   };
 
   return (

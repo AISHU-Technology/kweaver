@@ -11,6 +11,6 @@ const ContainerIsVisible = (props: Omit<ContainerIsHideType, 'isVisible' | 'plac
 };
 
 export default (props: ContainerIsHideType) => {
-  const { isVisible, placeholder, ...other } = props;
-  return <ContainerIsVisible {...other} />;
+  const { ...args } = props;
+  return <ContainerIsVisible {...args} />;
 };

@@ -1,29 +1,29 @@
 /* eslint-disable max-lines */
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import AdReactX6, { X6RefProps } from '@/components/AdReactX6/AdReactX6';
+import KwReactX6, { X6RefProps } from '@/components/KwReactX6';
 import type { Node, Edge, Graph as IGraph } from '@antv/x6';
 import {
-  AdX6EntityNode,
-  AdX6Edge,
-  AdX6DataFileNode,
-  AdX6EntityNodeWidth,
-  AdX6RelationNode,
-  AdX6RelationStartNode,
-  AdX6RelationEndNode,
-  AdX6DataFileNodeWidth,
-  AdRowStartPointPortRight,
-  AdRowStartPointPortLeft,
-  AdRowEndPointPortLeft,
-  AdRowEndPointPortRight,
-  AdHeaderStartPointPortRight,
-  AdHeaderEndPointPortLeft,
-  AdX6ModelNode,
-  AdX6ModelDirFileNode,
-  AdFileDirPortRight,
-  AdX6MindMapEdge,
-  AdX6EdgeNoArrow,
-  AdX6ModelEdge
-} from '@/components/AdReactX6/utils/constants';
+  KwX6EntityNode,
+  KwX6Edge,
+  KwX6DataFileNode,
+  KwX6EntityNodeWidth,
+  KwX6RelationNode,
+  KwX6RelationStartNode,
+  KwX6RelationEndNode,
+  KwX6DataFileNodeWidth,
+  KwRowStartPointPortRight,
+  KwRowStartPointPortLeft,
+  KwRowEndPointPortLeft,
+  KwRowEndPointPortRight,
+  KwHeaderStartPointPortRight,
+  KwHeaderEndPointPortLeft,
+  KwX6ModelNode,
+  KwX6ModelDirFileNode,
+  KwFileDirPortRight,
+  KwX6MindMapEdge,
+  KwX6EdgeNoArrow,
+  KwX6ModelEdge
+} from '@/components/KwReactX6/utils/constants';
 import { useKnowledgeMapContext } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/KnowledgeMapContext';
 import useDeepCompareEffect from '@/hooks/useDeepCompareEffect';
 import _ from 'lodash';
@@ -161,7 +161,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     return () => {
       setKnowledgeMapStore(preStore => ({
         ...preStore,
-        firstAddFile: false
+        firstKwdFile: false
       }));
     };
   }, []);
@@ -218,12 +218,12 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     const modelName = language === 'en-US' ? modelKey : modelData[modelKey];
     const modelNode: Node.Metadata = {
       id: modelKey,
-      shape: AdX6ModelNode,
+      shape: KwX6ModelNode,
       position: modelNodePosition,
       data: {
         label: modelName
       },
-      ports: [{ id: modelKey, group: AdHeaderEndPointPortLeft }]
+      ports: [{ id: modelKey, group: KwHeaderEndPointPortLeft }]
     };
     setGraphX6Data([modelNode]);
     // 选中的G6模型是否已经进行属性映射了
@@ -258,9 +258,9 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     if (graphX6) {
       const edgeData: Array<Edge.Metadata> = [];
       const nodes = graphX6.getNodes().map(item => item.toJSON())!;
-      const entityNode = nodes.find(item => item.shape === AdX6EntityNode)!;
-      const relationNode = nodes.find(item => item.shape === AdX6RelationNode)!;
-      const dataFileNode = nodes.find(item => item.shape === AdX6DataFileNode)!;
+      const entityNode = nodes.find(item => item.shape === KwX6EntityNode)!;
+      const relationNode = nodes.find(item => item.shape === KwX6RelationNode)!;
+      const dataFileNode = nodes.find(item => item.shape === KwX6DataFileNode)!;
       const allEdgeSourcePortId = graphX6.getEdges()!.map(item => item.getSourcePortId());
       const allEdgeTargetPortId = graphX6.getEdges()!.map(item => item.getTargetPortId());
       if (dataFileNode) {
@@ -282,7 +282,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
                   if (nodePropName === filePropName) {
                     edgeData.push({
                       zIndex: 0,
-                      shape: AdX6Edge,
+                      shape: KwX6Edge,
                       source: {
                         cell: entityClassName,
                         port: entityPort.id
@@ -316,7 +316,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
                     if (nodePropName === filePropName) {
                       edgeData.push({
                         zIndex: 0,
-                        shape: AdX6Edge,
+                        shape: KwX6Edge,
                         source: {
                           cell: entityClassName,
                           port: port.id
@@ -380,7 +380,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     const graphX6 = x6Ref.current?.graphX6;
     if (selectedModel.length > 0) {
       const allNodes = graphX6?.getNodes();
-      const deleteNodes = allNodes?.filter(node => node.toJSON()?.shape !== AdX6ModelNode);
+      const deleteNodes = allNodes?.filter(node => node.toJSON()?.shape !== KwX6ModelNode);
       deleteNodes && graphX6?.removeCells(deleteNodes);
       const newGraphKMap = _.cloneDeep(graphKMap)!;
       clearModelMap(newGraphKMap);
@@ -431,7 +431,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       const x6EntityNodeId = _sourceData.name;
       const ports = _sourceData.attributes.map((attribute: any) => ({
         id: `${x6EntityNodeId}${stringSeparator1}${attribute.attrName}`,
-        group: AdRowStartPointPortRight
+        group: KwRowStartPointPortRight
       }));
       const tableData = _sourceData.attributes?.map((item: any) => ({
         fieldName: item.attrName,
@@ -439,7 +439,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       }));
       return {
         id: x6EntityNodeId,
-        shape: AdX6EntityNode,
+        shape: KwX6EntityNode,
         position: nodePosition,
         data: {
           label: _sourceData.alias,
@@ -539,7 +539,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     }
     const ports = _sourceData.attributes.map((attribute: any) => ({
       id: `${_sourceData.name}${stringSeparator1}${attribute.attrName}`,
-      group: AdRowStartPointPortRight
+      group: KwRowStartPointPortRight
     }));
     const tableData = _sourceData.attributes?.map((item: any) => ({
       fieldName: item.attrName,
@@ -547,7 +547,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     }));
     const x6RelationNode = {
       id: _sourceData.name,
-      shape: AdX6RelationNode,
+      shape: KwX6RelationNode,
       position: relationClassX6Position,
       data: {
         label: _sourceData.alias,
@@ -577,7 +577,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     const startNodeSelectValue = begin_class_prop || startNodeAttributesOptions[0]?.value;
     const x6RelationStartNode = {
       id: startNodeId,
-      shape: AdX6RelationStartNode,
+      shape: KwX6RelationStartNode,
       position: relationClassStartNodeX6Position,
       data: {
         type: 'start',
@@ -595,7 +595,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       ports: [
         {
           id: `${startNodeData._sourceData.name}${stringSeparator1}${startNodeSelectValue}`,
-          group: AdRowStartPointPortLeft
+          group: KwRowStartPointPortLeft
         }
       ]
     };
@@ -610,7 +610,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     const endNodeSelectValue = end_class_prop || endNodeAttributesOptions[0].value;
     const x6RelationEndNode = {
       id: endNodeId,
-      shape: AdX6RelationEndNode,
+      shape: KwX6RelationEndNode,
       position: relationClassEndNodeX6Position,
       data: {
         type: 'end',
@@ -628,7 +628,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       ports: [
         {
           id: `${endNodeData._sourceData.name}${stringSeparator1}${endNodeSelectValue}`,
-          group: relationClassHaveAttribute ? AdRowStartPointPortLeft : AdRowEndPointPortLeft
+          group: relationClassHaveAttribute ? KwRowStartPointPortLeft : KwRowEndPointPortLeft
         }
       ]
     };
@@ -873,7 +873,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     const { graphId } = getLatestStore();
     return new Promise(resolve => {
       let name = dataFile.files[0].file_name;
-      let postfix = '';
+      let postfix: any = '';
       let params: any = {};
       if ([DS_SOURCE.as].includes(dataFile.data_source)) {
         postfix = getPostfix(name);
@@ -1041,7 +1041,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
   const removeX6DataFileNode = () => {
     const graphX6 = x6Ref.current?.graphX6;
     const allNode = graphX6?.getNodes();
-    const target = allNode?.find((node: any) => node.toJSON().shape === AdX6DataFileNode);
+    const target = allNode?.find((node: any) => node.toJSON().shape === KwX6DataFileNode);
     // 删除上次添加的数据文件节点
     if (target) {
       graphX6?.removeNode(target);
@@ -1051,7 +1051,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
   const removeX6ModelDataFileNode = () => {
     const graphX6 = x6Ref.current?.graphX6;
     const allNode = graphX6?.getNodes();
-    const targetNodes = allNode?.filter((node: any) => node.toJSON().shape === AdX6ModelDirFileNode) ?? [];
+    const targetNodes = allNode?.filter((node: any) => node.toJSON().shape === KwX6ModelDirFileNode) ?? [];
     if (targetNodes.length > 0) {
       graphX6?.removeCells(targetNodes);
     }
@@ -1184,7 +1184,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       const ports = dataFileProperty.map((attribute: any) => ({
         id: `${x6DataFileNodeId}${stringSeparator1}${attribute.key}`,
         name: `${x6DataFileNodeId}${stringSeparator1}${attribute.columnName}`, // 用列名作为连接桩的名字，用于hive数据源的匹配
-        group: AdRowEndPointPortLeft
+        group: KwRowEndPointPortLeft
       }));
 
       const tableData = dataFileProperty.map((attribute: any, index: number) => ({
@@ -1196,7 +1196,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
 
       // 获取节点的位置信息
       let dataFileNodePosition = {
-        x: 30 + 120 + AdX6EntityNodeWidth,
+        x: 30 + 120 + KwX6EntityNodeWidth,
         y: 110
       };
       const cacheX6DataFileNodeData = cacheGraphX6Data[selectedG6Node[0]._sourceData.name]?.find(
@@ -1217,7 +1217,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
 
       const x6Node: Node.Metadata = {
         id: x6DataFileNodeId,
-        shape: AdX6DataFileNode,
+        shape: KwX6DataFileNode,
         position: dataFileNodePosition,
         data: {
           fileName,
@@ -1456,7 +1456,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
             if (props.entity_prop && extractRulesFields.includes(props.entity_prop)) {
               edgeData.push({
                 zIndex: 0,
-                shape: AdX6Edge,
+                shape: KwX6Edge,
                 source: {
                   cell: item.name,
                   port: `${item.name}${stringSeparator1}${props.otl_prop}`
@@ -1507,7 +1507,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
 
       // 获取数据文件节点的位置
       let dataFileNodePosition = {
-        x: relationClassPosition.x! + AdX6EntityNodeWidth + 80,
+        x: relationClassPosition.x! + KwX6EntityNodeWidth + 80,
         y: relationClassPosition.y
       };
       const cacheX6DataFileNodeData = cacheGraphX6Data[edgeData._sourceData.name]?.find(
@@ -1519,7 +1519,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
 
       // 获取关系类起始节点的位置
       let newStartNodePosition = {
-        x: dataFileNodePosition.x + AdX6DataFileNodeWidth + 80,
+        x: dataFileNodePosition.x + KwX6DataFileNodeWidth + 80,
         y: dataFileNodePosition.y
       };
       const cacheX6RelationStartNodeData = cacheGraphX6Data[edgeData._sourceData.name]?.find(
@@ -1531,7 +1531,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       }
       // 获取关系类终点节点的位置
       let newEndNodePosition = {
-        x: dataFileNodePosition.x + AdX6DataFileNodeWidth + 80,
+        x: dataFileNodePosition.x + KwX6DataFileNodeWidth + 80,
         y: dataFileNodePosition.y + 200
       };
       const cacheX6RelationEndNodeData = cacheGraphX6Data[edgeData._sourceData.name]?.find(
@@ -1550,7 +1550,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
         endNode?.removePorts(); // 先删除之前的连接桩然后在添加
         const endNodeConfigData = endNode?.getData();
         endNode?.addPort({
-          group: AdRowStartPointPortLeft,
+          group: KwRowStartPointPortLeft,
           id: `${endNodeData._sourceData.name}${stringSeparator1}${endNodeConfigData.selectValue}`
         });
       }
@@ -1563,26 +1563,26 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       let ports = dataFileProperty.map((attribute: any) => ({
         id: `${x6DataFileNodeId}${stringSeparator1}${attribute.key}`,
         name: `${x6DataFileNodeId}${stringSeparator1}${attribute.columnName}`, // 用列名作为连接桩的名字，用于hive数据源的匹配
-        group: AdRowEndPointPortRight
+        group: KwRowEndPointPortRight
       }));
 
       if (!relationClassHaveAttribute) {
         if (!relationClassNode?.hasPort(edgeData._sourceData.name)) {
           // 给关系类添加一个头部右侧连接桩
           relationClassNode?.addPort({
-            group: AdHeaderStartPointPortRight,
+            group: KwHeaderStartPointPortRight,
             id: edgeData._sourceData.name
           });
         }
         // 给数据文件添加一个头部左侧连接桩
         ports.push({
           id: `${x6DataFileNodeId}${stringSeparator1}${x6DataFileNodeId}`,
-          group: AdHeaderEndPointPortLeft
+          group: KwHeaderEndPointPortLeft
         });
         // 将关系类节点与数据文件节点用边连接起来
         newEdges.push({
           zIndex: 0,
-          shape: AdX6Edge,
+          shape: KwX6Edge,
           source: {
             cell: edgeData._sourceData.name,
             port: edgeData._sourceData.name
@@ -1610,7 +1610,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
           ...dataFileProperty.map((attribute: any) => ({
             id: `${x6DataFileNodeId}${stringSeparator2}${attribute.key}`,
             name: `${x6DataFileNodeId}${stringSeparator2}${attribute.columnName}`, // 用列名作为连接桩的名字，用于hive数据源的匹配
-            group: AdRowEndPointPortLeft
+            group: KwRowEndPointPortLeft
           }))
         ];
       }
@@ -1630,7 +1630,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       }
       const x6Node: Node.Metadata = {
         id: x6DataFileNodeId,
-        shape: AdX6DataFileNode,
+        shape: KwX6DataFileNode,
         position: dataFileNodePosition,
         data: {
           fileName,
@@ -1659,7 +1659,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
       endNode?.removePorts(); // 先删除之前的连接桩然后在添加
       const endNodeConfigData = endNode?.getData();
       endNode?.addPort({
-        group: AdRowEndPointPortLeft,
+        group: KwRowEndPointPortLeft,
         id: `${endNodeData._sourceData.name}${stringSeparator1}${endNodeConfigData.selectValue}`
       });
 
@@ -1703,7 +1703,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
                 if (props.entity_prop && extractRulesFields.includes(props.entity_prop)) {
                   x6EdgeConfigData.push({
                     zIndex: 0,
-                    shape: AdX6Edge,
+                    shape: KwX6Edge,
                     source: {
                       cell: relationClassName,
                       port: `${relationClassName}${stringSeparator1}${props.edge_prop}`
@@ -1724,7 +1724,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
             ) {
               x6EdgeConfigData.push({
                 zIndex: 0,
-                shape: AdX6Edge,
+                shape: KwX6Edge,
                 source: {
                   cell: startNodeName,
                   port: `${startNodeName}${stringSeparator1}${item.relation_map.begin_class_prop}`
@@ -1753,7 +1753,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
             if (item.relation_map.relation_end_pro && extractRulesFields.includes(item.relation_map.relation_end_pro)) {
               x6EdgeConfigData.push({
                 zIndex: 0,
-                shape: AdX6Edge,
+                shape: KwX6Edge,
                 source: {
                   cell: endNodeId,
                   port: `${endNodeName}${stringSeparator1}${item.relation_map.end_class_prop}`
@@ -1785,7 +1785,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
             if (item.relation_map.equation) {
               x6EdgeConfigData.push({
                 zIndex: 0,
-                shape: AdX6MindMapEdge,
+                shape: KwX6MindMapEdge,
                 source: {
                   cell: startNodeName,
                   port: `${startNodeName}${stringSeparator1}${item.relation_map.begin_class_prop}`
@@ -1846,7 +1846,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
         currentDataFile.forEach(dataFile => {
           dataFile.files.forEach((file, index) => {
             let position = {
-              x: modelNodePosition.x - AdX6EntityNodeWidth - 100,
+              x: modelNodePosition.x - KwX6EntityNodeWidth - 100,
               y: modelNodePosition.y + 56 * (index + indexStart)
             };
             const cacheX6FileNodeData = cacheGraphX6Data[modelKey]?.find(x6Data => x6Data.id === file.file_name);
@@ -1855,9 +1855,9 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
             }
             fileNode.push({
               id: file.file_name,
-              shape: AdX6ModelDirFileNode,
+              shape: KwX6ModelDirFileNode,
               position,
-              ports: [{ id: file.file_name, group: AdFileDirPortRight }],
+              ports: [{ id: file.file_name, group: KwFileDirPortRight }],
               data: {
                 label: file.file_name,
                 type: file.file_type,
@@ -1879,7 +1879,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
         // 生成边
         const edges: any = fileNode.map((item: any) => ({
           zIndex: 0,
-          shape: AdX6ModelEdge,
+          shape: KwX6ModelEdge,
           target: {
             cell: modelKey,
             port: modelKey
@@ -1980,7 +1980,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
   const handleHelpTips = (graph: IGraph) => {
     const { selectedG6Node, selectedG6Edge, currentDataFile } = getLatestStore();
     const allNode = graph?.getNodes().map((item: any) => item.toJSON());
-    const dataFileNode = allNode?.find((item: any) => item.shape === AdX6DataFileNode);
+    const dataFileNode = allNode?.find((item: any) => item.shape === KwX6DataFileNode);
     const allEdges = graph?.getEdges() ?? [];
     let edges = allEdges.map((item: any) => item.toJSON());
 
@@ -2477,7 +2477,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
   const onEdgeConnected = (graph: IGraph, edge: Edge<Edge.Properties>) => {
     setKnowledgeMapStore(preStore => ({
       ...preStore,
-      firstAddFile: false
+      firstKwdFile: false
     }));
     const { selectedG6Edge, currentDataFile } = getLatestStore();
     if (selectedG6Edge.length > 0) {
@@ -2491,9 +2491,9 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
         endEntity = `${endEntity}${stringSeparator1}${endNodeData._sourceData.entity_id}`;
       }
       // --------------- 改变边的类型开始 -------------------
-      let edgeShape = AdX6Edge;
+      let edgeShape = KwX6Edge;
       if (targetCellId === startEntity || targetCellId === endEntity) {
-        edgeShape = AdX6MindMapEdge;
+        edgeShape = KwX6MindMapEdge;
       }
       edge.setProp('shape', edgeShape, {
         silent: false
@@ -2541,7 +2541,7 @@ const KnowledgeMapX6 = forwardRef<KnowledgeMapX6RefProps, KnowledgeMapX6Props>((
     <div className={`${prefixCls} kw-w-100 kw-h-100`}>
       <LoadingMask loading={loading} />
       {!viewMode && renderTips()}
-      <AdReactX6
+      <KwReactX6
         ref={x6Ref}
         onEdgeConnected={onEdgeConnected}
         onEdgeDeleteBtnClick={graph => {

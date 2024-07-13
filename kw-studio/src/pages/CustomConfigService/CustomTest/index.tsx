@@ -3,7 +3,7 @@ import { Button, Dropdown, Input, ConfigProvider, message, Menu } from 'antd';
 import { LeftOutlined, DownOutlined } from '@ant-design/icons';
 import HOOKS from '@/hooks';
 import _ from 'lodash';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import customService from '@/services/customService';
 import cognitiveSearchService from '@/services/cognitiveSearch';
 import classNames from 'classnames';
@@ -194,7 +194,7 @@ const CustomTest = (props: any) => {
       {loading && (
         <div className={`loading-mask ${loading && 'spinning'}`}>
           <div className="spin-content-box kw-flex">
-            <AdSpin />
+            <KwSpin />
             <div className="loading-content">{intl.get('cognitiveSearch.loading')}</div>
           </div>
         </div>

@@ -311,7 +311,7 @@ const PropertyTable = (props: PropertyListProps, ref: any) => {
               <Popover
                 overlayClassName="propCard"
                 destroyTooltipOnHide
-                onVisibleChange={(v: boolean) => setViewData(v ? item : {})}
+                onOpenChange={(v: boolean) => setViewData(v ? item : {})}
                 content={<PartPropCard data={viewData} onEdit={() => onEdit?.(item, index)} readOnly={readOnly} />}
                 placement="bottomRight"
                 trigger={['hover']}

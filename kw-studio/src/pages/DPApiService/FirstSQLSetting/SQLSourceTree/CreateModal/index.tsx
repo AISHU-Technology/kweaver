@@ -50,7 +50,7 @@ const CreateModal = (props: TypeCreateModal) => {
    * 选择源
    */
   const onSourceSelect = (value: any, option: any) => {
-      dropRef.current = true;
+    dropRef.current = true;
   };
 
   /** 保存 */
@@ -222,7 +222,7 @@ const CreateModal = (props: TypeCreateModal) => {
 
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       className="uploadSettingErrorModal"
       title={intl.get('domainData.addDataSource')}
       width={640}

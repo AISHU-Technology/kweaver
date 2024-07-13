@@ -5,7 +5,7 @@ import Format from '@/components/Format';
 import intl from 'react-intl-universal';
 import { useGlossaryStore } from '@/pages/KnowledgeNetwork/Glossary/GlossaryContext';
 import { SwapOutlined } from '@ant-design/icons';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 
 const TopBar = (props: any) => {
   const { glossaryStore } = useGlossaryStore();

@@ -7,7 +7,7 @@ import * as servicesLLMModel from '@/services/llmModel';
 import NoDataBox from '@/components/NoDataBox';
 import LoadingMask from '@/components/LoadingMask';
 import HOOKS from '@/hooks';
-import { sorter2sorter, PERMISSION_CODES } from '@/enums';
+import { sorter2sorter } from '@/enums';
 import { getParam } from '@/utils/handleFunction';
 
 import ToolBar from './components/ToolBar';
@@ -32,15 +32,6 @@ const LLMModel = (props: any) => {
   const [opController, setOpController] = useState({ visible: false, action: '', data: {} as any }); // 各种弹窗操作控制器
   const closeModal = () => setOpController({ visible: false, action: '', data: {} });
   const [modelConfig] = useModelConfig();
-  // const disabledStatus = HOOKS.usePermission(
-  //   {
-  //     create: { roleType: PERMISSION_CODES.ADF_LLM_MODEL_ADD },
-  //     edit: { roleType: PERMISSION_CODES.ADF_LLM_MODEL_EDIT },
-  //     check: { roleType: PERMISSION_CODES.ADF_LLM_MODEL_EDIT },
-  //     test: { roleType: PERMISSION_CODES.ADF_LLM_MODEL_EDIT }
-  //   },
-  //   { disabled: true }
-  // );
   const disabledStatus = { disabled: false };
 
   useEffect(() => {
@@ -106,10 +97,7 @@ const LLMModel = (props: any) => {
    * 跳转到文档
    */
   const toDocument = (data: DataItem) => {
-    window.open(
-      `/model-factory/doc/model?id=${getParam('id')}&llm_id=${data.model_id}&name=${data.model}`,
-      '_blank'
-    );
+    window.open(`/model-factory/doc/model?id=${getParam('id')}&llm_id=${data.model_id}&name=${data.model}`, '_blank');
   };
 
   /**

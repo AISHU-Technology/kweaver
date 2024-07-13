@@ -96,7 +96,7 @@ const DataCards = (props: DataCardsProps) => {
 
       {!cardsData.length && (
         <div className="kw-center kw-w-100 kw-mt-8 kw-p-4">
-          <NoDataBox.NO_RESULT />
+          <NoDataBox type="NO_RESULT" />
         </div>
       )}
     </div>

@@ -25,7 +25,7 @@ const DisplayHeader = (props: any) => {
           placement="bottomRight"
           overlayClassName="displayStylePopover"
           getPopupContainer={triggerNode => triggerNode?.parentElement || document.body}
-          onVisibleChange={(visible: any) => setPopoverVisible(visible)}
+          onOpenChange={(visible: any) => setPopoverVisible(visible)}
           content={
             <div className="kw-align-center">
               {_.map(SHAPES, (item, index: number) => {

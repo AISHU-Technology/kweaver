@@ -11,7 +11,6 @@ const V = 'V'; // 垂直对称, 根节点在中间，垂直对称布局
 
 const LIST = [LR, RL, TB, BT, H, V];
 
-// 这里使用了国际化
 const LABEL = {
   [LR]: 'enums.leftToRight',
   [RL]: 'enums.rightToLeft',
@@ -27,7 +26,6 @@ const getList = () => _.cloneDeep(LIST);
 const getLabel = () => _.cloneDeep(LABEL);
 const getKeyValueList = () => _.cloneDeep(KEY_VALUE_LIST);
 
-// 紧凑树布局默认值
 const DEFAULT_CONFIG = { direction: LR, hGap: 80, vGap: 80, limit: 15, isGroup: true };
 
 const GRAPH_LAYOUT_TREE_DIR = {

@@ -207,7 +207,7 @@ const List = (props: ListProps) => {
             );
           })}
         </Collapse>
-        {!!data.length && !showData.length && <NoDataBox.NO_RESULT />}
+        {!!data.length && !showData.length && <NoDataBox type="NO_RESULT" />}
       </div>
     </div>
   );

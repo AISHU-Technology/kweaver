@@ -9,12 +9,11 @@ import type { ColumnsType, SorterResult } from 'antd/es/table/interface';
 import { LoadingOutlined, DownOutlined, EllipsisOutlined } from '@ant-design/icons';
 
 import HELPER from '@/utils/helper';
-import { PERMISSION_CODES } from '@/enums';
 import createImg from '@/assets/images/create.svg';
 import { getParam } from '@/utils/handleFunction';
 import intentionService from '@/services/intention';
 
-import { ITable } from '@/components/ADTable';
+import { ITable } from '@/components/KwTable';
 import Format from '@/components/Format';
 import NoDataBox from '@/components/NoDataBox';
 import { tipModalFunc, knowModalFunc } from '@/components/TipModal';
@@ -289,12 +288,7 @@ const IntentionTable = (props: any) => {
         <Menu.Item
           // className={onStatus(record)}
           // style={OPERATION_STYLE}
-          disabled={
-            record?.train_status === '训练中' ||
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_INTENT_POOL_EDIT
-            })
-          }
+          disabled={record?.train_status === '训练中'}
           onClick={() => onCreateEdit('edit', record)}
         >
           {intl.get('intention.edit')}
@@ -319,39 +313,13 @@ const IntentionTable = (props: any) => {
         >
           {intl.get('intention.test')}
         </Menu.Item>
-        <Menu.Item
-          key="out"
-          disabled={
-            record?.train_status !== '训练成功' ||
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_INTENT_POOL_EXPORT_REPORT
-            })
-          }
-          onClick={() => onExport(record)}
-        >
+        <Menu.Item key="out" disabled={record?.train_status !== '训练成功'} onClick={() => onExport(record)}>
           {intl.get('intention.export')}
         </Menu.Item>
-        <Menu.Item
-          key="down"
-          disabled={
-            record?.train_status !== '训练成功' ||
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_INTENT_POOL_EXPORT_MODEL
-            })
-          }
-          onClick={() => onDownLoad(record)}
-        >
+        <Menu.Item key="down" disabled={record?.train_status !== '训练成功'} onClick={() => onDownLoad(record)}>
           {intl.get('intention.download')}
         </Menu.Item>
-        <Menu.Item
-          key="delete"
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_INTENT_POOL_DELETE
-            })
-          }
-          onClick={() => onDelete(record?.intentpool_id)}
-        >
+        <Menu.Item key="delete" onClick={() => onDelete(record?.intentpool_id)}>
           {intl.get('intention.delete')}
         </Menu.Item>
       </Menu>
@@ -432,7 +400,7 @@ const IntentionTable = (props: any) => {
         //     <>
         //       {tableState.search_name || tableState.filter_status !== '-1' ? (
         //         <div style={{ marginTop: '64px' }}>
-        //           <NoDataBox.NO_RESULT />
+        //           <NoDataBox type="NO_RESULT" />
         //         </div>
         //       ) : (
         //         <div className="noData-box">

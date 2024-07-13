@@ -28,7 +28,7 @@ const errorModal = props => {
   return (
     <UniversalModal
       title={intl.get('task.errorReport')}
-      visible={errorModal}
+      open={errorModal}
       onCancel={handleCancel}
       wrapClassName="task-error-modal"
       focusTriggerAfterClose={false}

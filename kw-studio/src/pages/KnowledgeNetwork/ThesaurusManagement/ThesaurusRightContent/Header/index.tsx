@@ -7,7 +7,6 @@ import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 
 import THESAURUS_TEXT from '@/enums/thesaurus_mode';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import HELPER from '@/utils/helper';
 import serverThesaurus from '@/services/thesaurus';
 import IconFont from '@/components/IconFont';
@@ -105,58 +104,24 @@ const Contentheader = (props: any) => {
 
   const menu = (
     <Menu className="operator-menu">
-      <ContainerIsVisible
-        isVisible={
-          HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-            userType: PERMISSION_KEYS.LEXICON_EDIT,
-            userTypeDepend: selectedThesaurus?.__codes
-          })
-          // && !['entity_link', 'std'].includes(selectedThesaurus?.mode)
-        }
+      <Menu.Item
+        key="1"
+        onClick={() => editThesaurus()}
+        disabled={['waiting', 'running'].includes(selectedThesaurus?.status)}
       >
-        <Menu.Item
-          key="1"
-          onClick={() => editThesaurus()}
-          disabled={['waiting', 'running'].includes(selectedThesaurus?.status)}
-        >
-          {intl.get('datamanagement.edit')}
-        </Menu.Item>
-      </ContainerIsVisible>
-      <ContainerIsVisible
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-          userType: PERMISSION_KEYS.LEXICON_VIEW,
-          userTypeDepend: selectedThesaurus?.__codes
-        })}
+        {intl.get('datamanagement.edit')}
+      </Menu.Item>
+      <Menu.Item
+        key="2"
+        onClick={() => exportData()}
+        disabled={_.isEmpty(selectedThesaurus?.columns) || ['waiting', 'running'].includes(selectedThesaurus?.status)}
       >
-        <Menu.Item
-          key="2"
-          onClick={() => exportData()}
-          disabled={_.isEmpty(selectedThesaurus?.columns) || ['waiting', 'running'].includes(selectedThesaurus?.status)}
-        >
-          {intl.get('uploadService.export')}
-        </Menu.Item>
-      </ContainerIsVisible>
-      <ContainerIsVisible
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_LEXICON_DELETE,
-          userType: PERMISSION_KEYS.LEXICON_DELETE,
-          userTypeDepend: selectedThesaurus?.__codes
-        })}
-      >
-        <Menu.Item key="4" onClick={() => setdelThesaurusVisible(true)}>
-          {intl.get('knowledge.delete')}
-        </Menu.Item>
-      </ContainerIsVisible>
-      {/* <ContainerIsVisible
-        isVisible={HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_LEXICON_MEMBER,
-          userType: PERMISSION_KEYS.LEXICON_EDIT_PERMISSION,
-          userTypeDepend: selectedThesaurus?.__codes
-        })}
-      >
-        <Menu.Item
+        {intl.get('uploadService.export')}
+      </Menu.Item>
+      <Menu.Item key="4" onClick={() => setdelThesaurusVisible(true)}>
+        {intl.get('knowledge.delete')}
+      </Menu.Item>
+      {/* <Menu.Item
           key="3"
           // onClick={() => setAuthThesaurusData(selectedThesaurus)}
           onClick={() =>
@@ -166,8 +131,7 @@ const Contentheader = (props: any) => {
           }
         >
           {intl.get('knowledge.authorityManagement')}
-        </Menu.Item>
-      </ContainerIsVisible> */}
+        </Menu.Item> */}
     </Menu>
   );
 
@@ -282,23 +246,15 @@ const Contentheader = (props: any) => {
               )}
             </>
           ) : (
-            <ContainerIsVisible
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-                userType: PERMISSION_KEYS.LEXICON_EDIT,
-                userTypeDepend: selectedThesaurus?.__codes
-              })}
+            <Format.Button
+              onClick={importThesaurus}
+              className="kw-align-center"
+              type="icon-text"
+              disabled={['waiting', 'running'].includes(selectedThesaurus?.status)}
             >
-              <Format.Button
-                onClick={importThesaurus}
-                className="kw-align-center"
-                type="icon-text"
-                disabled={['waiting', 'running'].includes(selectedThesaurus?.status)}
-              >
-                <IconFont type="icon-shangchuan" />
-                {intl.get('ThesaurusManage.importTwo')}
-              </Format.Button>
-            </ContainerIsVisible>
+              <IconFont type="icon-shangchuan" />
+              {intl.get('ThesaurusManage.importTwo')}
+            </Format.Button>
           )}
 
           <Dropdown

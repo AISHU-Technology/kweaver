@@ -5,16 +5,14 @@
 const { inputToRGB } = require('@ctrl/tinycolor');
 const { generate } = require('@ant-design/colors');
 
-// antd支持修改的5个颜色变量
 const antdTheme = {
-  primaryColor: '#126ee3', // 全局主色
-  successColor: '#52c41a', // 成功色
-  warningColor: '#faad14', // 警告色
-  errorColor: '#f5222d', // 错误色
-  infoColor: '#126ee3' // 信息提示色(暂时与主色一致)
+  primaryColor: '#126ee3',
+  successColor: '#52c41a',
+  warningColor: '#faad14',
+  errorColor: '#f5222d',
+  infoColor: '#126ee3'
 };
 
-// antd css变量名映射
 const antdCssMap = {
   primaryColor: '--ant-primary-color',
   successColor: '--ant-success-color',
@@ -23,59 +21,48 @@ const antdCssMap = {
   infoColor: '--ant-info-color'
 };
 
-// KWeaver自定义变量
 const adTheme = {
-  // 主色
-  primaryColor: '#126ee3', // 全局主色
-  successColor: '#52c41a', // 成功色
-  warningColor: '#faad14', // 警告色
-  errorColor: '#f5222d', // 错误色
-  infoColor: '#126ee3', // 信息提示色(暂时与主色一致)
-  disabledColor: 'rgba(0, 0, 0, 0.25)', // 失效色
+  primaryColor: '#126ee3',
+  successColor: '#52c41a',
+  warningColor: '#faad14',
+  errorColor: '#f5222d',
+  infoColor: '#126ee3',
+  disabledColor: 'rgba(0, 0, 0, 0.25)',
 
-  // 字体相关
-  // linkColor: '#3461ec', // 超链接颜色色rgba(52,97,236,.75)
   linkColor: 'rgba(52,97,236,.8)',
-  linkHoverColor: '#3461ec', // 超链接悬停色
-  headingColor: 'rgba(0, 0, 0, 0.85)', // 标题色
-  textColor: 'rgba(0, 0, 0, 0.65)', // 主文本色
-  textColorSecondary: 'rgba(0, 0, 0, 0.45)', // 次文本色
+  linkHoverColor: '#3461ec',
+  headingColor: 'rgba(0, 0, 0, 0.85)',
+  textColor: 'rgba(0, 0, 0, 0.65)',
+  textColorSecondary: 'rgba(0, 0, 0, 0.45)',
 
-  // 其他
-  borderRadiusBase: '3px', // 组件/浮层圆角
-  borderColorBase: 'rgba(0, 0, 0, 0.15)', // 边框色
+  borderRadiusBase: '3px',
+  borderColorBase: 'rgba(0, 0, 0, 0.15)',
   boxShadowBase:
-    '0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05)', // 浮层阴影
-  lineColor: 'rgba(0, 0, 0, 0.06)', // 分割线颜色
-  hoverBgColor: '#f5f5f5', // 悬停背景色, rgba(0, 0, 0, 0.04)
-  selectBgColor: '#f1f7fe' // 选中背景色, 主色的6%透明度
+    '0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
+  lineColor: 'rgba(0, 0, 0, 0.06)',
+  hoverBgColor: '#f5f5f5',
+  selectBgColor: '#f1f7fe'
 };
 
-// KWeaver css变量名映射
 const adCssMap = {
-  // 主色初始化的时候会自动生成rgb变量值, 例如 --kw-primary-color-rgb: 18, 110, 227
-  // primaryColor会计算和antd相同的hover值, --kw-primary-color-hover: #3a8ff0
-  primaryColor: '--kw-primary-color', // 全局主色
-  successColor: '--kw-success-color', // 成功色
-  warningColor: '--kw-warning-color', // 警告色
-  errorColor: '--kw-error-color', // 错误色
-  infoColor: '--kw-info-color', // 信息提示色(暂时与主色一致)
-  disabledColor: '--kw-disabled-color', // 失效色
+  primaryColor: '--kw-primary-color',
+  warningColor: '--kw-warning-color',
+  errorColor: '--kw-error-color',
+  infoColor: '--kw-info-color',
+  disabledColor: '--kw-disabled-color',
 
-  // 字体相关
-  linkColor: '--kw-link-color', // 链接色
-  linkHoverColor: '--kw-link-hover-color', // 链接悬停色
-  headingColor: '--kw-heading-color', // 标题色
-  textColor: '--kw-text-color', // 主文本色
-  textColorSecondary: '--kw-text-color-secondary', // 次文本色
+  linkColor: '--kw-link-color',
+  linkHoverColor: '--kw-link-hover-color',
+  headingColor: '--kw-heading-color',
+  textColor: '--kw-text-color',
+  textColorSecondary: '--kw-text-color-secondary',
 
-  // 其他
-  borderRadiusBase: '--kw-border-radius-base', // 组件/浮层圆角
-  borderColorBase: '--kw-border-color-base', // 边框色
-  boxShadowBase: '--kw-box-shadow-base', // 浮层阴影
-  lineColor: '--kw-line-color', // 分割线颜色
-  hoverBgColor: '--kw-hover-bg-color', // 悬停背景色, rgba(0, 0, 0, 0.04)
-  selectBgColor: '--kw-select-bg-color' // 选中背景色, 主色的6%透明度
+  borderRadiusBase: '--kw-border-radius-base',
+  borderColorBase: '--kw-border-color-base',
+  boxShadowBase: '--kw-box-shadow-base',
+  lineColor: '--kw-line-color',
+  hoverBgColor: '--kw-hover-bg-color',
+  selectBgColor: '--kw-select-bg-color'
 };
 
 /**
@@ -95,7 +82,6 @@ const createRgbValue = colorVal => {
 const otherVariables = variables => {
   const cssObj = {};
 
-  // 主色添加rgb三色通道值变量
   Object.keys(antdTheme).forEach(key => {
     const cssValue = adTheme[key];
     const cssKey = adCssMap[key];
@@ -104,7 +90,6 @@ const otherVariables = variables => {
     rgb && (cssObj[`${cssKey}-rgb`] = rgb);
   });
 
-  // 计算并添加primary hover
   const primaryColor = inputToRGB(variables.primaryColor);
   const colorPalettes = generate(primaryColor);
   const primaryHover = colorPalettes[4];
@@ -128,6 +113,4 @@ const createVariables = variables => {
   return Object.assign(cssObj, otherObj);
 };
 
-// webpack.config.js中需要使用, 故使用commonJS导出
-// 此文件中不能使用es6解构语法, 否则import时出错
 module.exports = { createVariables, antdTheme, antdCssMap, adTheme, adCssMap };

@@ -9,7 +9,7 @@ import { TermLabelType } from '@/pages/KnowledgeNetwork/Glossary/types';
 import { languageOptions } from '@/pages/KnowledgeNetwork/Glossary/constants';
 import { editTerm } from '@/services/glossaryServices';
 import _ from 'lodash';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 export default function BasicInfo({ refreshTerm }: any) {
   const {
@@ -156,7 +156,7 @@ export default function BasicInfo({ refreshTerm }: any) {
         </Button>
       )}
       <div className="kw-mt-4">
-        <ADTable
+        <KwTable
           showHeader={false}
           scroll={{ x: '100%' }}
           columns={getColumns()}

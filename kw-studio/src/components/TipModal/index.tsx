@@ -7,20 +7,20 @@ import classNames from 'classnames';
 import './style.less';
 
 interface TipModalProps extends ModalProps {
-  content?: React.ReactNode; // 弹窗内容
-  titleIcon?: React.ReactNode; // 弹窗icon
-  iconChange?: React.ReactNode; // 快速指定warming类型
-  extractBtn?: React.ReactNode; // 额外的按钮
-  onClose?: ModalProps['onCancel']; // 当 `取消` 按钮与 `关闭` icon事件不一致时, 单独设置`关闭`icon的事件
+  content?: React.ReactNode;
+  titleIcon?: React.ReactNode;
+  iconChange?: React.ReactNode;
+  extractBtn?: React.ReactNode;
+  onClose?: ModalProps['onCancel'];
 }
 
 /**
  * 二次确认弹窗, 常用于删除、退出提示
  */
 const TipModal: React.FC<TipModalProps> = ({
-  focusTriggerAfterClose = false, // 关闭自动聚焦
-  destroyOnClose = true, // 关闭后销毁
-  maskClosable = false, // 点击遮罩不关闭
+  focusTriggerAfterClose = false,
+  destroyOnClose = true,
+  maskClosable = false,
   title,
   titleIcon,
   content,
@@ -34,12 +34,10 @@ const TipModal: React.FC<TipModalProps> = ({
   closable = false,
   ...otherProps
 }) => {
-  // 点击确定
   const handleOk = (e: any) => {
     onOk?.(e);
   };
 
-  // 点击取消
   const handleCancel = (e: any) => {
     onCancel?.(e);
   };
@@ -87,7 +85,7 @@ const TipModal: React.FC<TipModalProps> = ({
  * 不支持extractBtn
  */
 const tipModalFunc = (props: Omit<TipModalProps, 'extractBtn'>) => {
-  (document.activeElement as HTMLElement)?.blur(); // 解决antd4.2的bug, 关闭弹窗后滚动条位置谜之变化
+  (document.activeElement as HTMLElement)?.blur();
   const {
     focusTriggerAfterClose = false,
     closable = false,
@@ -101,12 +99,12 @@ const tipModalFunc = (props: Omit<TipModalProps, 'extractBtn'>) => {
     Modal.confirm({
       className: 'kw-tip-modal-function',
       icon: titleIcon || <ExclamationCircleFilled className={`${iconChange ? 'warn-icon' : 'err-icon'}`} />,
-      okText: okText || ` ${intl.get('global.ok')} `, // 添加空格绕过antd的autoInsertSpaceInButton规则
+      okText: okText || ` ${intl.get('global.ok')} `,
       cancelText: cancelText || ` ${intl.get('global.cancel')} `,
       okType: 'primary',
       cancelButtonProps: { type: 'default' },
       width: 432,
-      zIndex: 2000, // 有些地方的层级太高盖住了弹窗
+      zIndex: 2000,
       focusTriggerAfterClose,
       closable,
       onOk() {
@@ -120,12 +118,11 @@ const tipModalFunc = (props: Omit<TipModalProps, 'extractBtn'>) => {
   });
 };
 
-// "知道了"确认弹窗, 函数式调用
 const knowModalFunc: { open: Function; close: Function } = {
   open: (props: ModalFuncProps) => {
     (document.activeElement as HTMLElement)?.blur();
 
-    return new Promise(resolve => {
+    return new Promise(() => {
       Modal.info({
         className: 'kw-know-modal-function',
         title: intl.get('workflow.tip'),

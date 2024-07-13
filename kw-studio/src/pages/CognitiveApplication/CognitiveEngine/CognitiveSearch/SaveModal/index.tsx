@@ -99,7 +99,7 @@ const SaveModal: React.FC<SaveModalProps> = props => {
   return (
     <Modal
       className="kg-save-strategy-modal"
-      visible={visible}
+      open={visible}
       width={640}
       destroyOnClose
       footer={null}

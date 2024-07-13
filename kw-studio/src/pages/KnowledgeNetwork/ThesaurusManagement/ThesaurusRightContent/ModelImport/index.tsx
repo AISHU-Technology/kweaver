@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
-import { Modal, Form, message, Radio, Space } from 'antd';
+import React from 'react';
+import { Form, message, Radio, Space } from 'antd';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 
-import serviceLicense from '@/services/license';
 import serverThesaurus from '@/services/thesaurus';
 import { UPLOAD_FAIL_TYPE } from '@/enums';
 
@@ -33,30 +32,9 @@ const ModalImport = (props: any) => {
   const { getThesaurusList, setPage, setErrorInfo, getThesaurusById } = props;
 
   /**
-   * 获取知识量
-   */
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          message.warning(intl.get('license.remaining'));
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || {};
-      Description && message.error(Description);
-    }
-  };
-
-  /**
    * 确认导入
    */
   const onSubmit = () => {
-    onCalculate();
     form.validateFields().then(async values => {
       const { file, mode } = values;
       const data = {
@@ -134,7 +112,7 @@ const ModalImport = (props: any) => {
 
   return (
     <UniversalModal
-      visible={isVisible}
+      open={isVisible}
       width={480}
       keyboard={false}
       forceRender={true}

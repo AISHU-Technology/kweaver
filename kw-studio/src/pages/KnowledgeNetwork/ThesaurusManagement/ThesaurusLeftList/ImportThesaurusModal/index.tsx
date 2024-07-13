@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, message } from 'antd';
+import React from 'react';
+import { Form, Input, message } from 'antd';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 
 import UploadCommon from '@/components/UploadCommon';
 import { UPLOAD_FAIL_TYPE, ONLY_KEYBOARD } from '@/enums';
 
-import serviceLicense from '@/services/license';
 import serverThesaurus from '@/services/thesaurus';
-import Tags from '@/components/Tags';
 import TrimmedInput from '@/components/TrimmedInput';
 
 import UniversalModal from '@/components/UniversalModal';
@@ -38,7 +36,6 @@ const ImportThesaurusModal = (props: any) => {
 
   // 提交
   const onSubmit = () => {
-    onCalculate();
     form.validateFields().then(async values => {
       const { name, description, file } = values;
       const files = _.isEmpty(file) ? JSON.stringify([]) : file;
@@ -104,26 +101,6 @@ const ImportThesaurusModal = (props: any) => {
   }, 300);
 
   /**
-   * 获取知识量
-   */
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          message.warning(intl.get('license.remaining'));
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || {};
-      Description && message.error(Description);
-    }
-  };
-
-  /**
    * 上传，选中文件后回调
    */
   const onCallBackFileChange = (value: Blob) => {
@@ -155,7 +132,7 @@ const ImportThesaurusModal = (props: any) => {
 
   return (
     <UniversalModal
-      visible={isVisible}
+      open={isVisible}
       width={480}
       keyboard={false}
       forceRender={true}

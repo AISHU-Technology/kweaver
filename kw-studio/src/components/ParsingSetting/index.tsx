@@ -1,7 +1,6 @@
 /**
  * 解析规则设置
  */
-
 import React, { useEffect } from 'react';
 import { Input } from 'antd';
 
@@ -36,10 +35,8 @@ const ParsingSetting = (props: any) => {
 
   useEffect(() => {
     let cloneData: any = [];
-    // 点击行解析规则展示
     if (editData) {
       const isParsing = editData?.files?.[0]?.delimiter;
-      // 升级上来的 editData有数据但是里面没有解析规则,此时给默认的解析规则
       if (isParsing && _.isEmpty(parsingFileSet)) {
         cloneData = [
           {

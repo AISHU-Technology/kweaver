@@ -13,33 +13,26 @@ export const paramPolyfill = (params: ParamItem[]) => {
   const timestamp = +new Date();
 
   return _.map(params, (item, index) => {
-    // 添加_id
     if (!item._id) {
       item._id = uniqueParamId();
     }
 
-    // 兼容旧版本数据, 转化成新结构
-    // { example: '示例', position: [0, 1, 3] } --> { position: [{ example: '示例', pos: [0, 1, 3] }] }
     if (item.position?.length === 3 && _.every(item.position, p => _.isNumber(p))) {
       item.position = [{ example: item.example, pos: item.position }];
     }
 
-    // 旧数据统一string类型
     if (!item.param_type) {
       item.param_type = 'string';
     }
 
-    // 后端bug
     if (item.param_type === '实体类') {
       item.param_type = 'entity';
     }
 
-    // 取出其中一个示例用于展示
     if (!item.example) {
       item.example = item.position![item.position!.length - 1].example;
     }
 
-    // 添加时间戳, 用于redo、undo时恢复顺序, 后续自定义排序再改
     if (!item._order) {
       item._order = timestamp + index;
     }
@@ -87,7 +80,6 @@ export const formatToEditor = (statements: string[] | string, params: ParamItem[
   const paramsResult: any[] = [];
   const statementsResult = Array.isArray(statements) ? [...statements] : _.split(statements, '\n');
 
-  // 处理所有参数, 按照 `行号` 分类
   const lineInfo = _.reduce(
     params,
     (res, item) => {
@@ -109,26 +101,23 @@ export const formatToEditor = (statements: string[] | string, params: ParamItem[
     {} as any
   );
 
-  // 处理每一行
   _.forEach(_.entries(lineInfo), ([line, item]: any) => {
     const text = statementsResult[line];
     if (!text) return;
 
-    // 替换参数
     const textObj = splitText(text, item.pos);
-    const replacedTextCache: any = {}; // 缓存被替换的文本
+    const replacedTextCache: any = {};
     _.forEach(_.entries(item.map), ([posKey, paramItem]: any) => {
       replacedTextCache[posKey] = textObj[posKey];
       textObj[posKey] = format ? format(paramItem) : `\${${paramItem.name}}`;
     });
 
-    // 拼接字符, 并计算新的 `参数标记` 坐标
     let resText = '';
     _.forEach(_.entries(textObj), ([posKey, str]: any) => {
       if (item.map[posKey]) {
         paramsResult.push({
           ...item.map[posKey],
-          _text: replacedTextCache[posKey], // 记住被替换的文本
+          _text: replacedTextCache[posKey],
           from: { line: Number(line), ch: resText.length },
           to: { line: Number(line), ch: resText.length + str.length }
         });
@@ -153,12 +142,10 @@ const splitText = (text: string, pos: number[]) => {
     const start = p;
     let end = sortedPos[i + 1];
 
-    // 不是从0开始, 添加前段
     if (i === 0 && start) {
       res[`0-${start}`] = text.slice(0, start);
     }
 
-    // 最后一个不是末尾, 添加尾段
     if (i === sortedPos.length - 1) {
       if (p < text.length) {
         end = text.length;
@@ -180,7 +167,6 @@ export const decodeEditorText = (editor: any) => {
   const statementsResult: string[] = [];
   const lineCount = editor.lineCount();
 
-  // WARNING 不能用内置的eachLine遍历, 有bug拿不到所有行数
   _({ length: lineCount }).forEach((v, index) => {
     const line: any = editor.getLineHandle(index);
     const { text, markedSpans } = line;
@@ -201,7 +187,6 @@ export const decodeEditorText = (editor: any) => {
       textObj[posKey] = paramItem._text;
     });
 
-    // 拼接字符, 并计算新的 `参数标记` 坐标
     let resText = '';
     _.forEach(_.entries(textObj), ([posKey, str]: any) => {
       if (lineInfo.map[posKey]) {
@@ -220,7 +205,6 @@ export const decodeEditorText = (editor: any) => {
     statementsResult.push(resText);
   });
 
-  // 内容为空时返回 [''] , 不是严格的空数组, 转换为 [];
   const statements = statementsResult.length === 1 && !statementsResult[0] ? [] : statementsResult;
   return [statements, _.values(paramsObj)];
 };
@@ -235,7 +219,6 @@ export const updatePosition = (oldData: any[], newData: any[]) => {
   return _.map(oldData, item => {
     if (map[item._id]) {
       item.position = map[item._id].position;
-      // 把需要显示的参数放到末尾
       item.position.sort((a: any, b: any) => (b.example === item.example ? -1 : 0));
     }
     return _.pick(item, 'name', 'alias', 'description', 'position', 'param_type', 'options');

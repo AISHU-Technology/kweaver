@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef, Fragment } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Fragment, lazy } from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
 import intl from 'react-intl-universal';
@@ -6,22 +6,21 @@ import { Route, Switch, Redirect, useHistory, useLocation, Prompt } from 'react-
 import { Spin, Menu, Tooltip, Dropdown, Divider } from 'antd';
 import { DownOutlined, EllipsisOutlined, LoadingOutlined } from '@ant-design/icons';
 
-import { GRAPH_STATUS, PERMISSION_CODES, PERMISSION_KEYS } from '@/enums';
+import { GRAPH_STATUS } from '@/enums';
 import { getParam, sessionStore } from '@/utils/handleFunction';
 import servicesPermission from '@/services/rbacPermission';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 
-import CHeader from '@/components/Header';
+import KwHeader from '@/components/KwHeader';
 import IconFont from '@/components/IconFont';
 import KnowledgeModal from '@/components/KnowledgeModal';
-import asyncComponent from '@/components/AsyncComponent';
 import ReactRouterPrompt from '@/components/ReactRouterPrompt';
 
 import Sidebar from './Sidebar';
 import DeleteKNModal from './DeleteKNModal';
 import LoadingMask from '@/components/LoadingMask';
 import './index.less';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 import HELPER from '@/utils/helper';
 import useAdHistory from '@/hooks/useAdHistory';
@@ -29,27 +28,27 @@ import useAdHistory from '@/hooks/useAdHistory';
 import { tipModalFunc } from '@/components/TipModal';
 import AuthChildRoute from '@/components/AuthChildRoute';
 
-const KnowledgeNetworkList = asyncComponent(() => import('./KnowledgeNetworkList')); // 知识网络列表
-const ThesaurusModeCreate = asyncComponent(() => import('./ThesaurusModeCreate')); // 词库编辑
-const ExploreGraph = asyncComponent(() => import('./ExploreGraph')); // 知识图谱调试页面
-const DomainIQ = asyncComponent(() => import('./DomainIQ')); // 领域智商
-const KnowledgeGraph = asyncComponent(() => import('./KnowledgeGraph')); // 知识图谱
-const KnowledgeGraphWorkflow = asyncComponent(() => import('./KnowledgeGraph/Workflow')); // 知识图谱创建编辑页面
-const ThesaurusManagement = asyncComponent(() => import('./ThesaurusManagement')); // 词库
-const OntoLib = asyncComponent(() => import('./OntologyLibrary')); // 本体库
-const GlossaryManage = asyncComponent(() => import('./Glossary')); // 术语库
-const DataSource = asyncComponent(() => import('./DataSource')); // 数据源管理
-const FunctionManage = asyncComponent(() => import('./FunctionManage')); // 函数管理
-const DataSourceQuery = asyncComponent(() => import('./DataSourceQuery')); // 数据源查询
-const GraphTaskRecord = asyncComponent(() => import('./KnowledgeGraph/GraphContent/GraphTaskRecord/GraphTaskRecord')); // 任务记录
-const NotFound = asyncComponent(() => import('@/components/NotFoundChildPage'));
+const KnowledgeNetworkList = lazy(() => import('./KnowledgeNetworkList')); // 知识网络列表
+const ThesaurusModeCreate = lazy(() => import('./ThesaurusModeCreate')); // 词库编辑
+const ExploreGraph = lazy(() => import('./ExploreGraph')); // 知识图谱调试页面
+const DomainIQ = lazy(() => import('./DomainIQ')); // 领域智商
+const KnowledgeGraph = lazy(() => import('./KnowledgeGraph')); // 知识图谱
+const KnowledgeGraphWorkflow = lazy(() => import('./KnowledgeGraph/Workflow')); // 知识图谱创建编辑页面
+const ThesaurusManagement = lazy(() => import('./ThesaurusManagement')); // 词库
+const OntoLib = lazy(() => import('./OntologyLibrary')); // 本体库
+const GlossaryManage = lazy(() => import('./Glossary')); // 术语库
+const DataSource = lazy(() => import('./DataSource')); // 数据源管理
+const FunctionManage = lazy(() => import('./FunctionManage')); // 函数管理
+const DataSourceQuery = lazy(() => import('./DataSourceQuery')); // 数据源查询
+const GraphTaskRecord = lazy(() => import('./KnowledgeGraph/GraphContent/GraphTaskRecord/GraphTaskRecord')); // 任务记录
+const NotFound = lazy(() => import('@/components/NotFoundChildPage'));
 
 /**
  * 知识网络入口
  * @returns {JSX.Element}
  * @constructor
  */
-const KnowledgeNetwork = () => {
+const KnowledgeNetwork = props => {
   const history = useHistory();
   const adHistory = useAdHistory();
   const location = useLocation();
@@ -75,25 +74,7 @@ const KnowledgeNetwork = () => {
   }, [window?.location?.search]);
 
   useEffect(() => {
-    // 获取列表权限, 判断权限
-    if (_.isEmpty(knData) || isPrevent) return;
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds: [String(knData?.id)] };
-    // servicesPermission.dataPermission(postData).then(result => {
-    //   const newKgData = { ...knData };
-    //   newKgData.__codes = result?.res?.[0]?.codes;
-    //   newKgData.__isCreator = result?.res?.[0]?.isCreator;
-    //   setKnData(newKgData);
-    // });
-    setKnData(knData);
-  }, [JSON.stringify(knData)]);
-
-  useEffect(() => {
     if (!knowledgeNetId) return;
-    // 改过的权限
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds: [String(knowledgeNetId)] };
-    // servicesPermission.dataPermission(postData).then(result => {
-    // if (_.isEmpty(result?.res?.[0]?.codes)) window.location.replace('/home');
-    // });
     getKnowledgeList();
   }, [knowledgeNetId]);
 
@@ -107,22 +88,13 @@ const KnowledgeNetwork = () => {
     }
     return {};
   };
+
   const getKnowledgeList = async () => {
     const data = { page: 1, size: 10000, order: 'desc', rule: 'update' };
     try {
       const result = await servicesKnowledgeNetwork.knowledgeNetGet(data);
       if (result?.res?.df && result?.res?.df?.length > 0) {
         let items = result?.res?.df;
-        // const dataIds = _.map(result?.res?.df, item => String(item.id));
-        // const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds };
-        // const permissionResult = (await servicesPermission.dataPermission(postData)) || {};
-        // const codesData = _.keyBy(permissionResult?.res, 'dataId');
-        // items = _.map(result?.res?.df, item => {
-        //   const { codes = [], isCreator = 0 } = codesData?.[item.id] || {};
-        //   item.__isCreator = isCreator;
-        //   item.__codes = codes;
-        //   return item;
-        // });
         setKnList(items);
         const data = findSelectedKnowledge(items, knowledgeNetId);
         if (_.isEmpty(data)) {
@@ -157,15 +129,9 @@ const KnowledgeNetwork = () => {
         setIsPrevent(true);
         return;
       }
-
       setIsChange(false);
-      setIsPrevent(false);
-      history.replace(url);
-      setKnowledgeNetId(id);
-      return;
     }
     setIsPrevent(false);
-
     history.replace(url);
     setKnowledgeNetId(id);
   };
@@ -287,72 +253,48 @@ const KnowledgeNetwork = () => {
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div className="kw-ellipsis kw-align-center" style={{ width: 170 }} title={knw_name}>
-                  <AdKnowledgeNetIcon style={{ marginRight: 6 }} type={color} />
+                  <KwKNIcon style={{ marginRight: 6 }} type={color} />
                   <div className="kw-flex-item-full-width kw-ellipsis">{knw_name}</div>
                 </div>
                 <Dropdown
                   overlay={
                     <Menu>
-                      <ContainerIsVisible
-                        isVisible={HELPER.getAuthorByUserInfo({
-                          roleType: PERMISSION_CODES.ADF_KN_EDIT,
-                          userType: PERMISSION_KEYS.KN_EDIT,
-                          userTypeDepend: item?.__codes
-                        })}
+                      <Menu.Item
+                        key="edit"
+                        onClick={({ domEvent }) => {
+                          // domEvent.stopPropagation();
+                          setKnowledgeNetworkOperation('');
+                          onCreateNetwork('edit', item);
+                        }}
                       >
-                        <Menu.Item
-                          key="edit"
-                          onClick={({ domEvent }) => {
-                            // domEvent.stopPropagation();
-                            setKnowledgeNetworkOperation('');
-                            onCreateNetwork('edit', item);
-                          }}
-                        >
-                          {intl.get('exploreGraph.edit')}
-                        </Menu.Item>
-                      </ContainerIsVisible>
+                        {intl.get('exploreGraph.edit')}
+                      </Menu.Item>
 
-                      <ContainerIsVisible
-                        isVisible={HELPER.getAuthorByUserInfo({
-                          roleType: PERMISSION_CODES.ADF_KN_DELETE,
-                          userType: PERMISSION_KEYS.KN_DELETE,
-                          userTypeDepend: item?.__codes
-                        })}
+                      <Menu.Item
+                        key="delete"
+                        onClick={({ domEvent }) => {
+                          // domEvent.stopPropagation();
+                          setKnowledgeNetworkOperation('');
+                          onOpenDelete(item);
+                        }}
                       >
-                        <Menu.Item
-                          key="delete"
-                          onClick={({ domEvent }) => {
-                            // domEvent.stopPropagation();
-                            setKnowledgeNetworkOperation('');
-                            onOpenDelete(item);
-                          }}
-                        >
-                          {intl.get('exploreGraph.Delete')}
-                        </Menu.Item>
-                      </ContainerIsVisible>
+                        {intl.get('exploreGraph.Delete')}
+                      </Menu.Item>
 
-                      <ContainerIsVisible
-                        isVisible={HELPER.getAuthorByUserInfo({
-                          roleType: PERMISSION_CODES.ADF_KN_MEMBER,
-                          userType: PERMISSION_KEYS.KN_EDIT_PERMISSION,
-                          userTypeDepend: item?.__codes
-                        })}
+                      <Menu.Item
+                        key="authorityManagement"
+                        onClick={({ domEvent }) => {
+                          domEvent.stopPropagation();
+                          setKnowledgeNetworkOperation('');
+                          const { id, knw_name } = item;
+                          history.push(`/knowledge/knowledge-net-auth?knId=${id}&knName=${knw_name}`);
+                        }}
                       >
-                        <Menu.Item
-                          key="authorityManagement"
-                          onClick={({ domEvent }) => {
-                            domEvent.stopPropagation();
-                            setKnowledgeNetworkOperation('');
-                            const { id, knw_name } = item;
-                            history.push(`/knowledge/knowledge-net-auth?knId=${id}&knName=${knw_name}`);
-                          }}
-                        >
-                          {intl.get('exploreGraph.authorityManagement')}
-                        </Menu.Item>
-                      </ContainerIsVisible>
+                        {intl.get('exploreGraph.authorityManagement')}
+                      </Menu.Item>
                     </Menu>
                   }
-                  visible={knowledgeNetworkOperation === item?.id}
+                  open={knowledgeNetworkOperation === item?.id}
                   trigger={['click']}
                   placement="bottomLeft"
                   overlayClassName="knowledgeNetworkOperation"
@@ -388,22 +330,16 @@ const KnowledgeNetwork = () => {
           {/* <IconFont type="icon-zhishiwangluoguanli" style={{ color: '#000', marginRight: 8 }} />*/}
           {intl.get('graphList.knowledgeNetManage')}
         </div>
-        <ContainerIsVisible
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_CREATE
-          })}
+        <div
+          className="knowledgeNetworkRootMenuSelect-operate-item menuItem kw-align-center"
+          style={{ height: 40 }}
+          onClick={() => {
+            onCreateNetwork('add');
+          }}
         >
-          <div
-            className="knowledgeNetworkRootMenuSelect-operate-item menuItem kw-align-center"
-            style={{ height: 40 }}
-            onClick={() => {
-              onCreateNetwork('add');
-            }}
-          >
-            {/* <IconFont type="icon-Add" style={{ color: '#000', marginRight: 8 }} />*/}
-            {intl.get('exploreGraph.createNetwork')}
-          </div>
-        </ContainerIsVisible>
+          {/* <IconFont type="icon-Add" style={{ color: '#000', marginRight: 8 }} />*/}
+          {intl.get('exploreGraph.createNetwork')}
+        </div>
       </div>
     </div>
   );
@@ -418,12 +354,12 @@ const KnowledgeNetwork = () => {
             overlay={knSelectMenus}
             trigger={['click']}
             placement="bottomLeft"
-            onVisibleChange={open => {
+            onOpenChange={open => {
               if (!open) setKnowledgeNetworkOperation('');
             }}
           >
             <div className="kw-align-center">
-              <AdKnowledgeNetIcon style={{ marginRight: 6 }} type={knData?.color} />
+              <KwKNIcon style={{ marginRight: 6 }} type={knData?.color} />
               <Tooltip placement="right" title={knData?.knw_name}>
                 <div className="kw-ellipsis" style={{ maxWidth: 132 }}>
                   {knData?.knw_name}
@@ -479,7 +415,7 @@ const KnowledgeNetwork = () => {
   return (
     <div className="knowledgeNetworkRoot kw-flex-column" key={knData?.id}>
       {headerVisible && (
-        <CHeader
+        <KwHeader
           breadcrumb={headerBreadcrumbVisible && breadcrumb}
           onClickLogo={() => {
             if (hasUnsaved) setIsIntercept(true);
@@ -586,14 +522,7 @@ const KnowledgeNetwork = () => {
                         />
                       )}
                     />
-                    {/* {appHasRoute.includes(defaultSelectRoute) ? (
-                    // <Redirect to={defaultSelectRoute} />
-                  ) : window.location.pathname === '/knowledge' ? (
-                    window.location.replace(defaultSelectRoute)
-                  ) : (
-                    <AuthChildRoute path={'*'} component={NotFound} />
-                  )} */}
-                    <Redirect from="/knowledge" to={defaultSelectRoute} />
+                    <AuthChildRoute allRoute={appHasRoute} path={'*'} defaultRoute={defaultSelectRoute} />
                   </Switch>
                 </div>
               </div>

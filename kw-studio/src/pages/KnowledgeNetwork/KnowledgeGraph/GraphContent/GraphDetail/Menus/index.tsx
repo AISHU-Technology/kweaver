@@ -44,8 +44,6 @@ const INFO_LIST_INFO = [
     intl: intl.get('graphDetail.knGraphClassDetail')
   }
 ];
-// 是否是iframe页面
-const isIframe = () => window.location.pathname.includes('iframe');
 
 const Menus = (props: any) => {
   const { ad_graphStatus, refInstance } = props;
@@ -97,7 +95,7 @@ const Menus = (props: any) => {
           const isSelected = id !== 'operate' && id === activeKey;
           const INTL = id === 'operate' && isVisibleDrawer ? intl2 : intl;
           const ICON: any = isVisibleDrawer ? icon2 || icon : icon;
-          if (id === 'statistics' && isIframe()) {
+          if (id === 'statistics') {
             return null;
           }
           return (

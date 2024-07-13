@@ -47,14 +47,14 @@ const OntologiesList = (props: OntologiesListProps) => {
           {nodes.length ? (
             <List type="node" data={nodes} isEditorFocused={isEditorFocused} onAdd={onAdd} />
           ) : (
-            <NoDataBox.NO_CONTENT />
+            <NoDataBox type="NO_CONTENT" />
           )}
         </div>
         <div className="kw-h-100" style={{ overflow: 'auto', display: activeKey === 'edge' ? undefined : 'none' }}>
           {edges.length ? (
             <List type="edge" data={edges} isEditorFocused={isEditorFocused} onAdd={onAdd} />
           ) : (
-            <NoDataBox.NO_CONTENT />
+            <NoDataBox type="NO_CONTENT" />
           )}
         </div>
       </div>

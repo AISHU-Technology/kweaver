@@ -113,7 +113,7 @@ const ImportModel = (props: any) => {
 
   return (
     <UniversalModal
-      visible={true}
+      open={true}
       width={480}
       zIndex={9999}
       title={MODEL_TITLE[type]}

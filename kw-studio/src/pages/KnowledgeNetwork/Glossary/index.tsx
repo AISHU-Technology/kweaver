@@ -1,8 +1,7 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import _ from 'lodash';
 import TipModal from '@/components/TipModal';
 import Format from '@/components/Format';
-import { useLocation } from 'react-router-dom';
 import Header from './Header';
 import GlossaryTable from './GlossaryTable';
 import CreateModal from './CreateModal';
@@ -13,13 +12,10 @@ import './style.less';
 import intl from 'react-intl-universal';
 import HOOKS from '@/hooks';
 import { deleteGlossary, getGlossaryList } from '@/services/glossaryServices';
-import { getParam, sessionStore } from '@/utils/handleFunction';
-import { message, Modal } from 'antd';
+import { getParam } from '@/utils/handleFunction';
+import { message } from 'antd';
 import { GlossaryDataType } from '@/pages/KnowledgeNetwork/Glossary/types';
 import GlossaryContext from '@/pages/KnowledgeNetwork/Glossary/GlossaryContext';
-import { PERMISSION_KEYS } from '@/enums';
-import servicesPermission from '@/services/rbacPermission';
-import serviceLicense from '@/services/license';
 
 const { useUpdateEffect, useLatestState, useRouteCache, useAdHistory } = HOOKS;
 
@@ -81,26 +77,6 @@ const GlossaryManage = forwardRef<any, any>(({ knData, onChangePageSign, handleC
     });
   }, [pagination.page, pagination.pageSize, tableProps.order, tableProps.orderField, tableProps.searchValue]);
 
-  /**
-   * 获取知识量
-   */
-  const onCalculate = async () => {
-    try {
-      const res = await serviceLicense.graphCountAll();
-      if (res && res !== undefined) {
-        const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
-        if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
-          message.warning(intl.get('license.remaining'));
-        }
-      }
-    } catch (error) {
-      if (!error.type) return;
-      const { Description } = error.response || {};
-      Description && message.error(Description);
-    }
-  };
-
   const getTableData = async ({ page, pageSize, order, orderField, searchValue, kwId }: any) => {
     let tableData: GlossaryDataType[] = [];
     let total = 0;
@@ -119,18 +95,6 @@ const GlossaryManage = forwardRef<any, any>(({ knData, onChangePageSign, handleC
       });
       total = data.res.count;
       tableData = data.res.taxonomies;
-      // 根据权限过滤表格数据
-      if (tableData.length > 0) {
-        const dataIds = tableData.map(item => item.id.toString());
-        const postData = { dataType: PERMISSION_KEYS.TYPE_GLOSSARY, dataIds };
-        // servicesPermission.dataPermission(postData).then(result => {
-        //   const codesData = _.keyBy(result?.res, 'dataId');
-        //   tableData = _.map(tableData, item => {
-        //     item.__codes = codesData?.[item.id]?.codes;
-        //     return item;
-        //   });
-        // });
-      }
     } catch (error) {
       const errorTip = error.type === 'message' ? error.response.ErrorDetails : error.data.ErrorDetails;
       message.error(errorTip);
@@ -211,7 +175,6 @@ const GlossaryManage = forwardRef<any, any>(({ knData, onChangePageSign, handleC
   };
 
   const openCreateModal = (data?: any) => {
-    onCalculate();
     setCreateModalProps(prevState => ({
       ...prevState,
       visible: true,
@@ -388,7 +351,7 @@ const GlossaryManage = forwardRef<any, any>(({ knData, onChangePageSign, handleC
         <TipModal
           title={intl.get(`${prefixLocale}.deleteGlossaryTipTitle`)}
           content={intl.get(`${prefixLocale}.deleteGlossaryTipContent`)}
-          visible={deleteModalProps.visible}
+          open={deleteModalProps.visible}
           onCancel={closeDeleteModal}
           onOk={_.debounce(handleDelete, 300)}
           closable={false}

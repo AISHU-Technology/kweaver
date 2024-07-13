@@ -260,3 +260,46 @@ func GetArrDiff(arr []int64, dbArr []int64) []int64 {
 	}
 	return res
 }
+
+func (logic *MenuLogic) GetMenuTree(parentMenuList []*po.TMenu, req *types.ReqGetMenuTree) (map[int64][]*types.RespMenu, error) {
+	repo := impl.NewMenuRepo(logic.svcCtx)
+
+	//根据父级菜单获取下级菜单
+	pids := make([]int64, len(parentMenuList))
+	if len(parentMenuList) > 0 {
+		for i, model := range parentMenuList {
+			pids[i] = model.Id
+		}
+	}
+	menuList, err := repo.GetMenuList(pids)
+	if err != nil {
+		return nil, err
+	}
+
+	//循环获取下级菜单
+	childrenMenuMap := make(map[int64][]*types.RespMenu, 0)
+	if len(menuList) > 0 {
+		if childrenMenuMap, err = logic.GetMenuTree(menuList, req); err != nil {
+			return nil, err
+		}
+	}
+
+	res := make(map[int64][]*types.RespMenu, 0)
+	children := make([]*types.RespMenu, 0)
+	for _, model := range menuList {
+		if model.MenuType == 1 && model.Visible == 0 { //可显示的菜单
+			cItem := &types.RespMenu{Id: utils.ToString(model.Id), CName: model.CName, EName: model.EName, Code: model.Code, Icon: model.Icon, SelectedIcon: model.SelectedIcon,
+				Path: model.Path, Component: model.Component, MenuType: model.MenuType, Pid: utils.ToString(model.Pid), SortOrder: model.SortOrder, Visible: model.Visible,
+				CreateTime: response.JsonTime(model.CreateTime), UpdateTime: response.JsonTime(model.UpdateTime), DelFlag: int(model.DelFlag), Children: children}
+			if len(childrenMenuMap[model.Id]) == 0 {
+				res[model.Pid] = append(res[model.Pid], cItem)
+			} else {
+				for _, cModel := range childrenMenuMap[model.Id] {
+					cItem.Children = append(cItem.Children, cModel)
+				}
+				res[model.Pid] = append(res[model.Pid], cItem)
+			}
+		}
+	}
+	return res, nil
+}

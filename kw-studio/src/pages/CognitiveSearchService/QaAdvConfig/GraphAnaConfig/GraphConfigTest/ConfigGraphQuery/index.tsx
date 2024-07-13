@@ -509,7 +509,7 @@ const ConfigGraphQuery = (props: any) => {
         <TipModal
           title={intl.get('analysisService.applyTitle')}
           content={intl.get('analysisService.applyTip')}
-          visible={applyVisible}
+          open={applyVisible}
           onOk={() => onConfirmApply()}
           onCancel={() => setApplyVisible(false)}
         />

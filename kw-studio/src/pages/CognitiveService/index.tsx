@@ -1,20 +1,19 @@
 /**
  * 认知服务根路由
  */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, lazy } from 'react';
 import { Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import { Divider } from 'antd';
 import intl from 'react-intl-universal';
 
-import CHeader from '@/components/Header';
-import asyncComponent from '@/components/AsyncComponent';
+import KwHeader from '@/components/KwHeader';
 import IconFont from '@/components/IconFont';
 import { KnwItem } from './types';
 import './style.less';
 
-const AnalysisServiceConfig = asyncComponent(() => import('@/pages/CognitiveService/AnalysisServiceConfig'));
-const AnalysisServiceTest = asyncComponent(() => import('@/pages/CognitiveService/AnalysisServiceTest'));
-const IframeDocument = asyncComponent(() => import('@/pages/CognitiveService/IframeDocument'));
+const AnalysisServiceConfig = lazy(() => import('@/pages/CognitiveService/AnalysisServiceConfig'));
+const AnalysisServiceTest = lazy(() => import('@/pages/CognitiveService/AnalysisServiceTest'));
+const IframeDocument = lazy(() => import('@/pages/CognitiveService/IframeDocument'));
 
 const CognitiveService = (props: any) => {
   const history = useHistory();
@@ -37,7 +36,7 @@ const CognitiveService = (props: any) => {
 
   return (
     <div className="cognitive-service-root">
-      <CHeader breadcrumb={breadcrumb} onClickLogo={() => history.push('/home')} />
+      <KwHeader breadcrumb={breadcrumb} onClickLogo={() => history.push('/home')} />
       <div className="l-layout">
         <div className="l-main" style={{}}>
           <Switch>

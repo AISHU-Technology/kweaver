@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState, useRef } from 'react';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import Format from '@/components/Format';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
@@ -17,8 +17,6 @@ import { getParam, localStore, copyToBoard, getTextByHtml, kwCookie } from '@/ut
 import servicesDpapi from '@/services/dpapi';
 import './style.less';
 import mysqlImg from '@/assets/images/mysql.svg';
-
-const indicator = <LoadingOutlined style={{ fontSize: 24, color: '#54639c', top: '200px' }} spin />;
 import { DESC, ASC, FILTER_OPTION, SORTER_FIELD, STATUS_COLOR, SORTED_FIELD_MAP_CODE } from './enum';
 import noResImg from '@/assets/images/noResult.svg';
 import createImg from '@/assets/images/create.svg';
@@ -29,7 +27,9 @@ import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 import servicesDataSource from '@/services/dataSource';
 import { DATA_SOURCE } from '@/pages/DPApiService/FirstSQLSetting/enums';
 import Cookie from 'js-cookie';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
+
+const indicator = <LoadingOutlined style={{ fontSize: 24, color: '#54639c', top: '200px' }} spin />;
 
 const DBApi = (props: any) => {
   const { knData } = props;
@@ -554,7 +554,7 @@ const DBApi = (props: any) => {
 
   return (
     <div className="dbapi-container">
-      <ADTable
+      <KwTable
         className="dbapi-table"
         // width={1000}
         title={intl.get('dpapiList.apiManager')}
@@ -625,7 +625,7 @@ const DBApi = (props: any) => {
                             <Select.Option key={item?.id} value={item?.id}>
                               <div className="myOptionItem">
                                 {/* <IconFont type="icon-color-renzhiyingyong" className="labelItem" /> */}
-                                <AdKnowledgeNetIcon type={item?.color} />
+                                <KwKNIcon type={item?.color} />
                                 <span className="valueItem" style={{ marginLeft: 8 }}>
                                   {item?.text}
                                 </span>
@@ -763,7 +763,7 @@ const DBApi = (props: any) => {
             </ContainerIsVisible>
           )
         }
-      ></ADTable>
+      />
     </div>
   );
 };

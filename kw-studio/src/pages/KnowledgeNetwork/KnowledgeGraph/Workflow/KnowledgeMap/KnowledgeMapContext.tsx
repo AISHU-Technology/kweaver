@@ -87,6 +87,7 @@ export const useKnowledgeMapContext = () => useContext(context);
 
 interface KnowledgeMapContextProps {
   currentStep: number;
+  children?: any;
 }
 
 const KnowledgeMapContext: React.FC<KnowledgeMapContextProps> = ({ children, currentStep }) => {

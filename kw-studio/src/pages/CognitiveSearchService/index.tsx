@@ -1,21 +1,20 @@
 /**
  * 认知服务根路由
  */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, lazy } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
-import CHeader from '@/components/Header';
-import asyncComponent from '@/components/AsyncComponent';
+import KwHeader from '@/components/KwHeader';
 
 import TopHeader from './TopHeader';
 import { KnwItem } from './types';
 
 import './style.less';
 
-const SearchConfigStep = asyncComponent(() => import('@/pages/CognitiveSearchService/SearchConfigStep'));
-const Publish = asyncComponent(() => import('@/pages/CognitiveSearchService/SearchConfigStep/ThirdPublish'));
-const IframeDocument = asyncComponent(() => import('@/pages/CognitiveSearchService/IframeDocument'));
-const ConfigTest = asyncComponent(() => import('@/pages/CognitiveSearchService/ConfigTest'));
+const SearchConfigStep = lazy(() => import('@/pages/CognitiveSearchService/SearchConfigStep'));
+const Publish = lazy(() => import('@/pages/CognitiveSearchService/SearchConfigStep/ThirdPublish'));
+const IframeDocument = lazy(() => import('@/pages/CognitiveSearchService/IframeDocument'));
+const ConfigTest = lazy(() => import('@/pages/CognitiveSearchService/ConfigTest'));
 
 const CognitiveSearchService = () => {
   const [knwData, setKnwData] = useState<KnwItem>({} as KnwItem);

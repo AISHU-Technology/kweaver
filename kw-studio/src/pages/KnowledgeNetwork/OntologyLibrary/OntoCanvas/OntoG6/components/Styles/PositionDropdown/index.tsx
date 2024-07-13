@@ -25,8 +25,8 @@ const PositionDropdown = (props: any) => {
   return (
     <Dropdown
       trigger={['click']}
-      visible={visible}
-      onVisibleChange={v => !readOnly && setVisible(v)}
+      open={visible}
+      onOpenChange={v => !readOnly && setVisible(v)}
       overlay={
         <Menu
           selectedKeys={[value]}

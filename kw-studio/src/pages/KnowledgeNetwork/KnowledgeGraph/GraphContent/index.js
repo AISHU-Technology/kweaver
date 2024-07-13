@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import intl from 'react-intl-universal';
@@ -8,18 +8,17 @@ import { LoadingOutlined } from '@ant-design/icons';
 import LoadingMask from '@/components/LoadingMask';
 import HELPER from '@/utils/helper';
 import { getParam } from '@/utils/handleFunction';
-import { PERMISSION_KEYS, PERMISSION_CODES, GRAPH_STATUS } from '@/enums';
+import { GRAPH_STATUS } from '@/enums';
 import serviceGraphDetail from '@/services/graphDetail';
 import servicesPermission from '@/services/rbacPermission';
 import { ad_onChangeGraphStatus } from '@/reduxConfig/action/knowledgeGraph';
 
-import asyncComponent from '@/components/AsyncComponent';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 import TaskList from './taskList';
 import Header from './Header';
 
-const GraphDetail = asyncComponent(() => import('./GraphDetail'));
-const ExploreAnalysis = asyncComponent(() => import('./ExploreAnalysis'));
+const GraphDetail = lazy(() => import('./GraphDetail'));
+const ExploreAnalysis = lazy(() => import('./ExploreAnalysis'));
 
 import knowledgeEmpty from '@/assets/images/kgEmpty.svg';
 import './index.less';
@@ -96,7 +95,6 @@ const GraphContent = props => {
       const result = await serviceGraphDetail.graphGetInfoBasic(getData);
       const data = result?.res || {};
       if (!_.isEmpty(data)) {
-        const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds: [String(data?.id)] };
         // servicesPermission.dataPermission(postData).then(result => {
         //   setGraphBasicData({ ...data, __codes: result?.res?.[0]?.codes || [] });
         // });
@@ -213,14 +211,7 @@ const GraphContent = props => {
         <div className="empty-box">
           <img src={knowledgeEmpty} alt="nodata" className="nodata-img"></img>
           <div className="text-des kw-c-text-lower">
-            <ContainerIsVisible
-              placeholder={intl.get('knowledge.noKnowledgeGraphs')}
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_KG_CREATE,
-                userType: PERMISSION_KEYS.KN_ADD_KG,
-                userTypeDepend: selectedKnowledge?.__codes
-              })}
-            >
+            <ContainerIsVisible placeholder={intl.get('knowledge.noKnowledgeGraphs')}>
               <div>
                 {intl.get('knowledge.click')}
                 <span

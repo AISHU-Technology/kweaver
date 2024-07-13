@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { Modal, Button, Divider, Tooltip, Popover } from 'antd';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 
-import { GRAPH_CONFIG, GRAPH_LAYOUT, PERMISSION_KEYS, GRAPH_LAYOUT_PATTERN } from '@/enums';
+import { GRAPH_CONFIG, GRAPH_LAYOUT, GRAPH_LAYOUT_PATTERN } from '@/enums';
 import { getParam } from '@/utils/handleFunction';
 import servicesPermission from '@/services/rbacPermission';
 
@@ -613,7 +613,6 @@ const HeaderOperation = (_props: any) => {
         onClick: async () => {
           if (iframe) return;
           // DATA-354277 dataPermission 入参dataIds kg_conf_id -> id
-          const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds: [String(getParam('graphConfId'))] };
           // const result = await servicesPermission.dataPermission(postData);
           // const codes = result?.res?.[0]?.codes || [];
           // if (!_.includes(codes, PERMISSION_KEYS.KG_VIEW)) {
@@ -702,14 +701,14 @@ const HeaderOperation = (_props: any) => {
               if (!item.popover) return <React.Fragment key={`${tip}-${index}`}>{element}</React.Fragment>;
               return (
                 <Popover
-                  visible={popoverKey === id}
+                  open={popoverKey === id}
                   key={`${tip}-${index}`}
                   overlayClassName="graphHeaderOperationItem"
                   trigger="click"
                   placement="bottomRight"
                   content={item.popover}
                   getPopupContainer={triggerNode => triggerNode?.parentElement || document.body}
-                  onVisibleChange={(visible: boolean) => {
+                  onOpenChange={(visible: boolean) => {
                     if (visible) onCloseRightDrawer();
                   }}
                 >

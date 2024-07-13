@@ -1,9 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import { Select as AntdSelect } from 'antd';
-
 import { SelectType } from '../type';
-
 import './style.less';
 
 const SIZE = {

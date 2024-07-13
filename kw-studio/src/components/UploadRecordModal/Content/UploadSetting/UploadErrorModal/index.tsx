@@ -2,7 +2,7 @@ import React from 'react';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
 import TemplateModal from '@/components/TemplateModal';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import IconFont from '@/components/IconFont';
 
 import './style.less';
@@ -11,7 +11,7 @@ const ErrorModel = (props: any) => {
 
   return (
     <TemplateModal
-      visible={visible}
+      open={visible}
       className="uploadSettingErrorModal"
       title={intl.get('uploadService.tip')}
       width={800}
@@ -30,7 +30,7 @@ const ErrorModel = (props: any) => {
             ? intl.get('uploadService.openErrorDes').split('|')[2]
             : intl.get('uploadService.closeErrorDes').split('|')[2]}
         </div>
-        <ScrollBar autoHeight autoHeightMax={484} color="rgb(184,184,184)">
+        <KwScrollBar autoHeight autoHeightMax={484} color="rgb(184,184,184)">
           <div className="kw-pb-5">
             <div className="graphName kw-align-center kw-pl-6">{intl.get('uploadService.graphName')}</div>
             {_.map(errorData?.errors, item => {
@@ -52,7 +52,7 @@ const ErrorModel = (props: any) => {
               );
             })}
           </div>
-        </ScrollBar>
+        </KwScrollBar>
       </div>
     </TemplateModal>
   );

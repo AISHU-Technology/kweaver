@@ -132,7 +132,7 @@ const GraphList = (props: GraphListProps) => {
         title={intl.get('knowledgeCard.changedTipTitle')}
         content={intl.get('knowledgeCard.changedTip')}
         okText={intl.get('global.save')}
-        visible={changedTip.visible}
+        open={changedTip.visible}
         onOk={() => changeGraph(changedTip.graph, true)}
         onCancel={() => setChangedTip({ visible: false, graph: {} })}
         extractBtn={<Button onClick={() => changeGraph(changedTip.graph)}>{intl.get('global.notSave')}</Button>}

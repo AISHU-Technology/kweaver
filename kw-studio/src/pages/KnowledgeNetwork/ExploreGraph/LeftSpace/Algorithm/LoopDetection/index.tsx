@@ -257,7 +257,7 @@ const LoopDetection: React.FC<PropsWithChildren<LoopDetectionProps>> = props => 
                 return null;
               })
             : isMounted.current && (
-                <NoDataBox.NO_CONTENT text={intl.get('exploreGraph.algorithm.loopDetectionToastTip')} />
+                <NoDataBox type="NO_CONTENT" desc={intl.get('exploreGraph.algorithm.loopDetectionToastTip')} />
               )}
         </div>
       </div>

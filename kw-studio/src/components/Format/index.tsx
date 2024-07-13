@@ -1,15 +1,13 @@
 import React from 'react';
 import classnames from 'classnames';
-
 import { ButtonType, ContainerType, InputType, SelectType, TextInterface } from './type';
-
-import Button from './Button';
-import Container from './Container';
-import Input from './Input';
-import InputNumber from './InputNumber';
-import Select from './Select';
 import Text from './Text';
+import Input from './Input';
+import Button from './Button';
+import Select from './Select';
+import Container from './Container';
 import HeaderText from './HeaderText';
+import InputNumber from './InputNumber';
 
 export type FormatComponent = {
   Button: React.FC<ButtonType>;

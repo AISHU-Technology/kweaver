@@ -5,12 +5,12 @@ import EdgeSelector from './EdgeSelector';
 
 interface TypeSelect extends SelectProps {
   data: any;
-  type: 'v_filters' | 'e_filters'; // node type or edge type
-  classList: any[]; // node class edge class list
+  entities: any;
+  classList: any[];
   className?: string;
   isDisabled?: boolean;
-  entities: any; // Ontology entity information
   onChange: (item: any) => void;
+  type: 'v_filters' | 'e_filters';
 }
 
 const SelectorClass = (props: TypeSelect) => {

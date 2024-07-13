@@ -3,22 +3,21 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import Column from './Column';
 import { PreviewColumn } from '../types';
-import { ONLY_KEYBOARD } from '@/enums';
 import './style.less';
 
 export interface PreviewTableProps {
-  className?: string; // 类名
-  data: PreviewColumn[]; // 表格数据
-  shouldCheck?: boolean; // 是否可勾选
-  checkedKeys?: string[]; // 勾选的表头key
-  showLess?: boolean; // 较窄的列宽
+  className?: string;
+  data: PreviewColumn[];
+  shouldCheck?: boolean;
+  checkedKeys?: string[];
+  showLess?: boolean;
   onCheck?: (keys: string[]) => void;
   selectFile?: any;
   partitionMes?: any;
 }
 
-const WIDTH1 = 160; // 默认宽度, 窄
-const WIDTH2 = 280; // 默认宽度
+const WIDTH1 = 160;
+const WIDTH2 = 280;
 
 const PreviewTable = (props: PreviewTableProps) => {
   const { className, data, shouldCheck, checkedKeys, showLess, onCheck, partitionMes, selectFile } = props;

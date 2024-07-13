@@ -4,7 +4,7 @@ import { CaretDownOutlined } from '@ant-design/icons';
 
 import intl from 'react-intl-universal';
 import IconFont from '@/components/IconFont';
-import TimedTask from '@/components/timedTask';
+import TimedTask from '@/components/TimedTask';
 import ModalBranchTask from '@/components/ModalBranchTask';
 import BuildGraphModel from '@/components/BuildGraphModel';
 

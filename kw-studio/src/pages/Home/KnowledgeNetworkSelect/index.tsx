@@ -23,7 +23,7 @@ const KnowledgeNetworkSelect = (props: any) => {
 
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       title={intl.get('homepage.selectKnowledgeNetwork')}
       className="knowledgeNetworkSelectRoot"
       destroyOnClose

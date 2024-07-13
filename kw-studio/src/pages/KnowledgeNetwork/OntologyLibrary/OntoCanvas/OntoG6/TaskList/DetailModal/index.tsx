@@ -14,7 +14,7 @@ import { getFileType } from '../assistFunction';
 
 import errorTip from '@/assets/images/kong.svg';
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 const PAGESIZE = 20;
 const TASKINFOPAGESIZE = 10;
@@ -414,7 +414,7 @@ class OntoDetailModal<T> extends Component<Props<T>, OntoDetailModalState> {
                 </div>
               </div>
 
-              <ADTable
+              <KwTable
                 className="kw-mt-4"
                 loading={task_status === 'running' || loadingContent}
                 showHeader={false}

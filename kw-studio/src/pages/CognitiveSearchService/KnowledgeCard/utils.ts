@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import servicesPermission from '@/services/rbacPermission';
-import { PERMISSION_KEYS } from '@/enums';
 import { NodeConfigItem } from './types';
 
 /**
@@ -39,7 +38,6 @@ export const isConfigChanged = (config: NodeConfigItem) => {
  */
 export const getPermissionIds = async (ids: string[]) => {
   const dataIds = _.map(ids, id => String(id));
-  const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
   let authIds: string[] = [];
   try {
     // await servicesPermission.dataPermission(postData).then(result => {

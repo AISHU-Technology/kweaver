@@ -1,0 +1,6 @@
+/kw-studio/node_modules
+/kw-studio/coverage
+/kw-studio/build
+/kw-studio/report
+
+.DS_Store

@@ -126,7 +126,7 @@ export const getAllChildrenKeys = (node: any) => {
 export const getNode = (id: string | string[], treeData: any[], field = 'id') => {
   const nodes: any[] = [];
   const loop = (data: any[]) => {
-    _.forEach(data, (item, i) => {
+    _.forEach(data, item => {
       const isMatch = _.isArray(id) ? _.includes(id, item[field]) : id === item[field];
       if (isMatch) {
         nodes.push(item);

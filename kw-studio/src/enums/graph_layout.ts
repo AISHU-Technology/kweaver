@@ -2,14 +2,13 @@ import _ from 'lodash';
 
 import HELPER from '@/utils/helper';
 
-const FREE = 'free'; // 自由布局
-const TREE = 'tree'; // 层次布局
-const DAGRE = 'dagre'; // 层次布局
-const FORCE = 'force'; // 力导布局
+const FREE = 'free';
+const TREE = 'tree';
+const DAGRE = 'dagre';
+const FORCE = 'force';
 
 const LIST = [FREE, TREE, DAGRE, FORCE];
 
-// 这里使用了国际化
 const LABEL = {
   [FREE]: 'exploreGraph.layout.freeLayout',
   [TREE]: 'exploreGraph.layout.compactBoxLayout',

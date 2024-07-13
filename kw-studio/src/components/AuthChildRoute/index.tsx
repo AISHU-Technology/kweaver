@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import _ from 'lodash';
 
 type AuthChildRouterType = {
   render: (props?: any) => any;
@@ -9,7 +8,7 @@ type AuthChildRouterType = {
   [key: string]: any;
 };
 
-export default (props: AuthChildRouterType) => {
+const AuthChildRouter = (props: AuthChildRouterType) => {
   const { path, render: Component, allRoute, defaultRoute, ...rest } = props;
 
   const res = useMemo(() => {
@@ -22,3 +21,5 @@ export default (props: AuthChildRouterType) => {
 
   return res;
 };
+
+export default AuthChildRouter;

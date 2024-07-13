@@ -8,7 +8,6 @@ import { generateGroupBody, generateGraphBody, isSameEdge } from '../assistant';
 import { verifyProperty } from '../NodeInfo/PropertyList/assistant';
 import { GraphData } from '../types/data';
 import { GraphGroupItem } from '../types/items';
-import './style.less';
 import {
   NodeApiDataType,
   EdgeApiDataType,

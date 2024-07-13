@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Select, Table, message } from 'antd';
+import { Button, Select, message } from 'antd';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
 import intentionService from '@/services/intention';
@@ -16,7 +16,7 @@ interface SModelType extends IntentionConfigType {
   onChangeView: (type: string, data: any) => void;
 }
 
-export default function index(props: SModelType) {
+const SModel = (props: SModelType) => {
   const { configData, updateConfig, onChangeView, onPrev, onNext } = props;
   const [IntentList, setIntentList] = useState<any[]>([]); // 意图列表
   const [slotsList, setSlotsList] = useState<any[]>([]);
@@ -152,4 +152,6 @@ export default function index(props: SModelType) {
       </div>
     </div>
   );
-}
+};
+
+export default SModel;

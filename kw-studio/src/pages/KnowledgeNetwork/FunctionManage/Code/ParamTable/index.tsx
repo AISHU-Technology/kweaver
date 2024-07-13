@@ -3,7 +3,7 @@ import type { ColumnsType } from 'antd/es/table';
 import classNames from 'classnames';
 import intl from 'react-intl-universal';
 import { ParamItem } from '@/components/ParamCodeEditor/type';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 const ParamTable = (props: any) => {
   const { data = [], disabled, readonly, onEdit, onDelete } = props;
@@ -73,7 +73,7 @@ const ParamTable = (props: any) => {
   ).filter(Boolean);
 
   return (
-    <ADTable
+    <KwTable
       showHeader={false}
       columns={columns}
       dataSource={data}

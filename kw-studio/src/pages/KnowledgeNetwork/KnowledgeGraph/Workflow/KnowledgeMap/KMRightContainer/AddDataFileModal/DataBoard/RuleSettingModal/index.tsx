@@ -156,7 +156,7 @@ const RuleSettingModal = (props: RuleSettingModalProps) => {
   return (
     <UniversalModal
       className="extract-rule-setting-modal"
-      visible={visible}
+      open={visible}
       title={intl.get('workflow.information.extraction')}
       onOk={handleOk}
       okText={intl.get('workflow.information.save2')}
@@ -237,7 +237,7 @@ const RuleSettingModal = (props: RuleSettingModalProps) => {
                             </div>
                           );
                         })}
-                        {!showData.length && <NoDataBox.NO_RESULT />}
+                        {!showData.length && <NoDataBox type="NO_RESULT" />}
                       </div>
                     </div>
                   </>

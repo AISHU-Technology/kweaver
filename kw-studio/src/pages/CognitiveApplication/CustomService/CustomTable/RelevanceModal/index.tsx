@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Select } from 'antd';
 import _ from 'lodash';
 import intl from 'react-intl-universal';
-import AdKnowledgeNetIcon from '@/components/AdKnowledgeNetIcon/AdKnowledgeNetIcon';
+import KwKNIcon from '@/components/KwKNIcon';
 // import kgImg from '@/assets/images/knGraph.svg';
 
 import './style.less';
@@ -18,7 +18,7 @@ const RelevanceModal = (props: any) => {
 
   return (
     <Modal
-      visible={visible}
+      open={visible}
       onCancel={() => setRelevanceModal(false)}
       title={intl.get('customService.associateGraph')}
       footer={null}
@@ -33,7 +33,7 @@ const RelevanceModal = (props: any) => {
         {_.map(relevanceList, item => {
           return (
             <Select.Option key={item?.knw_id} data={item?.resource_kgs}>
-              <AdKnowledgeNetIcon type={item?.color} className="kw-mr-2" /> {item?.name}
+              <KwKNIcon type={item?.color} className="kw-mr-2" /> {item?.name}
             </Select.Option>
           );
         })}

@@ -117,7 +117,7 @@ const CreateDrawer = (props: any) => {
         placement={'right'}
         destroyOnClose={true}
         maskClosable={false}
-        visible={isOpen}
+        open={isOpen}
         width={1080}
         closable={false}
         extra={<IconFont type="icon-guanbiquxiao" onClick={() => onChangeDrawer(false)} />}

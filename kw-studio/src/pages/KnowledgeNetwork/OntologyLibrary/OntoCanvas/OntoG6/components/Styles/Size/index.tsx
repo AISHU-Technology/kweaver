@@ -42,8 +42,8 @@ const Size = (props: any) => {
     <div className={classNames(className, 'onto-size-selector')}>
       <Dropdown
         trigger={['click']}
-        visible={visible}
-        onVisibleChange={v => !readOnly && setVisible(v)}
+        open={visible}
+        onOpenChange={v => !readOnly && setVisible(v)}
         overlay={
           <Menu
             selectedKeys={[String(value)]}

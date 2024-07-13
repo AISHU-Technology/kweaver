@@ -13,7 +13,7 @@ import serviceTaskManagement from '@/services/taskManagement';
 
 import Format from '@/components/Format';
 import IconFont from '@/components/IconFont';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import { DATA_SOURCES } from './enum';
 import kongImg from '@/assets/images/kong.svg';
 
@@ -261,7 +261,7 @@ const ModalSourceMatch = forwardRef((props: any, ref) => {
       {/* 初始数据源 */}
       {loading ? (
         <div className={`loading-mask ${loading && 'spinning'}`}>
-          <AdSpin />
+          <KwSpin />
         </div>
       ) : null}
       <div className="inception-source-title kw-flex kw-mr-6 kw-w-100">

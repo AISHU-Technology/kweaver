@@ -16,9 +16,9 @@ import servicesPermission from '@/services/rbacPermission';
 import cognitiveSearchService from '@/services/cognitiveSearch';
 import { knowModalFunc, tipModalFunc } from '@/components/TipModal';
 import ExplainTip from '@/components/ExplainTip';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 import { getParam } from '@/utils/handleFunction';
-import { ONLY_KEYBOARD, PERMISSION_KEYS, PERMISSION_CODES, GRAPH_DB_TYPE } from '@/enums';
+import { ONLY_KEYBOARD, GRAPH_DB_TYPE } from '@/enums';
 
 import { CN_NUMBER, EN_NUMBER, convertData, initConfig, generateConfig } from '../assistFunction';
 import SaveModal from '../SaveModal';
@@ -532,7 +532,7 @@ const StrategyConfig: React.ForwardRefRenderFunction<unknown, StrategyConfigProp
   return (
     <div className={`cognitive-config-pane ${kwLang === 'en-US' && 'en-pane'}`}>
       <div className="pane-scroll-wrap">
-        <ScrollBar isshowx="false">
+        <KwScrollBar isShowX={false}>
           <div className="pane-scroll-inner">
             <h2 className="h-title" style={{ marginTop: 20 }}>
               {intl.get('searchConfig.basicInfo')}
@@ -739,7 +739,7 @@ const StrategyConfig: React.ForwardRefRenderFunction<unknown, StrategyConfigProp
               </div>
             </div>
           </div>
-        </ScrollBar>
+        </KwScrollBar>
       </div>
 
       {/* 加载loading */}

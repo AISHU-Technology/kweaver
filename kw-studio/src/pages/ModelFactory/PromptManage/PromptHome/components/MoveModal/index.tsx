@@ -27,10 +27,10 @@ export interface MoveModalProps {
 const MoveModal = (props: MoveModalProps) => {
   const { className, visible, data, projectList = [], onOk, onCancel } = props;
   const [showData, setShowData] = useState(projectList);
-  const treeData = useMemo(() => parseToTreeData(showData), [showData]); // 数据转化
+  const treeData = useMemo(() => parseToTreeData(showData), [showData]);
   const [expandedKeys, setExpandedKeys] = useState<string[]>(() => {
     return _.map(projectList, p => p.prompt_item_id);
-  }); // 展开的key
+  });
   const [selectedCategory, setSelectedCategory] = useState(data);
 
   const onSearch = _.debounce(e => {
@@ -74,7 +74,7 @@ const MoveModal = (props: MoveModalProps) => {
       className={classNames(className, 'manage-prompt-move-modal')}
       title={intl.get('prompt.moveTo')}
       zIndex={2000}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footerData={[
         { label: intl.get('global.cancel'), onHandle: onCancel },
@@ -101,7 +101,7 @@ const MoveModal = (props: MoveModalProps) => {
         switcherIcon={<DownOutlined />}
         onExpand={(keys: any[]) => setExpandedKeys(keys)}
       />
-      {!treeData.length && <NoDataBox.NO_RESULT className="kw-mt-8" />}
+      {!treeData.length && <NoDataBox type="NO_RESULT" className="kw-mt-8" />}
     </UniversalModal>
   );
 };

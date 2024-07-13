@@ -7,7 +7,6 @@ import _ from 'lodash';
 import HELPER from '@/utils/helper';
 import servicesThesaurus from '@/services/thesaurus';
 import servicesPermission from '@/services/rbacPermission';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 
 import { ERROR_CODE } from '../../enum';
 import IconFont from '@/components/IconFont';

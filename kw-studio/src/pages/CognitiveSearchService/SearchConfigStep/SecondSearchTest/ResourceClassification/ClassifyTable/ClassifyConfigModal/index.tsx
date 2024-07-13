@@ -98,7 +98,7 @@ const ClassifyContent = forwardRef((props: any, ref) => {
         ) : (
           <>
             {_.isEmpty(matchData) && searchQuery ? (
-              <NoDataBox.NO_RESULT />
+              <NoDataBox type="NO_RESULT" />
             ) : (
               <div className="classify-data">
                 {_.map(matchData, (item: any, index: any) => {
@@ -143,7 +143,7 @@ const ClassifyConfigModal = (props: any) => {
   return (
     <UniversalModal
       className="classify-config-setting-modal-root"
-      visible={visible}
+      open={visible}
       onCancel={onHandleCancel}
       title={intl.get('cognitiveSearch.classify.category')}
       maskClosable={false}

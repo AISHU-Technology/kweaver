@@ -1,16 +1,13 @@
-import React, { useState, useMemo, useReducer, useEffect } from 'react';
+import React, { useState, useReducer, useEffect } from 'react';
 import { Tooltip, message } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import intl from 'react-intl-universal';
-import _ from 'lodash';
 import classNames from 'classnames';
 import serviceFunction from '@/services/functionManage';
-import servicesPermission from '@/services/rbacPermission';
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
 import ExplainTip from '@/components/ExplainTip';
-import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES, ANALYSIS_SERVICES } from '@/enums';
+import { ANALYSIS_SERVICES } from '@/enums';
 import { getPlaceholder } from '../enum';
 import { BasicData } from '../../../../types';
 import { EditorStatus } from '../../index';
@@ -35,20 +32,10 @@ const Toolbar = (props: ToolbarProps) => {
   const { editor, basicData, paramsList, selectionText, isEmpty, editorStatus, onToolClick } = props;
   const [saveVisible, setSaveVisible] = useState(false); // 保存弹窗
   const [refreshQuoteFlag, dispatchRefreshQuoteFlag] = useReducer(x => x + 1, 0); // 触发刷新函数引用列表
-  // 有新建权限才能保存
-  const [knwCode, setKnwCode] = useState([]);
-  const savedPermission = useMemo(() => {
-    return HELPER.getAuthorByUserInfo({
-      roleType: PERMISSION_CODES.ADF_KN_FUNCTION_CREATE,
-      userType: PERMISSION_KEYS.KN_ADD_FUNCTION,
-      userTypeDepend: knwCode
-    });
-  }, [knwCode]);
 
   useEffect(() => {
     if (!basicData.knw_id) return;
     const getKnwPermission = () => {
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds: [String(basicData.knw_id)] };
       // servicesPermission.dataPermission(postData).then(result => {
       //   setKnwCode(result?.res?.[0]?.codes);
       // });
@@ -89,7 +76,7 @@ const Toolbar = (props: ToolbarProps) => {
    * 点击保存
    */
   const onSaveClick = () => {
-    if (!savedPermission || isEmpty) return;
+    if (isEmpty) return;
     setSaveVisible(true);
   };
 
@@ -190,10 +177,7 @@ const Toolbar = (props: ToolbarProps) => {
         </Tooltip>
         <QuoteBar knwId={basicData.knw_id} refreshFlag={refreshQuoteFlag} onQuote={onQuote} />
         <Tooltip title={intl.get('function.saveBtn')}>
-          <span
-            className={classNames('tool-btn kw-ml-1 kw-pr-0', { disabled: !savedPermission || isEmpty })}
-            onClick={onSaveClick}
-          >
+          <span className={classNames('tool-btn kw-ml-1 kw-pr-0', { disabled: isEmpty })} onClick={onSaveClick}>
             <IconFont type="icon-baocun" />
           </span>
         </Tooltip>

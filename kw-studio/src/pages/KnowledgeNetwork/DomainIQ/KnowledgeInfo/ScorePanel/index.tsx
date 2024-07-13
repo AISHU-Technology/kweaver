@@ -16,7 +16,7 @@ const ScorePanel = (props: { score?: number }) => {
         <div className="s-text">{formatIQNumber(score)}</div>
         <div className="kw-mt-1 tip-text">
           {intl.get('global.domainIQ')}
-          <ExplainTip.DOMAIN_IQ />
+          <ExplainTip type="DOMAIN_IQ" />
         </div>
       </div>
     </div>

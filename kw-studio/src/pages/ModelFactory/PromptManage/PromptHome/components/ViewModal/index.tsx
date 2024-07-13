@@ -14,7 +14,7 @@ import './style.less';
 
 const ViewModal = (props: any) => {
   const { visible, setViewModal, recordData } = props;
-  const [editInfoData, setEditInfoData] = useState<any>({}); // 某一具体信息
+  const [editInfoData, setEditInfoData] = useState<any>({});
 
   useEffect(() => {
     if (!visible) return;
@@ -38,7 +38,7 @@ const ViewModal = (props: any) => {
 
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       width={'1000px'}
       maskClosable={false}
       className="view-prompt-modal-root"

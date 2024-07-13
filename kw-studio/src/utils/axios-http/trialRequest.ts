@@ -1,16 +1,14 @@
 import axios from 'axios';
-import { kwCookie, sessionStore } from '@/utils/handleFunction';
+import { kwCookie } from '@/utils/handleFunction';
 
-// 取消列表
 const sources: Record<string, Function> = {};
 const { CancelToken } = axios;
 
 const service: any = axios.create({
   baseURL: '/',
-  timeout: 60000 // 超时取消请求
+  timeout: 60000
 });
 
-// 请求头处理
 service.interceptors.request.use(
   (config: any) => {
     const request = JSON.stringify(config.url) + JSON.stringify(config.data);
@@ -25,18 +23,15 @@ service.interceptors.request.use(
     return config;
   },
   (error: any) => {
-    // 异常处理
     return Promise.reject(error);
   }
 );
 
-// 响应处理
 service.interceptors.response.use(
   (response: any) => {
     return response;
   },
   (error: any) => {
-    // 取消请求
     if (axios.isCancel(error)) {
       return {
         status: -200,
@@ -49,7 +44,6 @@ service.interceptors.response.use(
   }
 );
 
-// axios 对请求的处理
 type RequestParams = (data: {
   method: string;
   url: string;

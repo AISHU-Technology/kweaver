@@ -11,8 +11,6 @@ import TrimmedInput from '@/components/TrimmedInput';
 
 import { ONLY_KEYBOARD } from '@/enums';
 
-import './style.less';
-
 import { defaultOption, odbc, ERROR_CODE } from './enum';
 const { Option } = Select;
 type TypeCreateModal = {
@@ -237,7 +235,7 @@ const CreateModal = (props: TypeCreateModal) => {
 
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       className="uploadSettingErrorModal"
       title={intl.get('domainData.addDataSource')}
       width={640}

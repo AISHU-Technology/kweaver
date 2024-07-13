@@ -28,7 +28,7 @@ const RelatedLabel = (props: RelatedLabelProps) => {
   useEffect(() => setInnerLoading(!!loading), [loading]);
 
   const source = useMemo(() => {
-    const labels = _.slice(nodes, 0, config.limit).map((node, i) => {
+    const labels = _.slice(nodes, 0, config.limit).map(node => {
       return {
         node: { ...node, kg_id: kg_id || config.kg_id },
         id: node.id,

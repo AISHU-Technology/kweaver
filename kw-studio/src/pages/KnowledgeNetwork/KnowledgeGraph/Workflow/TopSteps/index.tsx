@@ -4,8 +4,8 @@
 import React, { memo, useMemo } from 'react';
 import intl from 'react-intl-universal';
 import './style.less';
-import AdSteps from '@/components/AdSteps';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import KwSteps from '@/components/KwSteps';
+import KwExitBar from '@/components/KwExitBar';
 
 export interface TopStepsProps {
   current: number;
@@ -36,11 +36,11 @@ const TopSteps = (props: any) => {
   // };
 
   return (
-    <AdExitBar
+    <KwExitBar
       style={{ height: 48, border: 0 }}
       onExit={onExit}
       title={graphName}
-      extraContent={<AdSteps type="navigation" items={stepItems} current={current} onChange={onStepChange} />}
+      extraContent={<KwSteps type="navigation" items={stepItems} current={current} onChange={onStepChange} />}
     />
   );
 };

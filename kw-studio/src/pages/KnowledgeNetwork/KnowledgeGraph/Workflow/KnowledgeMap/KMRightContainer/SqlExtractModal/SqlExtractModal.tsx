@@ -17,12 +17,8 @@ import ParamCodeEditor, { ParamEditorRef } from '@/components/ParamCodeEditor';
 import { PreviewTable, parseToTable } from '@/components/SourceImportComponent';
 import { DsSourceItem, PreviewColumn } from '@/components/SourceImportComponent/types';
 import { DataFileType, FileType } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/types';
-import {
-  useKnowledgeMapContext
-} from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/KnowledgeMapContext';
-import {
-  ExtractRuleProps
-} from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/KMRightContainer/AddDataFileModal/AddDataFileModal';
+import { useKnowledgeMapContext } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/KnowledgeMapContext';
+import { ExtractRuleProps } from '@/pages/KnowledgeNetwork/KnowledgeGraph/Workflow/KnowledgeMap/KMRightContainer/AddDataFileModal/AddDataFileModal';
 
 import servicesCreateEntity from '@/services/createEntity';
 
@@ -440,11 +436,11 @@ const SqlExtractModal: React.FC<PropsWithChildren<SqlExtractModalProps>> = props
       let target3 = '';
       const selectedDS = dataSourceOptions.find(item => item.id === values.ds_id);
       const { res, ErrorDetails } =
-      (await servicesCreateEntity.getDataList({
-        ds_id: selectedDS?.id,
-        data_source: selectedDS?.data_source,
-        postfix: ''
-      })) || {};
+        (await servicesCreateEntity.getDataList({
+          ds_id: selectedDS?.id,
+          data_source: selectedDS?.data_source,
+          postfix: ''
+        })) || {};
       if (res) {
         if ([DS_SOURCE.sqlserver, DS_SOURCE.kingbasees, DS_SOURCE.postgresql].includes(selectedDS!.data_source)) {
           const dirNames = Object.keys(res.output);
@@ -576,9 +572,7 @@ const SqlExtractModal: React.FC<PropsWithChildren<SqlExtractModalProps>> = props
                 isAddDisable={isAddDisable}
               />
             </div>
-            <div
-              className={`${prefixCls}-form kw-p-6 kw-border-r kw-flex kw-h-100`}
-            >
+            <div className={`${prefixCls}-form kw-p-6 kw-border-r kw-flex kw-h-100`}>
               <Form
                 className="kw-flex-column"
                 style={{ height: isRightAreaShow || !!editData ? `calc(100% - ${sqlResultHeight}px)` : '100%' }}
@@ -602,10 +596,10 @@ const SqlExtractModal: React.FC<PropsWithChildren<SqlExtractModalProps>> = props
                   <Input
                     onChange={() => {
                       fileNameValidate.status === 'error' &&
-                      setFileNameValidate({
-                        status: undefined,
-                        help: undefined
-                      });
+                        setFileNameValidate({
+                          status: undefined,
+                          help: undefined
+                        });
                     }}
                     autoComplete="off"
                     className="sql-name-input"
@@ -726,7 +720,7 @@ const SqlExtractModal: React.FC<PropsWithChildren<SqlExtractModalProps>> = props
         </div>
       </TemplateModal>
       <TipModal
-        visible={tipsModalVisible}
+        open={tipsModalVisible}
         onClose={() => setTipsModalVisible(false)}
         onCancel={() => setTipsModalVisible(false)}
         onOk={() => {

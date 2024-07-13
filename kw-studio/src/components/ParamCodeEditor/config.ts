@@ -212,11 +212,9 @@ const nebulaWordsUppercase = [
 export const ban = ['use', 'USE'];
 
 export const operators = [
-  // Bitwise Operator
   '&',
   '|',
   '^',
-  // Math
   'abs',
   'floor',
   'ceil',
@@ -237,7 +235,6 @@ export const operators = [
   'atan',
   'rand32',
   'rand64',
-  // String
   'strcasecmp',
   'lower',
   'upper',
@@ -251,9 +248,7 @@ export const operators = [
   'rpad',
   'substr',
   'hash',
-  // Timestamp
   'now',
-  // Comparison Functions And Operators
   '=',
   '/',
   '==',
@@ -266,32 +261,25 @@ export const operators = [
   '*',
   '-',
   'udf_is_in',
-  // Aggregate
   'AVG',
   'COUNT',
   'MAX',
   'MIN',
   'STD',
   'SUM',
-  // Logical Operator
   '&&',
   '!',
   '||',
   'XOR',
-  // Order by Function
   'ORDER',
   'BY',
   'DESC',
   'ASC',
-  // Limit
   'LIMIT',
-  // Set Operations
   'UNION',
   'INTERSECT',
   'MINUS',
-  // uuid
   'uuid',
-  // assignment
   '=>'
 ];
 

@@ -62,7 +62,7 @@ const CreateModal = (props: any) => {
       width={WIDTH}
       mask={false}
       footer={null}
-      visible={true}
+      open={true}
       closable={false}
       zIndex={1052}
       style={{ top, left, position: 'absolute' }}

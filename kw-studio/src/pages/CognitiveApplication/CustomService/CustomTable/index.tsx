@@ -14,11 +14,10 @@ import { tipModalFunc, knowModalFunc } from '@/components/TipModal';
 
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import ServiceDescription from '@/components/ServiceDescription';
 import { getTextByHtml, copyToBoard, localStore } from '@/utils/handleFunction';
 import customService from '@/services/customService';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import createImg from '@/assets/images/create.svg';
 import noResImg from '@/assets/images/noResult.svg';
 
@@ -328,67 +327,22 @@ const CustomTable = (props: any, ref: any) => {
   const items = (record: any) => {
     return (
       <Menu onClick={({ key }) => onOperate(key, record)} style={{ width: 120 }}>
-        <Menu.Item
-          key="edit"
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_CUSTOM_EDIT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            }) || record.status === 1
-          }
-        >
+        <Menu.Item key="edit" disabled={record.status === 1}>
           {intl.get('cognitiveService.analysis.edit')}
         </Menu.Item>
         <Menu.Item disabled={isDataAdmin} key="test">
           {intl.get('cognitiveService.analysis.test')}
         </Menu.Item>
-        <Menu.Item
-          key={record.status === 1 ? 'cancel' : 'publish'}
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_CUSTOM_EDIT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            })
-          }
-        >
+        <Menu.Item key={record.status === 1 ? 'cancel' : 'publish'}>
           {record.status === 1
             ? intl.get('cognitiveService.analysis.unPublish')
             : intl.get('cognitiveService.analysis.publish')}
         </Menu.Item>
-        <Menu.Item
-          key={'copy'}
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_CUSTOM_EDIT,
-              userType: PERMISSION_KEYS.SERVICE_EDIT,
-              userTypeDepend: record?.__codes
-            })
-          }
-        >
-          {intl.get('cognitiveSearch.copy')}
-        </Menu.Item>
-        <Menu.Item
-          key={'delete'}
-          disabled={
-            !HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_APP_CUSTOM_DELETE,
-              userType: PERMISSION_KEYS.SERVICE_DELETE,
-              userTypeDepend: record?.__codes
-            }) || record.status === 1
-          }
-        >
+        <Menu.Item key={'copy'}>{intl.get('cognitiveSearch.copy')}</Menu.Item>
+        <Menu.Item key={'delete'} disabled={record.status === 1}>
           {intl.get('cognitiveService.analysis.delete')}
         </Menu.Item>
-        <ContainerIsVisible
-          placeholder={<span style={{ height: 32 }} />}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_APP_CUSTOM_MEMBER,
-            userType: PERMISSION_KEYS.SERVICE_EDIT_PERMISSION,
-            userTypeDepend: record?.__codes
-          })}
-        >
+        <ContainerIsVisible placeholder={<span style={{ height: 32 }} />}>
           <Menu.Item onClick={() => onSetAuthData?.(record)}>{intl.get('graphList.authorityManagement')}</Menu.Item>
         </ContainerIsVisible>
       </Menu>
@@ -443,7 +397,7 @@ const CustomTable = (props: any, ref: any) => {
   return (
     <div className="custom-config-service-table-root">
       <div className="main-table kw-pt-4" ref={containRef}>
-        <ADTable
+        <KwTable
           showHeader={false}
           className="searchTable"
           dataSource={tableData}
@@ -472,13 +426,7 @@ const CustomTable = (props: any, ref: any) => {
             isSearching ? (
               intl.get('global.noResult')
             ) : (
-              <ContainerIsVisible
-                placeholder={<div className="kw-c-text">{intl.get('graphList.noContent')}</div>}
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_APP_CUSTOM_CREATE,
-                  userType: PERMISSION_KEYS.KN_ADD_SERVICE
-                })}
-              >
+              <ContainerIsVisible placeholder={<div className="kw-c-text">{intl.get('graphList.noContent')}</div>}>
                 <span>{intl.get('customService.noService').split('|')[0]}</span>
                 <span className="kw-c-primary kw-pointer" onClick={onCreate}>
                   {intl.get('customService.noService').split('|')[1]}

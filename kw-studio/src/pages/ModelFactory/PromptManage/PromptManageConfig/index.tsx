@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 import TipModal from '@/components/TipModal';
 import { getParam } from '@/utils/handleFunction';
-import AdExitBar from '@/components/AdExitBar/AdExitBar';
+import AdExitBar from '@/components/KwExitBar';
 
 import * as promptServices from '@/services/prompt';
 
@@ -19,9 +19,9 @@ import './style.less';
 const PromptManageConfig = () => {
   const backRef = useRef<any>();
   const [promptName, setPromptName] = useState<any>('');
-  const [projectList, setProjectList] = useState<any>([]); // 所有分组
-  const [exitVisible, setExitVisible] = useState(false); // 退出弹窗
-  const [isChange, setIsChange] = useState(false); // 是否更改配置 更改-弹出退出弹窗
+  const [projectList, setProjectList] = useState<any>([]);
+  const [exitVisible, setExitVisible] = useState(false);
+  const [isChange, setIsChange] = useState(false);
 
   useEffect(() => {
     const { name } = getParam(['name']);
@@ -99,7 +99,7 @@ const PromptManageConfig = () => {
       />
       <PromptConfig ref={backRef} projectList={projectList} setIsChange={setIsChange} onExit={onExit} />
       <TipModal
-        visible={exitVisible}
+        open={exitVisible}
         title={intl.get('prompt.exitTitle')}
         content={intl.get('prompt.exitContent')}
         okText={intl.get('prompt.saveClose')}

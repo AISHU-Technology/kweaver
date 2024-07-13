@@ -403,7 +403,7 @@ const PartitionConfig: React.ForwardRefRenderFunction<unknown, any> = (
             <Menu.Item key={inputPreview}>{inputPreview}</Menu.Item>
           </Menu>
         }
-        visible={showDrop === item}
+        open={showDrop === item}
         trigger={['click']}
         placement="bottomRight"
         className="drop-down-show"

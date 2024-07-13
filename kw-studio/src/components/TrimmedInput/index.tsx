@@ -1,5 +1,4 @@
-/** input输入框允许输入空格，但头尾空格都不保留 */
-import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { InputProps } from 'antd';
 import { Input } from 'antd';
 
@@ -11,7 +10,7 @@ const TrimmedInput = (props: InputProps) => {
     setInputValue(initialValue);
   }, [initialValue]);
 
-  const handleBlur = (e: any) => {
+  const handleBlur = () => {
     const trimmedValue = inputValue?.trim();
     setInputValue(trimmedValue);
     onChange?.(trimmedValue);
@@ -22,7 +21,7 @@ const TrimmedInput = (props: InputProps) => {
     onChange?.(e?.target?.value);
   };
 
-  const handlePressEnter = (e: any) => {
+  const handlePressEnter = () => {
     const trimmedValue = inputValue?.trim();
     setInputValue(trimmedValue);
     onChange?.(trimmedValue);

@@ -24,7 +24,7 @@ import { getPromptReduceState, promptReducer } from '../enums';
 import createImg from '@/assets/images/kgEmpty.svg';
 import './style.less';
 
-let requestId = 0; // 标记网络请求
+let requestId = 0;
 
 export interface ProjectDetailProps {
   className?: string;
@@ -37,11 +37,11 @@ const ProjectDetail = (props: ProjectDetailProps) => {
   const history = useHistory();
   const [promptList, setPromptList] = useState<PromptItem[]>([]);
   const [tableState, dispatchTableState] = useReducer(promptReducer, getPromptReduceState());
-  const [opController, setOpController] = useState({ visible: false, action: '', data: {} as any }); // 各种弹窗操作控制器
+  const [opController, setOpController] = useState({ visible: false, action: '', data: {} as any });
   const closeModal = () => setOpController({ visible: false, action: '', data: {} });
 
   useEffect(() => {
-    getData({ ...tableState, name: '' }); // 切换时重置搜索
+    getData({ ...tableState, name: '' });
   }, [selectedCategory.prompt_item_type_id]);
 
   const getData: Function = async (state: Partial<PromptState>, needLoading = true) => {

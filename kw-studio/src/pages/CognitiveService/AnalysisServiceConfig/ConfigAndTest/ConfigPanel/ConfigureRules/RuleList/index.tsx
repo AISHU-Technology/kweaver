@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import IconFont from '@/components/IconFont';
 import { ANALYSIS_PROPERTIES } from '@/enums';
-import AdResizeObserver from '@/components/AdResizeObserver/AdResizeObserver';
+import KwResizeObserver from '@/components/KwResizeObserver';
 
 import SelectorClass from '@/components/ClassSelector';
 import PropertyFilter from '../PropertyFilter';
@@ -299,7 +299,7 @@ const RuleList = (props: TypeRuleList) => {
                     </Popconfirm>
                   </div>
                   {/* 属性规则列表 */}
-                  <AdResizeObserver
+                  <KwResizeObserver
                     onResize={({ height }) => {
                       const len = getLength(id);
                       if (len > 1) {
@@ -354,7 +354,7 @@ const RuleList = (props: TypeRuleList) => {
                         })}
                       </div>
                     </div>
-                  </AdResizeObserver>
+                  </KwResizeObserver>
 
                   {/* 新增按钮 */}
                   <div className="kw-flex" style={{ paddingLeft: 146 }}>

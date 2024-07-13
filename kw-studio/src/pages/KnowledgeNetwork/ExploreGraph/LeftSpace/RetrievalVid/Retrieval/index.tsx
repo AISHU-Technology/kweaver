@@ -29,8 +29,6 @@ type FilterType = {
   number: number; // 搜索数量
   query: string; // 搜索条件
 };
-// 是否是iframe页面
-const isIframe = () => window.location.pathname.includes('iframe');
 const Retrieval = (props: any) => {
   const { classData, searchConfig, selectedItem, isLayoutTree, leftDrawerKey, resultPanelDisplay } = props;
   const { onChangeData, onCloseLeftDrawer, setSearchConfig, onResultVisibleChange } = props;
@@ -40,7 +38,7 @@ const Retrieval = (props: any) => {
   const [addType, setAddType] = useState(ADD_IMMEDIATELY); // 添加方式
 
   const { searchScope, rule, number, query } = filter;
-  const authorKgView = isIframe() ? true : selectedItem?.detail?.authorKgView;
+  const authorKgView = selectedItem?.detail?.authorKgView;
   // --start 树图有特殊的搜索功能
   const _isLayoutTree = isLayoutTree && searchScope === 'graph';
   useEffect(() => {

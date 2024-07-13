@@ -48,7 +48,6 @@ const CategorySelector = (props: CategorySelectorProps) => {
     });
   }, [projectList]);
 
-  // TODO 4.18.7不支持点击节点展开, 手动控制
   useEffect(() => {
     setExpandedKeys(_.map(projectList, d => d.prompt_item_id));
   }, [projectList.length]);

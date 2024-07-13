@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import intl from 'react-intl-universal';
 import { Radio } from 'antd';
 import classNames from 'classnames';
-
-import UniversalModal from '@/components/UniversalModal';
+import intl from 'react-intl-universal';
+import React, { useEffect, useState } from 'react';
 import IconFont from '@/components/IconFont';
-
+import UniversalModal from '@/components/UniversalModal';
 import './style.less';
+
 type BuildGraphModelType = {
   visible: boolean;
-  firstBuild: boolean; // Controlling incremental updates
+  firstBuild: boolean;
   onCancel: () => void;
   onOk: (type: string) => void;
 };
@@ -18,7 +17,6 @@ const BuildGraphModel = (props: BuildGraphModelType) => {
   const [type, setType] = useState<string>('increment');
 
   useEffect(() => {
-    // For the first build, only the full amount can be selected
     if (firstBuild) setType('full');
   }, [firstBuild]);
 
@@ -31,7 +29,7 @@ const BuildGraphModel = (props: BuildGraphModelType) => {
       maskClosable={false}
       keyboard={false}
       destroyOnClose={true}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footerData={[
         {

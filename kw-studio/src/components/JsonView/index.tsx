@@ -1,10 +1,3 @@
-/**
- * 格式化展示json数据
- * @author Jason.ji
- * @date 2022/06/15
- *
- */
-
 import React, { memo, useState, useEffect, useRef, useMemo } from 'react';
 import { isString, isNumber, isBigint, isBoolean, isArray, isObject } from '@/utils/handleFunction';
 import './style.less';
@@ -14,10 +7,9 @@ export interface JsonViewProps {
   [key: string]: any;
 }
 const JsonView: React.FC<JsonViewProps> = ({ data }) => {
-  const jsonContainerRef = useRef<any>(); // 左侧行计数
-  const [rowCount, setRowCount] = useState(0); // 行数
+  const jsonContainerRef = useRef<any>();
+  const [rowCount, setRowCount] = useState(0);
 
-  // 行数变化
   const rowResize = () => {
     setRowCount(Math.ceil(jsonContainerRef.current.clientHeight / 22) || 0);
   };
@@ -32,10 +24,8 @@ const JsonView: React.FC<JsonViewProps> = ({ data }) => {
     rowResize();
   }, [data]);
 
-  // 渲染json
   const renderJson = (text: any) => {
     if (isString(text)) {
-      // 当源数据是Object时, string类型加引号
       return <span className="json-string">{isObject(data) ? `"${text}"` : text}</span>;
     }
 
@@ -96,7 +86,6 @@ const JsonView: React.FC<JsonViewProps> = ({ data }) => {
     return String(text);
   };
 
-  // 缓存jsx, 避免重复递归渲染
   const JSON_ELEMENT = useMemo(() => renderJson(data), [data]);
 
   return (

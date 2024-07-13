@@ -1,26 +1,17 @@
-/**
- * 定时任务弹窗
- *
- * @author Eden
- * @date 2021/12/21
- *
- */
-
 import React, { Component, createRef } from 'react';
-import { Modal, Button } from 'antd';
+import { Button } from 'antd';
 import intl from 'react-intl-universal';
-import TimedTaskList from './timedTaskList';
-import TimedTaskConfig from './timedTaskConfig';
+import TimedTaskList from './TimedTaskList';
+import TimedTaskConfig from './TimedTaskConfig';
 import UniversalModal from '../UniversalModal';
-import ADTable from '@/components/ADTable';
 
 import './style.less';
 
 class TimedTask extends Component {
   state = {
-    viewType: 'list', // 当前弹窗展示的内容(list:任务列表; crateConfig:创建定时任务; editConfig:编辑定时任务)
-    allTaskNumber: 0, // 任务总数
-    editData: '' // 编辑进入时的数据
+    viewType: 'list',
+    allTaskNumber: 0,
+    editData: ''
   };
 
   TimedTaskListRef = createRef();
@@ -56,7 +47,7 @@ class TimedTask extends Component {
 
   render() {
     const { visible, onCancel, onOk, graphId, listFooterVisible = true } = this.props;
-    const { viewType, allTaskNumber, editData, TimedTaskListRef } = this.state;
+    const { viewType, allTaskNumber, editData } = this.state;
 
     return (
       <UniversalModal
@@ -75,29 +66,13 @@ class TimedTask extends Component {
             )}
           </div>
         }
-        visible={visible}
+        open={visible}
         destroyOnClose={true}
         onCancel={onCancel}
         footerData={
           viewType === 'list' ? (
             listFooterVisible && null
           ) : (
-            // (
-            //     <>
-            //       <Button className="ant-btn-default cancel button-style" onClick={onCancel}>
-            //         {intl.get('graphList.cancel')}
-            //         {''}
-            //       </Button>
-            //       <Button
-            //         className="button-style"
-            //         type="primary"
-            //         onClick={() => this.TimedTaskListRef.current.submit()}
-            //       >
-            //         {intl.get('graphList.ok')}
-            //         {''}
-            //       </Button>
-            //     </>
-            //   )
             <>
               <Button
                 className="ant-btn-default cancel button-style"

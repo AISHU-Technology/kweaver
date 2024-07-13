@@ -1,9 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import { Button as AntdButton, Tooltip } from 'antd';
-
 import { ButtonType } from '../type';
-
 import './style.less';
 
 const SIZE = {
@@ -24,7 +22,6 @@ const Button = (props: ButtonType) => {
   const extendSize_Icon = SIZE_ICON[size as keyof typeof SIZE_ICON] || '';
 
   const renderButton = () => {
-    // Plain text without boxes---No background color, no padding
     if (type === 'text') {
       return (
         <Tooltip title={tip} placement={tipPosition} trigger={['hover']}>
@@ -35,7 +32,6 @@ const Button = (props: ButtonType) => {
       );
     }
 
-    // Plain text without boxes---background color and padding
     if (type === 'text-b') {
       return (
         <Tooltip title={tip} placement={tipPosition} trigger={['hover']}>
@@ -46,7 +42,6 @@ const Button = (props: ButtonType) => {
       );
     }
 
-    // Text without boxlink---No background color, no padding，Font theme color
     if (type === 'link') {
       return (
         <Tooltip title={tip} placement={tipPosition} trigger={['hover']}>
@@ -57,7 +52,6 @@ const Button = (props: ButtonType) => {
       );
     }
 
-    // icon without frame
     if (type === 'icon') {
       return (
         <Tooltip title={tip} placement={tipPosition} trigger={['hover']}>
@@ -78,7 +72,6 @@ const Button = (props: ButtonType) => {
       );
     }
 
-    // icon + text + Frameless + background
     if (type === 'icon-text') {
       const childrenList = React.Children.toArray(children);
       const flag_1 = childrenList.length === 2 && typeof childrenList[1] === 'string';
@@ -111,7 +104,6 @@ const Button = (props: ButtonType) => {
       );
     }
 
-    // icon + text + Frameless + without background
     if (type === 'icon-text-link') {
       const childrenList = React.Children.toArray(children);
       const flag_1 = childrenList.length === 2 && typeof childrenList[1] === 'string';
@@ -144,7 +136,6 @@ const Button = (props: ButtonType) => {
       );
     }
 
-    // framed icon
     if (type === 'u-icon') {
       return (
         <Tooltip title={tip} placement={tipPosition} trigger={['hover']}>
@@ -176,7 +167,6 @@ const Button = (props: ButtonType) => {
       );
     }
 
-    // icon + text + frame / framed text
     return (
       <Tooltip title={tip} placement={tipPosition} trigger={['hover']}>
         <AntdButton

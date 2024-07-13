@@ -7,7 +7,7 @@ import { Menu, Tooltip, Divider } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getParam } from '@/utils/handleFunction';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
-import CHeader from '@/components/Header';
+import KwHeader from '@/components/KwHeader';
 import AvatarName from '@/components/Avatar';
 import IconFont from '@/components/IconFont';
 import { KnwItem } from '../types';
@@ -66,7 +66,7 @@ const TopHeader = (props: TopHeaderProps) => {
   };
 
   return (
-    <CHeader
+    <KwHeader
       breadcrumb={breadcrumb}
       onClickLogo={() => {
         setKnwStudio('studio');

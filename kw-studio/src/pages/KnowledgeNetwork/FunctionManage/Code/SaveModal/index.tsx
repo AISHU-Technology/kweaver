@@ -33,7 +33,7 @@ const SaveModal = (props: any) => {
           <ExplainTip autoMaxWidth title={intl.get('function.saveTip')} />
         </div>
       }
-      visible={visible}
+      open={visible}
       className="saveModal"
       zIndex={1052}
       onOk={handleOk}

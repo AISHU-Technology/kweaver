@@ -12,7 +12,6 @@ import 'codemirror/mode/meta';
 import 'codemirror/theme/monokai.css';
 
 import intl from 'react-intl-universal';
-// import { ban, keyWords, operators } from './config';
 
 import React, { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { message } from 'antd';
@@ -39,14 +38,14 @@ export interface ParamEditorRef {
   clearSelection: () => void;
   insertText: (text: string) => void;
   removeText: () => void;
-  editorInstance: EditorFromTextArea; // 实例
+  editorInstance: EditorFromTextArea;
 }
 
 export interface ParamEditorProps {
   className?: string;
   value?: string;
-  params?: any[]; // 参数
-  options?: Record<string, any>; // 编辑器配置
+  params?: any[];
+  options?: Record<string, any>;
   width?: string;
   height?: string;
   disabled?: boolean;
@@ -55,16 +54,16 @@ export interface ParamEditorProps {
   onChange?: (value: string, params?: any[], removeArr?: any) => void;
   onFocus?: (value: string) => void;
   onBlur?: (value: string) => void;
-  onSelectionChange?: (isSelection: boolean, text: string) => void; // 框选回调
+  onSelectionChange?: (isSelection: boolean, text: string) => void;
 }
 
 const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEditorProps> = (props, ref) => {
   const { className, value, disabled, readonly, options: customOption = {} } = props;
-  const selfProps = useRef<ParamEditorProps>(props); // 引用props解决hook闭包问题
+  const selfProps = useRef<ParamEditorProps>(props);
   selfProps.current = props;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const editorRef = useRef<any>();
-  const mousedownFlag = useRef(false); // 鼠标按下标志, 配合判断是否框选
+  const mousedownFlag = useRef(false);
 
   useImperativeHandle(ref, () => ({
     initMark,
@@ -86,7 +85,6 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
     if (editorRef.current) return;
     renderCodeMirror();
 
-    // 鼠标可能在编辑器外部抬起, 所以在window上监听mouseup
     const mouseupListener = () => {
       if (!mousedownFlag.current || !editorRef.current || selfProps.current.disabled) return;
       const isSelected = editorRef.current.somethingSelected();
@@ -101,8 +99,6 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
     };
   }, []);
 
-  // 外部更新值
-  // WARNING 你应该只将value用于设置初值, 而不是频繁更新它, 因为这可能导致`参数标记`的样式丢失
   useEffect(() => {
     if (!editorRef.current) return;
     if (value !== editorRef.current.getValue()) {
@@ -132,7 +128,6 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
     };
     editorRef.current = CodeMirror.fromTextArea(textareaRef.current!, options);
 
-    // 事件监听
     editorRef.current.on('change', codemirrorValueChange);
     editorRef.current.on('keydown', keydown);
     editorRef.current.on('focus', focus);
@@ -168,12 +163,7 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
 
     if (origin === 'setValue') return;
 
-    // 参数标记被删除或恢复, 返回仍存在的标记
-    if (
-      // ['+delete', 'redo', 'undo', 'paste', '*compose'].includes(origin) &&
-      origin &&
-      [...removed, ...text].some(str => isDeleteParam(str))
-    ) {
+    if (origin && [...removed, ...text].some(str => isDeleteParam(str))) {
       const existedParams = _.reduce(
         editorRef.current.getAllMarks(),
         (res, mark) => {
@@ -237,8 +227,8 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
   const addMarkStyle = (start: Pos, end: Pos, attr?: Record<string, any>) => {
     editorRef.current.markText(start, end, {
       className: 'kw-param-highlight',
-      atomic: true, // 当涉及到光标移动时，原子范围充当单个单元——即不能将光标放在它们内部
-      attributes: { _type: 'param', _id: attr?._id || uniqueParamId(), ...(attr || {}) } // 自定义_type字段, 标记它是`参数`
+      atomic: true,
+      attributes: { _type: 'param', _id: attr?._id || uniqueParamId(), ...(attr || {}) }
     });
   };
 
@@ -250,17 +240,15 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
   const addMark = (attributes: Record<string, any>, format?: FormatRule) => {
     if (!editorRef.current.somethingSelected()) return;
     const selectText = editorRef.current.getSelections()[0];
-    const replaceText = format ? format(attributes) : `\${${attributes?.name || selectText}}`; // 替换的内容
-    const selection = editorRef.current.listSelections()[0]; // 选中的坐标信息
+    const replaceText = format ? format(attributes) : `\${${attributes?.name || selectText}}`;
+    const selection = editorRef.current.listSelections()[0];
     const [start, end] = swapPos(_.pick(selection.anchor, 'line', 'ch'), _.pick(selection.head, 'line', 'ch'));
 
     if (!markAble()) return;
 
-    // 替换内容
     editorRef.current.replaceRange(replaceText, start, end);
-    end.ch = start.ch + replaceText.length; // 重新计算位置
+    end.ch = start.ch + replaceText.length;
 
-    // 添加样式
     const attr = _.merge(
       { _id: attributes?._id || uniqueParamId(), _text: attributes?._text || selectText },
       attributes
@@ -358,7 +346,7 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
    */
   const markAble = () => {
     const selectionText = getSelectText();
-    const selection = editorRef.current.listSelections()[0]; // 选中的坐标信息
+    const selection = editorRef.current.listSelections()[0];
     const [start, end] = swapPos(_.pick(selection.anchor, 'line', 'ch'), _.pick(selection.head, 'line', 'ch'));
     if (start.line !== end.line) {
       message.error(intl.get('function.enjambment'));
@@ -384,7 +372,7 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
    */
   const getSelectText = () => {
     if (!editorRef.current.somethingSelected()) return '';
-    return editorRef.current.getSelections()[0]; // 选中的文字
+    return editorRef.current.getSelections()[0];
   };
 
   /**
@@ -401,14 +389,12 @@ const ParamCodeEditor: React.ForwardRefRenderFunction<ParamEditorRef, ParamEdito
    * @param text
    */
   const insertText = (text: string) => {
-    // 有选中内容, 整个替换
     if (editorRef.current.somethingSelected()) {
       const selection = editorRef.current.listSelections()[0];
       const [start, end] = swapPos(_.pick(selection.anchor, 'line', 'ch'), _.pick(selection.head, 'line', 'ch'));
       editorRef.current.replaceRange(text, start, end, '+insert');
       return;
     }
-    // 在光标处插入
     const start = _.pick(editorRef.current.getCursor(), 'line', 'ch');
     editorRef.current.replaceRange(text, start, start, '+insert');
   };

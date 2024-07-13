@@ -1,10 +1,8 @@
 import React, { useImperativeHandle, forwardRef, useRef } from 'react';
-import _ from 'lodash';
 import intl from 'react-intl-universal';
 import { Button } from 'antd';
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
-import ExplainTip from '@/components/ExplainTip';
 
 import Sql from './Sql';
 import MyTable from './Table';

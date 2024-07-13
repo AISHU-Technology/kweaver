@@ -242,7 +242,7 @@ const CustomRelationModal = (props: any) => {
       title={intl.get(`${prefixLocale}.customRelationManageBtn`)}
       className={prefixCls}
       width={640}
-      visible
+      open
       onCancel={closeCustomRelationModal}
     >
       <div className={`${prefixCls}-modalContent`} style={{ height: 464 }}>

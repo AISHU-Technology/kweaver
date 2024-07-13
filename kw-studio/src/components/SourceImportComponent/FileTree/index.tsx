@@ -19,21 +19,19 @@ import './style.less';
 
 export interface FileTreeProps {
   className?: string;
-  source: DsSourceItem; // 数据源
-  multiple?: boolean; //  是否多选 默认 true
-  errors?: Record<string, string>; // 错误信息
-  extraTip?: string; // 额外的提示
+  source: DsSourceItem;
+  multiple?: boolean;
+  errors?: Record<string, string>;
+  extraTip?: string;
 
-  // 单选时的受控属性
-  selectedKey?: string; // 选中的key
-  onRowClick?: (docid?: string) => void; // 点击文件预览
+  selectedKey?: string;
+  onRowClick?: (docid?: string) => void;
 
-  // 多选时的受控属性
-  checkedKeys?: any[]; // 勾选的key(受控属性)
-  onChange?: (keys: any[], postfix?: string) => void; // 勾选变化(配合受控属性使用的值变化事件)
+  checkedKeys?: any[];
+  onChange?: (keys: any[], postfix?: string) => void;
 
-  rootNode?: { node: string; key: string }; // 设置根节点的key，从指定的根节点开始显示
-  setSourceFileType?: (data: any) => void; // 选择的数据源类型 csv | json
+  rootNode?: { node: string; key: string };
+  setSourceFileType?: (data: any) => void;
   onDefaultRequestId?: any;
   disabledNodeKeys?: string[];
 }
@@ -61,14 +59,14 @@ const FileTree = forwardRef<FileTreeRefProps, FileTreeProps>((props, ref) => {
     onDefaultRequestId,
     disabledNodeKeys = []
   } = props;
-  const [treeData, setTreeData] = useState<any[]>([]); // 树数据
-  const [fileType, setFileType] = useState<FileType>('csv'); // 结构化数据过滤文件类型
-  const [loading, setLoading] = useState(false); // 加载状态
-  const [expandedKeys, setExpandedKeys] = useState<string[]>([]); // 展开的key
-  const [treeLoadingMap, setTreeLoadingMap] = useState<Record<string, boolean>>({}); // loading标记
-  const [keyword, setKeyword] = useState(''); // 搜索关键字
-  const [searchData, setSearchData] = useState<any>([]); // 搜索数据
-  const [treeDataNew, setTreeDataNew] = useState<any[]>([]); // 树数据
+  const [treeData, setTreeData] = useState<any[]>([]);
+  const [fileType, setFileType] = useState<FileType>('csv');
+  const [loading, setLoading] = useState(false);
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+  const [treeLoadingMap, setTreeLoadingMap] = useState<Record<string, boolean>>({});
+  const [keyword, setKeyword] = useState('');
+  const [searchData, setSearchData] = useState<any>([]);
+  const [treeDataNew, setTreeDataNew] = useState<any[]>([]);
   const cacheExpandedKeys = useRef<string[]>([]);
   const selectedNodes = useMemo(() => {
     if (!selectedKey) return [];
@@ -113,7 +111,6 @@ const FileTree = forwardRef<FileTreeRefProps, FileTreeProps>((props, ref) => {
     }
   }, [source.id]);
 
-  // 导出刷新树数据方法
   useImperativeHandle(ref, () => ({
     refreshData: () => {
       if (SOURCE_TYPE.includes(source.data_source)) {
@@ -141,7 +138,6 @@ const FileTree = forwardRef<FileTreeRefProps, FileTreeProps>((props, ref) => {
     setLoading(false);
     if (!res) return;
     const tree = _.map(res.output, file => createTreeNode(file, source, undefined, disabledNodeKeys));
-    // 当数据源类型是postgresql kingbasees sqlserver
     if (SOURCE_TYPE.includes(data_source)) {
       const tableName = Object.values(res.output);
       const tableNameKey = Object.keys(res.output);
@@ -167,12 +163,10 @@ const FileTree = forwardRef<FileTreeRefProps, FileTreeProps>((props, ref) => {
       ds_id: source.id,
       postfix: source.dataType === DS_TYPE.STRUCTURED ? fileType : 'all'
     };
-    // 获取文件夹下的文件
     setTreeLoadingMap({ [key]: true });
     const { res } = (await servicesCreateEntity.getChildrenFile(params)) || {};
     setTreeLoadingMap({ [key]: false });
 
-    // [bug 359385] 每次展开/收起都为刷新为新数据, 强制修改antd的`已加载标记`
     Object.assign(node, { loaded: false });
 
     if (!res) return;
@@ -186,12 +180,10 @@ const FileTree = forwardRef<FileTreeRefProps, FileTreeProps>((props, ref) => {
    * 勾选
    */
   const onCheck = (keys: any, e: any) => {
-    // 标注只能单选
     if (source.extract_type === EXTRACT_TYPE.LABEL) {
       onChange && onChange(e.checked ? [e.node.value] : []);
       return;
     }
-    // 勾选父节点时, 只在样式上选中子节点, 实际数据只添加父节点这一份数据
     const { checkedNodes } = e;
     const childrenKeys = _.reduce(
       checkedNodes,
@@ -214,7 +206,6 @@ const FileTree = forwardRef<FileTreeRefProps, FileTreeProps>((props, ref) => {
     if (node.checkable) {
       const parentNode = getNode(node.pid, treeData);
       if (node.checked) {
-        // 原来是勾选, 取消勾选
         if (checkedKeys.includes(node.key)) {
           newCheck = checkedKeys.filter(k => k !== node.key);
         } else {
@@ -225,7 +216,6 @@ const FileTree = forwardRef<FileTreeRefProps, FileTreeProps>((props, ref) => {
         const checkedNodes = getNode(newCheck, treeData, 'key');
         onCheck(newCheck, { ...e, checked: !node.checked, checkedNodes });
       } else {
-        // 原来未勾选, 勾选
         const childrenKeys = getAllChildrenKeys(node);
         newCheck = [...checkedKeys, node.key, ...childrenKeys];
         if (
@@ -371,7 +361,7 @@ const FileTree = forwardRef<FileTreeRefProps, FileTreeProps>((props, ref) => {
         </>
       )}
       <LoadingMask loading={loading} />
-      {_.isEmpty(searchData) && keyword && <NoDataBox.NO_RESULT />}
+      {_.isEmpty(searchData) && keyword && <NoDataBox type="NO_RESULT" />}
       <div className="tree-scroll-wrap kw-w-100 kw-h-100">
         <Tree
           key={fileType}

@@ -19,7 +19,7 @@ import Hooks from '@/hooks';
 import servicesCreateEntity from '@/services/createEntity';
 
 import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES, GRAPH_DB_TYPE } from '@/enums';
+import { GRAPH_DB_TYPE } from '@/enums';
 
 import noResult from '@/assets/images/noResult.svg';
 import knowledgeEmpty from '@/assets/images/kgEmpty.svg';
@@ -31,7 +31,7 @@ import OntoLibG6 from './OntoCanvas';
 import servicesPermission from '@/services/rbacPermission';
 import SaveOntologyModal, { SaveOntoDataType, SaveOntoModalRef } from './OntoCanvas/OntoG6/OntoFooter/SaveOntoModal';
 import { OntoApiDataType } from './OntoCanvas/OntoG6/types/data';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import { sessionStore } from '@/utils/handleFunction';
 import useLatestState from '@/hooks/useLatestState';
 
@@ -88,24 +88,12 @@ const EXPORT_MENU = (record?: any) => [
   {
     id: 'xlsx',
     intlText: 'ontoLib.exportXlsx',
-    disable:
-      !record.saved ||
-      !HELPER.getAuthorByUserInfo({
-        roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_EXPORT,
-        userType: PERMISSION_KEYS.OTL_VIEW,
-        userTypeDepend: record?.__codes
-      })
+    disable: !record.saved
   },
   {
     id: 'json',
     intlText: 'ontoLib.exportJson',
-    disable:
-      !record.saved ||
-      !HELPER.getAuthorByUserInfo({
-        roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_EXPORT,
-        userType: PERMISSION_KEYS.OTL_VIEW,
-        userTypeDepend: record?.__codes
-      })
+    disable: !record.saved
   }
 ];
 
@@ -155,48 +143,20 @@ const OntoLib = (props: any) => {
   const MORE_MENU = (record?: any) => [
     // {
     //   id: 'view',
-    //   intlText: 'ontoLib.viewOnto',
-    //   disable: !HELPER.getAuthorByUserInfo({
-    //     roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_VIEW,
-    //     userType: PERMISSION_KEYS.OTL_VIEW,
-    //     userTypeDepend: record?.__codes
-    //   })
+    //   intlText: 'ontoLib.viewOnto'
     // },
     {
       id: 'copy',
-      intlText: 'ontoLib.copy',
-      disable: !(
-        HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_CREATE,
-          userType: PERMISSION_KEYS.KN_ADD_OTL,
-          userTypeDepend: knData?.__codes
-        }) &&
-        HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_UPDATE,
-          userType: PERMISSION_KEYS.OTL_EDIT,
-          userTypeDepend: record?.__codes
-        })
-      )
+      intlText: 'ontoLib.copy'
     },
     {
       id: 'delete',
-      intlText: 'ontoLib.delete',
-      disabled: !HELPER.getAuthorByUserInfo({
-        roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_DELETE,
-        userType: PERMISSION_KEYS.OTL_DELETE,
-        userTypeDepend: record?.__codes
-      })
+      intlText: 'ontoLib.delete'
     },
     {
       id: 'management',
       intlText: 'ontoLib.authManagement',
-      disable:
-        (record.is_temp && !record.saved) ||
-        !HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_MEMBER,
-          userType: PERMISSION_KEYS.OTL_EDIT_PERMISSION,
-          userTypeDepend: record?.__codes
-        })
+      disable: record.is_temp && !record.saved
     }
   ];
 
@@ -285,7 +245,6 @@ const OntoLib = (props: any) => {
       return;
     }
     const dataIds = _.map(tableData, item => String(item?.otl_id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_ONTOLOGY, dataIds };
     // servicesPermission.dataPermission(postData).then(result => {
     //   const codesData = _.keyBy(result?.res, 'dataId');
     //   const newTableData = _.map(tableData, item => {
@@ -341,104 +300,58 @@ const OntoLib = (props: any) => {
             trigger={['click']}
             overlay={
               <Menu>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_VIEW,
-                    userType: PERMISSION_KEYS.OTL_VIEW,
-                    userTypeDepend: record?.__codes
-                  })}
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    viewOntoFunc(record);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      viewOntoFunc(record);
-                    }}
-                  >
-                    {intl.get('ontoLib.viewOnto')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_UPDATE,
-                    userType: PERMISSION_KEYS.OTL_EDIT,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('ontoLib.viewOnto')}
+                </Menu.Item>
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    onEdit(record);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      onEdit(record);
-                    }}
-                  >
-                    {intl.get('ontoLib.edit')}
-                  </Menu.Item>
-                </ContainerIsVisible>
+                  {intl.get('ontoLib.edit')}
+                </Menu.Item>
 
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_VIEW,
-                    userType: PERMISSION_KEYS.OTL_VIEW,
-                    userTypeDepend: record?.__codes
-                  })}
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    onCopy(record);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      onCopy(record);
-                    }}
-                  >
-                    {intl.get('ontoLib.copy')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_EXPORT,
-                    userType: PERMISSION_KEYS.OTL_VIEW,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('ontoLib.copy')}
+                </Menu.Item>
+                <Menu.Item
+                  disabled={!record.saved}
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    exportEntityFunc(record, 'xlsx');
+                  }}
                 >
-                  <Menu.Item
-                    disabled={!record.saved}
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      exportEntityFunc(record, 'xlsx');
-                    }}
-                  >
-                    {intl.get('ontoLib.exportXlsx')}
-                  </Menu.Item>
-                  <Menu.Item
-                    disabled={!record.saved}
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      exportEntityFunc(record, 'json');
-                    }}
-                  >
-                    {intl.get('ontoLib.exportJson')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_DELETE,
-                    userType: PERMISSION_KEYS.OTL_DELETE,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('ontoLib.exportXlsx')}
+                </Menu.Item>
+                <Menu.Item
+                  disabled={!record.saved}
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    exportEntityFunc(record, 'json');
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      onDeleteAction(record);
-                    }}
-                  >
-                    {intl.get('ontoLib.delete')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                {/* <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_MEMBER,
-                    userType: PERMISSION_KEYS.OTL_EDIT_PERMISSION,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('ontoLib.exportJson')}
+                </Menu.Item>
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    onDeleteAction(record);
+                  }}
                 >
+                  {intl.get('ontoLib.delete')}
+                </Menu.Item>
+                {/* 
                   <Menu.Item
                     // disabled={record.is_temp && !record.saved}
                     onClick={({ domEvent }) => {
@@ -454,7 +367,7 @@ const OntoLib = (props: any) => {
                   >
                     {intl.get('ontoLib.authManagement')}
                   </Menu.Item>
-                </ContainerIsVisible> */}
+                 */}
               </Menu>
             }
           >
@@ -778,21 +691,7 @@ const OntoLib = (props: any) => {
     type: 'checkbox',
     selectedRowKeys,
     onChange: selectedRowKeysChange,
-    preserveSelectedRowKeys: true,
-    getCheckboxProps: (record: any) => {
-      const { id, data_source } = record;
-
-      // if (
-      //   !HELPER.getAuthorByUserInfo({
-      //     roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_DELETE,
-      //     userType: PERMISSION_KEYS.OTL_DELETE,
-      //     userTypeDepend: record?.__codes
-      //   })
-      // ) {
-      //   return { disabled: true };
-      // }
-      return {};
-    }
+    preserveSelectedRowKeys: true
   };
 
   // 表格分页器配置
@@ -985,14 +884,7 @@ const OntoLib = (props: any) => {
       </Format.Title>
       <div className="kw-space-between tool-box">
         <div className="left-box kw-align-center">
-          <ContainerIsVisible
-            placeholder={<span style={{ height: 32, display: 'inline-block' }} />}
-            isVisible={HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_CREATE,
-              userType: PERMISSION_KEYS.KN_ADD_OTL,
-              userTypeDepend: knData?.__codes
-            })}
-          >
+          <ContainerIsVisible placeholder={<span style={{ height: 32, display: 'inline-block' }} />}>
             <Button
               type="primary"
               style={{ marginRight: 12 }}
@@ -1009,20 +901,14 @@ const OntoLib = (props: any) => {
               {intl.get('ontoLib.importOnto')}
             </Button> */}
           </ContainerIsVisible>
-          <ContainerIsVisible
-            isVisible={HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_DELETE
-            })}
+          <Button
+            className="ant-btn-default delete-botton"
+            onClick={e => onDelete()}
+            disabled={selectedRowKeys.length <= 0}
           >
-            <Button
-              className="ant-btn-default delete-botton"
-              onClick={e => onDelete()}
-              disabled={selectedRowKeys.length <= 0}
-            >
-              <IconFont type="icon-lajitong" />
-              {intl.get('ontoLib.deleteOnto')}
-            </Button>
-          </ContainerIsVisible>
+            <IconFont type="icon-lajitong" />
+            {intl.get('ontoLib.deleteOnto')}
+          </Button>
         </div>
 
         <div className="kw-align-center">
@@ -1062,7 +948,7 @@ const OntoLib = (props: any) => {
           </Format.Button>
         </div>
       </div>
-      <ADTable
+      <KwTable
         lastColWidth={170}
         showHeader={false}
         dataSource={tableData}
@@ -1076,14 +962,7 @@ const OntoLib = (props: any) => {
         emptyImage={!searchValue ? AddContent : noResult}
         emptyText={
           !searchValue ? (
-            <ContainerIsVisible
-              placeholder={<p>{intl.get('datamanagement.noContent')}</p>}
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_CONCEPT_ONTOLOGY_CREATE,
-                userType: PERMISSION_KEYS.KN_ADD_OTL,
-                userTypeDepend: knData?.__codes
-              })}
-            >
+            <ContainerIsVisible placeholder={<p>{intl.get('datamanagement.noContent')}</p>}>
               <span>
                 {intl.get('ontoLib.noOntoCreate').split('|')[0]}
                 <span

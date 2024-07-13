@@ -38,28 +38,24 @@ export const promptReducer = (state: PromptState, action: Partial<PromptState>) 
 };
 export const projectReducer = (state: ProjectState, action: Partial<ProjectState>) => ({ ...state, ...action });
 
-// 排序下拉选项
 export const SORTER_MENU = [
   { key: 'create_time', label: intl.get('llmModel.byCreate') },
   { key: 'update_time', label: intl.get('llmModel.byUpdate') },
   { key: 'prompt_name', label: intl.get('llmModel.byName') }
 ];
 
-// 模型筛选项
 export const PROMPT_TYPE_OPTION = [
   { key: 'all', value: 'all', label: intl.get('global.all') },
   { key: 'chat', value: 'chat', label: intl.get('prompt.chat') },
   { key: 'completion', value: 'completion', label: intl.get('prompt.completion') }
 ];
 
-// 发布状态筛选项
 export const FILTER_STATUS_OPTIONS = [
   { key: 'all', value: 'all', label: intl.get('global.all') },
   { key: 'yes', value: 'yes', label: intl.get('modelService.published') },
   { key: 'no', value: 'no', label: intl.get('modelService.unpublished') }
 ];
 
-// prompt类型
 export const PROMPT_TYPES = [
   {
     key: 'completion',
@@ -75,13 +71,11 @@ export const PROMPT_TYPES = [
   }
 ];
 
-// 获取prompt类型的显示名称
 export const getPromptTypeText = (type: string) => {
   const data = _.keyBy(PROMPT_TYPES, 'key');
   return data[type]?.label || type;
 };
 
-// 操作下拉选项
 export const getOperateMenu = (isDeployed: boolean) => {
   return [
     { key: 'check', label: intl.get('global.check') },

@@ -6,7 +6,6 @@ import { Form, Select } from 'antd';
 import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 import servicesPermission from '@/services/rbacPermission';
 import UniversalModal from '@/components/UniversalModal';
-import { PERMISSION_KEYS } from '@/enums';
 
 const KnowledgeModal = (props: any) => {
   const { visible, onCancel, onOk } = props;
@@ -24,7 +23,6 @@ const KnowledgeModal = (props: any) => {
       const params = { size: 1000, page: 1, rule: 'update', order: 'desc' };
       const { res = {}, ErrorCode = '' } = (await servicesKnowledgeNetwork.knowledgeNetGet(params)) || {};
       const dataIds = _.map(res?.df, item => String(item.id));
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds };
       // servicesPermission.dataPermission(postData).then(result => {
       //   const codesData = _.keyBy(result?.res, 'dataId');
       //   const authData = _.filter(res?.df, item => {
@@ -49,7 +47,7 @@ const KnowledgeModal = (props: any) => {
 
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       className="searchKnowSelectModal"
       title={intl.get('homepage.selectKnowledgeNetwork')}
       footer={null}

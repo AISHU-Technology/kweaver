@@ -219,7 +219,7 @@ const GlossaryContent = forwardRef<any, GlossaryContentType>((props, ref) => {
       <TipModal
         title={intl.get('global.existTitle')}
         content={intl.get('glossary.exitTips')}
-        visible={exitModal.visible}
+        open={exitModal.visible}
         onCancel={() => {
           setExitModal(preState => ({
             ...preState,

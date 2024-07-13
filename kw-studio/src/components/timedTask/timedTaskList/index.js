@@ -1,36 +1,26 @@
-/**
- * 定时任务列表
- *
- * @author Eden
- * @date 2021/12/211
- *
- */
-
-import React, { Component, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Table, Switch, Button, Modal, message } from 'antd';
-import UniversalModal from '@/components/UniversalModal';
-import { ExclamationCircleFilled, LoadingOutlined } from '@ant-design/icons';
+import React, { Component } from 'react';
+import { Switch, Button, Modal, message } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import serviceTimedTask from '@/services/timedTask';
 import { setFrequency, setDetail, setType } from './assistFunction';
 import IconFont from '@/components/IconFont';
-import serviceLicense from '@/services/license';
 import AddContent from '@/assets/images/create.svg';
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import Format from '@/components/Format';
 
 const PAGESIZE = 10;
 
 class TimedTaskList extends Component {
   state = {
-    deleteModal: false, // 删除弹窗
-    current: 1, // 当前页数
-    dataSource: [], // 定时任务列表数据
-    selectedRowKeys: [], // 选择的任务
-    total: 0, // 数据总数
-    deleteOneKey: '', // 删除单个定时任务的task_id
-    loadingData: false // 获取数据加载状态
+    deleteModal: false,
+    current: 1,
+    dataSource: [],
+    selectedRowKeys: [],
+    total: 0,
+    deleteOneKey: '',
+    loadingData: false
   };
 
   columns = [
@@ -48,7 +38,6 @@ class TimedTaskList extends Component {
       title: intl.get('graphList.detail'),
       dataIndex: 'detail',
       key: 'detail',
-      // fixed: 'left',
       width: 500,
       render: (text, record) => {
         return setDetail(record);
@@ -112,30 +101,6 @@ class TimedTaskList extends Component {
         );
       }
     }
-    // {
-    //   title: intl.get('datamanagement.Operator'),
-    //   dataIndex: 'update_user',
-    //   key: 'update_user',
-    //   width: 180,
-    //   render: (_text, record) => {
-    //     return (
-    //       <div className="time-task-user">
-    //         <div className="name" title={record.update_user || '--'}>
-    //           {record.update_user || '--'}
-    //         </div>
-    //         {/* <div className="email" title={record.update_user_email || '--'}>
-    //           {record.update_user_email || '--'}
-    //         </div> */}
-    //       </div>
-    //     );
-    //   }
-    // },
-    // {
-    //   title: intl.get('datamanagement.updated'),
-    //   dataIndex: 'modify_time',
-    //   key: 'modify_time',
-    //   width: 140
-    // }
   ];
 
   componentDidMount() {
@@ -242,7 +207,6 @@ class TimedTaskList extends Component {
       if (Math.ceil((total - 1) / 10) >= current || current === 1) {
         await this.getTask({});
       } else {
-        // 如果删除的项为最后一页的最后一条数据，则页面减一
         await this.getTask({ page: Math.ceil((total - 1) / 10) });
       }
     }
@@ -254,7 +218,6 @@ class TimedTaskList extends Component {
         window.location.replace('/home');
       }, 2000);
     }
-    // 500403
     if (res && res.ErrorCode === 'Manager.SoftAuth.UnknownServiceRecordError') {
       message.error(intl.get('graphList.noP'));
 
@@ -278,7 +241,7 @@ class TimedTaskList extends Component {
   /**
    * @description 勾选任务，用于批量删除
    */
-  setSelectKey = (currentSelectedRowKeys, selectedRows) => {
+  setSelectKey = currentSelectedRowKeys => {
     const { dataSource } = this.state;
     let { selectedRowKeys } = this.state;
     let deleteKeys = [];
@@ -345,7 +308,6 @@ class TimedTaskList extends Component {
         window.location.replace('/home');
       }, 2000);
     }
-    // 500403
     if (res && res.ErrorCode === 'anager.SoftAuth.UnknownServiceRecordError') {
       message.error(intl.get('graphList.noP'));
 
@@ -367,7 +329,7 @@ class TimedTaskList extends Component {
       const res = await serviceLicense.graphCountAll();
       if (res && res !== undefined) {
         const { all_knowledge, knowledge_limit } = res;
-        if (knowledge_limit === -1) return; // 无限制
+        if (knowledge_limit === -1) return;
         if (knowledge_limit - all_knowledge >= 0 && knowledge_limit - all_knowledge < knowledge_limit * 0.1) {
           message.warning(intl.get('license.remaining'));
         }
@@ -399,7 +361,7 @@ class TimedTaskList extends Component {
   };
 
   render() {
-    const { onCancel, changeViewType } = this.props;
+    const { changeViewType } = this.props;
     const { deleteModal, current, dataSource, selectedRowKeys, deleteOneKey, total, loadingData } = this.state;
 
     return (
@@ -428,13 +390,12 @@ class TimedTaskList extends Component {
               {intl.get('graphList.delete')}
             </Button>
           </div>
-          <ADTable
+          <KwTable
             showHeader={false}
             rowSelection={{
               selectedRowKeys,
               onChange: this.setSelectKey
             }}
-            // scroll={{ y: 480 }}
             columns={this.columns}
             dataSource={dataSource}
             pagination={{
@@ -480,7 +441,7 @@ class TimedTaskList extends Component {
         <Modal
           className="delete-modal"
           width={432}
-          visible={deleteModal}
+          open={deleteModal}
           footer={null}
           closable={false}
           maskClosable={false}

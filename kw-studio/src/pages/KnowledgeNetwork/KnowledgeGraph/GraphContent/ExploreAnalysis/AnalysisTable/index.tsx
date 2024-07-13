@@ -4,7 +4,7 @@ import intl from 'react-intl-universal';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Button, Table, Modal, Popover, message, Tooltip, Dropdown, Menu } from 'antd';
 
-import { GRAPH_STATUS, PERMISSION_KEYS } from '@/enums';
+import { GRAPH_STATUS } from '@/enums';
 import { getParam } from '@/utils/handleFunction';
 import serviceGraphDetail from '@/services/graphDetail';
 import servicesPermission from '@/services/rbacPermission';
@@ -244,7 +244,6 @@ const AnalysisTable = (props: any) => {
 
   const onToPageExplore = async (data: any = {}, isRun = true) => {
     // DATA-354277 dataPermission 入参dataIds kg_conf_id -> id
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds: [String(selectedGraph?.id)] };
     // const result = await servicesPermission.dataPermission(postData);
     // const codes = result?.res?.[0]?.codes || [];
     // if (!_.includes(codes, PERMISSION_KEYS.KG_VIEW)) {
@@ -382,7 +381,7 @@ const AnalysisTable = (props: any) => {
       />
       {/* 删除二次确认弹窗 */}
       <TipModal
-        visible={deleteInfo.visible}
+        open={deleteInfo.visible}
         closable={false}
         title={intl.get('exploreAnalysis.deleteCanvas')}
         content={

@@ -10,7 +10,7 @@ import { copyToBoard } from '@/utils/handleFunction';
 import PromptEditor, { uniquePromptId } from '@/components/PromptEditor';
 
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 
 const ViewRightVariable = (props: any) => {
   const { editInfoData } = props;
@@ -79,7 +79,7 @@ const ViewRightVariable = (props: any) => {
               <IconFont type="icon-wenhao" style={{ opacity: 0.65 }} />
             </Tooltip>
           </div>
-          <ADTable
+          <KwTable
             className="view-table-root"
             showHeader={false}
             columns={columns}

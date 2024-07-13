@@ -6,7 +6,7 @@ import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'rea
 import { Toolbar, Editor } from '@wangeditor/editor-for-react';
 import { i18nChangeLanguage } from '@wangeditor/editor';
 import type { IDomEditor } from '@wangeditor/editor';
-import '@wangeditor/editor/dist/css/style.css'; // 引入编辑器css
+import '@wangeditor/editor/dist/css/style.css';
 import classNames from 'classnames';
 import { defaultToolbarConfig, defaultEditorConfig } from './defaultConfig';
 import './style.less';
@@ -14,7 +14,7 @@ import './style.less';
 export interface WangEditorProps {
   className?: string;
   placeholder?: string;
-  height?: string | number; // 编辑器高度
+  height?: string | number;
   value?: string;
   language?: string;
   onChange?: (value: string) => void;
@@ -26,7 +26,7 @@ export interface WangEditorRef {
 
 const WangEditor: React.ForwardRefRenderFunction<WangEditorRef, WangEditorProps> = (props, ref) => {
   const { className, placeholder, height, value, language, onChange } = props;
-  const [editor, setEditor] = useState<IDomEditor | null>(null); // editor 实例
+  const [editor, setEditor] = useState<IDomEditor | null>(null);
 
   useImperativeHandle(ref, () => ({ editor }));
 

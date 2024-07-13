@@ -3,7 +3,6 @@
  */
 import { API } from '@/services/api';
 import apiService from '@/utils/axios-http/oldIndex';
-import apiServiceEngine from '@/utils/axios-http/engineServer';
 import { message } from 'antd';
 import intl from 'react-intl-universal';
 
@@ -12,15 +11,12 @@ const ERROR_CODE: Record<string, string> = {
   'Builder.LexiconController.ExportLexicon.EmptyLexicon': 'ThesaurusManage.emptyWords',
   'Builder.LexiconController.ExportLexicon.InvalidStatus': 'ThesaurusManage.editwordsError'
 };
-// 获取词库列表接口
 const thesaurusList = async (data: any) => {
   return await apiService.axiosGetData(API.thesaurusList, data);
 };
 
-// 词库id查找词库接口
 const thesaurusInfoBasic = async (data: any) => await apiService.axiosGetData(API.thesaurusInfoBasic, data);
 
-// 新建词库接口
 const thesaurusCreate = async (data: any) => {
   return await apiService.axiosPost(
     API.thesaurusCreate,
@@ -36,10 +32,8 @@ const thesaurusTemplateLexicon = async (data: any) => {
   return await apiService.axiosPost(API.thesaurusTemplateLexicon, data);
 };
 
-// 获取候选标签接口
 const thesaurusLabelList = async (data: any) => await apiService.axiosGetData(API.thesaurusLabelList, data);
 
-// 词库导出接口
 const thesaurusExport = async (data: any) => {
   try {
     const result = await apiService.axiosPost(API.thesaurusExport, data, { responseType: 'blob' });
@@ -68,37 +62,28 @@ const thesaurusExport = async (data: any) => {
       return false;
     }
     const csvType = 'application/zip;charset-UTF-8';
-    const blob = new Blob([result], { type: csvType }); // 指定格式
+    const blob = new Blob([result], { type: csvType });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = '词库.zip'; // 指定导出名称
+    link.download = '词库.zip';
     link.click();
     URL.revokeObjectURL(link.href);
     return true;
-  } catch (err) {
-    //
-  }
+  } catch (err) {}
 };
 
-// 词库中新增词汇接口
 const thesaurusInsertWords = async (data: any) => await apiService.axiosPost(API.thesaurusInsertWords, data);
 
-// 词库中搜索词汇接口
 const thesaurusSearchWords = async (data: any) => await apiService.axiosPost(API.thesaurusSearchWords, data);
 
-// 词库中编辑词汇接口
 const thesaurusEditWords = async (data: any) => await apiService.axiosPost(API.thesaurusEditWords, data);
 
-// 词库中删除词汇接口
 const thesaurusDeleteWords = async (data: any) => await apiService.axiosPost(API.thesaurusDeleteWords, data);
 
-// 编辑词库信息接口
 const thesaurusEdit = async (data: any) => await apiService.axiosPost(API.thesaurusEdit, data);
 
-// 删除词库信息接口
 const thesaurusDelete = async (data: any) => await apiService.axiosPost(API.thesaurusDelete, data);
 
-// 词库内导入词汇接口
 const thesaurusImportWords = async (data: any) => {
   return await apiService.axiosPost(
     API.thesaurusImportWords,
@@ -107,7 +92,6 @@ const thesaurusImportWords = async (data: any) => {
   );
 };
 
-// 词库模板下载接口
 const downloadTemplate = async () => {
   const result = await apiService.axiosPost(API.downloadTemplate, {}, { responseType: 'blob' });
 
@@ -115,10 +99,10 @@ const downloadTemplate = async () => {
 
   if (result?.ErrorCode) return result;
   const csvType = 'application/zip;charset-UTF-8';
-  const blob = new Blob([result], { type: csvType }); // 指定格式
+  const blob = new Blob([result], { type: csvType });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = '模板.zip'; // 指定导出名称
+  link.download = '模板.zip';
   link.click();
   URL.revokeObjectURL(link.href);
 };

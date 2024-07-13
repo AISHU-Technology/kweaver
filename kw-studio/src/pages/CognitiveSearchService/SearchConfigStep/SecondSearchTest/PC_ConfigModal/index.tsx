@@ -229,7 +229,7 @@ const PC_ConfigModal = (props: PC_ConfigModalProps) => {
 
   return (
     <UniversalModal
-      visible={visible}
+      open={visible}
       title={intl.get('cognitiveSearch.canvasConfig')}
       destroyOnClose={true}
       maskClosable={false}

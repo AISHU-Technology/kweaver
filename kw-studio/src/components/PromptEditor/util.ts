@@ -1,5 +1,5 @@
 import CodeMirror from 'codemirror';
-import 'codemirror/mode/meta'; // 提供所有模式的元信息, 可使用findModeByName、findModeByExtension、findModeByFileName
+import 'codemirror/mode/meta';
 import _ from 'lodash';
 import { TVariables } from '.';
 
@@ -45,20 +45,17 @@ export const getVariablesPosition = (text: string, variables?: TVariables) => {
   const isGetLikeVar = !variables;
   text.split('\n').forEach((lineText, index) => {
     lineText.replace(/{{(.*?)}}/g, (matchText, $1, startIndex) => {
-      // 去掉空格再判断, 比如{{ text }}、{{text}}都是匹配的
       const matchVar = $1.trim();
-      // 不能包含中文
       if (/[\u4e00-\u9fa5]/.test(matchVar)) return matchText;
-      // 限制长度
       if (matchVar.length > 50) return matchText;
 
       if (matchVar && (isGetLikeVar || variablesObj[matchVar])) {
         positions.push({
           id: variablesObj[matchVar]?.id,
-          from: { line: index, ch: startIndex }, // 起始索引
-          to: { line: index, ch: startIndex + matchText.length }, // 终点索引
-          match: matchVar, // 匹配到的匹配到的变量
-          value: matchText // 原始文本
+          from: { line: index, ch: startIndex },
+          to: { line: index, ch: startIndex + matchText.length },
+          match: matchVar,
+          value: matchText
         });
       }
       return matchText;

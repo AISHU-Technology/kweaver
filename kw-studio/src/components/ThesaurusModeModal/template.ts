@@ -1,12 +1,10 @@
 import _ from 'lodash';
 
-// 分词模板
 const custom_template = ['樱桃', '车厘子', '菠萝', '凤梨', '黄梨', '西安', '长安', '镐京'];
 export const SYNONYM_CUSTOM = _.map(custom_template, (item: any, index: any) => {
   return { words: item, id: index };
 });
 
-// 实体链接模板
 export const SYNONYM_ENTITY_LINK = [
   {
     words: '樱桃',
@@ -66,7 +64,6 @@ export const SYNONYM_ENTITY_LINK = [
   }
 ];
 
-// 近义词模板
 export const SYNONYM_STD = [
   {
     synonym: '樱桃',

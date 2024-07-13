@@ -15,20 +15,20 @@ import { DsSourceItem } from '../types';
 import './style.less';
 
 export interface DataSheetProps {
-  source: DsSourceItem; // 列表数据
-  checkedValues: string[]; // 勾选的数据
-  selectedKey?: string; // 选中的数据
-  errors?: Record<string, string>; // 错误数据
-  extraTip?: string; // 额外的提示
+  source: DsSourceItem;
+  checkedValues: string[];
+  selectedKey?: string;
+  errors?: Record<string, string>;
+  extraTip?: string;
   onChange: (keys: string[]) => void;
   onNameClick: (sheet: string, source?: any, data?: any) => void;
 }
 
 const DataSheet = (props: DataSheetProps) => {
   const { source, checkedValues, selectedKey, errors = {}, extraTip, onChange, onNameClick } = props;
-  const [sheetList, setSheetList] = useState<string[]>([]); // 数据库表
-  const [loading, setLoading] = useState(false); // 加载状态
-  const [keyword, setKeyword] = useState(''); // 搜索关键字
+  const [sheetList, setSheetList] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState('');
   const showData = useMemo(() => {
     if (source?.data_source === 'AnyRobot') {
       return _.filter(sheetList, (d: any) => fuzzyMatch(keyword, d?.name));
@@ -58,7 +58,7 @@ const DataSheet = (props: DataSheetProps) => {
   /**
    * 勾选
    */
-  const handleCheck = (key: string, isCheck: boolean, disabled: boolean) => {
+  const handleCheck = (key: string, isCheck: boolean) => {
     const newKeys = isCheck ? [...checkedValues, key] : checkedValues.filter(k => k !== key);
     onChange(newKeys);
   };
@@ -66,7 +66,7 @@ const DataSheet = (props: DataSheetProps) => {
   /**
    * 点击预览
    */
-  const handleClick = (sheet: any, selected: boolean, disabled: boolean) => {
+  const handleClick = (sheet: any, selected: boolean) => {
     if (selected) return;
     if (source.data_source === 'AnyRobot') {
       onNameClick(sheet?.id, '', sheet);
@@ -106,19 +106,18 @@ const DataSheet = (props: DataSheetProps) => {
           const sheetShow = isRobot ? sheet?.name : sheet;
           const isCheck = _.includes(checkedValues, sheetShow);
           const selected = selectedKey === sheetShow;
-          const disabled = !!errors[sheetShow];
 
           return (
             <div
               className={classNames('sheet-item kw-align-center kw-pointer', { selected })}
               key={sheet}
-              onClick={() => handleClick(sheet, selected, disabled)}
+              onClick={() => handleClick(sheet, selected)}
             >
               <div
                 className="check-mask"
                 onClick={e => {
                   e.stopPropagation();
-                  handleCheck(sheetShow, !isCheck, disabled);
+                  handleCheck(sheetShow, !isCheck);
                 }}
               >
                 <Checkbox className="kw-ml-3 kw-mr-2" checked={isCheck} />
@@ -138,7 +137,7 @@ const DataSheet = (props: DataSheetProps) => {
           );
         })}
 
-        {!!sheetList.length && !showData.length && <NoDataBox.NO_RESULT />}
+        {!!sheetList.length && !showData.length && <NoDataBox type="NO_RESULT" />}
       </div>
     </div>
   );

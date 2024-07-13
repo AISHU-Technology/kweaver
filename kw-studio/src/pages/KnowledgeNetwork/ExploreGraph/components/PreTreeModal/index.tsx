@@ -91,7 +91,7 @@ const PreTreeModal = (props: any) => {
       title={intl.get('exploreGraph.layout.treeLayoutSettings')}
       width={1872}
       zIndex={1052}
-      visible={true}
+      open={true}
       footer={null}
       onCancel={onCancel}
       footerData={[

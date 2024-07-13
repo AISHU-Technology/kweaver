@@ -1,11 +1,8 @@
-/**
- * input组件封装, 阻止中文输入法未完成时触发onChange事件
- */
-import React, { useRef, forwardRef, useState, useEffect } from 'react';
-import classNames from 'classnames';
 import { Input } from 'antd';
+import classNames from 'classnames';
 import type { InputProps } from 'antd';
 import type { TextAreaProps } from 'antd/lib/input';
+import React, { useRef, forwardRef, useState, useEffect } from 'react';
 
 export type ComposInputProps = {
   useAntd?: boolean;

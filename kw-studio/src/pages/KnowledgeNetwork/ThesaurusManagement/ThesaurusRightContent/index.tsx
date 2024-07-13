@@ -6,7 +6,6 @@ import { LoadingOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 
 import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import ContainerIsVisible from '@/components/ContainerIsVisible';
 import serverThesaurus from '@/services/thesaurus';
 
@@ -59,14 +58,6 @@ const ThesaurusRightContent = (props: any) => {
   const [importModalVisible, setImportModalVisible] = useState<boolean>(false); // 导入弹窗
   const [editRecord, setEditRecord] = useState<any>(); // 编辑的一行词库
   const [showInfo, setShowInfo] = useState<boolean>(false); // 侧边信息
-  const { hasAuthorEdit } = useMemo(() => {
-    const hasAuthorEdit = HELPER.getAuthorByUserInfo({
-      roleType: PERMISSION_CODES.ADF_KN_LEXICON_EDIT,
-      userType: PERMISSION_KEYS.LEXICON_EDIT,
-      userTypeDepend: selectedThesaurus?.__codes
-    });
-    return { hasAuthorEdit };
-  }, [JSON.stringify(selectedThesaurus)]);
 
   /**
    * 编辑词库
@@ -141,7 +132,7 @@ const ThesaurusRightContent = (props: any) => {
             setCollapse={setCollapse}
           />
           <ThesaurusTable
-            hasAuthorEdit={hasAuthorEdit}
+            hasAuthorEdit={true}
             selectedThesaurus={selectedThesaurus}
             showInfo={showInfo}
             setShowInfo={setShowInfo}
@@ -198,14 +189,7 @@ const ThesaurusRightContent = (props: any) => {
           <div className="empty-content">
             <img src={createSvg} alt="nodata" className="nodata-img" />
             <div className="text-des">
-              <ContainerIsVisible
-                placeholder={intl.get('ThesaurusManage.noWord')}
-                isVisible={HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_LEXICON_CREATE,
-                  userType: PERMISSION_KEYS.KN_ADD_LEXICON,
-                  userTypeDepend: knowledge?.__codes
-                })}
-              >
+              <ContainerIsVisible placeholder={intl.get('ThesaurusManage.noWord')}>
                 <div>
                   {intl.get('ThesaurusManage.create').split('|')[0]}
                   <span className="create-span kw-pointer" onClick={() => onImportAndCreateModal('import')}>

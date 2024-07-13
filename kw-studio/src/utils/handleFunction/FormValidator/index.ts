@@ -17,7 +17,6 @@ export class FormValidator {
     initRules && (this.rules = initRules);
   }
 
-  // 定义校验器
   private _verifyFunc: Record<RuleKeys, Function> = {
     required: (value: any, isReq: boolean, message: string) => (isReq && !value ? message : ''),
     max: (value: any, length: number, message: string) => (value?.length > length ? message : ''),

@@ -8,11 +8,11 @@ import './style.less';
 
 export interface TemplateModalProps extends ModalProps {
   children?: React.ReactNode;
-  title?: string | React.ReactNode; // 标题
-  footerExtra?: React.ReactNode; // 底部左侧额外元素
-  isDisabled?: boolean; // 按钮是否灰置
-  footerData?: FooterModalSourceType[] | React.ReactNode; // 底部元素
-  fullScreen?: boolean; // 是否全屏 默认 false
+  title?: string | React.ReactNode;
+  footerExtra?: React.ReactNode;
+  isDisabled?: boolean;
+  footerData?: FooterModalSourceType[] | React.ReactNode;
+  fullScreen?: boolean;
 }
 
 /**
@@ -24,10 +24,7 @@ const UniversalModal = (props: TemplateModalProps) => {
     className,
     children,
     title = null,
-    okText,
-    cancelText,
     footerExtra,
-    isDisabled,
     width = 640,
     footerData,
     fullScreen = false,

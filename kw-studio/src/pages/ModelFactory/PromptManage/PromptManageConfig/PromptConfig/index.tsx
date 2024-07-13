@@ -43,10 +43,10 @@ const PromptConfig = (props: any, ref: any) => {
     action: getAction()
   }));
   const contextValue = useMemo(() => ({ configStore, setConfigStore, getLatestStore }), [configStore]);
-  const [formData, setFormData] = useState<any>({ prompt_type: 'completion', icon: '5' }); // 部分字段单独控制
+  const [formData, setFormData] = useState<any>({ prompt_type: 'completion', icon: '5' });
   const [modelData, setModelData] = useState({ chat: [], completion: [] } as Record<string, any[]>);
-  const [id, setID] = useState<any>(''); // 提示词项目id
-  const [isError, setIsError] = useState(false); // 提示词是否为空
+  const [id, setID] = useState<any>('');
+  const [isError, setIsError] = useState(false);
 
   useImperativeHandle(ref, () => ({ onBack, handleSave }));
 
@@ -192,7 +192,7 @@ const PromptConfig = (props: any, ref: any) => {
       icon: formData?.icon,
       prompt_item_id: formData?.prompt_item_id,
       messages: promptInfo?.messages,
-      variables // 提示词管理的时候传
+      variables
     };
     if (promptInfo?.prompt_type === 'chat') {
       data.opening_remarks = enhanceConfig?.prologue;

@@ -1,4 +1,3 @@
-// 提示词信息
 export type TPromptInfo = {
   prompt_item_id: string;
   prompt_item_type_id: string;
@@ -18,7 +17,6 @@ export type TPromptInfo = {
   model_para: TModelParams;
 };
 
-// 变量
 export type TVariables = {
   id: string;
   var_name: string;
@@ -37,7 +35,6 @@ export type TEnhanceConfig = {
   prologue: string;
 };
 
-// 对话信息
 export type TChatInfo = {
   id: string;
   status: string;
@@ -48,7 +45,6 @@ export type TChatInfo = {
   time?: number;
 }[];
 
-// 模板
 export type TTemplates = {
   prompt_id: string;
   prompt_name: string;
@@ -71,7 +67,6 @@ export type TTemplates = {
   [key: string]: any;
 }[];
 
-// 模型参数
 export type TModelParams = {
   temperature: number;
   top_p: number;
@@ -81,16 +76,13 @@ export type TModelParams = {
   [key: string]: number;
 };
 
-// 对话历史
 export type TChatHistory = {
   role: 'human' | 'ai' | string;
   message: string;
 }[];
 
-// 模型运行时的配置
 export type TRuntimeOptions = {
   model_id: string;
-  // enhanceConfig: TEnhanceConfig;
   model_para: TModelParams;
   messages: string;
   inputs: Record<string, any>;

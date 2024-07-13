@@ -10,7 +10,7 @@ import HOOKS from '@/hooks';
 import { copyToBoard, formatTime } from '@/utils/handleFunction';
 import { DESCEND, ASCEND } from '@/enums';
 import IconFont from '@/components/IconFont';
-import { ITable } from '@/components/ADTable';
+import { ITable } from '@/components/KwTable';
 
 import PromptIcon from '../../components/PromptIcon';
 import OperateBar from '@/pages/ModelFactory/LLMModel/components/OperateBar';

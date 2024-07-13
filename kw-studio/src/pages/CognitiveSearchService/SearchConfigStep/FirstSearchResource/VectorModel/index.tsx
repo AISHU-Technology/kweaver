@@ -80,7 +80,7 @@ const VectorModel = (props: VectorModelType) => {
   return (
     <UniversalModal
       className="search-create-edit-modal"
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       title={intl.get('cognitiveSearch.resource.addResource')}
       width={640}

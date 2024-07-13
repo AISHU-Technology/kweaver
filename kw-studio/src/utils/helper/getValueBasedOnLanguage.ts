@@ -1,4 +1,3 @@
-import Cookie from 'js-cookie';
 import { kwCookie } from '@/utils/handleFunction';
 
 const getValueBasedOnLanguage = (data: { [key: string]: any }, lang?: string) => {

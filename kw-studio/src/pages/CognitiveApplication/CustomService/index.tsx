@@ -16,7 +16,6 @@ import CreateModal from './CreateModal';
 import cognitiveSearchService from '@/services/cognitiveSearch';
 import servicesPermission from '@/services/rbacPermission';
 import customService from '@/services/customService';
-import { PERMISSION_CODES, PERMISSION_KEYS } from '@/enums';
 
 import { paramBody } from './assistFunction';
 import { ListItem, TableState, KnwItem } from './types';
@@ -85,7 +84,6 @@ const CustomService = (props: any) => {
         }
         // 获取权限
         const dataIds = _.map(results, item => String(item.id));
-        const postData = { dataType: PERMISSION_KEYS.TYPE_SERVICE, dataIds };
         // const authCode = await servicesPermission.dataPermission(postData);
         // const codesData = _.keyBy(authCode?.res, 'dataId');
         // const newTableData = _.map(results, item => {

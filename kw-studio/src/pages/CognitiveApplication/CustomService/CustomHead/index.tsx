@@ -12,7 +12,6 @@ import HELPER from '@/utils/helper';
 import Format from '@/components/Format';
 
 import ContainerIsVisible from '@/components/ContainerIsVisible';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 
 import { DESC, FILTER_OPTION, SORTER_MENU, INIT_STATE, FILTER_ENV_OPTION } from '../enum';
 import ExplainTip from '@/components/ExplainTip';
@@ -108,14 +107,7 @@ export default function FilterHeader(props: any) {
   return (
     <div>
       <div className="kw-space-between kw-mb-4">
-        <ContainerIsVisible
-          placeholder={<span style={{ height: 32, display: 'inline-block' }} />}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_APP_CUSTOM_CREATE,
-            userType: PERMISSION_KEYS.KN_ADD_SERVICE
-            // userTypeDepend: knData?.__codes
-          })}
-        >
+        <ContainerIsVisible placeholder={<span style={{ height: 32, display: 'inline-block' }} />}>
           <Format.Button type="primary" onClick={onCreate}>
             <IconFont type="icon-Add" style={{ color: '#fff', fontSize: 14 }} />
             {intl.get('exploreAnalysis.create')}

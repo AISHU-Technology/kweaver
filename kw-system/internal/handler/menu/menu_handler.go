@@ -158,3 +158,30 @@ func DeleteMenu(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		}
 	}
 }
+
+// GetMenuTree 根据授权获取菜单树
+func GetMenuTree(svcCtx *svc.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req types.ReqGetMenuTree
+		if err := httpx.ParseForm(r, &req); err != nil {
+			errors.ErrorHandler(w, errors.ParameterError.SetDetailError(err.Error()))
+			return
+		}
+		pid, err := utils.ToInt64(req.Pid)
+		if err != nil {
+			errors.ErrorHandler(w, errors.ParameterError.SetDetailError(err.Error()))
+			return
+		}
+		l := menu.NewMenuLogic(r.Context(), svcCtx)
+		menuMap, err := l.GetMenuTree([]*po.TMenu{{Id: pid}}, &req)
+		if err != nil {
+			errors.ErrorHandler(w, err)
+		} else {
+			resp := make([]*types.RespMenu, 0)
+			for _, menus := range menuMap {
+				resp = append(resp, menus...)
+			}
+			httpx.OkJsonCtx(r.Context(), w, &types.ResVo{Res: resp})
+		}
+	}
+}

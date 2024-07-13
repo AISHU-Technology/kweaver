@@ -5,7 +5,7 @@ import moment from 'moment';
 import PaginationCommon from '@/components/PaginationCommon';
 import IconFont from '@/components/IconFont';
 import { MODEL_TYPE } from '../enum';
-import ADTable, { ITable } from '@/components/ADTable';
+import KwTable, { ITable } from '@/components/KwTable';
 
 import noResImg from '@/assets/images/noResult.svg';
 import emptyImg from '@/assets/images/empty.svg';

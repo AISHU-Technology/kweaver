@@ -207,7 +207,7 @@ const CreateAttributesModal = (props: EntityModalAttributesProps) => {
           ? intl.get('ontoLib.canvasOnto.editEntityAttrTitle')
           : intl.get('ontoLib.canvasOnto.createEntityAttrTitle')
       }
-      visible={showCreateAttributesModal}
+      open={showCreateAttributesModal}
       destroyOnClose={true}
       maskClosable={false}
       onCancel={closeCreateAttributesModal}

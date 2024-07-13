@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, lazy } from 'react';
 import { Divider } from 'antd';
 import { Route, Switch, Redirect, useHistory, useLocation } from 'react-router-dom';
 import _ from 'lodash';
@@ -8,24 +8,23 @@ import intl from 'react-intl-universal';
 // import servicesKnowledgeNetwork from '@/services/knowledgeNetwork';
 
 import IconFont from '@/components/IconFont';
-import CHeader from '@/components/Header';
+import KwHeader from '@/components/KwHeader';
 // import AvatarName from '@/components/Avatar';
-import asyncComponent from '@/components/AsyncComponent';
 import AuthChildRoute from '@/components/AuthChildRoute';
 
 import Sidebar from './Sidebar';
 
-// const ModelLibrary = asyncComponent(() => import('./ModelLibrary'));
-const IntentionPool = asyncComponent(() => import('./IntentionPool'));
-const LLMModel = asyncComponent(() => import('./LLMModel'));
-const ModelService = asyncComponent(() => import('./ModelService'));
-const PromptHome = asyncComponent(() => import('./Prompt/PromptHome'));
-const PromptConfig = asyncComponent(() => import('./Prompt/PromptConfig'));
-const PromptManage = asyncComponent(() => import('./PromptManage/PromptHome'));
-const PromptManageConfig = asyncComponent(() => import('./PromptManage/PromptManageConfig'));
-const NotFound = asyncComponent(() => import('@/components/NotFoundChildPage'));
-
 import './style.less';
+
+// const ModelLibrary = lazy(() => import('./ModelLibrary'));
+const IntentionPool = lazy(() => import('./IntentionPool'));
+const LLMModel = lazy(() => import('./LLMModel'));
+const ModelService = lazy(() => import('./ModelService'));
+const PromptHome = lazy(() => import('./Prompt/PromptHome'));
+const PromptConfig = lazy(() => import('./Prompt/PromptConfig'));
+const PromptManage = lazy(() => import('./PromptManage/PromptHome'));
+const PromptManageConfig = lazy(() => import('./PromptManage/PromptManageConfig'));
+const NotFound = lazy(() => import('@/components/NotFoundChildPage'));
 
 const HIED_SIDE_URLS = [
   '/model-factory/prompt-config',
@@ -37,7 +36,7 @@ const HIED_SIDE_URLS = [
 
 const REST_FULL_API_URLS = ['/model-factory/doc/prompt', '/model-factory/doc/model'];
 
-const ModelFactory = () => {
+const ModelFactory = (props: any) => {
   const history = useHistory();
   const location = useLocation();
   const [defaultSelectRoute, setDefaultSelectRoute] = useState('');
@@ -68,7 +67,7 @@ const ModelFactory = () => {
 
   return (
     <div className="modelShopRoot">
-      <CHeader breadcrumb={breadcrumb} onClickLogo={() => setTimeout(() => history.push('/home'))} />
+      <KwHeader breadcrumb={breadcrumb} onClickLogo={() => setTimeout(() => history.push('/home'))} />
       <div className="l-layout">
         {!HIED_SIDE_URLS.includes(location.pathname) && <Sidebar setDefaultSelectRoute={setDefaultSelectRoute} />}
         {/* 暂时注释(编辑进入刷新页面空白) */}

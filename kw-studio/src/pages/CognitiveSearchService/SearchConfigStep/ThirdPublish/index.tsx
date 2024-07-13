@@ -56,7 +56,7 @@ const ERROR_CODE: Record<string, string> = {
   'KnCognition.GraphPermissionDeniedErr': intl.get('analysisService.noGraphAuth')
 };
 
-const ThirdPublish = (props: PublishProps) => {
+const ThirdPublish = (props: PublishProps | any) => {
   const history = useHistory();
 
   const {

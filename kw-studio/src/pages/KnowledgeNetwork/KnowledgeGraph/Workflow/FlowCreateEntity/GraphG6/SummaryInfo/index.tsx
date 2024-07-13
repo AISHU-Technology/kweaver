@@ -272,7 +272,7 @@ const SummaryInfo = (props: SummaryInfoProps) => {
                 onDelete={item => onTriggerDelete([item.uid])}
               />
             ) : (
-              <NoDataBox.NO_CONTENT />
+              <NoDataBox type="NO_CONTENT" />
             )}
           </TabPane>
           <TabPane
@@ -303,7 +303,7 @@ const SummaryInfo = (props: SummaryInfoProps) => {
                 onDelete={item => onTriggerDelete([item.uid])}
               />
             ) : (
-              <NoDataBox.NO_CONTENT />
+              <NoDataBox type="NO_CONTENT" />
             )}
           </TabPane>
         </Tabs>

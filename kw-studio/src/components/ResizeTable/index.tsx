@@ -6,16 +6,14 @@ import _ from 'lodash';
 import { Resizable } from 'react-resizable';
 import './style.less';
 
-// 自定义表格组件的参数类型
 interface CustomTableProps {
-  initCol: any[]; // 表格列的配置
-  dataSource: any[]; // 数据
-  itemHeight?: number; // 表格高度
-  tableHeight?: number; // 表格可视高度
-  virtual?: boolean; // 是否需要虚拟滚动
+  initCol: any[];
+  dataSource: any[];
+  itemHeight?: number;
+  tableHeight?: number;
+  virtual?: boolean;
 }
 
-// 调整table表头
 const ResizeableTitle = (props: any) => {
   const { onResize, width, ...restProps } = props;
 
@@ -36,16 +34,15 @@ const ResizeableTitle = (props: any) => {
 const ResizeTable: React.FC<CustomTableProps & TableProps<any>> = props => {
   const { initCol, virtual = false, dataSource, ...otherProps } = props;
   const { itemHeight = 48, tableHeight = 540 } = props;
-  // 表格列
   const [cols, setCols] = useState(initCol);
   const [columns, setColumns] = useState<any>([]);
 
-  const [point, setPoint] = useState<any>([0, 0]); // 当前可视列起点终点
-  const [offset, setOffset] = useState<any>({ top: 0, bottom: 0 }); // 监听滚动位置
+  const [point, setPoint] = useState<any>([0, 0]);
+  const [offset, setOffset] = useState<any>({ top: 0, bottom: 0 });
 
   const tabRef = useRef<any>(null);
   const containRef = useRef<any>();
-  const visibleCount = Math.ceil(tableHeight / itemHeight); // 可视列数量
+  const visibleCount = Math.ceil(tableHeight / itemHeight);
 
   useEffect(() => {
     if (!virtual) return;
@@ -96,13 +93,11 @@ const ResizeTable: React.FC<CustomTableProps & TableProps<any>> = props => {
     setColumns(column);
   };
 
-  // 处理拖拽
   const handleResize =
     (index: any) =>
     (e: any, { size }: any) => {
       const column = _.isEmpty(cols) ? initCol : cols;
       const nextColumns = [...column];
-      // 拖拽是调整宽度
       nextColumns[index] = { ...nextColumns[index], width: size.width };
       setCols(nextColumns);
     };

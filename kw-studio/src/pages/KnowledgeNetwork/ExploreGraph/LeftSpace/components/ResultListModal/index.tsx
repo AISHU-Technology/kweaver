@@ -3,7 +3,7 @@ import { Tabs, Button, message } from 'antd';
 import _ from 'lodash';
 import classNames from 'classnames';
 import intl from 'react-intl-universal';
-import ScrollBar from '@/components/ScrollBar';
+import KwScrollBar from '@/components/KwScrollBar';
 
 import IconFont from '@/components/IconFont';
 import ResizeDrawer from '@/components/ResizeDrawer';
@@ -143,7 +143,7 @@ const ResultListModal = (props: TemplateModalProps) => {
           <div className={classNames('result-wrap', { selectWrapper: isSelectAdd })}>
             <Tabs className="resultTabs" activeKey={tabsKey} onChange={e => setTabsKey(e)}>
               <Tabs.TabPane tab={intl.get('exploreGraph.list')} key="list">
-                <ScrollBar className="scroll-wrapper" isshowx="false">
+                <KwScrollBar className="scroll-wrapper" isShowX={false}>
                   <div className="kw-pl-6 kw-pr-6 kw-h-100">
                     <TableList
                       dataList={pageData}
@@ -157,7 +157,7 @@ const ResultListModal = (props: TemplateModalProps) => {
                       changeCheckData={changeCheckData}
                     />
                   </div>
-                </ScrollBar>
+                </KwScrollBar>
               </Tabs.TabPane>
             </Tabs>
           </div>

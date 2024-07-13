@@ -141,8 +141,8 @@ const ProjectList = forwardRef<ProjectListRef, ProjectListProps>((props: Project
           overlayClassName="prompt-op-dropdown"
           placement="bottomRight"
           destroyPopupOnHide
-          visible={isShowOperateIcon}
-          onVisibleChange={visible => setVisibleInfo({ key: visible ? key : '', type: visible ? 'op' : '' })}
+          open={isShowOperateIcon}
+          onOpenChange={visible => setVisibleInfo({ key: visible ? key : '', type: visible ? 'op' : '' })}
           overlay={
             <Menu style={{ minWidth: 120 }} onClick={info => clickOpIconMenu(info, type, sourceData)}>
               <Menu.Item key="edit">{intl.get('global.edit')}</Menu.Item>
@@ -166,8 +166,8 @@ const ProjectList = forwardRef<ProjectListRef, ProjectListProps>((props: Project
             overlayClassName="prompt-op-dropdown"
             placement="bottomRight"
             destroyPopupOnHide
-            visible={isShowAddIcon}
-            onVisibleChange={visible => setVisibleInfo({ key: visible ? key : '', type: visible ? 'add' : '' })}
+            open={isShowAddIcon}
+            onOpenChange={visible => setVisibleInfo({ key: visible ? key : '', type: visible ? 'add' : '' })}
             overlay={
               <Menu style={{ minWidth: 120 }} onClick={info => clickAddIconMenu(info, sourceData)}>
                 <Menu.Item key="create">{intl.get('prompt.createGroup')}</Menu.Item>

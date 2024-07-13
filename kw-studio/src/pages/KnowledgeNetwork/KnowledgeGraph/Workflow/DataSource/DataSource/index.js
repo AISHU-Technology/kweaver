@@ -5,7 +5,6 @@ import intl from 'react-intl-universal';
 import { Table, Button, Modal, message, Checkbox, Dropdown, Menu, Tooltip } from 'antd';
 import { ExclamationCircleFilled, LoadingOutlined, EllipsisOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
-import { PERMISSION_CODES, PERMISSION_KEYS } from '@/enums';
 import HELPER from '@/utils/helper';
 import apiService from '@/utils/axios-http/oldIndex';
 import servicesDataSource from '@/services/dataSource';
@@ -21,7 +20,7 @@ import SourceModal from './SourceModal';
 import noResult from '@/assets/images/noResult.svg';
 import addContentImg from '@/assets/images/create.svg';
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import Format from '@/components/Format';
 import { useLocation } from 'react-router-dom';
 
@@ -99,7 +98,6 @@ const DataSource = props => {
       ?.split('&')
       ?.filter(item => item?.includes('knId'))?.[0]
       ?.split('=')[1];
-    const postData = { dataType: PERMISSION_KEYS.TYPE_KN, dataIds: [String(knId)] };
     // servicesPermission.dataPermission(postData).then(result => {
     //   setCodes(result?.res?.[0]?.codes || []);
     // });
@@ -107,7 +105,6 @@ const DataSource = props => {
   useEffect(() => {
     if (_.isEmpty(tableData)) return;
     const dataIds = _.map(tableData, item => String(item.id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_DS, dataIds };
     // servicesPermission.dataPermission(postData).then(result => {
     //   const codesData = _.keyBy(result?.res, 'dataId');
     //   const newTableData = _.map(tableData, item => {
@@ -608,49 +605,14 @@ const DataSource = props => {
           >
             {/* 编辑 */}
 
-            <Menu.Item
-              key="edit"
-              disabled={
-                !HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_DS_EDIT,
-                  userType: PERMISSION_KEYS.DS_EDIT,
-                  userTypeDepend: record.__codes
-                })
-              }
-            >
-              {intl.get('datamanagement.edit')}
-            </Menu.Item>
+            <Menu.Item key="edit">{intl.get('datamanagement.edit')}</Menu.Item>
 
             {/* 复制 */}
 
-            <Menu.Item
-              key="copy"
-              disabled={
-                !HELPER.getAuthorByUserInfo({
-                  roleType: PERMISSION_CODES.ADF_KN_DS_CREATE,
-                  userType: PERMISSION_KEYS.DS_EDIT,
-                  userTypeDepend: record.__codes
-                })
-              }
-            >
-              {intl.get('datamanagement.copy')}
-            </Menu.Item>
+            <Menu.Item key="copy">{intl.get('datamanagement.copy')}</Menu.Item>
 
             {/* 删除 */}
-            {!isWorkflow && (
-              <Menu.Item
-                key="delete"
-                disabled={
-                  !HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_DS_DELETE,
-                    userType: PERMISSION_KEYS.DS_DELETE,
-                    userTypeDepend: record.__codes
-                  })
-                }
-              >
-                {intl.get('datamanagement.delete')}
-              </Menu.Item>
-            )}
+            {!isWorkflow && <Menu.Item key="delete">{intl.get('datamanagement.delete')}</Menu.Item>}
 
             {/* 测试链接 */}
             {isWorkflow && (
@@ -669,13 +631,13 @@ const DataSource = props => {
 
         return (
           <Dropdown
-            visible={operationVisible && selectKey === id}
+            open={operationVisible && selectKey === id}
             overlay={memu}
             trigger={['click']}
             destroyPopupOnHide
             overlayClassName="data-source-operation-down min-w"
             getPopupContainer={() => document.querySelector('.dataSource')}
-            onVisibleChange={isOpen => setOperationVisible(isOpen)}
+            onOpenChange={isOpen => setOperationVisible(isOpen)}
           >
             {/* <span*/}
             {/*  className="icon-wrap"*/}
@@ -877,37 +839,19 @@ const DataSource = props => {
   return (
     <div className="dataSource">
       <div className="dataSource-toolbox">
-        <ContainerIsVisible
-          isVisible={
-            HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_KN_DS_CREATE,
-              userType: PERMISSION_KEYS.KN_ADD_DS,
-              userTypeDepend: codes
-            }) && !viewMode
-          }
+        <Button type="primary" className="new-botton" onClick={onCreate}>
+          <IconFont type="icon-Add" style={{ color: '#fff' }} />
+          {intl.get('datamanagement.create')}
+        </Button>
+        <Button
+          className="ant-btn-default delete-botton"
+          onClick={onDelete}
+          disabled={selectedRowKeys.length <= 0}
+          style={isWorkflow ? { display: 'none' } : null}
         >
-          <Button type="primary" className="new-botton" onClick={onCreate}>
-            <IconFont type="icon-Add" style={{ color: '#fff' }} />
-            {intl.get('datamanagement.create')}
-          </Button>
-        </ContainerIsVisible>
-        <ContainerIsVisible
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_KN_DS_DELETE,
-            userType: PERMISSION_KEYS.DS_DELETE,
-            userTypeDepend: codes
-          })}
-        >
-          <Button
-            className="ant-btn-default delete-botton"
-            onClick={onDelete}
-            disabled={selectedRowKeys.length <= 0}
-            style={isWorkflow ? { display: 'none' } : null}
-          >
-            <IconFont type="icon-lajitong" />
-            {intl.get('datamanagement.delete')}
-          </Button>
-        </ContainerIsVisible>
+          <IconFont type="icon-lajitong" />
+          {intl.get('datamanagement.delete')}
+        </Button>
         <span style={isWorkflow ? null : { display: 'none' }} className="workflow-select-length">
           {intl.get('workflow.datasource.checkedNumH')}
           <span className="select-number">{selectedRowsList.length}</span>
@@ -940,7 +884,7 @@ const DataSource = props => {
         />
       </div>
 
-      <ADTable
+      <KwTable
         showHeader={false}
         dataSource={getTableData()}
         columns={getColumns()}
@@ -965,14 +909,7 @@ const DataSource = props => {
           viewMode ? (
             intl.get('datamanagement.noDataSource')
           ) : listType === 'all' && !searchName ? (
-            <ContainerIsVisible
-              placeholder={<p>{intl.get('datamanagement.noContent')}</p>}
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_DS_CREATE,
-                userType: PERMISSION_KEYS.KN_ADD_DS,
-                userTypeDepend: codes
-              })}
-            >
+            <ContainerIsVisible placeholder={<p>{intl.get('datamanagement.noContent')}</p>}>
               <span>
                 {intl.get('datamanagement.noDataF').split('|')[0]}
                 <span className="create-span" onClick={onCreate}>
@@ -1010,7 +947,7 @@ const DataSource = props => {
 
       {/* 删除弹窗 */}
       <Modal
-        visible={deleteVisible}
+        open={deleteVisible}
         onCancel={handleCancel}
         wrapClassName="dataSource-delete-modal"
         focusTriggerAfterClose={false}

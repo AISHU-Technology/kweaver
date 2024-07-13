@@ -7,13 +7,13 @@ import { getIconCode as getIconCodeMore } from '@/utils/antv6/getIconMore';
 
 import { height, themeColor } from './enums';
 
+import curPng from '@/assets/images/node_copy_cur.png';
+
 export const getLabelValues = (labels?: any[], limit?: number) => {
   if (!labels) return '';
   const checkedLabel = _.filter(labels, l => l?.isChecked);
   return _.map(checkedLabel, l => HELPER.stringEllipsis(l.value, limit || 15))?.join('\n');
 };
-
-import curPng from '@/assets/images/node_copy_cur.png';
 
 const NODE_HALO_CLASS = 'node-halo-class';
 

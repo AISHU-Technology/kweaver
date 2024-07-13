@@ -267,7 +267,7 @@ const CreateModal = (props: any) => {
       className="thesaurus-graph-mode-create-UniversalModal-root"
       title={intl.get('ThesaurusManage.add')}
       width={'640px'}
-      visible={visible}
+      open={visible}
       onCancel={onCancel}
       footerData={[
         { label: intl.get('global.cancel'), onHandle: onCancel },

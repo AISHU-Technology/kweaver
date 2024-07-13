@@ -2,13 +2,12 @@ import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } f
 import { Modal, Form, Select, Input, ConfigProvider, Button, message, Divider } from 'antd';
 import _ from 'lodash';
 import IconFont from '@/components/IconFont';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import intl from 'react-intl-universal';
 import HOOKS from '@/hooks';
 import cognitiveSearchService from '@/services/cognitiveSearch';
 import servicesPermission from '@/services/rbacPermission';
 import servicesSearchConfig from '@/services/searchConfig';
-import { PERMISSION_KEYS } from '@/enums';
 import { onAddGraph } from '../../assistFunction';
 import { convertData } from '../../../SecondSearchTest/SearchRange/assistFunction';
 import './style.less';
@@ -51,7 +50,6 @@ export const CreateSourceContent = forwardRef((props: any, ref) => {
       const { res } = (await cognitiveSearchService.getKgList(id)) || {};
 
       const dataIds = _.map(res?.df, item => String(item.id));
-      const postData = { dataType: PERMISSION_KEYS.TYPE_KG, dataIds };
       // servicesPermission.dataPermission(postData).then(result => {
       //   const codesData = _.keyBy(result?.res, 'dataId');
 
@@ -270,7 +268,7 @@ export const CreateSourceContent = forwardRef((props: any, ref) => {
                         {loading ? (
                           <Option disabled={true} key="loading" style={{ height: '128px', background: '#fff' }}>
                             <div className="loading-mask kw-h-100 kw-center" style={{ flexFlow: 'column' }}>
-                              <AdSpin />
+                              <KwSpin />
                               <div className="kw-mt-3">{intl.get('cognitiveSearch.loading')}</div>
                             </div>
                           </Option>
@@ -360,7 +358,7 @@ const CreateResourceModal = (props: any) => {
     <>
       <UniversalModal
         className="search-create-edit-modal"
-        visible={visible}
+        open={visible}
         onCancel={() => setIsAddModal(false)}
         title={intl.get('cognitiveSearch.resource.addResource')}
         width={'800px'}

@@ -19,7 +19,6 @@ import { ERROR_CODE } from './enum';
 
 import './style.less';
 import classNames from 'classnames';
-import HeaderTab from '@/components/ADTab';
 
 const TAB_TITLE = {
   graph: intl.get('cognitiveSearch.resource.know'),

@@ -80,7 +80,7 @@ const ProjectOperateModal = (props: ProjectOperateModalProps) => {
     <UniversalModal
       className={classNames(className, 'manage-project-operate-modal-root')}
       title={action === 'create' ? intl.get('prompt.createGroup') : intl.get('prompt.editGroup')}
-      visible={visible}
+      open={visible}
       width={480}
       zIndex={2000}
       onCancel={onCancel}

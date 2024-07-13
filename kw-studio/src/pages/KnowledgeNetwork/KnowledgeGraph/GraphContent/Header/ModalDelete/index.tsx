@@ -20,7 +20,7 @@ const ModalDelete = (props: ModalDeleteInterface) => {
       footer={null}
       closable={false}
       maskClosable={false}
-      visible={visible}
+      open={visible}
       focusTriggerAfterClose={false}
       wrapClassName="graph-delete-modal"
     >

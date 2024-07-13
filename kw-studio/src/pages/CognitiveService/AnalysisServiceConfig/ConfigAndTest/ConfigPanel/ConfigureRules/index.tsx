@@ -172,7 +172,7 @@ const ConfigureRules = (props: ServiceTypeConfigureRules) => {
     <UniversalModal
       style={style}
       title={editRule?.name ? intl.get('exploreGraph.editRule') : intl.get('exploreGraph.addRules')}
-      visible={visible}
+      open={visible}
       width={1000}
       zIndex={1052}
       className="serviceConfig-configureRulesModal"

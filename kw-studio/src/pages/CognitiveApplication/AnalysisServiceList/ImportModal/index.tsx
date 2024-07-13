@@ -1,5 +1,5 @@
 import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Modal, Button, Tooltip, Form, Upload, Input, message } from 'antd';
+import { Button, Tooltip, Form, Upload, Input } from 'antd';
 import { FolderOpenOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
@@ -10,7 +10,6 @@ import UniversalModal from '@/components/UniversalModal';
 import { getParam } from '@/utils/handleFunction';
 import analysisService from '@/services/analysisService';
 import { useHistory } from 'react-router-dom';
-import { KnwItem } from '.././types';
 
 import './style.less';
 
@@ -46,12 +45,12 @@ const ImportModalContent = forwardRef((props: ImportModalContentType, ref) => {
    * 导入
    */
   const onImport = async () => {
-    form.validateFields().then(async values => {
+    form.validateFields().then(async () => {
       setIsImporting(true);
       try {
         const { id } = getParam(['id']);
         const { res, ErrorDetails } = await analysisService.analysisServiceImport({
-          // knw_id: parseInt(id),
+          knw_id: parseInt(id),
           file: fileData
         });
         if (res) {
@@ -191,7 +190,7 @@ const ImportModal = (props: any) => {
     <UniversalModal
       onCancel={onHandleCancel}
       className="analysis-import-modal-root"
-      visible={visible}
+      open={visible}
       width={480}
       footerData={
         <>

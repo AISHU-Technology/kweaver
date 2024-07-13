@@ -9,10 +9,7 @@ import { ArrowDownOutlined, CaretDownOutlined } from '@ant-design/icons';
 import intl from 'react-intl-universal';
 import _ from 'lodash';
 
-import HELPER from '@/utils/helper';
-
 import ContainerIsVisible from '@/components/ContainerIsVisible';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import Format from '@/components/Format';
 
 import { DESC, ASC, SORTER_MENU, QUERY_OPTION, FILTER_OPTION, INIT_STATE } from '../enum';
@@ -119,13 +116,7 @@ const FilterHeader = (props: any) => {
   return (
     <div>
       <div className="kw-space-between">
-        <ContainerIsVisible
-          placeholder={<span style={{ height: 32, display: 'inline-block' }} />}
-          isVisible={HELPER.getAuthorByUserInfo({
-            roleType: PERMISSION_CODES.ADF_APP_GRAPHANAL_CREATE,
-            userType: PERMISSION_KEYS.KN_ADD_SERVICE
-          })}
-        >
+        <ContainerIsVisible placeholder={<span style={{ height: 32, display: 'inline-block' }} />}>
           <Dropdown
             overlay={menu}
             placement="bottomRight"

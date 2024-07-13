@@ -1,37 +1,28 @@
-/**
- * 定时任务配置页面(包含新增和编辑)
- *
- * @author Eden
- * @date 2021/12/21
- *
- */
-
 import React, { Component } from 'react';
-import { Radio, Button, message } from 'antd';
+import { Radio, message } from 'antd';
 import intl from 'react-intl-universal';
 import moment from 'moment';
 import serviceTimedTask from '@/services/timedTask';
-import ByTime from './byTime';
-import ByDay from './byDay';
-import ByWeek from './byWeek';
-import ByMonth from './byMonth';
+import ByTime from './ByTime';
+import ByDay from './ByDay';
+import ByWeek from './ByWeek';
+import ByMonth from './ByMonth';
 import './style.less';
 
 class TimedTaskConfig extends Component {
   state = {
-    selectedTag: 'one', // 定时类型
-    updateType: 'increment', // 更新方式
-    enabled: 1, // 任务开关
-    byTimeRef: '', // 按次模块
-    byDayRef: '', // 按天模块
-    byWeekRef: '', // 按周模块
-    byMonthRef: '' // 按月模块
+    selectedTag: 'one',
+    updateType: 'increment',
+    enabled: 1,
+    byTimeRef: '',
+    byDayRef: '',
+    byWeekRef: '',
+    byMonthRef: ''
   };
 
-  isLoading = false; // 接口未响应之前，再次点击不发送请求
+  isLoading = false;
 
   componentDidMount() {
-    // 编辑进去时初始化数据
     if (this.props.viewType === 'editConfig') {
       this.setState({
         selectedTag: this.props.editData.cycle,
@@ -74,7 +65,6 @@ class TimedTaskConfig extends Component {
 
     this.isLoading = true;
 
-    // 按次
     if (selectedTag === 'one') {
       if (!byTimeRef.state.selectTime) {
         message.error(intl.get('graphList.taskNeedConfig'));
@@ -93,7 +83,6 @@ class TimedTaskConfig extends Component {
       };
     }
 
-    // 按天
     if (selectedTag === 'day') {
       if (!byDayRef.state.selectTime) {
         message.error(intl.get('graphList.taskNeedConfig'));
@@ -150,7 +139,6 @@ class TimedTaskConfig extends Component {
 
     let res = '';
 
-    // 创建定时任务
     if (viewType === 'crateConfig') {
       res = await serviceTimedTask.timerCreate(graphId, data);
     }
@@ -179,7 +167,6 @@ class TimedTaskConfig extends Component {
     if (res && res.ErrorCode === '500053') {
       message.error(intl.get('graphList.timeOut'));
     }
-    // 500403
     if (res && res.ErrorCode === 'Manager.SoftAuth.UnknownServiceRecordError') {
       message.error(intl.get('graphList.noP'));
 
@@ -228,7 +215,7 @@ class TimedTaskConfig extends Component {
   };
 
   render() {
-    const { changeViewType, editData } = this.props;
+    const { editData } = this.props;
     const { selectedTag, updateType } = this.state;
 
     return (
@@ -307,22 +294,6 @@ class TimedTaskConfig extends Component {
             {selectedTag === 'month' ? <ByMonth onByMonthRef={this.onByMonthRef} editData={editData} /> : null}
           </div>
         </div>
-
-        {/* <div className="bottom-button">
-          <Button
-            className="ant-btn-default cancel button-style"
-            onClick={() => {
-              changeViewType('list');
-            }}
-          >
-            {intl.get('graphList.cancel')}
-            {''}
-          </Button>
-          <Button className="button-style" type="primary" onClick={this.save}>
-            {intl.get('createEntity.save')}
-            {''}
-          </Button>
-        </div> */}
       </div>
     );
   }

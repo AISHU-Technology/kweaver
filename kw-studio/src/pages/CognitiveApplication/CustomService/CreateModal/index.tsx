@@ -58,7 +58,7 @@ const CreateModal = (props: any) => {
     <UniversalModal
       // title={!editData.name ? intl.get('customService.createService') : intl.get('customService.editService')}
       title={intl.get('customService.createService')}
-      visible
+      open
       className="customService-modal"
       width={640}
       onCancel={onClose}

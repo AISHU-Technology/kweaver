@@ -10,7 +10,6 @@ import classNames from 'classnames';
 import HOOKS from '@/hooks';
 import './style.less';
 
-// 文字图标
 const NumIcon = ({ number }: { number: number }) => <span className="kw-center">{number}</span>;
 
 export interface TopStepsProps {
@@ -25,7 +24,6 @@ const TopSteps = (props: TopStepsProps) => {
   const { step = 0, title = '', isHideStep, exitText, onExit } = props;
   const language = HOOKS.useLanguage();
 
-  // 所有步骤条标题
   const titleList = [
     intl.get('cognitiveSearch.dataConfig'),
     intl.get('cognitiveSearch.mode'),

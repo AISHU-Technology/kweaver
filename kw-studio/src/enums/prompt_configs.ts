@@ -11,12 +11,11 @@ const colorList = [
   '#8c8c8c'
 ];
 
-// 对话型icon
 export const PROMPT_CHAT_ICONS = colorList.map((color, index) => ({
   color,
   fontClass: `icon-color-duihua${index + 1}`
 }));
-// 生成型icon
+
 export const PROMPT_COMPLETION_ICONS = colorList.map((color, index) => ({
   color,
   fontClass: `icon-color-wenben${index + 1}`

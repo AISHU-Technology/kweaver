@@ -11,8 +11,7 @@ const ModalContent = memo((props: any) => {
     <div className="">
       <div className="error-modal-title">{intl.get('task.errorReport')}</div>
 
-      <div className="error-modal-body">
-      </div>
+      <div className="error-modal-body"></div>
 
       <div className="error-modal-footer">
         <Button className="ant-btn-default error-modal-button" onClick={handleCancel}>
@@ -27,7 +26,7 @@ const ErrorModal = (props: any) => {
   const { errorModal, handleCancel } = props;
   return (
     <Modal
-      visible={errorModal}
+      open={errorModal}
       onCancel={handleCancel}
       wrapClassName="task-error-modal"
       focusTriggerAfterClose={false}

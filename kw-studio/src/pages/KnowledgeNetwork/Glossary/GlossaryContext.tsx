@@ -41,7 +41,7 @@ context.displayName = 'glossaryStore';
 
 export const useGlossaryStore = () => useContext(context);
 
-const GlossaryContext: React.FC = ({ children }) => {
+const GlossaryContext: React.FC<{ children: any }> = ({ children }) => {
   const [store, setStore, getLatestStore] = useImmerState<InitialStateProps>(initialState);
 
   const initStore = () => {

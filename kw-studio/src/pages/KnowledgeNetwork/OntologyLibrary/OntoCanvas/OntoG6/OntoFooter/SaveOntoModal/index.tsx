@@ -23,7 +23,7 @@ export interface SaveOntoDataType {
 
 export interface SaveOntoDataProps {
   showSaveOntologyModal: boolean;
-  closeSaveOntologyModal: (e: any) => void;
+  closeSaveOntologyModal: () => void;
   modalOkSave: Function;
   initData: SaveOntoDataType;
   modalTitle: string;
@@ -91,7 +91,7 @@ const SaveOntologyModal: React.ForwardRefRenderFunction<SaveOntoModalRef, SaveOn
       className="create-saveOnto-content"
       width={'640px'}
       title={modalTitle}
-      visible={showSaveOntologyModal}
+      open={showSaveOntologyModal}
       destroyOnClose={true}
       maskClosable={false}
       onCancel={closeSaveOntologyModal}

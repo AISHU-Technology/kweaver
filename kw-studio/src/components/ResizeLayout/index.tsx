@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
 import classnames from 'classnames';
-import IconFont from '@/components/IconFont';
 
 import './style.less';
 

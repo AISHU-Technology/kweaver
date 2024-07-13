@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-
 import { ContainerType } from '../type';
 
 const Container = (props: ContainerType) => {

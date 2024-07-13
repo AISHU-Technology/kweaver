@@ -15,8 +15,11 @@ declare module 'react-draggable';
 declare module 'react-intl-universal';
 declare module '@/assets/graphIcons/iconfont.js';
 declare module '@/assets/graphIconsMore/iconfont.js';
+declare module '@/assets/font/lineIconfont.js';
+declare module '@/assets/font/colorIconfont.js';
+declare module '@/assets/font/twotoneIconfont.js';
+declare module '@/assets/font/menuIconfont.js';
 
-// Encapsulation omit: Solve the problem of omit losing types
-type AdOmit<T, K extends keyof T> = {
+type KwOmit<T, K extends keyof T> = {
   [P in keyof T as Exclude<P, K>]: T[P];
 };

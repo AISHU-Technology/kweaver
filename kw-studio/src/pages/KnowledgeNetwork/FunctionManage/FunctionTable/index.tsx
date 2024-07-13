@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { Button, Select, Table, Tooltip, Dropdown, Menu, message } from 'antd';
+import { Button, Select, Dropdown, Menu, message } from 'antd';
 import intl from 'react-intl-universal';
-import HOOKS from '@/hooks';
-import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import serviceFunction from '@/services/functionManage';
-import servicesPermission from '@/services/rbacPermission';
-import { useHistory } from 'react-router-dom';
 import IconFont from '@/components/IconFont';
 import Format from '@/components/Format';
 import SearchInput from '@/components/SearchInput';
@@ -17,11 +12,9 @@ import ContainerIsVisible from '@/components/ContainerIsVisible';
 import noResImg from '@/assets/images/noResult.svg';
 import emptyImg from '@/assets/images/create.svg';
 import './style.less';
-import ADTable from '@/components/ADTable';
+import KwTable from '@/components/KwTable';
 import { EllipsisOutlined } from '@ant-design/icons';
-import { sessionStore } from '@/utils/handleFunction';
 import useLatestState from '@/hooks/useLatestState';
-import useRouteCache from '@/hooks/useRouteCache';
 import useAdHistory from '@/hooks/useAdHistory';
 
 const ORDER_MENU = [
@@ -30,9 +23,17 @@ const ORDER_MENU = [
   { id: 'name', intlText: 'knowledge.byName' }
 ];
 const FunctionTable = (props: any) => {
-  const { routeCache, setRouteCache, tableState, dataSource, kgData, refreshTable } = props;
-  const { onChangeState, onChangeDrawer, setAuthFunction, onSetFunctionInfo, onDelete } = props;
-  const language = HOOKS.useLanguage();
+  const {
+    onChangeState,
+    onChangeDrawer,
+    onSetFunctionInfo,
+    onDelete,
+    routeCache,
+    setRouteCache,
+    tableState,
+    dataSource,
+    refreshTable
+  } = props;
   const [selectedRowKeys, setSelectedRowKeys, getSelectedRowKeys] = useLatestState<any>(
     routeCache.tableSelectedKey ?? []
   );
@@ -42,24 +43,12 @@ const FunctionTable = (props: any) => {
   const history = useAdHistory();
 
   useEffect(() => {
-    // 获取列表权限, 判断权限
     if (_.isEmpty(dataSource)) {
       setTableData([]);
       return;
     }
-
-    const dataIds = _.map(dataSource, item => String(item.id));
-    const postData = { dataType: PERMISSION_KEYS.TYPE_FUNCTION, dataIds };
-    // servicesPermission.dataPermission(postData).then(result => {
-    //   const codesData = _.keyBy(result?.res, 'dataId');
-    //   const newTableData = _.map(dataSource, item => {
-    //     item.__codes = codesData?.[item.id]?.codes;
-    //     return item;
-    //   });
-    //   setTableData(newTableData);
-    // });
     setTableData(dataSource);
-  }, [JSON.stringify(dataSource)]);
+  }, [dataSource]);
 
   const selectMenu = (e: any) => {
     const { rule, order } = tableState;
@@ -101,12 +90,7 @@ const FunctionTable = (props: any) => {
       const data = { function_id: record?.id };
       const response = await serviceFunction.functionInfo(data);
       if (response?.res) {
-        const disabled = !HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_FUNCTION_EDIT,
-          userType: PERMISSION_KEYS.FUNCTION_EDIT,
-          userTypeDepend: record?.__codes
-        });
-        onSetFunctionInfo(response?.res, disabled);
+        onSetFunctionInfo(response?.res, false);
       }
       if (response?.ErrorCode) {
         message.error(response?.ErrorDetails);
@@ -148,20 +132,7 @@ const FunctionTable = (props: any) => {
     type: 'checkbox',
     selectedRowKeys,
     onChange: (rowKeys: any) => setSelectedRowKeys(rowKeys),
-    preserveSelectedRowKeys: true,
-    getCheckboxProps: (record: any) => {
-      if (
-        !HELPER.getAuthorByUserInfo({
-          roleType: PERMISSION_CODES.ADF_KN_FUNCTION_DELETE,
-          userType: PERMISSION_KEYS.FUNCTION_DELETE,
-          userTypeDepend: record?.__codes
-        })
-      ) {
-        return { disabled: true };
-      }
-
-      return {};
-    }
+    preserveSelectedRowKeys: true
   };
 
   /**
@@ -234,60 +205,36 @@ const FunctionTable = (props: any) => {
             trigger={['click']}
             overlay={
               <Menu>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_FUNCTION_EDIT,
-                    userType: PERMISSION_KEYS.FUNCTION_EDIT,
-                    userTypeDepend: record?.__codes
-                  })}
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    onEditFunction(record);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      onEditFunction(record);
-                    }}
-                  >
-                    {intl.get('exploreAnalysis.edit')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_FUNCTION_DELETE,
-                    userType: PERMISSION_KEYS.FUNCTION_DELETE,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('exploreAnalysis.edit')}
+                </Menu.Item>
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    openDeleteModel(record?.id);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      openDeleteModel(record?.id);
-                    }}
-                  >
-                    {intl.get('exploreAnalysis.delete')}
-                  </Menu.Item>
-                </ContainerIsVisible>
-                <ContainerIsVisible
-                  isVisible={HELPER.getAuthorByUserInfo({
-                    roleType: PERMISSION_CODES.ADF_KN_FUNCTION_MEMBER,
-                    userType: PERMISSION_KEYS.FUNCTION_EDIT_PERMISSION,
-                    userTypeDepend: record?.__codes
-                  })}
+                  {intl.get('exploreAnalysis.delete')}
+                </Menu.Item>
+                <Menu.Item
+                  onClick={({ domEvent }) => {
+                    domEvent.stopPropagation();
+                    setRouteCache({
+                      tableSelectedKey: getSelectedRowKeys(),
+                      page: tableState.page,
+                      filterRule: tableState.rule,
+                      filterOrder: tableState.order
+                    });
+                    history.push(`/knowledge/function-auth?functionId=${record.id}&functionName=${record.name}`);
+                  }}
                 >
-                  <Menu.Item
-                    onClick={({ domEvent }) => {
-                      domEvent.stopPropagation();
-                      setRouteCache({
-                        tableSelectedKey: getSelectedRowKeys(),
-                        page: tableState.page,
-                        filterRule: tableState.rule,
-                        filterOrder: tableState.order
-                      });
-                      history.push(`/knowledge/function-auth?functionId=${record.id}&functionName=${record.name}`);
-                    }}
-                  >
-                    {intl.get('exploreAnalysis.authorityManagement')}
-                  </Menu.Item>
-                </ContainerIsVisible>
+                  {intl.get('exploreAnalysis.authorityManagement')}
+                </Menu.Item>
               </Menu>
             }
           >
@@ -356,29 +303,16 @@ const FunctionTable = (props: any) => {
     <div className="functionTableRoot">
       <div className="kw-mb-4 kw-space-between">
         <div>
-          <ContainerIsVisible
-            placeholder={<span style={{ height: 32, display: 'inline-block' }} />}
-            isVisible={HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_KN_FUNCTION_CREATE,
-              userType: PERMISSION_KEYS.KN_ADD_FUNCTION,
-              userTypeDepend: kgData?.__codes
-            })}
-          >
+          <ContainerIsVisible placeholder={<span style={{ height: 32, display: 'inline-block' }} />}>
             <Button type="primary" className="kw-mr-3" onClick={() => onChangeDrawer(true)}>
               <IconFont type="icon-Add" style={{ color: '#fff' }} />
               {intl.get('exploreAnalysis.create')}
             </Button>
           </ContainerIsVisible>
-          <ContainerIsVisible
-            isVisible={HELPER.getAuthorByUserInfo({
-              roleType: PERMISSION_CODES.ADF_KN_FUNCTION_DELETE
-            })}
-          >
-            <Button disabled={_.isEmpty(selectedRowKeys)} onClick={() => openDeleteModel()}>
-              <IconFont type="icon-lajitong" />
-              {intl.get('global.delete')}
-            </Button>
-          </ContainerIsVisible>
+          <Button disabled={_.isEmpty(selectedRowKeys)} onClick={() => openDeleteModel()}>
+            <IconFont type="icon-lajitong" />
+            {intl.get('global.delete')}
+          </Button>
         </div>
         <div className="kw-align-center">
           <Format.Text className="kw-mr-2">{intl.get('function.language')}</Format.Text>
@@ -391,11 +325,7 @@ const FunctionTable = (props: any) => {
               nGQL
             </Select.Option>
           </Select>
-          <SearchInput
-            placeholder={intl.get('function.searchFunction')}
-            debounce
-            onChange={searchFunction}
-          ></SearchInput>
+          <SearchInput placeholder={intl.get('function.searchFunction')} debounce onChange={searchFunction} />
           <Dropdown
             className="dropdown kw-pointer"
             overlay={menuRule}
@@ -412,7 +342,7 @@ const FunctionTable = (props: any) => {
           </Format.Button>
         </div>
       </div>
-      <ADTable
+      <KwTable
         lastColWidth={170}
         showHeader={false}
         dataSource={tableData}
@@ -432,14 +362,7 @@ const FunctionTable = (props: any) => {
         emptyImage={!tableState?.search ? emptyImg : noResImg}
         emptyText={
           !tableState?.search ? (
-            <ContainerIsVisible
-              placeholder={<div className="kw-c-text">{intl.get('graphList.noContent')}</div>}
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_FUNCTION_CREATE,
-                userType: PERMISSION_KEYS.KN_ADD_FUNCTION,
-                userTypeDepend: kgData?.__codes
-              })}
-            >
+            <ContainerIsVisible placeholder={<div className="kw-c-text">{intl.get('graphList.noContent')}</div>}>
               <div>
                 {intl.get('function.emptyTip').split('|')[0]}
                 <span className="kw-c-primary kw-pointer" onClick={() => onChangeDrawer(true)}>
@@ -456,7 +379,7 @@ const FunctionTable = (props: any) => {
 
       {/* 删除二次确认弹窗 */}
       <TipModal
-        visible={deleteVisible}
+        open={deleteVisible}
         closable={false}
         title={intl.get('function.deleteFunTitle')}
         content={intl.get('function.deleteFunTip')}

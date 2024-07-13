@@ -34,7 +34,6 @@ const calculateSize = ({ source, sortKey = 'count', option }: CalculateType) => 
     }
   }
 
-  // 比中位值大的
   for (let i = medianIndex + 1; i < array.length; ++i) {
     const size = Math.sqrt(array[i][sortKey] || 1) * ratio;
     if (size <= maxSize) {

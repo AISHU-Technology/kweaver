@@ -21,7 +21,7 @@ import { PROJECT_STATE, projectReducer } from './enums';
 import createImg from '@/assets/images/kgEmpty.svg';
 import './style.less';
 
-let requestId = 0; // 标记网络请求
+let requestId = 0;
 
 const PromptHome = (props: any) => {
   const { className } = props;
@@ -29,9 +29,9 @@ const PromptHome = (props: any) => {
   const [projectList, setProjectList] = useState<ProjectItem[]>([]);
   const [projectState, dispatchProjectState] = useReducer(projectReducer, PROJECT_STATE);
   const [selectedCategory, setSelectedCategory] = useState<CategoryItem>({} as CategoryItem);
-  const [opController, setOpController] = useState({ visible: false, type: '', action: '', data: {} as any }); // 各种弹窗操作控制器
+  const [opController, setOpController] = useState({ visible: false, type: '', action: '', data: {} as any });
   const closeModal = () => setOpController({ visible: false, type: '', action: '', data: {} });
-  const operateType = useRef<any>(''); // 搜索
+  const operateType = useRef<any>('');
 
   useEffect(() => {
     const mount = async () => {
@@ -67,7 +67,6 @@ const PromptHome = (props: any) => {
         dispatchProjectState({ total, searchTotal });
         data.length &&
           setSelectedCategory(pre => {
-            // 从其他页面跳转回来, 选中指定分类
             if (isMount) {
               const { _project, _category } = getParam(['_project', '_category']);
               const category = getLatestCategory(data, {
@@ -78,14 +77,12 @@ const PromptHome = (props: any) => {
                 return category;
               }
             }
-            // 新建后选中
             if (targetData) {
               const category = getLatestCategory(data, targetData);
               if (category?.prompt_item_id) {
                 return { ...category, scroll: true };
               }
             }
-            // 更新选中的分类
             if (pre.prompt_item_id && operateType.current !== 'search') {
               const category = getLatestCategory(data, pre);
               if (category?.prompt_item_id) {
@@ -150,14 +147,12 @@ const PromptHome = (props: any) => {
       closeModal();
       let category: any;
       const { type, data } = opController;
-      // 新建后选中
       if (action === 'create') {
         category = {
           prompt_item_id: type === 'project' ? id : data.prompt_item_id,
           prompt_item_type_id: type === 'project' ? undefined : id
         };
       }
-      // 删除后选中后一个
       if (action === 'delete') {
         if (type === 'project' && data.prompt_item_id === selectedCategory.prompt_item_id && projectList.length > 1) {
           const index = _.findIndex(projectList, item => item.prompt_item_id === data.prompt_item_id);

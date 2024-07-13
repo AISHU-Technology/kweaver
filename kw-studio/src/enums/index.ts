@@ -16,8 +16,6 @@ export { default as GRAPH_LAYOUT } from './graph_layout';
 export { default as GRAPH_STATUS } from './graph_status';
 export * from './iframe_interactive_type';
 
-export { PERMISSION_CODES } from './permission_codes';
-export { default as PERMISSION_KEYS } from './permission_keys';
 export { default as PROPERTIES_TYPE } from './properties_type';
 export { ROLE_BLACKLIST } from './role_blacklist';
 export { default as UPLOAD_FAIL_TYPE } from './upload_fail_type';

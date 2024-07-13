@@ -71,7 +71,7 @@ const EditThesaurusModal = (props: any) => {
 
   return (
     <UniversalModal
-      visible={isVisible}
+      open={isVisible}
       width={480}
       keyboard={false}
       forceRender={true}

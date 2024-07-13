@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import cognitiveSearchService from '@/services/cognitiveSearch';
 import NoDataBox from '@/components/NoDataBox';
 import intl from 'react-intl-universal';
-import AdSpin from '@/components/AdSpin';
+import KwSpin from '@/components/KwSpin';
 import HOOKS from '@/hooks';
 import _ from 'lodash';
 import { useHistory, Prompt } from 'react-router-dom';
@@ -433,7 +433,7 @@ const ConfigTest = (props: any) => {
           {selfState.loading && (
             <div className={`loading-mask ${selfState.loading && 'spinning'}`}>
               <div className="spin-content-box kw-flex">
-                <AdSpin />
+                <KwSpin />
                 {selfState.textLoading && (
                   <div className={language === 'zh-CN' ? 'loading-content' : 'loading-us'}>
                     {intl.get('cognitiveSearch.loading')}
@@ -492,7 +492,7 @@ const ConfigTest = (props: any) => {
                 </div>
               ) : (
                 <div className="no-complete-search">
-                  <NoDataBox.NO_RESULT />
+                  <NoDataBox type="NO_RESULT" />
                   {!kgqaResData?.openai_status && !_.isEmpty(kgqaResData) && (
                     <div className="sorry-tip">
                       {kgqaResData.model_type === 'private_llm'

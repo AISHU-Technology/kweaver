@@ -50,8 +50,8 @@ const GroupList = (props: GroupListProps) => {
                   <>
                     <Dropdown
                       destroyPopupOnHide
-                      visible={isHover}
-                      onVisibleChange={visible => setHoverGroup(visible ? id : 0)}
+                      open={isHover}
+                      onOpenChange={visible => setHoverGroup(visible ? id : 0)}
                       overlay={
                         <Menu
                           // style={{ display: isHover ? undefined : 'none' }} // 强制隐藏

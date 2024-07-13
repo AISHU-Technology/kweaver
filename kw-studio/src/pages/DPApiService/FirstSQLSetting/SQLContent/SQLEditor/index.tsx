@@ -14,7 +14,6 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import serviceFunction from '@/services/functionManage';
 import HELPER from '@/utils/helper';
-import { PERMISSION_CODES } from '@/enums';
 import IconFont from '@/components/IconFont';
 import ParamCodeEditor, {
   ParamEditorRef,

@@ -44,7 +44,7 @@ const DeleteWordsModal = (props: any) => {
       footer={null}
       closable={false}
       maskClosable={false}
-      visible={isVisible}
+      open={isVisible}
       focusTriggerAfterClose={false}
       wrapClassName="words-delete-modal"
       onCancel={onCancel}

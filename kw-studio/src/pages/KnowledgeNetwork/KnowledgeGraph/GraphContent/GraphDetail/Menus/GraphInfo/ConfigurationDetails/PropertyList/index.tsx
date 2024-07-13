@@ -48,7 +48,7 @@ const PropertyList = (props: PropertyListType) => {
         <React.Fragment>
           {_.map(getCurrentList(items, page, pageSize), (item: PropertyType, index) => {
             return (
-              <>
+              <div key={`property${item.alias || index}`}>
                 <div key={index} className="kw-pb-4 kw-space-between">
                   <div className="kw-flex-column kw-flex-item-full-width">
                     <span className="kw-c-header" title={item.name}>
@@ -63,7 +63,7 @@ const PropertyList = (props: PropertyListType) => {
                   </div>
                 </div>
                 <Divider className="kw-mt-0 kw-mb-2" />
-              </>
+              </div>
             );
           })}
           <PaginationCommon

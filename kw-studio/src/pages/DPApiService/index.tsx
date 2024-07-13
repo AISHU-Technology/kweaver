@@ -5,7 +5,7 @@ import intl from 'react-intl-universal';
 import classNames from 'classnames';
 import IconFont from '@/components/IconFont';
 import { tipModalFunc } from '@/components/TipModal';
-import CHeader from '@/components/Header';
+import KwHeader from '@/components/KwHeader';
 import { getParam } from '@/utils/handleFunction';
 import TopSteps from './TopSteps';
 import FirstSQLSetting from './FirstSQLSetting';
@@ -105,7 +105,7 @@ const DPApiService = (props: any) => {
 
   return (
     <div className="dpapi-wrapper">
-      <CHeader onClickLogo={() => onExit('/home')} breadcrumb={breadcrumb} />
+      <KwHeader onClickLogo={() => onExit('/home')} breadcrumb={breadcrumb} />
       <DataWrapper>
         <div className="dpapi-top-step-container">
           <TopSteps step={step} onExit={onExit} isHideStep={action === 1} pageAction={action} />

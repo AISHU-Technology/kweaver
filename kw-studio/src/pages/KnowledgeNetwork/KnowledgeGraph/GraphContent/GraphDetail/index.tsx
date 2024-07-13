@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, message } from 'antd';
 
 import HELPER from '@/utils/helper';
-import { GRAPH_STATUS, PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
+import { GRAPH_STATUS } from '@/enums';
 import serviceGraphDetail from '@/services/graphDetail';
 
 import ContainerIsVisible from '@/components/ContainerIsVisible';
@@ -111,14 +111,7 @@ const GraphDetail = (props: GraphDetailType) => {
         {isFetching || isLoading ? null : graphBasicData.status === GRAPH_STATUS.CONFIGURATION ? (
           <div className="empty" onClick={() => menusRef.current.closeDrawer()}>
             <img className="kw-mb-2" src={empty} />
-            <ContainerIsVisible
-              placeholder={<div>{intl.get('global.noContent')}</div>}
-              isVisible={HELPER.getAuthorByUserInfo({
-                roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-                userType: PERMISSION_KEYS.KG_EDIT,
-                userTypeDepend: graphBasicData?.__codes
-              })}
-            >
+            <ContainerIsVisible placeholder={<div>{intl.get('global.noContent')}</div>}>
               <React.Fragment>
                 <div>{intl.get('graphDetail.noContentPleaseConfiguration')}</div>
                 <Button type="link" onClick={editGraph}>

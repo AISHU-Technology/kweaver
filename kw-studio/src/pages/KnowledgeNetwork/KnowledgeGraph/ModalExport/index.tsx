@@ -7,7 +7,6 @@ import { LoadingOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 
 import HOOKS from '@/hooks';
 import HELPER from '@/utils/helper';
-import { PERMISSION_KEYS, PERMISSION_CODES } from '@/enums';
 import servicesPermission from '@/services/rbacPermission';
 import serverKnowledgeNetwork from '@/services/knowledgeNetwork';
 import IconFont from '@/components/IconFont';
@@ -130,17 +129,7 @@ const ModalExport = (props: ModalExportType) => {
       dataIndex: 'operate',
       render: (val: any, data: any) => {
         return (
-          <Button
-            type="link"
-            onClick={() => onClickExport(data)}
-            // disabled={
-            //   !HELPER.getAuthorByUserInfo({
-            //     roleType: PERMISSION_CODES.ADF_KN_KG_EDIT,
-            //     userType: PERMISSION_KEYS.KG_EDIT,
-            //     userTypeDepend: data?.__codes
-            //   })
-            // }
-          >
+          <Button type="link" onClick={() => onClickExport(data)}>
             {intl.get('knowledge.export')}
           </Button>
         );
@@ -150,7 +139,7 @@ const ModalExport = (props: ModalExportType) => {
 
   return (
     <UniversalModal
-      visible={isVisible}
+      open={isVisible}
       width={480}
       footer={null}
       keyboard={false}
