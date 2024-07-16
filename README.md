@@ -59,7 +59,6 @@ GRANT ROLE ADMIN ON kweaver TO kweaver;
 ### 4、访问地址
 
 - 本地访问地址： http://localhost:3001
-- 演示地址： http://10.4.108.161:3001
 
 ### 5、依赖中间件
 
