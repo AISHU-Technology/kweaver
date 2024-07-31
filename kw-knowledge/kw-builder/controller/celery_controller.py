@@ -1,7 +1,4 @@
 # -*-coding:utf-8-*-
-# @Time    : 2020/11/9 10:42
-# @Author  : Lowe.li
-# @Email   : Lowe.li@aishu.cn
 import json
 import os
 import sys
@@ -18,11 +15,9 @@ from jsonschema import validate, ValidationError
 import common.stand_log as log_oper
 from common.errorcode import codes
 from common.errorcode.gview import Gview as Gview2
-from dao.intelligence_dao import intelligence_dao
 from service.graph_Service import graph_Service
 from service.task_Service import task_service
 from utils.CommonUtil import commonutil
-from utils.ConnectUtil import redisConnect
 from utils.Gview import Gview
 from utils.celery_check_params_json import celery_check_params
 from utils.common_response_status import CommonResponseStatus
@@ -68,7 +63,7 @@ def graph_capacity_send(url, count):
     return mess
 
 
-@task_controller_app.route('/<graph_id>', methods=["post"], strict_slashes=False)
+@task_controller_app.route('/add/<graph_id>', methods=["post"], strict_slashes=False)
 @swag_from(swagger_old_response)
 def execute_task(graph_id):
     '''
@@ -90,9 +85,9 @@ def execute_task(graph_id):
                 schema:
                     type: 'object'
                     required:
-                        - tasktype
+                        - task_type
                     properties:
-                        tasktype:
+                        task_type:
                             type: string
                             format: string
                             description: '任务构建类型，full(全量构建)，increment(增量构建)'
@@ -125,7 +120,7 @@ def execute_task(graph_id):
             return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                        message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
 
-        tasktype = params_json["tasktype"]
+        task_type = params_json["task_type"]
         trigger_type = 0
 
         # 根据graph_id 获取使用数据源类型, rabbitmq数据源时，trigger_type = 2
@@ -139,7 +134,7 @@ def execute_task(graph_id):
         # 调用执行
         url = "http://localhost:6485/buildertask"
         # url = "http://10.4.37.76:6485/buildertask"  # debug
-        payload = {"graph_id": graph_id, "tasktype": tasktype, "trigger_type": trigger_type}
+        payload = {"graph_id": graph_id, "task_type": task_type, "trigger_type": trigger_type}
         headers = {
             'Content-Type': 'application/json',
             'userId': request.headers.get("userId"),
@@ -174,7 +169,7 @@ def execute_task(graph_id):
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
 
-@task_controller_app.route('/batch/<graph_id>', methods=["post"], strict_slashes=False)
+@task_controller_app.route('/batch_add/<graph_id>', methods=["post"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def batch_execute_task(graph_id):
     '''
@@ -293,7 +288,7 @@ def delete_task(graph_id):
         return Gview2.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@task_controller_app.route('/<graph_id>', methods=["GET"], strict_slashes=False)
+@task_controller_app.route('/page/<graph_id>', methods=["GET"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def getalltask(graph_id):
     '''
@@ -397,7 +392,7 @@ def getalltask(graph_id):
         return Gview2.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@task_controller_app.route('/stoptask', methods=["POST"], strict_slashes=False)
+@task_controller_app.route('/stop', methods=["POST"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def stoptask():
     '''

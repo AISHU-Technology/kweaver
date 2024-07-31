@@ -53,7 +53,7 @@ class DsmService():
             # 失败情况返回错误
             if ret_code != CommonResponseStatus.SUCCESS.value:
                 # 添加问题数据源名称信息
-                ds_name_info = "inavailability data source name: {},".format(row['dsname'])
+                ds_name_info = "inavailability data source name: {},".format(row['ds_name'])
                 obj['cause'] = ds_name_info + ret_message['Description']
                 obj['code'] = CommonResponseStatus.SERVER_ERROR.value
                 obj['message'] = "check graph's data source error"
@@ -84,7 +84,7 @@ class DsmService():
             # 失败情况返回错误
             if ret_code != CommonResponseStatus.SUCCESS.value:
                 # 添加问题数据源名称信息
-                ds_name_info = "inavailability data source name: {},".format(row['dsname'])
+                ds_name_info = "inavailability data source name: {},".format(row['ds_name'])
                 obj['cause'] = ds_name_info + ret_message['Description']
                 obj['code'] = CommonResponseStatus.SERVER_ERROR.value
                 obj['message'] = "check graph's data source error"
@@ -403,8 +403,8 @@ class DsmService():
         obj = {}
         ds_id = -1  # 数据源id
         try:
-            dsname = params_json["dsname"].strip()
-            params_json["dsname"] = dsname
+            ds_name = params_json["ds_name"].strip()
+            params_json["ds_name"] = ds_name
             knw_id = params_json["knw_id"]
 
             # 知识网络不存在
@@ -420,7 +420,7 @@ class DsmService():
                 return ret_code, obj, ds_id
 
             # 校验数据源名是否重名
-            resname = dsm_dao.getbydsname(dsname, knw_id)
+            resname = dsm_dao.getbydsname(ds_name, knw_id)
             if len(resname) > 0:
                 ret_code = CommonResponseStatus.SERVER_ERROR.value
                 obj["ErrorCode"] = "Builder.service.dsm_Service.DsmService.addds.SameNameError"
@@ -505,7 +505,7 @@ class DsmService():
         try:
             kgIds = args.get("kgIds", [])
             page = args.get("page")
-            dsname = args.get("dsname")
+            ds_name = args.get("ds_name")
             size = args.get("size")
             order = args.get("order")
             knw_id = args.get("knw_id")
@@ -520,8 +520,8 @@ class DsmService():
                 
                 return ret_code, obj
 
-            count = dsm_dao.getCountbyname(dsname, kgIds, knw_id)
-            rec_dict = dsm_dao.getallbyname(dsname, int(page) - 1, int(size), order, kgIds, knw_id)
+            count = dsm_dao.getCountbyname(ds_name, kgIds, knw_id)
+            rec_dict = dsm_dao.getallbyname(ds_name, int(page) - 1, int(size), order, kgIds, knw_id)
             res = {}
             res["count"] = count
             res["df"] = rec_dict
@@ -555,7 +555,7 @@ class DsmService():
         new_ds_info["ds_path"] = ds_info["ds_path"]
         new_ds_info["ds_port"] = ds_info["ds_port"]
         new_ds_info["ds_user"] = ds_info["ds_user"]
-        new_ds_info["ds_name"] = ds_info["dsname"]
+        new_ds_info["ds_name"] = ds_info["ds_name"]
             
         return 200, new_ds_info
 
@@ -569,7 +569,7 @@ class DsmService():
         obj = {}
         flag_code = False
         flag_no_exit = False
-        ids = params_json["dsids"]
+        ids = params_json["ds_ids"]
         ids = set(ids)
         try:
             ds_infos = dsm_dao.getbyids(ids)
@@ -601,10 +601,10 @@ class DsmService():
                     ret = dsm_dao.delete(unuse_list)
                     if ret == 0:
                         ids = unuse_list
-                        message += "success delete dsids  %s !" % ",".join('%s' % id2 for id2 in ids)
+                        message += "success delete ds_ids  %s !" % ",".join('%s' % id2 for id2 in ids)
                     else:
                         ids = unuse_list
-                        message += "failed delete dsids  %s !" % ",".join('%s' % id2 for id2 in ids)
+                        message += "failed delete ds_ids  %s !" % ",".join('%s' % id2 for id2 in ids)
 
                 if len(use_list) > 0:
                     flag_code = True
@@ -622,7 +622,7 @@ class DsmService():
                     obj['code'] = CommonResponseStatus.DS_NO_EXIST_ERROR.value
                     obj['message'] = "delete fail!"
                 else:
-                    obj["res"] = "success delete dsids %s !" % ids
+                    obj["res"] = "success delete ds_ids %s !" % ids
                     obj["ds_ids"] = ids
             
 
@@ -668,9 +668,9 @@ class DsmService():
             #     
             #     return 500, obj
 
-            dsname = params_json["dsname"].strip()
-            params_json["dsname"] = dsname
-            resbyname = dsm_dao.getbydsnameId(dsname, id)
+            ds_name = params_json["ds_name"].strip()
+            params_json["ds_name"] = ds_name
+            resbyname = dsm_dao.getbydsnameId(ds_name, id)
             if len(resbyname) > 0:
                 obj["ErrorCode"] = "Builder.DsmService.Updata.SameNameError"
                 obj["Description"] = _l("Duplicate data source name")

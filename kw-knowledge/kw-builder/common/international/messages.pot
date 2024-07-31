@@ -1288,7 +1288,7 @@ msgstr ""
 msgid " parameters: ds_port must in 1~65535"
 msgstr ""
 
-msgid " parameters: dataType must be str"
+msgid " parameters: data_type must be str"
 msgstr ""
 
 msgid " parameters: extract_type must be str"
@@ -1298,17 +1298,17 @@ msgid " parameters: data_source must be str"
 msgstr ""
 
 msgid ""
-" parameters:dataType is structured  parameters:extract_type must be "
+" parameters:data_type is structured  parameters:extract_type must be "
 "standardExtraction!"
 msgstr ""
 
 msgid ""
-"parameters: dataType is unstructured  parameters: extract_type must be "
+"parameters: data_type is unstructured  parameters: extract_type must be "
 "modelExtraction!"
 msgstr ""
 
 msgid ""
-" parameters:dataType is unstructured  parameters:data_source must be "
+" parameters:data_type is unstructured  parameters:data_source must be "
 "Anyshare!"
 msgstr ""
 

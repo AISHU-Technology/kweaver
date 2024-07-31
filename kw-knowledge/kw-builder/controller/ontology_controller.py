@@ -45,7 +45,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
 
 
 ########mysql、hive根据数据源返回数据表#######
-@ontology_controller_app.route('/gettabbydsn', methods=["GET"])
+@ontology_controller_app.route('/ds_table/list', methods=["GET"])
 def get_table():
 
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -73,7 +73,7 @@ def get_table():
 
 
 # ##########源数据预览#########
-@ontology_controller_app.route('/previewdata', methods=["GET"])
+@ontology_controller_app.route('/preview_data', methods=["GET"])
 def data_preview():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -101,7 +101,7 @@ def data_preview():
 
 
 # 抽取数据
-@ontology_controller_app.route('/auto/autogenschema', methods=["post"])
+@ontology_controller_app.route('/autogen_schema', methods=["post"])
 def predict_ontology():
     try:
         params_json = request.get_data()
@@ -124,7 +124,7 @@ def predict_ontology():
 
 
 # 新建本体
-@ontology_controller_app.route('/saveontology', methods=["post"])
+@ontology_controller_app.route('/add', methods=["post"])
 def save_ontology():
     try:
         params_json = request.get_data()
@@ -158,7 +158,7 @@ def save_ontology():
         return Gview2.error_return(code, description=str(e), cause=str(e)), 500
 
 
-@ontology_controller_app.route('/editontology/<otl_id>', methods=['POST'])
+@ontology_controller_app.route('/edit/<otl_id>', methods=['POST'])
 def edit_ontology(otl_id):
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -198,7 +198,7 @@ def edit_ontology(otl_id):
         return Gview2.error_return(code, description=str(e), cause=str(e)), 500
 
 
-@ontology_controller_app.route('/deleteontology', methods=['POST'])
+@ontology_controller_app.route('/delete', methods=['POST'])
 def delete_ontology():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -234,7 +234,7 @@ def delete_ontology():
         return Gview2.error_return(code, description=str(e), cause=str(e)), 500
 
 
-@ontology_controller_app.route('/getotl', methods=["get"])
+@ontology_controller_app.route('/page', methods=["get"])
 def getall():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -305,18 +305,18 @@ def delotl():
     param_code, params_json, param_message = commonutil.getMethodParam()
     ret_code, ret_message = otl_service.delete(params_json, host_url)
     if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-        
+
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     user_name = request.headers.get("username")
     ids = set(params_json["otlids"])
     operation_log = log_oper.get_operation_log(user_name, log_oper.DELETE, list(ids), {}, "删除了本体{id=%s}" % ids, "otl")
     Logger.log_info(operation_log)
-    
+
     return Gview.BuVreturn(message=ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
-@ontology_controller_app.route('updatename/<otlid>', methods=["post"], strict_slashes=False)
+@ontology_controller_app.route('/edit_name/<otlid>', methods=["post"], strict_slashes=False)
 def updateotlname(otlid):
     try:
         host_url = getHostUrl()
@@ -394,22 +394,22 @@ def updateotlinfo(otlid):
                                    message="Incorrect parameter format"), CommonResponseStatus.BAD_REQUEST.value
 
 
-@ontology_controller_app.route('/getbykgid/<kgid>', methods=["get"], strict_slashes=False)
-def getotlbykgid(kgid):
+@ontology_controller_app.route('/kg/<kg_id>', methods=["get"], strict_slashes=False)
+def getotlbykgid(kg_id):
 
     host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
-    if not kgid.isdigit():
+    if not kg_id.isdigit():
         return Gview.TErrorreturn(
             ErrorCode='Builder.controller.ontology.getKGid.KGidWrongFormat',
-            Description='The parameter kgid type must be int!',
-            ErrorDetails='The parameter kgid type must be int!',
-            Solution='please check your KGid',
+            Description='The parameter kg_id type must be int!',
+            ErrorDetails='The parameter kg_id type must be int!',
+            Solution='please check your kg_id',
             ErrorLink=''
         ), 400
     if param_code == 0:
-        # 根据kgid查询本体id
-        code, obj = otl_service.getOtlIdbyKGId(kgid)
+        # 根据kg_id查询本体id
+        code, obj = otl_service.getOtlIdbyKGId(kg_id)
         if code != CommonResponseStatus.SUCCESS.value:
             return obj, code
         otlid = obj
@@ -418,13 +418,13 @@ def getotlbykgid(kgid):
         if ret_code != CommonResponseStatus.SUCCESS.value:
             return ret_message, ret_code
         # 过滤本体中不在图数据库中的点或边
-        ret_code, ret_message = otl_service.filterotl(kgid, ret_message)
+        ret_code, ret_message = otl_service.filterotl(kg_id, ret_message)
         if ret_code != CommonResponseStatus.SUCCESS.value:
             return ret_message, ret_code
         return ret_message, CommonResponseStatus.SUCCESS.value
 
 
-@ontology_controller_app.route('/task/build_task', methods=["POST"], strict_slashes=False)
+@ontology_controller_app.route('/task/build', methods=["POST"], strict_slashes=False)
 def build_onto_task():
     try:
         params_json = request.get_data()
@@ -459,7 +459,7 @@ def build_onto_task():
         return Gview2.TErrorreturn(code, cause=repr(e), description=repr(e)), 500
 
 
-@ontology_controller_app.route('/task/gettaskinfo', methods=["POST"], strict_slashes=False)
+@ontology_controller_app.route('/task/page', methods=["POST"], strict_slashes=False)
 def gettaskinfo():
 
     params_json = request.get_data()
@@ -494,7 +494,7 @@ def gettaskinfo():
         return res_json_return, CommonResponseStatus.SUCCESS.value
 
 
-@ontology_controller_app.route('/task/deletetask', methods=["POST"], strict_slashes=False)
+@ontology_controller_app.route('/task/delete', methods=["POST"], strict_slashes=False)
 def deletetask():
 
     params_json = request.get_data()
@@ -535,7 +535,7 @@ def deletetask():
         return res_json_return, CommonResponseStatus.SUCCESS.value
 
 
-@ontology_controller_app.route('/task/get_task_files', methods=["GET"], strict_slashes=False)
+@ontology_controller_app.route('/task_files/page', methods=["GET"], strict_slashes=False)
 def get_task_files():
 
     params_json = request.args.to_dict()
@@ -574,7 +574,7 @@ def get_task_files():
         return res_json_return, CommonResponseStatus.SUCCESS.value
 
 
-@ontology_controller_app.route('/task/deletealltask', methods=["DELETE"], strict_slashes=False)
+@ontology_controller_app.route('/task/batch_delete', methods=["DELETE"], strict_slashes=False)
 def deletealltask():
 
     params_json = request.args.to_dict()
@@ -615,7 +615,7 @@ def deletealltask():
 
 
 # 本体入口，一键导入时数据源列表
-@ontology_controller_app.route('/ds', methods=["get"], strict_slashes=False)
+@ontology_controller_app.route('/ds/list', methods=["get"], strict_slashes=False)
 def graphDsList():
 
     # dataIds = request.headers.get("dataIds")
@@ -627,139 +627,6 @@ def graphDsList():
         return Gview.BuFailVreturn(cause=ret_message["cause"], code=ret_message["code"],
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     return ret_message, CommonResponseStatus.SUCCESS.value
-
-
-@ontology_controller_open.route('/updateotlschema', methods=["POST"], strict_slashes=False)
-@swag_from(swagger_new_response)
-def updateotlschema():
-    """
-    本体编辑和图谱schema修改
-    同时支持orientdb和nebula， 但部分功能有差异，nebula不支持修改实体类或边类名称，nebula不支持修改类属性。
-    ---
-    operationId: updateotlschema
-    requestBody:
-        description: 'request body'
-        content:
-            application/json:
-                schema:
-                    type: 'object'
-                    required:
-                        - graph_id
-                        - operationtype
-                        - datatype
-                        - classname
-                    properties:
-                        graph_id:
-                            type: integer
-                            format: int32
-                            description: 图谱id
-                            example: 1
-                        operationtype:
-                            type: string
-                            format: string
-                            description: 操作类型，add(添加) delete(删除) update(更新)； name属性不能被修改和删除
-                            example: add
-                        datatype:
-                            type: string
-                            format: string
-                            description: 操作对象类型，要操作的schema数据类型实体类：entity 边类：edge 实体类属性：entityindex 边类属性：edgeindex 实体类索引：entityproperty 边类索引： edgeproperty
-                            example: entity
-                        classname:
-                            type: string
-                            format: string
-                            description: 实体类名称或边类名称
-                            example: entity_name
-                        propertyname:
-                            type: string
-                            format: string
-                            description: 属性名称
-                            example: pro_name
-                        propertytype:
-                            type: string
-                            format: string
-                            description: 属性类型，boolean,float,double,string,decimal,datetime,date,integer
-                            example: integer
-                        altertype:
-                            type: string
-                            format: string
-                            description: 修改类型，name 代表修改名称,type 代表修改类型
-                            example: name
-                        oldname:
-                            type: string
-                            format: string
-                            description: 类或者属性名
-                            example: oldname
-                        indextype:
-                            type: string
-                            format: string
-                            description: 索引类型，[fulltext] 全文索引 只提供新增全文索引的功能， 新增全文索引的时候 删除已有的全文索引，根据参数indexproperties新建新的全文索引（包含name）;本体中的索引使用indexproperties覆盖
-                            example: fulltext
-                        indexproperties:
-                            type: array
-                            items:
-                                type: string
-                            description: 索引字段，对哪些属性进行建立索引
-                            example: [
-                                "name",
-                                "id",
-                                "weight"
-                            ]
-                        edgein:
-                            type: string
-                            format: string
-                            description: 入边名称
-                            example: edgein
-                        edgeout:
-                            type: string
-                            format: string
-                            description: 出边名称
-                            example: edgeout
-                        unsafe:
-                            type: string
-                            format: string
-                            description: true为不安全模式，可暴力删除修改；false为使用安全模式，索引不能删除和修改
-                            example: true
-    """
-
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    graph_id = params_json.get("graph_id", None)
-    if graph_id is None:
-        obj = {}
-        message = "parameter graph_id cannot be empty!"
-        obj["ErrorCode"] = str(CommonResponseStatus.PARAMETERS_ERROR.value)
-        obj["Description"] = message
-        obj["Solution"] = "assign values to parameter graph_id.."
-        obj["ErrorDetails"] = message
-        obj["ErrorLink"] = ""
-        return Gview.VErrorreturn(obj), CommonResponseStatus.BAD_REQUEST.value
-    if type(graph_id).__name__ != "int":
-        obj = {}
-        message = "The parameter graph_id type must be int!"
-        obj["ErrorCode"] = str(CommonResponseStatus.PARAMETERS_ERROR.value)
-        obj["Description"] = message
-        obj["Solution"] = "Enter graph_id of type int."
-        obj["ErrorDetails"] = message
-        obj["ErrorLink"] = ""
-        return Gview.VErrorreturn(obj), CommonResponseStatus.BAD_REQUEST.value
-    if param_code == 0:
-        # 步骤2 参数图谱id是否存在; 图谱配置中本体是否存在，图谱状态是否运行中, 图谱数据库不存在,图谱不可用 ，并获得一些需要的信息
-        ret_code, ret_message, rec_dict = otlOpenSerivice.getGraphById(graph_id)
-        if ret_code == CommonResponseStatus.SERVER_ERROR.value:
-            error_log = log_oper.get_error_log(json.dumps(ret_message), sys._getframe())
-            Logger.log_error(error_log)
-            
-            return Gview.VErrorreturn(ret_message), CommonResponseStatus.SERVER_ERROR.value
-        ret_code, obj = otlOpenSerivice.updateotlschema(params_json, rec_dict, graph_id)
-        if ret_code != CommonResponseStatus.SUCCESS.value:
-            error_log = log_oper.get_error_log(json.dumps(ret_message), sys._getframe())
-            Logger.log_error(error_log)
-            return Gview.VErrorreturn(obj), ret_code
-        user_name = request.headers.get("username")
-        operation_log = log_oper.get_operation_log(user_name, log_oper.UPDATE, graph_id, params_json,
-                                                   "修改了图谱{id=%s}本体" % graph_id)
-        Logger.log_info(operation_log)
-        
-        return jsonify(obj), CommonResponseStatus.SUCCESS.value
 
 
 @ontology_controller_app.route('/import_task', methods=["POST"], strict_slashes=False)
@@ -972,7 +839,7 @@ def sql_extract():
         return Gview2.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@ontology_controller_app.route('/sql/previewdata', methods=["POST"], strict_slashes=False)
+@ontology_controller_app.route('/sql/preview_data', methods=["POST"], strict_slashes=False)
 def sql_preview_data():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -992,7 +859,7 @@ def sql_preview_data():
         return Gview2.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@ontology_controller_app.route('/vector/vector_service_status', methods=["GET"], strict_slashes=False)
+@ontology_controller_app.route('/vector/service_status', methods=["GET"], strict_slashes=False)
 def get_vector_service_status():
     try:
         code, data = otl_service.get_vector_service_status()
@@ -1022,7 +889,7 @@ def BindingDataSourceFiltering(res, OwnerIds):
                 if ds_id not in OwnerIds:
                     res["res"]["df"][i]["entity"][j]["source_table"] = []
                     res["res"]["df"][i]["entity"][j]["source_type"] = "manual"
-                    res["res"]["df"][i]["entity"][j]["dataType"] = ""
+                    res["res"]["df"][i]["entity"][j]["data_type"] = ""
                     res["res"]["df"][i]["entity"][j]["data_source"] = ""
                     res["res"]["df"][i]["entity"][j]["ds_address"] = ""
                     res["res"]["df"][i]["entity"][j]["ds_id"] = ""
@@ -1039,7 +906,7 @@ def BindingDataSourceFiltering(res, OwnerIds):
                 if ds_id not in OwnerIds:
                     res["res"]["df"][i]["edge"][k]["source_table"] = []
                     res["res"]["df"][i]["edge"][k]["source_type"] = "manual"
-                    res["res"]["df"][i]["edge"][k]["dataType"] = ""
+                    res["res"]["df"][i]["edge"][k]["data_type"] = ""
                     res["res"]["df"][i]["edge"][k]["data_source"] = ""
                     res["res"]["df"][i]["edge"][k]["ds_address"] = ""
                     res["res"]["df"][i]["edge"][k]["ds_id"] = ""

@@ -415,7 +415,7 @@ class IntelligenceQueryService(object):
             knw_intelligence['knw_name'] = knw_info["knw_name"]
             knw_intelligence['knw_description'] = knw_info["knw_description"]
             knw_intelligence['color'] = knw_info["color"]
-            knw_intelligence['creation_time'] = knw_info["creation_time"]
+            knw_intelligence['create_time'] = knw_info["create_time"]
             knw_intelligence['update_time'] = knw_info["update_time"]
             knw_intelligence['identify_id'] = knw_info['identify_id']
             knw_intelligence['graph_intelligence_list'] = graph_intelligence_list
@@ -583,7 +583,7 @@ class IntelligenceQueryService(object):
 
         graph_quality['calculate_status'] = calculate_status
         graph_quality['last_task_message'] = task_info.get('result') if task_info.get('result') else ""
-        graph_quality['last_task_time'] = (task_info['created_time']).strftime('%Y-%m-%d %H:%M:%S')
+        graph_quality['last_task_time'] = (task_info['create_time']).strftime('%Y-%m-%d %H:%M:%S')
 
     def check_uint(self, graph_id):
         if not graph_id:

@@ -17,7 +17,7 @@ class Otl_check_params(object):
     # 某些参数只有固定值
 
     rule_dict = {}
-    rule_dict["dataType"] = ["structured", "unstructured"]
+    rule_dict["data_type"] = ["structured", "unstructured"]
     rule_dict["extract_type"] = ["standardExtraction", "modelExtraction"]
     rule_dict["data_source"] = ["mysql", "hive", "sqlserver", "kingbasees", "postgresql",
                                 "clickhouse"]
@@ -55,15 +55,15 @@ class Otl_check_params(object):
     otl_paramdic["flatfile"] = ("ds_id", "postfix", "file",)
     param_dic["extract_type"] = ["standardExtraction", "modelExtraction", "", ]
     param_dic["file_type"] = ["csv", "json", "", "all", ]
-    param_dic["dataType"] = ["structured", "unstructured", "", ]
+    param_dic["data_type"] = ["structured", "unstructured", "", ]
     param_dic["source_type"] = ["automatic", "manual", ]
     param_dic["model"] = ["AImodel", "Generalmodel", "Anysharedocumentmodel", "Contractmodel",
                           "OperationMaintenanceModel", ""]
     param_dic["data_source"] = ["mysql", "hive", "", "sqlserver", "kingbasees", "postgresql"]
     params["entity"] = ["name", "alias", "properties", "colour", "source_type", "ds_name", "source_table", "file_type",
-                        "dataType", "extract_type", "model", "ds_id", "data_source", "ds_path", "properties_index",
+                        "data_type", "extract_type", "model", "ds_id", "data_source", "ds_path", "properties_index",
                         "task_id", "entity_id", "x", "y", "icon", "default_tag", "vector_generation"]
-    params["edge"] = ["name", "alias", "colour", "ds_name", "dataType", "extract_type", "model", "file_type",
+    params["edge"] = ["name", "alias", "colour", "ds_name", "data_type", "extract_type", "model", "file_type",
                       "properties", "source_table", "source_type", "relations", "properties_index", "task_id", "ds_id",
                       "edge_id"]
     params_v1["entity"] = ['entity_id', 'name', 'description', 'alias', 'synonym', 'default_tag', 'properties_index',

@@ -311,8 +311,8 @@ class LexiconService:
             res["error_info"] = _l(res["error_info"] if res["error_info"] else res["error_info"])
             if res["status"] == "running":
                 res["columns"] = eval(res.get("columns"))
-                res["create_user"] = uuid2name.get(res["create_user"])
-                res["operate_user"] = uuid2name.get(res["operate_user"])
+                res["create_by"] = uuid2name.get(res["create_by"])
+                res["update_by"] = uuid2name.get(res["update_by"])
                 res["word_info"] = []
                 
                 return 200, res
@@ -323,8 +323,8 @@ class LexiconService:
                                                                  int(params_json.get("size")))
             res["columns"] = eval(res.get("columns"))
             res["count"] = count
-            res["create_user"] = uuid2name.get(res["create_user"])
-            res["operate_user"] = uuid2name.get(res["operate_user"])
+            res["create_by"] = uuid2name.get(res["create_by"])
+            res["update_by"] = uuid2name.get(res["update_by"])
             if word_info:
                 titles = list(word_info[0].keys())
                 titles.sort()

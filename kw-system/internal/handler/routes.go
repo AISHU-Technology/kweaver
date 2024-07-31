@@ -24,7 +24,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: eventLog.AddEvent(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/eventStats/v1/event_log"),
+		rest.WithPrefix("/api/system/v1/event_log"),
 	)
 	server.AddRoutes(
 		[]rest.Route{
@@ -39,7 +39,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: health.Alive(),
 			},
 		},
-		rest.WithPrefix("/api/eventStats/v1/health"),
+		rest.WithPrefix("/api/system/v1/health"),
 	)
 	server.AddRoutes(
 		[]rest.Route{
@@ -94,7 +94,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: dict.DeleteDictItem(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/eventStats/v1/dict"),
+		rest.WithPrefix("/api/system/v1/dict"),
 	)
 	server.AddRoutes(
 		[]rest.Route{
@@ -129,6 +129,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: menu.GetMenuTree(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/eventStats/v1/menu"),
+		rest.WithPrefix("/api/system/v1/menu"),
 	)
 }

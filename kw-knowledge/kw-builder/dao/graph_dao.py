@@ -105,7 +105,7 @@ class GraphDao():
         values_list.append('{}')
         values_list.append(params_json["knw_id"])
         sql = "INSERT INTO graph_config_table " \
-              "(create_user, update_user, create_time, update_time, graph_name, KDB_name, status, " \
+              "(create_by, update_by, create_time, update_time, graph_name, KDB_name, status, " \
               "graph_baseInfo, graph_ds, graph_otl, graph_KMap, knw_id) " \
               "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         Logger.log_info(sql % tuple(values_list))
@@ -118,9 +118,9 @@ class GraphDao():
         new_ids = {}
         sql_ontology = """
         INSERT INTO ontology_table (
-            create_user,
+            create_by,
             create_time,
-            update_user, 
+            update_by, 
             update_time,
             ontology_name, 
             ontology_des, 
@@ -135,9 +135,9 @@ class GraphDao():
         """
         # 拼接ontology需要的数据结构
         ontology_value_list = []
-        ontology_value_list.append(ontology["create_user"])
+        ontology_value_list.append(ontology["create_by"])
         ontology_value_list.append(ontology["create_time"])
-        ontology_value_list.append(ontology["update_user"])
+        ontology_value_list.append(ontology["update_by"])
         ontology_value_list.append(ontology["update_time"])
         ontology_value_list.append(ontology["ontology_name"])
         ontology_value_list.append(ontology["ontology_des"])
@@ -157,9 +157,9 @@ class GraphDao():
 
         sql_graph_config = """
         INSERT INTO graph_config_table (
-                create_user,
+                create_by,
                 create_time, 
-                update_user,
+                update_by,
                 update_time, 
                 graph_name,
                 status, 
@@ -177,9 +177,9 @@ class GraphDao():
         """
         # 拼接graph_config所需要的结构
         graph_config_value_list = []
-        graph_config_value_list.append(graph_config["create_user"])
+        graph_config_value_list.append(graph_config["create_by"])
         graph_config_value_list.append(graph_config["create_time"])
-        graph_config_value_list.append(graph_config["update_user"])
+        graph_config_value_list.append(graph_config["update_by"])
         graph_config_value_list.append(graph_config["update_time"])
         graph_config_value_list.append(graph_config["graph_name"])
         graph_config_value_list.append("edit")
@@ -228,7 +228,7 @@ class GraphDao():
         sql_graph_config = \
         """
         update graph_config_table set
-            update_user = %s,
+            update_by = %s,
             update_time = %s, 
             graph_ds = %s,
             graph_KMap = %s,
@@ -239,7 +239,7 @@ class GraphDao():
         """
         # 拼接graph_config所需要的结构
         graph_config_value_list = []
-        graph_config_value_list.append(graph_config["update_user"])
+        graph_config_value_list.append(graph_config["update_by"])
         graph_config_value_list.append(graph_config["update_time"])
         graph_config_value_list.append(graph_config["graph_ds"])
         graph_config_value_list.append(graph_config["graph_KMap"])
@@ -255,7 +255,7 @@ class GraphDao():
         sql_ontology = \
         """
         update ontology_table set
-            update_user = %s, 
+            update_by = %s, 
             update_time = %s,
             otl_status = %s,
             entity = %s,
@@ -268,7 +268,7 @@ class GraphDao():
         """
         # 拼接ontology需要的数据结构
         ontology_value_list = []
-        ontology_value_list.append(ontology["update_user"])
+        ontology_value_list.append(ontology["update_by"])
         ontology_value_list.append(ontology["update_time"])
         ontology_value_list.append(ontology["otl_status"])
         ontology_value_list.append(ontology["entity"])
@@ -443,7 +443,7 @@ class GraphDao():
         userId = ""
         values_list.append(userId)  # 用户
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
-        sql = """UPDATE graph_config_table SET update_user=%s, update_time=%s """
+        sql = """UPDATE graph_config_table SET update_by=%s, update_time=%s """
 
         # 传入什么key 更新相关的数据 动态拼接sql
         for key in params_json:
@@ -505,19 +505,19 @@ class GraphDao():
             values_list.append(int(id))
             sql = "UPDATE graph_config_table " \
                   "SET " \
-                  f"update_user=%s, update_time=%s, graph_name=%s, {graph_step}=%s, step_num=%s " \
+                  f"update_by=%s, update_time=%s, graph_name=%s, {graph_step}=%s, step_num=%s " \
                   "where id = %s"
         elif graph_step == "graph_otl":
             values_list.append(str(otl_id))
             values_list.append(id)
-            sql = f"""UPDATE graph_config_table SET update_user=%s, update_time=%s,{graph_step}=%s where id = %s"""
+            sql = f"""UPDATE graph_config_table SET update_by=%s, update_time=%s,{graph_step}=%s where id = %s"""
         elif graph_step == "graph_KMap":
             step_num = 4
             step_num = step_raw if step_num < step_raw else step_num
             values_list.append(str(params_json["graph_process"]))
             values_list.append(step_num)
             values_list.append(int(id))
-            sql = f"""UPDATE graph_config_table SET update_user=%s, update_time=%s,{graph_step}=%s,
+            sql = f"""UPDATE graph_config_table SET update_by=%s, update_time=%s,{graph_step}=%s,
                       step_num=%s  where id = %s"""
 
         elif graph_step == "graph_ds":
@@ -528,7 +528,7 @@ class GraphDao():
             values_list.append(id)
             rabbitmq_ds = str(params_json.get("rabbitmq_ds", "0"))
             condition = f" rabbitmq_ds={rabbitmq_ds}, "
-            sql = f"""UPDATE graph_config_table SET update_user=%s, update_time=%s,{graph_step}=%s,""" \
+            sql = f"""UPDATE graph_config_table SET update_by=%s, update_time=%s,{graph_step}=%s,""" \
                   + condition + """step_num=%s where id = %s"""
         Logger.log_info(sql % tuple(values_list))
         cursor.execute(sql, values_list)
@@ -696,7 +696,7 @@ class GraphDao():
         if isinstance(graph_id_list, list):
             graph_id_str = ','.join([str(graph_id) for graph_id in graph_id_list])
 
-        sql = f"""SELECT gct.knw_id, kn.knw_name, kn.knw_description, kn.color, kn.creation_time,
+        sql = f"""SELECT gct.knw_id, kn.knw_name, kn.knw_description, kn.color, kn.create_time,
                     kn.update_time as update_time, gct.id as graph_id, gct.graph_name as graph_name,
                     gct.graph_otl as graph_otl, gct.update_time last_update_time, gct.graph_baseInfo as graph_baseInfo, 
                     gct.graph_KMap as graph_kmap
@@ -744,8 +744,8 @@ class GraphDao():
     def insert_timed_data(self, crontab_data, task_data, connection, cursor):
         crontab_sql = """INSERT INTO timer_crontab (minute,hour,day_of_month,month_of_year,day_of_week,timezone)
                   VALUES(%s,%s,%s,%s,%s,%s)"""
-        task_sql = """INSERT INTO timer_task (task_id,task,args,kwargs,create_user,update_user,graph_id,task_type,cycle,
-                enabled,date_time,date_list,crontab_id,modify_time,create_time) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
+        task_sql = """INSERT INTO timer_task (task_id,task,args,kwargs,create_by,update_by,graph_id,task_type,cycle,
+                enabled,date_time,date_list,crontab_id,update_time,create_time) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
                 %s,%s,%s,%s)"""
         Logger.log_info(crontab_sql % tuple(crontab_data))
         cursor.execute(crontab_sql, crontab_data)
@@ -774,8 +774,8 @@ class GraphDao():
                                 date_time in (select date_time from timer_task where task_id='{task_id}' and graph_id={graph_id})"""
         else:
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            update_run_sql = f"""UPDATE timer_task SET enabled={enabled},update_user='{user_id}',
-                                 modify_time='{now}' where graph_id={graph_id} and task_id='{task_id}'"""
+            update_run_sql = f"""UPDATE timer_task SET enabled={enabled},update_by='{user_id}',
+                                 update_time='{now}' where graph_id={graph_id} and task_id='{task_id}'"""
         Logger.log_info(update_run_sql)
         cursor.execute(update_run_sql)
         new_id = rdsdriver.process_last_row_id(cursor.lastrowid)
@@ -798,8 +798,8 @@ class GraphDao():
         crontab_sql = f"""UPDATE timer_crontab SET minute='{minute}',hour='{hour}',day_of_month='{day_of_month}',
                           month_of_year='{month_of_year}',day_of_week='{day_of_week}' where id={crontab_id}"""
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        task_sql = f"""UPDATE timer_task SET args='{args}',update_user='{user_id}',task_type='{task_type}',
-                     cycle='{cycle}', enabled={enabled},date_time='{date_time}',modify_time='{now}',
+        task_sql = f"""UPDATE timer_task SET args='{args}',update_by='{user_id}',task_type='{task_type}',
+                     cycle='{cycle}', enabled={enabled},date_time='{date_time}',update_time='{now}',
                      date_list='{date_list}' where task_id='{task_id}' and graph_id={graph_id}"""
         Logger.log_info(crontab_sql)
         cursor.execute(crontab_sql)
@@ -854,13 +854,13 @@ class GraphDao():
     def select_timed_page(self, graph_id, order_type, page, size, connection, cursor):
         # sql = f"""select t.task_id,t.task_type,t.cycle,t.date_time as datetime,t.date_list,t.enabled,
         #      t.create_time as create_time,
-        #      t.modify_time as modify_time,
-        #      a.username as update_user from timer_task t left join
-        #      account a on t.update_user = a.account_id where t.graph_id={graph_id} order by t.create_time {order_type}
+        #      t.update_time as update_time,
+        #      a.username as update_by from timer_task t left join
+        #      account a on t.update_by = a.account_id where t.graph_id={graph_id} order by t.create_time {order_type}
         #      limit {(page - 1) * size},{size}"""
         sql = f"""select t.task_id,t.task_type,t.cycle,t.date_time as datetime,t.date_list,t.enabled,
              t.create_time as create_time,
-             t.modify_time as modify_time 
+             t.update_time as update_time 
              from timer_task t  where t.graph_id={graph_id} order by t.create_time {order_type}
              limit {(page - 1) * size},{size}"""
         Logger.log_info(sql)

@@ -9,8 +9,8 @@ class FunctionDao:
     @connect_execute_commit_close_db
     def insert_function(self, params_json, cursor, connection):
         sql = 'insert into `function` ' \
-              '(name, code, description, parameters, create_time, update_time, create_user, ' \
-              'update_user, knowledge_network_id, language) ' \
+              '(name, code, description, parameters, create_time, update_time, create_by, ' \
+              'update_by, knowledge_network_id, language) ' \
               'values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
         # userId = request.headers.get("userId")
         userId = ""
@@ -52,7 +52,7 @@ class FunctionDao:
     def update_function(self, params_json, cursor, connection):
         sql = 'update `function` set ' \
               'name=%s, code=%s, description=%s, parameters=%s, update_time=%s,' \
-              'update_user=%s, knowledge_network_id=%s ' \
+              'update_by=%s, knowledge_network_id=%s ' \
               'where id=%s'
         # userId = request.headers.get("userId")
         userId = ""
@@ -108,12 +108,12 @@ class FunctionDao:
         language = params_json.get('language', None)
         values = [knw_id]
         # sql = 'select f.id, f.name name, f.description, f.create_time, f.update_time, f.knowledge_network_id, ' \
-        #       'f.language, a1.username create_user, a2.username update_user from `function` f ' \
-        #       'left join account a1 on a1.account_id = f.create_user ' \
-        #       'left join account a2 on a2.account_id = f.update_user ' \
+        #       'f.language, a1.username create_by, a2.username update_by from `function` f ' \
+        #       'left join account a1 on a1.account_id = f.create_by ' \
+        #       'left join account a2 on a2.account_id = f.update_by ' \
         #       'where f.knowledge_network_id=%s '
         sql = 'select f.id, f.name name, f.description, f.create_time, f.update_time, f.knowledge_network_id, ' \
-              'f.language, f.create_user, f.update_user from `function` f ' \
+              'f.language, f.create_by, f.update_by from `function` f ' \
               'where f.knowledge_network_id=%s '
 
         if len(function_ids) > 0:
@@ -132,12 +132,12 @@ class FunctionDao:
     @connect_execute_close_db
     def get_function_detail_by_id(self, function_id, cursor, connection):
         # sql = 'select f.id, f.name name, f.description, f.create_time, f.update_time, f.knowledge_network_id, ' \
-        #       'f.code, f.parameters, f.language, a1.username create_user, a2.username update_user from `function` f '\
-        #       'left join account a1 on a1.account_id = f.create_user ' \
-        #       'left join account a2 on a2.account_id = f.update_user ' \
+        #       'f.code, f.parameters, f.language, a1.username create_by, a2.username update_by from `function` f '\
+        #       'left join account a1 on a1.account_id = f.create_by ' \
+        #       'left join account a2 on a2.account_id = f.update_by ' \
         #       'where f.id=%s '
         sql = 'select f.id, f.name name, f.description, f.create_time, f.update_time, f.knowledge_network_id, ' \
-              'f.code, f.parameters, f.language, f.create_user, f.update_user from `function` f ' \
+              'f.code, f.parameters, f.language, f.create_by, f.update_by from `function` f ' \
               'where f.id=%s '
         Logger.log_info(sql)
         cursor.execute(sql, function_id)

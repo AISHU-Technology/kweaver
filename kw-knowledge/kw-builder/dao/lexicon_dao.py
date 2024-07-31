@@ -35,8 +35,8 @@ class LexiconDao:
         value_list.append("")
 
         sql = """
-                INSERT INTO lexicon (lexicon_name, description, knowledge_id, create_user,
-                 operate_user, create_time, update_time, columns, status, error_info, mode, extract_info)
+                INSERT INTO lexicon (lexicon_name, description, knowledge_id, create_by,
+                 update_by, create_time, update_time, columns, status, error_info, mode, extract_info)
                  VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 """
         Logger.log_info("insert_lexicon: {}".format(sql % tuple(value_list)))
@@ -169,21 +169,21 @@ class LexiconDao:
     def update_lexicon(self, id, name, description, extract_info, user_id, connection, cursor):
         """ 编辑词库信息"""
         value_list = []
-        operate_user = user_id
+        update_by = user_id
         update_time = arrow.now().format('YYYY-MM-DD HH:mm:ss')
         value_list.append(name)
         value_list.append(description)
-        value_list.append(operate_user)
+        value_list.append(update_by)
         value_list.append(update_time)
         if extract_info is not None:
             value_list.append(str(extract_info))
             sql = """
-                UPDATE lexicon SET lexicon_name=%s, description=%s, operate_user=%s, update_time=%s, extract_info=%s
+                UPDATE lexicon SET lexicon_name=%s, description=%s, update_by=%s, update_time=%s, extract_info=%s
                  WHERE id=%s;
             """
         else:
             sql = """
-                UPDATE lexicon SET lexicon_name=%s, description=%s, operate_user=%s, update_time=%s WHERE id=%s;
+                UPDATE lexicon SET lexicon_name=%s, description=%s, update_by=%s, update_time=%s WHERE id=%s;
             """
         value_list.append(id)
         Logger.log_info("update lexicon: {}".format(sql % tuple(value_list)))
@@ -195,11 +195,11 @@ class LexiconDao:
     def update_lexicon_user_and_time(self, id, user_id, connection, cursor):
         """ 编辑词库信息"""
         sql = """
-                    UPDATE lexicon SET operate_user='{}', update_time='{}' WHERE id={};
+                    UPDATE lexicon SET update_by='{}', update_time='{}' WHERE id={};
                 """
-        operate_user = user_id
+        update_by = user_id
         update_time = arrow.now().format('YYYY-MM-DD HH:mm:ss')
-        sql = sql.format(operate_user, update_time, id)
+        sql = sql.format(update_by, update_time, id)
         Logger.log_info("update lexicon: {}".format(sql))
         cursor.execute(sql)
         new_id = rdsdriver.process_last_row_id(cursor.lastrowid)
@@ -223,12 +223,12 @@ class LexiconDao:
     def update_lexicon_columns(self, id, columns, user_id, connection, cursor):
         """ 编辑词库信息"""
         sql = """
-                        UPDATE lexicon SET operate_user='{}', update_time='{}', columns='{}' WHERE id={};
+                        UPDATE lexicon SET update_by='{}', update_time='{}', columns='{}' WHERE id={};
                     """
-        operate_user = user_id
+        update_by = user_id
         update_time = arrow.now().format('YYYY-MM-DD HH:mm:ss')
         columns = str(columns).replace("'", '"')
-        sql = sql.format(operate_user, update_time, columns, id)
+        sql = sql.format(update_by, update_time, columns, id)
         Logger.log_info("update lexicon: {}".format(sql))
         cursor.execute(sql)
         new_id = rdsdriver.process_last_row_id(cursor.lastrowid)

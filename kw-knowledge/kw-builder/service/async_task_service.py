@@ -37,15 +37,15 @@ class AsyncTaskService(object):
         else:
             task_status = "unkonwn"
         celery_task_id = task.id
-        finished_time = task.date_done
-        if finished_time is not None:
-            utcTime = datetime.datetime.strptime(str(finished_time).split(".")[0], "%Y-%m-%d %H:%M:%S")
-            finished_time = utcTime + datetime.timedelta(hours=8)
+        update_time = task.date_done
+        if update_time is not None:
+            utcTime = datetime.datetime.strptime(str(update_time).split(".")[0], "%Y-%m-%d %H:%M:%S")
+            update_time = utcTime + datetime.timedelta(hours=8)
         # 更新本体任务状态
         update_params = dict()
         update_params["task_status"] = task_status
         update_params["celery_task_id"] = celery_task_id
-        update_params["finished_time"] = finished_time
+        update_params["update_time"] = update_time
 
         ret_code, obj = self.update(task_id, update_params)
             
@@ -161,7 +161,7 @@ class AsyncTaskService(object):
         # 保存取消状态
         update_param = dict()
         update_param['task_status'] = 'canceled'
-        update_param['finished_time'] = datetime.datetime.now()
+        update_param['update_time'] = datetime.datetime.now()
         update_param['result'] = '已取消'
         code, res = self.update(task_id, update_param)
         if code != codes.successCode:

@@ -44,7 +44,7 @@ def getHostUrl():
     return hostUrl
 
 
-@lexicon_controller_app.route('/create', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/add', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def create_lexicon():
     '''
@@ -146,7 +146,7 @@ def create_lexicon():
                                    ErrorDetails=repr(e)), 500
 
 
-@lexicon_controller_app.route('/create/template_lexicon', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/add/template_lexicon', methods=["POST"], strict_slashes=False)
 def create_template_lexicon():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -177,7 +177,7 @@ def create_template_lexicon():
         return Gview2.error_return(code, description=str(e)), 500
 
 
-@lexicon_controller_app.route('/build_task', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/build', methods=["POST"], strict_slashes=False)
 def build_task():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -208,7 +208,7 @@ def build_task():
         return Gview2.error_return(code, description=str(e)), 500
 
 
-@lexicon_controller_app.route('/getall', methods=["GET"], strict_slashes=False)
+@lexicon_controller_app.route('/page', methods=["GET"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def get_lexicon():
     '''
@@ -287,7 +287,7 @@ def get_lexicon():
                                ErrorDetails=res), 500
 
 
-@lexicon_controller_app.route('/getbyid', methods=["GET"], strict_slashes=False)
+@lexicon_controller_app.route('/detail', methods=["GET"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def get_lexicon_by_id():
     '''
@@ -338,7 +338,7 @@ def get_lexicon_by_id():
                                ErrorDetails=res), 500
 
 
-@lexicon_controller_app.route('/insert', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/add', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def insert_word2lexicon():
     '''
@@ -396,7 +396,7 @@ def insert_word2lexicon():
                                    data=params_json.get("word_info")), 500
 
 
-@lexicon_controller_app.route('/search', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/search', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def search_word_in_lexicon():
     '''
@@ -448,7 +448,7 @@ def search_word_in_lexicon():
                                ErrorDetails=res), 500
 
 
-@lexicon_controller_app.route('/edit_words', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/edit', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def edit_word_in_lexicon():
     '''
@@ -510,7 +510,7 @@ def edit_word_in_lexicon():
                                    ErrorDetails=error_code), 500
 
 
-@lexicon_controller_app.route('/delete_words', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/delete', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def delete_word_in_lexicon():
     '''
@@ -645,7 +645,7 @@ def delete_lexicon():
                                ErrorDetails=mess), 500
 
 
-@lexicon_controller_app.route('/import_words', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/import', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def import_word2lexicon():
     '''

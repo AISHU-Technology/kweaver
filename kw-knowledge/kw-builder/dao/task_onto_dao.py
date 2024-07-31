@@ -145,7 +145,7 @@ class TaskDaoOnto(object):
         values_list.append(str(postfix))
         values_list.append(str(arrow.now().format('YYYY-MM-DD HH:mm:ss')))
         values_list.append(str(otl_id))
-        sql = """INSERT INTO ontology_task_table ( create_user,task_name, ds_id, task_type,postfix,create_time,ontology_id) VALUES(%s,%s,%s,%s,%s,%s,%s)"""
+        sql = """INSERT INTO ontology_task_table ( create_by,task_name, ds_id, task_type,postfix,create_time,ontology_id) VALUES(%s,%s,%s,%s,%s,%s,%s)"""
         Logger.log_info(sql % tuple(values_list))
         cursor.execute(sql, values_list)
         new_id = rdsdriver.process_last_row_id(cursor.lastrowid)
@@ -163,23 +163,23 @@ class TaskDaoOnto(object):
 
 
     @connect_execute_commit_close_db
-    def update_otl_statusbyid(self, status, error_report, celery_task_id,task_id,finished_time, connection, cursor):
+    def update_otl_statusbyid(self, status, error_report, celery_task_id,task_id,update_time, connection, cursor):
         values_list = []
         values_list.append(str(status))
         error_report = str(error_report)
         # error_report = error_report.replace('"', "'")
         values_list.append(error_report)
         values_list.append(str(celery_task_id))
-        if finished_time != "None":
-            values_list.append(str(finished_time))
+        if update_time != "None":
+            values_list.append(str(update_time))
         else :
             values_list.append(str("-"))
         values_list.append(str(task_id))
         if error_report == "":
-            sql = """UPDATE ontology_task_table SET task_status=%s, celery_task_id=%s ,finished_time=%s WHERE task_id=%s;"""
+            sql = """UPDATE ontology_task_table SET task_status=%s, celery_task_id=%s ,update_time=%s WHERE task_id=%s;"""
             new_values_list = [values_list[0], values_list[2], values_list[3], values_list[4]]
         else:
-            sql = """UPDATE ontology_task_table SET task_status=%s, result=%s, celery_task_id=%s,finished_time=%s WHERE task_id=%s;"""
+            sql = """UPDATE ontology_task_table SET task_status=%s, result=%s, celery_task_id=%s,update_time=%s WHERE task_id=%s;"""
             new_values_list = [values_list[0], values_list[1], values_list[2], values_list[3], values_list[4]]
 
         Logger.log_info(sql % tuple(new_values_list))
@@ -188,23 +188,23 @@ class TaskDaoOnto(object):
         return new_id
 
     @connect_execute_commit_close_db
-    def update_otl_status_byceleryid(self, status, error_report, celery_task_id,finished_time, connection, cursor):
+    def update_otl_status_byceleryid(self, status, error_report, celery_task_id,update_time, connection, cursor):
         values_list = []
         values_list.append(str(status))
         error_report = str(error_report)
         values_list.append(error_report)
-        if finished_time != "None":
-            values_list.append(str(finished_time))
+        if update_time != "None":
+            values_list.append(str(update_time))
         else :
             values_list.append("-")
         values_list.append(str(celery_task_id))
 
         # values_list.append(str(task_id))
         if error_report == "":
-            sql = """UPDATE ontology_task_table SET task_status=%s, finished_time=%s WHERE celery_task_id=%s;"""
+            sql = """UPDATE ontology_task_table SET task_status=%s, update_time=%s WHERE celery_task_id=%s;"""
             new_values_list = [values_list[0], values_list[2], values_list[3]]
         else:
-            sql = """UPDATE ontology_task_table SET task_status=%s, result=%s, finished_time=%s WHERE celery_task_id=%s;"""
+            sql = """UPDATE ontology_task_table SET task_status=%s, result=%s, update_time=%s WHERE celery_task_id=%s;"""
             new_values_list = [values_list[0], values_list[1], values_list[2], values_list[3]]
         Logger.log_info(sql % tuple(new_values_list))
         cursor.execute(sql, new_values_list)
@@ -214,7 +214,7 @@ class TaskDaoOnto(object):
     @connect_execute_close_db
     def get_task_by_task_id(self, task_id, connection, cursor):
         # sql = """SELECT a1.usernameAS create_user_name,o.* FROM ontology_task_table AS o
-        #         LEFT JOIN account a1 ON a1.account_id=o.create_user
+        #         LEFT JOIN account a1 ON a1.account_id=o.create_by
         #         where task_id = %s""" % (str(task_id))
         sql = """SELECT o.* FROM ontology_task_table AS o 
                 where task_id = %s""" % (str(task_id))

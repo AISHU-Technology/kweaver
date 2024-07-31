@@ -6,13 +6,13 @@ router02 = APIRouter()
 
 
 # 获取提示词项目列表信息接口
-@router02.get('/prompt-item-source')
+@router02.get('/prompt/item/list')
 async def source_prompt_item(request: Request, prompt_item_name='', is_management="false"):
     return await source_prompt_item_endpoint(request, prompt_item_name, is_management)
 
 
 # 获取提示词列表信息接口
-@router02.get('/prompt-source')
+@router02.get('/prompt/page')
 async def source_prompt(
         request: Request,
         page, size,
@@ -26,13 +26,13 @@ async def source_prompt(
 
 
 # 获取大模型列表接口
-@router02.get('/prompt-llm-source')
+@router02.get('/prompt/llm/list')
 async def source_llm_prompt(request: Request, types=''):
     return await source_llm_prompt_endpoint(request, types)
 
 
 # 获取提示词模板列表信息接口
-@router02.get('/prompt-template-source')
+@router02.get('/prompt/template/list')
 async def template_source_prompt(request: Request, prompt_type='', prompt_name=''):
     return await template_source_prompt_endpoint(request, prompt_type, prompt_name)
 
@@ -62,97 +62,90 @@ def get_user_id(request: Request):
 
 
 # 新建提示词项目接口
-@router02.post("/prompt-item-add")
+@router02.post("/prompt/item/add")
 async def add_prompt_item(request: Request, params: dict = Body(...)):
     userId = get_user_id(request)
     return await add_prompt_item_endpoint(userId, params)
 
 
 # 编辑提示词项目接口
-@router02.post("/prompt-item-edit")
+@router02.post("/prompt/item/edit")
 async def edit_prompt_item(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await edit_prompt_item_endpoint(userId, model_para)
 
 
 # 新建提示词分类接口
-@router02.post("/prompt-type-add")
+@router02.post("/prompt/type/add")
 async def add_prompt_type(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await add_prompt_type_endpoint(userId, model_para)
 
 
 # 编辑提示词分类接口
-@router02.post("/prompt-type-edit")
+@router02.post("/prompt/type/edit")
 async def edit_prompt_type(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await edit_prompt_type_endpoint(userId, model_para)
 
 
 # 新增提示词接口
-@router02.post("/prompt-add")
+@router02.post("/prompt/add")
 async def add_prompt(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await add_prompt_endpoint(userId, model_para)
 
 
 # 编辑提示词名称接口
-@router02.post("/prompt-name-edit")
+@router02.post("/prompt/edit_name")
 async def name_edit_prompt(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await name_edit_prompt_endpoint(userId, model_para)
 
 
 # 编辑提示词接口
-@router02.post("/prompt-edit")
+@router02.post("/prompt/edit")
 async def edit_prompt(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await edit_prompt_endpoint(userId, model_para)
 
 
 # 提示词管理中编辑提示词接口
-@router02.post("/prompt-template-edit")
+@router02.post("/prompt/template/edit")
 async def edit_prompt(request: Request, params: dict = Body(...)):
     userId = get_user_id(request)
     return await edit_template_prompt_endpoint(userId, params)
 
 
 # 提示词发布接口
-@router02.post("/prompt-deploy")
+@router02.post("/prompt/deploy")
 async def deploy_prompt(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await deploy_prompt_endpoint(userId, model_para)
 
 
 # 提示词取消发布接口
-@router02.post("/prompt-undeploy")
+@router02.post("/prompt/undeploy")
 async def undeploy_prompt(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await undeploy_prompt_endpoint(userId, model_para)
 
 
 # 提示词运行接口
-@router02.post("/prompt-run")
+@router02.post("/prompt/run")
 async def run_prompt(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await run_prompt_endpoint(userId, model_para)
 
 
 # 提示词模板运行接口
-@router02.post("/prompt-template-run")
+@router02.post("/prompt/template/run")
 async def run_prompt_template(request: Request, model_para: dict = Body(...)):
     return await run_prompt_template_endpoint(request, model_para)
 
 
-# 填充提示词open接口
-@router02.get('/open/prompt_completion/{prompt_id}')
-async def completion_prompt(request: Request, prompt_id, inputs=''):
-    userId = get_user_id(request)
-    return await completion_prompt_endpoint(userId, prompt_id, inputs)
-
-
 # 代码查看接口
-@router02.get('/prompt-code')
+@router02.get('/prompt/code')
 async def code_prompt(request: Request, model_id, prompt_id=''):
     userId = get_user_id(request)
     return await code_prompt_endpoint(userId, model_id, prompt_id)
@@ -165,7 +158,7 @@ async def api_doc_prompt(request: Request, service_id):
 
 
 # 流式返回接口
-@router02.post("/prompt-run-stream")
+@router02.post("/prompt/run_stream")
 async def run_prompt_stream(request: Request, response: Response, params: dict = Body(...)):
     userId = get_user_id(request)
     response.headers["Content-Type"] = "text/event-stream"
@@ -174,14 +167,14 @@ async def run_prompt_stream(request: Request, response: Response, params: dict =
 
 
 # 删除接口
-@router02.post("/delete-prompt")
+@router02.post("/prompt/delete")
 async def delete_prompt(request: Request, delete_id: dict = Body(...)):
     userId = get_user_id(request)
     return await delete_prompt_endpoint(userId, delete_id)
 
 
 # 获取服务id接口
-@router02.get("/get-id")
+@router02.get("/get_id")
 async def get_id(request: Request):
     userId = get_user_id(request)
     return await get_id_endpoint(userId)

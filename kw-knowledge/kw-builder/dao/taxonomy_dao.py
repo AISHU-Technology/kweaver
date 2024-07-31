@@ -16,7 +16,7 @@ class TaxonomyDao():
                   params_json['db_name'],
                   params_json['userId'],
                   params_json['userId']]
-        sql = 'insert into taxonomy(name, knw_id, default_language, description, db_name, create_user, update_user) ' \
+        sql = 'insert into taxonomy(name, knw_id, default_language, description, db_name, create_by, update_by) ' \
               'values (%s, %s, %s, %s, %s, %s, %s)'
         Logger.log_info(sql % tuple(values))
         cursor.execute(sql, values)
@@ -56,7 +56,7 @@ class TaxonomyDao():
                   taxonomy_id)
         sql = 'UPDATE taxonomy SET ' \
               'name=%s, default_language=%s, description=%s, ' \
-              'update_user=%s ' \
+              'update_by=%s ' \
               'WHERE id=%s'
         Logger.log_info(sql % values)
         cursor.execute(sql, values)
@@ -88,13 +88,13 @@ class TaxonomyDao():
         #       't.id, t.name, t.description, t.default_language, t.word_num, ' \
         #       't.create_time as create_time, ' \
         #       't.update_time as update_time, ' \
-        #       't.create_user, t.update_user, ' \
+        #       't.create_by, t.update_by, ' \
         #       'a1.username as create_user_name, ' \
         #       'a2.username as update_user_name ' \
         #       'from ' \
         #       'taxonomy as t ' \
-        #       'LEFT JOIN account a1 ON a1.account_id = t.create_user ' \
-        #       'LEFT JOIN account a2 ON a2.account_id = t.update_user ' \
+        #       'LEFT JOIN account a1 ON a1.account_id = t.create_by ' \
+        #       'LEFT JOIN account a2 ON a2.account_id = t.update_by ' \
         #       'where ' \
         #       f't.knw_id = {params_json["knw_id"]} ' \
         #       'and deleted=0 ' \
@@ -106,7 +106,7 @@ class TaxonomyDao():
               't.id, t.name, t.description, t.default_language, t.word_num, ' \
               't.create_time as create_time, ' \
               't.update_time as update_time, ' \
-              't.create_user, t.update_user ' \
+              't.create_by, t.update_by ' \
               'from ' \
               'taxonomy as t ' \
               'where ' \
@@ -150,7 +150,7 @@ class TaxonomyDao():
               't.id, t.name, t.description, t.default_language, t.word_num, ' \
               't.create_time as create_time, ' \
               't.update_time as update_time, ' \
-              't.create_user, t.update_user ' \
+              't.create_by, t.update_by ' \
               'from ' \
               'taxonomy as t ' \
               'where ' \
@@ -199,7 +199,7 @@ class TaxonomyDao():
 
     @connect_execute_commit_close_db
     def update_word_num(self, id: int, word_num: int, userid: str,  connection, cursor):
-        sql = "update taxonomy set word_num=%s, update_user=%s where id=%s"
+        sql = "update taxonomy set word_num=%s, update_by=%s where id=%s"
         value_list = [word_num, userid, id]
         Logger.log_info(sql)
         cursor.execute(sql, value_list)
@@ -216,7 +216,7 @@ class TaxonomyDao():
         values = (name, taxonomy_id,
                   params_json['userId'],
                   params_json['userId'])
-        sql = 'insert into taxonomy_custom_relation(name, taxonomy_id, create_user, update_user) values (%s, %s, %s, %s)'
+        sql = 'insert into taxonomy_custom_relation(name, taxonomy_id, create_by, update_by) values (%s, %s, %s, %s)'
         Logger.log_info(sql % values)
         cursor.execute(sql, values)
         new_id = rdsdriver.process_last_row_id(cursor.lastrowid)
@@ -230,7 +230,7 @@ class TaxonomyDao():
 
     @connect_execute_commit_close_db
     def update_time(self, id: int, userid: str, connection, cursor):
-        sql = "update taxonomy set update_time = '{}', update_user = '{}' where id = {}" \
+        sql = "update taxonomy set update_time = '{}', update_by = '{}' where id = {}" \
             .format(arrow.now().format('YYYY-MM-DD HH:mm:ss'), userid, id)
         Logger.log_info(sql)
         cursor.execute(sql)

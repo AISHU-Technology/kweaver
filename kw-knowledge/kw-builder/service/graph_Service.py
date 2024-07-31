@@ -423,7 +423,7 @@ class GraphService():
                     ds_name_dict = {}
                     ds_byname_dict = dsm_dao.getdsbyids(list(set(used_ds)))
                     for ds in ds_byname_dict:
-                        ds_name_dict[ds['id']] = ds['dsname']
+                        ds_name_dict[ds['id']] = ds['ds_name']
                     # 将映射中使用的数据源详细信息赋值给graph_used_ds
                     rec_dict["graph_used_ds"] = ds_byname_dict
                 else:
@@ -625,7 +625,7 @@ class GraphService():
                     if ds_type == "filter":
                         ds_infos = dsm_dao.getbyids_order(ds_ids)
 
-                    # sort_df_grade = sort_df_grade.loc[sort_df_grade["dataType"] == "structured"]
+                    # sort_df_grade = sort_df_grade.loc[sort_df_grade["data_type"] == "structured"]
                     # pd.merge(sort_df_grade, quizs_type_df, on='quiz_id', how='left')
                     res = {}
                     res["count"] = len(ds_infos)
@@ -1230,9 +1230,9 @@ class GraphService():
         for ds_info in ds_infos:
             ds_basic_info = {}
             ds_basic_info["id"] = ds_info["id"]
-            ds_basic_info["dsname"] = ds_info["dsname"]
+            ds_basic_info["ds_name"] = ds_info["ds_name"]
             ds_basic_info["ds_path"] = ds_info["ds_path"]
-            ds_basic_info["dataType"] = ds_info["dataType"]
+            ds_basic_info["data_type"] = ds_info["data_type"]
             ds_basic_info["data_source"] = ds_info["data_source"]
             ds_basic_infos.append(ds_basic_info)
 
@@ -1401,7 +1401,7 @@ class GraphService():
                 # 覆盖导入
                 # 处理graph_config_table的数据结构
                 graph_config['id'] = table_graph_config['id']
-                graph_config["update_user"] = user_id
+                graph_config["update_by"] = user_id
                 graph_config["update_time"] = time_now
                 graph_config["is_upload"] = 1
                 if graph_config["graph_ds"] == "[]":
@@ -1410,7 +1410,7 @@ class GraphService():
 
                 # 处理本体结构
                 ontology['id'] = otl_id
-                ontology["update_user"] = user_id
+                ontology["update_by"] = user_id
                 ontology["update_time"] = time_now
 
                 # 处理子图配置表
@@ -1419,9 +1419,9 @@ class GraphService():
             else:
                 # 新增导入
                 # 处理本体结构
-                ontology["create_user"] = user_id
+                ontology["create_by"] = user_id
                 ontology["create_time"] = time_now
-                ontology["update_user"] = user_id
+                ontology["update_by"] = user_id
                 ontology["update_time"] = time_now
                 # 循环处理，直到名称非重复。
                 ontology_name = ontology["ontology_name"]
@@ -1432,9 +1432,9 @@ class GraphService():
                 ontology["ontology_name"] = ontology_name
 
                 # 处理graph_config_table的数据结构
-                graph_config["create_user"] = user_id
+                graph_config["create_by"] = user_id
                 graph_config["create_time"] = time_now
-                graph_config["update_user"] = user_id
+                graph_config["update_by"] = user_id
                 graph_config["update_time"] = time_now
                 graph_config["is_upload"] = 1
                 graph_config_name_temp = rename if rename else graph_config["graph_name"]
@@ -1481,11 +1481,11 @@ class GraphService():
             key: 字符串列表,可选值:
                 "graph_des": 图谱描述
                 "create_email": 创建人邮箱
-                "create_user" 创建人
+                "create_by" 创建人
                 "create_time" 创建时间
                 "update_email" 最终操作人邮箱
                 "update_time" 最终操作时间
-                "update_user" 最终操作用户
+                "update_by" 最终操作用户
                 "export" 是否可以导出
                 "is_import" 是外部导入的图谱还是手动创建
                 "knowledge_type" 知识类型
@@ -1570,16 +1570,16 @@ class GraphService():
             res_info["error_result"] = response.json()["res"]["df"][0]["error_report"]
         else:
             res_info["error_result"] = {}
-        if is_all or ('create_user' in key):
-            create_user_uuid = kg_info[0]['create_user']
+        if is_all or ('create_by' in key):
+            create_user_uuid = kg_info[0]['create_by']
             # account_info = graph_dao.get_account_by_uuid(create_user_uuid)
             # if len(account_info) > 0:
-            #     res_info['create_user'] = account_info[0]['username']
-        if is_all or ('update_user' in key):
-            update_user_uuid = kg_info[0]['update_user']
+            #     res_info['create_by'] = account_info[0]['username']
+        if is_all or ('update_by' in key):
+            update_user_uuid = kg_info[0]['update_by']
             # account_info = graph_dao.get_account_by_uuid(update_user_uuid)
             # if len(account_info) > 0:
-            #     res_info['update_user'] = account_info[0]['username']
+            #     res_info['update_by'] = account_info[0]['username']
         is_upload = config_info['is_upload']  # 表示图谱是否是上传而来
         res_info['is_import'] = True if is_upload else False
         if is_all or ('graphdb_type' in key or 'export' in key or 'graphdb_name' in key):
@@ -1678,10 +1678,10 @@ class GraphService():
             edge['shape'] = e['shape']
             edge['width'] = e.get('width')
             res['edge'].append(edge)
-        res['dbname'] = graph_dao.getKDBnameByIds([graph_id])[0]
+        res['db_name'] = graph_dao.getKDBnameByIds([graph_id])[0]
         if compensation_cache == True:
             content = {}
-            content["dbname"] = res['dbname']
+            content["db_name"] = res['db_name']
             content["edge"] = edges
             content["entity"] = entitys
             code = graph_dao.refresh_redis_cache(graph_id, content)

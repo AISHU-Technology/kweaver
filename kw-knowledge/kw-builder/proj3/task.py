@@ -90,7 +90,7 @@ def predict_ontology(self, new_params_json, task_id, userId):
         for i in range(len(file_list)):
             if new_params_json["data_source"]:
                 tableinfo.append(
-                    [str(file_list[i]), str(new_params_json["ds_path"]), str(new_params_json["dsname"]), "running",
+                    [str(file_list[i]), str(new_params_json["ds_path"]), str(new_params_json["ds_name"]), "running",
                      str(new_params_json["data_source"])])
                 # tableinfo: [[table_name, ds_path, ds_name, 'running', data_source]]
         new_params_json["table_list"] = tableinfo
@@ -206,7 +206,7 @@ def intelligence_calculate(self, params_json, task_id):
         Logger.log_error(error_log)
     finally:
         # 此处只需要更新下错误原因即可，状态由外部调用更新
-        update_json['finished_time'] = datetime.datetime.now()
+        update_json['update_time'] = datetime.datetime.now()
         async_task_service.update(task_id, update_json)
         return {'current': 100, 'total': 100}
 
@@ -727,7 +727,7 @@ def import_onto(self, params_json, task_id):
         update_json["result"] = str(error_log)
         return {'current': 100, 'total': 100}
     finally:
-        update_json['finished_time'] = datetime.datetime.now()
+        update_json['update_time'] = datetime.datetime.now()
         async_task_service.update(task_id, update_json)
 
 
@@ -825,7 +825,7 @@ def import_lexicon(self, params_json, task_id):
             os.remove(file_path)
         except FileNotFoundError:
             pass
-        update_json['finished_time'] = datetime.datetime.now()
+        update_json['update_time'] = datetime.datetime.now()
         if update_json["task_status"] == "failed":
             lexicon_dao.update_lexicon_status(lexicon_id, "failed")
             lexicon_dao.update_lexicon_error_info(lexicon_id, str(update_json["result"]))
@@ -1095,7 +1095,7 @@ def lexicon_build(self, params_json, task_id):
         update_json["result"] = str(error_log)
         return {'current': 100, 'total': 100}
     finally:
-        update_json['finished_time'] = datetime.datetime.now()
+        update_json['update_time'] = datetime.datetime.now()
         if update_json["task_status"] == "failed":
             lexicon_dao.update_lexicon_status(lexicon_id, "failed")
             lexicon_dao.update_lexicon_error_info(lexicon_id, str(update_json["result"]))

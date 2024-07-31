@@ -440,7 +440,7 @@
                       "example": "2023-08-22 09:31:31",
                       "type": "string"
                     },
-                    "create_user": {
+                    "create_by": {
                       "description": "\u521b\u5efa\u4ebauuid",
                       "example": "93e2682e-9322-9d28-a8df-509035bebb8d",
                       "type": "string"
@@ -450,7 +450,7 @@
                       "example": "tom",
                       "type": "string"
                     },
-                    "dataType": {
+                    "data_type": {
                       "description": "unstructured\uff1a\u975e\u7ed3\u6784\u5316\uff0cstructured\uff1a\u7ed3\u6784\u5316",
                       "example": "structured",
                       "type": "string"
@@ -490,7 +490,7 @@
                       "example": "admin",
                       "type": "string"
                     },
-                    "dsname": {
+                    "ds_name": {
                       "description": "\u6570\u636e\u6e90\u540d\u79f0",
                       "example": "mysql",
                       "type": "string"
@@ -525,7 +525,7 @@
                       "example": "2023-08-22 09:31:31",
                       "type": "string"
                     },
-                    "update_user": {
+                    "update_by": {
                       "description": "\u64cd\u4f5c\u4ebauuid",
                       "example": "93e2682e-9322-9d28-a8df-509035bebb8d",
                       "type": "string"
@@ -612,7 +612,7 @@
                 "example": "2022-12-19 15:55:24",
                 "type": "string"
               },
-              "create_user": {
+              "create_by": {
                 "description": "\u521b\u5efa\u4eba\u540d\u79f0",
                 "example": "abc",
                 "type": "string"
@@ -712,7 +712,7 @@
                 "example": "2022-12-19 15:55:24",
                 "type": "string"
               },
-              "update_user": {
+              "update_by": {
                 "description": "\u6700\u7ec8\u64cd\u4f5c\u4eba\u540d\u79f0",
                 "example": "abc",
                 "type": "string"
@@ -960,7 +960,7 @@
                 "example": "2023-08-15 14:17:49",
                 "type": "string"
               },
-              "create_user": {
+              "create_by": {
                 "description": "\u521b\u5efa\u8005",
                 "example": "5a8113ae-48ac-4542-aba7-0810f1bd30e4",
                 "type": "string"
@@ -1030,7 +1030,7 @@
                 "example": "2023-08-15 14:21:00",
                 "type": "string"
               },
-              "update_user": {
+              "update_by": {
                 "description": "\u4fee\u6539\u8005",
                 "example": "5a8113ae-48ac-4542-aba7-0810f1bd30e4",
                 "type": "string"
@@ -1053,7 +1053,7 @@
             "items": {
               "description": "\u5b50\u56fe\u4fe1\u606f",
               "properties": {
-                "dataType": {
+                "data_type": {
                   "description": "\u6570\u636e\u7c7b\u578b",
                   "example": "structured",
                   "type": "string"
@@ -1068,7 +1068,7 @@
                   "example": "MyOwnDb",
                   "type": "string"
                 },
-                "dsname": {
+                "ds_name": {
                   "description": "\u6570\u636e\u6e90\u540d\u79f0",
                   "example": "999999",
                   "type": "string"
@@ -1091,17 +1091,17 @@
                 "example": null,
                 "type": "string"
               },
-              "creation_time": {
+              "create_time": {
                 "description": "\u521b\u5efa\u65f6\u95f4",
                 "example": "2023-03-31 16:30:37",
                 "type": "string"
               },
-              "creator_id": {
+              "create_by": {
                 "description": "\u521b\u5efa\u8005ID",
                 "example": "cb5cbb2e-4ee3-4d29-b50a-34a990de22ed",
                 "type": "string"
               },
-              "final_operator": {
+              "update_by": {
                 "description": "\u6700\u7ec8\u4fee\u6539\u8005",
                 "example": "cb5cbb2e-4ee3-4d29-b50a-34a990de22ed",
                 "type": "string"
@@ -1161,7 +1161,7 @@
                 "example": "2023-08-15 14:17:56",
                 "type": "string"
               },
-              "create_user": {
+              "create_by": {
                 "description": "\u521b\u5efa\u8005ID",
                 "example": "5a8113ae-48ac-4542-aba7-0810f1bd30e4",
                 "type": "string"
@@ -1221,7 +1221,7 @@
                 "example": "2023-08-15 14:18:08",
                 "type": "string"
               },
-              "update_user": {
+              "update_by": {
                 "description": "\u4fee\u6539\u8005ID",
                 "example": "5a8113ae-48ac-4542-aba7-0810f1bd30e4",
                 "type": "string"
@@ -1259,7 +1259,7 @@
                   "example": "2023-08-15 14:17:56",
                   "type": "string"
                 },
-                "create_user": {
+                "create_by": {
                   "description": "\u521b\u5efa\u8005ID",
                   "example": "5a8113ae-48ac-4542-aba7-0810f1bd30e4",
                   "type": "string"
@@ -1289,7 +1289,7 @@
                   "example": "2023-08-15 14:18:08",
                   "type": "string"
                 },
-                "update_user": {
+                "update_by": {
                   "description": "\u4fee\u6539\u8005ID",
                   "example": "5a8113ae-48ac-4542-aba7-0810f1bd30e4",
                   "type": "string"
@@ -1332,7 +1332,7 @@
                 "example": "2023-08-15 14:17:49",
                 "type": "string"
               },
-              "create_user": {
+              "create_by": {
                 "description": "\u521b\u5efa\u8005ID",
                 "example": "5a8113ae-48ac-4542-aba7-0810f1bd30e4",
                 "type": "string"
@@ -1372,7 +1372,7 @@
                 "example": "2023-08-15 14:20:56",
                 "type": "string"
               },
-              "update_user": {
+              "update_by": {
                 "description": "\u4fee\u6539\u8005ID",
                 "example": "5a8113ae-48ac-4542-aba7-0810f1bd30e4",
                 "type": "string"
@@ -1494,7 +1494,7 @@
                       "example": "#126EE3",
                       "type": "string"
                     },
-                    "creation_time": {
+                    "create_time": {
                       "description": "\u77e5\u8bc6\u7f51\u7edc\u521b\u5efa\u65f6\u95f4",
                       "example": "2022-12-22 04:09:04",
                       "type": "string"
@@ -1504,7 +1504,7 @@
                       "example": "abc@abc.com",
                       "type": "string"
                     },
-                    "creator_id": {
+                    "create_by": {
                       "description": "\u521b\u5efa\u4ebauuid",
                       "example": "a6926148-9f9f-4c28-8ad8-1e7053a481db",
                       "type": "string"
@@ -1514,7 +1514,7 @@
                       "example": "abc",
                       "type": "string"
                     },
-                    "final_operator": {
+                    "update_by": {
                       "description": "\u6700\u7ec8\u64cd\u4f5c\u4ebauuid",
                       "example": "a6926148-9f9f-4c28-8ad8-1e7053a481db",
                       "type": "string"
@@ -1607,7 +1607,7 @@
                       "example": "2022-12-19 15:55:24",
                       "type": "string"
                     },
-                    "create_user": {
+                    "create_by": {
                       "description": "\u521b\u5efa\u4eba\u540d\u79f0",
                       "example": "abc",
                       "type": "string"
@@ -1682,7 +1682,7 @@
                       "example": "2022-12-20 15:55:24",
                       "type": "string"
                     },
-                    "update_user": {
+                    "update_by": {
                       "description": "\u6700\u7ec8\u64cd\u4f5c\u4eba\u540d\u79f0",
                       "example": "abc",
                       "type": "string"
@@ -1715,7 +1715,7 @@
                       "example": "#126EE3",
                       "type": "string"
                     },
-                    "creation_time": {
+                    "create_time": {
                       "description": "\u77e5\u8bc6\u7f51\u7edc\u521b\u5efa\u65f6\u95f4",
                       "example": "2022-12-22 04:09:04",
                       "type": "string"
@@ -1725,7 +1725,7 @@
                       "example": "abc@abc.com",
                       "type": "string"
                     },
-                    "creator_id": {
+                    "create_by": {
                       "description": "\u521b\u5efa\u4ebauuid",
                       "example": "a6926148-9f9f-4c28-8ad8-1e7053a481db",
                       "type": "string"
@@ -1735,7 +1735,7 @@
                       "example": "abc",
                       "type": "string"
                     },
-                    "final_operator": {
+                    "update_by": {
                       "description": "\u6700\u7ec8\u64cd\u4f5c\u4ebauuid",
                       "example": "a6926148-9f9f-4c28-8ad8-1e7053a481db",
                       "type": "string"
@@ -2027,7 +2027,7 @@
             "format": "string",
             "type": "string"
           },
-          "datatype": {
+          "data_type": {
             "description": "\u64cd\u4f5c\u5bf9\u8c61\u7c7b\u578b\uff0c\u8981\u64cd\u4f5c\u7684schema\u6570\u636e\u7c7b\u578b\u5b9e\u4f53\u7c7b\uff1aentity \u8fb9\u7c7b\uff1aedge \u5b9e\u4f53\u7c7b\u5c5e\u6027\uff1aentityindex \u8fb9\u7c7b\u5c5e\u6027\uff1aedgeindex \u5b9e\u4f53\u7c7b\u7d22\u5f15\uff1aentityproperty \u8fb9\u7c7b\u7d22\u5f15\uff1a edgeproperty",
             "example": "entity",
             "format": "string",
@@ -2103,7 +2103,7 @@
         "required": [
           "graph_id",
           "operationtype",
-          "datatype",
+          "data_type",
           "classname"
         ],
         "type": "object"
@@ -2405,7 +2405,7 @@
                     "format": "string",
                     "type": "string"
                   },
-                  "dataType": {
+                  "data_type": {
                     "description": "\u6570\u636e\u7c7b\u578b",
                     "enum": [
                       "structured",
@@ -2465,7 +2465,7 @@
                     "format": "string",
                     "type": "string"
                   },
-                  "dsname": {
+                  "ds_name": {
                     "description": "\u6570\u636e\u6e90\u540d\u79f0",
                     "example": "\u6d4b\u8bd5\u7528mysql",
                     "format": "string",
@@ -2507,9 +2507,9 @@
                   }
                 },
                 "required": [
-                  "dsname",
+                  "ds_name",
                   "data_source",
-                  "dataType",
+                  "data_type",
                   "ds_address",
                   "ds_port",
                   "ds_path",
@@ -2859,7 +2859,7 @@
                     "format": "string",
                     "type": "string"
                   },
-                  "dsname": {
+                  "ds_name": {
                     "description": "\u6570\u636e\u6e90\u540d\u79f0",
                     "example": "\u6d4b\u8bd5\u7528mysql",
                     "format": "string",
@@ -2873,7 +2873,7 @@
                   }
                 },
                 "required": [
-                  "dsname",
+                  "ds_name",
                   "data_source",
                   "connect_type"
                 ],
@@ -3230,7 +3230,7 @@
             }
           },
           {
-            "description": "\u9700\u8981\u989d\u5916\u83b7\u53d6\u4fe1\u606f\u7684\u5b57\u6bb5\uff1b\u53ef\u9009\u503c\uff1a\"graph_des\"(\u56fe\u8c31\u63cf\u8ff0)\u3001\"create_email\"(\u521b\u5efa\u4eba\u90ae\u7bb1)\u3001\"create_user(\u521b\u5efa\u4eba)\"\u3001\"create_time\"(\u521b\u5efa\u65f6\u95f4)\u3001\"update_email\"(\u6700\u7ec8\u64cd\u4f5c\u4eba\u90ae\u7bb1)\u3001\"update_time\"(\u6700\u7ec8\u64cd\u4f5c\u65f6\u95f4)\u3001\"update_user\"(\u6700\u7ec8\u64cd\u4f5c\u7528\u6237)\u3001\"export\"(\u56fe\u8c31\u662f\u5426\u53ef\u4ee5\u5bfc\u51fa)\u3001\"is_import\"(\u662f\u5916\u90e8\u5bfc\u5165\u7684\u56fe\u8c31\u8fd8\u662f\u624b\u52a8\u521b\u5efa)\u3001\"knowledge_type\"(\u77e5\u8bc6\u7c7b\u578b)\u3001\"status\"(\u56fe\u8c31\u72b6\u6001)\u3001\"task_status\"(\u56fe\u8c31\u6784\u5efa\u4efb\u52a1\u8fd0\u884c\u72b6\u6001)\u3001\"step_num\"(\u56fe\u8c31\u914d\u7f6e\u6d41\u7a0b\u8fdb\u884c\u5230\u4e86\u7b2c\u51e0\u6b65)\u3001\"ds\"(\u4f7f\u7528\u8fc7\u7684\u6570\u636e\u6e90id)\u3001\"otl\"(\u672c\u4f53id)\u3001\"info_ext\"(\u62bd\u53d6\u89c4\u5219\u4fe1\u606f)\u3001\"kmap\"(\u6620\u5c04\u89c4\u5219\u4fe1\u606f)\u3001\"mongo_name\"(MongoDB\u8868\u540d)\u3001\"graphdb_name\"(\u56fe\u6570\u636e\u5e93DB\u540d)\u3001\"graphdb_type\"(\u56fe\u6570\u636e\u5e93\u7c7b\u578b)\u3001\"graphdb_address\"(\u56fe\u6570\u636e\u5e93\u5730\u5740)\u3001\"graphdb_id\"(\u56fe\u6570\u636e\u5e93id)",
+            "description": "\u9700\u8981\u989d\u5916\u83b7\u53d6\u4fe1\u606f\u7684\u5b57\u6bb5\uff1b\u53ef\u9009\u503c\uff1a\"graph_des\"(\u56fe\u8c31\u63cf\u8ff0)\u3001\"create_email\"(\u521b\u5efa\u4eba\u90ae\u7bb1)\u3001\"create_by(\u521b\u5efa\u4eba)\"\u3001\"create_time\"(\u521b\u5efa\u65f6\u95f4)\u3001\"update_email\"(\u6700\u7ec8\u64cd\u4f5c\u4eba\u90ae\u7bb1)\u3001\"update_time\"(\u6700\u7ec8\u64cd\u4f5c\u65f6\u95f4)\u3001\"update_by\"(\u6700\u7ec8\u64cd\u4f5c\u7528\u6237)\u3001\"export\"(\u56fe\u8c31\u662f\u5426\u53ef\u4ee5\u5bfc\u51fa)\u3001\"is_import\"(\u662f\u5916\u90e8\u5bfc\u5165\u7684\u56fe\u8c31\u8fd8\u662f\u624b\u52a8\u521b\u5efa)\u3001\"knowledge_type\"(\u77e5\u8bc6\u7c7b\u578b)\u3001\"status\"(\u56fe\u8c31\u72b6\u6001)\u3001\"task_status\"(\u56fe\u8c31\u6784\u5efa\u4efb\u52a1\u8fd0\u884c\u72b6\u6001)\u3001\"step_num\"(\u56fe\u8c31\u914d\u7f6e\u6d41\u7a0b\u8fdb\u884c\u5230\u4e86\u7b2c\u51e0\u6b65)\u3001\"ds\"(\u4f7f\u7528\u8fc7\u7684\u6570\u636e\u6e90id)\u3001\"otl\"(\u672c\u4f53id)\u3001\"info_ext\"(\u62bd\u53d6\u89c4\u5219\u4fe1\u606f)\u3001\"kmap\"(\u6620\u5c04\u89c4\u5219\u4fe1\u606f)\u3001\"mongo_name\"(MongoDB\u8868\u540d)\u3001\"graphdb_name\"(\u56fe\u6570\u636e\u5e93DB\u540d)\u3001\"graphdb_type\"(\u56fe\u6570\u636e\u5e93\u7c7b\u578b)\u3001\"graphdb_address\"(\u56fe\u6570\u636e\u5e93\u5730\u5740)\u3001\"graphdb_id\"(\u56fe\u6570\u636e\u5e93id)",
             "in": "query",
             "name": "key",
             "required": false,
@@ -4583,7 +4583,7 @@
                     "format": "string",
                     "type": "string"
                   },
-                  "datatype": {
+                  "data_type": {
                     "description": "\u64cd\u4f5c\u5bf9\u8c61\u7c7b\u578b\uff0c\u8981\u64cd\u4f5c\u7684schema\u6570\u636e\u7c7b\u578b\u5b9e\u4f53\u7c7b\uff1aentity \u8fb9\u7c7b\uff1aedge \u5b9e\u4f53\u7c7b\u5c5e\u6027\uff1aentityindex \u8fb9\u7c7b\u5c5e\u6027\uff1aedgeindex \u5b9e\u4f53\u7c7b\u7d22\u5f15\uff1aentityproperty \u8fb9\u7c7b\u7d22\u5f15\uff1a edgeproperty",
                     "example": "entity",
                     "format": "string",
@@ -4659,7 +4659,7 @@
                 "required": [
                   "graph_id",
                   "operationtype",
-                  "datatype",
+                  "data_type",
                   "classname"
                 ],
                 "type": "object"

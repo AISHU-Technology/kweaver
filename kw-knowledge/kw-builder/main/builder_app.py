@@ -221,7 +221,7 @@ app.register_blueprint(graph_count_controller_app, url_prefix='/api/builder/v1/g
 app.register_blueprint(graph_count_controller_app_open, url_prefix='/api/builder/v1/open/graphcount')
 # app.register_blueprint(dsm_controller_app, url_prefix='/api/builder/v1/acctoken')
 
-app.register_blueprint(rebuild_fulltextindex_controller_app, url_prefix='/api/builder/v1/fulltextindex')
+app.register_blueprint(rebuild_fulltextindex_controller_app, url_prefix='/api/builder/v1/fulltext_index')
 app.register_blueprint(timer_controller_app, url_prefix='/api/builder/v1/timer')
 
 app.register_blueprint(knowledgeNetwork_controller_app, name="knowledgeNetwork_controller_app",

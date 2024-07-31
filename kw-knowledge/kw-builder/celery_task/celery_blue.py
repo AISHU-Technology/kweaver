@@ -79,7 +79,7 @@ def task():
         params_json = request.get_data()
         params_json = json.loads(params_json)
         graph_id = params_json.get("graph_id")
-        tasktype = params_json.get("tasktype")
+        task_type = params_json.get("task_type")
         trigger_type = params_json.get("trigger_type", 0)
         userId = request.headers.get("userId")
         # 统计上传中的图谱
@@ -95,9 +95,9 @@ def task():
             # 查看graph_id 存在不，如果不存在执行任务，如果存在，根据状态：执行中和等待中不可以执行，
             # 其他状态可以执行，且把该条数据放到历史记录去，并且查询结束时间放到历史记录
             ret_code, task_data = task_service.get_task_by_graph_id(graph_id)
-            # tasktype为用户配置的任务状态，right_task_type为实际执行的任务状态
-            right_task_type = tasktype
-            if tasktype != 'full' and trigger_type <= 1:
+            # task_type为用户配置的任务状态，right_task_type为实际执行的任务状态
+            right_task_type = task_type
+            if task_type != 'full' and trigger_type <= 1:
                 graph_task_state = graph_dao.getnormaltask(graph_id)
                 if len(graph_task_state) == 0:
                     right_task_type = "full"
@@ -122,7 +122,7 @@ def task():
                         # 删除
                         task_service.deletetask(None, graph_id)
                         task_service.initiate_graph_task({'graph_id': graph_id,
-                                                          'task_type': tasktype,
+                                                          'task_type': task_type,
                                                           'trigger_type': trigger_type,
                                                           'timestamp': timestamp,
                                                           'userId': userId
@@ -165,7 +165,7 @@ def task():
                         return jsonify({'res': {"cause": err, "code": 500001, "message": err}, "code": 500})
             else:
                 task_service.initiate_graph_task({'graph_id': graph_id,
-                                                  'task_type': tasktype,
+                                                  'task_type': task_type,
                                                   'trigger_type': trigger_type,
                                                   'userId': userId
                                                   })

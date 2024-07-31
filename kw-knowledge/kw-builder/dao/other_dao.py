@@ -71,17 +71,17 @@ class OtherDao():
     def resource(self, data_id, data_type, connection, cursor):
         sql = ""
         if data_type == "kn":
-            sql = f""" select creator_id as create_user from knowledge_network where id=%s; """
+            sql = f""" select create_by as create_by from knowledge_network where id=%s; """
         elif data_type == "kg":
-            sql = f""" select create_user from graph_config_table where id=%s; """
+            sql = f""" select create_by from graph_config_table where id=%s; """
         elif data_type == "lexicon":
-            sql = f""" select create_user from lexicon where id=%s; """
+            sql = f""" select create_by from lexicon where id=%s; """
         elif data_type == "ds":
-            sql = f""" select create_user from data_source_table where id=%s; """
+            sql = f""" select create_by from data_source_table where id=%s; """
         elif data_type == "function":
-            sql = f""" select create_user from `function` where id=%s; """
+            sql = f""" select create_by from `function` where id=%s; """
         elif data_type == "otl":
-            sql = f""" select create_user from ontology_table where id=%s; """
+            sql = f""" select create_by from ontology_table where id=%s; """
 
         Logger.log_info(sql)
         cursor.execute(sql, data_id)

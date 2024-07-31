@@ -222,7 +222,7 @@ class TaskDao(object):
         #     h.*
         # FROM
         #     graph_task_table AS h
-        #     LEFT JOIN account a1 ON a1.account_id=h.create_user
+        #     LEFT JOIN account a1 ON a1.account_id=h.create_by
         # where
         #     h.graph_id = %s""" % (id)
         sql = """
@@ -487,7 +487,7 @@ class TaskDao(object):
             FROM
               graph_task_history_table task_his
               left join graph_config_table kg on kg.id = task_his.graph_id
---                   left join account a on a.account_id = task_his.create_user
+--                   left join account a on a.account_id = task_his.create_by
             where
               graph_id = %s 
               and parent is null
@@ -771,12 +771,12 @@ class TaskDao(object):
         if timestamp == "NULL":
             sql = f'''INSERT INTO graph_task_table
                         (graph_id, graph_name, task_status, create_time, task_type, trigger_type, subgraph_ids, 
-                        current_subgraph_id, write_mode, create_user, `timestamp`)
+                        current_subgraph_id, write_mode, create_by, `timestamp`)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NULL)'''
         else:
             sql = f'''INSERT INTO graph_task_table
                         (graph_id, graph_name, task_status, create_time, task_type, trigger_type, subgraph_ids, 
-                        current_subgraph_id, write_mode, create_user, `timestamp`)
+                        current_subgraph_id, write_mode, create_by, `timestamp`)
                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
             value_list.append(timestamp)
         Logger.log_info(sql % tuple(value_list))
@@ -816,7 +816,7 @@ class TaskDao(object):
         values_placeholder = ','.join(values_placeholder)
         sql = '''INSERT INTO graph_task_history_table
                     (graph_id, graph_name, task_status, task_type, trigger_type, subgraph_id, task_name, entity,
-                     edge, create_user, entity_num, edge_num, entity_pro_num, edge_pro_num)
+                     edge, create_by, entity_num, edge_num, entity_pro_num, edge_pro_num)
                     VALUES {}'''.format(values_placeholder)
         Logger.log_info(sql % tuple(values))
         cursor.execute(sql, values)
@@ -946,7 +946,7 @@ class TaskDao(object):
     @connect_execute_close_db
     def get_history_task_by_id(self, id, connection, cursor):
         # sql = '''SELECT gtht.*, a1.username create_user_name from graph_task_history_table gtht
-        #          left join account a1 on gtht.create_user=a1.account_id
+        #          left join account a1 on gtht.create_by=a1.account_id
         #          where gtht.id=%s and gtht.parent is null'''
         sql = '''SELECT gtht.* from graph_task_history_table gtht 
                  where gtht.id=%s and gtht.parent is null'''
