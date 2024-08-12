@@ -797,13 +797,13 @@ def import_lexicon(self, params_json, task_id):
         if mode == "create":
             lexicon_dao.update_lexicon_columns(lexicon_id, columns, user_id)
         elif mode == "replace":
-            lexicon_service.delete_word_in_mongo(lexicon_id)
+            lexicon_service.delete_all_words(lexicon_id)
 
-        # 写入mongodb
+        # 写入数据库
         if mode == "create":
-            ret_code, ret_message = lexicon_service.insert_lexicon(lexicon_id, res)
+            ret_code, ret_message = lexicon_service.insert_lexicon(user_id, lexicon_id, res)
         else:
-            ret_code, ret_message = lexicon_service.insert_data2mongo(lexicon_id, res, user_id)
+            ret_code, ret_message = lexicon_service.insert_words(lexicon_id, res, user_id)
         if ret_code != 200:
             error_log = log_oper.get_error_log(ret_message, sys._getframe())
             Logger.log_error(error_log)
@@ -834,8 +834,8 @@ def import_lexicon(self, params_json, task_id):
 
 @cel.task(name='cel.lexicon_build', bind=True)
 def lexicon_build(self, params_json, task_id):
-    db = mongoConnect.connect_mongo()
     update_json = {}
+    user_id = params_json["user_id"]
     lexicon_id = params_json["lexicon_id"]
     lexicon_dao.update_lexicon_status(lexicon_id, "running")
     mongodb_name = f"Lexicon-{lexicon_id}"
@@ -865,7 +865,7 @@ def lexicon_build(self, params_json, task_id):
                         words = word[column].split(separator) if separator != "" else [word[column]]
                         word_info.append({"words": word for word in words})
             if word_info:
-                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
 
         if "graph" in extract_info:
             for extract_graph in extract_info["graph"]:
@@ -919,7 +919,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(data, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "hive":
                         transfer = HiveTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -945,7 +945,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(dataDicts, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "sqlserver":
                         transfer = SqlserverTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -979,7 +979,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(data_dicts, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "kingbasees":
                         transfer = KingbaseesTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -1013,7 +1013,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(data_dicts, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "postgresql":
                         transfer = PostgresqlTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -1047,7 +1047,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(data_dicts, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "clickhouse":
                         transfer = ClickHouseTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -1073,13 +1073,13 @@ def lexicon_build(self, params_json, task_id):
                                     word_info = extract_word_info(data, graph_id, mode, otl_name, std_pro,
                                                                   synonym_dict, otl_info.otl_tab,
                                                                   ontology_config.pro_merge)
-                                    lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                    lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                                     data = []
                             if data:
                                 word_info = extract_word_info(data, graph_id, mode, otl_name, std_pro,
                                                               synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                                 if word_info:
-                                    lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                    lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     else:
                         Logger.log_info(data_source + "not supports lexicon extract")
 

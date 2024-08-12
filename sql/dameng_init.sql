@@ -177,6 +177,49 @@ CREATE TABLE IF NOT EXISTS "lexicon" (
 CREATE UNIQUE INDEX IF NOT EXISTS lexicon_uk_lexicon_name_kwn_id ON lexicon("lexicon_name", "knowledge_id");
 
 
+CREATE TABLE IF NOT EXISTS "lexicon_entity_link_words" (
+    "id" BIGINT not null,
+    "lexicon_id" INT not null,
+    "words" VARCHAR(255) null,
+    "vid" VARCHAR(255) null,
+    "ent_name" VARCHAR(255) null,
+    "graph_id" BIGINT not null,
+    "create_by" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
+    "create_time" VARCHAR(50) null,
+    "update_time" VARCHAR(50) null,
+    PRIMARY KEY ("id")
+);
+
+
+CREATE TABLE IF NOT EXISTS "lexicon_std_words" (
+    "id" BIGINT not null,
+    "lexicon_id" INT not null,
+    "synonym" VARCHAR(255) null,
+    "std_name" VARCHAR(255) null,
+    "std_property" VARCHAR(255) null,
+    "ent_name" VARCHAR(255) null,
+    "graph_id" BIGINT not null,
+    "create_by" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
+    "create_time" VARCHAR(50) null,
+    "update_time" VARCHAR(50) null,
+    PRIMARY KEY ("id")
+);
+
+
+CREATE TABLE IF NOT EXISTS "lexicon_custom_words" (
+    "id" BIGINT not null,
+    "lexicon_id" INT not null,
+    "words" VARCHAR(255) null,
+    "create_by" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
+    "create_time" VARCHAR(50) null,
+    "update_time" VARCHAR(50) null,
+    PRIMARY KEY ("id")
+);
+
+
 CREATE TABLE IF NOT EXISTS "intelligence_records" (
     "id" INT not null IDENTITY(1, 1),
     "resource_id" INT null,

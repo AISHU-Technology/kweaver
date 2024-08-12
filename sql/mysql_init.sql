@@ -208,6 +208,49 @@ CREATE TABLE IF NOT EXISTS `lexicon` (
   UNIQUE KEY `uk_lexicon_name_kwn_id` (`lexicon_name`,`knowledge_id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- 导出  表 kweaver.lexicon_entity_link_words 结构
+CREATE TABLE IF NOT EXISTS `lexicon_entity_link_words` (
+  `id` bigint NOT NULL,
+  `lexicon_id` int NOT NULL,
+  `words` varchar(255)  DEFAULT NULL,
+  `vid` varchar(255)  DEFAULT NULL,
+  `ent_name` varchar(255)  DEFAULT NULL,
+  `graph_id` bigint NOT NULL,
+  `create_by` varchar(50)  DEFAULT NULL,
+  `update_by` varchar(50)  DEFAULT NULL,
+  `create_time` varchar(50)  DEFAULT NULL,
+  `update_time` varchar(50)  DEFAULT NULL,
+  PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 导出  表 kweaver.lexicon_std_words 结构
+CREATE TABLE IF NOT EXISTS `lexicon_std_words` (
+  `id` bigint NOT NULL,
+  `lexicon_id` int NOT NULL,
+  `synonym` varchar(255)  DEFAULT NULL,
+  `std_name` varchar(255)  DEFAULT NULL,
+  `std_property` varchar(255)  DEFAULT NULL,
+  `ent_name` varchar(255)  DEFAULT NULL,
+  `graph_id` bigint NOT NULL,
+  `create_by` varchar(50)  DEFAULT NULL,
+  `update_by` varchar(50)  DEFAULT NULL,
+  `create_time` varchar(50)  DEFAULT NULL,
+  `update_time` varchar(50)  DEFAULT NULL,
+  PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 导出  表 kweaver.lexicon_custom_words 结构
+CREATE TABLE IF NOT EXISTS `lexicon_custom_words` (
+  `id` bigint NOT NULL,
+  `lexicon_id` int NOT NULL,
+  `words` varchar(255)  DEFAULT NULL,
+  `create_by` varchar(50)  DEFAULT NULL,
+  `update_by` varchar(50)  DEFAULT NULL,
+  `create_time` varchar(50)  DEFAULT NULL,
+  `update_time` varchar(50)  DEFAULT NULL,
+  PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- 导出  表 kweaver.ontology_table 结构
 CREATE TABLE IF NOT EXISTS `ontology_table` (
                                               `id` int NOT NULL AUTO_INCREMENT,
