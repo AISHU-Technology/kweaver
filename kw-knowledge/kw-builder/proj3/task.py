@@ -12,7 +12,6 @@ from celery_task.transfer import MysqlTransfer, HiveTransfer, ClickHouseTransfer
     SqlserverTransfer, PostgresqlTransfer
 from dao.graphdb_dao import get_md5, normalize_text
 from service.graph_Service import graph_Service
-from utils.ConnectUtil import mongoConnect
 from celery import Celery
 from service.async_task_service import async_task_service
 from service.intelligence_service import intelligence_calculate_service
@@ -838,7 +837,6 @@ def lexicon_build(self, params_json, task_id):
     user_id = params_json["user_id"]
     lexicon_id = params_json["lexicon_id"]
     lexicon_dao.update_lexicon_status(lexicon_id, "running")
-    mongodb_name = f"Lexicon-{lexicon_id}"
     mode = params_json["mode"]
     extract_info = params_json["extract_info"]
     try:
@@ -851,10 +849,9 @@ def lexicon_build(self, params_json, task_id):
                 return {'current': 100, 'total': 100}
             word_info = []
             for extract_lexicon in extract_info["lexicon"]:
-                extract_mongodb_name = f"Lexicon-{extract_lexicon['id']}"
                 extract_columns = extract_lexicon["columns"]
                 separators = extract_lexicon["separator"]
-                extract_words = db[extract_mongodb_name].find()
+                extract_words = lexicon_dao.get_all_words(lexicon_id)
                 for word in extract_words:
                     for index, column in enumerate(extract_columns):
                         separator = separators[index]
