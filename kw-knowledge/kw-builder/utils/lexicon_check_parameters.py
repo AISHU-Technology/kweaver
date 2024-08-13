@@ -240,20 +240,22 @@ class LexiconCheckParameters(object):
     def check_edit_lexicon_word(self, params_json):
         """ 词库中编辑词汇接口参数校验 """
         ret_status = self.VALID
-        required = ["id", "old_info", "new_info"]
+        required = ["id", "word_id", "new_info"]
         message = self.params_check(params_json, required)
         for key, value in params_json.items():
             if key == "id":
                 if not isinstance(value, int):
                     message += "parameter {} must be int; ".format(key)
-            elif key in ["old_info", "new_info"]:
+            elif key == "word_id":
+                if not isinstance(value, str):
+                    message += "parameter {} must be string; ".format(key)
+            elif key == "new_info":
                 if not isinstance(value, dict):
                     message += "parameter {} must be dict; ".format(key)
                 else:
-                    if key == "new_info":
-                        for k, v in value.items():
-                            if not v.strip():
-                                message += "word cannot be empty; ".format(key)
+                    for k, v in value.items():
+                        if not v.strip():
+                            message += "word cannot be empty; ".format(key)
         if message:
             ret_status = self.INVALID
         return ret_status, message

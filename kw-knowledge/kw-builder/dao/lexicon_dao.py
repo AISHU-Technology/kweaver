@@ -385,7 +385,7 @@ class LexiconDao:
             values = (lexicon_id, word_info["words"], word_info["vid"], word_info["ent_name"], word_info["graph_id"])
         else:
             condition = "words = %s"
-            values = (lexicon_id, word_info["words"],)
+            values = (lexicon_id, word_info["words"])
 
 
         sql = sql.format(table_name, condition)
@@ -417,35 +417,28 @@ class LexiconDao:
         return True
 
     @connect_execute_commit_close_db
-    def update_word(self, lexicon_id, old_info, new_info, cursor, connection):
+    def update_word(self, lexicon_id, word_id, new_info, cursor, connection):
         """ 修改词汇信息 """
         mode = self.get_mode_by_lexicon_id(lexicon_id)
 
 
-        sql = "UPDATE {} SET {} WHERE lexicon_id =%s and {};"
+        sql = "UPDATE {} SET {} WHERE lexicon_id =%s and id =%s;"
         table_name = "lexicon_" + mode + "_words"
 
         new_value = ""
-        condition = ""
         values = ()
-        if "synonym" in old_info:
+        if mode == "std":
             new_value = "synonym = %s, std_name = %s, std_property = %s, ent_name = %s, graph_id = %s"
-            condition = "synonym = %s and std_name = %s and std_property = %s and ent_name = %s and graph_id = %s"
-            values = (lexicon_id, new_info["synonym"], new_info["std_name"], new_info["std_property"],
-                      new_info["ent_name"], new_info["graph_id"], old_info["synonym"],
-                      old_info["std_name"], old_info["std_property"], old_info["ent_name"], old_info["graph_id"])
-
-        elif "vid" in old_info:
+            values = (new_info["synonym"], new_info["std_name"], new_info["std_property"],
+                      new_info["ent_name"], new_info["graph_id"], lexicon_id, word_id)
+        elif mode == "entity_link":
             new_value = "words = %s, vid = %s, ent_name = %s, graph_id = %s"
-            condition = "words = %s and vid = %s and ent_name = %s and graph_id = %s"
-            values = (lexicon_id, new_info["words"], new_info["vid"], new_info["ent_name"], new_info["graph_id"],
-                      old_info["words"], old_info["vid"], old_info["ent_name"], old_info["graph_id"])
+            values = (new_info["words"], new_info["vid"], new_info["ent_name"], new_info["graph_id"], lexicon_id, word_id)
         else:
             new_value = "words = %s"
-            condition = "words = %s"
-            values = (lexicon_id, new_info["words"], old_info["words"])
+            values = (new_info["words"], lexicon_id, word_id)
 
-        sql = sql.format(table_name, new_value, condition)
+        sql = sql.format(table_name, new_value)
         Logger.log_info(sql)
         cursor.execute(sql, values)
 

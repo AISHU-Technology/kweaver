@@ -614,17 +614,29 @@ class LexiconService:
         error_code = ""
         try:
             # 被修改的词汇是否存在
-            if not lexicon_dao.is_word_exist_info(params_json.get("id"), params_json.get("old_info")):
+            if not lexicon_dao.is_word_exist_id(params_json.get("id"), params_json.get("word_id")):
                 return "Builder_LexiconController_EditLexiconWord_LexiconWordNotExist"
             # 修改后的词汇是否存在
             if lexicon_dao.is_word_exist_info(params_json.get("id"), params_json.get("new_info")):
                 return "Builder_LexiconController_EditLexiconWord_LexiconWordExisted"
             # 词汇格式
-            if set(params_json.get("old_info").keys()) != set(params_json.get("new_info").keys()):
+            mode = lexicon_dao.get_mode_by_lexicon_id(params_json.get("id"))
+            std_keys = {"synonym", "std_name", "std_property", "ent_name", "graph_id"}
+            entity_link_keys = {"words", "vid", "ent_name", "graph_id"}
+            custom_keys = {"words"}
+            keys = {}
+            if mode == "std":
+                keys = std_keys
+            elif mode == "entity_link":
+                keys = entity_link_keys
+            elif mode == "custom":
+                keys = custom_keys
+
+            if keys != set(params_json.get("new_info").keys()):
                 return "Builder_LexiconController_EditLexiconWord_FormatMismatch"
 
             # 修改
-            lexicon_dao.update_word(params_json.get("id"), params_json.get("old_info"),
+            lexicon_dao.update_word(params_json.get("id"), int(params_json.get("word_id")),
                                              params_json.get("new_info"))
             # mysql中更新操作时间，操作人
             self.update_lexicon(params_json.get("id"), user_id)
