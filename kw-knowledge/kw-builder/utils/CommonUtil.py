@@ -231,28 +231,6 @@ class Commonutil(object):
         hostUrl = request.host_url
         return hostUrl
 
-    def updatemongo(self, db, collection, filter, source):
-        find_dict = {"name": filter["name"]}
-        if source == "type_sa":
-            find_dict["type_nw"] = "true"
-        ss = db[collection].find_one(find_dict)
-        if ss:  ##如果存在
-            update = {"$set": {source: "true"}}
-            db[collection].update_many(find_dict, update)
-        else:
-            if source != "type_sa":
-                data = {"name": filter["name"],
-                        "adlabel_kcid": filter["name"],
-                        "kc_topic_tags": "",
-                        "weight": "",
-                        "type_as": "false",
-                        "type_sa": "false",
-                        "type_nw": "false",
-                        "type_kc": "false",
-                        "_ds_id_": str(filter["ds_id"])}
-                data[source] = "true"
-                db[collection].insert_one(data)
-
     def check_statement_num(self, sql):
         """
         判断 sql 是否为单条语句

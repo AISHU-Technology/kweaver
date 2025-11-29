@@ -105,7 +105,7 @@ def otl_task():
                     new_params_json["ds_port"] = str(data["ds_port"])
                     new_params_json["ds_path"] = data["ds_path"]
                     new_params_json["ds_auth"] = data["ds_auth"]
-                    new_params_json["dsname"] = data["dsname"]
+                    new_params_json["ds_name"] = data["ds_name"]
                     new_params_json["vhost"] = data["vhost"]
                     new_params_json["queue"] = data["queue"]
                     new_params_json["json_schema"] = data["json_schema"]
@@ -331,7 +331,7 @@ def getfilestatus():
                     obj["res"]["result"]["files"] = []
                     obj["res"]["result"]["create_user_name"] = row["create_user_name"]
                     obj["res"]["result"]["create_time"] = row["create_time"]
-                    obj["res"]["result"]["finished_time"] = "-"
+                    obj["res"]["result"]["update_time"] = "-"
                     # # 更新状态
                     # task_service.updatestoptask(task_id)
                 elif task_status == "failed":
@@ -349,7 +349,7 @@ def getfilestatus():
                     obj["res"]["result"]["files"] = []
                     obj["res"]["result"]["create_user_name"] = row["create_user_name"]
                     obj["res"]["result"]["create_time"] = row["create_time"]
-                    obj["res"]["result"]["finished_time"] = row["finished_time"]
+                    obj["res"]["result"]["update_time"] = row["update_time"]
                 elif task_status == "finished":
                     file_list = row["file_list"]
                     file_list = eval(file_list)
@@ -371,7 +371,7 @@ def getfilestatus():
                     obj["res"]["result"]["files"] = file
                     obj["res"]["result"]["create_user_name"] = row["create_user_name"]
                     obj["res"]["result"]["create_time"] = row["create_time"]
-                    obj["res"]["result"]["finished_time"] = row["finished_time"]
+                    obj["res"]["result"]["update_time"] = row["update_time"]
 
                 return jsonify({'res': obj["res"], "code": 200})
         else:

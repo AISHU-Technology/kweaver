@@ -35,7 +35,7 @@ with open(os.path.join(GBUILDER_ROOT_PATH, 'docs/swagger_new_response.yaml'), 'r
     swagger_new_response.update(swagger_definitions)
 
 
-@dsm_controller_app.route('/testconnect', methods=["post"], strict_slashes=False)
+@dsm_controller_app.route('/test_connect', methods=["post"], strict_slashes=False)
 def connectTest():
     """测试连接"""
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -62,8 +62,7 @@ def connectTest():
                                    description=param_message), 400
 
 
-@dsm_controller_app.route('', methods=["get"], strict_slashes=False)
-@dsm_controller_open.route('', methods=["get"], strict_slashes=False)
+@dsm_controller_app.route('/page', methods=["get"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def getdss():
     """
@@ -151,8 +150,7 @@ def getdss():
     return ret_message, CommonResponseStatus.SUCCESS.value
 
 
-@dsm_controller_app.route('', methods=["post"], strict_slashes=False)
-@dsm_controller_open.route('', methods=["post"], strict_slashes=False)
+@dsm_controller_app.route('/add', methods=["post"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def addds():
     """
@@ -166,9 +164,9 @@ def addds():
                 schema:
                     type: 'object'
                     required:
-                        - dsname
+                        - ds_name
                         - data_source
-                        - dataType
+                        - data_type
                         - ds_address
                         - ds_port
                         - ds_path
@@ -178,7 +176,7 @@ def addds():
                         - ds_user
                         - ds_password
                     properties:
-                        dsname:
+                        ds_name:
                             type: string
                             format: string
                             description: 数据源名称
@@ -194,7 +192,7 @@ def addds():
                                 - sqlserver
                                 - kingbasees
                                 - postgresql
-                        dataType:
+                        data_type:
                             type: string
                             format: string
                             description: 数据类型
@@ -268,10 +266,9 @@ def addds():
     return jsonify(obj), CommonResponseStatus.SUCCESS.value
 
 
-@dsm_controller_app.route('/<dsid>', methods=["post"], strict_slashes=False)
-@dsm_controller_open.route('/<dsid>', methods=["post"], strict_slashes=False)
+@dsm_controller_app.route('/edit/<ds_id>', methods=["post"], strict_slashes=False)
 @swag_from(swagger_new_response)
-def ds(dsid):
+def ds(ds_id):
     """
     数据源修改
     数据源修改
@@ -291,13 +288,13 @@ def ds(dsid):
                 schema:
                     type: 'object'
                     required:
-                        - dsname
+                        - ds_name
                         - data_source
                         - connect_type
                         - ds_user
                         - ds_password
                     properties:
-                        dsname:
+                        ds_name:
                             type: string
                             format: string
                             description: 数据源名称
@@ -354,21 +351,20 @@ def ds(dsid):
 
     # params_json["user_id"] = request.headers["userId"]
     # params_json["roles"] = request.headers["roles"]
-    ret_code, ret_message = dsm_service.update(dsid, params_json, host_url)
+    ret_code, ret_message = dsm_service.update(ds_id, params_json, host_url)
     if ret_code != CommonResponseStatus.SUCCESS.value:
         
         return Gview.TErrorreturn(ErrorCode=ret_message["ErrorCode"], Description=ret_message["Description"],
                                   Solution=ret_message["Solution"], ErrorDetails=ret_message["ErrorDetails"],
                                   ErrorLink=ret_message["ErrorLink"]), ret_code
     user_name = request.headers.get("username")
-    operation_log = log_oper.get_operation_log(user_name, log_oper.UPDATE, dsid, params_json,
-                                               "修改了数据源{id=%s}" % dsid, "ds")
+    operation_log = log_oper.get_operation_log(user_name, log_oper.UPDATE, ds_id, params_json,
+                                               "修改了数据源{id=%s}" % ds_id, "ds")
     Logger.log_info(operation_log)
     return Gview2.json_return(ret_message.get("res")), CommonResponseStatus.SUCCESS.value
 
 
-@dsm_controller_app.route('/delbydsids', methods=["DELETE"], strict_slashes=False)
-@dsm_controller_open.route('/delbydsids', methods=["DELETE"], strict_slashes=False)
+@dsm_controller_app.route('/delete', methods=["DELETE"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def delds():
     """
@@ -383,9 +379,9 @@ def delds():
                 schema:
                     type: 'object'
                     required:
-                        - dsids
+                        - ds_ids
                     properties:
-                        dsids:
+                        ds_ids:
                             type: array
                             items:
                                 type: integer
@@ -401,15 +397,14 @@ def delds():
                                    message=ret_message["message"]), CommonResponseStatus.SERVER_ERROR.value
     obj = {"res": ret_message.get("res") + " success", "ds_ids": ret_message.get("ds_ids")}
     user_name = request.headers.get("username")
-    operation_log = log_oper.get_operation_log(user_name, log_oper.DELETE, params_json["dsids"], {},
-                                               "删除了数据源{id=%s}" % params_json["dsids"], "ds")
+    operation_log = log_oper.get_operation_log(user_name, log_oper.DELETE, params_json["ds_ids"], {},
+                                               "删除了数据源{id=%s}" % params_json["ds_ids"], "ds")
     Logger.log_info(operation_log)
     
     return jsonify(obj), CommonResponseStatus.SUCCESS.value
 
 
-@dsm_controller_app.route('/get_by_id', methods=["GET"], strict_slashes=False)
-@dsm_controller_open.route('/get_by_id', methods=["GET"], strict_slashes=False)
+@dsm_controller_app.route('/detail', methods=["GET"], strict_slashes=False)
 @swag_from(swagger_new_response)
 def get_by_id():
     """
@@ -473,7 +468,7 @@ def get_by_id():
 
 
 # 模糊查询
-@dsm_controller_app.route('/searchbyname', methods=["get"], strict_slashes=False)
+@dsm_controller_app.route('/search', methods=["get"], strict_slashes=False)
 def getbydsname():
     host_url = getHostUrl()
     param_code, params_json, param_message = commonutil.getMethodParam()
@@ -509,10 +504,10 @@ def getbydsname():
 
 
 # 数据源复制
-@dsm_controller_app.route('/ds_copy/<ds_id>', methods=["post"], strict_slashes=False)
+@dsm_controller_app.route('/copy/<ds_id>', methods=["post"], strict_slashes=False)
 def ds_copy(ds_id):
     host_url = getHostUrl()
-    Logger.log_info("dsid: {}".format(ds_id))
+    Logger.log_info("ds_id: {}".format(ds_id))
     # 获取参数
     param_code, params_json, param_message = commonutil.getMethodParam()
     if param_code != 0:
@@ -558,7 +553,7 @@ def ds_copy(ds_id):
     return jsonify(obj), CommonResponseStatus.SUCCESS.value
 
 
-@dsm_controller_app.route('/hive/partitions', methods=["GET"], strict_slashes=False)
+@dsm_controller_app.route('/hive/partition/list', methods=["GET"], strict_slashes=False)
 def getHivePartitions():
     ''' 获取hive数据源表的分区字段 '''
     params_json = request.args.to_dict()
@@ -581,7 +576,7 @@ def getHivePartitions():
     return jsonify(obj), CommonResponseStatus.SUCCESS.value
 
 
-@dsm_controller_app.route('/hive/partition_case', methods=["GET"], strict_slashes=False)
+@dsm_controller_app.route('/hive/partition/case', methods=["GET"], strict_slashes=False)
 def getHivePartitionCase():
     ''' 通过分区表达式获取hive分区实例 '''
 
@@ -605,7 +600,7 @@ def getHivePartitionCase():
     return jsonify(obj), CommonResponseStatus.SUCCESS.value
 
 
-@dsm_controller_app.route('/hive/partition_infos/check', methods=["POST"], strict_slashes=False)
+@dsm_controller_app.route('/hive/partition/check_info', methods=["POST"], strict_slashes=False)
 def checkPartitionInfos():
     ''' 批量检查分区配置 '''
     # 获取参数
@@ -687,7 +682,7 @@ def ds_sql():
         return Gview2.TErrorreturn(code, cause=str(e)), 500
 
 
-@dsm_controller_app.route('/previewdata', methods=["GET"], strict_slashes=False)
+@dsm_controller_app.route('/preview_data', methods=["GET"], strict_slashes=False)
 def preview_data():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()

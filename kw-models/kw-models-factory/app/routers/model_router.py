@@ -33,39 +33,39 @@ def get_user_id(request: Request):
 
 
 # 保存数据接口
-@router01.post("/llm-add")
+@router01.post("/llm/add")
 async def add_llm(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await add_model(model_para, userId)
 
 
 # 大模型删除接口
-@router01.post("/llm-remove")
+@router01.post("/llm/delete")
 async def remove_llm(model_id: dict = Body(...), user: Optional[str] = Header(None)):
     return await remove_model(model_id, user)
 
 
 # 大模型测试接口
-@router01.post("/llm-test")
+@router01.post("/llm/test")
 async def test_llm_(model_config: dict = Body(...), user: Optional[str] = Header(None)):
     return await test_model(model_config, user)
 
 
 # 大模型重命名接口
-@router01.post("/llm-edit")
+@router01.post("/llm/edit")
 async def edit_llm(request: Request, model_para: dict = Body(...)):
     userId = get_user_id(request)
     return await edit_model(model_para, userId)
 
 
 # 获取大模型列表接口
-@router01.get("/llm-source")
+@router01.get("/llm/page")
 async def source_llm(request: Request, page, size, order='desc', rule='update_time', series='', name=''):
     userId = get_user_id(request)
     return await source_model(userId, page, size, name, order, series, rule)
 
 
-@router01.post("/llm-used/{llm_id}")
+@router01.post("/llm/used/{llm_id}")
 async def used_post(
         request: Request,
         llm_id,
@@ -79,13 +79,13 @@ async def used_post(
 
 
 # 查看大模型接口
-@router01.get("/llm-check")
+@router01.get("/llm/detail")
 async def check_llm_(model_id, user: Optional[str] = Header(None)):
     return await check_model(model_id, user)
 
 
 # 新增大模型获取参数接口
-@router01.get("/llm-param")
+@router01.get("/llm/param")
 async def param_llm(user: Optional[str] = Header(None)):
     return await param_model(user)
 

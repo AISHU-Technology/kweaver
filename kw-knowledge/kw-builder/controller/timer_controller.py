@@ -90,8 +90,8 @@ def add_timed_task(graph_id):
                                       error_link), CommonResponseStatus.BAD_REQUEST.value
 
 
-# 修改定时任务
-@timer_controller_app.route('/update/<graph_id>', methods=["post"], strict_slashes=False)
+# 编辑定时任务
+@timer_controller_app.route('/edit/<graph_id>', methods=["post"], strict_slashes=False)
 def update_timed_task(graph_id):
 
     method = request.method
@@ -214,7 +214,7 @@ def delete_timed_task(graph_id):
 
 
 # 分页获取定时任务
-@timer_controller_app.route('', methods=["get"], strict_slashes=False)
+@timer_controller_app.route('/page', methods=["get"], strict_slashes=False)
 def get_timed_task():
 
     method = request.method
@@ -304,8 +304,8 @@ def timed_switch(graph_id):
             enabled = params_json.get("enabled", True)
             if not enabled:
                 enabled = False
-            update_user = request.headers.get("userId")
-            code, data = task_service.update_timer_switch(graph_id, task_id, enabled, update_user)
+            update_by = request.headers.get("userId")
+            code, data = task_service.update_timer_switch(graph_id, task_id, enabled, update_by)
             if code != CommonResponseStatus.SUCCESS.value:
                 error_link = ''
                 code = data['error_code']

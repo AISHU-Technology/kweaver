@@ -2,9 +2,9 @@ SET SCHEMA kwever;
 
 CREATE TABLE IF NOT EXISTS "graph_config_table" (
     "id" INT not null IDENTITY(1, 1),
-    "create_user" VARCHAR(100) null,
+    "create_by" VARCHAR(100) null,
     "create_time" VARCHAR(100) null,
-    "update_user" VARCHAR(100) null,
+    "update_by" VARCHAR(100) null,
     "update_time" VARCHAR(100) null,
     "graph_name" VARCHAR(100) null,
     "graph_baseInfo" text null,
@@ -26,12 +26,12 @@ CREATE TABLE IF NOT EXISTS "graph_config_table" (
 
 CREATE TABLE IF NOT EXISTS "data_source_table" (
     "id" INT not null IDENTITY(1, 1),
-    "create_user" VARCHAR(50) null,
+    "create_by" VARCHAR(50) null,
     "create_time" VARCHAR(50) null,
-    "update_user" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
     "update_time" VARCHAR(50) null,
-    "dsname" VARCHAR(50) null,
-    "dataType" VARCHAR(20) null,
+    "ds_name" VARCHAR(50) null,
+    "data_type" VARCHAR(20) null,
     "data_source" VARCHAR(20) null,
     "ds_user" VARCHAR(30) null,
     "ds_password" VARCHAR(500) null,
@@ -51,9 +51,9 @@ CREATE TABLE IF NOT EXISTS "data_source_table" (
 
 CREATE TABLE IF NOT EXISTS "ontology_table" (
     "id" INT not null IDENTITY(1, 1),
-    "create_user" VARCHAR(50) null,
+    "create_by" VARCHAR(50) null,
     "create_time" VARCHAR(50) null,
-    "update_user" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
     "update_time" VARCHAR(50) null,
     "ontology_name" VARCHAR(50) null,
     "ontology_des" VARCHAR(150) null,
@@ -74,11 +74,11 @@ CREATE TABLE IF NOT EXISTS "ontology_table" (
 CREATE TABLE IF NOT EXISTS "ontology_task_table" (
     "task_id" INT not null IDENTITY(1, 1),
     "ontology_id" VARCHAR(50) null,
-    "create_user" VARCHAR(100) null,
+    "create_by" VARCHAR(100) null,
     "task_name" text null,
     "task_type" VARCHAR(50) null,
     "create_time" VARCHAR(100) null,
-    "finished_time" VARCHAR(100) null,
+    "update_time" VARCHAR(100) null,
     "task_status" VARCHAR(500) null,
     "celery_task_id" VARCHAR(100) null,
     "result" text null,
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS "graph_task_table" (
     "id" INT not null IDENTITY(1, 1),
     "graph_id" INT null,
     "graph_name" VARCHAR(50) null,
-    "create_user" VARCHAR(100) null,
+    "create_by" VARCHAR(100) null,
     "create_time" VARCHAR(100) null,
     "task_status" VARCHAR(50) null,
     "task_id" VARCHAR(200) null,
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS "graph_task_history_table" (
     "graph_name" VARCHAR(50) null,
     "task_id" VARCHAR(200) null,
     "task_status" VARCHAR(50) null,
-    "create_user" VARCHAR(100) null,
+    "create_by" VARCHAR(100) null,
     "start_time" VARCHAR(100) null,
     "end_time" VARCHAR(100) null,
     "entity_num" INT null,
@@ -147,9 +147,9 @@ CREATE TABLE IF NOT EXISTS "knowledge_network" (
     "knw_description" VARCHAR(200) null,
     "intelligence_score" decimal(10,2) default -1.00 not null,
     "color" VARCHAR(50) null,
-    "creator_id" VARCHAR(50) null,
-    "final_operator" VARCHAR(50) null,
-    "creation_time" VARCHAR(50) null,
+    "create_by" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
+    "create_time" VARCHAR(50) null,
     "update_time" VARCHAR(50) null,
     "identify_id" VARCHAR(128) null,
     "to_be_uploaded" TINYINT default 0 null,
@@ -165,8 +165,8 @@ CREATE TABLE IF NOT EXISTS "lexicon" (
     "mode" VARCHAR(50) not null,
     "extract_info" text not null,
     "knowledge_id" INT null,
-    "create_user" VARCHAR(50) null,
-    "operate_user" VARCHAR(50) null,
+    "create_by" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
     "create_time" VARCHAR(50) null,
     "update_time" VARCHAR(50) null,
     "status" VARCHAR(50) null,
@@ -175,6 +175,49 @@ CREATE TABLE IF NOT EXISTS "lexicon" (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS lexicon_uk_lexicon_name_kwn_id ON lexicon("lexicon_name", "knowledge_id");
+
+
+CREATE TABLE IF NOT EXISTS "lexicon_entity_link_words" (
+    "id" BIGINT not null,
+    "lexicon_id" INT not null,
+    "words" VARCHAR(255) null,
+    "vid" VARCHAR(255) null,
+    "ent_name" VARCHAR(255) null,
+    "graph_id" BIGINT not null,
+    "create_by" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
+    "create_time" VARCHAR(50) null,
+    "update_time" VARCHAR(50) null,
+    PRIMARY KEY ("id")
+);
+
+
+CREATE TABLE IF NOT EXISTS "lexicon_std_words" (
+    "id" BIGINT not null,
+    "lexicon_id" INT not null,
+    "synonym" VARCHAR(255) null,
+    "std_name" VARCHAR(255) null,
+    "std_property" VARCHAR(255) null,
+    "ent_name" VARCHAR(255) null,
+    "graph_id" BIGINT not null,
+    "create_by" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
+    "create_time" VARCHAR(50) null,
+    "update_time" VARCHAR(50) null,
+    PRIMARY KEY ("id")
+);
+
+
+CREATE TABLE IF NOT EXISTS "lexicon_custom_words" (
+    "id" BIGINT not null,
+    "lexicon_id" INT not null,
+    "words" VARCHAR(255) null,
+    "create_by" VARCHAR(50) null,
+    "update_by" VARCHAR(50) null,
+    "create_time" VARCHAR(50) null,
+    "update_time" VARCHAR(50) null,
+    PRIMARY KEY ("id")
+);
 
 
 CREATE TABLE IF NOT EXISTS "intelligence_records" (
@@ -208,8 +251,8 @@ CREATE TABLE IF NOT EXISTS "async_tasks" (
     "relation_id" VARCHAR(200) null,
     "task_params" text null,
     "result" text null,
-    "created_time" datetime null,
-    "finished_time" datetime null,
+    "create_time" datetime null,
+    "update_time" datetime null,
     PRIMARY KEY ("id")
 );
 
@@ -237,9 +280,9 @@ CREATE TABLE IF NOT EXISTS "function" (
     "description" VARCHAR(255) null,
     "parameters" text null,
     "language" VARCHAR(100) null,
-    "create_user" VARCHAR(100) null,
+    "create_by" VARCHAR(100) null,
     "create_time" VARCHAR(100) null,
-    "update_user" VARCHAR(100) null,
+    "update_by" VARCHAR(100) null,
     "update_time" VARCHAR(100) null,
     "knowledge_network_id" INT null,
     PRIMARY KEY ("id")
@@ -248,9 +291,9 @@ CREATE TABLE IF NOT EXISTS "function" (
 
 CREATE TABLE IF NOT EXISTS "taxonomy" (
     "id" INT not null IDENTITY(1, 1),
-    "create_user" VARCHAR(100) null,
+    "create_by" VARCHAR(100) null,
     "create_time" datetime default current_timestamp() null,
-    "update_user" VARCHAR(100) null,
+    "update_by" VARCHAR(100) null,
     "update_time" datetime default current_timestamp() null,
     "name" VARCHAR(100) null,
     "default_language" VARCHAR(10) null,
@@ -267,9 +310,9 @@ CREATE UNIQUE INDEX IF NOT EXISTS taxonomy_uk_name ON taxonomy("name", "knw_id")
 
 CREATE TABLE IF NOT EXISTS "taxonomy_custom_relation" (
     "id" INT not null IDENTITY(1, 1),
-    "create_user" VARCHAR(100) null,
+    "create_by" VARCHAR(100) null,
     "create_time" datetime default current_timestamp() null,
-    "update_user" VARCHAR(100) null,
+    "update_by" VARCHAR(100) null,
     "update_time" datetime default current_timestamp() null,
     "name" VARCHAR(100) null,
     "taxonomy_id" INT null,
@@ -294,10 +337,10 @@ CREATE TABLE IF NOT EXISTS "timer_crontab" (
 CREATE TABLE IF NOT EXISTS "timer_task" (
     "id" INT IDENTITY(1, 1),
     "task_id" VARCHAR(255) null,
-    "modify_time" datetime null,
+    "update_time" datetime null,
     "create_time" datetime null,
-    "create_user" VARCHAR(100) null,
-    "update_user" VARCHAR(100) null,
+    "create_by" VARCHAR(100) null,
+    "update_by" VARCHAR(100) null,
     "graph_id" INT null,
     "task_type" VARCHAR(20) null,
     "cycle" VARCHAR(20) null,
@@ -337,9 +380,9 @@ CREATE TABLE IF NOT EXISTS "canvas" (
   "canvas_name" VARCHAR(256) NOT NULL,
   "canvas_info" text DEFAULT NULL,
   "canvas_body" text NOT NULL,
-  "create_user" VARCHAR(50) NOT NULL,
+  "create_by" VARCHAR(50) NOT NULL,
   "create_time" VARCHAR(50) NOT NULL,
-  "update_user" VARCHAR(50) NOT NULL,
+  "update_by" VARCHAR(50) NOT NULL,
   "update_time" VARCHAR(50) NOT NULL,
   PRIMARY KEY ("id")
 );
@@ -356,8 +399,8 @@ CREATE TABLE IF NOT EXISTS "search_config" (
   "db_2_doc" text DEFAULT NULL,
   "create_time" datetime DEFAULT NULL,
   "update_time" datetime DEFAULT NULL,
-  "create_user" VARCHAR(255) DEFAULT NULL,
-  "update_user" VARCHAR(255) DEFAULT NULL,
+  "create_by" VARCHAR(255) DEFAULT NULL,
+  "update_by" VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY ("id")
 );
 

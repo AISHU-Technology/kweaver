@@ -13,22 +13,21 @@ class DsCheckParameters(object):
     VALID = 0
     INVALID = -1
     rule_dict = {}
-    rule_dict["dataType"] = ["structured", "unstructured"]
+    rule_dict["data_type"] = ["structured", "unstructured"]
     rule_dict["extract_type"] = ["standardExtraction", "modelExtraction"]
     rule_dict["data_source"] = ["mysql", "hive", "sqlserver", "kingbasees", "postgresql",
                                 "clickhouse"]
     ds_getall_params = ["page", "size", "order", "knw_id", 'filter', 'ds_type']
     task_status_params = ["page", "size", "order", "status"]
     search_taskbyname_params = ["page", "size", "order", "graph_name", "status", "task_type", "trigger_type", 'rule']
-    ds_add_params = ("dsname", "dataType", "data_source", "ds_address", "ds_port", "ds_user", "ds_password", "ds_path",
+    ds_add_params = ("ds_name", "data_type", "data_source", "ds_address", "ds_port", "ds_user", "ds_password", "ds_path",
                      "extract_type", "ds_auth", "vhost", "queue", "json_schema", "knw_id", "connect_type")
-    ds_edit_params = ("dsname", "data_source", "ds_port", "ds_user", "ds_password", "ds_auth", "json_schema", "connect_type")
+    ds_edit_params = ("ds_name", "data_source", "ds_port", "ds_user", "ds_password", "ds_auth", "json_schema", "connect_type")
     ds_contest_params = (
         "ds_id", "data_source", "ds_address", "ds_port", "ds_user", "ds_password", "ds_path", "ds_auth",
         "vhost", "queue", "connect_type")
 
-    ds_del_params = ["dsnames"]
-    ds_getbyname_params = ["page", "size", "dsname", "order", "knw_id"]
+    ds_getbyname_params = ["page", "size", "ds_name", "order", "knw_id"]
     ds_auth_params = ["ds_route", "ds_address", "ds_auth"]
     ds_gettoken_params = ["ds_code", "ds_auth"]
     ds_verify_params = ["ds_auth"]
@@ -264,7 +263,7 @@ class DsCheckParameters(object):
                 if k in ds_add_params:
                     value = params_json[k]
                     # value = str(value)
-                    if k == "ds_port" or k == "dataType" or k == "extract_type" or k == "data_source":
+                    if k == "ds_port" or k == "data_type" or k == "extract_type" or k == "data_source":
                         continue
 
                     elif k == "ds_address":
@@ -277,7 +276,7 @@ class DsCheckParameters(object):
                                 message += _l(" parameters: ") + k + _l(" irregular！")
                                 ret_status = self.INVALID
 
-                    elif k == "dsname":
+                    elif k == "ds_name":
                         if not isinstance(value, str):
                             message += _l(" parameters: ") + k + _l(" must be str！")
                             ret_status = self.INVALID
@@ -356,7 +355,7 @@ class DsCheckParameters(object):
                         ret_status = self.INVALID
 
             ds_port = params_json.get("ds_port")
-            dataType = params_json.get("dataType")
+            data_type = params_json.get("data_type")
             extract_type = params_json.get("extract_type")
             data_source = params_json.get("data_source")
             if ds_port is not None:
@@ -371,12 +370,12 @@ class DsCheckParameters(object):
                 message += _l(" parameters: ds_port must be int")
                 ret_status = self.INVALID
 
-            if dataType is not None:
-                if dataType not in self.rule_dict["dataType"]:
-                    message_dict["no_rule"].append("dataType")
+            if data_type is not None:
+                if data_type not in self.rule_dict["data_type"]:
+                    message_dict["no_rule"].append("data_type")
                     ret_status = self.INVALID
             else:
-                message += _l(" parameters: dataType must be str")
+                message += _l(" parameters: data_type must be str")
                 ret_status = self.INVALID
             if extract_type is not None:
                 if extract_type not in self.rule_dict["extract_type"]:
@@ -394,14 +393,14 @@ class DsCheckParameters(object):
                 message += _l(" parameters: data_source must be str")
                 ret_status = self.INVALID
 
-            if dataType == "structured":
+            if data_type == "structured":
                 # if extract_type is not None:
                 #     if extract_type not in self.rule_dict["extract_type"]:
                 #         message_dict["no_rule"].append("extract_type")
                 #         ret_status = self.INVALID
                 #     else:
                 if extract_type not in ["standardExtraction"]:
-                    message += _l(" parameters:dataType is structured  parameters:extract_type must be standardExtraction!")
+                    message += _l(" parameters:data_type is structured  parameters:extract_type must be standardExtraction!")
                     ret_status = self.INVALID
 
                 # if data_source is not None:
@@ -409,14 +408,14 @@ class DsCheckParameters(object):
                 #         message_dict["no_rule"].append("data_source")
                 #         ret_status = self.INVALID
 
-            elif dataType == "unstructured":
+            elif data_type == "unstructured":
                 if extract_type is not None:
                     if extract_type != "modelExtraction":
-                        message += _l("parameters: dataType is unstructured  parameters: extract_type must be modelExtraction!")
+                        message += _l("parameters: data_type is unstructured  parameters: extract_type must be modelExtraction!")
                         ret_status = self.INVALID
 
                 if data_source is not None:
-                    message += _l(" parameters:dataType is unstructured  parameters:data_source must be Anyshare!")
+                    message += _l(" parameters:data_type is unstructured  parameters:data_source must be Anyshare!")
                     ret_status = self.INVALID
 
             # 参数多余，错误的参数
@@ -487,7 +486,7 @@ class DsCheckParameters(object):
                     if k == "ds_port" or k == "data_source":
                         continue
 
-                    elif k == "dsname":
+                    elif k == "ds_name":
                         if not isinstance(value, str):
                             message += _l(" parameters: ") + k + _l(" must be str！")
                             ret_status = self.INVALID
@@ -735,7 +734,7 @@ class DsCheckParameters(object):
                     if value not in ["ascend", "descend"]:
                         message += " parameters: " + k + " must be ascend or descend!"
                         ret_status = self.INVALID
-                elif k == "dsname":
+                elif k == "ds_name":
                     if not isinstance(value, str):
                         message += " parameters: " + k + " must be str！"
                         ret_status = self.INVALID
@@ -1012,7 +1011,7 @@ class DsCheckParameters(object):
         ret_status = self.VALID
         message = ""
         # 定义参数
-        required = ["tasktype"]
+        required = ["task_type"]
         # 请求参数
         values = params_json
         # 请求的参数不在定义的参数中
@@ -1020,10 +1019,10 @@ class DsCheckParameters(object):
         for k in values:
             if not k in required:
                 unnecessaryParameters.append(k)
-        tasktype = params_json.get("tasktype", None)
+        task_type = params_json.get("task_type", None)
         # 请求的参数缺少必须的参数
         MissingParameters = []
-        if tasktype == None:
+        if task_type == None:
             for k in required:
                 if not k in values:
                     MissingParameters.append(k)
@@ -1036,13 +1035,13 @@ class DsCheckParameters(object):
         # 校验顺序一 先校验参数是否缺少或者多的
         if len(unnecessaryParameters) > 0 or len(MissingParameters) > 0:
             return ret_status, message
-        Logger.log_info(type(tasktype))
-        if tasktype is not None:
-            if tasktype not in ["full", "increment"]:
+        Logger.log_info(type(task_type))
+        if task_type is not None:
+            if task_type not in ["full", "increment"]:
                 message += "parameters tasktype must in ['full', 'increment']!"
                 ret_status = self.INVALID
         else:
-            message += " parameters: tasktype must be str"
+            message += " parameters: task_type must be str"
             ret_status = self.INVALID
         return ret_status, message
 

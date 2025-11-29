@@ -382,8 +382,8 @@ class DsmDao(object):
         values_list.append(userId)
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
-        values_list.append(params_json["dsname"])
-        values_list.append(params_json["dataType"])
+        values_list.append(params_json["ds_name"])
+        values_list.append(params_json["data_type"])
         values_list.append(params_json["data_source"])
         ds_address = params_json["ds_address"]
         values_list.append(ds_address)
@@ -400,7 +400,7 @@ class DsmDao(object):
         values_list.append(params_json.get("ds_user", ""))
         values_list.append(params_json.get("ds_password", ""))
 
-        sql = """INSERT INTO data_source_table (create_user,update_user ,create_time,update_time, dsname, dataType,
+        sql = """INSERT INTO data_source_table (create_by,update_by ,create_time,update_time, ds_name, data_type,
                        data_source,ds_address,ds_port,ds_path,extract_type,vhost, queue, json_schema, knw_id, connect_type, ds_user,ds_password) 
                        VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         cursor.execute(sql, values_list)
@@ -416,7 +416,7 @@ class DsmDao(object):
         if len(kgIds) > 0:
             condition += """ AND id IN ({}) """.format(",".join(map(str, kgIds)))
         if filter == 'structured':
-            condition += " and dataType = 'structured' "
+            condition += " and data_type = 'structured' "
         if ds_type:
             condition += f" and data_source = '{ds_type}' "
         if knw_id != "-1":
@@ -444,7 +444,7 @@ class DsmDao(object):
     @connect_execute_close_db
     def getCountstructured(self, connection, cursor, ):
         sql = """
-                SELECT id FROM data_source_table where datatype = 'structured';
+                SELECT id FROM data_source_table where data_type = 'structured';
                 """
         # sql = sql.format()
         Logger.log_info(sql)
@@ -457,8 +457,8 @@ class DsmDao(object):
         if len(ids) == 0:
             return []
         # sql = """SELECT a1.username AS create_user_name, a2.username AS update_user_name,d.* FROM data_source_table AS d
-        #             LEFT JOIN account a1 ON a1.account_id=d.create_user
-        #             LEFT JOIN account a2 ON a2.account_id=d.update_user  where d.id in (%s)
+        #             LEFT JOIN account a1 ON a1.account_id=d.create_by
+        #             LEFT JOIN account a2 ON a2.account_id=d.update_by  where d.id in (%s)
         #         ORDER BY update_time desc""" % (
         #     ",".join([str(id) for id in ids]))
         sql = """SELECT d.* FROM data_source_table AS d 
@@ -478,7 +478,7 @@ class DsmDao(object):
     @connect_execute_close_db
     def getbyids_order(self, ids, connection, cursor, ):
         sql = """SELECT * FROM data_source_table WHERE id IN ({}) 
-                AND dataType=%s ORDER BY update_time desc""".format(",".join([str(id) for id in ids]))
+                AND data_type=%s ORDER BY update_time desc""".format(",".join([str(id) for id in ids]))
 
         # sql = sql.format()
         Logger.log_info(sql)
@@ -508,7 +508,7 @@ class DsmDao(object):
 
     @connect_execute_close_db
     def getbydsname(self, name, knw_id, connection, cursor, ):
-        sql = """SELECT id FROM data_source_table where dsname=%s and knw_id=%s;"""
+        sql = """SELECT id FROM data_source_table where ds_name=%s and knw_id=%s;"""
 
         Logger.log_info(sql)
         cursor.execute(sql, [name, knw_id])
@@ -526,13 +526,13 @@ class DsmDao(object):
         return res
 
     @connect_execute_close_db
-    def getCountbyname(self, dsname, kgIds, knw_id, connection, cursor, ):
+    def getCountbyname(self, ds_name, kgIds, knw_id, connection, cursor, ):
         condition = " "
         if len(kgIds) > 0:
             condition = """ id in ({}) AND """.format(",".join(map(str, kgIds)))
-        sql = """SELECT id FROM data_source_table where knw_id=%s AND """ + condition + """ dsname like %s;"""
-        dsname = "%" + dsname + "%"
-        value_list = [knw_id, dsname]
+        sql = """SELECT id FROM data_source_table where knw_id=%s AND """ + condition + """ ds_name like %s;"""
+        ds_name = "%" + ds_name + "%"
+        value_list = [knw_id, ds_name]
         Logger.log_info(sql % tuple(value_list))
 
         cursor.execute(sql, value_list)
@@ -562,7 +562,7 @@ class DsmDao(object):
             else:
                 condition = """ WHERE d.id > 0 """
         if filter == 'structured':
-            condition += """ and d.dataType = 'structured' """
+            condition += """ and d.data_type = 'structured' """
         if ds_type:
             condition += f""" and d.data_source = '{ds_type}' """
 
@@ -585,8 +585,8 @@ class DsmDao(object):
                 #         d.*
                 #     FROM
                 #         data_source_table AS d
-                #         JOIN account a1 ON a1.account_id = d.create_user
-                #         JOIN account a2 ON a2.account_id = d.update_user""" \
+                #         JOIN account a1 ON a1.account_id = d.create_by
+                #         JOIN account a2 ON a2.account_id = d.update_by""" \
                 #       + condition + """ order by update_time asc limit %s, %s;"""
                 sql = """SELECT
                         d.*
@@ -600,8 +600,8 @@ class DsmDao(object):
                 #         d.*
                 #     FROM
                 #         data_source_table AS d
-                #         JOIN account a1 ON a1.account_id = d.create_user
-                #         JOIN account a2 ON a2.account_id = d.update_user """ \
+                #         JOIN account a1 ON a1.account_id = d.create_by
+                #         JOIN account a2 ON a2.account_id = d.update_by """ \
                 #       + condition + """ order by update_time  Desc limit %s, %s;"""
                 sql = """SELECT
                         d.*
@@ -615,29 +615,29 @@ class DsmDao(object):
             return res
 
     @connect_execute_close_db
-    def getallbyname(self, dsname, page, size, order, kgIds, knw_id, connection, cursor):
+    def getallbyname(self, ds_name, page, size, order, kgIds, knw_id, connection, cursor):
         condition = " "
         if len(kgIds) > 0:
             condition = """ d.id in ({}) AND """.format(",".join(map(str, kgIds)))
         # sql = """SELECT a1.username AS create_user_name, a2.username AS update_user_name, d.* FROM data_source_table AS d
-        #         LEFT JOIN account a1 ON a1.account_id=d.create_user
-        #         LEFT JOIN account a2 ON a2.account_id=d.update_user
-        #         where  """ + condition + """ knw_id=%s AND d.dsname like %s
+        #         LEFT JOIN account a1 ON a1.account_id=d.create_by
+        #         LEFT JOIN account a2 ON a2.account_id=d.update_by
+        #         where  """ + condition + """ knw_id=%s AND d.ds_name like %s
         #         order by d.update_time asc limit %s, %s;"""
         sql = """SELECT d.* FROM data_source_table AS d 
-                where  """ + condition + """ knw_id=%s AND d.dsname like %s 
+                where  """ + condition + """ knw_id=%s AND d.ds_name like %s 
                 order by d.update_time asc limit %s, %s;"""
         if order == "descend":
             # sql = """SELECT a1.username AS create_user_name, a2.username AS update_user_name, d.* FROM data_source_table AS d
-            #         LEFT JOIN account a1 ON a1.account_id=d.create_user
-            #         LEFT JOIN account a2 ON a2.account_id=d.update_user
-            #         where """ + condition + """ knw_id=%s AND d.dsname like %s
+            #         LEFT JOIN account a1 ON a1.account_id=d.create_by
+            #         LEFT JOIN account a2 ON a2.account_id=d.update_by
+            #         where """ + condition + """ knw_id=%s AND d.ds_name like %s
             #         order by d.update_time desc limit %s, %s; """
             sql = """SELECT d.* FROM data_source_table AS d 
-                        where """ + condition + """ knw_id=%s AND d.dsname like %s 
+                        where """ + condition + """ knw_id=%s AND d.ds_name like %s 
                         order by d.update_time desc limit %s, %s; """
-        dsname = "%" + dsname + "%"
-        value_list = [knw_id, dsname, page * size, size]
+        ds_name = "%" + ds_name + "%"
+        value_list = [knw_id, ds_name, page * size, size]
         Logger.log_info(sql % tuple(value_list))
         cursor.execute(sql, value_list)
         res = cursor.fetchall()
@@ -652,14 +652,14 @@ class DsmDao(object):
         userId = ""
         values_list.append(userId)  # 用户
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
-        values_list.append(params_json["dsname"])
+        values_list.append(params_json["ds_name"])
 
         values_list.append(params_json.get("json_schema", ""))
         values_list.append(params_json.get("ds_user", ""))
         values_list.append(params_json.get("ds_password", ""))
 
         values_list.append(id)
-        sql = """UPDATE data_source_table SET update_user=%s, update_time=%s, dsname=%s, json_schema=%s,
+        sql = """UPDATE data_source_table SET update_by=%s, update_time=%s, ds_name=%s, json_schema=%s,
                             ds_user=%s, ds_password=%s where id = %s"""
         cursor.execute(sql, values_list)
         # cursor.execute(sql)
@@ -711,11 +711,11 @@ class DsmDao(object):
         condition1, condition2 = " ", " "
         if len(kgIds) > 0:
             condition1 = """ WHERE d.id in ({}) """.format(",".join(map(str, kgIds)))
-            condition2 = """ AND dataType = "structured" """
+            condition2 = """ AND data_type = "structured" """
 
         # sql = """SELECT a1.username AS create_user_name, a2.username AS update_user_name, d.* FROM data_source_table AS d
-        #             LEFT JOIN account a1 ON a1.account_id=d.create_user
-        #             LEFT JOIN account a2 ON a2.account_id=d.update_user
+        #             LEFT JOIN account a1 ON a1.account_id=d.create_by
+        #             LEFT JOIN account a2 ON a2.account_id=d.update_by
         #             """ + condition1 + condition2 + """ order by update_time """
         sql = """SELECT d.* FROM data_source_table AS d 
                     """ + condition1 + condition2 + """ order by update_time """
@@ -729,7 +729,7 @@ class DsmDao(object):
         condition1, condition2 = " ", " "
         if len(kgIds) > 0:
             condition1 = """ WHERE id in ({}) """.format(",".join(map(str, kgIds)))
-            condition2 = """ AND dataType = 'structured' """
+            condition2 = """ AND data_type = 'structured' """
         sql = """SELECT id FROM data_source_table """ + condition1 + condition2 + """ ;"""
         # sql = sql.format()
         Logger.log_info(sql)
@@ -739,7 +739,7 @@ class DsmDao(object):
 
     @connect_execute_close_db
     def getbydsnameId(self, name, dsid, connection, cursor, ):
-        sql = """SELECT id FROM data_source_table where dsname = %s and id != %s and knw_id=(select knw_id from data_source_table d where id = %s);"""
+        sql = """SELECT id FROM data_source_table where ds_name = %s and id != %s and knw_id=(select knw_id from data_source_table d where id = %s);"""
         Logger.log_info(sql)
         cursor.execute(sql, [name, dsid, dsid])
         res = cursor.fetchall()

@@ -30,7 +30,7 @@ def create_task(task_type):
 
     params_json['task_type'] = task_type
     params_json['task_status'] = "waiting"
-    params_json['created_time'] = datetime.datetime.now()
+    params_json['create_time'] = datetime.datetime.now()
 
     if task_type in ["lexicon_build", "import_lexicon"]:
         lexicon_dao.update_lexicon_status(params_json["relation_id"], "waiting")

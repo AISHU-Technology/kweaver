@@ -1073,7 +1073,7 @@ class OtlDao(object):
         values_list.append(str(params_json.get('canvas', {})))
         Logger.log_info(values_list)
 
-        sql = """INSERT INTO ontology_table (create_user, update_user, ontology_name, ontology_des, entity, edge,
+        sql = """INSERT INTO ontology_table (create_by, update_by, ontology_name, ontology_des, entity, edge,
                     used_task, all_task, create_time, update_time, identify_id, knw_id, `domain`, otl_temp, canvas)
                  VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         Logger.log_info(sql % tuple(values_list))
@@ -1118,7 +1118,7 @@ class OtlDao(object):
         value_list.append(str(params_json.get('canvas', {})))
         value_list.append(params_json["otl_id"])
         sql = """update ontology_table set ontology_name=%s, ontology_des=%s, `domain`=%s, {}
-                 otl_temp=%s, used_task=%s, all_task=%s, update_user=%s, update_time=%s, canvas=%s
+                 otl_temp=%s, used_task=%s, all_task=%s, update_by=%s, update_time=%s, canvas=%s
                  where id=%s;""".format(update_entity)
         Logger.log_info(sql % tuple(value_list))
         new_id = cursor.execute(sql, value_list)
@@ -1153,8 +1153,8 @@ class OtlDao(object):
 --                               a2.username AS update_user_name,
                            o.*
                     FROM ontology_table AS o
---                                 LEFT JOIN account a1 ON a1.account_id = o.create_user
---                                 LEFT JOIN account a2 ON a2.account_id = o.update_user
+--                                 LEFT JOIN account a1 ON a1.account_id = o.create_by
+--                                 LEFT JOIN account a2 ON a2.account_id = o.update_by
             """ + condition + """ order by o.create_time  Desc """
         else:
             sql = """SELECT
@@ -1162,8 +1162,8 @@ class OtlDao(object):
 --                              a2.username AS update_user_name,
                            o.*
                     FROM ontology_table AS o
---                                 LEFT JOIN account a1 ON a1.account_id = o.create_user
---                                 LEFT JOIN account a2 ON a2.account_id = o.update_user
+--                                 LEFT JOIN account a1 ON a1.account_id = o.create_by
+--                                 LEFT JOIN account a2 ON a2.account_id = o.update_by
             """ + condition + """ order by o.create_time  Desc limit {0}, {1};"""
             if order == "descend":
                 sql = """SELECT
@@ -1171,8 +1171,8 @@ class OtlDao(object):
 --                                   a2.username AS update_user_name,
                                o.*
                         FROM ontology_table AS o
---                                     LEFT JOIN account a1 ON a1.account_id = o.create_user
---                                     LEFT JOIN account a2 ON a2.account_id = o.update_user
+--                                     LEFT JOIN account a1 ON a1.account_id = o.create_by
+--                                     LEFT JOIN account a2 ON a2.account_id = o.update_by
                 """ + condition + """ order by o.create_time asc limit {0}, {1} ;"""
             sql = sql.format(page * size, size)
         Logger.log_info(sql)
@@ -1240,8 +1240,8 @@ class OtlDao(object):
         #                a2.username AS update_user_name,
         #                o.*
         #         FROM ontology_table AS o
-        #                  LEFT JOIN account a1 ON a1.account_id = o.create_user
-        #                  LEFT JOIN account a2 ON a2.account_id = o.update_user
+        #                  LEFT JOIN account a1 ON a1.account_id = o.create_by
+        #                  LEFT JOIN account a2 ON a2.account_id = o.update_by
         #          where """ + condition + """ o.ontology_name like %s
         #          order by o.create_time Desc
         #          limit %s, %s;"""
@@ -1257,8 +1257,8 @@ class OtlDao(object):
             #                a2.username AS update_user_name,
             #                o.*
             #         FROM ontology_table AS o
-            #                  LEFT JOIN account a1 ON a1.account_id = o.create_user
-            #                  LEFT JOIN account a2 ON a2.account_id = o.update_user
+            #                  LEFT JOIN account a1 ON a1.account_id = o.create_by
+            #                  LEFT JOIN account a2 ON a2.account_id = o.update_by
             #      where """ + condition + """ o.ontology_name like %s
             #      order by o.create_time asc
             #      limit %s, %s;"""
@@ -1279,7 +1279,7 @@ class OtlDao(object):
     def update_name(self, otlid, params_json, connection, cursor):
         values_list = []
         # 只修改 用户名密码
-        sql = """UPDATE ontology_table SET update_user=%s, update_time=%s , ontology_name=%s"""
+        sql = """UPDATE ontology_table SET update_by=%s, update_time=%s , ontology_name=%s"""
         # userId = request.headers.get("userId")
         userId = ""
         values_list.append(userId)  # 用户
@@ -1350,7 +1350,7 @@ class OtlDao(object):
             step_raw = res[0]['step_num']
             step_num = 3 if updateoradd == "update_otl_info" else 2
             step_num = step_raw if step_num < step_raw else step_num
-        sql = """UPDATE ontology_table SET update_user=%s, update_time=%s , entity=%s, edge=%s ,used_task=%s,all_task=%s,
+        sql = """UPDATE ontology_table SET update_by=%s, update_time=%s , entity=%s, edge=%s ,used_task=%s,all_task=%s,
                  canvas=%s
                  where id = %s"""
 
@@ -1378,8 +1378,8 @@ class OtlDao(object):
                        a2.username AS update_user_name,
                        o.*
                 FROM ontology_table AS o
-                         LEFT JOIN account a1 ON a1.account_id = o.create_user
-                         LEFT JOIN account a2 ON a2.account_id = o.update_user
+                         LEFT JOIN account a1 ON a1.account_id = o.create_by
+                         LEFT JOIN account a2 ON a2.account_id = o.update_by
                 where o.otl_status ={0}
                 order by o.create_time Desc
                 limit {1}, {2};"""
@@ -1389,8 +1389,8 @@ class OtlDao(object):
                            a2.username AS update_user_name,
                            o.*
                     FROM ontology_table AS o
-                             LEFT JOIN account a1 ON a1.account_id = o.create_user
-                             LEFT JOIN account a2 ON a2.account_id = o.update_user
+                             LEFT JOIN account a1 ON a1.account_id = o.create_by
+                             LEFT JOIN account a2 ON a2.account_id = o.update_by
                     where o.otl_status = {0}
                     order by o.create_time asc
                     limit {1}, {2};"""
@@ -1418,8 +1418,8 @@ class OtlDao(object):
                        a2.username AS update_user_name,
                        o.*
                 FROM ontology_table AS o
-                         LEFT JOIN account a1 ON a1.account_id = o.create_user
-                         LEFT JOIN account a2 ON a2.account_id = o.update_user
+                         LEFT JOIN account a1 ON a1.account_id = o.create_by
+                         LEFT JOIN account a2 ON a2.account_id = o.update_by
                 where o.ontology_name like %s and o.otl_status = %s
                 order by o.create_time Desc
                 limit %s, %s;"""
@@ -1429,8 +1429,8 @@ class OtlDao(object):
                            a2.username AS update_user_name,
                            o.*
                     FROM ontology_table AS o
-                             LEFT JOIN account a1 ON a1.account_id = o.create_user
-                             LEFT JOIN account a2 ON a2.account_id = o.update_user
+                             LEFT JOIN account a1 ON a1.account_id = o.create_by
+                             LEFT JOIN account a2 ON a2.account_id = o.update_by
                     where o.ontology_name like %s and o.otl_status = %s
                     order by o.create_time asc
                     limit %s, %s;"""
@@ -1495,8 +1495,8 @@ class OtlDao(object):
         values_list = []
         # userId = request.headers.get("userId")
         userId = ""
-        values_list.append(userId)  # create_user
-        values_list.append(userId)  # update_user
+        values_list.append(userId)  # create_by
+        values_list.append(userId)  # update_by
         values_list.append(params_json.get("ontology_name"))
         values_list.append(params_json["ontology_des"])
         values_list.append(args.get("entity"))
@@ -1510,7 +1510,7 @@ class OtlDao(object):
         values_list = list(map(str, values_list))
         Logger.log_info(values_list)
 
-        sql = """INSERT INTO ontology_table (create_user, update_user, ontology_name, ontology_des, entity,edge,used_task,all_task,otl_status,create_time, update_time, otl_temp) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+        sql = """INSERT INTO ontology_table (create_by, update_by, ontology_name, ontology_des, entity,edge,used_task,all_task,otl_status,create_time, update_time, otl_temp) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
         Logger.log_info(sql % tuple(values_list))
         cursor.execute(sql, values_list)
         new_id = rdsdriver.process_last_row_id(cursor.lastrowid)
@@ -1561,13 +1561,13 @@ class OtlDao(object):
         #           where
         #             knw_id={knw_id}
         #             and identify_id is not null
-        #             AND NOT (otl_temp != '[]' AND entity = '[]' AND create_user != %s) """ \
+        #             AND NOT (otl_temp != '[]' AND entity = '[]' AND create_by != %s) """ \
         #       + condition
         sql = f"""select count(*) `count` from ontology_table 
                   where 
                     knw_id={knw_id} 
                     and identify_id is not null 
-                    AND NOT (otl_temp != '[]' AND entity = '[]' AND create_user is not null) """\
+                    AND NOT (otl_temp != '[]' AND entity = '[]' AND create_by is not null) """\
               + condition
         Logger.log_info(sql)
         if search:
@@ -1624,12 +1624,12 @@ class OtlDao(object):
         #             a2.username update_user_name
         #         from
         #             ontology_table otl
-        #             left join account a1 on a1.account_id = otl.create_user
-        #             left join account a2 on a2.account_id = otl.update_user
+        #             left join account a1 on a1.account_id = otl.create_by
+        #             left join account a2 on a2.account_id = otl.update_by
         #         where
         #             knw_id=%s
         #             and otl.identify_id is not null
-        #             AND NOT (otl_temp != '[]' AND entity = '[]' AND create_user != %s) """ \
+        #             AND NOT (otl_temp != '[]' AND entity = '[]' AND create_by != %s) """ \
         #       + condition
         sql = f"""select
                     otl.id otl_id,
@@ -1646,7 +1646,7 @@ class OtlDao(object):
                 where
                     knw_id=%s 
                     and otl.identify_id is not null 
-                    AND NOT (otl_temp != '[]' AND entity = '[]' AND create_user is not null) """ \
+                    AND NOT (otl_temp != '[]' AND entity = '[]' AND create_by is not null) """ \
               + condition
         # value_list = [knw_id, user_id]
         value_list = [knw_id]

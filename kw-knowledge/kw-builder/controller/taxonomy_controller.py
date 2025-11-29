@@ -17,7 +17,7 @@ from utils.log_info import Logger
 taxonomy_controller_app = Blueprint('taxonomy_controller_app', __name__)
 
 
-@taxonomy_controller_app.route('', methods=["post"], strict_slashes=False)
+@taxonomy_controller_app.route('/add', methods=["post"], strict_slashes=False)
 def create_taxonomy():
     '''
     创建术语库
@@ -98,7 +98,7 @@ def create_taxonomy():
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>', methods=["post"], strict_slashes=False)
+@taxonomy_controller_app.route('/edit/<taxonomy_id>', methods=["post"], strict_slashes=False)
 def edit_taxonomy(taxonomy_id: str):
     '''
     编辑术语库
@@ -200,7 +200,7 @@ def edit_taxonomy(taxonomy_id: str):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/', methods=["get"], strict_slashes=False)
+@taxonomy_controller_app.route('/page', methods=["get"], strict_slashes=False)
 def get_taxonomy_list():
     '''
     获取术语库列表
@@ -377,7 +377,7 @@ def delete_taxonomy():
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/word', methods=["post"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/add_word', methods=["post"], strict_slashes=False)
 def add_word(taxonomy_id):
     '''
     添加词
@@ -681,7 +681,7 @@ def edit_word_level(taxonomy_id, word_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/word', methods=["get"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/top_word', methods=["get"], strict_slashes=False)
 def get_top_words(taxonomy_id):
     '''
     获取术语库的顶级词
@@ -1026,7 +1026,7 @@ def delete_word(taxonomy_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/custom_relation', methods=["post"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/custom_relation/edit', methods=["post"], strict_slashes=False)
 def edit_custom_relation(taxonomy_id):
     '''
     编辑术语库的自定义关系
@@ -1129,7 +1129,7 @@ def edit_custom_relation(taxonomy_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/custom_relation', methods=["get"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/custom_relation/list', methods=["get"], strict_slashes=False)
 def get_custom_relation(taxonomy_id):
     '''
     获取自定义关系列表
@@ -1168,7 +1168,7 @@ def get_custom_relation(taxonomy_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/relation/create_ispartof', methods=["post"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/relation/ispartof/add', methods=["post"], strict_slashes=False)
 def create_relation_ispartof(taxonomy_id):
     '''
     新建词的属性
@@ -1249,7 +1249,7 @@ def create_relation_ispartof(taxonomy_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/relation/delete_ispartof', methods=["post"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/relation/ispartof/delete', methods=["post"], strict_slashes=False)
 def delete_relation_ispartof(taxonomy_id):
     '''
     删除词的属性
@@ -1330,7 +1330,7 @@ def delete_relation_ispartof(taxonomy_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/relation/edit_custom', methods=["post"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/relation/custom/edit', methods=["post"], strict_slashes=False)
 def edit_relation_custom(taxonomy_id):
     '''
     编辑词的自定义关系
@@ -1424,7 +1424,7 @@ def edit_relation_custom(taxonomy_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/relation/delete_custom', methods=["post"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/relation/custom/delete', methods=["post"], strict_slashes=False)
 def delete_relation_custom(taxonomy_id):
     '''
     删除词的自定义关系
@@ -1503,7 +1503,7 @@ def delete_relation_custom(taxonomy_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/relation/ispartof', methods=["get"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/relation/ispartof/list', methods=["get"], strict_slashes=False)
 def get_relation_ispartof(taxonomy_id):
     '''
     获取词的属性列表
@@ -1577,7 +1577,7 @@ def get_relation_ispartof(taxonomy_id):
         return Gview.TErrorreturn(code, description=str(e), cause=str(e)), 500
 
 
-@taxonomy_controller_app.route('/<taxonomy_id>/relation/custom', methods=["get"], strict_slashes=False)
+@taxonomy_controller_app.route('/<taxonomy_id>/relation/custom/list', methods=["get"], strict_slashes=False)
 def get_relation_custom(taxonomy_id):
     '''
     获取词的自定义关系列表

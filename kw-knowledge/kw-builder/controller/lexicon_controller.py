@@ -44,7 +44,7 @@ def getHostUrl():
     return hostUrl
 
 
-@lexicon_controller_app.route('/create', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/add', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def create_lexicon():
     '''
@@ -146,7 +146,7 @@ def create_lexicon():
                                    ErrorDetails=repr(e)), 500
 
 
-@lexicon_controller_app.route('/create/template_lexicon', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/add/template_lexicon', methods=["POST"], strict_slashes=False)
 def create_template_lexicon():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -177,7 +177,7 @@ def create_template_lexicon():
         return Gview2.error_return(code, description=str(e)), 500
 
 
-@lexicon_controller_app.route('/build_task', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/build', methods=["POST"], strict_slashes=False)
 def build_task():
     try:
         param_code, params_json, param_message = commonutil.getMethodParam()
@@ -208,7 +208,7 @@ def build_task():
         return Gview2.error_return(code, description=str(e)), 500
 
 
-@lexicon_controller_app.route('/getall', methods=["GET"], strict_slashes=False)
+@lexicon_controller_app.route('/page', methods=["GET"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def get_lexicon():
     '''
@@ -287,7 +287,7 @@ def get_lexicon():
                                ErrorDetails=res), 500
 
 
-@lexicon_controller_app.route('/getbyid', methods=["GET"], strict_slashes=False)
+@lexicon_controller_app.route('/detail', methods=["GET"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def get_lexicon_by_id():
     '''
@@ -338,7 +338,7 @@ def get_lexicon_by_id():
                                ErrorDetails=res), 500
 
 
-@lexicon_controller_app.route('/insert', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/add', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def insert_word2lexicon():
     '''
@@ -375,7 +375,7 @@ def insert_word2lexicon():
                                    lexicon_id=params_json.get("id")), 500
     user_id = request.headers.get("userId", "")
     # 词库新增词汇
-    ret_code, mess = lexicon_service.insert_data2mongo(params_json.get("id"), [params_json.get("word_info")],
+    ret_code, mess = lexicon_service.insert_words(params_json.get("id"), [params_json.get("word_info")],
                                                        user_id, insert_one=True)
     if ret_code == 200:
         user_name = request.headers.get("username")
@@ -396,7 +396,7 @@ def insert_word2lexicon():
                                    data=params_json.get("word_info")), 500
 
 
-@lexicon_controller_app.route('/search', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/search', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def search_word_in_lexicon():
     '''
@@ -448,7 +448,7 @@ def search_word_in_lexicon():
                                ErrorDetails=res), 500
 
 
-@lexicon_controller_app.route('/edit_words', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/edit', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def edit_word_in_lexicon():
     '''
@@ -510,7 +510,7 @@ def edit_word_in_lexicon():
                                    ErrorDetails=error_code), 500
 
 
-@lexicon_controller_app.route('/delete_words', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/delete', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def delete_word_in_lexicon():
     '''
@@ -645,7 +645,7 @@ def delete_lexicon():
                                ErrorDetails=mess), 500
 
 
-@lexicon_controller_app.route('/import_words', methods=["POST"], strict_slashes=False)
+@lexicon_controller_app.route('/words/import', methods=["POST"], strict_slashes=False)
 # @swag_from(swagger_new_response)
 def import_word2lexicon():
     '''
@@ -709,7 +709,7 @@ def import_word2lexicon():
             if fsize > 10 * 1024 * 1024:
                 return Gview2.TErrorreturn(Builder_LexiconController_ImportWord2Lexicon_DataExceeded), 500
 
-            # 异步写入mongodb
+            # 异步写入数据库
             lexicon_id = params_json.get("id")
             params_json["lexicon_id"] = lexicon_id
             params_json["file_path"] = path
@@ -861,41 +861,6 @@ def create_synonym():
                                                f"基于图谱id={graph_id}生成并导出{detail_type}", "lexicon")
     Logger.log_info(operation_log)
     return send_from_directory(synonym_path, synonym_name, as_attachment=True)
-
-
-@lexicon_controller_app.route('/download', methods=["GET"], strict_slashes=False)
-def download_lexicon():
-    """ 下载单个词库，用来通过api一次性获取单个词库所有内容用，还未产品化，临时使用，未开启国际化 """
-    # 获取接口参数
-    param_code, params_json, param_message = commonutil.getMethodParam()
-    # 参数校验
-    check_res, message = lexicon_check_parameters.check_download_lexicon(params_json)
-    if check_res != 0:
-        error_log = log_oper.get_error_log("parameters:%s invalid" % params_json, sys._getframe())
-        Logger.log_error(error_log)
-        return Gview2.TErrorreturn(Builder_LexiconController_DownloadLexicon_ParamError,
-                                   ErrorDetails=message), 400
-    lexicon_id = params_json.get("lexicon_id")
-    # 校验词库id是否存在
-    ids = lexicon_service.is_lexicon_id_exist(int(lexicon_id))
-    if not ids:
-        return Gview2.TErrorreturn(Builder_LexiconController_DownloadLexicon_LexiconIdNotExist,
-                                   lexicon_id=lexicon_id), 500
-    # 校验词库状态
-    ids = lexicon_service.get_lexicon_status(lexicon_id)
-    if len(ids) == 0:
-        return Gview2.TErrorreturn(Builder_LexiconController_DownloadLexicon_InvalidStatus,
-                                   lexicon_id=lexicon_id), 500
-    # 导出
-    try:
-        file_path, file_name, flag = lexicon_service.download_lexicon(ids)
-        if flag:
-            return send_from_directory(file_path, file_name, as_attachment=True)
-    except Exception as e:
-        return Gview2.TErrorreturn(Builder_LexiconController_DownloadLexicon_InternalError,
-                                   lexicon_id=lexicon_id), 500
-    return Gview2.TErrorreturn(Builder_LexiconController_DownloadLexicon_EmptyLexicon,
-                               lexicon_id=lexicon_id), 500
 
 
 def send_import_lexicon(params_json):

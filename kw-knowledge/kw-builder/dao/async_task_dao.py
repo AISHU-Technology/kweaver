@@ -19,11 +19,11 @@ class AsyncTaskDao(object):
         value_list.append(params_json.get('celery_task_id', ''))
         value_list.append(params_json.get('relation_id'))
         value_list.append(params_json.get('task_params'))
-        value_list.append(params_json.get('created_time'))
+        value_list.append(params_json.get('create_time'))
 
         sql = """
                 INSERT INTO async_tasks 
-                    (task_type, task_status, task_name, celery_task_id, relation_id, task_params, created_time)   
+                    (task_type, task_status, task_name, celery_task_id, relation_id, task_params, create_time)   
                 VALUES
                     (%s, %s, %s, %s, %s, %s, %s)
                       """
@@ -52,9 +52,9 @@ class AsyncTaskDao(object):
         id_list = [str(v) for v in relation_id_list]
 
         sql = """select a.* from async_tasks a join 
-                        (select relation_id , MAX(created_time) created_time from async_tasks 
+                        (select relation_id , MAX(create_time) create_time from async_tasks 
                         where task_type=%s and relation_id in ({}) GROUP by relation_id) b
-                        on a.relation_id  =  b.relation_id and a.created_time = b.created_time;"""
+                        on a.relation_id  =  b.relation_id and a.create_time = b.create_time;"""
 
         sql = sql.format(','.join(id_list))
         Logger.log_info(sql % "intelligence")
@@ -135,8 +135,8 @@ class AsyncTaskDao(object):
             condition.append(" celery_task_id='{}' ".format(query_json.get('celery_task_id')))
         if query_json.get('relation_id'):
             condition.append(" relation_id='{}' ".format(query_json.get('relation_id')))
-        if query_json.get('finished_time'):
-            condition.append(" finished_time='{}'".format(query_json.get('finished_time')))
+        if query_json.get('update_time'):
+            condition.append(" update_time='{}'".format(query_json.get('update_time')))
         return condition
 
 

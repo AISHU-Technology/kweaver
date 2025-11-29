@@ -12,7 +12,6 @@ from celery_task.transfer import MysqlTransfer, HiveTransfer, ClickHouseTransfer
     SqlserverTransfer, PostgresqlTransfer
 from dao.graphdb_dao import get_md5, normalize_text
 from service.graph_Service import graph_Service
-from utils.ConnectUtil import mongoConnect
 from celery import Celery
 from service.async_task_service import async_task_service
 from service.intelligence_service import intelligence_calculate_service
@@ -90,7 +89,7 @@ def predict_ontology(self, new_params_json, task_id, userId):
         for i in range(len(file_list)):
             if new_params_json["data_source"]:
                 tableinfo.append(
-                    [str(file_list[i]), str(new_params_json["ds_path"]), str(new_params_json["dsname"]), "running",
+                    [str(file_list[i]), str(new_params_json["ds_path"]), str(new_params_json["ds_name"]), "running",
                      str(new_params_json["data_source"])])
                 # tableinfo: [[table_name, ds_path, ds_name, 'running', data_source]]
         new_params_json["table_list"] = tableinfo
@@ -206,7 +205,7 @@ def intelligence_calculate(self, params_json, task_id):
         Logger.log_error(error_log)
     finally:
         # 此处只需要更新下错误原因即可，状态由外部调用更新
-        update_json['finished_time'] = datetime.datetime.now()
+        update_json['update_time'] = datetime.datetime.now()
         async_task_service.update(task_id, update_json)
         return {'current': 100, 'total': 100}
 
@@ -727,7 +726,7 @@ def import_onto(self, params_json, task_id):
         update_json["result"] = str(error_log)
         return {'current': 100, 'total': 100}
     finally:
-        update_json['finished_time'] = datetime.datetime.now()
+        update_json['update_time'] = datetime.datetime.now()
         async_task_service.update(task_id, update_json)
 
 
@@ -797,13 +796,13 @@ def import_lexicon(self, params_json, task_id):
         if mode == "create":
             lexicon_dao.update_lexicon_columns(lexicon_id, columns, user_id)
         elif mode == "replace":
-            lexicon_service.delete_word_in_mongo(lexicon_id)
+            lexicon_service.delete_all_words(lexicon_id)
 
-        # 写入mongodb
+        # 写入数据库
         if mode == "create":
-            ret_code, ret_message = lexicon_service.insert_lexicon(lexicon_id, res)
+            ret_code, ret_message = lexicon_service.insert_lexicon(user_id, lexicon_id, res)
         else:
-            ret_code, ret_message = lexicon_service.insert_data2mongo(lexicon_id, res, user_id)
+            ret_code, ret_message = lexicon_service.insert_words(lexicon_id, res, user_id)
         if ret_code != 200:
             error_log = log_oper.get_error_log(ret_message, sys._getframe())
             Logger.log_error(error_log)
@@ -825,7 +824,7 @@ def import_lexicon(self, params_json, task_id):
             os.remove(file_path)
         except FileNotFoundError:
             pass
-        update_json['finished_time'] = datetime.datetime.now()
+        update_json['update_time'] = datetime.datetime.now()
         if update_json["task_status"] == "failed":
             lexicon_dao.update_lexicon_status(lexicon_id, "failed")
             lexicon_dao.update_lexicon_error_info(lexicon_id, str(update_json["result"]))
@@ -834,11 +833,10 @@ def import_lexicon(self, params_json, task_id):
 
 @cel.task(name='cel.lexicon_build', bind=True)
 def lexicon_build(self, params_json, task_id):
-    db = mongoConnect.connect_mongo()
     update_json = {}
+    user_id = params_json["user_id"]
     lexicon_id = params_json["lexicon_id"]
     lexicon_dao.update_lexicon_status(lexicon_id, "running")
-    mongodb_name = f"Lexicon-{lexicon_id}"
     mode = params_json["mode"]
     extract_info = params_json["extract_info"]
     try:
@@ -851,10 +849,9 @@ def lexicon_build(self, params_json, task_id):
                 return {'current': 100, 'total': 100}
             word_info = []
             for extract_lexicon in extract_info["lexicon"]:
-                extract_mongodb_name = f"Lexicon-{extract_lexicon['id']}"
                 extract_columns = extract_lexicon["columns"]
                 separators = extract_lexicon["separator"]
-                extract_words = db[extract_mongodb_name].find()
+                extract_words = lexicon_dao.get_all_words(lexicon_id)
                 for word in extract_words:
                     for index, column in enumerate(extract_columns):
                         separator = separators[index]
@@ -865,7 +862,7 @@ def lexicon_build(self, params_json, task_id):
                         words = word[column].split(separator) if separator != "" else [word[column]]
                         word_info.append({"words": word for word in words})
             if word_info:
-                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
 
         if "graph" in extract_info:
             for extract_graph in extract_info["graph"]:
@@ -919,7 +916,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(data, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "hive":
                         transfer = HiveTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -945,7 +942,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(dataDicts, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "sqlserver":
                         transfer = SqlserverTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -979,7 +976,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(data_dicts, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "kingbasees":
                         transfer = KingbaseesTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -1013,7 +1010,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(data_dicts, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "postgresql":
                         transfer = PostgresqlTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -1047,7 +1044,7 @@ def lexicon_build(self, params_json, task_id):
                             word_info = extract_word_info(data_dicts, graph_id, mode, otl_name, std_pro,
                                                           synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                             if word_info:
-                                lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     elif data_source == "clickhouse":
                         transfer = ClickHouseTransfer({'name': otl_name}, kmap_config)
                         client = transfer.get_client()
@@ -1073,13 +1070,13 @@ def lexicon_build(self, params_json, task_id):
                                     word_info = extract_word_info(data, graph_id, mode, otl_name, std_pro,
                                                                   synonym_dict, otl_info.otl_tab,
                                                                   ontology_config.pro_merge)
-                                    lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                    lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                                     data = []
                             if data:
                                 word_info = extract_word_info(data, graph_id, mode, otl_name, std_pro,
                                                               synonym_dict, otl_info.otl_tab, ontology_config.pro_merge)
                                 if word_info:
-                                    lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+                                    lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
                     else:
                         Logger.log_info(data_source + "not supports lexicon extract")
 
@@ -1095,7 +1092,7 @@ def lexicon_build(self, params_json, task_id):
         update_json["result"] = str(error_log)
         return {'current': 100, 'total': 100}
     finally:
-        update_json['finished_time'] = datetime.datetime.now()
+        update_json['update_time'] = datetime.datetime.now()
         if update_json["task_status"] == "failed":
             lexicon_dao.update_lexicon_status(lexicon_id, "failed")
             lexicon_dao.update_lexicon_error_info(lexicon_id, str(update_json["result"]))

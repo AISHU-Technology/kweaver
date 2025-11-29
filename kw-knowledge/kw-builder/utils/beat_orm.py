@@ -126,10 +126,10 @@ class PeriodicTask(Base, ModelMixin):
     __table_args__ = {'mysql_charset': 'utf8'}
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
     task_id = sa.Column(sa.String(255), unique=True, nullable=True)
-    modify_time = sa.Column(sa.DateTime(timezone=True), nullable=True)
+    update_time = sa.Column(sa.DateTime(timezone=True), nullable=True)
     create_time = sa.Column(sa.DateTime(timezone=True), nullable=True)
-    create_user = sa.Column(sa.String(100), nullable=True)
-    update_user = sa.Column(sa.String(100), nullable=True)
+    create_by = sa.Column(sa.String(100), nullable=True)
+    update_by = sa.Column(sa.String(100), nullable=True)
     graph_id = sa.Column(sa.Integer, nullable=True)
     task_type = sa.Column(sa.String(20), nullable=True)
     cycle = sa.Column(sa.String(20), nullable=True)

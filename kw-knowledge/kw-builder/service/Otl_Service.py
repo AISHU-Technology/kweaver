@@ -635,7 +635,7 @@ class OtlService(object):
         params_json["ds_port"] = data["ds_port"]
         params_json["ds_path"] = data["ds_path"]
         params_json["ds_auth"] = data["ds_auth"]
-        params_json["dsname"] = data["dsname"]
+        params_json["ds_name"] = data["ds_name"]
         params_json["connect_type"] = data["connect_type"]
         if params_json["new_data_source"] != params_json["data_source"]:
             code = codes.Builder_OtlService_PredictOntology_DataSourceInConsistent
@@ -654,7 +654,7 @@ class OtlService(object):
                     if new_params_json["data_source"]:
                         tablelist.append([str(file_list[i]),
                                           str(new_params_json["ds_path"]),
-                                          str(new_params_json["dsname"]),
+                                          str(new_params_json["ds_name"]),
                                           "running",
                                           str(new_params_json["data_source"])])
                     # table_list example: [[表名, 数据源路径, 数据源名, 'running', 数据源类型]]
@@ -2094,7 +2094,7 @@ class OtlService(object):
 
         if not preview:
             ret["ds_id"] = ds_id
-            ret["ds_name"] = ds[0]["dsname"]
+            ret["ds_name"] = ds[0]["ds_name"]
             ret["data_source"] = ds[0]["data_source"]
             ret["ds_path"] = ds[0]["ds_path"]
             ret["extract_type"] = "sqlExtraction"

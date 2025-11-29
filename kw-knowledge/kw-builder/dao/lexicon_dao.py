@@ -10,7 +10,7 @@ import rdsdriver
 from dao.intelligence_dao import intelligence_dao
 from utils.log_info import Logger
 from utils.my_pymysql_pool import connect_execute_commit_close_db, connect_execute_close_db
-
+from snowflake import SnowflakeGenerator
 
 class LexiconDao:
     """
@@ -35,8 +35,8 @@ class LexiconDao:
         value_list.append("")
 
         sql = """
-                INSERT INTO lexicon (lexicon_name, description, knowledge_id, create_user,
-                 operate_user, create_time, update_time, columns, status, error_info, mode, extract_info)
+                INSERT INTO lexicon (lexicon_name, description, knowledge_id, create_by,
+                 update_by, create_time, update_time, columns, status, error_info, mode, extract_info)
                  VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
                 """
         Logger.log_info("insert_lexicon: {}".format(sql % tuple(value_list)))
@@ -169,21 +169,21 @@ class LexiconDao:
     def update_lexicon(self, id, name, description, extract_info, user_id, connection, cursor):
         """ 编辑词库信息"""
         value_list = []
-        operate_user = user_id
+        update_by = user_id
         update_time = arrow.now().format('YYYY-MM-DD HH:mm:ss')
         value_list.append(name)
         value_list.append(description)
-        value_list.append(operate_user)
+        value_list.append(update_by)
         value_list.append(update_time)
         if extract_info is not None:
             value_list.append(str(extract_info))
             sql = """
-                UPDATE lexicon SET lexicon_name=%s, description=%s, operate_user=%s, update_time=%s, extract_info=%s
+                UPDATE lexicon SET lexicon_name=%s, description=%s, update_by=%s, update_time=%s, extract_info=%s
                  WHERE id=%s;
             """
         else:
             sql = """
-                UPDATE lexicon SET lexicon_name=%s, description=%s, operate_user=%s, update_time=%s WHERE id=%s;
+                UPDATE lexicon SET lexicon_name=%s, description=%s, update_by=%s, update_time=%s WHERE id=%s;
             """
         value_list.append(id)
         Logger.log_info("update lexicon: {}".format(sql % tuple(value_list)))
@@ -195,11 +195,11 @@ class LexiconDao:
     def update_lexicon_user_and_time(self, id, user_id, connection, cursor):
         """ 编辑词库信息"""
         sql = """
-                    UPDATE lexicon SET operate_user='{}', update_time='{}' WHERE id={};
+                    UPDATE lexicon SET update_by='{}', update_time='{}' WHERE id={};
                 """
-        operate_user = user_id
+        update_by = user_id
         update_time = arrow.now().format('YYYY-MM-DD HH:mm:ss')
-        sql = sql.format(operate_user, update_time, id)
+        sql = sql.format(update_by, update_time, id)
         Logger.log_info("update lexicon: {}".format(sql))
         cursor.execute(sql)
         new_id = rdsdriver.process_last_row_id(cursor.lastrowid)
@@ -223,12 +223,12 @@ class LexiconDao:
     def update_lexicon_columns(self, id, columns, user_id, connection, cursor):
         """ 编辑词库信息"""
         sql = """
-                        UPDATE lexicon SET operate_user='{}', update_time='{}', columns='{}' WHERE id={};
+                        UPDATE lexicon SET update_by='{}', update_time='{}', columns='{}' WHERE id={};
                     """
-        operate_user = user_id
+        update_by = user_id
         update_time = arrow.now().format('YYYY-MM-DD HH:mm:ss')
         columns = str(columns).replace("'", '"')
-        sql = sql.format(operate_user, update_time, columns, id)
+        sql = sql.format(update_by, update_time, columns, id)
         Logger.log_info("update lexicon: {}".format(sql))
         cursor.execute(sql)
         new_id = rdsdriver.process_last_row_id(cursor.lastrowid)
@@ -284,112 +284,272 @@ class LexiconDao:
         cursor.execute(sql)
         return rdsdriver.process_last_row_id(cursor.lastrowid)
 
-    def write_lexicon2mongo(self, db, mongodb_name, word_dict_list):
-        """ 词汇信息写入 monogodb """
-        lexicon_id = mongodb_name.split('-')[1]
-        data = db[mongodb_name].find_one()
-        if not data:
-            keys = list(word_dict_list[0].keys())
-            _index = [(str(key), 1) for key in keys]
-            db[mongodb_name].create_index(_index, unique=True)
+    @connect_execute_commit_close_db
+    def write_lexicon_words(self, user_id, lexicon_id, word_dict_list, cursor, connection):
+        """ 导入词汇 """
+
+        mode = ""
+        value_list = []
+        gen = SnowflakeGenerator(42)
+        for word_dict in word_dict_list:
+            value_list.append(next(gen))  # 雪花id
+            value_list.append(lexicon_id)
+            if "synonym" in word_dict:
+                mode = "std"
+                value_list.append(word_dict["synonym"])
+                value_list.append(word_dict["std_name"])
+                value_list.append(word_dict["std_property"])
+                value_list.append(word_dict["ent_name"])
+                value_list.append(word_dict["graph_id"])
+
+            elif "vid" in word_dict:
+                mode = "entity_link"
+                value_list.append(word_dict["words"])
+                value_list.append(word_dict["vid"])
+                value_list.append(word_dict["ent_name"])
+                value_list.append(word_dict["graph_id"])
+            else:
+                mode = "custom"
+                value_list.append(word_dict["words"])
+
+            value_list.append(user_id)  # 创建者uuid
+            value_list.append(user_id)  # 最终操作人uuid
+            value_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))  # 创建时间
+            value_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))  # 最终操作时间
+
+        table_name = "lexicon_" + mode + "_words"
+        sql = "SELECT count(*) FROM {} WHERE lexicon_id =%s;"
+        sql = sql.format(table_name)
+        Logger.log_info(sql)
+        cursor.execute(sql, lexicon_id)
+        ret = cursor.fetchall()
+        if ret[0]["count"] <= 0:
+            # 根据词汇格式修改mode
+            sql2 = "UPDATE lexicon SET mode=%s WHERE id=%s;"
+            Logger.log_info("update lexicon: {}".format(sql2))
+            cursor.execute(sql2, (mode, id))
+
             intelligence_dao.create_lexicon_knowledge(lexicon_id)
-        try:
-            db[mongodb_name].insert_many(word_dict_list, ordered=False)
-        except Exception as e:
-            if "E11000 duplicate key error collection" in repr(e):
-                pass
-        finally:
-            count = db[mongodb_name].count()
-            intelligence_dao.update_lexicon_knowledge(lexicon_id, count, "add")
-    
-    def is_word_exist_mongo(self, db, mongodb_name, word_info):
-        if not db[mongodb_name].find_one(word_info):  # mongodb不存在该词汇
+
+        sql = """
+                INSERT INTO {} (id, lexicon_id, {}, create_by, update_by, create_time, update_time)
+                 VALUES{}
+                """
+
+        if mode == "std":
+            sql = sql.format(table_name, "synonym, std_name, std_property, ent_name, graph_id",
+                             ",".join(["(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"] * len(word_dict_list)))
+        elif mode == "entity_link":
+            sql = sql.format(table_name, "words, vid, ent_name, graph_id",
+                             ",".join(["(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"] * len(word_dict_list)))
+        elif mode == "custom":
+            sql = sql.format(table_name, "words",
+                             ",".join(["(%s,%s,%s,%s,%s,%s,%s)"] * len(word_dict_list)))
+
+
+        Logger.log_info("insert_lexicon: {}".format(sql % tuple(value_list)))
+        cursor.execute(sql, value_list)
+
+        count = ret[0]["count"] + len(word_dict_list)
+        intelligence_dao.update_lexicon_knowledge(lexicon_id, count, "add")
+
+    @connect_execute_close_db
+    def get_mode_by_lexicon_id(self, lexicon_id, connection, cursor):
+        sql = """
+                    SELECT `mode` FROM lexicon WHERE id=%s;
+            """
+        Logger.log_info(sql)
+        cursor.execute(sql, lexicon_id)
+        res = cursor.fetchall()
+        return res[0]["mode"]
+
+    @connect_execute_close_db
+    def is_word_exist_info(self, lexicon_id, word_info, cursor, connection):
+
+        mode = self.get_mode_by_lexicon_id(lexicon_id)
+
+        if not mode:
+            return False
+
+        sql = "SELECT count(*) FROM {} WHERE lexicon_id =%s and {};"
+        table_name = "lexicon_" + mode + "_words"
+
+        condition = ""
+        values = ()
+        if "synonym" in word_info:
+            condition = "synonym = %s and std_name = %s and std_property = %s and ent_name = %s and graph_id = %s"
+            values = (lexicon_id, word_info["synonym"], word_info["std_name"], word_info["std_property"], word_info["ent_name"], word_info["graph_id"])
+
+        elif "vid" in word_info:
+            condition = "words = %s and vid = %s and ent_name = %s and graph_id = %s"
+            values = (lexicon_id, word_info["words"], word_info["vid"], word_info["ent_name"], word_info["graph_id"])
+        else:
+            condition = "words = %s"
+            values = (lexicon_id, word_info["words"])
+
+
+        sql = sql.format(table_name, condition)
+        Logger.log_info(sql)
+        cursor.execute(sql, values)
+        ret = cursor.fetchall()
+        if ret[0]["count"] <= 0:  # 词库对应词汇表不存在该词汇
             return False
         return True
-    
-    def update_lexicon2mongo(self, db, mongodb_name, old_info, new_info):
-        """ mongodb 修改词汇信息 """
-        db[mongodb_name].update_one(old_info, {"$set": new_info})
-    
-    def delete_lexicon_word2mongo(self, db, mongodb_name, word_dict_list):
-        """ 从mongodb中删除某些词汇信息 """
-        lexicon_id = mongodb_name.split('-')[1]
-        for word_dict in word_dict_list:
-            db[mongodb_name].delete_many(word_dict)
-        intelligence_dao.update_lexicon_knowledge(lexicon_id, len(word_dict_list), "reduce")
-    
-    def get_all_lexicon2mongo(self, db, mongodb_name, page, size):
-        """ 获取mongodb中指定词库的所有词汇信息 """
-        words = []
-        count = db[mongodb_name].count()
-        word_infos = db[mongodb_name].find().sort([("_id", -1)]).limit(size).skip((page - 1) * size)
-        for word in word_infos:
-            word.pop("_id")
-            words.append(word)
-        return count, words
-    
-    def get_all_words_from_mongo(self, db, mongodb_name):
-        """ 获取mongodb中指定词库的所有词汇 """
-        words = []
-        word_infos = db[mongodb_name].find().sort([("_id", 1)])
-        for word in word_infos:
-            word.pop("_id")
-            words.append(word)
-        return words
-    
-    def get_words_from_mongo_by_title(self, db, mongodb_name, title):
-        """ 获取mongodb中指定词库的所有词汇 """
-        word_infos = db[mongodb_name].find({}, {title: 1, "_id": 0}).sort([("_id", -1)])
-        return word_infos
 
-    def get_word_in_title_mongo(self, db, mongodb_name, title, word, page, size):
-        """mongodb中搜索某在指定字段中搜索词汇"""
-        res = []
-        count_num = db[mongodb_name].find({title: word}).count()
-        query_res = db[mongodb_name].find({title: word}, {"_id": 0}).sort([("_id", -1)]).limit(size).skip(
-            (page - 1) * size)
-        
-        for line in query_res:
-            res.append(line)
-        return count_num, res
-    
-    def get_word_by_condition_mongo(self, db, mongodb_name, word, page, size):
-        """mongodb中搜索某词汇"""
-        count_num = 0
-        res = []
-        data = db[mongodb_name].find_one()
-        if not data:
-            res = []
+    @connect_execute_close_db
+    def is_word_exist_id(self, lexicon_id, word_id, cursor, connection):
+
+        mode = self.get_mode_by_lexicon_id(lexicon_id)
+
+        if not mode:
+            return False
+
+        sql = "SELECT count(*) FROM {} WHERE lexicon_id = %s and id = %s;"
+        table_name = "lexicon_" + mode + "_words"
+
+
+        sql = sql.format(table_name)
+        Logger.log_info(sql)
+        cursor.execute(sql, (lexicon_id, word_id))
+        ret = cursor.fetchall()
+        if ret[0]["count"] <= 0:  # 词库对应词汇表不存在该词汇
+            return False
+        return True
+
+    @connect_execute_commit_close_db
+    def update_word(self, lexicon_id, word_id, new_info, cursor, connection):
+        """ 修改词汇信息 """
+        mode = self.get_mode_by_lexicon_id(lexicon_id)
+
+
+        sql = "UPDATE {} SET {} WHERE lexicon_id =%s and id =%s;"
+        table_name = "lexicon_" + mode + "_words"
+
+        new_value = ""
+        values = ()
+        if mode == "std":
+            new_value = "synonym = %s, std_name = %s, std_property = %s, ent_name = %s, graph_id = %s"
+            values = (new_info["synonym"], new_info["std_name"], new_info["std_property"],
+                      new_info["ent_name"], new_info["graph_id"], lexicon_id, word_id)
+        elif mode == "entity_link":
+            new_value = "words = %s, vid = %s, ent_name = %s, graph_id = %s"
+            values = (new_info["words"], new_info["vid"], new_info["ent_name"], new_info["graph_id"], lexicon_id, word_id)
         else:
-            columns = list(data.keys())
-            columns.remove("_id")
-            if word:
-                condition = [{column: {"$regex": word}} for column in columns]
-                count_num = db[mongodb_name].find({"$or": condition}).count()
-                query_res = db[mongodb_name].find({"$or": condition}).sort([("_id", -1)]).limit(size).skip(
-                    (page - 1) * size)
-                Logger.log_info("search: {}".format(condition))
-            else:
-                count_num = db[mongodb_name].find().count()
-                query_res = db[mongodb_name].find().sort([("_id", -1)]).limit(size).skip((page - 1) * size)
+            new_value = "words = %s"
+            values = (new_info["words"], lexicon_id, word_id)
 
-            for line in query_res:
-                line.pop("_id", None)
-                res.append(line)
+        sql = sql.format(table_name, new_value)
+        Logger.log_info(sql)
+        cursor.execute(sql, values)
+
+    @connect_execute_commit_close_db
+    def delete_words(self, lexicon_id, word_ids, cursor, connection):
+        """ 删除某些词汇信息 """
+        mode = self.get_mode_by_lexicon_id(lexicon_id)
+
+        sql = "DELETE FROM {} WHERE lexicon_id =%s and id in (%s);"
+        table_name = "lexicon_" + mode + "_words"
+        condition = ','.join([str(word_id) for word_id in word_ids])
+        sql = sql.format(table_name)
+        Logger.log_info(sql)
+        cursor.execute(sql, (lexicon_id, condition))
+
+        intelligence_dao.update_lexicon_knowledge(lexicon_id, len(word_ids), "reduce")
+
+    @connect_execute_close_db
+    def get_words_page(self, lexicon_id, page, size, cursor, connection):
+        """ 分页获取指定词库的所有词汇信息 """
+
+        mode = self.get_mode_by_lexicon_id(lexicon_id)
+
+        sql = "SELECT * FROM {} WHERE lexicon_id =%s limit %s,%s;"
+        table_name = "lexicon_" + mode + "_words"
+        sql = sql.format(table_name)
+        Logger.log_info(sql)
+        cursor.execute(sql, (lexicon_id, (page - 1) * size, size))
+        words = cursor.fetchall()
+        for row in words:
+            row['id'] = str(row['id'])
+
+        sql2 = "SELECT id FROM {} WHERE lexicon_id =%s;"
+        sql2 = sql2.format(table_name)
+        Logger.log_info(sql2)
+        cursor.execute(sql2, lexicon_id)
+        ret = cursor.fetchall()
+
+        return len(ret), words
+
+    @connect_execute_close_db
+    def get_all_words(self, lexicon_id, cursor, connection):
+        """ 获取指定词库的所有词汇 """
+
+        mode = self.get_mode_by_lexicon_id(lexicon_id)
+
+        sql = "SELECT * FROM {} WHERE lexicon_id =%s;"
+        table_name = "lexicon_" + mode + "_words"
+        sql = sql.format(table_name)
+        Logger.log_info(sql)
+        cursor.execute(sql, lexicon_id)
+        words = cursor.fetchall()
+        for row in words:
+            row['id'] = str(row['id'])
+        return words
+
+    @connect_execute_close_db
+    def get_word_by_condition(self, lexicon_id, word, page, size, cursor, connection):
+        """搜索指定词库的某词汇"""
+
+        mode = self.get_mode_by_lexicon_id(lexicon_id)
+
+        table_name = "lexicon_" + mode + "_words"
+        #总数
+        sql = "SELECT id FROM {} WHERE lexicon_id = %s "
+        sql = sql.format(table_name)
+        if mode == "std":
+            sql = sql+"and (synonym like %s or std_name like %s or std_property like %s or ent_name like %s or graph_id like %s)"
+            cursor.execute(sql, (lexicon_id, "%"+word+"%", "%"+word+"%", "%"+word+"%", "%"+word+"%", "%"+word+"%"))
+        elif mode == "entity_link":
+            sql = sql+"and (words like %s or vid like %s or ent_name like %s or graph_id like %s)"
+            cursor.execute(sql, (lexicon_id, "%"+word+"%", "%"+word+"%", "%"+word+"%", "%"+word+"%"))
+        else:
+            sql = sql+"and words like %s"
+            cursor.execute(sql, (lexicon_id, "%"+word+"%"))
+
+        Logger.log_info(sql)
+        res = cursor.fetchall()
+        count_num = len(res)
+
+        #数据
+        sql = "SELECT * FROM {} WHERE lexicon_id = %s "
+        sql = sql.format(table_name)
+        if mode == "std":
+            sql = sql+"and (synonym like %s or std_name like %s or std_property like %s or ent_name like %s or graph_id like %s) limit %s,%s"
+            cursor.execute(sql, (lexicon_id, "%"+word+"%", "%"+word+"%", "%"+word+"%", "%"+word+"%", "%"+word+"%", (page - 1) * size, size))
+        elif mode == "entity_link":
+            sql = sql+"and (words like %s or vid like %s or ent_name like %s or graph_id like %s) limit %s,%s"
+            cursor.execute(sql, (lexicon_id, "%"+word+"%", "%"+word+"%", "%"+word+"%", "%"+word+"%", (page - 1) * size, size))
+        else:
+            sql = sql+"and words like %s limit %s,%s"
+            cursor.execute(sql, (lexicon_id, "%"+word+"%", (page - 1) * size, size))
+
+        Logger.log_info(sql)
+        res = cursor.fetchall()
+        for row in res:
+            row['id'] = str(row['id'])
+
         return count_num, res
 
-    def delete_lexicon_2mongo(self, db, mongodb_name):
-        """ 从mongodb中删除某个词库 """
-        db[mongodb_name].drop()
-    
-    def get_one_word_lexicon_2mongo(self, db, mongodb_name):
-        """ 从mongodb指定词库获取一个词汇 """
-        data = db[mongodb_name].find_one()
-        return data
-    
-    def get_word_2word_cloud(self, db, mongodb_name, topk):
-        """ 从mongodb指定词库获取topk个词汇"""
-        pass
+    @connect_execute_commit_close_db
+    def delete_all_words(self, lexicon_id, cursor, connection):
+        """ 删除指定词库对应的所有词汇 """
+
+        mode = self.get_mode_by_lexicon_id(lexicon_id)
+
+        sql = "DELETE FROM {} WHERE lexicon_id =%s;"
+        table_name = "lexicon_" + mode + "_words"
+        sql = sql.format(table_name)
+        Logger.log_info(sql)
+        cursor.execute(sql, lexicon_id)
 
 
 lexicon_dao = LexiconDao()

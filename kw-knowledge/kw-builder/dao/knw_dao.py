@@ -10,8 +10,8 @@ class knwDao:
     @connect_execute_commit_close_db
     def insert_knowledgeNetwork(self, params_json, cursor, connection):
         Logger.log_info("entry in save")
-        # creator_id = request.headers.get("userId")  # 创建者id
-        creator_id = ""
+        # create_by = request.headers.get("userId")  # 创建者id
+        create_by = ""
         values_list = []
         values_list.append(params_json["knw_name"])
         if "knw_des" not in params_json.keys():
@@ -19,8 +19,8 @@ class knwDao:
         else:
             values_list.append(params_json["knw_des"])
         values_list.append(params_json["knw_color"])
-        values_list.append(creator_id)
-        values_list.append(creator_id)
+        values_list.append(create_by)
+        values_list.append(create_by)
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         values_list.append(arrow.now().format('YYYY-MM-DD HH:mm:ss'))
         identify_id = str(uuid.uuid1())
@@ -32,8 +32,8 @@ class knwDao:
         Logger.log_info(values_list)
 
         sql = """
-                INSERT INTO knowledge_network (knw_name, knw_description, color, creator_id, final_operator, 
-                creation_time, update_time, identify_id, to_be_uploaded) SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s
+                INSERT INTO knowledge_network (knw_name, knw_description, color, create_by, update_by, 
+                create_time, update_time, identify_id, to_be_uploaded) SELECT %s, %s, %s, %s, %s, %s, %s, %s, %s
                 WHERE NOT EXISTS (SELECT id from knowledge_network where knw_name=%s)
                 """
         Logger.log_info(sql % tuple(values_list))
@@ -57,8 +57,8 @@ class knwDao:
         #                     else 0
         #                 end  group_column
         #             from knowledge_network knw
-        #             left join account a1 on a1.account_id=creator_id
-        #             left join account a2 on a2.account_id=final_operator
+        #             left join account a1 on a1.account_id=create_by
+        #             left join account a2 on a2.account_id=update_by
         #             where knw.id in ({})
         #         """.format(knw_ids)
 
@@ -121,7 +121,7 @@ class knwDao:
               "SET knw_name=%s, " \
                     "knw_description=%s, " \
                     "color=%s, " \
-                    "final_operator=%s, " \
+                    "update_by=%s, " \
                     "update_time=%s " \
                     f"{to_be_uploaded_sql}" \
               "WHERE id=%s "
@@ -187,7 +187,7 @@ class knwDao:
         # userId = request.headers.get("userId")
         userId = ""
         sql = """
-                SELECT * FROM knowledge_network WHERE creator_id=%s;        
+                SELECT * FROM knowledge_network WHERE create_by=%s;        
                 """
         Logger.log_info(sql % userId)
         cursor.execute(sql, [userId])
@@ -266,8 +266,8 @@ class knwDao:
             from
                 graph_config_table gc
                 LEFT JOIN graph_task_table gt ON gc.id = gt.graph_id
---                     LEFT JOIN account a1 ON a1.account_id = gc.create_user
---                     LEFT JOIN account a2 ON a2.account_id = gc.update_user
+--                     LEFT JOIN account a1 ON a1.account_id = gc.create_by
+--                     LEFT JOIN account a2 ON a2.account_id = gc.update_by
                 {join_str}
             where
                 gc.graph_name like %s
@@ -314,7 +314,7 @@ class knwDao:
     # 根据知识网络ID查找其创建者
     @connect_execute_close_db
     def get_creator(self, knw_id, connection, cursor):
-        sql = """select creator_id from knowledge_network where id={};"""
+        sql = """select create_by from knowledge_network where id={};"""
         sql = sql.format(knw_id)
         Logger.log_info(sql)
         cursor.execute(sql)
@@ -339,7 +339,7 @@ class knwDao:
                        arrow.now().format('YYYY-MM-DD HH:mm:ss'),
                        graph_id]
         sql = """
-                update knowledge_network set final_operator=%s ,update_time=%s where id=
+                update knowledge_network set update_by=%s ,update_time=%s where id=
                 (select knw_id from graph_config_table where id=%s);
             """
         Logger.log_info(sql % tuple(values_list))
@@ -464,16 +464,16 @@ class knwDao:
     @connect_execute_close_db
     def get_knw_by_ids(self, knw_ids, page, size, connection, cursor):
         # sql = """
-        #     select kn.id, kn.color, kn.creation_time create_time, kn.identify_id, kn.intelligence_score,
-        #         kn.knw_description, kn.knw_name, kn.update_time, a1.username create_user, a2.username update_user
+        #     select kn.id, kn.color, kn.create_time create_time, kn.identify_id, kn.intelligence_score,
+        #         kn.knw_description, kn.knw_name, kn.update_time, a1.username create_by, a2.username update_by
         #     from knowledge_network kn
-        #     left join account a1 on kn.creator_id = a1.account_id
-        #     left join account a2 on kn.final_operator = a2.account_id
+        #     left join account a1 on kn.create_by = a1.account_id
+        #     left join account a2 on kn.update_by = a2.account_id
         #     where kn.id in ({})
         #     limit {}, {}
         #     """.format(','.join(knw_ids), str((int(page) - 1) * int(size)), size)
         sql = """
-            select kn.id, kn.color, kn.creation_time create_time, kn.identify_id, kn.intelligence_score, 
+            select kn.id, kn.color, kn.create_time create_time, kn.identify_id, kn.intelligence_score, 
                 kn.knw_description, kn.knw_name, kn.update_time 
             from knowledge_network kn 
             where kn.id in ({}) 

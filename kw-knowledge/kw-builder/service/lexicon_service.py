@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-'''
-@Author ：Jay.zhu
-@Date ：2022/8/12 16:42
-'''
 import json
 import os
 import re
@@ -21,25 +17,22 @@ from dao.graphdb_dao import get_md5, normalize_text
 from dao.knw_dao import knw_dao
 from dao.lexicon_dao import lexicon_dao
 from service.graph_Service import graph_Service
-from utils.ConnectUtil import mongoConnect
 from utils.Otl_Util import otl_util
 from common.errorcode.gview import Gview as Gview2
 from flask_babel import gettext as _l
 
-db = mongoConnect.connect_mongo()
 
 
 class LexiconService:
-    def insert_lexicon(self, lexicon_id, word_dict_list):
+    def insert_lexicon(self, user_id, lexicon_id, word_dict_list):
         """ 新建词库 """
         try:
-            # 若有词库文件，则词汇信息插入mongodb
+            # 若有词库文件，则词汇信息插入mariadb
             if len(word_dict_list) == 0:
                 lexicon_dao.update_lexicon_status(lexicon_id, "success")
             else:
-                mongodb_name = "Lexicon-{}".format(lexicon_id)
                 try:
-                    lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_dict_list)
+                    lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_dict_list)
                     lexicon_dao.update_lexicon_status(lexicon_id, "success")
                 except Exception as e:
                     lexicon_dao.update_lexicon_status(lexicon_id, "failed")
@@ -129,11 +122,12 @@ class LexiconService:
                 
                 return 500, Gview2.error_return(code, ids=not_exist_ids)
 
-        # 清空mongo
-        lexicon_service.delete_word_in_mongo(lexicon_id)
+        # 清空词汇
+        lexicon_service.delete_all_words(lexicon_id)
         lexicon_dao.update_lexicon_user_and_time(lexicon_id, user_id)
 
         params_json = {}
+        params_json["user_id"] = user_id
         params_json["mode"] = lexicon["mode"]
         params_json["extract_info"] = extract_info
         params_json["lexicon_id"] = lexicon_id
@@ -172,7 +166,7 @@ class LexiconService:
             # 删除词库
             lexicon_id = lexicon_dao.delete_lexicon(ids)
             for id in ids:
-                self.delete_word_in_mongo(id)
+                self.delete_all_words(id)
             
             return 200, lexicon_id
         except Exception as e:
@@ -311,20 +305,19 @@ class LexiconService:
             res["error_info"] = _l(res["error_info"] if res["error_info"] else res["error_info"])
             if res["status"] == "running":
                 res["columns"] = eval(res.get("columns"))
-                res["create_user"] = uuid2name.get(res["create_user"])
-                res["operate_user"] = uuid2name.get(res["operate_user"])
+                res["create_by"] = uuid2name.get(res["create_by"])
+                res["update_by"] = uuid2name.get(res["update_by"])
                 res["word_info"] = []
                 
                 return 200, res
 
             # 获取该词库的词汇内容
-            mongodb_name = "Lexicon-{}".format(params_json.get("id"))
-            count, word_info = lexicon_dao.get_all_lexicon2mongo(db, mongodb_name, int(params_json.get("page")),
+            count, word_info = lexicon_dao.get_words_page(params_json.get("id"), int(params_json.get("page")),
                                                                  int(params_json.get("size")))
             res["columns"] = eval(res.get("columns"))
             res["count"] = count
-            res["create_user"] = uuid2name.get(res["create_user"])
-            res["operate_user"] = uuid2name.get(res["operate_user"])
+            res["create_by"] = uuid2name.get(res["create_by"])
+            res["update_by"] = uuid2name.get(res["update_by"])
             if word_info:
                 titles = list(word_info[0].keys())
                 titles.sort()
@@ -558,12 +551,11 @@ class LexiconService:
         res_dict = df_data.to_dict(orient="records")
         return res_dict
 
-    def insert_data2mongo(self, lexicon_id, word_info, user_id, insert_one=False):
+    def insert_words(self, lexicon_id, word_info, user_id, insert_one=False):
         """ 词库新增词汇"""
         message = ""
         try:
             # 校验格式
-            mongodb_name = "Lexicon-{}".format(lexicon_id)
             columns = self.get_columns_from_lexicon(lexicon_id)
             if len(word_info) == 0:
                 if not insert_one:
@@ -573,7 +565,7 @@ class LexiconService:
             if set(columns) != set((word_info[0].keys())) and columns:
                 return 500, "Builder_LexiconController_InsertLexiconWord_FormatMismatch"
             # 校验词汇是否已经存在
-            if insert_one and lexicon_dao.is_word_exist_mongo(db, mongodb_name, word_info[0]):
+            if insert_one and lexicon_dao.is_word_exist_info(lexicon_id, word_info[0]):
                 return 500, "Builder_LexiconController_InsertLexiconWord_WordExisted"
 
             titles = list(word_info[0].keys())
@@ -583,7 +575,7 @@ class LexiconService:
             else:
                 lexicon_dao.update_lexicon_columns(lexicon_id, titles, user_id)
             # 新增词汇
-            lexicon_dao.write_lexicon2mongo(db, mongodb_name, word_info)
+            lexicon_dao.write_lexicon_words(user_id, lexicon_id, word_info)
             if not insert_one:
                 lexicon_dao.update_lexicon_status(lexicon_id, "success")
             return 200, message
@@ -604,9 +596,8 @@ class LexiconService:
 
     def search_word_in_lexicon(self, params_json):
         """ 词库中搜索词汇 """
-        mongodb_name = "Lexicon-{}".format(params_json.get("id"))
         try:
-            count, data = lexicon_dao.get_word_by_condition_mongo(db, mongodb_name, params_json.get("word"),
+            count, data = lexicon_dao.get_word_by_condition(params_json.get("id"), params_json.get("word"),
                                                                   params_json.get("page"),
                                                                   params_json.get("size"))
             obj = {"count": count,
@@ -620,21 +611,32 @@ class LexiconService:
 
     def edit_word_in_lexicon(self, params_json, user_id):
         """ 在词库中修改词汇 """
-        mongodb_name = "Lexicon-{}".format(params_json.get("id"))
         error_code = ""
         try:
             # 被修改的词汇是否存在
-            if not lexicon_dao.is_word_exist_mongo(db, mongodb_name, params_json.get("old_info")):
+            if not lexicon_dao.is_word_exist_id(params_json.get("id"), params_json.get("word_id")):
                 return "Builder_LexiconController_EditLexiconWord_LexiconWordNotExist"
             # 修改后的词汇是否存在
-            if lexicon_dao.is_word_exist_mongo(db, mongodb_name, params_json.get("new_info")):
+            if lexicon_dao.is_word_exist_info(params_json.get("id"), params_json.get("new_info")):
                 return "Builder_LexiconController_EditLexiconWord_LexiconWordExisted"
             # 词汇格式
-            if set(params_json.get("old_info").keys()) != set(params_json.get("new_info").keys()):
+            mode = lexicon_dao.get_mode_by_lexicon_id(params_json.get("id"))
+            std_keys = {"synonym", "std_name", "std_property", "ent_name", "graph_id"}
+            entity_link_keys = {"words", "vid", "ent_name", "graph_id"}
+            custom_keys = {"words"}
+            keys = {}
+            if mode == "std":
+                keys = std_keys
+            elif mode == "entity_link":
+                keys = entity_link_keys
+            elif mode == "custom":
+                keys = custom_keys
+
+            if keys != set(params_json.get("new_info").keys()):
                 return "Builder_LexiconController_EditLexiconWord_FormatMismatch"
 
-            # mongodb中修改
-            lexicon_dao.update_lexicon2mongo(db, mongodb_name, params_json.get("old_info"),
+            # 修改
+            lexicon_dao.update_word(params_json.get("id"), int(params_json.get("word_id")),
                                              params_json.get("new_info"))
             # mysql中更新操作时间，操作人
             self.update_lexicon(params_json.get("id"), user_id)
@@ -645,17 +647,16 @@ class LexiconService:
 
     def delete_word_in_lexicon(self, params_json, user_id):
         """ 在词库中删除词汇 """
-        mongodb_name = "Lexicon-{}".format(params_json.get("id"))
         error_code = ""
         try:
             # 词汇是否存在
-            word_infos = []
-            for word_info in params_json.get("word_info_list"):
-                if lexicon_dao.is_word_exist_mongo(db, mongodb_name, word_info):
-                    word_infos.append(word_info)
-            if len(word_infos) == 0:
+            word_ids = []
+            for word_id in params_json.get("word_ids"):
+                if lexicon_dao.is_word_exist_id(params_json.get("id"), int(word_id)):
+                    word_ids.append(word_id)
+            if len(word_ids) == 0:
                 return "Builder.LexiconController.DeleteLexiconWord.WordNotExist"
-            lexicon_dao.delete_lexicon_word2mongo(db, mongodb_name, word_infos)
+            lexicon_dao.delete_words(params_json.get("id"), word_ids)
             # mysql中更新操作时间，操作人
             self.update_lexicon(params_json.get("id"), user_id)
 
@@ -698,8 +699,7 @@ class LexiconService:
             res = lexicon_dao.get_lexicon_by_id(id)
             res = res[0]
             lexicon_name = res.get("lexicon_name")
-            mongodb_name = "Lexicon-{}".format(id)
-            word_infos = lexicon_dao.get_all_words_from_mongo(db, mongodb_name)
+            word_infos = lexicon_dao.get_all_words(id)
             if word_infos:
                 word_info_df = pd.DataFrame(word_infos)
                 csv_name = "{}.csv".format(lexicon_name)
@@ -744,9 +744,8 @@ class LexiconService:
             
         return file_path, file_name
 
-    def delete_word_in_mongo(self, id):
-        mongodb_name = "Lexicon-{}".format(id)
-        lexicon_dao.delete_lexicon_2mongo(db, mongodb_name)
+    def delete_all_words(self, lexicon_id):
+        lexicon_dao.delete_all_words(lexicon_id)
 
     def download_lexicon(self, ids):
         """ 导出词库"""
@@ -758,9 +757,7 @@ class LexiconService:
         save_path = save_path.format(synonym_name)
         flag = 1
         for id in ids:
-            # 词库名称
-            mongodb_name = "Lexicon-{}".format(id)
-            word_infos = lexicon_dao.get_all_words_from_mongo(db, mongodb_name)
+            word_infos = lexicon_dao.get_all_words(id)
             with open(save_path, "w", encoding="utf_8_sig") as f:
                 if word_infos:
                     keys = list(word_infos[0].keys())

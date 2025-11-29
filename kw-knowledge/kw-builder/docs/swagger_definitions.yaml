@@ -178,7 +178,7 @@ components:
       required:
         - graph_id
         - operationtype
-        - datatype
+        - data_type
         - classname
       properties:
         graph_id:
@@ -191,7 +191,7 @@ components:
           format: string
           description: 操作类型，add(添加) delete(删除) update(更新)； name属性不能被修改和删除
           example: add
-        datatype:
+        data_type:
           type: string
           format: string
           description: 操作对象类型，要操作的schema数据类型实体类：entity 边类：edge 实体类属性：entityindex 边类属性：edgeindex 实体类索引：entityproperty 边类索引： edgeproperty
@@ -319,15 +319,15 @@ components:
                       description: 颜色
                       type: string
                       example: #126EE3
-                  creator_id:
+                  create_by:
                       description: 创建者ID
                       type: string
                       example: cb5cbb2e-4ee3-4d29-b50a-34a990de22ed
-                  final_operator:
+                  update_by:
                       description: 最终修改者
                       type: string
                       example: cb5cbb2e-4ee3-4d29-b50a-34a990de22ed
-                  creation_time:
+                  create_time:
                       description: 创建时间
                       type: string
                       example: "2023-03-31 16:30:37"
@@ -354,7 +354,7 @@ components:
                       description: 图谱ID
                       type: integer
                       example: 38
-                  create_user:
+                  create_by:
                       description: 创建者
                       type: string
                       example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
@@ -362,7 +362,7 @@ components:
                       description: 创建时间
                       type: string
                       example: "2023-08-15 14:17:49"
-                  update_user:
+                  update_by:
                       description: 修改者
                       type: string
                       example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
@@ -462,7 +462,7 @@ components:
                       description: 高亮
                       type: string
                       example: "@-highlight-content-end-@"
-                  create_user:
+                  create_by:
                       description: 创建者ID
                       type: string
                       example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
@@ -470,7 +470,7 @@ components:
                       description: 创建时间
                       type: string
                       example: "2023-08-15 14:17:49"
-                  update_user:
+                  update_by:
                       description: 修改者ID
                       type: string
                       example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
@@ -494,7 +494,7 @@ components:
                       description: 本体ID
                       type: integer
                       example: 39
-                  create_user:
+                  create_by:
                       description: 创建者ID
                       type: string
                       example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
@@ -502,7 +502,7 @@ components:
                       description: 创建时间
                       type: string
                       example: "2023-08-15 14:17:56"
-                  update_user:
+                  update_by:
                       description: 修改者ID
                       type: string
                       example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
@@ -597,11 +597,11 @@ components:
                           description: 修改时间
                           type: string
                           example: "2023-08-15 14:18:08"
-                      create_user:
+                      create_by:
                           description: 创建者ID
                           type: string
                           example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
-                      update_user:
+                      update_by:
                           description: 修改者ID
                           type: string
                           example: 5a8113ae-48ac-4542-aba7-0810f1bd30e4
@@ -655,7 +655,7 @@ components:
                           description: 数据源ID
                           type: integer
                           example: 24
-                      dsname:
+                      ds_name:
                           description: 数据源名称
                           type: string
                           example: "999999"
@@ -663,7 +663,7 @@ components:
                           description: 路径
                           type: string
                           example: MyOwnDb
-                      dataType:
+                      data_type:
                           description: 数据类型
                           type: string
                           example: structured
@@ -693,7 +693,7 @@ components:
               type: string
               description: 创建人Email
               example: "abc@abc.com"
-            create_user:
+            create_by:
               type: string
               description: 创建人名称
               example: "abc"
@@ -705,7 +705,7 @@ components:
               type: string
               description: 最终操作人Email
               example: "abc@abc.com"
-            update_user:
+            update_by:
               type: string
               description: 最终操作人名称
               example: "abc"
@@ -1225,7 +1225,7 @@ components:
                     type: string
                     description: 颜色
                     example: "#126EE3"
-                  creation_time:
+                  create_time:
                     type: string
                     description: 知识网络创建时间
                     example: "2022-12-22 04:09:04"
@@ -1233,7 +1233,7 @@ components:
                     type: string
                     description: 创建人邮箱
                     example: "abc@abc.com"
-                  creator_id:
+                  create_by:
                     type: string
                     description: 创建人uuid
                     example: "a6926148-9f9f-4c28-8ad8-1e7053a481db"
@@ -1241,7 +1241,7 @@ components:
                     type: string
                     description: 创建人名称
                     example: "abc"
-                  final_operator:
+                  update_by:
                     type: string
                     description: 最终操作人uuid
                     example: "a6926148-9f9f-4c28-8ad8-1e7053a481db"
@@ -1308,7 +1308,7 @@ components:
                     type: string
                     description: 颜色
                     example: "#126EE3"
-                  creation_time:
+                  create_time:
                     type: string
                     description: 知识网络创建时间
                     example: "2022-12-22 04:09:04"
@@ -1316,7 +1316,7 @@ components:
                     type: string
                     description: 创建人邮箱
                     example: "abc@abc.com"
-                  creator_id:
+                  create_by:
                     type: string
                     description: 创建人uuid
                     example: "a6926148-9f9f-4c28-8ad8-1e7053a481db"
@@ -1324,7 +1324,7 @@ components:
                     type: string
                     description: 创建人名称
                     example: "abc"
-                  final_operator:
+                  update_by:
                     type: string
                     description: 最终操作人uuid
                     example: "a6926148-9f9f-4c28-8ad8-1e7053a481db"
@@ -1414,7 +1414,7 @@ components:
                     type: string
                     description: 创建人Email
                     example: "abc@abc.com"
-                  create_user:
+                  create_by:
                     type: string
                     description: 创建人名称
                     example: "abc"
@@ -1430,7 +1430,7 @@ components:
                     type: string
                     description: 最终操作时间
                     example: "2022-12-20 15:55:24"
-                  update_user:
+                  update_by:
                     type: string
                     description: 最终操作人名称
                     example: "abc"
@@ -1493,7 +1493,7 @@ components:
                     type: string
                     description: 数据源创建时间
                     example: "2023-08-22 09:31:31"
-                  create_user:
+                  create_by:
                     type: string
                     description: 创建人uuid
                     example: "93e2682e-9322-9d28-a8df-509035bebb8d"
@@ -1501,7 +1501,7 @@ components:
                     type: string
                     description: 创建人显示名
                     example: "tom"
-                  dataType:
+                  data_type:
                     type: string
                     description: unstructured：非结构化，structured：结构化
                     example: "structured"
@@ -1533,7 +1533,7 @@ components:
                     type: string
                     description: 数据源用户名
                     example: "admin"
-                  dsname:
+                  ds_name:
                     type: string
                     description: 数据源名称
                     example: "mysql"
@@ -1553,7 +1553,7 @@ components:
                     type: string
                     description: 数据源更新时间
                     example: "2023-08-22 09:31:31"
-                  update_user:
+                  update_by:
                     type: string
                     description: 操作人uuid
                     example: "93e2682e-9322-9d28-a8df-509035bebb8d"

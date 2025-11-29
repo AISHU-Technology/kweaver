@@ -275,7 +275,7 @@ class DataBase():
             params_json:
                 data_source: 数据源类型
                 postfix: 文件后缀名。可选值:csv json
-                dsname: 数据源名
+                ds_name: 数据源名
                 table_list: 对于数据库: [[表名, 数据源路径, 数据源名, 'running', 数据源类型]]
                 ds_path: 数据源路径
                 newtablelist: 和table_list一样

@@ -65,7 +65,7 @@ def before_request():
     Logger.log_info("method: {}".format(method))
     graphParamValidate = GraphParamValidate(method)
     # POST请求：新增图谱
-    if path == "/api/builder/v1/graph" and method == "POST":
+    if path == "/api/builder/v1/graph/add" and method == "POST":
         res_message, res_code = graphParamValidate.graphCreate()
         if res_code != 0:
             return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
@@ -104,10 +104,10 @@ def before_request():
                                       data['error_link']), http_code
         return None
     # 返回数据源
-    elif path == "/api/builder/v1/ds" and method == "GET":
+    elif path == "/api/builder/v1/ds/page" and method == "GET":
         return None
     # 新建数据源
-    elif path == "/api/builder/v1/ds" and method == "POST":
+    elif path == "/api/builder/v1/ds/add" and method == "POST":
         res_message, res_code = graphParamValidate.dsmCreate()
         if res_code != 0:
             return Gview.TErrorreturn(ErrorCode=res_message["code"], Description=res_message["cause"],
@@ -115,7 +115,7 @@ def before_request():
                                       ErrorLink=""), res_code
         return None
     # 编辑数据源
-    elif "/api/builder/v1/ds/" in path and len(path.split('/')) == 6 and path.split('/')[-1].isdigit() and method == "POST":
+    elif "/api/builder/v1/ds/edit" in path and len(path.split('/')) == 6 and path.split('/')[-1].isdigit() and method == "POST":
         dsid = path.split("/")[-1]
         res_message, res_code = graphParamValidate.dsmEdit(dsid=dsid)
         if res_code != 0:
@@ -124,7 +124,7 @@ def before_request():
                                       ErrorLink=""), res_code
         return None
     # 删除数据源
-    elif "/api/builder/v1/ds/delbydsids" in path and method == "DELETE":
+    elif "/api/builder/v1/ds/delete" in path and method == "DELETE":
         res_message, res_code = graphParamValidate.dsmDelete()
         if res_code != 0:
             return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
@@ -132,14 +132,14 @@ def before_request():
         return None
 
     # 删除本体
-    elif path == "/api/builder/v1/onto/delotlbyids" and method == "DELETE":
+    elif path == "/api/builder/v1/onto/delete" and method == "DELETE":
         res_message, res_code = graphParamValidate.ontoDelete()
         if res_code != 0:
             return Gview.BuFailVreturn(cause=res_message["cause"], code=res_message["code"],
                                        message=res_message["message"]), res_code
         return None
     # 运行任务
-    elif "/api/builder/v1/task" in path and "stoptask" not in path and "gettaskinfo" not in path and method == "POST":
+    elif "/api/builder/v1/task" in path and "stop" not in path and "gettaskinfo" not in path and method == "POST":
         graph_id = path.split("/")[-1]
         res_message, res_code = graphParamValidate.task_run(graph_id)
         if res_code != 0:
@@ -221,7 +221,7 @@ app.register_blueprint(graph_count_controller_app, url_prefix='/api/builder/v1/g
 app.register_blueprint(graph_count_controller_app_open, url_prefix='/api/builder/v1/open/graphcount')
 # app.register_blueprint(dsm_controller_app, url_prefix='/api/builder/v1/acctoken')
 
-app.register_blueprint(rebuild_fulltextindex_controller_app, url_prefix='/api/builder/v1/fulltextindex')
+app.register_blueprint(rebuild_fulltextindex_controller_app, url_prefix='/api/builder/v1/fulltext_index')
 app.register_blueprint(timer_controller_app, url_prefix='/api/builder/v1/timer')
 
 app.register_blueprint(knowledgeNetwork_controller_app, name="knowledgeNetwork_controller_app",

@@ -25,7 +25,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: health.CheckAliveHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/engine/v1/health"),
+		rest.WithPrefix("/api/graph/v1/health"),
 	)
 
 	server.AddRoutes(
@@ -46,7 +46,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: graphsearchbasic.EdgesSearchHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/engine/v1/basic-search/kgs/:kg_id"),
+		rest.WithPrefix("/api/graph/v1/basic-search/kgs/:kg_id"),
 	)
 
 	server.AddRoutes(
@@ -57,7 +57,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: graphsearchcustom.CustomSearchHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/engine/v1/custom-search"),
+		rest.WithPrefix("/api/graph/v1/custom-search"),
 	)
 
 	server.AddRoutes(
@@ -78,24 +78,24 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: graphsearchexplore.ExpandVHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/engine/v1/graph-explore/kgs/:kg_id"),
+		rest.WithPrefix("/api/graph/v1/graph-explore/kgs/:kg_id"),
 	)
 
 	server.AddRoutes(
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/",
+				Path:    "/add",
 				Handler: canvas.CreateCanvasHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/:c_id/delete",
+				Path:    "/delete/:c_id",
 				Handler: canvas.DeleteCanvasHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/:c_id/update",
+				Path:    "/update/:c_id",
 				Handler: canvas.UpdateCanvasHandler(serverCtx),
 			},
 			{
@@ -124,6 +124,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: canvas.GetCanvasInfoByCIDHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/alg-server/v1/canvases"),
+		rest.WithPrefix("/api/graph/v1/canvases"),
 	)
 }

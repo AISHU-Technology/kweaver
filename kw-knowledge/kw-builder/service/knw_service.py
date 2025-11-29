@@ -68,7 +68,7 @@ class knwService:
             order = params_json.get("order")
             rule = params_json.get("rule")
             if rule == "create":
-                rule = "creation_time"
+                rule = "create_time"
             elif rule == "update":
                 rule = "update_time"
 

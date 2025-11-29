@@ -113,7 +113,7 @@ class OtlOpenService():
 		obj = {}
 		# 获取参数
 		operationtype = params_json.get("operationtype", None)  # add delete update drop
-		datatype = params_json.get("datatype", None)  # entity edge entityindex edgeindex entityproperty edgeproperty
+		data_type = params_json.get("data_type", None)  # entity edge entityindex edgeindex entityproperty edgeproperty
 		classname = params_json.get("classname", None)
 		propertyname = params_json.get("propertyname", None)
 		propertytype = params_json.get("propertytype",
@@ -138,11 +138,11 @@ class OtlOpenService():
 			obj["ErrorLink"] = ""
 			return ret_code, obj
 		# 校验操作对象类型
-		if datatype not in rule_datatype:
+		if data_type not in rule_datatype:
 			ret_code = 400
-			obj = self.errorobj(400000, 'parameter datatype illegal,must be in ["entity", "edge", "index", "property"]',
-								"modify parameter datatype.",
-								'parameter datatype illegal,must be in ["entity", "edge", "index", "property"]', "")
+			obj = self.errorobj(400000, 'parameter data_type illegal,must be in ["entity", "edge", "index", "property"]',
+								"modify parameter data_type.",
+								'parameter data_type illegal,must be in ["entity", "edge", "index", "property"]', "")
 			return ret_code, obj
 		# 校验类名（实体类、边类）
 		if classname is None:
@@ -167,7 +167,7 @@ class OtlOpenService():
 										classname), "")
 				return ret_code, obj
 
-		ret_code, obj = self.generateorientsql(operationtype, datatype, classname, [rec_dict], graph_id=graph_id, edgein=edgein,
+		ret_code, obj = self.generateorientsql(operationtype, data_type, classname, [rec_dict], graph_id=graph_id, edgein=edgein,
 											   edgeout=edgeout,
 											   propertyname=propertyname, propertytype=propertytype,
 											   indextype=indextype, indexproperties=indexproperties,
@@ -176,7 +176,7 @@ class OtlOpenService():
 
 		return ret_code, obj
 
-	def generateorientsql(self, operationtype, datatype, classname, rec_dict, **kw):
+	def generateorientsql(self, operationtype, data_type, classname, rec_dict, **kw):
 		'''本体编辑和图谱schema修改 具体实现过程'''
 		ret_code = CommonResponseStatus.SUCCESS.value
 		NAME_EXIST_ERROR = CommonResponseStatus.OTL_OPEN_NAME_EXIST.value
@@ -187,7 +187,7 @@ class OtlOpenService():
 		try:
 			orient_sql_list = []  # 需要执行的不是一个sql；默认创建name 属性，使用事务的方式创建
 			if operationtype == "add":
-				if datatype == "entity":
+				if data_type == "entity":
 					schema_entity_old, schema_edge_old = self.getoldotl(rec_dict)
 
 					if classname in schema_entity_old:
@@ -233,14 +233,14 @@ class OtlOpenService():
 					# 插入修改后本体
 					ret_code, ret_message = self.updateotl_info(otlid, params_json_new, graph_id, "host_url", "-1")
 					if ret_code == 200:
-						obj['res'] = "{} {} {} success".format(operationtype, datatype, classname)
-						Logger.log_info("{} {} {} success".format(operationtype, datatype, classname))
+						obj['res'] = "{} {} {} success".format(operationtype, data_type, classname)
+						Logger.log_info("{} {} {} success".format(operationtype, data_type, classname))
 						
 						return ret_code, obj
 					
 					return ret_code, ret_message
 
-				elif datatype == "edge":
+				elif data_type == "edge":
 					if kw["edgein"] is None:
 						ret_code = 400
 						obj = self.errorobj(400000, 'parameter edgein cannot be empty!',
@@ -363,7 +363,7 @@ class OtlOpenService():
 					# 插入修改后的本体
 					ret_code, ret_message = self.updateotl_info(otlid, params_json_new, graph_id, "host_url", "-1")
 					if ret_code == 200:
-						message = "{} {} {} from {} to {} success".format(operationtype, datatype, classname,
+						message = "{} {} {} from {} to {} success".format(operationtype, data_type, classname,
 																		  kw["edgeout"], kw["edgein"])
 						obj['res'] = message
 						Logger.log_info(message)
@@ -371,7 +371,7 @@ class OtlOpenService():
 						return ret_code, obj
 					
 					return ret_code, ret_message
-				elif "property" in datatype:
+				elif "property" in data_type:
 					if kw["propertyname"] is None:
 						ret_code = 400
 						obj = self.errorobj(400000, 'parameter propertyname cannot be empty !',
@@ -419,9 +419,9 @@ class OtlOpenService():
 							return ret_code, obj
 					# 原来的实体类 和 边类
 					schema_entity_old, schema_edge_old = self.getoldotl(rec_dict)
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						schema_old_en_ed = schema_entity_old
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						schema_old_en_ed = schema_edge_old
 					# 类是否存在
 					if classname in schema_old_en_ed:
@@ -446,9 +446,9 @@ class OtlOpenService():
 						
 						return ret_code, obj
 					# 修改图数据库schema 之 addproperty
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						class_type = 'tag'
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						class_type = 'edge'
 					code, res = graphdb.alter_class(db, classname, class_type=class_type, op='add_prop',
 													otl_pro=[kw["propertyname"]],
@@ -469,9 +469,9 @@ class OtlOpenService():
 					params_json_new = {}
 					oldentity = eval(otl_dict[0]["entity"])
 					oldeedge = eval(otl_dict[0]["edge"])
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						otl_old_en_ed = oldentity
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						otl_old_en_ed = oldeedge
 					for i in range(len(otl_old_en_ed)):
 						if classname == otl_old_en_ed[i]["name"]:
@@ -480,10 +480,10 @@ class OtlOpenService():
 													 'data_type': str(kw["propertytype"])})
 							otl_old_en_ed[i]["properties"] = class_properties
 							break
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						params_json_new["entity"] = otl_old_en_ed
 						params_json_new["edge"] = oldeedge
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						params_json_new["entity"] = oldentity
 						params_json_new["edge"] = otl_old_en_ed
 					params_json_new["used_task"] = []
@@ -492,14 +492,14 @@ class OtlOpenService():
 					# 插入修改后的本体
 					ret_code, ret_message = self.updateotl_info(otlid, params_json_new, graph_id, "host_url", "-1")
 					if ret_code == 200:
-						message = "{} {} {}: {}  success".format(operationtype, datatype, classname, kw["propertyname"])
+						message = "{} {} {}: {}  success".format(operationtype, data_type, classname, kw["propertyname"])
 						obj['res'] = message
 						Logger.log_info(message)
 						
 						return ret_code, obj
 					
 					return ret_code, ret_message
-				elif "index" in datatype:
+				elif "index" in data_type:
 					if kw["indexproperties"] is None or type(kw["indexproperties"]) != list:
 						ret_code = 400
 						obj = self.errorobj(400000,
@@ -550,9 +550,9 @@ class OtlOpenService():
 							return ret_code, obj
 					# 原来的实体类 和 边类
 					schema_entity_old, schema_edge_old = self.getoldotl(rec_dict)
-					if datatype == "entityindex":
+					if data_type == "entityindex":
 						schema_old_en_ed = schema_entity_old
-					elif datatype == "edgeindex":
+					elif data_type == "edgeindex":
 						schema_old_en_ed = schema_edge_old
 					# 类是否存在
 					if classname in schema_old_en_ed:
@@ -598,9 +598,9 @@ class OtlOpenService():
 						params_json_new = {}
 						oldentity = eval(otl_dict[0]["entity"])
 						oldeedge = eval(otl_dict[0]["edge"])
-						if datatype == "entityindex":
+						if data_type == "entityindex":
 							otl_old_en_ed = oldentity
-						elif datatype == "edgeindex":
+						elif data_type == "edgeindex":
 							otl_old_en_ed = oldeedge
 						for i in range(len(otl_old_en_ed)):
 							if classname == otl_old_en_ed[i]["name"]:
@@ -608,10 +608,10 @@ class OtlOpenService():
 								if "name" not in kw["indexproperties"]:
 									kw["indexproperties"].append("name")
 								otl_old_en_ed[i]["properties_index"] = kw["indexproperties"]
-						if datatype == "entityindex":
+						if data_type == "entityindex":
 							params_json_new["entity"] = otl_old_en_ed
 							params_json_new["edge"] = oldeedge
-						elif datatype == "edgeindex":
+						elif data_type == "edgeindex":
 							params_json_new["entity"] = oldentity
 							params_json_new["edge"] = otl_old_en_ed
 						params_json_new["used_task"] = []
@@ -620,7 +620,7 @@ class OtlOpenService():
 						# 插入修改后本体
 						ret_code, ret_message = self.updateotl_info(otlid, params_json_new, graph_id, "host_url", "-1")
 						if ret_code == 200:
-							message = "{} {} {}: {}  success".format(operationtype, datatype, classname,
+							message = "{} {} {}: {}  success".format(operationtype, data_type, classname,
 																	 kw["indexproperties"])
 							obj['res'] = message
 							
@@ -628,13 +628,13 @@ class OtlOpenService():
 						
 						return ret_code, ret_message
 					else:
-						message = "{} {} {}: {}  success".format(operationtype, datatype, classname,
+						message = "{} {} {}: {}  success".format(operationtype, data_type, classname,
 																 kw["indexproperties"])
 						obj['res'] = message
 						
 						return ret_code, obj
 			elif operationtype == "update":
-				if datatype == "entity" or datatype == "edge":
+				if data_type == "entity" or data_type == "edge":
 					if kw["altertype"] is None:
 						ret_code = 400
 						obj = self.errorobj(400000, 'parameter altertype cannot be empty!',
@@ -690,9 +690,9 @@ class OtlOpenService():
 
 					# 原来的实体类 和 边类
 					schema_entity_old, schema_edge_old = self.getoldotl(rec_dict)
-					if datatype == "entity":
+					if data_type == "entity":
 						schema_old_en_ed = schema_entity_old
-					elif datatype == "edge":
+					elif data_type == "edge":
 						schema_old_en_ed = schema_edge_old
 					# 类是否存在
 					if kw["oldname"] not in schema_old_en_ed:
@@ -738,7 +738,7 @@ class OtlOpenService():
 					oldeedge = eval(otl_dict[0]["edge"])
 
 					# 如果是实体类
-					if datatype == "entity":
+					if data_type == "entity":
 						# 将原来的类名 替换成新的类名
 						for i in range(len(oldentity)):
 							if kw["oldname"] == oldentity[i]["name"]:
@@ -753,7 +753,7 @@ class OtlOpenService():
 						params_json_new["entity"] = oldentity
 						params_json_new["edge"] = oldeedge
 					# 如果是修改关系类名，只修改关系类名就可
-					if datatype == "edge":
+					if data_type == "edge":
 						# 将原来的类名 替换成新的类名
 						for i in range(len(oldeedge)):
 							if kw["oldname"] == oldeedge[i]["name"]:
@@ -767,14 +767,14 @@ class OtlOpenService():
 					# 插入修改后的本体
 					ret_code, ret_message = self.updateotl_info(otlid, params_json_new, graph_id, "host_url", "-1")
 					if ret_code == 200:
-						message = "{} {} {}: {}  success".format(operationtype, datatype, kw["oldname"], classname)
+						message = "{} {} {}: {}  success".format(operationtype, data_type, kw["oldname"], classname)
 						obj['res'] = message
 						Logger.log_info(message)
 						
 						return ret_code, obj
 					
 					return ret_code, ret_message
-				elif "property" in datatype:
+				elif "property" in data_type:
 					if kw["altertype"] is None:
 						ret_code = 400
 						obj = self.errorobj(400000, 'parameter altertype cannot be empty!',
@@ -878,9 +878,9 @@ class OtlOpenService():
 
 					# 原来的实体类 和 边类
 					schema_entity_old, schema_edge_old = self.getoldotl(rec_dict)
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						schema_old_en_ed = schema_entity_old
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						schema_old_en_ed = schema_edge_old
 					# 类是否存在
 					if classname in schema_old_en_ed:
@@ -940,9 +940,9 @@ class OtlOpenService():
 					params_json_new = {}
 					oldentity = eval(otl_dict[0]["entity"])
 					oldeedge = eval(otl_dict[0]["edge"])
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						otl_old_en_ed = oldentity
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						otl_old_en_ed = oldeedge
 					for i in range(len(otl_old_en_ed)):
 						if classname == otl_old_en_ed[i]["name"]:
@@ -961,10 +961,10 @@ class OtlOpenService():
 							if kw["oldname"] in properties_index:
 								properties_index[properties_index.index(kw["oldname"])] = kw["propertyname"]
 								otl_old_en_ed[i]["properties_index"] = properties_index
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						params_json_new["entity"] = otl_old_en_ed
 						params_json_new["edge"] = oldeedge
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						params_json_new["entity"] = oldentity
 						params_json_new["edge"] = otl_old_en_ed
 					params_json_new["used_task"] = []
@@ -973,7 +973,7 @@ class OtlOpenService():
 					# 插入修改后的本体
 					ret_code, ret_message = self.updateotl_info(otlid, params_json_new, graph_id, "host_url", "-1")
 					if ret_code == 200:
-						message = "{} {} {}: {}  success".format(operationtype, datatype, classname, kw["propertyname"])
+						message = "{} {} {}: {}  success".format(operationtype, data_type, classname, kw["propertyname"])
 						obj['res'] = message
 						Logger.log_info(message)
 						
@@ -982,19 +982,19 @@ class OtlOpenService():
 					return ret_code, ret_message
 				else:
 					ret_code = 400
-					obj = self.errorobj(400000, 'parameter datatype is illegal!',
+					obj = self.errorobj(400000, 'parameter data_type is illegal!',
 										"assign values to parameter propertyname.",
 										'parameter propertyname is illegal !', "")
 					
 					return ret_code, obj
 
 			elif operationtype == "delete":
-				if datatype == "entity" or datatype == "edge":
+				if data_type == "entity" or data_type == "edge":
 					# 原来的实体类 和 边类
 					schema_entity_old, schema_edge_old = self.getoldotl(rec_dict)
-					if datatype == "entity":
+					if data_type == "entity":
 						schema_old_en_ed = schema_entity_old
-					elif datatype == "edge":
+					elif data_type == "edge":
 						schema_old_en_ed = schema_edge_old
 					# 类是否存在
 					if classname not in schema_old_en_ed:
@@ -1007,9 +1007,9 @@ class OtlOpenService():
 						return ret_code, obj
 					# 修改图数据库schema 之 dropclass
 					# 删除实体了，跟实体相关的边还在
-					if datatype == "entity":
+					if data_type == "entity":
 						class_type = 'tag'
-					elif datatype == "edge":
+					elif data_type == "edge":
 						class_type = 'edge'
 					code, res = graphdb.drop_class(db, classname, class_type=class_type)
 					if code != 200:
@@ -1033,15 +1033,15 @@ class OtlOpenService():
 					params_json_new = {}
 					oldentity = eval(otl_dict[0]["entity"])
 					oldeedge = eval(otl_dict[0]["edge"])
-					if datatype == "entity":
+					if data_type == "entity":
 						otl_old_en_ed = oldentity
-					elif datatype == "edge":
+					elif data_type == "edge":
 						otl_old_en_ed = oldeedge
 					# 重组新的实体类和边类
 					otl_new_en_ed = []
 					for i in range(len(otl_old_en_ed)):
 						if classname == otl_old_en_ed[i]["name"]:
-							if datatype == "entity":
+							if data_type == "entity":
 								# 如果是实体类， 关系类中可能有使用到 该实体类,则将该关系删除
 								newedge = []
 								for edgeindex in range(len(oldeedge)):
@@ -1052,10 +1052,10 @@ class OtlOpenService():
 						else:
 							otl_new_en_ed.append(otl_old_en_ed[i])
 					otl_old_en_ed = otl_new_en_ed
-					if datatype == "entity":
+					if data_type == "entity":
 						params_json_new["entity"] = otl_old_en_ed
 						params_json_new["edge"] = oldeedge
-					elif datatype == "edge":
+					elif data_type == "edge":
 						params_json_new["entity"] = oldentity
 						params_json_new["edge"] = otl_old_en_ed
 					params_json_new["used_task"] = []
@@ -1064,7 +1064,7 @@ class OtlOpenService():
 					# 插入修改后的本体
 					ret_code, ret_message = self.updateotl_info(otlid, params_json_new, graph_id, "host_url", "-1")
 					if ret_code == 200:
-						message = "{} {} {}: {}  success".format(operationtype, datatype, classname,
+						message = "{} {} {}: {}  success".format(operationtype, data_type, classname,
 																 kw["propertyname"])
 						obj['res'] = message
 						Logger.log_info(message)
@@ -1074,7 +1074,7 @@ class OtlOpenService():
 					return ret_code, ret_message
 
 
-				elif "property" in datatype:
+				elif "property" in data_type:
 					if kw["propertyname"] is None:
 						ret_code = 400
 						obj = self.errorobj(400000, 'parameter propertyname cannot be empty !',
@@ -1123,9 +1123,9 @@ class OtlOpenService():
 
 					# 原来的实体类 和 边类
 					schema_entity_old, schema_edge_old = self.getoldotl(rec_dict)
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						schema_old_en_ed = schema_entity_old
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						schema_old_en_ed = schema_edge_old
 					# 类是否存在
 					if classname in schema_old_en_ed:
@@ -1150,9 +1150,9 @@ class OtlOpenService():
 						
 						return ret_code, obj
 					# 修改图数据库schema 之 deleteproperty
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						class_type = 'tag'
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						class_type = 'edge'
 					code, res = graphdb.alter_class(db, classname, class_type=class_type, op='drop_prop',
 													propertyname=kw["propertyname"], unsafe=kw["unsafe"])
@@ -1177,9 +1177,9 @@ class OtlOpenService():
 					params_json_new = {}
 					oldentity = eval(otl_dict[0]["entity"])
 					oldeedge = eval(otl_dict[0]["edge"])
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						otl_old_en_ed = oldentity
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						otl_old_en_ed = oldeedge
 					for i in range(len(otl_old_en_ed)):
 						if classname == otl_old_en_ed[i]["name"]:
@@ -1194,10 +1194,10 @@ class OtlOpenService():
 							if kw["propertyname"] in properties_index:
 								properties_index.pop(properties_index.index(kw["propertyname"]))
 								otl_old_en_ed[i]["properties_index"] = properties_index
-					if datatype == "entityproperty":
+					if data_type == "entityproperty":
 						params_json_new["entity"] = otl_old_en_ed
 						params_json_new["edge"] = oldeedge
-					elif datatype == "edgeproperty":
+					elif data_type == "edgeproperty":
 						params_json_new["entity"] = oldentity
 						params_json_new["edge"] = otl_old_en_ed
 					params_json_new["used_task"] = []
@@ -1206,7 +1206,7 @@ class OtlOpenService():
 					# 插入修改后的本体
 					ret_code, ret_message = self.updateotl_info(otlid, params_json_new, graph_id, "host_url", "-1")
 					if ret_code == 200:
-						message = "{} {} {}: {}  success".format(operationtype, datatype, classname, kw["propertyname"])
+						message = "{} {} {}: {}  success".format(operationtype, data_type, classname, kw["propertyname"])
 						obj['res'] = message
 						Logger.log_info(message)
 						
@@ -1215,7 +1215,7 @@ class OtlOpenService():
 					return ret_code, ret_message
 				else:
 					ret_code = 400
-					obj = self.errorobj(400000, 'parameter datatype is illegal!',
+					obj = self.errorobj(400000, 'parameter data_type is illegal!',
 										"assign values to parameter propertyname.",
 										'parameter propertyname is illegal !', "")
 					
@@ -1371,7 +1371,7 @@ class OtlOpenService():
 		new_entity = {"entity_id": id,
 					  "colour": str(color),
 					  "ds_name": "",
-					  "dataType": "",
+					  "data_type": "",
 					  "data_source": "",
 					  "ds_path": "",
 					  "ds_id": "",
@@ -1392,7 +1392,7 @@ class OtlOpenService():
 		new_edge = {"edge_id": id,
 					"colour": str(color),
 					"ds_name": "",
-					"dataType": "",
+					"data_type": "",
 					"data_source": "",
 					"ds_id": "",
 					"extract_type": "",

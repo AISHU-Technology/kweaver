@@ -665,18 +665,18 @@ class TaskService():
                         if task_state == "PENDING":
                             df.loc[index, 'task_status'] = "running"
                             status2 = "running"
-                            finished_time = task["date_done"]
+                            update_time = task["date_done"]
                             task_dao_onto.update_otl_status_byceleryid(status2, error_report, row['celery_task_id'],
-                                                                       finished_time)
+                                                                       update_time)
                         elif task_state == "SUCCESS":  ###更新結果
                             task_status = row["task_status"]
                             if task_status != "finished":
                                 df.loc[index, 'task_status'] = "finished"
                             status2 = "finished"
                             result = task["result"]["res"]
-                            finished_time = task["date_done"]
+                            update_time = task["date_done"]
                             task_dao_onto.update_otl_status_byceleryid(status2, result, row['celery_task_id'],
-                                                                       finished_time)
+                                                                       update_time)
                             file_list = task["result"]["file_list"]
                             task_dao_onto.add_file_status(file_list, row['celery_task_id'])
 
@@ -686,17 +686,17 @@ class TaskService():
                                 error_report = task["all_res"]
                             status2 = "failed"
                             result = task["result"]
-                            finished_time = task["date_done"]
+                            update_time = task["date_done"]
                             # result=str(result).replace("'",'"')
                             task_dao_onto.update_otl_status_byceleryid(status2, result, row['celery_task_id'],
-                                                                       finished_time)
+                                                                       update_time)
                         else:
                             df.loc[index, 'task_status'] = str(task_state)
                             status2 = str(task_state)
                             result = task["result"]
-                            finished_time = task["date_done"]
+                            update_time = task["date_done"]
                             task_dao_onto.update_otl_status_byceleryid(status2, result, row['celery_task_id'],
-                                                                       finished_time)
+                                                                       update_time)
                 except Exception as e:
                     err = repr(e)
                     error_log = log_oper.get_error_log(err, sys._getframe(), traceback.format_exc())
@@ -775,7 +775,7 @@ class TaskService():
             dict_all = {}
             dict_all['effective_storage'] = effective_storage
             for key in reslist:
-                # if key == "create_user":
+                # if key == "create_by":
                 #     dict_all[key] = reslist['create_user_name']
                 if key == "error_report":
                     value = reslist[key]
@@ -801,11 +801,11 @@ class TaskService():
             
         return ret_code, res
 
-    def update_otl_task(self, status, error_report, celery_task_id, task_id, finished_time):
+    def update_otl_task(self, status, error_report, celery_task_id, task_id, update_time):
         ret_code = CommonResponseStatus.SUCCESS.value
         obj = {}
         try:
-            task_dao_onto.update_otl_statusbyid(status, error_report, celery_task_id, task_id, finished_time)
+            task_dao_onto.update_otl_statusbyid(status, error_report, celery_task_id, task_id, update_time)
             obj["res"] = "update task "
 
         except Exception as e:
@@ -1134,11 +1134,11 @@ class TaskService():
         return code, data
 
     # 定时任务开关
-    def update_timer_switch(self, graph_id, task_id, enabled, update_user):
+    def update_timer_switch(self, graph_id, task_id, enabled, update_by):
         code = CommonResponseStatus.SUCCESS.value
         data = {}
         try:
-            graph_dao.update_timer_switch(graph_id, task_id, enabled, update_user)
+            graph_dao.update_timer_switch(graph_id, task_id, enabled, update_by)
 
         except Exception as e:
             err = repr(e)
@@ -1166,17 +1166,17 @@ class TaskService():
         else:
             task_status = "unkonwn"
         celery_task_id = task.id
-        finished_time = task.date_done
-        if finished_time is None:
-            finished_time = "None"
+        update_time = task.date_done
+        if update_time is None:
+            update_time = "None"
         else:
-            date_done = str(finished_time).split(".")[0]
+            date_done = str(update_time).split(".")[0]
             UTC_FORMAT = "%Y-%m-%d %H:%M:%S"
             utcTime = datetime.datetime.strptime(date_done, UTC_FORMAT)
-            finished_time = utcTime + datetime.timedelta(hours=8)
+            update_time = utcTime + datetime.timedelta(hours=8)
         # task_id=params_json["task_id"]
         # 更新本体任务状态
-        ret_code, obj = task_service.update_otl_task(task_status, "", celery_task_id, task_id, finished_time)
+        ret_code, obj = task_service.update_otl_task(task_status, "", celery_task_id, task_id, update_time)
         if ret_code != 200:
 
             return ret_code, celery_task_id
@@ -1291,7 +1291,7 @@ class TaskService():
                 if ds_id:
                     ds = dsm_dao.getdatabyid(ds_id)
                     if ds:
-                        ds_name = ds[0]['dsname']
+                        ds_name = ds[0]['ds_name']
                         ds_path = ds[0]['ds_path']
                 file['ds_name'] = ds_name
                 file['ds_path'] = ds_path
