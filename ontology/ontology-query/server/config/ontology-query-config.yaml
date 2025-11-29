@@ -1,0 +1,90 @@
+server:
+  runMode: release
+  httpPort: 13018
+  language: zh-CN
+  readTimeOut: 120
+  writeTimeOut: 120
+  viewDataTimeout: 5m
+  defaultSmallModelEnabled: true
+log:
+  logLevel: debug
+  developMode: false
+  maxAge: 100
+  maxBackups: 20
+  maxSize: 100
+observability:
+  logEnabled: false
+  traceEnabled: false
+  metricEnabled: false
+  logExporter: console
+  traceProvider: http
+  metricProvider: http
+  logLoadInternal: 1
+  logLoadMaxLog: 10
+  traceMaxQueueSize: 50000
+  metricIntervalSecond: 60
+  httpLogFeedIngesterUrl: http://feed-ingester-service:13031/api/feed_ingester/v1/jobs/dip-o11y-log/events
+  httpTraceFeedIngesterUrl: http://feed-ingester-service:13031/api/feed_ingester/v1/jobs/dip-o11y-trace/events
+  httpMetricFeedIngesterUrl: http://feed-ingester-service:13031/api/feed_ingester/v1/jobs/dip-o11y-metric/events
+  grpcTraceFeedIngesterUrl: feed-ingester-service:30013
+  grpcTraceJobId: dip-o11y-trace-grpc
+
+depServices:
+  class-443:
+    ingressClass: class-443
+  rds:
+    host: 192.168.201.29
+    port: 30006
+    user: root
+    password: eisoo.com123
+    type: MariaDB
+  opensearch:
+    host: 192.168.201.29
+    port: 30000
+    protocol: http
+    user: admin
+    password: eisoo.com123 
+  authorization-private:
+    host: 192.168.201.29
+    port: 30920
+    protocol: http
+  user-management: 
+    host: 192.168.201.29
+    port:  30981
+    protocol: http
+  hydra-public:
+    host: 192.168.201.29
+    port: 4444
+    protocol: http
+  hydra-admin:
+    host: 192.168.201.29
+    port: 4445
+    protocol: http
+  model-factory:
+    host: 192.168.201.29
+    port: 9898
+    protocol: http
+  data-model:
+    host: 192.168.201.29
+    port: 13020
+    protocol: http
+  uniquery:
+    host: 192.168.201.29
+    port: 13011
+    protocol: http
+  ontology-manager:
+    host: 192.168.201.29
+    port: 13014
+    protocol: http
+  agent-operator-integration:
+    host: 192.168.201.29
+    port: 9000
+    protocol: http
+  mf-model-manager:
+    host: 192.168.201.29
+    port: 9899
+    protocol: http
+  mf-model-api:
+    host: 192.168.201.29
+    port: 9898
+    protocol: http

@@ -1,18 +1,8 @@
-# KWeaver
+# 本体引擎 (Ontology Engine)
 
 [中文](README.md) | [English](README.en.md)
 
-KWeaver 开源的辅助决策型 AI 应用平台，提供围绕业务场景开发和使用。
-
-而 AI 应用是为特定业务场景提供的智能决策程序，依托 ADP 架构，整合业务域中的Data Agent 、业务知识网络等核心能力，通过自定义Chat和Board的可视化方式，实现从询问、分析、建议、行动到反馈的端到端业务闭环。
-
-当前阶段的开源版本为 **本体引擎**，文档请 [点击这里](ontology/)
-
-后续更多组件开源，敬请期待!
-
----
-
-## 本体引擎
+## 项目简介
 
 本体引擎是一个基于Go语言开发的分布式业务知识网络管理系统，提供本体建模、数据管理和智能查询功能。该系统采用微服务架构，分为本体管理模块和本体查询模块，支持大规模知识网络的构建、存储和查询。
 
@@ -25,9 +15,9 @@ KWeaver 开源的辅助决策型 AI 应用平台，提供围绕业务场景开�
 - **分布式架构**: 基于微服务设计，支持水平扩展
 - **OpenSearch集成**: 集成OpenSearch提供高效的搜索能力
 
-### 系统架构
+## 系统架构
 
-#### 模块组成
+### 模块组成
 
 ```text
 kweaver/
@@ -36,7 +26,7 @@ kweaver/
     └── ontology-query/       # 本体查询模块
 ```
 
-#### 本体管理模块
+### 本体管理模块 (ontology-manager)
 
 负责本体模型的创建、编辑和管理，主要功能包括：
 
@@ -46,7 +36,7 @@ kweaver/
 - **行动类管理**: 定义可执行的操作和行动
 - **任务调度**: 后台任务和作业管理
 
-#### 本体查询模块
+### 本体查询模块 (ontology-query)
 
 提供高效的知识图谱查询服务，主要功能包括：
 
@@ -55,9 +45,9 @@ kweaver/
 - **语义搜索**: 基于语义的智能搜索
 - **数据检索**: 多维度数据过滤和检索
 
-### 快速开始
+## 快速开始
 
-#### 环境要求
+### 环境要求
 
 - Go 1.23.0 或更高版本
 - MariaDB 11.4+ 或 DM8（用于数据存储）
@@ -65,23 +55,23 @@ kweaver/
 - Docker（可选，用于容器化部署）
 - Kubernetes（可选，用于集群部署）
 
-#### 本地开发
+### 本地开发
 
-1. **克隆代码库**
+#### 1. 克隆代码库
 
 ```bash
 git clone https://github.com/AISHU-Technology/kweaver.git
 cd kweaver/ontology
 ```
 
-2. **配置环境**
+#### 2. 配置环境
 
 每个模块都有独立的配置文件：
 
 - `ontology-manager/server/config/ontology-manager-config.yaml`
 - `ontology-query/server/config/ontology-query-config.yaml`
 
-3. **运行本体管理模块**
+#### 3. 运行本体管理模块
 
 ```bash
 cd ontology-manager/server
@@ -91,7 +81,7 @@ go run main.go
 
 服务将在 `http://localhost:13014` 启动
 
-4. **运行本体查询模块**
+#### 4. 运行本体查询模块
 
 ```bash
 cd ../ontology-query/server
@@ -101,9 +91,9 @@ go run main.go
 
 服务将在 `http://localhost:13018` 启动
 
-#### Docker 部署
+### Docker 部署
 
-##### 构建镜像
+#### 构建镜像
 
 ```bash
 # 构建本体管理模块
@@ -115,7 +105,7 @@ cd ../ontology-query
 docker build -t ontology-query:latest -f docker/Dockerfile .
 ```
 
-##### 运行容器
+#### 运行容器
 
 ```bash
 # 运行本体管理模块
@@ -125,7 +115,7 @@ docker run -d -p 13014:13014 --name ontology-manager ontology-manager:latest
 docker run -d -p 13018:13018 --name ontology-query ontology-query:latest
 ```
 
-#### Kubernetes 部署
+### Kubernetes 部署
 
 项目提供了Helm charts用于Kubernetes部署：
 
@@ -137,23 +127,23 @@ helm3 install ontology-manager ontology-manager/helm/ontology-manager/
 helm3 install ontology-query ontology-query/helm/ontology-query/
 ```
 
-### API 文档
+## API 文档
 
 系统提供完整的RESTful API文档：
 
-#### 本体管理API
+### 本体管理API
 
-- [知识网络API](ontology/ontology-manager/api_doc/ontology-manager-network.html)
-- [对象类API](ontology/ontology-manager/api_doc/ontology-manager-object-type.html)
-- [关系类API](ontology/ontology-manager/api_doc/ontology-manager-relation-type.json)
-- [动作类API](ontology/ontology-manager/api_doc/ontology-manager-action-type.html)
-- [任务管理API](ontology/ontology-manager/api_doc/ontology-manager-job-api.html)
+- [知识网络API](ontology-manager/api_doc/ontology-manager-network.html)
+- [对象类API](ontology-manager/api_doc/ontology-manager-object-type.html)
+- [关系类API](ontology-manager/api_doc/ontology-manager-relation-type.json)
+- [动作类API](ontology-manager/api_doc/ontology-manager-action-type.html)
+- [任务管理API](ontology-manager/api_doc/ontology-manager-job-api.html)
 
-#### 本体查询API
+### 本体查询API
 
-- [查询服务API](ontology/ontology-query/api/ontology-query.html)
+- [查询服务API](ontology-query/api/ontology-query.html)
 
-### 数据库支持
+## 数据库支持
 
 系统支持多种数据库：
 
@@ -163,18 +153,18 @@ helm3 install ontology-query ontology-query/helm/ontology-query/
 
 数据库升级脚本位于：
 
-- `ontology/ontology-manager/migrations/`
-- `ontology/ontology-query/migrations/`
+- `ontology-manager/migrations/`
+- `ontology-query/migrations/`
 
-### 监控与日志
+## 监控与日志
 
 - **日志系统**: 集成结构化日志，支持多级别日志记录
 - **链路追踪**: 基于OpenTelemetry的分布式链路追踪
 - **健康检查**: 提供健康检查端点
 
-### 开发指南
+## 开发指南
 
-#### 代码结构
+### 代码结构
 
 ```text
 server/
@@ -191,7 +181,7 @@ server/
 └── worker/          # 后台任务
 ```
 
-#### 开发规范
+### 开发规范
 
 1. **模块化设计**: 遵循清洁架构原则
 2. **接口隔离**: 明确定义接口和实现
@@ -207,15 +197,15 @@ server/
 4. 推送到分支 (`git push origin feature/amazing-feature`)
 5. 创建 Pull Request
 
-### 版本历史
+## 版本历史
 
 - **v6.1.0**: 当前版本，基于Go 1.23
 
-### 许可证
+## 许可证
 
-本项目采用 Apache License 2.0 许可证。详情请参阅 [LICENSE](LICENSE.txt) 文件。
+本项目采用 Apache License 2.0 许可证。详情请参阅 [LICENSE](../../LICENSE.txt) 文件。
 
-### 支持与联系
+## 支持与联系
 
 - **技术支持**: AISHU ADP研发团队
 - **文档更新**: 持续更新中

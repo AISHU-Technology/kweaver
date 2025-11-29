@@ -1,0 +1,140 @@
+# Common
+[OntologyManager.CountExceeded.TagTotal]
+Description = "Number of Tags Exceed 5"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.DataTagName]
+Description = "Invalid Data Tag Name"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.Direction]
+Description = "Invalid Sort Direction"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.Condition]
+Description = "Invalid Condition"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.ID]
+Description = "Invalid ID"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.ImportMode]
+Description = "Invalid Import Mode"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.Mode]
+Description = "Invalid Mode"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.Limit]
+Description = "Invalid Pagination Limit"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.ModuleType]
+Description = "Invalid Module Name"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.Offset]
+Description = "Invalid Offset"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.OverrideMethod]
+Description = "Invalid Override Method"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.RequestBody]
+Description = "Request Body Is Empty"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.Sort]
+Description = "Invalid Sort Type"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidParameter.ConditionValue]
+Description = "Invalid Condition Value"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.LengthExceeded.Comment]
+Description = "The Length Of Comment Exceeds The Limit"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.NullParameter.ConditionName]
+Description = "Condition Name Is Empty"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.NullParameter.ConditionOperation]
+Description = "Condition Operation Is Empty"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.UnsupportConditionOperation]
+Description = "Unsupported Condition Operation"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.CountExceeded.Conditions]
+Description = "The Number Of Conditions Exceeds The Limit"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.InvalidRequestHeader.ContentType]
+Description = "Invalid ContentType"
+Solution = "Please check the Http Header."
+ErrorLink = "None"
+
+[OntologyManager.InternalError.CheckPermissionFailed]
+Description = "An internal server error occurred while check permission"
+Solution = "Please try this operation again, if the error occurs again, submit the work order or contact technical support engineers."
+ErrorLink = "None"
+
+[OntologyManager.InternalError.CreateResourcesFailed]
+Description = "An internal server error occurred while create resources"
+Solution = "Please try this operation again, if the error occurs again, submit the work order or contact technical support engineers."
+ErrorLink = "None"
+
+[OntologyManager.InternalError.DeleteResourcesFailed]
+Description = "An internal server error occurred while delete resources"
+Solution = "Please try this operation again, if the error occurs again, submit the work order or contact technical support engineers."
+ErrorLink = "None"
+
+[OntologyManager.InternalError.FilterResourcesFailed]
+Description = "An internal server error occurred while filter resources"
+Solution = "Please try this operation again, if the error occurs again, submit the work order or contact technical support engineers."
+ErrorLink = "None"
+
+[OntologyManager.InternalError.UpdateResourceFailed]
+Description = "An internal server error occurred while update resource name"
+Solution = "Please try this operation again, if the error occurs again, submit the work order or contact technical support engineers."
+ErrorLink = "None"
+
+[OntologyManager.InternalError.MQPublishMsgFailed]
+Description = "An internal server error occurred while mq publish message"
+Solution = "Please try this operation again, if the error occurs again, submit the work order or contact technical support engineers."
+ErrorLink = "None"
+
+[OntologyManager.InternalError.MarshalDataFailed]
+Description = "An internal server error occurred while marshaling data"
+Solution = "Please try this operation again, if the error occurs again, submit the work order or contact technical support engineers."
+ErrorLink = "None"
+
+[OntologyManager.InternalError.UnMarshalDataFailed]
+Description = "An internal server error occurred while unMarshaling data"
+Solution = "Please try this operation again, if the error occurs again, submit the work order or contact technical support engineers."
+ErrorLink = "None"

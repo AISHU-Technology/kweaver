@@ -1,0 +1,70 @@
+# ActionType
+[OntologyManager.ActionType.Duplicated.IDInFile]
+Description = "Same Action Type ID Existed"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.Duplicated.Name]
+Description = "Same Action Type Name Existed"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.InvalidParameter]
+Description = "Invalid Request Paramter"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.InvalidParameter.ConceptCondition]
+Description = "Invalid Request Paramter"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.ActionTypeIDExisted]
+Description = "Same ID Existed"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.ActionTypeNameExisted]
+Description = "Same Action Type Name Existed"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.LengthExceeded.Name]
+Description = "The Length of Action Type Name Out of Limit"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.NullParameter.Name]
+Description = "Action Type Name Is Empty"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.ActionTypeNotFound]
+Description = "The Action Type Does Not Exist"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.InternalError]
+Description = "Internal Error"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.InternalError.BeginTransactionFailed]
+Description = "Begin Transaction Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.InternalError.CheckActionTypeIfExistFailed]
+Description = "Check Action Type Exist Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.InternalError.GetActionTypesByIDsFailed]
+Description = "Get Action Type By IDS Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ActionType.InternalError.InsertOpenSearchDataFailed]
+Description = "Insert Action Type Data Into OpenSearch Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"

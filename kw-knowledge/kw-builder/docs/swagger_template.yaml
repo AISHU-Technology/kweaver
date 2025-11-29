@@ -1,7 +1,0 @@
-info:
-  description: 欢迎使用AnyDATA Framework 2.0 OpenAPI
-  title: AnyDATA OpenAPI
-  version: 0.1.0
-tags:
-- description: 知识网络生成服务 Knowledge Network Builder（Builder）：利用人工智能技术，将不同形态的数据转化为知识网络，实现数据知识化。包括知识图谱、语言模型和规则库。
-  name: Builder
