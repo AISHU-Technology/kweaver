@@ -1,0 +1,61 @@
+# Job
+[OntologyManager.Job.InvalidParameter]
+Description = "任务参数无效"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.InvalidParameter.JobType]
+Description = "任务类型参数无效"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.InvalidParameter.JobState]
+Description = "任务状态参数无效"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.InvalidParameter.JobConceptConfig]
+Description = "任务概念配置参数无效"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.InvalidParameter.TaskState]
+Description = "子任务状态参数无效"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.InvalidParameter.ConceptType]
+Description = "概念类型参数无效"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.NullParameter.Name]
+Description = "任务名称为空"
+Solution = "请提供非空的任务名称。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.LengthExceeded.Name]
+Description = "任务名称长度超限"
+Solution = "请缩短任务名称长度。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.JobNotFound]
+Description = "任务不存在"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.InternalError]
+Description = "内部错误"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.InternalError.BeginTransactionFailed]
+Description = "数据库事务开启失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.Job.InternalError.CommitTransactionFailed]
+Description = "数据库事务提交失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+

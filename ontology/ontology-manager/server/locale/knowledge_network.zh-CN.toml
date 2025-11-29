@@ -1,0 +1,160 @@
+# 业务知识网络
+[OntologyManager.KnowledgeNetwork.Duplicated.IDInFile]
+Description = "存在重复的业务知识网络ID"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.Duplicated.Name]
+Description = "存在重复的业务知识网络名称"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InvalidParameter]
+Description = "请求参数不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InvalidParameter.BusinessDomain]
+Description = "业务域不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InvalidParameter.ConceptCondition]
+Description = "概念过滤条件不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InvalidParameter.Direction]
+Description = "路径方向不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InvalidParameter.IncludeTypeInfo]
+Description = "是否包含概念信息不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InvalidParameter.PathLength]
+Description = "路径长度不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.KNIDExisted]
+Description = "业务知识网络ID已经存在"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.KNNameExisted]
+Description = "业务知识网络名称已经存在"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.LengthExceeded.Name]
+Description = "业务知识网络名称长度超出限制"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.NullParameter.Direction]
+Description = "方向为空"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.NullParameter.Name]
+Description = "业务知识网络名称为空"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.NullParameter.SourceObjectTypeId]
+Description = "起点对象类为空"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.NotFound]
+Description = "业务知识网络不存在"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError]
+Description = "内部错误"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.BeginTransactionFailed]
+Description = "开启事务异常"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.BindBusinessDomainFailed]
+Description = "绑定业务知识网络业务域失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.UnbindBusinessDomainFailed]
+Description = "解绑业务知识网络业务域失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.CheckKNIfExistFailed]
+Description = "检查业务知识网络名称是否存在失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.GetKNByIDFailed]
+Description = "按ID获取业务知识网络失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.UpdateKNFailed]
+Description = "更新业务知识网络失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.CreateKNFailed]
+Description = "创建业务知识网络失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.CreateResourcesFailed]
+Description = "创建业务知识网络资源失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.GetVectorFailed]
+Description = "获取业务知识网络向量失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.InsertOpenSearchDataFailed]
+Description = "业务知识网络概念索引插入失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.CreateObjectTypesFailed]
+Description = "创建对象类失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.CreateRelationTypesFailed]
+Description = "创建关系类失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.CreateActionTypesFailed]
+Description = "创建行动类失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.DeleteObjectTypesFailed]
+Description = "删除对象类失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.DeleteRelationTypesFailed]
+Description = "删除关系类失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.KnowledgeNetwork.InternalError.DeleteActionTypesFailed]
+Description = "删除行动类失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"

@@ -1,9 +1,0 @@
-{
-  "modelFactory": {
-    "creation": "创作",
-    "management": "管理",
-    "model": "模型",
-    "customModel": "自定义模型",
-    "llmTraining": "模型训练"
-  }
-}

@@ -1,0 +1,91 @@
+[
+  {
+    "db_name": "dip",
+    "table_name": "t_knowledge_network",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_creator_type",
+    "object_property": "VARCHAR(20 char) NOT NULL DEFAULT ''",
+    "object_comment": "创建者类型"
+  },{
+    "db_name": "dip",
+    "table_name": "t_knowledge_network",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_updater_type",
+    "object_property": "VARCHAR(20 char) NOT NULL DEFAULT ''",
+    "object_comment": "更新者类型"
+  },{
+    "db_name": "dip",
+    "table_name": "t_knowledge_network",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_business_domain",
+    "object_property": "VARCHAR(40 char) NOT NULL DEFAULT ''",
+    "object_comment": "业务域"
+  },{
+    "db_name": "dip",
+    "table_name": "t_object_type",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_creator_type",
+    "object_property": "VARCHAR(20 char) NOT NULL DEFAULT ''",
+    "object_comment": "创建者类型"
+  },{
+    "db_name": "dip",
+    "table_name": "t_object_type",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_updater_type",
+    "object_property": "VARCHAR(20 char) NOT NULL DEFAULT ''",
+    "object_comment": "更新者类型"
+  },{
+    "db_name": "dip",
+    "table_name": "t_relation_type",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_creator_type",
+    "object_property": "VARCHAR(20 char) NOT NULL DEFAULT ''",
+    "object_comment": "创建者类型"
+  },{
+    "db_name": "dip",
+    "table_name": "t_relation_type",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_updater_type",
+    "object_property": "VARCHAR(20 char) NOT NULL DEFAULT ''",
+    "object_comment": "更新者类型"
+  },{
+    "db_name": "dip",
+    "table_name": "t_action_type",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_creator_type",
+    "object_property": "VARCHAR(20 char) NOT NULL DEFAULT ''",
+    "object_comment": "创建者类型"
+  },{
+    "db_name": "dip",
+    "table_name": "t_action_type",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_updater_type",
+    "object_property": "VARCHAR(20 char) NOT NULL DEFAULT ''",
+    "object_comment": "更新者类型"
+  },{
+    "db_name": "dip",
+    "table_name": "t_object_type",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_index",
+    "object_property": "VARCHAR(255 char) NOT NULL DEFAULT ''",
+    "object_comment": "索引名称"
+  },{
+    "db_name": "dip",
+    "table_name": "t_object_type",
+    "object_type": "COLUMN",
+    "operation_type": "ADD",
+    "object_name": "f_index_available",
+    "object_property": "TINYINT NOT NULL DEFAULT 0",
+    "object_comment": "索引是否可用"
+  }
+]

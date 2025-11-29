@@ -1,0 +1,1729 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "ontology-manager-action-type",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/ontology-manager/v1/knowledge-networks/{kn_id}/action-types": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "kn_id",
+                        "description": "业务知识网络ID",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "name_pattern",
+                        "description": "根据络名称模糊查询，默认为空",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "sort",
+                        "description": "排序类型，默认是update_time",
+                        "schema": {
+                            "enum": [
+                                "update_time",
+                                "name"
+                            ],
+                            "type": "string"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "direction",
+                        "description": "排序结果方向，可选asc、desc。\n默认desc",
+                        "schema": {
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "type": "string"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "offset",
+                        "description": "开始响应的项目的偏移量\t\n范围需大于等于0，默认值0",
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "limit",
+                        "description": "每页最多可返回的项目数；\n分页可选1-1000，-1表示不分页；\n默认值10",
+                        "schema": {
+                            "format": "int64",
+                            "type": "integer"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "tag",
+                        "description": "根据标签精准查询，默认为空.",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "group_id",
+                        "description": "按概念分组过滤",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query"
+                    },
+                    {
+                        "name": "action_type",
+                        "description": "行动类型",
+                        "schema": {
+                            "enum": [
+                                "add",
+                                "modify",
+                                "delete"
+                            ],
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "object_type_id",
+                        "description": "绑定对象类",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListActionTypes"
+                                }
+                            }
+                        },
+                        "description": "ok"
+                    }
+                },
+                "summary": "获取行动类列表"
+            },
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/override"
+                            },
+                            "examples": {
+                                "创建行动类": {
+                                    "value": [
+                                        {
+                                            "id": "restart_pod",
+                                            "name": "重启pod",
+                                            "tags": [
+                                                "拓扑架构"
+                                            ],
+                                            "comment": "当pod状态是unknown或者failed时,重启pod",
+                                            "icon": "",
+                                            "color": "",
+                                            "branch": "main",
+                                            "action_type": "modify",
+                                            "object_type_id": "pod",
+                                            "condition": {
+                                                "object_type_id": "pod",
+                                                "field": "pod_status",
+                                                "operation": "in",
+                                                "value_from": "const",
+                                                "value": [
+                                                    "Unknown",
+                                                    "Failed"
+                                                ]
+                                            },
+                                            "affect": {
+                                                "object_type_id": "pod",
+                                                "comment": "重启pod"
+                                            },
+                                            "action_source": {
+                                                "type": "tool",
+                                                "box_id": "tool_123",
+                                                "tool_id": "box_123"
+                                            },
+                                            "parameters": [
+                                                {
+                                                    "name": "pod",
+                                                    "value_from": "property",
+                                                    "value": "pod_name"
+                                                },
+                                                {
+                                                    "name": "namespace",
+                                                    "value_from": "property",
+                                                    "value": "pod_namespace"
+                                                },
+                                                {
+                                                    "name": "cmd_type",
+                                                    "value_from": "input",
+                                                    "value": ""
+                                                }
+                                            ],
+                                            "schedule": {
+                                                "type": "",
+                                                "expression": ""
+                                            },
+                                            "module_type": "action_type"
+                                        }
+                                    ]
+                                },
+                                "检索行动类-第一次请求": {
+                                    "value": {
+                                        "need_total": true,
+                                        "limit": 1,
+                                        "condition": {
+                                            "operation": "and",
+                                            "sub_conditions": [
+                                                {
+                                                    "field": "comment",
+                                                    "operation": "match",
+                                                    "value_from": "const",
+                                                    "value": "pod"
+                                                },
+                                                {
+                                                    "field": "*",
+                                                    "operation": "knn",
+                                                    "value_from": "const",
+                                                    "value": [
+                                                        "pod",
+                                                        10
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                },
+                                "检索行动类-非第一次请求": {
+                                    "value": {
+                                        "search_after": [
+                                            5.0170403,
+                                            "restart_pod"
+                                        ],
+                                        "need_total": true,
+                                        "limit": 1,
+                                        "condition": {
+                                            "operation": "and",
+                                            "sub_conditions": [
+                                                {
+                                                    "field": "comment",
+                                                    "operation": "match",
+                                                    "value_from": "const",
+                                                    "value": "pod"
+                                                },
+                                                {
+                                                    "field": "*",
+                                                    "operation": "knn",
+                                                    "value_from": "const",
+                                                    "value": [
+                                                        "pod",
+                                                        10
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "name": "kn_id",
+                        "description": "业务知识网络ID",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "x-http-method-override",
+                        "description": "重载请求头",
+                        "schema": {
+                            "enum": [
+                                "POST",
+                                "GET"
+                            ],
+                            "type": "string"
+                        },
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ID"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "ok"
+                    },
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ActionTypeSearchResponse"
+                                },
+                                "examples": {
+                                    "检索行动类-第一次请求": {
+                                        "value": {
+                                            "entries": [
+                                                {
+                                                    "id": "restart_pod",
+                                                    "name": "重启pod",
+                                                    "tags": [
+                                                        "拓扑架构"
+                                                    ],
+                                                    "comment": "当pod状态是unknown或者failed时,重启pod",
+                                                    "icon": "",
+                                                    "color": "",
+                                                    "branch": "main",
+                                                    "detail": "",
+                                                    "creator": "a0f02238-6cec-11f0-82bb-fa1c4529a151",
+                                                    "create_time": 1757657606651,
+                                                    "updater": "a0f02238-6cec-11f0-82bb-fa1c4529a151",
+                                                    "update_time": 1758098535626,
+                                                    "kn_id": "kn_system_incident_event_network",
+                                                    "action_type": "modify",
+                                                    "object_type_id": "pod",
+                                                    "object_type": {
+                                                        "id": "",
+                                                        "name": "",
+                                                        "icon": "",
+                                                        "color": ""
+                                                    },
+                                                    "condition": {
+                                                        "object_type_id": "pod",
+                                                        "field": "pod_status",
+                                                        "operation": "in",
+                                                        "value_from": "const",
+                                                        "value": [
+                                                            "Unknown",
+                                                            "Failed"
+                                                        ]
+                                                    },
+                                                    "affect": {
+                                                        "object_type_id": "pod",
+                                                        "object_type": {
+                                                            "id": "",
+                                                            "name": "",
+                                                            "icon": "",
+                                                            "color": ""
+                                                        },
+                                                        "comment": "重启pod"
+                                                    },
+                                                    "action_source": {
+                                                        "type": "tool",
+                                                        "box_id": "tool_123",
+                                                        "tool_id": "box_123"
+                                                    },
+                                                    "parameters": [
+                                                        {
+                                                            "name": "pod",
+                                                            "value_from": "property",
+                                                            "value": "pod_name"
+                                                        },
+                                                        {
+                                                            "name": "namespace",
+                                                            "value_from": "property",
+                                                            "value": "pod_namespace"
+                                                        },
+                                                        {
+                                                            "name": "cmd_type",
+                                                            "value_from": "input",
+                                                            "value": ""
+                                                        }
+                                                    ],
+                                                    "schedule": {
+                                                        "type": "",
+                                                        "expression": ""
+                                                    },
+                                                    "IfNameModify": false,
+                                                    "module_type": "action_type"
+                                                }
+                                            ],
+                                            "total_count": 2,
+                                            "search_after": [
+                                                5.0170403,
+                                                "restart_pod"
+                                            ]
+                                        }
+                                    },
+                                    "检索行动类-非第一次请求": {
+                                        "value": {
+                                            "entries": [
+                                                {
+                                                    "id": "restart_pod_test",
+                                                    "name": "重启pod_test",
+                                                    "tags": [
+                                                        "拓扑架构"
+                                                    ],
+                                                    "comment": "当pod状态是unknown或者failed时,重启pod",
+                                                    "icon": "",
+                                                    "color": "",
+                                                    "branch": "main",
+                                                    "detail": "",
+                                                    "creator": "a0f02238-6cec-11f0-82bb-fa1c4529a151",
+                                                    "create_time": 1758346280120,
+                                                    "updater": "a0f02238-6cec-11f0-82bb-fa1c4529a151",
+                                                    "update_time": 1758346280120,
+                                                    "kn_id": "kn_system_incident_event_network",
+                                                    "action_type": "modify",
+                                                    "object_type_id": "pod",
+                                                    "object_type": {
+                                                        "id": "",
+                                                        "name": "",
+                                                        "icon": "",
+                                                        "color": ""
+                                                    },
+                                                    "condition": {
+                                                        "object_type_id": "pod",
+                                                        "field": "pod_status",
+                                                        "operation": "in",
+                                                        "value_from": "const",
+                                                        "value": [
+                                                            "Unknown",
+                                                            "Failed"
+                                                        ]
+                                                    },
+                                                    "affect": {
+                                                        "object_type_id": "pod",
+                                                        "object_type": {
+                                                            "id": "",
+                                                            "name": "",
+                                                            "icon": "",
+                                                            "color": ""
+                                                        },
+                                                        "comment": "重启pod"
+                                                    },
+                                                    "action_source": {
+                                                        "type": "tool",
+                                                        "box_id": "tool_123",
+                                                        "tool_id": "box_123"
+                                                    },
+                                                    "parameters": [
+                                                        {
+                                                            "name": "pod",
+                                                            "value_from": "property",
+                                                            "value": "pod_name"
+                                                        },
+                                                        {
+                                                            "name": "namespace",
+                                                            "value_from": "property",
+                                                            "value": "pod_namespace"
+                                                        },
+                                                        {
+                                                            "name": "cmd_type",
+                                                            "value_from": "input",
+                                                            "value": ""
+                                                        }
+                                                    ],
+                                                    "schedule": {
+                                                        "type": "",
+                                                        "expression": ""
+                                                    },
+                                                    "IfNameModify": false,
+                                                    "module_type": "action_type"
+                                                }
+                                            ],
+                                            "search_after": [
+                                                5.011528,
+                                                "restart_pod_test"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "重载GET, 检索行动类"
+                    }
+                },
+                "summary": "创建或检索行动类"
+            },
+            "parameters": [
+                {
+                    "name": "kn_id",
+                    "description": "业务知识网络ID",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        },
+        "/api/ontology-manager/v1/knowledge-networks/{kn_id}/action-types/{at_id}": {
+            "put": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateActionType"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "parameters": [
+                    {
+                        "name": "kn_id",
+                        "description": "业务知识网络ID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "at_id",
+                        "description": "行动类ID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "summary": "修改行动类"
+            },
+            "parameters": [
+                {
+                    "name": "kn_id",
+                    "description": "业务知识网络ID",
+                    "in": "path",
+                    "required": true
+                },
+                {
+                    "name": "at_id",
+                    "description": "行动类ID",
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        },
+        "/api/ontology-manager/v1/knowledge-networks/{kn_id}/action-types/{at_ids}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "include_detail",
+                        "description": "是否包含说明书信息，默认false，不包含。",
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ActionTypeDetail"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "ok"
+                    }
+                },
+                "summary": "获取行动类详情"
+            },
+            "delete": {
+                "parameters": [
+                    {
+                        "name": "kn_id",
+                        "description": "业务知识网络ID",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "name": "at_ids",
+                        "description": "行动类ID",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "删除成功"
+                    }
+                },
+                "summary": "删除行动类"
+            },
+            "parameters": [
+                {
+                    "name": "kn_id",
+                    "description": "业务知识网络ID",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "in": "path",
+                    "required": true
+                },
+                {
+                    "name": "at_ids",
+                    "description": "行动类ID",
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        }
+    },
+    "components": {
+        "schemas": {
+            "BasicInfo": {
+                "description": "资源的基本信息，包含id和名称",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "资源ID",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "资源名称",
+                        "type": "string"
+                    }
+                }
+            },
+            "ConceptCondition": {
+                "description": "概念查询数据条件。可用于过滤的字段有类名、属性名和描述",
+                "required": [
+                    "operation"
+                ],
+                "type": "object",
+                "properties": {
+                    "field": {
+                        "description": "字段名称",
+                        "enum": [
+                            "type_id",
+                            "type_name",
+                            "property_name",
+                            "property_display_name",
+                            "comment"
+                        ],
+                        "type": "string"
+                    },
+                    "operation": {
+                        "description": "操作符。\n\nknn: 未对原文进行向量化的向量过滤，接收的值是数组，第一个值，过滤内容，第二个值为 int,是邻居搜索时返回的邻居个数。\n\nknn_vector: 对原文进行向量化后的向量过滤，接收的值是数组，第一个值，向量，第二个值为 int,是邻居搜索时返回的邻居个数。",
+                        "enum": [
+                            "and",
+                            "or",
+                            "==",
+                            "!=",
+                            "in",
+                            "not_in",
+                            "like",
+                            "not_like",
+                            "regex",
+                            "match",
+                            "match_phrase",
+                            "knn",
+                            "knn_vector"
+                        ],
+                        "type": "string"
+                    },
+                    "sub_conditions": {
+                        "description": "子过滤条件",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ConceptCondition"
+                        }
+                    },
+                    "value": {
+                        "description": "字段值"
+                    },
+                    "value_from": {
+                        "description": "字段值来源，当前仅支持 \"const\"",
+                        "enum": [
+                            "const"
+                        ],
+                        "type": "string"
+                    }
+                }
+            },
+            "ConceptTypeQueryBody": {
+                "description": "对象类、关系类、行动类的查询请求体",
+                "required": [
+                    "condition"
+                ],
+                "type": "object",
+                "properties": {
+                    "concept_groups": {
+                        "description": "概念分组ID数组，可选",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "concept_type": {
+                        "description": "概念类型，可选。查询的是对象类、关系类还是行动类，为空时查全部",
+                        "enum": [
+                            "object_type",
+                            "relation_type",
+                            "action_type"
+                        ],
+                        "type": "string"
+                    },
+                    "condition": {
+                        "$ref": "#/components/schemas/ConceptCondition",
+                        "description": "过滤条件"
+                    }
+                }
+            },
+            "ConceptTypeResponse": {
+                "description": "对象类、关系类、行动类的查询返回结构",
+                "required": [
+                    "concept_type",
+                    "id",
+                    "name",
+                    "tags",
+                    "groups"
+                ],
+                "type": "object",
+                "properties": {
+                    "concept_type": {
+                        "description": "概念类型",
+                        "enum": [
+                            "object_type",
+                            "relation_type",
+                            "action_type"
+                        ],
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "概念id",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "概念名称",
+                        "type": "string"
+                    },
+                    "tags": {
+                        "description": "标签",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "groups": {
+                        "description": "所属概念分组ID",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "Object": {
+                "description": "json，字段不定",
+                "type": "object"
+            },
+            "ActionCondition": {
+                "description": "行动条件",
+                "type": "object",
+                "properties": {
+                    "object_type_id": {
+                        "description": "对象类ID。当时多个对象类的过滤时，需要把对象类ID带上，否则只要属性名属于对象类就会进行过滤。",
+                        "type": "string"
+                    },
+                    "field": {
+                        "description": "字段名称，也即对象类的属性名称",
+                        "type": "string"
+                    },
+                    "operation": {
+                        "description": "操作符",
+                        "enum": [
+                            "and",
+                            "or",
+                            "==",
+                            "!=",
+                            ">",
+                            ">=",
+                            "<",
+                            "<=",
+                            "in",
+                            "not_in",
+                            "range",
+                            "out_range",
+                            "exist",
+                            "not_exist"
+                        ],
+                        "type": "string"
+                    },
+                    "sub_conditions": {
+                        "description": "子过滤条件",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ActionCondition"
+                        }
+                    },
+                    "value": {
+                        "description": "字段值"
+                    },
+                    "value_from": {
+                        "description": "字段值来源，当前仅支持 \"const\"",
+                        "enum": [
+                            "const"
+                        ],
+                        "type": "string"
+                    }
+                }
+            },
+            "Affect": {
+                "description": "行动影响",
+                "required": [
+                ],
+                "type": "object",
+                "properties": {
+                    "comment": {
+                        "description": "影响描述",
+                        "type": "string"
+                    },
+                    "object_type_id": {
+                        "description": "影响的对象类ID",
+                        "type": "string"
+                    }
+                }
+            },
+            "Schedule": {
+                "description": "执行频率配置项",
+                "required": [
+                    "time_type",
+                    "frequency",
+                    "expression",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "description": "执行类型。枚举，支持配置固定频率(FIX_RATE)和配置crontab表达式（CRON）",
+                        "enum": [
+                            "FIX_RATE",
+                            "CRON"
+                        ],
+                        "type": "string"
+                    },
+                    "expression": {
+                        "description": "执行表达式。\n\n1.固定频率指以固定周期执行持久化，frequency=< time_durations >，用一个数字，后面跟时间单位来定义。时间单位可以是如下之一：m - 分钟； h - 小时； d - 天",
+                        "type": "string"
+                    }
+                }
+            },
+            "ID": {
+                "description": "id",
+                "required": [
+                    "id"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "id",
+                        "type": "string"
+                    }
+                }
+            },
+            "Branch": {
+                "description": "分支信息",
+                "required": [
+                    "base_version",
+                    "comment",
+                    "id",
+                    "kn_id",
+                    "name",
+                    "tags"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "分支ID",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "分支名称",
+                        "type": "string"
+                    },
+                    "tags": {
+                        "description": "标签",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "comment": {
+                        "description": "备注",
+                        "type": "string"
+                    },
+                    "base_version": {
+                        "description": "来源版本",
+                        "type": "string"
+                    },
+                    "kn_id": {
+                        "description": "业务知识网络ID",
+                        "type": "string"
+                    }
+                }
+            },
+            "ListActionTypes": {
+                "description": "行动类列表",
+                "required": [
+                    "entries",
+                    "total_count"
+                ],
+                "type": "object",
+                "properties": {
+                    "entries": {
+                        "description": "条目列表",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ActionType"
+                        }
+                    },
+                    "total_count": {
+                        "description": "总条数",
+                        "type": "integer"
+                    }
+                }
+            },
+            "ReqActionType": {
+                "description": "行动类创建信息",
+                "required": [
+                    "action_type",
+                    "groups",
+                    "kn_id",
+                    "name",
+                    "object_type",
+                    "concept_type",
+                    "branch",
+                    "base_version",
+                    "object_type_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "行动类ID",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "行动类名称",
+                        "type": "string"
+                    },
+                    "tags": {
+                        "description": "标签。",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "comment": {
+                        "description": "备注",
+                        "type": "string"
+                    },
+                    "icon": {
+                        "description": "图标",
+                        "type": "string"
+                    },
+                    "color": {
+                        "description": "颜色",
+                        "type": "string"
+                    },
+                    "branch": {
+                        "description": "分支ID",
+                        "type": "string"
+                    },
+                    "concept_groups": {
+                        "description": "概念分组id",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "action_type": {
+                        "description": "行动类型",
+                        "enum": [
+                            "add",
+                            "modify",
+                            "delete"
+                        ],
+                        "type": "string"
+                    },
+                    "object_type_id": {
+                        "description": "行动类所绑定的对象类ID",
+                        "type": "string"
+                    },
+                    "condition": {
+                        "$ref": "#/components/schemas/ActionCondition",
+                        "description": "行动条件"
+                    },
+                    "affect": {
+                        "$ref": "#/components/schemas/Affect",
+                        "description": "行动影响"
+                    },
+                    "action_source": {
+                        "$ref": "#/components/schemas/ToolSource",
+                        "description": "绑定的行动的资源"
+                    },
+                    "parameters": {
+                        "description": "行动资源参数",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Parameter"
+                        }
+                    },
+                    "schedule": {
+                        "$ref": "#/components/schemas/Schedule",
+                        "description": "行动监听参数配置"
+                    }
+                }
+            },
+            "UpdateActionType": {
+                "description": "行动类更新信息",
+                "required": [
+                    "action_type",
+                    "groups",
+                    "kn_id",
+                    "name",
+                    "object_type",
+                    "concept_type",
+                    "branch",
+                    "base_version",
+                    "object_type_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "行动类名称",
+                        "type": "string"
+                    },
+                    "tags": {
+                        "description": "标签。 （可以为空）",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "comment": {
+                        "description": "备注（可以为空）",
+                        "type": "string"
+                    },
+                    "icon": {
+                        "description": "图标",
+                        "type": "string"
+                    },
+                    "color": {
+                        "description": "颜色",
+                        "type": "string"
+                    },
+                    "branch": {
+                        "description": "分支ID",
+                        "type": "string"
+                    },
+                    "concept_groups": {
+                        "description": "概念分组id",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "action_type": {
+                        "description": "行动类型",
+                        "enum": [
+                            "add",
+                            "modify",
+                            "delete"
+                        ],
+                        "type": "string"
+                    },
+                    "object_type_id": {
+                        "description": "行动类所绑定的对象类ID",
+                        "type": "string"
+                    },
+                    "condition": {
+                        "$ref": "#/components/schemas/ActionCondition",
+                        "description": "行动条件"
+                    },
+                    "affect": {
+                        "$ref": "#/components/schemas/Affect",
+                        "description": "行动影响"
+                    },
+                    "action_source": {
+                        "$ref": "#/components/schemas/ToolSource",
+                        "description": "绑定的行动的资源"
+                    },
+                    "parameters": {
+                        "description": "行动资源参数",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Parameter"
+                        }
+                    },
+                    "schedule": {
+                        "$ref": "#/components/schemas/Schedule",
+                        "description": "行动监听参数配置"
+                    }
+                }
+            },
+            "ToolSource": {
+                "description": "数据来源",
+                "required": [
+                    "type",
+                    "id",
+                    "tool_id",
+                    "box_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "description": "资源类型",
+                        "enum": [
+                            "tool"
+                        ],
+                        "type": "string"
+                    },
+                    "box_id": {
+                        "description": "工具箱ID",
+                        "type": "string"
+                    },
+                    "tool_id": {
+                        "description": "工具ID",
+                        "type": "string"
+                    }
+                }
+            },
+            "ConceptGroup": {
+                "description": "概念分组",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "概念分组ID",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "概念分组名称",
+                        "type": "string"
+                    }
+                }
+            },
+            "SimpleObjectType": {
+                "description": "",
+                "required": [
+                    "id",
+                    "name",
+                    "icon",
+                    "color"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "对象类id",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "对象类名称",
+                        "type": "string"
+                    },
+                    "icon": {
+                        "description": "对象类图标",
+                        "type": "string"
+                    },
+                    "color": {
+                        "description": "对象类颜色",
+                        "type": "string"
+                    }
+                }
+            },
+            "AffectDetail": {
+                "description": "行动影响",
+                "required": [
+                    "object_type",
+                    "comment",
+                    "object_type_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "comment": {
+                        "description": "影响描述",
+                        "type": "string"
+                    },
+                    "object_type_id": {
+                        "description": "影响的对象类ID",
+                        "type": "string"
+                    },
+                    "object_type": {
+                        "$ref": "#/components/schemas/SimpleObjectType",
+                        "description": "对象类信息"
+                    }
+                }
+            },
+            "override": {
+                "oneOf": [
+                    {
+                        "type": "object"
+                    },
+                    {
+                        "$ref": "#/components/schemas/ReqActionTypes"
+                    },
+                    {
+                        "$ref": "#/components/schemas/override--get"
+                    }
+                ],
+                "discriminator": {
+                    "mapping": {
+                        "x-http-method-override:POST": "#/components/schemas/ReqActionTypes",
+                        "x-http-method-override:GET": "#/components/schemas/override--get"
+                    },
+                    "propertyName\"": "x-http-method-override"
+                },
+                "description": "post 重载批量创建、行动类检索接口",
+                "type": "object"
+            },
+            "ReqActionTypes": {
+                "description": "批量创建请求体",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ReqActionType"
+                }
+            },
+            "override--get": {
+                "oneOf": [
+                    {
+                        "$ref": "#/components/schemas/FirstQueryWithSearchAfter"
+                    },
+                    {
+                        "$ref": "#/components/schemas/PageTurnQueryWithSearchAfter"
+                    }
+                ],
+                "description": "行动类检索请求体",
+                "type": "object"
+            },
+            "FirstQueryWithSearchAfter": {
+                "description": "行动类检索第一次请求",
+                "required": [
+                    "condition",
+                    "limit"
+                ],
+                "type": "object",
+                "properties": {
+                    "condition": {
+                        "$ref": "#/components/schemas/Condition",
+                        "description": "行动类检索条件"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/Sort",
+                        "description": "排序字段，默认使用 _score 排序，排序方向为 desc"
+                    },
+                    "limit": {
+                        "description": "返回的数量，默认值 10。范围 1-10000",
+                        "type": "integer"
+                    },
+                    "need_total": {
+                        "description": "是否需要总数，默认false",
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Sort": {
+                "description": "排序字段。默认按 _score 倒序排序",
+                "required": [
+                    "field",
+                    "direction"
+                ],
+                "type": "object",
+                "properties": {
+                    "field": {
+                        "description": "排序字段",
+                        "type": "string"
+                    },
+                    "direction": {
+                        "description": "排序方向",
+                        "enum": [
+                            "desc",
+                            "asc"
+                        ],
+                        "type": "string"
+                    }
+                }
+            },
+            "Condition": {
+                "description": "概念查询数据条件。可用于过滤的字段有类名、属性名和描述",
+                "required": [
+                    "operation"
+                ],
+                "type": "object",
+                "properties": {
+                    "field": {
+                        "description": "字段名称。当需要做向量检索时，字段为 *, 操作符为 knn",
+                        "enum": [
+                            "id",
+                            "name",
+                            "comment",
+                            "detail",
+                            "*"
+                        ],
+                        "type": "string"
+                    },
+                    "operation": {
+                        "description": "操作符。\n\nknn: 未对原文进行向量化的向量过滤，接收的值是数组，第一个值，过滤内容，第二个值为 int,是邻居搜索时返回的邻居个数。\n\nknn_vector: 对原文进行向量化后的向量过滤，接收的值是数组，第一个值，向量，第二个值为 int,是邻居搜索时返回的邻居个数。",
+                        "enum": [
+                            "and",
+                            "or",
+                            "==",
+                            "!=",
+                            "in",
+                            "not_in",
+                            "like",
+                            "not_like",
+                            "regex",
+                            "match",
+                            "match_phrase",
+                            "knn"
+                        ],
+                        "type": "string"
+                    },
+                    "sub_conditions": {
+                        "description": "子过滤条件",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Condition"
+                        }
+                    },
+                    "value": {
+                        "description": "字段值"
+                    },
+                    "value_from": {
+                        "description": "字段值来源，当前仅支持 \"const\"",
+                        "enum": [
+                            "const"
+                        ],
+                        "type": "string"
+                    }
+                }
+            },
+            "PageTurnQueryWithSearchAfter": {
+                "description": "分页查询的后续分页查询请求",
+                "required": [
+                    "limit",
+                    "search_after",
+                    "condition"
+                ],
+                "type": "object",
+                "properties": {
+                    "condition": {
+                        "$ref": "#/components/schemas/Condition",
+                        "description": "过滤条件"
+                    },
+                    "sort": {
+                        "$ref": "#/components/schemas/Sort",
+                        "description": "排序字段，默认使用 _score 排序，排序方向为 desc"
+                    },
+                    "limit": {
+                        "description": "返回的数量，默认值 10。范围 1-10000",
+                        "type": "integer"
+                    },
+                    "need_total": {
+                        "description": "是否需要总数，默认false",
+                        "type": "boolean"
+                    },
+                    "search_after": {
+                        "description": "上次查询返回的最后一个文档的排序值。",
+                        "type": "array",
+                        "items": {
+
+                        }
+                    }
+                }
+            },
+            "ActionTypeDetail": {
+                "description": "行动类",
+                "required": [
+                    "action_type",
+                    "comment",
+                    "groups",
+                    "id",
+                    "kn_id",
+                    "name",
+                    "tags",
+                    "condition",
+                    "affect",
+                    "action_source",
+                    "parameters",
+                    "schedule",
+                    "module_type",
+                    "base_branch",
+                    "branch",
+                    "color",
+                    "concept_groups",
+                    "icon",
+                    "object_type_id",
+                    "update_time",
+                    "updater",
+                    "create_time",
+                    "creator",
+                    "object_type"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "行动类ID",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "行动类名称",
+                        "type": "string"
+                    },
+                    "tags": {
+                        "description": "标签。 （可以为空）",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "comment": {
+                        "description": "备注（可以为空）",
+                        "type": "string"
+                    },
+                    "icon": {
+                        "description": "图标",
+                        "type": "string"
+                    },
+                    "color": {
+                        "description": "颜色",
+                        "type": "string"
+                    },
+                    "branch": {
+                        "description": "分支ID",
+                        "type": "string"
+                    },
+                    "kn_id": {
+                        "description": "业务知识网络ID",
+                        "type": "string"
+                    },
+                    "concept_groups": {
+                        "description": "概念分组id",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ConceptGroup"
+                        }
+                    },
+                    "action_type": {
+                        "description": "行动类型",
+                        "enum": [
+                            "add",
+                            "modify",
+                            "delete"
+                        ],
+                        "type": "string"
+                    },
+                    "object_type_id": {
+                        "description": "行动类所绑定的对象类ID",
+                        "type": "string"
+                    },
+                    "object_type": {
+                        "$ref": "#/components/schemas/SimpleObjectType",
+                        "description": "行动类所绑定的对象类名称."
+                    },
+                    "condition": {
+                        "$ref": "#/components/schemas/ActionCondition",
+                        "description": "行动条件"
+                    },
+                    "affect": {
+                        "$ref": "#/components/schemas/AffectDetail",
+                        "description": "行动影响"
+                    },
+                    "action_source": {
+                        "$ref": "#/components/schemas/ToolSource",
+                        "description": "绑定的行动的资源"
+                    },
+                    "parameters": {
+                        "description": "行动资源参数",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Parameter"
+                        }
+                    },
+                    "schedule": {
+                        "$ref": "#/components/schemas/Schedule",
+                        "description": "行动监听参数配置"
+                    },
+                    "creator": {
+                        "description": "创建人ID",
+                        "type": "string"
+                    },
+                    "create_time": {
+                        "format": "int64",
+                        "description": "创建时间",
+                        "type": "integer"
+                    },
+                    "updater": {
+                        "description": "最近一次修改人",
+                        "type": "string"
+                    },
+                    "update_time": {
+                        "format": "int64",
+                        "description": "最近一次更新时间",
+                        "type": "integer"
+                    },
+                    "detail": {
+                        "description": "说明书。按需返回，若指定了include_detail=true，则返回，否则不返回",
+                        "type": "string"
+                    },
+                    "module_type": {
+                        "description": "模块类型",
+                        "enum": [
+                            "action_type"
+                        ],
+                        "type": "string"
+                    }
+                }
+            },
+            "ActionType": {
+                "description": "行动类",
+                "required": [
+                    "action_type",
+                    "comment",
+                    "groups",
+                    "id",
+                    "kn_id",
+                    "name",
+                    "tags",
+                    "condition",
+                    "affect",
+                    "action_source",
+                    "parameters",
+                    "schedule",
+                    "module_type",
+                    "base_branch",
+                    "branch",
+                    "color",
+                    "concept_groups",
+                    "icon",
+                    "object_type_id",
+                    "update_time",
+                    "updater",
+                    "create_time",
+                    "creator"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "description": "行动类ID",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "行动类名称",
+                        "type": "string"
+                    },
+                    "tags": {
+                        "description": "标签。 （可以为空）",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "comment": {
+                        "description": "备注（可以为空）",
+                        "type": "string"
+                    },
+                    "icon": {
+                        "description": "图标",
+                        "type": "string"
+                    },
+                    "color": {
+                        "description": "颜色",
+                        "type": "string"
+                    },
+                    "branch": {
+                        "description": "分支ID",
+                        "type": "string"
+                    },
+                    "kn_id": {
+                        "description": "业务知识网络ID",
+                        "type": "string"
+                    },
+                    "concept_groups": {
+                        "description": "概念分组id",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ConceptGroup"
+                        }
+                    },
+                    "action_type": {
+                        "description": "行动类型",
+                        "enum": [
+                            "add",
+                            "modify",
+                            "delete"
+                        ],
+                        "type": "string"
+                    },
+                    "object_type_id": {
+                        "description": "行动类所绑定的对象类ID",
+                        "type": "string"
+                    },
+                    "condition": {
+                        "$ref": "#/components/schemas/ActionCondition",
+                        "description": "行动条件"
+                    },
+                    "affect": {
+                        "$ref": "#/components/schemas/Affect",
+                        "description": "行动影响"
+                    },
+                    "action_source": {
+                        "$ref": "#/components/schemas/ToolSource",
+                        "description": "绑定的行动的资源"
+                    },
+                    "parameters": {
+                        "description": "行动资源参数",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Parameter"
+                        }
+                    },
+                    "schedule": {
+                        "$ref": "#/components/schemas/Schedule",
+                        "description": "行动监听参数配置"
+                    },
+                    "creator": {
+                        "description": "创建人ID",
+                        "type": "string"
+                    },
+                    "create_time": {
+                        "format": "int64",
+                        "description": "创建时间",
+                        "type": "integer"
+                    },
+                    "updater": {
+                        "description": "最近一次修改人",
+                        "type": "string"
+                    },
+                    "update_time": {
+                        "format": "int64",
+                        "description": "最近一次更新时间",
+                        "type": "integer"
+                    },
+                    "detail": {
+                        "description": "说明书。按需返回，若指定了include_detail=true，则返回，否则不返回",
+                        "type": "string"
+                    },
+                    "module_type": {
+                        "description": "模块类型",
+                        "enum": [
+                            "action_type"
+                        ],
+                        "type": "string"
+                    }
+                }
+            },
+            "ActionTypeSearchResponse": {
+                "description": "行动类检索返回结果",
+                "required": [
+                    "groups",
+                    "type",
+                    "entries",
+                    "search_after"
+                ],
+                "type": "object",
+                "properties": {
+                    "entries": {
+                        "description": "对象实例数据",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ActionTypeDetail"
+                        }
+                    },
+                    "total_count": {
+                        "description": "总条数",
+                        "type": "integer"
+                    },
+                    "search_after": {
+                        "description": "表示返回的最后一个文档的排序值，获取这个用于下一次 search_after 分页。",
+                        "type": "array",
+                        "items": {
+
+                        }
+                    }
+                }
+            },
+            "Parameter": {
+                "description": "工具参数",
+                "required": [
+                    "name",
+                    "value_from"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "参数名称",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "参数类型",
+                        "type": "string"
+                    },
+                    "source": {
+                        "description": "参数来源",
+                        "type": "string"
+                    },
+                    "value_from": {
+                        "description": "值来源",
+                        "enum": [
+                            "property",
+                            "input",
+                            "const"
+                        ],
+                        "type": "string"
+                    },
+                    "value": {
+                        "description": "参数值。value_from=property时，填入的是对象类的数据属性名称；value_from=input时，不设置此字段",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

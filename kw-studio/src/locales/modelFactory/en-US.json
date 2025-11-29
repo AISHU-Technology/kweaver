@@ -1,9 +1,0 @@
-{
-  "modelFactory": {
-    "creation": "Creation",
-    "management": "Management",
-    "model": "Model",
-    "customModel": "Custom Model",
-    "llmTraining": "Model training"
-  }
-}

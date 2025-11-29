@@ -1,0 +1,115 @@
+# ObjectType
+[OntologyManager.ObjectType.Duplicated.IDInFile]
+Description = "Same Object Type ID Existed"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.Duplicated.Name]
+Description = "Same Object Type Name Existed"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InvalidParameter]
+Description = "Invalid Request Paramter"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InvalidParameter.ConceptCondition]
+Description = "Invalid Concept Condition Parameter"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InvalidParameter.PropertyName]
+Description = "Invalid Property Name"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InvalidParameter.SmallModel]
+Description = "Invalid Small Model Parameter"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.ObjectTypeIDExisted]
+Description = "Same ID Existed"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.ObjectTypeNameExisted]
+Description = "Same Object Type Name Existed"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.LengthExceeded.Name]
+Description = "The Length of Object Type Name Out of Limit"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.NullParameter.Name]
+Description = "Object Type Name Is Empty"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.NullParameter.PrimaryKeys]
+Description = "Object Type PrimaryKeys Is Empty"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.NullParameter.PropertyName]
+Description = "Object Type Property Name Is Empty"
+Solution = "Please check whether the parameter is correct."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.ObjectTypeNotFound]
+Description = "The Object Type Does Not Exist"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.SmallModelNotFound]
+Description = "The Small Model Does Not Exist"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError]
+Description = "Internal Error"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError.BeginTransactionFailed]
+Description = "Begin Transaction Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError.CheckObjectTypeIfExistFailed]
+Description = "Check Object Type Exist Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError.GetDataViewByIDFailed]
+Description = "Get Data View By ID Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError.GetMetricModelByIDFailed]
+Description = "Get Metric Model By ID Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError.GetObjectTypeByIDFailed]
+Description = "Get Object Type By ID Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError.GetObjectTypesByIDsFailed]
+Description = "Get Object Type By IDs Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError.GetSmallModelByIDFailed]
+Description = "Get Small Model By ID Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"
+
+[OntologyManager.ObjectType.InternalError.InsertOpenSearchDataFailed]
+Description = "Insert Object Type Data Into OpenSearch Failed"
+Solution = "Please try again. If the error occurs again, please submit the work order or contact technical support."
+ErrorLink = "None"

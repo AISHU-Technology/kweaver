@@ -1,0 +1,115 @@
+# 对象类
+[OntologyManager.ObjectType.Duplicated.IDInFile]
+Description = "存在重复的对象类ID"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.Duplicated.Name]
+Description = "存在重复的对象类名称"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InvalidParameter]
+Description = "请求参数不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InvalidParameter.ConceptCondition]
+Description = "概念查询参数不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InvalidParameter.PropertyName]
+Description = "请求的属性名称不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InvalidParameter.SmallModel]
+Description = "小模型参数不合法"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.ObjectTypeIDExisted]
+Description = "对象类ID已经存在"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.ObjectTypeNameExisted]
+Description = "对象类名称已经存在"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.LengthExceeded.Name]
+Description = "对象类名称长度超出限制"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.NullParameter.Name]
+Description = "对象类名称为空"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.NullParameter.PrimaryKeys]
+Description = "对象类主键为空"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.NullParameter.PropertyName]
+Description = "对象类属性名称为空"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.ObjectTypeNotFound]
+Description = "对象类不存在"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.SmallModelNotFound]
+Description = "小模型不存在"
+Solution = "请检查参数是否正确。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError]
+Description = "内部错误"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError.BeginTransactionFailed]
+Description = "开启事务异常"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError.CheckObjectTypeIfExistFailed]
+Description = "检查对象类名称是否存在失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError.GetDataViewByIDFailed]
+Description = "按ID获取数据视图失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError.GetMetricModelByIDFailed]
+Description = "按ID获取指标模型失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError.GetObjectTypeByIDFailed]
+Description = "按ID获取对象类失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError.GetObjectTypesByIDsFailed]
+Description = "按ID批量获取对象类失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError.GetSmallModelByIDFailed]
+Description = "按ID获取小模型失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
+
+[OntologyManager.ObjectType.InternalError.InsertOpenSearchDataFailed]
+Description = "对象类概念索引插入失败"
+Solution = "请重试该操作，若再次出现该错误请提交工单或联系技术支持工程师。"
+ErrorLink = "暂无"
