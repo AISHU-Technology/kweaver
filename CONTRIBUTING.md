@@ -159,6 +159,39 @@ go test -cover ./...
 - Add examples if introducing new functionality
 - Update CHANGELOG.md if applicable
 
+#### README Guidelines
+
+When updating README files, please follow these guidelines:
+
+- **Default Language**: `README.md` should be in English (default)
+- **Chinese Version**: Chinese documentation should be in `README.zh.md`
+- **Keep in Sync**: If you update `README.md`, please also update `README.zh.md` accordingly
+- **Structure**: Maintain consistent structure between English and Chinese versions
+- **Links**: Update language switcher links at the top of each README file:
+  - English: `[中文](README.zh.md) | English`
+  - Chinese: `[中文](README.zh.md) | [English](README.md)`
+
+**Example README Structure:**
+
+```markdown
+# Project Name
+
+[中文](README.zh.md) | English
+
+[![License](...)](LICENSE.txt)
+[![Go Version](...)](...)
+
+Brief description...
+
+## 📚 Quick Links
+
+- Links to documentation, contributing guide, etc.
+
+## Main Content
+
+...
+```
+
 ### 6. Commit Your Changes
 
 Write clear, descriptive commit messages:
