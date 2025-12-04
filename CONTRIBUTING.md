@@ -228,12 +228,58 @@ git push origin feature/my-feature
 
 ---
 
+## 🏗 Development Setup
+
+### Prerequisites
+
+- Go 1.23.0 or higher
+- MariaDB 11.4+ or DM8
+- OpenSearch 2.x (optional, for full functionality)
+- Git
+
+### Local Development
+
+1. **Clone your fork:**
+
+```bash
+git clone https://github.com/YOUR_USERNAME/kweaver.git
+cd kweaver
+```
+
+2. **Add upstream remote:**
+
+```bash
+git remote add upstream https://github.com/AISHU-Technology/kweaver.git
+```
+
+3. **Set up the development environment:**
+
+```bash
+# Navigate to the module you want to work on
+cd ontology/ontology-manager/server
+# or
+cd ontology/ontology-query/server
+
+# Download dependencies
+go mod download
+
+# Run the service
+go run main.go
+```
+
+4. **Run tests:**
+
+```bash
+go test ./...
+```
+
+---
+
 ## 🐛 Reporting Security Issues
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
 Instead, please report them via:
-
 - Email: [Security contact email]
 - Internal security reporting system
 
