@@ -1,87 +1,98 @@
 # KWeaver
 
-[中文](README.md) | [English](README.en.md)
+[中文](README.zh.md) | English
 
-KWeaver 开源的辅助决策型 AI 应用平台，提供围绕业务场景开发和使用。
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE.txt)
+[![Go Version](https://img.shields.io/badge/go-1.23.0+-00ADD8.svg)](https://golang.org/)
 
-而 AI 应用是为特定业务场景提供的智能决策程序，依托 ADP 架构，整合业务域中的Data Agent 、业务知识网络等核心能力，通过自定义Chat和Board的可视化方式，实现从询问、分析、建议、行动到反馈的端到端业务闭环。
+KWeaver is an open-source AI application platform for decision support, designed for development and use around business scenarios.
 
-当前阶段的开源版本为 **本体引擎**，文档请 [点击这里](ontology/)
+## 📚 Quick Links
 
-后续更多组件开源，敬请期待!
+- 📖 [Documentation](ontology/README.md) - Complete documentation for Ontology Engine
+- 🤝 [Contributing](CONTRIBUTING.md) - Guidelines for contributing to the project
+- 📄 [License](LICENSE.txt) - Apache License 2.0
+- 🐛 [Report Bug](https://github.com/AISHU-Technology/kweaver/issues) - Report a bug or issue
+- 💡 [Request Feature](https://github.com/AISHU-Technology/kweaver/issues) - Suggest a new feature
+
+AI applications are intelligent decision programs for specific business scenarios. Based on the ADP architecture, they integrate core capabilities such as Data Agents and business knowledge networks in the business domain. Through customizable Chat and Board visualization methods, they achieve end-to-end business closed loops from inquiry, analysis, suggestion, action to feedback.
+
+The current open-source version is the **Ontology Engine**. For documentation, please [click here](ontology/README.md).
+
+More components will be open-sourced in the future. Stay tuned!
 
 ---
 
-## 本体引擎
+## Ontology Engine
 
-本体引擎是一个基于Go语言开发的分布式业务知识网络管理系统，提供本体建模、数据管理和智能查询功能。该系统采用微服务架构，分为本体管理模块和本体查询模块，支持大规模知识网络的构建、存储和查询。
+The Ontology Engine is a distributed business knowledge network management system developed in Go, providing ontology modeling, data management, and intelligent query capabilities. The system adopts a microservices architecture, divided into ontology management and ontology query modules, supporting the construction, storage, and querying of large-scale knowledge networks.
 
-### 核心特性
+### Core Features
 
-- **本体建模与管理**: 支持对象类、关系类、行动类的定义和管理
-- **知识网络构建**: 构建多领域的知识网络，支持复杂的语义关系
-- **智能查询引擎**: 提供强大的知识网络查询能力，支持复杂的关系查询
-- **数据集成**: 通过VEGA虚拟化引擎集成多种数据源
-- **分布式架构**: 基于微服务设计，支持水平扩展
-- **OpenSearch集成**: 集成OpenSearch提供高效的搜索能力
+- **Ontology Modeling & Management**: Supports definition and management of object types, relation types, and action types
+- **Knowledge Network Construction**: Build multi-domain knowledge networks with complex semantic relationships
+- **Intelligent Query Engine**: Provides powerful knowledge network query capabilities, supporting complex relationship queries
+- **Data Integration**: Integrates multiple data sources through the VEGA virtualization engine
+- **Distributed Architecture**: Microservices-based design supporting horizontal scaling
+- **OpenSearch Integration**: Integrated OpenSearch for efficient search capabilities
 
-### 系统架构
+### System Architecture
 
-#### 模块组成
+#### Module Structure
 
 ```text
 kweaver/
 └── ontology/
-    ├── ontology-manager/     # 本体管理模块
-    └── ontology-query/       # 本体查询模块
+    ├── ontology-manager/     # Ontology Management Module
+    └── ontology-query/       # Ontology Query Module
 ```
 
-#### 本体管理模块
+#### Ontology Manager Module
 
-负责本体模型的创建、编辑和管理，主要功能包括：
+Responsible for creating, editing, and managing ontology models. Main features include:
 
-- **知识网络管理**: 构建和管理业务知识网络
-- **对象类管理**: 定义和管理知识网络中的对象类
-- **关系类管理**: 定义和管理知识网络中的关系类
-- **行动类管理**: 定义可执行的操作和行动
-- **任务调度**: 后台任务和作业管理
+- **Knowledge Network Management**: Build and manage business knowledge networks
+- **Object Type Management**: Define and manage object types in knowledge networks
+- **Relation Type Management**: Define and manage relation types in knowledge networks
+- **Action Type Management**: Define executable operations and actions
+- **Job Scheduling**: Background task and job management
 
-#### 本体查询模块
+#### Ontology Query Module
 
-提供高效的知识图谱查询服务，主要功能包括：
+Provides efficient knowledge graph query services. Main features include:
 
-- **模型查询**: 本体模型的查询和浏览
-- **图谱查询**: 复杂的关系路径查询
-- **语义搜索**: 基于语义的智能搜索
-- **数据检索**: 多维度数据过滤和检索
+- **Model Query**: Query and browse ontology models
+- **Graph Query**: Complex relationship path queries
+- **Semantic Search**: Semantic-based intelligent search
+- **Data Retrieval**: Multi-dimensional data filtering and retrieval
 
-### 快速开始
+### Quick Start
 
-#### 环境要求
+#### Prerequisites
 
-- Go 1.23.0 或更高版本
-- MariaDB 11.4+ 或 DM8（用于数据存储）
-- OpenSearch 2.x（用于搜索和索引）
-- Docker（可选，用于容器化部署）
-- Kubernetes（可选，用于集群部署）
+- Go 1.23.0 or higher
+- MariaDB 11.4+ or DM8 (for data storage)
+- OpenSearch 2.x (for search and indexing)
+- Docker (optional, for containerized deployment)
+- Kubernetes (optional, for cluster deployment)
 
-#### 本地开发
+#### Local Development
 
-1. **克隆代码库**
+1. **Clone the repository**
 
 ```bash
 git clone https://github.com/AISHU-Technology/kweaver.git
 cd kweaver/ontology
 ```
 
-2. **配置环境**
+2. **Configure environment**
 
-每个模块都有独立的配置文件：
+Each module has its own configuration file:
 
 - `ontology-manager/server/config/ontology-manager-config.yaml`
 - `ontology-query/server/config/ontology-query-config.yaml`
 
-3. **运行本体管理模块**
+3. **Run the Ontology Manager module**
 
 ```bash
 cd ontology-manager/server
@@ -89,9 +100,9 @@ go mod download
 go run main.go
 ```
 
-服务将在 `http://localhost:13014` 启动
+The service will start at `http://localhost:13014`
 
-4. **运行本体查询模块**
+4. **Run the Ontology Query module**
 
 ```bash
 cd ../ontology-query/server
@@ -99,128 +110,133 @@ go mod download
 go run main.go
 ```
 
-服务将在 `http://localhost:13018` 启动
+The service will start at `http://localhost:13018`
 
-#### Docker 部署
+#### Docker Deployment
 
-##### 构建镜像
+**Build images**
 
 ```bash
-# 构建本体管理模块
+# Build Ontology Manager module
 cd ontology-manager
 docker build -t ontology-manager:latest -f docker/Dockerfile .
 
-# 构建本体查询模块  
+# Build Ontology Query module  
 cd ../ontology-query
 docker build -t ontology-query:latest -f docker/Dockerfile .
 ```
 
-##### 运行容器
+**Run containers**
 
 ```bash
-# 运行本体管理模块
+# Run Ontology Manager module
 docker run -d -p 13014:13014 --name ontology-manager ontology-manager:latest
 
-# 运行本体查询模块
+# Run Ontology Query module
 docker run -d -p 13018:13018 --name ontology-query ontology-query:latest
 ```
 
-#### Kubernetes 部署
+#### Kubernetes Deployment
 
-项目提供了Helm charts用于Kubernetes部署：
+The project provides Helm charts for Kubernetes deployment:
 
 ```bash
-# 部署本体管理模块
+# Deploy Ontology Manager module
 helm3 install ontology-manager ontology-manager/helm/ontology-manager/
 
-# 部署本体查询模块
+# Deploy Ontology Query module
 helm3 install ontology-query ontology-query/helm/ontology-query/
 ```
 
-### API 文档
+### API Documentation
 
-系统提供完整的RESTful API文档：
+The system provides complete RESTful API documentation:
 
-#### 本体管理API
+#### Ontology Manager APIs
 
-- [知识网络API](ontology/ontology-manager/api_doc/ontology-manager-network.html)
-- [对象类API](ontology/ontology-manager/api_doc/ontology-manager-object-type.html)
-- [关系类API](ontology/ontology-manager/api_doc/ontology-manager-relation-type.json)
-- [动作类API](ontology/ontology-manager/api_doc/ontology-manager-action-type.html)
-- [任务管理API](ontology/ontology-manager/api_doc/ontology-manager-job-api.html)
+- [Knowledge Network API](ontology/ontology-manager/api_doc/ontology-manager-network.html)
+- [Object Type API](ontology/ontology-manager/api_doc/ontology-manager-object-type.html)
+- [Relation Type API](ontology/ontology-manager/api_doc/ontology-manager-relation-type.json)
+- [Action Type API](ontology/ontology-manager/api_doc/ontology-manager-action-type.html)
+- [Job Management API](ontology/ontology-manager/api_doc/ontology-manager-job-api.html)
 
-#### 本体查询API
+#### Ontology Query APIs
 
-- [查询服务API](ontology/ontology-query/api/ontology-query.html)
+- [Query Service API](ontology/ontology-query/api/ontology-query.html)
 
-### 数据库支持
+### Database Support
 
-系统支持多种数据库：
+The system supports multiple databases:
 
-- **MariaDB**: 主数据存储
-- **DM8**: 达梦数据库支持
-- **OpenSearch**: 搜索引擎和数据分析
+- **MariaDB**: Primary data storage
+- **DM8**: DM8 database support
+- **OpenSearch**: Search engine and data analysis
 
-数据库升级脚本位于：
+Database migration scripts are located at:
 
 - `ontology/ontology-manager/migrations/`
 - `ontology/ontology-query/migrations/`
 
-### 监控与日志
+### Monitoring & Logging
 
-- **日志系统**: 集成结构化日志，支持多级别日志记录
-- **链路追踪**: 基于OpenTelemetry的分布式链路追踪
-- **健康检查**: 提供健康检查端点
+- **Logging System**: Integrated structured logging with multi-level log recording
+- **Distributed Tracing**: OpenTelemetry-based distributed tracing
+- **Health Checks**: Health check endpoints provided
 
-### 开发指南
+### Development Guide
 
-#### 代码结构
+#### Code Structure
 
 ```text
 server/
-├── common/          # 公共配置和常量
-├── config/          # 配置文件
-├── drivenadapters/  # 数据访问层
-├── driveradapters/  # 接口适配层
-├── errors/          # 错误定义
-├── interfaces/      # 接口定义
-├── locale/          # 国际化
-├── logics/          # 业务逻辑层
-├── main.go          # 应用入口
-├── version/         # 版本信息
-└── worker/          # 后台任务
+├── common/          # Common configuration and constants
+├── config/          # Configuration files
+├── drivenadapters/  # Data access layer
+├── driveradapters/  # Interface adapter layer
+├── errors/          # Error definitions
+├── interfaces/      # Interface definitions
+├── locale/          # Internationalization
+├── logics/          # Business logic layer
+├── main.go          # Application entry point
+├── version/         # Version information
+└── worker/          # Background tasks
 ```
 
-#### 开发规范
+#### Development Standards
 
-1. **模块化设计**: 遵循清洁架构原则
-2. **接口隔离**: 明确定义接口和实现
-3. **错误处理**: 统一的错误处理机制
-4. **日志规范**: 结构化的日志记录
-5. **测试覆盖**: 单元测试和集成测试
+1. **Modular Design**: Follow clean architecture principles
+2. **Interface Isolation**: Clearly define interfaces and implementations
+3. **Error Handling**: Unified error handling mechanism
+4. **Logging Standards**: Structured logging
+5. **Test Coverage**: Unit tests and integration tests
 
-### 贡献指南
+### Contributing
 
-1. Fork 代码库
-2. 创建特性分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to contribute to this project.
 
-### 版本历史
+Quick start:
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Create a Pull Request
 
-- **v6.1.0**: 当前版本，基于Go 1.23
+### Version History
 
-### 许可证
+- **v6.1.0**: Current version, based on Go 1.23
 
-本项目采用 Apache License 2.0 许可证。详情请参阅 [LICENSE](LICENSE.txt) 文件。
+### License
 
-### 支持与联系
+This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE.txt) file for details.
 
-- **技术支持**: AISHU ADP研发团队
-- **文档更新**: 持续更新中
-- **问题反馈**: 通过内部系统提交
+### Support & Contact
+
+- **Technical Support**: AISHU ADP R&D Team
+- **Documentation**: [Ontology Engine Documentation](ontology/README.md)
+- **Contributing**: [Contributing Guide](CONTRIBUTING.md)
+- **Issues**: [GitHub Issues](https://github.com/AISHU-Technology/kweaver/issues)
+- **License**: [Apache License 2.0](LICENSE.txt)
 
 ---
 
-**注意**: 这是一个企业级内部项目，代码和文档可能包含特定的业务逻辑和配置。请根据实际环境进行相应的调整。
+**Note**: This is an enterprise-level internal project. Code and documentation may contain specific business logic and configurations. Please adjust according to your actual environment.
