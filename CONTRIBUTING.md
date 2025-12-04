@@ -185,13 +185,54 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
 - `test:` - Adding or updating tests
 - `chore:` - Maintenance tasks
 
-### 7. Push to Your Fork
+### 7. Keep Your Branch Up to Date
+
+Since this project requires linear history, please rebase your branch on the latest `main` branch before pushing:
+
+```bash
+# Make sure you're on your feature branch
+git checkout feature/my-feature
+
+# Ensure all changes are committed
+git status  # Check for uncommitted changes
+
+# If you have uncommitted changes, commit them first:
+# git add .
+# git commit -m "your commit message"
+
+# Option 1: If you have upstream configured, fetch and rebase on upstream/main
+# git fetch upstream
+# git rebase upstream/main
+
+# Option 2: Fetch latest changes from origin and rebase on origin/main
+git fetch origin
+git rebase origin/main
+
+# If there are conflicts, resolve them and continue:
+# 1. Fix conflicts in the affected files
+# 2. git add <resolved-files>
+# 3. git rebase --continue
+
+# If you want to abort the rebase:
+# git rebase --abort
+
+# Force push (required after rebase)
+git push origin feature/my-feature --force-with-lease
+```
+
+> **Note**:
+>
+> - Use `--force-with-lease` instead of `--force` to avoid overwriting others' work.
+> - Make sure you're on your feature branch before rebasing.
+> - If you prefer to track the upstream repository, you can add it: `git remote add upstream https://github.com/AISHU-Technology/kweaver.git`
+
+### 8. Push to Your Fork
 
 ```bash
 git push origin feature/my-feature
 ```
 
-### 8. Create a Pull Request
+### 9. Create a Pull Request
 
 1. Go to the original repository on GitHub
 2. Click "New Pull Request"
@@ -225,6 +266,8 @@ git push origin feature/my-feature
    - Keep discussions constructive
 
 3. **Approval**: Once approved, a maintainer will merge your PR
+   - PRs will be merged using squash merge or rebase merge to maintain linear history
+   - Please ensure your branch is up to date before requesting review
 
 ---
 
@@ -246,13 +289,13 @@ git clone https://github.com/YOUR_USERNAME/kweaver.git
 cd kweaver
 ```
 
-2. **Add upstream remote:**
+1. **Add upstream remote:**
 
 ```bash
 git remote add upstream https://github.com/AISHU-Technology/kweaver.git
 ```
 
-3. **Set up the development environment:**
+1. **Set up the development environment:**
 
 ```bash
 # Navigate to the module you want to work on
@@ -267,7 +310,7 @@ go mod download
 go run main.go
 ```
 
-4. **Run tests:**
+1. **Run tests:**
 
 ```bash
 go test ./...
@@ -280,6 +323,7 @@ go test ./...
 **Please do not report security vulnerabilities through public GitHub issues.**
 
 Instead, please report them via:
+
 - Email: [Security contact email]
 - Internal security reporting system
 

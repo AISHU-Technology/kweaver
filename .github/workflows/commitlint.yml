@@ -1,0 +1,71 @@
+name: Commit Message Lint
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate commit messages
+        run: |
+          # Get base branch
+          BASE_BRANCH="${{ github.base_ref }}"
+          
+          # Fetch base branch
+          git fetch origin "$BASE_BRANCH:$BASE_BRANCH" || true
+          
+          # Get commits in PR (exclude merge commits)
+          COMMITS=$(git log --format=%s --no-merges "$BASE_BRANCH"..HEAD)
+          
+          if [ -z "$COMMITS" ]; then
+            echo "No commits to check"
+            exit 0
+          fi
+          
+          # Check each commit message
+          ERROR_COUNT=0
+          while IFS= read -r commit_msg; do
+            if [ -z "$commit_msg" ]; then
+              continue
+            fi
+            
+            # Skip automatically generated commits
+            if echo "$commit_msg" | grep -qE '^(Merge|Revert|Cherry-pick|Auto-merge|Automatic merge|Squash)'; then
+              echo "⏭️  Skipping auto-generated commit: $commit_msg"
+              continue
+            fi
+            
+            # Skip Dependabot and other bot commits
+            if echo "$commit_msg" | grep -qiE '(dependabot|renovate|bot|automated)'; then
+              echo "⏭️  Skipping bot commit: $commit_msg"
+              continue
+            fi
+            
+            # Check format: type(scope): subject
+            if ! echo "$commit_msg" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+'; then
+              echo "❌ Invalid commit message: $commit_msg"
+              ERROR_COUNT=$((ERROR_COUNT + 1))
+            fi
+          done <<< "$COMMITS"
+          
+          if [ $ERROR_COUNT -gt 0 ]; then
+            echo ""
+            echo "Commit messages must follow Conventional Commits format:"
+            echo "  type(scope): subject"
+            echo ""
+            echo "Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+            echo "Examples:"
+            echo "  feat(api): add user authentication"
+            echo "  fix: resolve memory leak"
+            echo "  docs: update README"
+            exit 1
+          fi
+          
+          echo "✅ All commit messages are valid"
