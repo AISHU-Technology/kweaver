@@ -158,6 +158,39 @@ go test -cover ./...
 - 如果引入新功能，请添加示例
 - 如适用，更新 CHANGELOG.md
 
+#### README 规范
+
+更新 README 文件时，请遵循以下规范：
+
+- **默认语言**: `README.md` 应为英文（默认）
+- **中文版本**: 中文文档应在 `README.zh.md` 中
+- **保持同步**: 如果更新了 `README.md`，请同时更新 `README.zh.md`
+- **结构一致**: 保持英文和中文版本的结构一致
+- **链接更新**: 更新每个 README 文件顶部的语言切换链接：
+  - 英文版: `[中文](README.zh.md) | English`
+  - 中文版: `[中文](README.zh.md) | [English](README.md)`
+
+**README 结构示例：**
+
+```markdown
+# 项目名称
+
+[中文](README.zh.md) | [English](README.md)
+
+[![License](...)](LICENSE.txt)
+[![Go Version](...)](...)
+
+简要描述...
+
+## 📚 快速链接
+
+- 文档、贡献指南等链接
+
+## 主要内容
+
+...
+```
+
 ### 6. 提交更改
 
 编写清晰、描述性的提交消息：
