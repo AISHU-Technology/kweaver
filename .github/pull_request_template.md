@@ -6,12 +6,14 @@ Brief description of changes:
 
 - [ ] Feature/module 1
 - [ ] Feature/module 2
+- [ ] Docs/doc 1
 
 ---
 
 ## Why
 
-- Related Issue: #123
+- Related Issue: [Issue #123](link-to-issue)
+- Related Feature: [Feature Name](link-to-feature)
 - Background:
 
 ---
