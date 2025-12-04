@@ -184,13 +184,54 @@ Closes #123"
 - `test:` - 添加或更新测试
 - `chore:` - 维护任务
 
-### 7. 推送到你的 Fork
+### 7. 保持分支与主分支同步
+
+由于本项目要求线性历史，请在推送前将你的分支 rebase 到最新的 `main` 分支：
+
+```bash
+# 确保你在你的功能分支上
+git checkout feature/my-feature
+
+# 确保所有更改都已提交
+git status  # 检查是否有未提交的更改
+
+# 如果有未提交的更改，请先提交：
+# git add .
+# git commit -m "你的提交消息"
+
+# 方式 1: 如果已配置 upstream，从 upstream 获取并 rebase
+# git fetch upstream
+# git rebase upstream/main
+
+# 方式 2: 从 origin 获取最新更改并 rebase 到 origin/main
+git fetch origin
+git rebase origin/main
+
+# 如果有冲突，解决后继续：
+# 1. 修复冲突文件
+# 2. git add <已解决的文件>
+# 3. git rebase --continue
+
+# 如果想中止 rebase：
+# git rebase --abort
+
+# 强制推送（rebase 后必需）
+git push origin feature/my-feature --force-with-lease
+```
+
+> **注意**:
+>
+> - 使用 `--force-with-lease` 而不是 `--force`，以避免覆盖其他人的工作。
+> - 确保在 rebase 前你在你的功能分支上。
+> - 如果你想跟踪上游仓库，可以添加：`git remote add upstream https://github.com/AISHU-Technology/kweaver.git`
+
+### 8. 推送到你的 Fork
 
 ```bash
 git push origin feature/my-feature
 ```
 
-### 8. 创建 Pull Request
+### 9. 创建 Pull Request
 
 1. 转到 GitHub 上的原始仓库
 1. 点击 "New Pull Request"
@@ -224,6 +265,8 @@ git push origin feature/my-feature
    - 保持讨论建设性
 
 1. **批准**: 一旦批准，维护者将合并你的 PR
+   - PR 将使用 squash merge 或 rebase merge 合并，以保持线性历史
+   - 请在请求审查前确保你的分支是最新的
 
 ---
 
@@ -245,13 +288,13 @@ git clone https://github.com/YOUR_USERNAME/kweaver.git
 cd kweaver
 ```
 
-2. **添加上游远程仓库：**
+1. **添加上游远程仓库：**
 
 ```bash
 git remote add upstream https://github.com/AISHU-Technology/kweaver.git
 ```
 
-3. **设置开发环境：**
+1. **设置开发环境：**
 
 ```bash
 # 导航到你要工作的模块
@@ -266,7 +309,7 @@ go mod download
 go run main.go
 ```
 
-4. **运行测试：**
+1. **运行测试：**
 
 ```bash
 go test ./...
